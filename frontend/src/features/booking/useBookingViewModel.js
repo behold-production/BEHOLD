@@ -184,6 +184,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
               price: Number(c.price) || 899,
+              halfSessionPrice: c.halfSessionPrice !== undefined && Number(c.halfSessionPrice) > 0
+                ? Number(c.halfSessionPrice)
+                : (Number(c.price) <= 899 ? 499 : Number(c.price) >= 1200 ? 699 : Math.round((Number(c.price) || 899) * 0.5)),
               modes: (Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP']).filter(m => {
                 const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
                 if (m === 'ONLINE') return settings.enableOnline !== false;
@@ -311,15 +314,19 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   } catch {}
 
-  const getDurationPrice = (fullPrice, duration) => {
+  const getDurationPrice = (advisor, duration) => {
+    const fullPrice = advisor ? (Number(advisor.price) || 899) : 899;
     if (duration === 60) return fullPrice;
+    if (advisor && advisor.halfSessionPrice && Number(advisor.halfSessionPrice) > 0) {
+      return Number(advisor.halfSessionPrice);
+    }
     if (fullPrice <= 899) return 499;
     if (fullPrice >= 1200) return 699;
     return Math.round(fullPrice * 0.5);
   };
 
   const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 899) : 899;
-  const baseFee = getDurationPrice(rawPrice, bookingDuration);
+  const baseFee = getDurationPrice(selectedAdvisor, bookingDuration);
   const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
   const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
 
@@ -397,6 +404,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       doc.text(`Advisor Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
       doc.text(`Session Schedule: ${formatDateString(bookingDetails.date)} at ${bookingDetails.time}`, 20, 98);
       doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
+      if (bookingDetails.duration) {
+        doc.text(`Duration: ${bookingDetails.duration}`, 120, 104);
+      }
 
       // Divider Line
       doc.line(20, 110, 190, 110);
@@ -429,7 +439,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const detailsNetTotal = typeof bookingDetails.amount === 'number' ? bookingDetails.amount : Math.max(0, detailsBaseFee + detailsGstAmount - detailsDiscount);
 
       // 1. Base fee
-      doc.text(`${bookingDetails.service} Session Booking Fee`, 24, tableY);
+      const feeDesc = bookingDetails.duration ? `${bookingDetails.service} Session Fee (${bookingDetails.duration})` : `${bookingDetails.service} Session Booking Fee`;
+      doc.text(feeDesc, 24, tableY);
       doc.text(`Rs. ${detailsBaseFee.toFixed(2)}`, 160, tableY);
       tableY += 8;
 
@@ -830,6 +841,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const draft = {
         bookingService,
         bookingMode,
+        bookingDuration,
         selectedDate,
         selectedTime,
         selectedAdvisorId: selectedAdvisor ? selectedAdvisor.id : null,
@@ -838,7 +850,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       };
       sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
     } catch { /* ignore */ }
-  }, [bookingService, bookingMode, selectedDate, selectedTime, selectedAdvisor, advisorConfirmed, bookingForm]);
+  }, [bookingService, bookingMode, bookingDuration, selectedDate, selectedTime, selectedAdvisor, advisorConfirmed, bookingForm]);
 
   useEffect(() => {
     if (preselectedAdvisorId) {
@@ -1025,9 +1037,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
         date: selectedDate,
         time: selectedTime,
+        duration: bookingDuration,
+        bookingDuration: bookingDuration,
         mode: bookingMode,
         service: bookingService,
         couponCode: couponInput,
+        appliedDiscount: appliedDiscount,
+        baseFee: baseFee,
+        gstAmount: gstAmount,
+        amount: netTotal,
         clientName: bookingForm.name || user?.name || '',
         clientEmail: bookingForm.email || user?.email || '',
         clientPhone: bookingForm.phone || user?.phone || '',
@@ -1080,7 +1098,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         amount: amount,
         currency: currency || 'INR',
         name: "BEHOLD.",
-        description: `${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} Session`,
+        description: `${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} Session (${bookingDuration === 30 ? '30 Mins' : '1 Hour'})`,
         image: "https://www.behold.co.in/pwa-512.png",
         order_id: orderId,
         handler: async function (response) {
@@ -1091,9 +1109,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
               date: selectedDate,
               time: selectedTime,
+              duration: bookingDuration,
+              bookingDuration: bookingDuration,
               mode: bookingMode,
               service: bookingService,
               couponCode: couponInput,
+              appliedDiscount: appliedDiscount,
+              baseFee: baseFee,
+              gstAmount: gstAmount,
+              amount: netTotal,
               clientName: bookingForm.name || user?.name || '',
               clientEmail: bookingForm.email || user?.email || '',
               clientPhone: bookingForm.phone || user?.phone || '',
@@ -1277,6 +1301,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const draft = {
         bookingService,
         bookingMode,
+        bookingDuration,
         selectedDate,
         selectedTime,
         selectedAdvisorId: selectedAdvisor ? selectedAdvisor.id : null,

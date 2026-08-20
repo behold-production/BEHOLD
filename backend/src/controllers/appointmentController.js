@@ -9,7 +9,7 @@ const AppointmentController = {
   // Create Appointment (User / Student)
   async createAppointment(req, res, next) {
     try {
-      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude, clientName, clientEmail, clientPhone } = req.body;
+      const { counsellorId, date, time, duration, bookingDuration, mode, service, clientLocationName, clientLatitude, clientLongitude, clientName, clientEmail, clientPhone } = req.body;
       const userId = req.user.id;
 
       if (!counsellorId || !date || !time || !mode) {
@@ -53,12 +53,16 @@ const AppointmentController = {
         });
       }
 
+      const durationVal = Number(duration) || Number(bookingDuration) || 60;
+      const sessionDurationStr = durationVal === 30 ? '30 Minutes' : '1 Hour (60 Mins)';
+
       // Create appointment
       const newAppointment = await StorageService.create('appointments', {
         userId,
         counsellorId,
         date,
         time,
+        duration: sessionDurationStr,
         mode, // ONLINE or OFFLINE
         meetLink: mode === 'ONLINE' ? counsellor.defaultMeetLink || '' : '',
         status: 'PENDING',
@@ -170,6 +174,7 @@ const AppointmentController = {
         counsellorId: appointment.counsellorId,
         date: appointment.date,
         time: appointment.time,
+        duration: appointment.duration || '1 Hour (60 Mins)',
         mode: appointment.mode,
         meetLink,
         status: 'PENDING',

@@ -109,6 +109,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             hoursText: displayHours,
             lang: Array.isArray(psy.lang) ? psy.lang.join(', ') : (psy.lang || 'Malayalam, English'),
             price: validPrice,
+            halfSessionPrice: (Number.isFinite(rawHalf) && rawHalf >= 100) ? rawHalf : (validPrice <= 899 ? 499 : validPrice >= 1200 ? 699 : Math.round(validPrice * 0.5)),
             rating: Number(psy.rating) || 5.0,
             reviewCount: Number(psy.reviewCount) || 0,
             nextAvailable: nextAvailable || 'Available Today',

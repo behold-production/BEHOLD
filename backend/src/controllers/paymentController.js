@@ -91,6 +91,8 @@ const PaymentController = {
         counsellorId,
         date,
         time,
+        duration,
+        bookingDuration,
         mode,
         service,
         couponCode,
@@ -105,6 +107,9 @@ const PaymentController = {
       let amountInPaise = 0;
       let orderNotes = { ...(customNotes || {}) };
       let netTotal = 0;
+      let calculatedBaseFee = 0;
+      let calculatedGstAmount = 0;
+      let calculatedDuration = '1 Hour (60 Mins)';
 
       // Scenario 1: Direct amount provided (e.g. standard checkout payload)
       if (amount !== undefined && amount !== null && amount !== '') {
@@ -116,6 +121,7 @@ const PaymentController = {
           });
         }
         netTotal = amountInPaise / 100;
+        calculatedBaseFee = netTotal;
         if (req.user && req.user.id) {
           orderNotes.userId = req.user.id;
         }
@@ -140,10 +146,21 @@ const PaymentController = {
         const counsellor = validation.counsellor;
         const settings = (await StorageService.findOne('settings')) || {};
 
-        const baseFee = Number(counsellor.price) || 1200;
+        const durationVal = Number(duration) || Number(bookingDuration) || Number(req.body.bookingDetails?.duration) || Number(req.body.bookingDetails?.bookingDuration) || 60;
+        const isHalfSession = durationVal === 30;
+        calculatedDuration = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+
+        const rawPrice = Number(counsellor.price) || 899;
+        const halfPrice = counsellor.halfSessionPrice !== undefined && Number(counsellor.halfSessionPrice) > 0
+          ? Number(counsellor.halfSessionPrice)
+          : (rawPrice <= 899 ? 499 : rawPrice >= 1200 ? 699 : Math.round(rawPrice * 0.5));
+        const baseFee = isHalfSession ? halfPrice : rawPrice;
+        calculatedBaseFee = baseFee;
+
         const gstEnabled = settings.gstEnabled === true;
         const gstPercent = gstEnabled ? Number(settings.gstPercent) || 0 : 0;
         const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
+        calculatedGstAmount = gstAmount;
         const totalBeforeDiscount = baseFee + gstAmount;
 
         let appliedDiscount = 0;
@@ -179,10 +196,15 @@ const PaymentController = {
           clientPhone: clientPhone || '',
           date,
           time,
+          duration: calculatedDuration,
+          bookingDuration: String(durationVal),
           mode,
           service: service || 'counselling',
           couponCode: couponCode || '',
-          appliedDiscount: String(appliedDiscount)
+          appliedDiscount: String(appliedDiscount),
+          baseFee: String(baseFee),
+          gstAmount: String(gstAmount),
+          netTotal: String(netTotal)
         };
       } else {
         return res.status(400).json({
@@ -245,7 +267,10 @@ const PaymentController = {
           orderId: order.id,
           amount: order.amount,
           currency: order.currency,
-          netTotal
+          netTotal,
+          baseFee: calculatedBaseFee,
+          gstAmount: calculatedGstAmount,
+          duration: calculatedDuration
         }
       });
     } catch (error) {
@@ -310,7 +335,21 @@ const PaymentController = {
         });
       }
 
-      const { counsellorId, date, time, mode, service, clientLocationName, clientLatitude, clientLongitude, clientName, clientEmail, clientPhone } = bookingDetails;
+      const {
+        counsellorId,
+        date,
+        time,
+        mode,
+        service,
+        duration: bDuration,
+        bookingDuration: bBookingDuration,
+        clientLocationName,
+        clientLatitude,
+        clientLongitude,
+        clientName,
+        clientEmail,
+        clientPhone
+      } = bookingDetails;
       const userId = req.user ? req.user.id : '';
 
       if (!counsellorId || !date || !time || !mode) {
@@ -356,8 +395,8 @@ const PaymentController = {
       let notes = {};
       // HMAC signature is already 100% cryptographically verified above.
       // We set default notes from booking details directly to prevent unnecessary network latency.
-      const appliedDiscount = Number(req.body.appliedDiscount) || 0;
-      const couponCode = req.body.couponCode || '';
+      const appliedDiscount = Number(bookingDetails.appliedDiscount) || Number(req.body.appliedDiscount) || 0;
+      const couponCode = bookingDetails.couponCode || req.body.couponCode || '';
 
       // 3. Validation check
       const validation = await validateBookingDetails(counsellorId, date, time, mode, service || 'counselling', null, clientLatitude, clientLongitude);
@@ -378,7 +417,16 @@ const PaymentController = {
 
       // 4. Compute price & commission
       const settings = (await StorageService.findOne('settings')) || {};
-      const baseFee = Number(counsellor.price) || 1200;
+      const durationVal = Number(bDuration) || Number(bBookingDuration) || Number(req.body.duration) || Number(req.body.bookingDuration) || 60;
+      const isHalfSession = durationVal === 30;
+      const sessionDurationStr = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+
+      const rawPrice = Number(counsellor.price) || 899;
+      const halfPrice = counsellor.halfSessionPrice !== undefined && Number(counsellor.halfSessionPrice) > 0
+        ? Number(counsellor.halfSessionPrice)
+        : (rawPrice <= 899 ? 499 : rawPrice >= 1200 ? 699 : Math.round(rawPrice * 0.5));
+      const baseFee = isHalfSession ? halfPrice : rawPrice;
+
       const gstEnabled = settings.gstEnabled === true;
       const gstPercent = gstEnabled ? Number(settings.gstPercent) || 0 : 0;
       const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
@@ -411,6 +459,7 @@ const PaymentController = {
         counsellorId,
         date,
         time,
+        duration: sessionDurationStr,
         mode,
         meetLink: finalMeetLink,
         status: 'CONFIRMED',
@@ -418,6 +467,8 @@ const PaymentController = {
         paymentStatus: 'PAID',
         razorpayOrderId: razorpay_order_id,
         razorpayPaymentId: razorpay_payment_id,
+        baseFee,
+        gstAmount,
         amountPaid: netTotal,
         appliedDiscount,
         couponCode,
@@ -430,6 +481,31 @@ const PaymentController = {
         commissionPercent,
         counsellorShareAmount
       });
+
+      // Also ensure corresponding session record exists in sessions collection
+      try {
+        const existingSession = await StorageService.findOne('sessions', { appointmentId: newAppointment.id });
+        if (!existingSession) {
+          await StorageService.create('sessions', {
+            appointmentId: newAppointment.id,
+            userId,
+            counsellorId,
+            date,
+            time,
+            duration: sessionDurationStr,
+            mode,
+            meetLink: finalMeetLink,
+            status: 'CONFIRMED',
+            notes: '',
+            feedback: '',
+            clientLocationName: clientLocationName || '',
+            clientLatitude: Number(clientLatitude) || 0,
+            clientLongitude: Number(clientLongitude) || 0
+          });
+        }
+      } catch (sessErr) {
+        console.error('[Create Session Sync Error]:', sessErr);
+      }
 
       // Dispatch notifications & WhatsApp alert for new appointment
       await dispatchBookingNotifications(newAppointment, req.body, clientPhone);
@@ -534,6 +610,10 @@ const PaymentController = {
               : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);
             const counsellorShareAmount = Number((netTotal * (commissionPercent / 100)).toFixed(2));
 
+            const durationVal = notes.bookingDuration ? Number(notes.bookingDuration) : (notes.duration === '30 Minutes' || Number(notes.duration) === 30 ? 30 : 60);
+            const isHalfSession = durationVal === 30;
+            const sessionDurationStr = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+
             const { generateSessionMeetingLink } = require('../utils/calendarHelper');
             const autoMeetLink = notes.mode === 'ONLINE' ? await generateSessionMeetingLink({
               counsellor,
@@ -549,6 +629,7 @@ const PaymentController = {
               counsellorId: notes.counsellorId,
               date: notes.date,
               time: notes.time,
+              duration: sessionDurationStr,
               mode: notes.mode,
               meetLink: autoMeetLink,
               status: 'CONFIRMED',
@@ -556,6 +637,8 @@ const PaymentController = {
               paymentStatus: 'PAID',
               razorpayOrderId: orderId,
               razorpayPaymentId: paymentId || '',
+              baseFee: Number(notes.baseFee) || netTotal,
+              gstAmount: Number(notes.gstAmount) || 0,
               amountPaid: netTotal,
               appliedDiscount: Number(notes.appliedDiscount) || 0,
               couponCode: notes.couponCode || '',
@@ -571,6 +654,27 @@ const PaymentController = {
 
             console.log(`[Razorpay Webhook]: Auto-created booking ${newBooking.id} via captured payment event.`);
             cleanDuplicateAppointments().catch(() => {});
+
+            try {
+              await StorageService.create('sessions', {
+                appointmentId: newBooking.id,
+                userId: notes.userId || '',
+                counsellorId: notes.counsellorId,
+                date: notes.date,
+                time: notes.time,
+                duration: sessionDurationStr,
+                mode: notes.mode,
+                meetLink: autoMeetLink,
+                status: 'CONFIRMED',
+                notes: '',
+                feedback: '',
+                clientLocationName: notes.clientLocationName || '',
+                clientLatitude: Number(notes.clientLatitude) || 0,
+                clientLongitude: Number(notes.clientLongitude) || 0
+              });
+            } catch (whSessErr) {
+              console.error('[Webhook Session Create Error]:', whSessErr);
+            }
 
             if (notes.counsellorId) {
               await StorageService.create('notifications', {

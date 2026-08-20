@@ -530,12 +530,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 <span className="text-slate-500 block font-normal text-xs">{confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                                             </div>
                                             <div className="space-y-1">
-                                                <span className="text-slate-500 block font-medium text-[11px]">Date & Time Slot</span>
+                                                <span className="text-slate-500 block font-medium text-[11px]">Date & Schedule</span>
                                                 <span className="font-semibold text-slate-900 text-sm block">
                                                     {formatDateString(confirmedBooking?.date || selectedDate)}
                                                 </span>
                                                 <span className="text-slate-500 block font-normal text-xs">
-                                                    {confirmedBooking?.time || selectedTime}
+                                                    {confirmedBooking?.time || selectedTime} • {confirmedBooking?.duration || (bookingDuration === 30 ? '30 Mins' : '1 Hour')}
                                                 </span>
                                             </div>
                                             <div className="space-y-1">
@@ -609,6 +609,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             id: bookingId,
                                                             service,
                                                             mode,
+                                                            duration: confirmedBooking?.duration || (bookingDuration === 30 ? '30 Minutes' : '1 Hour (60 Mins)'),
                                                             advisorName,
                                                             advisorRole,
                                                             date: confirmedBooking?.date || selectedDate,
@@ -618,9 +619,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             clientPhone,
                                                             amount,
                                                             meetLink,
-                                                            baseFee: confirmedBooking?.amountPaid ? (confirmedBooking?.amountPaid - (gstEnabled ? gstAmount : 0)) : baseFee,
+                                                            baseFee: confirmedBooking?.baseFee || (confirmedBooking?.amountPaid ? (confirmedBooking?.amountPaid - (gstEnabled ? gstAmount : 0)) : baseFee),
                                                             gstPercent: gstEnabled ? gstPercent : 0,
-                                                            gstAmount: gstEnabled ? gstAmount : 0,
+                                                            gstAmount: typeof confirmedBooking?.gstAmount === 'number' ? confirmedBooking.gstAmount : (gstEnabled ? gstAmount : 0),
                                                             appliedDiscount: appliedDiscount
                                                         });
                                                     }}
@@ -773,7 +774,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <div className="grid grid-cols-2 gap-3 w-full">
                                                             {(() => {
                                                                 const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 899) : 899;
-                                                                const halfPrice = rawPrice <= 899 ? 499 : rawPrice >= 1200 ? 699 : Math.round(rawPrice * 0.5);
+                                                                const halfPrice = selectedAdvisor?.halfSessionPrice !== undefined && Number(selectedAdvisor.halfSessionPrice) > 0
+                                                                    ? Number(selectedAdvisor.halfSessionPrice)
+                                                                    : (rawPrice <= 899 ? 499 : rawPrice >= 1200 ? 699 : Math.round(rawPrice * 0.5));
                                                                 const fullPrice = rawPrice;
                                                                 return [
                                                                     { id: 30, label: '30 Minutes (Half Hour)', desc: `Half Session • ₹${halfPrice}` },
@@ -1131,8 +1134,12 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                                 <span className="text-xs font-medium text-surface-500 mt-1">Language</span>
                                                                                             </div>
                                                                                             <div className="p-4 sm:p-5 flex flex-col items-center justify-center text-center">
-                                                                                                <span className="font-semibold text-xl sm:text-2xl text-surface-900 leading-none">₹{advisor.price}</span>
-                                                                                                <span className="text-xs font-medium text-surface-500 mt-1">Session</span>
+                                                                                                <span className="font-semibold text-xl sm:text-2xl text-surface-900 leading-none">
+                                                                                                    ₹{bookingDuration === 30 ? (advisor.halfSessionPrice || (Number(advisor.price) <= 899 ? 499 : Number(advisor.price) >= 1200 ? 699 : Math.round(Number(advisor.price) * 0.5))) : (advisor.price || 899)}
+                                                                                                </span>
+                                                                                                <span className="text-xs font-medium text-surface-500 mt-1">
+                                                                                                    {bookingDuration === 30 ? '30 Mins' : 'Session'}
+                                                                                                </span>
                                                                                             </div>
                                                                                         </div>
 
@@ -1275,8 +1282,12 @@ const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
                                                                                         </div>
                                                                                         <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 sm:gap-2 shrink-0 border-t sm:border-t-0 border-surface-100 pt-3 sm:pt-0 mt-3 sm:mt-0">
                                                                                             <div className="text-left sm:text-right">
-                                                                                                <span className={`font-semibold text-xl sm:text-2xl leading-none block ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>₹{advisor.price}</span>
-                                                                                                <span className="text-[10px] font-semibold text-surface-500 uppercase tracking-widest mt-0.5 block">Per Session</span>
+                                                                                                <span className={`font-semibold text-xl sm:text-2xl leading-none block ${!isAvailable ? 'text-surface-400' : 'text-surface-900'}`}>
+                                                                                                    ₹{bookingDuration === 30 ? (advisor.halfSessionPrice || (Number(advisor.price) <= 899 ? 499 : Number(advisor.price) >= 1200 ? 699 : Math.round(Number(advisor.price) * 0.5))) : (advisor.price || 899)}
+                                                                                                </span>
+                                                                                                <span className="text-[10px] font-semibold text-surface-500 uppercase tracking-widest mt-0.5 block">
+                                                                                                    {bookingDuration === 30 ? '30-Min Session' : '1-Hour Session'}
+                                                                                                </span>
                                                                                             </div>
                                                                                             {isAvailable ? (
                                                                                                 <div className="px-4 py-2 bg-surface-50 text-[#0f172a] text-xs font-semibold uppercase tracking-wider rounded-lg border border-surface-200 group-hover:bg-[#0f172a] group-hover:text-white group-hover:border-[#0f172a] transition-all duration-300 flex items-center gap-1.5 shadow-xs">

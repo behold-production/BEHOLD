@@ -8,6 +8,7 @@ const sessionSchema = new mongoose.Schema(
     counsellorId: { type: String, required: true },
     date: { type: String, required: true },
     time: { type: String, required: true },
+    duration: { type: String, default: '1 Hour (60 Mins)' },
     mode: { type: String, required: true },
     meetLink: { type: String, default: '' },
     status: { type: String, default: 'PENDING' },

@@ -167,6 +167,9 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.text(`Consultant Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
     doc.text(`Session Schedule: ${formatDateString(bookingDetails.date)} at ${bookingDetails.time}`, 20, 98);
     doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
+    if (bookingDetails.duration) {
+      doc.text(`Duration: ${bookingDetails.duration}`, 120, 104);
+    }
 
     // Divider Line
     doc.line(20, 110, 190, 110);
@@ -199,7 +202,8 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     const detailsNetTotal = bookingDetails.amount || 0;
 
     // 1. Base fee
-    doc.text(`${bookingDetails.service} Session Booking Fee`, 24, tableY);
+    const feeDesc = bookingDetails.duration ? `${bookingDetails.service} Session Fee (${bookingDetails.duration})` : `${bookingDetails.service} Session Booking Fee`;
+    doc.text(feeDesc, 24, tableY);
     doc.text(`Rs. ${detailsBaseFee.toFixed(2)}`, 160, tableY);
     tableY += 8;
 
@@ -305,10 +309,13 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
     const service = session.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
     const mode = session.mode === 'ONLINE' ? 'Video Call' : session.mode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
 
+    const duration = session.duration || '1 Hour (60 Mins)';
+
     const details = {
       id: session.appointmentId || session.id,
       service,
       mode,
+      duration,
       advisorName: session.advisorName || 'Advisor',
       advisorRole: session.advisorRole || (session.service === 'counselling' ? 'Consultant Psychologist' : 'Career Advisor'),
       date: session.date,
