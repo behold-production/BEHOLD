@@ -13,7 +13,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
   };
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || typeof document === 'undefined') return;
     document.body.classList.add('no-scroll');
     const handleEsc = (e) => {
       if (e.key === 'Escape') handleClose(e);
@@ -25,7 +25,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === 'undefined') return null;
 
   const handleConfirm = (e) => {
     if (e) e.stopPropagation?.();

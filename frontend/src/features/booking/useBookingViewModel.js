@@ -29,16 +29,18 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   let enablePsychology = true;
   let enableCareerMentoring = true;
-  try {
-    const stored = localStorage.getItem('behold_site_settings');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      enablePsychology = parsed.enablePsychology !== false;
-      enableCareerMentoring = parsed.enableCareerMentoring !== false;
-    }
-  } catch {}
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem('behold_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        enablePsychology = parsed.enablePsychology !== false;
+        enableCareerMentoring = parsed.enableCareerMentoring !== false;
+      }
+    } catch {}
+  }
 
-  const isRescheduleParam = !!(new URLSearchParams(window.location.search).get('reschedule'));
+  const isRescheduleParam = typeof window !== 'undefined' ? !!(new URLSearchParams(window.location.search).get('reschedule')) : false;
   
   const getLocalTodayString = () => {
     const today = new Date();
@@ -49,38 +51,44 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   };
 
   const [bookingService, setBookingService] = useState(() => {
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft.bookingService) return draft.bookingService;
-      }
-      const queryParams = new URLSearchParams(window.location.search);
-      const urlService = queryParams.get('service') || queryParams.get('type');
-      if (urlService === 'career' || urlService === 'counselling' || urlService === 'counseling') {
-        return urlService === 'counseling' ? 'counselling' : urlService;
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (draft.bookingService) return draft.bookingService;
+        }
+        const queryParams = new URLSearchParams(window.location.search);
+        const urlService = queryParams.get('service') || queryParams.get('type');
+        if (urlService === 'career' || urlService === 'counselling' || urlService === 'counseling') {
+          return urlService === 'counseling' ? 'counselling' : urlService;
+        }
+      } catch {}
+    }
     return 'counselling';
   }); // counselling, career
   const [bookingMode, setBookingMode] = useState(() => {
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft.bookingMode) return draft.bookingMode;
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (draft.bookingMode) return draft.bookingMode;
+        }
+      } catch {}
+    }
     return 'ONLINE';
   }); // ONLINE, DOOR_STEP, OFFLINE
   const [bookingDuration, setBookingDuration] = useState(() => {
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft.bookingDuration) return draft.bookingDuration;
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (draft.bookingDuration) return draft.bookingDuration;
+        }
+      } catch {}
+    }
     return 60; // 30 mins or 60 mins (default 60)
   });
   const [bookingForm, setBookingForm] = useState(() => {
@@ -97,38 +105,45 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       clientLatitude: '',
       clientLongitude: ''
     };
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft.bookingForm) return { ...defaultForm, ...draft.bookingForm };
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (draft.bookingForm) return { ...defaultForm, ...draft.bookingForm };
+        }
+      } catch {}
+    }
     return defaultForm;
   });
   const [selectedDate, setSelectedDate] = useState(() => {
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft.selectedDate) return draft.selectedDate;
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (draft.selectedDate) return draft.selectedDate;
+        }
+      } catch {}
+    }
     return '';
   });
   const [selectedTime, setSelectedTime] = useState(() => {
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft.selectedTime) return draft.selectedTime;
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (draft.selectedTime) return draft.selectedTime;
+        }
+      } catch {}
+    }
     return '';
   });
 
   // Auto-fallback booking mode if selected mode is disabled
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     let settings = {};
     try {
       const stored = localStorage.getItem('behold_site_settings');
@@ -155,13 +170,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   }, [bookingMode]);
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
   const [advisorConfirmed, setAdvisorConfirmed] = useState(() => {
-    try {
-      const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (typeof draft.advisorConfirmed === 'boolean') return draft.advisorConfirmed;
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw);
+          if (typeof draft.advisorConfirmed === 'boolean') return draft.advisorConfirmed;
+        }
+      } catch {}
+    }
     return false;
   });
   const [advisors, setAdvisors] = useState([]);

@@ -161,6 +161,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   const formatTimer = (s) => `0:${String(s).padStart(2, '0')}`;
   const canResend = resendTimer === 0 && !isResending;
 
+  if (!isOpen || typeof document === 'undefined') return null;
+
   return createPortal(
     <>
       <div className="fixed inset-0 z-[120] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={onClose} aria-hidden="true" />

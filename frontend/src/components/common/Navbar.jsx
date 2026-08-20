@@ -295,8 +295,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
         );
       })()}
 
-      {/* Mobile Sidebar Overlay & LEFT-SIDE Drawer Portal */}
-      {createPortal(
+      {/* Mobile Slide-out Menu via Portal */}
+      {typeof document !== 'undefined' && mobileMenuOpen && createPortal(
         <div
           className={`fixed inset-0 z-[100] lg:hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'

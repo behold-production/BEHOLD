@@ -94,6 +94,8 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
     }
   };
 
+  if (!isOpen || typeof document === 'undefined') return null;
+
   return createPortal(
     <>
       {/* Backdrop */}
