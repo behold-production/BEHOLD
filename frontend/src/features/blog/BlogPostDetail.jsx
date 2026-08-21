@@ -74,7 +74,7 @@ const BlogPostDetail = () => {
   const bgLayer = (
     <div className="absolute inset-0 z-0 pointer-events-none">
       <img
-        src={greenTexture}
+        src={greenTexture?.src || greenTexture}
         alt=""
         className="w-full h-full object-cover object-center opacity-45 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
       />
@@ -118,14 +118,14 @@ const BlogPostDetail = () => {
     "@type": "BlogPosting",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": typeof window !== 'undefined' ? window.location.href : ""
+      "@id": typeof window !== 'undefined' ? window.location.href : `https://www.behold.co.in/blog/${post.slug}`
     },
     "headline": post.title,
     "image": [
-      post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage
+      post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage || "https://www.behold.co.in/og-image.png")
     ],
-    "datePublished": new Date(post.createdAt || post.date).toISOString(),
-    "dateModified": new Date(post.updatedAt || post.createdAt || post.date).toISOString(),
+    "datePublished": new Date(post.createdAt || post.date || Date.now()).toISOString(),
+    "dateModified": new Date(post.updatedAt || post.createdAt || post.date || Date.now()).toISOString(),
     "author": {
       "@type": "Person",
       "name": post.author?.name || post.authorName || 'BEHOLD. Editor'
@@ -135,7 +135,7 @@ const BlogPostDetail = () => {
       "name": "BEHOLD.",
       "logo": {
         "@type": "ImageObject",
-        "url": typeof window !== 'undefined' ? window.location.origin + "/favicon.ico" : ""
+        "url": typeof window !== 'undefined' ? window.location.origin + "/favicon.png" : "https://www.behold.co.in/favicon.png"
       }
     }
   };
@@ -261,9 +261,9 @@ const BlogPostDetail = () => {
           {/* Cover Image */}
           <div className="mb-12 rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-slate-950 relative group flex items-center justify-center">
             <img
-              src={post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage}
+              src={post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage)}
               alt={post.title}
-              onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage; }}
+              onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage?.src || defaultBlogImage; }}
               className="w-full h-auto max-h-[500px] object-cover group-hover:scale-105 transition-transform duration-700"
             />
           </div>

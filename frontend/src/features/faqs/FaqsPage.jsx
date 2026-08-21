@@ -115,7 +115,7 @@ export default function FaqsPage() {
         {/* Background Accent Image */}
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <img
-            src={shadeGreenBg}
+            src={shadeGreenBg?.src || shadeGreenBg}
             alt=""
             className="w-full h-full object-cover object-center [mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)]"
           />

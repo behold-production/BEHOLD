@@ -4,6 +4,7 @@ const Counsellor = require('../models/Counsellor');
 const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const EmailService = require('../services/emailService');
+const WhatsAppService = require('../services/whatsappService');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const cacheHelper = require('../utils/cacheHelper');
 
@@ -1975,6 +1976,11 @@ If you have questions or would like to reapply with updated information, please 
       if (appointment.refundStatus !== 'PENDING') {
         return res.status(400).json({ success: false, message: 'Refund is not in PENDING status' });
       }
+
+      const updated = await StorageService.update('appointments', id, {
+        refundStatus: 'REJECTED',
+        refundProcessedAt: new Date()
+      });
 
       res.status(200).json({ success: true, message: 'Refund request rejected successfully', data: updated });
     } catch (error) {

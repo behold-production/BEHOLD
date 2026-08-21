@@ -1,7 +1,8 @@
 'use client';
 
-import { useRouter, usePathname, useSearchParams as useNextSearchParams, useParams as useNextParams } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
+import { useRouter, usePathname, useParams as useNextParams } from 'next/navigation';
+import { useCallback, useMemo, useEffect, useState, forwardRef } from 'react';
+import NextLink from 'next/link';
 
 export function useNavigate() {
   const router = useRouter();
@@ -24,53 +25,85 @@ export function useNavigate() {
 
 export function useLocation() {
   const pathname = usePathname() || '/';
-  let search = '';
-  try {
-    const searchParams = useNextSearchParams();
-    search = searchParams ? `?${searchParams.toString()}` : '';
-  } catch {}
+  const [search, setSearch] = useState('');
+  const [hash, setHash] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setSearch(window.location.search || '');
+      setHash(window.location.hash || '');
+    }
+  }, [pathname]);
 
   return useMemo(() => ({
     pathname,
-    search: search === '?' ? '' : search,
-    hash: typeof window !== 'undefined' ? window.location.hash : '',
+    search: typeof window !== 'undefined' ? window.location.search : search,
+    hash: typeof window !== 'undefined' ? window.location.hash : hash,
     state: null
-  }), [pathname, search]);
+  }), [pathname, search, hash]);
 }
 
 export function useParams() {
-  try {
-    const params = useNextParams();
-    return params || {};
-  } catch {
-    return {};
-  }
+  const params = useNextParams();
+  return params || {};
 }
 
 export function useSearchParams() {
   const router = useRouter();
   const pathname = usePathname();
-  let searchParams = null;
-  try {
-    searchParams = useNextSearchParams();
-  } catch {}
+  const [searchParams, setSearchParamsState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return new URLSearchParams(window.location.search);
+    }
+    return new URLSearchParams();
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setSearchParamsState(new URLSearchParams(window.location.search));
+    }
+  }, [pathname]);
 
   const setSearchParams = useCallback((newParams) => {
     const params = new URLSearchParams(newParams);
     router.push(`${pathname}?${params.toString()}`);
   }, [router, pathname]);
 
-  return [searchParams || new URLSearchParams(), setSearchParams];
+  return [searchParams, setSearchParams];
 }
 
 export function Navigate({ to, replace = true }) {
   const router = useRouter();
-  if (typeof window !== 'undefined' && to) {
-    if (replace) router.replace(to);
-    else router.push(to);
-  }
+  useEffect(() => {
+    if (to) {
+      if (replace) router.replace(to);
+      else router.push(to);
+    }
+  }, [router, to, replace]);
   return null;
 }
+
+export const Link = forwardRef(function Link({ to, href, children, ...props }, ref) {
+  const target = to || href || '#';
+  return (
+    <NextLink ref={ref} href={target} {...props}>
+      {children}
+    </NextLink>
+  );
+});
+
+export const NavLink = forwardRef(function NavLink({ to, href, className, children, ...props }, ref) {
+  const pathname = usePathname();
+  const target = to || href || '#';
+  const isActive = pathname === target;
+  const computedClassName = typeof className === 'function' ? className({ isActive }) : className;
+
+  return (
+    <NextLink ref={ref} href={target} className={computedClassName} {...props}>
+      {children}
+    </NextLink>
+  );
+});
 
 export function Routes({ children }) {
   return <>{children}</>;
@@ -79,3 +112,4 @@ export function Routes({ children }) {
 export function Route({ element }) {
   return element || null;
 }
+

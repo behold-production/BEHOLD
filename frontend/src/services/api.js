@@ -1,6 +1,30 @@
 import toast from 'react-hot-toast';
 
-let envUrl = import.meta.env.VITE_API_URL || '/api'; //
+const safeStorage = {
+  getItem: (key) => {
+    if (typeof window === 'undefined') return null;
+    try { return localStorage.getItem(key); } catch { return null; }
+  },
+  setItem: (key, value) => {
+    if (typeof window === 'undefined') return;
+    try { localStorage.setItem(key, value); } catch {}
+  },
+  removeItem: (key) => {
+    if (typeof window === 'undefined') return;
+    try { localStorage.removeItem(key); } catch {}
+  }
+};
+
+const triggerStorageEvent = () => {
+  if (typeof window !== 'undefined') {
+    try { window.dispatchEvent(new Event('storage')); } catch {}
+  }
+};
+
+let envUrl = (typeof process !== 'undefined' && (process.env.NEXT_PUBLIC_API_URL || process.env.VITE_API_URL)) ||
+  (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_API_URL || import.meta.env.NEXT_PUBLIC_API_URL)) ||
+  '/api';
+
 if (envUrl && !envUrl.endsWith('/api') && envUrl !== '/api') {
   // Trim trailing slash before appending /api
   envUrl = envUrl.endsWith('/') ? `${envUrl}api` : `${envUrl}/api`;
@@ -10,7 +34,7 @@ let isRefreshing = false;
 let refreshSubscribers = [];
 
 function subscribeTokenRefresh(cb) {
-  refreshSubscribers.push(cb); //
+  refreshSubscribers.push(cb);
 }
 
 function onRefreshed(token) {
@@ -19,8 +43,8 @@ function onRefreshed(token) {
 }
 
 async function executeRequest(endpoint, options = {}) {
-  const token = localStorage.getItem('behold_token');
-  const headers = { //
+  const token = safeStorage.getItem('behold_token');
+  const headers = {
     'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...(options.headers || {})
@@ -32,19 +56,19 @@ async function executeRequest(endpoint, options = {}) {
 
   let response;
   try {
-    response = await fetch(`${BASE_URL}${endpoint}`, { //
+    response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
       headers
     });
   } catch (err) {
     const errorMsg = 'Network error occurred. Please verify your connection.';
-    toast.error(errorMsg, { id: 'network-error' });
+    if (typeof window !== 'undefined') toast.error(errorMsg, { id: 'network-error' });
     throw new Error(errorMsg, { cause: err });
   }
 
   const text = await response.text();
   let data;
-  try { //
+  try {
     data = text ? JSON.parse(text) : {};
   } catch (err) {
     if (response.ok) {
@@ -55,7 +79,8 @@ async function executeRequest(endpoint, options = {}) {
         fallbackMsg = `Resource non-existent or endpoint not found (${endpoint}).`;
       } else if (response.status === 405) {
         fallbackMsg = 'Method Not Allowed. Please verify API url and endpoint configuration.';
-      } else if (response.status === 500) {        fallbackMsg = 'Server internal error. Please check server logs and environment configuration.';
+      } else if (response.status === 500) {
+        fallbackMsg = 'Server internal error. Please check server logs and environment configuration.';
       } else if (response.status === 502 || response.status === 504) {
         fallbackMsg = 'Server gateway timeout or unavailable. Please try again later.';
       } else if (response.status === 503) {
@@ -69,26 +94,30 @@ async function executeRequest(endpoint, options = {}) {
   }
 
   // Handle expired/missing token transparently
-  if (response.status === 401) { //
+  if (response.status === 401) {
     if (data.message === 'Access Denied: No Token Provided') {
-      localStorage.removeItem('behold_token');
-      localStorage.removeItem('behold_refresh_token');
-      localStorage.removeItem('behold_auth_user');
-      window.dispatchEvent(new Event('storage'));
-      if (window.spaNavigate) window.spaNavigate('/');
+      safeStorage.removeItem('behold_token');
+      safeStorage.removeItem('behold_refresh_token');
+      safeStorage.removeItem('behold_auth_user');
+      if (typeof window !== 'undefined') {
+        triggerStorageEvent();
+        if (window.spaNavigate) window.spaNavigate('/');
+      }
       throw new Error('Access Denied: No Token Provided');
     }
 
     if (data.message === 'Access Token Expired') {
-      const refreshToken = localStorage.getItem('behold_refresh_token');
+      const refreshToken = safeStorage.getItem('behold_refresh_token');
       if (!refreshToken) {
         // Clear token, user must login
-        localStorage.removeItem('behold_token');
-        localStorage.removeItem('behold_refresh_token');
-        localStorage.removeItem('behold_auth_user');
-        window.dispatchEvent(new Event('storage'));
-        if (window.spaNavigate) window.spaNavigate('/');
-        toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+        safeStorage.removeItem('behold_token');
+        safeStorage.removeItem('behold_refresh_token');
+        safeStorage.removeItem('behold_auth_user');
+        if (typeof window !== 'undefined') {
+          triggerStorageEvent();
+          if (window.spaNavigate) window.spaNavigate('/');
+          toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+        }
         throw new Error('Session expired. Please log in again.');
       }
 
@@ -106,30 +135,34 @@ async function executeRequest(endpoint, options = {}) {
             refreshResult = refreshText ? JSON.parse(refreshText) : {};
           } catch (e) {}
           if (refreshResult.success && refreshResult.data && refreshResult.data.accessToken) {
-            localStorage.setItem('behold_token', refreshResult.data.accessToken);
+            safeStorage.setItem('behold_token', refreshResult.data.accessToken);
             if (refreshResult.data.refreshToken) {
-              localStorage.setItem('behold_refresh_token', refreshResult.data.refreshToken);
+              safeStorage.setItem('behold_refresh_token', refreshResult.data.refreshToken);
             }
             isRefreshing = false;
             onRefreshed(refreshResult.data.accessToken);
           } else {
             isRefreshing = false;
-            localStorage.removeItem('behold_token');
-            localStorage.removeItem('behold_refresh_token');
-            localStorage.removeItem('behold_auth_user');
-            window.dispatchEvent(new Event('storage'));
-            if (window.spaNavigate) window.spaNavigate('/');
-            toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+            safeStorage.removeItem('behold_token');
+            safeStorage.removeItem('behold_refresh_token');
+            safeStorage.removeItem('behold_auth_user');
+            if (typeof window !== 'undefined') {
+              triggerStorageEvent();
+              if (window.spaNavigate) window.spaNavigate('/');
+              toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+            }
             throw new Error('Session expired. Please log in again.');
           }
         } catch (err) {
           isRefreshing = false;
-          localStorage.removeItem('behold_token');
-          localStorage.removeItem('behold_refresh_token');
-          localStorage.removeItem('behold_auth_user');
-          window.dispatchEvent(new Event('storage'));
-          if (window.spaNavigate) window.spaNavigate('/');
-          toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+          safeStorage.removeItem('behold_token');
+          safeStorage.removeItem('behold_refresh_token');
+          safeStorage.removeItem('behold_auth_user');
+          if (typeof window !== 'undefined') {
+            triggerStorageEvent();
+            if (window.spaNavigate) window.spaNavigate('/');
+            toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+          }
           throw err;
         }
       }
@@ -312,10 +345,10 @@ const ApiService = {
       body: JSON.stringify({ email: cleanEmail, password, portal })
     });
     if (res.success && res.data && res.data.accessToken) {
-      localStorage.setItem('behold_token', res.data.accessToken);
-      localStorage.setItem('behold_refresh_token', res.data.refreshToken);
-      localStorage.setItem('behold_auth_user', JSON.stringify(res.data.user));
-      window.dispatchEvent(new Event('storage'));
+      safeStorage.setItem('behold_token', res.data.accessToken);
+      safeStorage.setItem('behold_refresh_token', res.data.refreshToken);
+      safeStorage.setItem('behold_auth_user', JSON.stringify(res.data.user));
+      triggerStorageEvent();
     }
     return res;
   },
@@ -328,20 +361,20 @@ const ApiService = {
       body: JSON.stringify({ name, email: cleanEmail, password, ...extra })
     });
     if (res.success && res.data && res.data.accessToken) {
-      localStorage.setItem('behold_token', res.data.accessToken);
-      localStorage.setItem('behold_refresh_token', res.data.refreshToken);
+      safeStorage.setItem('behold_token', res.data.accessToken);
+      safeStorage.setItem('behold_refresh_token', res.data.refreshToken);
       // Log in automatically if registration succeeded
-      localStorage.setItem('behold_auth_user', JSON.stringify(res.data.user || res.data.counsellor));
-      window.dispatchEvent(new Event('storage'));
+      safeStorage.setItem('behold_auth_user', JSON.stringify(res.data.user || res.data.counsellor));
+      triggerStorageEvent();
     }
     return res;
   },
 
   logout() {
-    localStorage.removeItem('behold_token'); //
-    localStorage.removeItem('behold_refresh_token');
-    localStorage.removeItem('behold_auth_user');
-    window.dispatchEvent(new Event('storage'));
+    safeStorage.removeItem('behold_token'); //
+    safeStorage.removeItem('behold_refresh_token');
+    safeStorage.removeItem('behold_auth_user');
+    triggerStorageEvent();
   },
 
   async forgotPassword(email) {
@@ -373,10 +406,10 @@ const ApiService = {
     });
     // If it was a login flow, update session
     if (isLogin && res.success && res.data && res.data.accessToken) {
-      localStorage.setItem('behold_token', res.data.accessToken);
-      localStorage.setItem('behold_refresh_token', res.data.refreshToken);
-      localStorage.setItem('behold_auth_user', JSON.stringify(res.data.user));
-      window.dispatchEvent(new Event('storage'));
+      safeStorage.setItem('behold_token', res.data.accessToken);
+      safeStorage.setItem('behold_refresh_token', res.data.refreshToken);
+      safeStorage.setItem('behold_auth_user', JSON.stringify(res.data.user));
+      triggerStorageEvent();
     }
     return res;
   },
@@ -392,13 +425,13 @@ const ApiService = {
       body: JSON.stringify(profileData)
     });
     if (res.success && res.data) {
-      localStorage.setItem('behold_student_profile', JSON.stringify(res.data));
+      safeStorage.setItem('behold_student_profile', JSON.stringify(res.data));
       // Sync auth user session
       try {
-        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const authUser = JSON.parse(safeStorage.getItem('behold_auth_user') || '{}');
         const updatedUser = { ...authUser, ...res.data };
-        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
-        window.dispatchEvent(new Event('storage'));
+        safeStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        triggerStorageEvent();
       } catch (e) { }
     }
     return res;
@@ -431,7 +464,7 @@ const ApiService = {
           if (res && res.success) {
             this._counsellorsCache = res;
             this._counsellorsCacheTime = Date.now();
-            try { localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
+            try { safeStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
           }
         }).catch(() => {});
         return this._counsellorsCache;
@@ -440,7 +473,7 @@ const ApiService = {
       if (res && res.success) {
         this._counsellorsCache = res;
         this._counsellorsCacheTime = Date.now();
-        try { localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
+        try { safeStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
       }
       return res;
     }
@@ -748,10 +781,10 @@ const ApiService = {
     if (res.success && res.data) {
       // Sync auth user session
       try {
-        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const authUser = JSON.parse(safeStorage.getItem('behold_auth_user') || '{}');
         const updatedUser = { ...authUser, ...res.data };
-        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
-        window.dispatchEvent(new Event('storage'));
+        safeStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        triggerStorageEvent();
       } catch (e) { }
     }
     return res;
@@ -977,10 +1010,10 @@ const ApiService = {
     });
     if (res.success && res.data) {
       try {
-        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const authUser = JSON.parse(safeStorage.getItem('behold_auth_user') || '{}');
         const updatedUser = { ...authUser, ...res.data };
-        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
-        window.dispatchEvent(new Event('storage'));
+        safeStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        triggerStorageEvent();
       } catch (e) { }
     }
     return res;
@@ -992,10 +1025,10 @@ const ApiService = {
     });
     if (res.success && res.data) {
       try {
-        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const authUser = JSON.parse(safeStorage.getItem('behold_auth_user') || '{}');
         const updatedUser = { ...authUser, ...res.data };
-        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
-        window.dispatchEvent(new Event('storage'));
+        safeStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        triggerStorageEvent();
       } catch (e) { }
     }
     return res;
@@ -1028,10 +1061,10 @@ const ApiService = {
     });
     if (res.success && res.data) {
       try {
-        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const authUser = JSON.parse(safeStorage.getItem('behold_auth_user') || '{}');
         const updatedUser = { ...authUser, ...res.data };
-        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
-        window.dispatchEvent(new Event('storage'));
+        safeStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        triggerStorageEvent();
       } catch (e) { }
     }
     return res;
@@ -1044,10 +1077,10 @@ const ApiService = {
     });
     if (res.success && res.data) {
       try {
-        const authUser = JSON.parse(localStorage.getItem('behold_auth_user') || '{}');
+        const authUser = JSON.parse(safeStorage.getItem('behold_auth_user') || '{}');
         const updatedUser = { ...authUser, ...res.data };
-        localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
-        window.dispatchEvent(new Event('storage'));
+        safeStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        triggerStorageEvent();
       } catch (e) { }
     }
     return res;

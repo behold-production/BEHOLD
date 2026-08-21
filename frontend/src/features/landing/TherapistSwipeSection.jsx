@@ -361,7 +361,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       {/* Background Image with smooth mask-image fade (no hard cutout lines) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
-          src={shadeGreenBg}
+          src={shadeGreenBg?.src || shadeGreenBg}
           alt=""
           className="w-full h-full object-cover object-center opacity-55 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
         />

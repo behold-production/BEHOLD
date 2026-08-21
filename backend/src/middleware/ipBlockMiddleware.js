@@ -3,6 +3,7 @@
  * Checks each incoming request's IP against the blockedIps list in Settings.
  * Uses a short in-memory cache (30 s) to avoid hitting the database on every request.
  */
+const mongoose = require('mongoose');
 const Setting = require('../models/Setting');
 
 let _cachedBlockedIps = [];
@@ -10,6 +11,7 @@ let _lastFetched = 0;
 const CACHE_TTL_MS = 30_000; // 30 seconds
 
 async function refreshCache() {
+  if (mongoose.connection.readyState !== 1) return;
   try {
     const settings = await Setting.findOne({ id: 'global' }).lean();
     _cachedBlockedIps = settings?.blockedIps ?? [];

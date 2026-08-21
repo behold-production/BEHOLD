@@ -43,6 +43,9 @@ app.use(
 
 // ─── Database Connection Middleware for Serverless / Cold Starts ───────────
 app.use(async (req, res, next) => {
+  if (req.path === '/api/health' || req.path === '/health') {
+    return next();
+  }
   try {
     await connectDB();
     next();
@@ -139,14 +142,18 @@ if (!fs.existsSync(uploadsDir)) {
 }
 app.use('/uploads', express.static(uploadsDir));
 
+const mongoose = require('mongoose');
+
 // ─── Health Check ─────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   res.status(200).json({
     success: true,
     message: 'Behold Backend API is running and healthy',
     data: {
       uptime: process.uptime(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      database: dbStatus
     }
   });
 });

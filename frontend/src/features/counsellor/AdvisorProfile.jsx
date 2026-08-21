@@ -172,7 +172,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           "@type": "Physician",
           "name": advisor.name,
           "description": advisor.about,
-          "image": advisor.profilePic || "https://www.behold.co.in/favicon.svg",
+          "image": advisor.profilePic || "https://www.behold.co.in/favicon.png",
           "medicalSpecialty": "Psychiatric",
           "priceRange": `₹${advisor.price}`,
           "aggregateRating": {

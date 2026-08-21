@@ -158,9 +158,9 @@ const BlogSection = () => {  const navigate = useNavigate();
               {/* Cover Image Container */}
               <div className="relative h-56 w-full overflow-hidden bg-surface-100 shrink-0">
                 <img
-                  src={post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage}
+                  src={post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage)}
                   alt={post.title}
-                  onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage; }}
+                  onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage?.src || defaultBlogImage; }}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/50 to-transparent opacity-50 group-hover:opacity-30 transition-opacity duration-300" />

@@ -1,11 +1,11 @@
 import React from 'react';
 import luxuryClinicRoom from '../../assets/luxury_clinic_room.png';
 import greyGreenBg from '../../assets/greygreen.png';
-import { ArrowRight, ShieldCheck, Award, Users, Heart } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Award, Users, Heart, Sparkles, GraduationCap, BrainCircuit, Compass } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 
 export default function About({ enablePsychology = true, enableCareerMentoring = true, siteSettings }) {
-  const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const settings = siteSettings || (typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('behold_site_settings') || '{}') : {});
 
   const stats = [
     {
@@ -37,7 +37,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
         {/* Background Image Layer with mask gradient fade */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <img
-            src={greyGreenBg}
+            src={greyGreenBg?.src || greyGreenBg}
             alt=""
             className="w-full h-full object-cover object-center opacity-60 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
           />
@@ -48,45 +48,60 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           {/* Bento Box Main Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-6 items-stretch">
             
-            {/* Cell 1: Intro Text (lg:col-span-5) */}
-            <div className="md:col-span-2 lg:col-span-5 bg-white/70 backdrop-blur-xl border border-white/80 p-8 lg:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-center reveal-on-scroll reveal-scale-in hover-scale-card">
-              <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
-                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
-                At BEHOLD
-                <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
-              </span>
-              <h2 className="text-[var(--text-4xl)] font-sans font-semibold text-slate-900 tracking-tight leading-[1.05] mb-5">
-                BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.6)]">.</span>
-              </h2>
-              <p className="text-[var(--text-base)] text-slate-600 leading-relaxed font-medium">
-                {settings.aboutSectionDesc || "We believe psychological care and career mentorship is more than just counseling — it's about creating mental clarity that inspires, functions beautifully, and reflects the true potential of every individual."}
-              </p>
+            {/* Cell 1: Mission (lg:col-span-7) */}
+            <div className="lg:col-span-7 bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-10 border border-slate-200/80 shadow-md flex flex-col justify-between relative overflow-hidden reveal-on-scroll reveal-scale-in">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="relative z-10">
+                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
+                  <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+                  Our Purpose
+                </span>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-slate-900 tracking-tight leading-tight font-serif">
+                  {settings.aboutSectionTitle || 'Mental Wellbeing Begins With Feeling Understood.'}
+                </h3>
+                <p className="mt-4 text-sm sm:text-base text-slate-600 font-normal leading-relaxed">
+                  {settings.aboutSectionDesc || "We believe psychological care and career mentorship is more than just counseling — it's about creating mental clarity that inspires, functions beautifully, and reflects the true potential of every individual."}
+                </p>
+              </div>
+              <div className="mt-6 sm:mt-8 pt-6 border-t border-slate-100 flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 text-xs font-medium text-slate-700">
+                  <Sparkles className="w-3.5 h-3.5 text-[#00a8b5]" /> Evidence-Based Therapy
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 text-xs font-medium text-slate-700">
+                  <GraduationCap className="w-3.5 h-3.5 text-[#00a8b5]" /> CDAT Career Mentorship
+                </span>
+              </div>
             </div>
 
-            {/* Cell 2: Stat 1 (lg:col-span-3) */}
-            <div className="md:col-span-1 lg:col-span-3 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover-scale-card transition-all duration-300 reveal-on-scroll reveal-scale-in reveal-delay-1">
-              <Award className="w-6 h-6 text-[#00c9d6] mb-4 group-hover:scale-110 transition-transform" />
-              <div>
-                <span className="block text-4xl sm:text-5xl font-semibold text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+            {/* Cell 2: Primary Stat (lg:col-span-5) */}
+            <div className="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-6 sm:p-10 border border-slate-800 shadow-xl flex flex-col justify-between text-white relative overflow-hidden reveal-on-scroll reveal-scale-in reveal-delay-1">
+              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#00c9d6]/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center mb-6">
+                  <BrainCircuit className="w-6 h-6 text-[#00c9d6]" />
+                </div>
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-white font-sans">
                   {stats[0].value}
-                </span>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+                </div>
+                <p className="mt-2 text-sm sm:text-base text-slate-300 font-medium leading-relaxed">
                   {stats[0].label}
                 </p>
               </div>
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <p className="text-xs text-slate-400">Validated through clinical outcomes &amp; student career achievements.</p>
+              </div>
             </div>
 
-            {/* Cell 3: Stat 2 (lg:col-span-4) */}
-            <div className="md:col-span-1 lg:col-span-4 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover-scale-card transition-all duration-300 relative overflow-hidden reveal-on-scroll reveal-scale-in reveal-delay-2">
-              <div className="absolute top-0 right-0 p-8 opacity-5">
-                <Users className="w-32 h-32" />
-              </div>
-              <Users className="w-6 h-6 text-[#00c9d6] mb-4 relative z-10 group-hover:scale-110 transition-transform" />
+            {/* Cell 3: Secondary Stat (lg:col-span-7) */}
+            <div className="lg:col-span-7 bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-10 border border-slate-200/80 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden reveal-on-scroll reveal-scale-in reveal-delay-2">
               <div className="relative z-10">
-                <span className="block text-4xl sm:text-5xl font-semibold text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/60 flex items-center justify-center mb-3">
+                  <Compass className="w-5 h-5 text-[#00a8b5]" />
+                </div>
+                <div className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight font-sans">
                   {stats[1].value}
-                </span>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed max-w-[200px]">
+                </div>
+                <p className="mt-1 text-sm text-slate-600 font-medium">
                   {stats[1].label}
                 </p>
               </div>
@@ -95,7 +110,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             {/* Cell 4: Image (lg:col-span-5) */}
             <div className="md:col-span-2 lg:col-span-5 h-72 sm:h-80 lg:h-auto rounded-[2.5rem] overflow-hidden bg-slate-900 shadow-xl relative group hover-scale-card reveal-on-scroll reveal-scale-in reveal-delay-3">
               <img
-                src={luxuryClinicRoom}
+                src={luxuryClinicRoom?.src || luxuryClinicRoom}
                 alt="BEHOLD Mentorship & Psychological Care"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
               />

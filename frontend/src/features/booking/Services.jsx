@@ -82,13 +82,13 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
       <SEO 
         title="Services & Appointments" 
         description="Book a session for Psychological Counselling, Career Mentoring, or C-DAT Aptitude tests." 
-        canonicalUrl={window.location.origin + "/booking"}
+        canonicalUrl={typeof window !== 'undefined' ? window.location.origin + "/booking" : "https://www.behold.co.in/booking"}
       />
       <section id="services" className="py-24 bg-transparent relative overflow-hidden text-slate-900 reveal-on-scroll">
       {/* Background Image Layer with smooth mask gradient fade */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
-          src={greyGreenBg}
+          src={greyGreenBg?.src || greyGreenBg}
           alt=""
           className="w-full h-full object-cover object-center opacity-40 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
         />

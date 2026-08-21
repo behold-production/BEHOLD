@@ -22,7 +22,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
 
               {/* Background Image with Dark Luxury Opacity Overlay */}
               <img
-                src={siteSettings?.whyChooseUsImage || siteSettings?.servicesFirstCardImage || luxuryClinicRoom}
+                src={siteSettings?.whyChooseUsImage || siteSettings?.servicesFirstCardImage || (luxuryClinicRoom?.src || luxuryClinicRoom)}
                 alt="Behold Mentorship & Psychological Care"
                 className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-110"
               />

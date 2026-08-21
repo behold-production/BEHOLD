@@ -108,7 +108,7 @@ const BlogList = () => {
         {/* Background */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <img
-            src={greenTexture}
+            src={greenTexture?.src || greenTexture}
             alt=""
             className="w-full h-full object-cover object-center opacity-40 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
           />
@@ -228,9 +228,9 @@ const BlogList = () => {
                       {/* Cover Image */}
                       <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 shrink-0">
                         <img
-                          src={post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage}
+                          src={post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage)}
                           alt={post.title}
-                          onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage; }}
+                          onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage?.src || defaultBlogImage; }}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent" />

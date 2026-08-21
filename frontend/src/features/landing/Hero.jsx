@@ -73,7 +73,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
         <div className="absolute w-[45rem] h-[45rem] bg-[#00c9d6]/20 rounded-full blur-[140px] animate-hero-pulse pointer-events-none" />
 
         <img
-          src={settings.heroBgImage || headerBg}
+          src={settings.heroBgImage || headerBg?.src || headerBg}
           alt="Hero Background"
           className="w-full h-full object-cover object-center opacity-95 animate-hero-float pointer-events-none"
         />

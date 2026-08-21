@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "outputDirectory": "frontend/dist",
   "functions": {
     "api/index.js": {
       "maxDuration": 30
@@ -14,10 +13,6 @@
     {
       "source": "/uploads/(.*)",
       "destination": "/api/index.js"
-    },
-    {
-      "source": "/((?!api/|uploads/|assets/).*)",
-      "destination": "/index.html"
     }
   ]
 }

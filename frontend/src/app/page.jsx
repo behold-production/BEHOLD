@@ -27,7 +27,9 @@ export default function HomePage() {
         const res = await ApiService.getPublicSettings();
         if (res && res.success && res.data) {
           setSiteSettings(res.data);
-          localStorage.setItem('behold_site_settings', JSON.stringify(res.data));
+          if (typeof window !== 'undefined') {
+            try { localStorage.setItem('behold_site_settings', JSON.stringify(res.data)); } catch {}
+          }
         }
       } catch (err) {
         console.warn('Failed to fetch site settings', err);
@@ -48,13 +50,15 @@ export default function HomePage() {
     }
   };
 
+  const bgImageSrc = globalBgTexture?.src || globalBgTexture;
+
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between selection:bg-[#00c9d6] selection:text-slate-950 font-sans">
       {/* Background Texture */}
       <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none">
         <div
           className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none opacity-50"
-          style={{ backgroundImage: `url(${globalBgTexture})` }}
+          style={{ backgroundImage: `url(${bgImageSrc})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/5 to-transparent pointer-events-none" />
       </div>
