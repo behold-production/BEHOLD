@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Copy, Check, MessageCircle, BookOpen, Send, Sparkles, Tag } from 'lucide-react';
 import ApiService from '../../services/api';
@@ -14,6 +14,38 @@ const BlogPostDetail = () => {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [relatedBlogs, setRelatedBlogs] = useState([]);
+
+  const schema = useMemo(() => {
+    if (!post) return null;
+    const pubDate = post?.createdAt || post?.date || '2026-01-01T00:00:00.000Z';
+    const modDate = post?.updatedAt || post?.createdAt || post?.date || '2026-01-01T00:00:00.000Z';
+    return {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": typeof window !== 'undefined' ? window.location.href : `https://www.behold.co.in/blog/${post?.slug}`
+      },
+      "headline": post?.title,
+      "image": [
+        post?.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage || "https://www.behold.co.in/og-image.png")
+      ],
+      "datePublished": new Date(pubDate).toISOString(),
+      "dateModified": new Date(modDate).toISOString(),
+      "author": {
+        "@type": "Person",
+        "name": post?.author?.name || post?.authorName || 'BEHOLD. Editor'
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "BEHOLD.",
+        "logo": {
+          "@type": "ImageObject",
+          "url": typeof window !== 'undefined' ? window.location.origin + "/favicon.png" : "https://www.behold.co.in/favicon.png"
+        }
+      }
+    };
+  }, [post]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -112,33 +144,6 @@ const BlogPostDetail = () => {
       </>
     );
   }
-
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": typeof window !== 'undefined' ? window.location.href : `https://www.behold.co.in/blog/${post.slug}`
-    },
-    "headline": post.title,
-    "image": [
-      post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage || "https://www.behold.co.in/og-image.png")
-    ],
-    "datePublished": new Date(post.createdAt || post.date || Date.now()).toISOString(),
-    "dateModified": new Date(post.updatedAt || post.createdAt || post.date || Date.now()).toISOString(),
-    "author": {
-      "@type": "Person",
-      "name": post.author?.name || post.authorName || 'BEHOLD. Editor'
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "BEHOLD.",
-      "logo": {
-        "@type": "ImageObject",
-        "url": typeof window !== 'undefined' ? window.location.origin + "/favicon.png" : "https://www.behold.co.in/favicon.png"
-      }
-    }
-  };
 
   return (
     <>
