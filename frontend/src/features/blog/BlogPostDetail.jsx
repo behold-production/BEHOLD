@@ -100,7 +100,11 @@ const BlogPostDetail = () => {
   };
 
   const handleBack = () => {
-    navigate('/blog');
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/blog');
+    }
   };
 
   const bgLayer = (

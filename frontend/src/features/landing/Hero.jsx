@@ -65,7 +65,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
       />
       <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16 bg-transparent transition-opacity duration-500"
+      className="relative min-h-[calc(100svh-0px)] w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16 bg-transparent transition-opacity duration-500"
     >
       {/* Hero Background SVG/Image with Floating & Ambient Pulse Animations */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
@@ -84,24 +84,24 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 my-auto">
 
         {/* COLUMN: Typography & Action Button */}
-        <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-5 max-w-2xl mx-auto md:mx-0 transition-transform duration-500 animate-fade-scale">
+        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left gap-6 max-w-2xl mx-auto lg:mx-0 transition-transform duration-500 animate-fade-scale">
 
           {/* Main Title Block */}
-          <div className="relative leading-none flex flex-col items-center md:items-start group">
+          <div className="relative leading-none flex flex-col items-center lg:items-start group">
             {/* Line 1 - Slender, Elegant & Moderately Sized Headline */}
-            <h1 className="font-sans font-semibold text-slate-900 text-2xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-5xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
+            <h1 className="font-sans font-semibold text-slate-900 text-2xl xs:text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
               {eyebrowLine1}
             </h1>
 
-            {/* Accent Line 2 - Custom Cursive Font (Slightly bigger on screens < 768px) */}
+            {/* Accent Line 2 - Custom Cursive Font */}
             <div className="relative inline-block mt-2 sm:mt-4">
-              <span className="font-rough text-[#00c9d6] text-[80px] xs:text-[86px] sm:text-[92px] md:text-[88px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.92] drop-shadow-sm select-none animate-hero-pulse">
+              <span className="font-rough text-[#00c9d6] text-[80px] xs:text-[86px] sm:text-[92px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.92] drop-shadow-sm select-none animate-hero-pulse">
                 {displayTitle.toLowerCase()}
               </span>
 
-              {/* Turquoise Brush Underline Graphic with Subtle Pulse */}
+              {/* Turquoise Brush Underline Graphic */}
               <svg
-                className="absolute -bottom-2 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 w-3/5 h-4 sm:h-5 text-[#00c9d6]/80 pointer-events-none animate-pulse"
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 w-3/5 h-4 sm:h-5 text-[#00c9d6]/80 pointer-events-none animate-pulse transition-all duration-500"
                 viewBox="0 0 200 20"
                 fill="currentColor"
                 preserveAspectRatio="none"
@@ -111,13 +111,13 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             </div>
           </div>
 
-          {/* Subtitle Paragraph - Refined Compact Size */}
-          <p className="font-sans text-center md:text-left text-slate-600 text-[var(--text-base)] font-normal leading-relaxed max-w-lg animate-fade-scale delay-200">
+          {/* Subtitle Paragraph */}
+          <p className="font-sans text-center lg:text-left text-slate-600 text-[var(--text-base)] font-normal leading-relaxed max-w-lg animate-fade-scale delay-200">
             {subtitleText}
           </p>
 
           {/* Action Button */}
-          <div className="pt-2 flex justify-center md:justify-start w-full animate-fade-scale delay-300">
+          <div className="flex justify-center lg:justify-start w-full animate-fade-scale delay-300">
             <button
               onClick={handleConnectClick}
               className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base sm:text-lg font-bold px-8 py-2.5 rounded-2xl shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer"

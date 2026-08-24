@@ -344,9 +344,9 @@ export default function BookingManagementTab(props) {
 
   const uniqueBookingsMap = new Map();
   (bookingsDb || []).forEach(b => {
-    const key = (b.razorpayOrderId && b.razorpayOrderId.trim()) 
+    const key = b.id || b._id || ((b.razorpayOrderId && b.razorpayOrderId.trim()) 
       ? b.razorpayOrderId 
-      : `${b.advisorId || b.counsellorId || ''}_${b.date || ''}_${b.time || ''}`;
+      : `${b.advisorId || b.counsellorId || ''}_${b.date || ''}_${b.time || ''}`);
     if (!uniqueBookingsMap.has(key)) {
       uniqueBookingsMap.set(key, b);
     } else {

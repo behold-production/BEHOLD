@@ -163,7 +163,13 @@ export default function OverviewTab({
               <span className="text-xs sm:text-sm font-semibold text-surface-500">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
               <button
                 type="button"
-                onClick={() => handleSectionChange('cdat')}
+                onClick={() => {
+                  if (testProfile) {
+                    handleSectionChange('results');
+                  } else {
+                    navigate('/sample-test');
+                  }
+                }}
                 className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs sm:text-sm transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
               >
                 {testProfile ? 'View Report' : 'Take Assessment'}

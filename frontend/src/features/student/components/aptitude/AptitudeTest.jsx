@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
- ArrowRight,
- Brain,
- Puzzle,
- BookOpen,
- UserCheck,
- RotateCcw,
- Award,
- ArrowUpRight,
- Lightbulb,
- Heart,
- Loader2
+  ArrowRight,
+  Brain,
+  Puzzle,
+  BookOpen,
+  UserCheck,
+  RotateCcw,
+  Award,
+  ArrowUpRight,
+  Lightbulb,
+  Heart,
+  Loader2,
+  ChevronLeft
 } from 'lucide-react';
 
 import ApiService from '../../../../services/api';
@@ -145,17 +146,29 @@ export default function AptitudeTest({ onFinishTest }) {
  setIsAnimating(false);
  };
 
- const handleClaimMentoring = async () => {
- if (isClaiming) return;
- setIsClaiming(true);
- try {
- await onFinishTest(dominantDomain, scorePercentages);
- } catch (error) {
- console.error("Error claiming mentoring:", error);
- } finally {
- setIsClaiming(false);
- }
- };
+  const handleClaimMentoring = async () => {
+    if (isClaiming) return;
+    setIsClaiming(true);
+    try {
+      if (typeof onFinishTest === 'function') {
+        await onFinishTest(dominantDomain, scorePercentages);
+      } else {
+        window.spaNavigate?.('/booking?service=career');
+      }
+    } catch (error) {
+      console.error("Error claiming mentoring:", error);
+    } finally {
+      setIsClaiming(false);
+    }
+  };
+
+  const handleExitTest = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.spaNavigate?.('/aptitude');
+    }
+  };
 
  // Calculations for results panel (max score is 10 per category)
  const scorePercentages = {
@@ -231,23 +244,33 @@ export default function AptitudeTest({ onFinishTest }) {
     <div 
       className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen text-surface-900 relative overflow-hidden font-sans bg-transparent text-left"
     >
- <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="mb-4 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={handleExitTest}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer bg-white/80 backdrop-blur-xs px-3.5 py-1.5 rounded-lg border border-slate-200 shadow-2xs"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span>Back</span>
+          </button>
+        </div>
 
- {!testFinished ? (
- /* Quiz Interface Card */
- <div
- className={`bg-white border border-surface-200 rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 select-none transition-all duration-300 ${
- isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
- }`}
- id="quiz-card"
- >
- {/* Header / Progress bar */}
- <div className="mb-8 sm:mb-12">
- <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
- <div>
- <h2 className="text-3xl sm:text-4xl font-extrabold text-surface-900 leading-none">
- Aptitude Profiling
- </h2>
+        {!testFinished ? (
+          /* Quiz Interface Card */
+          <div
+            className={`bg-white border border-surface-200 rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 select-none transition-all duration-300 ${
+              isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
+            }`}
+            id="quiz-card"
+          >
+            {/* Header / Progress bar */}
+            <div className="mb-8 sm:mb-12">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
+                <div>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold text-surface-900 leading-none">
+                    Aptitude Profiling
+                  </h2>
  <p className="text-sm font-medium text-surface-500 mt-2">
  Discover your core cognitive affinities across 8 dimensions.
  </p>

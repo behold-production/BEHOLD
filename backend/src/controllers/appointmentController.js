@@ -208,6 +208,7 @@ const AppointmentController = {
             isRead: false
           }),
           userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, mode: appointment.mode, meetLink, recipientRole: 'user' }) : Promise.resolve(),
+          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, mode: appointment.mode, meetLink, recipientRole: 'counsellor' }) : Promise.resolve(),
           user ? EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }) : Promise.resolve()
         ]);
       } catch (notifErr) {

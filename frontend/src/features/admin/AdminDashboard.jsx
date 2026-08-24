@@ -1183,40 +1183,41 @@ const _handleAdminDetectLocation = () => {
 
 
 
- const getAdvisorSlotsForBookingForm = () => {
- let slots = [];
- if (bookingForm.advisorId) {
- const psy = usersDb.find(u => u.id === bookingForm.advisorId);
- if (psy && psy.availability) {
- if (psy.availability.availableSlots) {
- slots = psy.availability.availableSlots;
- } else if (Array.isArray(psy.availability)) {
- slots = psy.availability;
- } else {
- const bookingDate = new Date(bookingForm.date);
- const dayName = bookingDate.getDay();
- slots = psy.availability[dayName] || [];
- }
- }
- }
+  const getAdvisorSlotsForBookingForm = () => {
+    let slots = [];
+    if (bookingForm.advisorId) {
+      const psy = usersDb.find(u => u.id === bookingForm.advisorId);
+      if (psy && psy.availability) {
+        if (psy.availability.availableSlots) {
+          slots = [...psy.availability.availableSlots];
+        } else if (Array.isArray(psy.availability)) {
+          slots = [...psy.availability];
+        } else {
+          const bookingDate = new Date(bookingForm.date);
+          const dayName = bookingDate.getDay();
+          slots = [...(psy.availability[dayName] || [])];
+        }
+      }
+    }
 
- if (slots.length > 0) {
- slots = slots.filter(slot => {
- const isAlreadyBooked = bookingsDb.some(b =>
- b.advisorId === bookingForm.advisorId &&
- b.date === bookingForm.date &&
- b.time === slot &&
- (b.status === 'CONFIRMED' || b.status === 'PENDING')
- );
- return !isAlreadyBooked;
- });
- }
+    if (slots.length > 0) {
+      slots = slots.filter(slot => {
+        const isAlreadyBooked = bookingsDb.some(b =>
+          (b.id !== bookingForm.id && b._id !== bookingForm.id) &&
+          (b.advisorId === bookingForm.advisorId || b.counsellorId === bookingForm.advisorId) &&
+          b.date === bookingForm.date &&
+          b.time === slot &&
+          (b.status === 'CONFIRMED' || b.status === 'PENDING' || b.status === 'APPROVED')
+        );
+        return !isAlreadyBooked;
+      });
+    }
 
- if (bookingForm.time && !slots.includes(bookingForm.time)) {
- slots.push(bookingForm.time);
- }
- return slots;
- };
+    if (bookingForm.time && !slots.includes(bookingForm.time)) {
+      slots.push(bookingForm.time);
+    }
+    return slots;
+  };
 
   const reloadData = React.useCallback(async () => { //
   if (!user || user?.role?.toUpperCase() !== 'ADMIN') return;
@@ -1929,19 +1930,19 @@ const _handleAdminDetectLocation = () => {
   };
 
   const handleOpenEditBooking = (booking) => {
-    const studentUser = usersDb.find(u => u.name === booking.userName && (u.role === 'USER' || !u.role));
-    const advisorUser = usersDb.find(u => u.name === booking.advisorName && u.role === 'PSYCHOLOGIST');
+    const studentUser = usersDb.find(u => (booking.userId && u.id === booking.userId) || (booking.userName && u.name === booking.userName && (u.role === 'USER' || !u.role)));
+    const advisorUser = usersDb.find(u => ((booking.advisorId || booking.counsellorId) && (u.id === booking.advisorId || u.id === booking.counsellorId)) || (booking.advisorName && u.name === booking.advisorName && u.role === 'PSYCHOLOGIST'));
 
     setBookingForm({
-      id: booking.id,
-      userId: studentUser?.id || booking.userId || '',
-      advisorId: booking.advisorId || advisorUser?.id || '',
+      id: booking.id || booking._id,
+      userId: booking.userId || studentUser?.id || '',
+      advisorId: booking.advisorId || booking.counsellorId || advisorUser?.id || '',
       service: booking.service || 'counselling',
       mode: booking.mode || 'ONLINE',
       date: booking.date || '',
       time: booking.time || '',
       meetLink: booking.meetLink || '',
-      status: booking.status || 'CONFIRMED',
+      status: booking.status === 'APPROVED' ? 'CONFIRMED' : (booking.status || 'CONFIRMED'),
       adminNotes: booking.adminNotes || ''
     });
 
@@ -1973,21 +1974,31 @@ const _handleAdminDetectLocation = () => {
         mode: bookingForm.mode,
         date: bookingForm.date,
         time: bookingForm.time,
-        meetLink: bookingForm.meetLink.trim(),
+        meetLink: bookingForm.meetLink ? bookingForm.meetLink.trim() : '',
         status: bookingForm.status,
         adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
       });
 
+      const psy = usersDb.find(u => u.id === bookingForm.advisorId);
+      const student = usersDb.find(u => u.id === bookingForm.userId);
+
       // Instant local state update
       setBookingsDb(prev => prev.map(b => {
-        if (b.id === bookingForm.id) {
+        if (b.id === bookingForm.id || b._id === bookingForm.id) {
           return {
             ...b,
+            userId: bookingForm.userId || b.userId,
+            userName: student?.name || b.userName,
+            advisorId: bookingForm.advisorId || b.advisorId,
+            counsellorId: bookingForm.advisorId || b.counsellorId,
+            advisorName: psy?.name || b.advisorName,
+            counsellorName: psy?.name || b.counsellorName,
+            advisorRole: psy?.title || b.advisorRole || 'Consultant Psychologist',
             date: bookingForm.date,
             time: bookingForm.time,
             service: bookingForm.service,
             mode: bookingForm.mode,
-            meetLink: bookingForm.meetLink.trim(),
+            meetLink: bookingForm.meetLink ? bookingForm.meetLink.trim() : '',
             status: bookingForm.status,
             adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
           };
@@ -3401,7 +3412,6 @@ const _handleAdminDetectLocation = () => {
  <label className="text-sm font-bold text-zinc-400">Select User</label>
  <select
  required
- disabled={isEditBookingOpen}
  value={bookingForm.userId}
  onChange={(e) => setBookingForm({ ...bookingForm, userId: e.target.value })}
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
@@ -3417,7 +3427,6 @@ const _handleAdminDetectLocation = () => {
  <label className="text-sm font-bold text-zinc-400">Select Psychologist</label>
  <select
  required
- disabled={isEditBookingOpen}
  value={bookingForm.advisorId}
  onChange={(e) => {
  const nextAdvisorId = e.target.value;
@@ -3467,7 +3476,6 @@ const _handleAdminDetectLocation = () => {
  <input
  type="date"
  required
- min={getLocalTodayString()}
  value={bookingForm.date}
  onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"

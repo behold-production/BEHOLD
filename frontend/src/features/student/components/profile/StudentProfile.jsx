@@ -25,11 +25,19 @@ export default function StudentProfile({ onOpenBooking }) {
   const { showAlert } = useCustomDialog();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentSection = useMemo(() => searchParams.get('tab') || 'overview', [searchParams]);
+  const currentSection = useMemo(() => {
+    const rawTab = (searchParams.get('tab') || 'overview').toLowerCase();
+    if (rawTab === 'cdat' || rawTab === 'aptitude') return 'results';
+    if (rawTab === 'sessions' || rawTab === 'appointments' || rawTab === 'bookings') return 'booked';
+    if (rawTab === 'profile' || rawTab === 'settings' || rawTab === 'account') return 'details';
+    if (['overview', 'details', 'booked', 'results'].includes(rawTab)) return rawTab;
+    return 'overview';
+  }, [searchParams]);
   const [permissionState, setPermissionState] = useState(() => getNotificationPermission());
 
   const handleSectionChange = (sectionId) => {
     setSearchParams({ tab: sectionId });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const {

@@ -70,15 +70,18 @@ function ToastLimitManager() {
   return null;
 }
 
-function AdvisorProfileWrapper({ handleBookTherapist, setPendingScrollSection }) { //
+function AdvisorProfileWrapper({ handleBookTherapist }) {
   const { id } = useParams();
   const navigate = useNavigate();
   return (
     <AdvisorProfile
       advisorId={id}
       onBack={() => {
-        navigate('/');
-        setPendingScrollSection('services');
+        if (window.history.length > 1) {
+          navigate(-1);
+        } else {
+          navigate('/booking');
+        }
       }}
       onBook={handleBookTherapist}
     />
@@ -588,10 +591,10 @@ export default function App() {
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPostDetail />} />
           <Route path="/faqs" element={<FaqsPage />} />
-          <Route path="/test" element={<><Navbar onOpenAuth={() => { }} /><AptitudeTest /></>} />
-          <Route path="/results/:testId" element={<><Navbar onOpenAuth={() => { }} /><TestResultsTab /></>} /> {/* */}
-          
-          <Route path="/privacy" element={<><Navbar onOpenAuth={() => { }} /><PrivacyPolicy /><Footer /></>} />
+          <Route path="/test" element={<AptitudeTest onFinishTest={handleFinishTest} />} />
+          <Route path="/results/:testId" element={<TestResultsTab />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
           {/* Aptitude routes: only active when admin enables aptitude */}
           {siteSettings.enableAptitude !== false ? (

@@ -93,15 +93,15 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             </div>
 
             {/* Cell 3: Secondary Stat (lg:col-span-7) */}
-            <div className="lg:col-span-7 bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-10 border border-slate-200/80 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden reveal-on-scroll reveal-scale-in reveal-delay-2">
-              <div className="relative z-10">
+            <div className="lg:col-span-7 bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-10 border border-slate-200/80 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-start gap-6 relative overflow-hidden reveal-on-scroll reveal-scale-in reveal-delay-2">
+              <div className="relative z-10 flex flex-col gap-1">
                 <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/60 flex items-center justify-center mb-3">
                   <Compass className="w-5 h-5 text-[#00a8b5]" />
                 </div>
                 <div className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight font-sans">
                   {stats[1].value}
                 </div>
-                <p className="mt-1 text-sm text-slate-600 font-medium">
+                <p className="mt-1 text-sm text-slate-600 font-medium max-w-xs">
                   {stats[1].label}
                 </p>
               </div>
@@ -138,7 +138,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             </div>
 
             {/* Cell 6: Dark Card (lg:col-span-3) */}
-            <div className="md:col-span-1 lg:col-span-3 bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl flex flex-col justify-between relative overflow-hidden group">
+            <div className="md:col-span-1 lg:col-span-3 bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl flex flex-col justify-between relative overflow-hidden group reveal-on-scroll reveal-scale-in reveal-delay-4">
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#00e5ff] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
               <p className="text-sm text-slate-300 font-medium leading-relaxed italic relative z-10">
                 "{stats[3].label}<span className="text-[#00e5ff] not-italic font-semibold text-lg leading-none">.</span>"
@@ -180,7 +180,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 {settings.aboutCards.map((card, idx) => (
                   <div key={idx} className="bg-white/80 backdrop-blur-md border border-slate-200/90 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1">
                     <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-[#00e5ff]/10 transition-colors">
-                      <span className="text-lg font-semibold text-slate-400 font-sans group-hover:text-[#00c9d6]">0{idx + 1}</span>
+                      <span className="text-lg font-semibold uppercase text-slate-400 font-sans group-hover:text-[#00c9d6] tracking-wide">{String(idx + 1).padStart(2, '0')}</span>
                     </div>
                     <h4 className="text-lg font-semibold text-slate-900 uppercase tracking-wide mb-3">{card.title}</h4>
                     <p className="text-sm text-slate-600 leading-relaxed">{card.desc}</p>

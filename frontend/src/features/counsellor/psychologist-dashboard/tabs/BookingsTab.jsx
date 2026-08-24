@@ -33,9 +33,9 @@ const BookingsTab = ({
 }) => {
   const uniqueBookingsMap = new Map();
   (bookings || []).forEach(b => {
-    const key = (b.razorpayOrderId && b.razorpayOrderId.trim()) 
+    const key = b.id || b._id || ((b.razorpayOrderId && b.razorpayOrderId.trim()) 
       ? b.razorpayOrderId 
-      : `${b.counsellorId || b.advisorId || ''}_${b.date || ''}_${b.time || ''}`;
+      : `${b.counsellorId || b.advisorId || ''}_${b.date || ''}_${b.time || ''}`);
     if (!uniqueBookingsMap.has(key)) {
       uniqueBookingsMap.set(key, b);
     } else {
