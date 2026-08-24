@@ -216,10 +216,10 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                 Prior Therapy Experience
               </h3>
 
-              {/* 1. Did you had any prefer therapy experience? */}
+              {/* 1. Have you had any prior therapy experience? */}
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-zinc-600 block">
-                  1. Did you had any prefer therapy experience?
+                  1. Have you had any prior therapy experience?
                 </label>
                 <div className="flex gap-2">
                   {['Yes', 'No'].map((opt) => {
@@ -267,7 +267,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                 disabled={isLoading}
                 className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
               >
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save & Continue to Payment'}
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save & Continue'}
               </button>
             </div>
           </form>
