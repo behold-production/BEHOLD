@@ -17,25 +17,54 @@ const Otp = require('../models/Otp');
 const Blog = require('../models/Blog');
 const CampaignEvent = require('../models/CampaignEvent');
 
+const Review = require('../models/Review');
+const PasswordResetOtp = require('../models/PasswordResetOtp');
+const WhatsAppMessage = require('../models/WhatsAppMessage');
+
 const modelMap = {
   users: User,
+  user: User,
   counsellors: Counsellor,
+  counsellor: Counsellor,
   admins: Admin,
+  admin: Admin,
   appointments: Appointment,
+  appointment: Appointment,
   sessions: Session,
+  session: Session,
   feedbacks: Feedback,
+  feedback: Feedback,
   notifications: Notification,
+  notification: Notification,
   inquiries: Inquiry,
+  inquiry: Inquiry,
   faqs: Faq,
+  faq: Faq,
   settings: Setting,
+  setting: Setting,
   testresults: TestResult,
+  testresult: TestResult,
+  test_results: TestResult,
   roles: Role,
+  role: Role,
   aptitudequestions: AptitudeQuestion,
+  aptitudequestion: AptitudeQuestion,
+  aptitude_questions: AptitudeQuestion,
   otps: Otp,
+  otp: Otp,
+  passwordresetotps: PasswordResetOtp,
+  passwordresetotp: PasswordResetOtp,
+  password_reset_otps: PasswordResetOtp,
   blogs: Blog,
+  blog: Blog,
   campaignevents: CampaignEvent,
   campaignevent: CampaignEvent,
-  campaign_events: CampaignEvent
+  campaign_events: CampaignEvent,
+  reviews: Review,
+  review: Review,
+  whatsappmessages: WhatsAppMessage,
+  whatsappmessage: WhatsAppMessage,
+  whatsapp_messages: WhatsAppMessage
 };
 
 function getRecordFilter(id) {
