@@ -4,6 +4,7 @@ const cloudinary = require('../config/cloudinary');
 const { uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const cacheHelper = require('../utils/cacheHelper');
+const { cache } = require('../middleware/cacheMiddleware');
 
 const COUNSELLOR_MODES = new Set(['ONLINE', 'OFFLINE', 'DOOR_STEP']);
 
@@ -18,7 +19,10 @@ const CounsellorController = {
   // Get Counsellor Profile
   async getProfile(req, res, next) {
     try {
-      const counsellor = await StorageService.findById('counsellors', req.user.id);
+      let counsellor = await StorageService.findById('counsellors', req.user.id);
+      if (!counsellor) {
+        counsellor = await StorageService.findById('users', req.user.id);
+      }
       if (!counsellor) {
         return res.status(404).json({ success: false, message: 'Counsellor not found' });
       }
@@ -99,37 +103,30 @@ const CounsellorController = {
         }
         updates.hours = parsedHours;
       }
-      if (modes !== undefined) {
-        updates.modes = normalizeModes(modes);
-        if (updates.modes.length === 0) {
-          return res.status(400).json({ success: false, message: 'Select at least one valid consultation mode' });
-        }
-      }
+      if (modes !== undefined) updates.modes = normalizeModes(modes);
       if (locationName !== undefined) updates.locationName = locationName;
-      if (latitude !== undefined) {
-        const parsedLatitude = Number(latitude);
-        if (!Number.isFinite(parsedLatitude) || parsedLatitude < -90 || parsedLatitude > 90) {
-          return res.status(400).json({ success: false, message: 'Latitude must be between -90 and 90' });
-        }
-        updates.latitude = parsedLatitude;
-      }
-      if (longitude !== undefined) {
-        const parsedLongitude = Number(longitude);
-        if (!Number.isFinite(parsedLongitude) || parsedLongitude < -180 || parsedLongitude > 180) {
-          return res.status(400).json({ success: false, message: 'Longitude must be between -180 and 180' });
-        }
-        updates.longitude = parsedLongitude;
-      }
+      if (latitude !== undefined) updates.latitude = Number(latitude) || 0;
+      if (longitude !== undefined) updates.longitude = Number(longitude) || 0;
       if (bankAccountNumber !== undefined) updates.bankAccountNumber = bankAccountNumber;
       if (bankIfscCode !== undefined) updates.bankIfscCode = bankIfscCode;
       if (bankAccountName !== undefined) updates.bankAccountName = bankAccountName;
 
-      const updated = await StorageService.update('counsellors', req.user.id, updates);
+      let updated = await StorageService.update('counsellors', req.user.id, updates);
+      try {
+        await StorageService.update('users', req.user.id, updates);
+      } catch {}
+
+      if (!updated) {
+        updated = await StorageService.findById('users', req.user.id);
+      }
+
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Counsellor not found' });
       }
 
-      cacheHelper.clear('counsellors_list_');
+      // Flush caches
+      try { cacheHelper.flush(); } catch {}
+      try { cache.flushAll(); } catch {}
 
       const { password, ...counsellorData } = updated;
       res.status(200).json({
@@ -145,16 +142,28 @@ const CounsellorController = {
   // Update Availability
   async updateAvailability(req, res, next) {
     try {
-      const { availability } = req.body; // e.g. { Monday: ["09:00 AM", "10:00 AM"], ... }
+      const { availability } = req.body;
 
       if (!availability) {
         return res.status(400).json({ success: false, message: 'Availability slots are required' });
       }
 
-      const updated = await StorageService.update('counsellors', req.user.id, { availability });
+      let updated = await StorageService.update('counsellors', req.user.id, { availability });
+      try {
+        await StorageService.update('users', req.user.id, { availability });
+      } catch {}
+
+      if (!updated) {
+        updated = await StorageService.findById('users', req.user.id);
+      }
+
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Counsellor not found' });
       }
+
+      // Flush all caches so users see the latest slots immediately
+      try { cacheHelper.flush(); } catch {}
+      try { cache.flushAll(); } catch {}
 
       const { password, ...counsellorData } = updated;
       res.status(200).json({

@@ -476,11 +476,17 @@ const ApiService = {
       }
     });
 
+    if (forceRefresh) {
+      this._counsellorsCache = null;
+      this._counsellorsCacheTime = 0;
+      params.append('_t', Date.now().toString());
+    }
+
     const qs = params.toString();
 
     // Cache the default full list to prevent sudden loading screens
     if (!qs && !forceRefresh) {
-      if (this._counsellorsCache && (Date.now() - this._counsellorsCacheTime < 10 * 60 * 1000)) {
+      if (this._counsellorsCache && (Date.now() - this._counsellorsCacheTime < 2 * 60 * 1000)) {
         request('/users/counsellors').then((res) => {
           if (res && res.success) {
             this._counsellorsCache = res;
@@ -499,7 +505,13 @@ const ApiService = {
       return res;
     }
 
-    return await request(`/users/counsellors${qs ? `?${qs}` : ''}`);
+    const res = await request(`/users/counsellors${qs ? `?${qs}` : ''}`);
+    if (res && res.success && !query.specialty && !query.mode && !query.search) {
+      this._counsellorsCache = res;
+      this._counsellorsCacheTime = Date.now();
+      try { safeStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
+    }
+    return res;
   },
 
   async getAdvisors(query = {}, forceRefresh = false) {
@@ -788,6 +800,9 @@ const ApiService = {
   },
 
   async updateAvailability(availability) {
+    this._counsellorsCache = null;
+    this._counsellorsCacheTime = 0;
+    try { safeStorage.removeItem('behold_counsellors_cache'); } catch {}
     return await request('/counsellors/availability', {
       method: 'PUT',
       body: JSON.stringify({ availability })

@@ -4,7 +4,7 @@ import { useCustomDialog } from '../../context/CustomDialogContext';
 import toast from 'react-hot-toast';
 import ApiService from '../../services/api';
 import { jsPDF } from 'jspdf';
-import { formatDateString } from '../../utils/dateFormatter';
+import { formatDateString, calculateNextAvailable, getScheduleForDay } from '../../utils/dateFormatter';
 import { sendLocalNotification } from '../../services/notificationHelper';
 import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../utils/validation';
 import { trackInitiateCheckout, trackPurchase, trackSchedule, getStoredCampaignData } from '../../utils/metaPixel';
@@ -588,21 +588,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     try {
       const [year, month, day] = dateStr.split('-').map(Number);
       const dayOfWeek = new Date(year, month - 1, day).getDay();
-      const parsed = advisor.availabilitySlots || {};
+      const rawAvailability = advisor.availabilitySlots || advisor.availability || {};
       
-      const hasActiveDaysConfig = parsed.activeDays && Object.keys(parsed.activeDays).length > 0;
-      const dayActive = hasActiveDaysConfig
-        ? (parsed.activeDays[dayOfWeek] === true || parsed.activeDays[String(dayOfWeek)] === true)
-        : true;
+      const { isDayActive, slots, hasConfig } = getScheduleForDay(rawAvailability, dayOfWeek);
+      if (!isDayActive) return [];
 
-      if (!dayActive) return [];
-
-      const daySpecificSlots = parsed.daySlots && (parsed.daySlots[dayOfWeek] || parsed.daySlots[String(dayOfWeek)]);
-      const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
-        ? daySpecificSlots
-        : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
-          ? parsed.availableSlots
-          : (!hasActiveDaysConfig ? DEFAULT_SLOTS : []);
+      const activeSlots = slots.length > 0 ? slots : (!hasConfig ? DEFAULT_SLOTS : []);
 
       const bookings = advisor.bookedSlots || [];
       const todayStr = getLocalTodayString();
@@ -723,20 +714,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     try {
       const [year, month, day] = dateStr.split('-').map(Number);
       const dayOfWeek = new Date(year, month - 1, day).getDay();
-      const parsed = advisor.availabilitySlots || {};
+      const rawAvailability = advisor.availabilitySlots || advisor.availability || {};
       
-      const hasActiveDaysConfig = parsed.activeDays && Object.keys(parsed.activeDays).length > 0;
-      const dayActive = hasActiveDaysConfig
-        ? (parsed.activeDays[dayOfWeek] === true || parsed.activeDays[String(dayOfWeek)] === true)
-        : true;
-      if (!dayActive) return [];
+      const { isDayActive, slots, hasConfig } = getScheduleForDay(rawAvailability, dayOfWeek);
+      if (!isDayActive) return [];
 
-      const daySpecificSlots = parsed.daySlots && (parsed.daySlots[dayOfWeek] || parsed.daySlots[String(dayOfWeek)]);
-      const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
-        ? daySpecificSlots
-        : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
-          ? parsed.availableSlots
-          : (!hasActiveDaysConfig ? DEFAULT_SLOTS : []);
+      const activeSlots = slots.length > 0 ? slots : (!hasConfig ? DEFAULT_SLOTS : []);
 
       const todayStr = getLocalTodayString();
       const isSlotInPast = (timeStr) => {
@@ -796,24 +779,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     const dayOfWeek = new Date(year, month - 1, day).getDay();
 
     const advisor = advisors.find(a => a.id === advisorId);
-    if (!advisor || !advisor.availabilitySlots) {
+    if (!advisor) {
       return 'Available';
     }
 
     try {
-      const parsed = advisor.availabilitySlots;
-      const hasActiveDaysConfig = parsed.activeDays && Object.keys(parsed.activeDays).length > 0;
-      const isDayActive = hasActiveDaysConfig
-        ? (parsed.activeDays[dayOfWeek] === true || parsed.activeDays[String(dayOfWeek)] === true)
-        : true;
+      const rawAvailability = advisor.availabilitySlots || advisor.availability || {};
+      const { isDayActive, slots, hasConfig } = getScheduleForDay(rawAvailability, dayOfWeek);
       
-      const daySpecificSlots = parsed.daySlots && (parsed.daySlots[dayOfWeek] || parsed.daySlots[String(dayOfWeek)]);
-      const slotsForDay = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
-        ? daySpecificSlots
-        : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
-          ? parsed.availableSlots
-          : (!hasActiveDaysConfig ? [timeStr] : []);
-
+      const slotsForDay = slots.length > 0 ? slots : (!hasConfig ? [timeStr] : []);
       const isSlotActive = slotsForDay.includes(timeStr);
       if (isDayActive && isSlotActive) {
         const bookings = advisor.bookedSlots || [];

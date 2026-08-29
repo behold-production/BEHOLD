@@ -55,28 +55,98 @@ export const formatDateString = (dateInput) => {
   }
 };
 
+export const getScheduleForDay = (availability, dayOfWeek) => {
+  if (!availability) {
+    return { isDayActive: true, slots: [], hasConfig: false };
+  }
+
+  let parsed = availability;
+  if (typeof parsed === 'string') {
+    try {
+      parsed = JSON.parse(parsed);
+    } catch {
+      return { isDayActive: false, slots: [], hasConfig: true };
+    }
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return { isDayActive: true, slots: [], hasConfig: false };
+  }
+
+  const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayName = DAY_NAMES[dayOfWeek];
+  const dayNameLower = dayName ? dayName.toLowerCase() : '';
+
+  const activeDays = parsed.activeDays;
+  const hasActiveDaysConfig = activeDays && typeof activeDays === 'object' && Object.keys(activeDays).length > 0;
+
+  let isDayActive = true;
+  if (hasActiveDaysConfig) {
+    isDayActive = Boolean(
+      activeDays[dayOfWeek] === true ||
+      activeDays[String(dayOfWeek)] === true ||
+      (dayName && activeDays[dayName] === true) ||
+      (dayNameLower && activeDays[dayNameLower] === true)
+    );
+  } else if (parsed[dayName] !== undefined || parsed[dayNameLower] !== undefined) {
+    const direct = parsed[dayName] !== undefined ? parsed[dayName] : parsed[dayNameLower];
+    isDayActive = Array.isArray(direct) ? direct.length > 0 : Boolean(direct);
+  }
+
+  if (!isDayActive) {
+    return { isDayActive: false, slots: [], hasConfig: true };
+  }
+
+  let rawSlots = [];
+  const daySlots = parsed.daySlots;
+  if (daySlots && typeof daySlots === 'object') {
+    const s = daySlots[dayOfWeek] || daySlots[String(dayOfWeek)] || (dayName && daySlots[dayName]) || (dayNameLower && daySlots[dayNameLower]);
+    if (Array.isArray(s) && s.length > 0) rawSlots = s;
+  }
+
+  if (rawSlots.length === 0 && (parsed[dayName] || parsed[dayNameLower])) {
+    const s = parsed[dayName] || parsed[dayNameLower];
+    if (Array.isArray(s) && s.length > 0) rawSlots = s;
+  }
+
+  if (rawSlots.length === 0 && Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0) {
+    rawSlots = parsed.availableSlots;
+  }
+
+  const hasConfig = Boolean(hasActiveDaysConfig) || Boolean(daySlots) || Boolean(parsed.availableSlots) || Boolean(parsed[dayName]) || Boolean(parsed[dayNameLower]);
+
+  return { isDayActive: true, slots: rawSlots, hasConfig };
+};
+
 export const calculateNextAvailable = (availability, bookedSlots) => {
   if (!availability) {
     return 'Unavailable';
   }
 
-  const activeDays = availability.activeDays || {};
+  let parsed = availability;
+  if (typeof parsed === 'string') {
+    try { parsed = JSON.parse(parsed); } catch { return 'Unavailable'; }
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return 'Unavailable';
+  }
+
+  const activeDays = parsed.activeDays || {};
   const hasActiveDaysConfig = Object.keys(activeDays).length > 0;
   const hasActiveDays = Object.values(activeDays).some(v => v === true);
   if (hasActiveDaysConfig && !hasActiveDays) {
     return 'Unavailable';
   }
 
-  const hasAvailableSlotsConfig = Array.isArray(availability.availableSlots);
-  const hasDaySlotsConfig = availability.daySlots && typeof availability.daySlots === 'object';
+  const hasAvailableSlotsConfig = Array.isArray(parsed.availableSlots);
+  const hasDaySlotsConfig = parsed.daySlots && typeof parsed.daySlots === 'object';
   
-  const hasAnySlots = (hasAvailableSlotsConfig && availability.availableSlots.length > 0) ||
-    (hasDaySlotsConfig && Object.values(availability.daySlots).some(arr => Array.isArray(arr) && arr.length > 0));
+  const hasAnySlots = (hasAvailableSlotsConfig && parsed.availableSlots.length > 0) ||
+    (hasDaySlotsConfig && Object.values(parsed.daySlots).some(arr => Array.isArray(arr) && arr.length > 0)) ||
+    ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].some(d => Array.isArray(parsed[d]) && parsed[d].length > 0);
 
   if ((hasAvailableSlotsConfig || hasDaySlotsConfig) && !hasAnySlots) {
     return 'Unavailable';
   }
-
 
   const today = new Date();
   
@@ -112,20 +182,13 @@ export const calculateNextAvailable = (availability, bookedSlots) => {
     checkDate.setDate(today.getDate() + i);
     
     const dayOfWeek = checkDate.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const isDayActive = hasActiveDaysConfig
-      ? (activeDays[dayOfWeek] === true || activeDays[String(dayOfWeek)] === true)
-      : true;
+    const { isDayActive, slots, hasConfig } = getScheduleForDay(parsed, dayOfWeek);
     
     if (isDayActive) {
       const dateStr = formatDateStringLocal(checkDate);
       const bookingsForDate = (bookedSlots || []).filter(b => b && b.date === dateStr);
       
-      const daySpecificSlots = availability.daySlots && (availability.daySlots[dayOfWeek] || availability.daySlots[String(dayOfWeek)]);
-      const rawSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
-        ? daySpecificSlots
-        : (Array.isArray(availability.availableSlots) && availability.availableSlots.length > 0)
-          ? availability.availableSlots
-          : (!hasActiveDaysConfig ? DEFAULT_SLOTS : []);
+      const rawSlots = slots.length > 0 ? slots : (!hasConfig ? DEFAULT_SLOTS : []);
 
       const freeSlots = rawSlots.filter(slot => {
         const isBooked = bookingsForDate.some(b => b.time === slot);
