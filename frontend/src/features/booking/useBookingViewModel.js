@@ -677,88 +677,121 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAdvisorSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
-    if (advisor.modes && !advisor.modes.includes(bookingMode)) {
+    if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
       return [];
     }
-    const [year, month, day] = dateStr.split('-').map(Number);
-    const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
-    const parsed = advisor.availabilitySlots;
-    if (!parsed) return [];
-    try {
-      const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-      
-      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
-      const activeSlots = Array.isArray(daySpecificSlots) ? daySpecificSlots : (parsed.availableSlots || []);
 
-      if (dayActive && activeSlots.length > 0) {
-        const bookings = advisor.bookedSlots || [];
-        const todayStr = getLocalTodayString();
-        const isSlotInPast = (timeStr) => {
-          try {
-            const [time, modifier] = timeStr.split(' ');
-            let [hours, minutes] = time.split(':').map(Number);
-            if (modifier === 'PM' && hours < 12) hours += 12;
-            if (modifier === 'AM' && hours === 12) hours = 0;
-            const now = new Date();
-            const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-            return now >= slotDate;
-          } catch { return false; }
-        };
-        return activeSlots.filter(slot => {
+    const DEFAULT_SLOTS = [
+      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+      '06:00 PM', '07:00 PM', '08:00 PM'
+    ];
+
+    try {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+      const parsed = advisor.availabilitySlots || {};
+      const dayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
+      
+      if (!dayActive) return [];
+
+      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
+      const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
+        ? daySpecificSlots
+        : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
+        ? parsed.availableSlots
+        : DEFAULT_SLOTS;
+
+      const bookings = advisor.bookedSlots || [];
+      const todayStr = getLocalTodayString();
+      const isSlotInPast = (timeStr) => {
+        try {
+          const [time, modifier] = timeStr.split(' ');
+          let [hours, minutes] = time.split(':').map(Number);
+          if (modifier === 'PM' && hours < 12) hours += 12;
+          if (modifier === 'AM' && hours === 12) hours = 0;
+          const now = new Date();
+          const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+          return now >= slotDate;
+        } catch { return false; }
+      };
+
+      const parseTimeToMinutes = (timeStr) => {
+        const [time, meridiem] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (meridiem === 'PM' && hours !== 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+      };
+
+      return activeSlots
+        .filter(slot => {
           if (dateStr === todayStr && isSlotInPast(slot)) {
             return false;
           }
-          return !bookings.some(b => 
-            b.date === dateStr && 
-            b.time === slot
-          );
-        });
-      }
+          return !bookings.some(b => b.date === dateStr && b.time === slot);
+        })
+        .sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
     } catch (e) {
       console.error("Error checking slots for advisor:", e);
+      return [];
     }
-    return [];
   };
   
   const getAdvisorAllSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
-    if (advisor.modes && !advisor.modes.includes(bookingMode)) {
+    if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
       return [];
     }
-    const [year, month, day] = dateStr.split('-').map(Number);
-    const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
-    const parsed = advisor.availabilitySlots;
-    if (!parsed) return [];
-    try {
-      const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-      
-      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
-      const activeSlots = Array.isArray(daySpecificSlots) ? daySpecificSlots : (parsed.availableSlots || []);
 
-      if (dayActive && activeSlots.length > 0) {
-        const todayStr = getLocalTodayString();
-        const isSlotInPast = (timeStr) => {
-          try {
-            const [time, modifier] = timeStr.split(' ');
-            let [hours, minutes] = time.split(':').map(Number);
-            if (modifier === 'PM' && hours < 12) hours += 12;
-            if (modifier === 'AM' && hours === 12) hours = 0;
-            const now = new Date();
-            const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-            return now >= slotDate;
-          } catch { return false; }
-        };
-        return activeSlots.filter(slot => {
-          if (dateStr === todayStr && isSlotInPast(slot)) {
-            return false;
-          }
-          return true;
-        });
-      }
+    const DEFAULT_SLOTS = [
+      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+      '06:00 PM', '07:00 PM', '08:00 PM'
+    ];
+
+    try {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+      const parsed = advisor.availabilitySlots || {};
+      const dayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
+      if (!dayActive) return [];
+
+      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
+      const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
+        ? daySpecificSlots
+        : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
+        ? parsed.availableSlots
+        : DEFAULT_SLOTS;
+
+      const todayStr = getLocalTodayString();
+      const isSlotInPast = (timeStr) => {
+        try {
+          const [time, modifier] = timeStr.split(' ');
+          let [hours, minutes] = time.split(':').map(Number);
+          if (modifier === 'PM' && hours < 12) hours += 12;
+          if (modifier === 'AM' && hours === 12) hours = 0;
+          const now = new Date();
+          const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+          return now >= slotDate;
+        } catch { return false; }
+      };
+
+      const parseTimeToMinutes = (timeStr) => {
+        const [time, meridiem] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (meridiem === 'PM' && hours !== 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+      };
+
+      return activeSlots
+        .filter(slot => !(dateStr === todayStr && isSlotInPast(slot)))
+        .sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
     } catch (e) {
       console.error("Error checking all slots for advisor:", e);
+      return [];
     }
-    return [];
   };
 
   const getAdvisorBookedSlotsForDate = (advisor, dateStr) => {

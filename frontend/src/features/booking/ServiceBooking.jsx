@@ -992,25 +992,22 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
                                                         <div className="space-y-3">
                                                             {(() => {
-                                                                const filteredAdvisors = advisors
+                                                                const baseList = advisors.length > 0 ? advisors : [];
+                                                                const filteredAdvisors = baseList
                                                                     .filter(advisor => {
-                                                                        if (!advisor.type) return true;
-                                                                        const r = (advisor.role || advisor.type || '').toLowerCase();
-                                                                        if (bookingService === 'counselling') {
-                                                                            return advisor.type === 'counselling' || advisor.type === 'counseling' || advisor.type === 'psychologist' || r.includes('psychologist') || r.includes('counsellor') || r.includes('counselor');
+                                                                        if (bookingMode === 'DOOR_STEP') {
+                                                                            const clientLat = parseFloat(bookingForm.clientLatitude);
+                                                                            const clientLng = parseFloat(bookingForm.clientLongitude);
+                                                                            const advLat = Number(advisor.latitude);
+                                                                            const advLng = Number(advisor.longitude);
+                                                                            if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return false;
+                                                                            const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
+                                                                            return distance <= 10;
                                                                         }
-                                                                        return advisor.type === 'career' || r.includes('career') || r.includes('mentor');
-                                                                    })
-                                                                    .filter(advisor => !advisor.modes || advisor.modes.includes(bookingMode))
-                                                                    .filter(advisor => {
-                                                                        if (bookingMode !== 'DOOR_STEP') return true;
-                                                                        const clientLat = parseFloat(bookingForm.clientLatitude);
-                                                                        const clientLng = parseFloat(bookingForm.clientLongitude);
-                                                                        const advLat = Number(advisor.latitude);
-                                                                        const advLng = Number(advisor.longitude);
-                                                                        if (isNaN(clientLat) || isNaN(clientLng) || !advLat || !advLng) return false;
-                                                                        const distance = getHaversineDistance(clientLat, clientLng, advLat, advLng);
-                                                                        return distance <= 10;
+                                                                        if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0) {
+                                                                            return advisor.modes.includes(bookingMode);
+                                                                        }
+                                                                        return true;
                                                                     });
 
                                                                 if (filteredAdvisors.length === 0) {
@@ -1021,19 +1018,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     );
                                                                 }
 
-                                                                const availableAdvisors = filteredAdvisors.filter(advisor => getAdvisorSlotsForDate(advisor, selectedDate).length > 0);
+                                                                const availableAdvisors = filteredAdvisors.filter(advisor => {
+                                                                    const slots = getAdvisorSlotsForDate(advisor, selectedDate);
+                                                                    return Array.isArray(slots) && slots.length > 0;
+                                                                });
 
-                                                                if (availableAdvisors.length === 0) {
-                                                                    return (
-                                                                        <div className="p-4 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm">
-                                                                            No psychologists are available on this selected date. Please choose another date.
-                                                                        </div>
-                                                                    );
-                                                                }
+                                                                const displayAdvisors = availableAdvisors.length > 0 ? availableAdvisors : filteredAdvisors;
 
-const totalPages = Math.max(1, Math.ceil(availableAdvisors.length / 4));
-                                                                  const currentPage = Math.min(effectiveAdvisorPage, totalPages);
-                                                                  const advisorsToRender = availableAdvisors.slice((currentPage - 1) * 4, currentPage * 4);
+                                                                const totalPages = Math.max(1, Math.ceil(displayAdvisors.length / 4));
+                                                                const currentPage = Math.min(effectiveAdvisorPage, totalPages);
+                                                                const advisorsToRender = displayAdvisors.slice((currentPage - 1) * 4, currentPage * 4);
 
                                                                 return (
                                                                     <>
