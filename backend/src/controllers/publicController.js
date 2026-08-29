@@ -6,17 +6,36 @@ const PublicController = {
   // Submit inquiry
   async submitInquiry(req, res, next) {
     try {
-      const { name, email, message } = req.body;
-      if (!name || !email || !message) {
-        return res.status(400).json({ success: false, message: 'All fields are required' });
+      const {
+        name,
+        studentName,
+        email,
+        message,
+        comments,
+        phone,
+        utmSource,
+        utmCampaign,
+        fbclid
+      } = req.body || {};
+
+      const resolvedName = (name || studentName || '').trim();
+      const resolvedEmail = (email || '').trim();
+      const resolvedMessage = (message || comments || '').trim();
+
+      if (!resolvedName || !resolvedEmail || !resolvedMessage) {
+        return res.status(400).json({ success: false, message: 'Name, email, and message are required' });
       }
 
       const newInquiry = await StorageService.create('inquiries', {
-        name,
-        email,
-        message,
+        name: resolvedName,
+        email: resolvedEmail,
+        message: resolvedMessage,
+        phone: phone || '',
         status: 'PENDING',
-        note: ''
+        note: '',
+        utmSource: utmSource || req.query.utm_source || '',
+        utmCampaign: utmCampaign || req.query.utm_campaign || '',
+        fbclid: fbclid || req.query.fbclid || ''
       });
 
       try {
@@ -239,6 +258,180 @@ const PublicController = {
 
       res.header('Content-Type', 'application/xml');
       res.send(xml);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Record Meta / Ads Campaign Event (Browser + Server CAPI)
+  async recordCampaignEvent(req, res, next) {
+    try {
+      const MetaCapiService = require('../services/metaCapiService');
+      const CampaignEvent = require('../models/CampaignEvent');
+
+      const {
+        eventName,
+        eventId,
+        eventTime,
+        eventData,
+        customData,
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        utmContent,
+        utmTerm,
+        fbclid,
+        fbp,
+        fbc,
+        url,
+        email,
+        phone,
+        userId,
+        value,
+        currency
+      } = req.body || {};
+
+      const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+      const userAgent = req.headers['user-agent'] || '';
+
+      const resolvedEventName = eventName || 'PageView';
+      const resolvedEventId = eventId || `srv_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+      const resolvedCustomData = customData || eventData || {};
+
+      // 1. Dispatch to Meta Conversions API (server-to-server)
+      let capiResult = null;
+      try {
+        const capiResponse = await MetaCapiService.trackServerEvent({
+          eventName: resolvedEventName,
+          eventId: resolvedEventId,
+          eventTime: eventTime || Math.floor(Date.now() / 1000),
+          url: url || req.headers.referer || 'https://www.behold.co.in',
+          ip,
+          userAgent,
+          email,
+          phone,
+          userId,
+          fbclid: fbclid || req.query.fbclid,
+          fbp,
+          fbc,
+          value: value || resolvedCustomData.value,
+          currency: currency || resolvedCustomData.currency || 'INR',
+          customData: resolvedCustomData
+        });
+        capiResult = capiResponse.result;
+      } catch (capiErr) {
+        console.warn('[Meta CAPI Dispatch Error]:', capiErr.message);
+      }
+
+      // 2. Persist in database
+      const campaignDoc = {
+        id: `evt_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+        eventName: resolvedEventName,
+        eventId: resolvedEventId,
+        utmSource: utmSource || req.query.utm_source || 'meta_ads',
+        utmMedium: utmMedium || req.query.utm_medium || '',
+        utmCampaign: utmCampaign || req.query.utm_campaign || '',
+        utmContent: utmContent || req.query.utm_content || '',
+        utmTerm: utmTerm || req.query.utm_term || '',
+        fbclid: fbclid || req.query.fbclid || '',
+        fbp: fbp || '',
+        fbc: fbc || '',
+        url: url || req.headers.referer || '',
+        userId: userId || '',
+        userEmail: email ? MetaCapiService.hashData(email) : '',
+        userPhone: phone ? MetaCapiService.hashPhone(phone) : '',
+        value: Number(value || resolvedCustomData.value || 0),
+        currency: currency || resolvedCustomData.currency || 'INR',
+        ip,
+        userAgent,
+        customData: resolvedCustomData,
+        capiStatus: capiResult?.status || 'SAVED_LOCAL',
+        metaResponse: capiResult?.data || capiResult?.error || null
+      };
+
+      try {
+        await StorageService.create('campaign_events', campaignDoc);
+      } catch {
+        try {
+          await CampaignEvent.create(campaignDoc);
+        } catch (e) {
+          console.warn('Could not persist CampaignEvent:', e.message);
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Campaign event processed and recorded successfully',
+        eventId: resolvedEventId,
+        capiStatus: campaignDoc.capiStatus,
+        pixelId: MetaCapiService.PIXEL_ID
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Get Campaign & Meta Ads Conversion Statistics
+  async getCampaignStats(req, res, next) {
+    try {
+      const appointments = await StorageService.findAll('appointments', {}) || [];
+      const users = await StorageService.findAll('users', {}) || [];
+      const events = await StorageService.findAll('campaign_events', {}) || [];
+
+      const adBookings = appointments.filter(a => a.utmSource || a.utmCampaign || a.fbclid);
+      const adUsers = users.filter(u => u.utmSource || u.utmCampaign || u.fbclid);
+
+      const campaignGroups = {};
+
+      adBookings.forEach(b => {
+        const key = b.utmCampaign || b.utmSource || 'direct_meta';
+        if (!campaignGroups[key]) {
+          campaignGroups[key] = {
+            campaign: key,
+            source: b.utmSource || 'meta_ads',
+            totalBookings: 0,
+            confirmedBookings: 0,
+            revenue: 0,
+            users: 0
+          };
+        }
+        campaignGroups[key].totalBookings += 1;
+        if (b.status === 'COMPLETED' || b.paymentStatus === 'PAID') {
+          campaignGroups[key].confirmedBookings += 1;
+          campaignGroups[key].revenue += Number(b.amountPaid || 0);
+        }
+      });
+
+      adUsers.forEach(u => {
+        const key = u.utmCampaign || u.utmSource || 'direct_meta';
+        if (!campaignGroups[key]) {
+          campaignGroups[key] = {
+            campaign: key,
+            source: u.utmSource || 'meta_ads',
+            totalBookings: 0,
+            confirmedBookings: 0,
+            revenue: 0,
+            users: 0
+          };
+        }
+        campaignGroups[key].users += 1;
+      });
+
+      const totalRevenue = adBookings
+        .filter(b => b.status === 'COMPLETED' || b.paymentStatus === 'PAID')
+        .reduce((sum, b) => sum + Number(b.amountPaid || 0), 0);
+
+      res.status(200).json({
+        success: true,
+        data: {
+          pixelId: '2080399902866260',
+          totalEventsLogged: events.length,
+          totalAdUsers: adUsers.length,
+          totalAdBookings: adBookings.length,
+          totalAttributedRevenue: totalRevenue,
+          campaigns: Object.values(campaignGroups)
+        }
+      });
     } catch (error) {
       next(error);
     }

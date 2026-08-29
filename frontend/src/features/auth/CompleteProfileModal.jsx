@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Loader2, Mail, User, Calendar, Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import { validateEmail } from '../../utils/validation';
 import toast from 'react-hot-toast';
+import { trackCompleteRegistration, setMetaUserData, getStoredCampaignData } from '../../utils/metaPixel';
 
 const FEELING_OPTIONS = [
   '😊 Good & Calm',
@@ -15,9 +16,9 @@ const FEELING_OPTIONS = [
 ];
 
 export default function CompleteProfileModal({ isOpen, onSuccess }) {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
-    name: user?.name && !user.name.includes('Behold User') ? user.name : '',
+    name: user?.name && user.name !== 'New User' && !user.name.includes('Behold User') ? user.name : '',
     email: user?.email && !user.email.includes('@temp.behold') ? user.email : '',
     age: user?.age || '',
     feelingLately: user?.feelingLately || '',
@@ -26,7 +27,20 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!isOpen || !user || user.role === 'admin' || user.role === 'counsellor') return null;
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user?.name && user.name !== 'New User' && !user.name.includes('Behold User') ? user.name : '',
+        email: user?.email && !user.email.includes('@temp.behold') ? user.email : '',
+        age: user?.age || '',
+        feelingLately: user?.feelingLately || '',
+        hadPriorTherapy: user?.hadPriorTherapy || '',
+        priorTherapyDetails: user?.priorTherapyDetails || ''
+      });
+    }
+  }, [user, isOpen]);
+
+  if (!isOpen || !user || user.role === 'admin' || user.role === 'counsellor' || user.isProfileCompleted) return null;
 
   const handleInputChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -70,20 +84,50 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
 
     setIsLoading(true);
     try {
-      const res = await ApiService.updateProfile({ 
+      const campaign = getStoredCampaignData();
+      const payload = { 
         name: formData.name.trim(), 
         email: cleanEmail,
         age: String(formData.age).trim(),
         feelingLately: formData.feelingLately.trim(),
         hadPriorTherapy: formData.hadPriorTherapy.trim(),
-        priorTherapyDetails: formData.priorTherapyDetails.trim()
-      });
+        priorTherapyDetails: formData.priorTherapyDetails.trim(),
+        isProfileCompleted: true,
+        utmSource: campaign.utm_source || '',
+        utmCampaign: campaign.utm_campaign || '',
+        utmMedium: campaign.utm_medium || '',
+        fbclid: campaign.fbclid || ''
+      };
+
+      const res = await ApiService.updateProfile(payload);
       
-      if (res.success) {
+      if (res.success && res.data) {
+        const updatedUser = {
+          ...user,
+          ...res.data,
+          isProfileCompleted: true
+        };
+        
+        // Instantly update AuthContext & localStorage to ensure the modal never shows again
+        if (updateUser) {
+          updateUser(updatedUser);
+        }
+        try {
+          localStorage.setItem('behold_auth_user', JSON.stringify(updatedUser));
+        } catch {}
+
+        setMetaUserData({
+          em: cleanEmail,
+          fn: formData.name.trim(),
+          id: updatedUser.id,
+          ph: updatedUser.phone
+        });
+        trackCompleteRegistration({
+          method: 'profile_completion'
+        });
+
         toast.success('Profile completed successfully!');
-        setTimeout(() => {
-          if (onSuccess) onSuccess();
-        }, 300);
+        if (onSuccess) onSuccess(updatedUser);
       } else {
         toast.error(res.message || 'Failed to update profile');
       }

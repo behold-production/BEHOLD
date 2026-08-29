@@ -75,9 +75,23 @@ export default function HomePage() {
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
       <CompleteProfileModal
-        isOpen={Boolean(user && (user.role === 'user' || !user.role) && (user.email?.includes('@temp.behold') || !user.name || user.name.includes('Behold User') || !user.age))}
+        isOpen={Boolean(
+          user &&
+          (user.role === 'user' || !user.role) &&
+          !user.isProfileCompleted &&
+          (
+            !user.name ||
+            user.name === 'New User' ||
+            user.name.includes('Behold User') ||
+            !user.email ||
+            user.email.includes('@temp.behold') ||
+            !user.age
+          )
+        )}
         onSuccess={() => {
-          if (typeof window !== 'undefined') window.dispatchEvent(new Event('storage'));
+          if (typeof window !== 'undefined' && window.dispatchEvent) {
+            window.dispatchEvent(new Event('storage'));
+          }
         }}
       />
 

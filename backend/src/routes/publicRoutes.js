@@ -13,6 +13,13 @@ router.post('/test-results', PublicController.saveTestResult);
 router.get('/aptitude-questions', cacheMiddleware(300), PublicController.getAptitudeQuestions);
 router.get('/sitemap.xml', cacheMiddleware(3600), PublicController.getSitemap);
 
+// Campaign & Meta Ads Event Tracking Routes
+router.post('/campaign-event', PublicController.recordCampaignEvent);
+router.post('/meta-events', PublicController.recordCampaignEvent);
+router.post('/meta-conversions', PublicController.recordCampaignEvent);
+router.get('/campaigns/stats', PublicController.getCampaignStats);
+router.get('/meta-ads/stats', PublicController.getCampaignStats);
+
 // Review routes
 router.get('/reviews', cacheMiddleware(300), reviewController.getPublicReviews);
 router.post('/reviews', verifyJWT, reviewController.submitReview);

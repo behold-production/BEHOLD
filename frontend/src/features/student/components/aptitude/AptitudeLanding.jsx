@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import greenTexture from '../../../../assets/greygreen.png';
 import SEO from '../../../../components/common/SEO';
+import { trackViewContent, trackStartTrial } from '../../../../utils/metaPixel';
 
 export default function AptitudeLanding({ setView }) {
+  useEffect(() => {
+    trackViewContent({
+      content_name: 'C-DAT Aptitude Assessment Landing',
+      content_type: 'assessment_page'
+    });
+  }, []);
+
   const handleProceed = () => {
+    trackStartTrial({ test_type: 'C-DAT Sample Assessment' });
     window.spaNavigate?.('/sample-test');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

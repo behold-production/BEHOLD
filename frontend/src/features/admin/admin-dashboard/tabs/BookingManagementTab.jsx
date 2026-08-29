@@ -553,12 +553,19 @@ export default function BookingManagementTab(props) {
  <span className="font-bold text-white block leading-tight">{booking.advisorName}</span>
  <span className="text-sm text-zinc-500">{booking.advisorRole}</span>
  </td>
- <td className="p-3 whitespace-nowrap">
- <span className="font-semibold block text-white leading-tight">
- {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
- </span>
- <span className="text-sm text-zinc-555 font-bold ">{booking.mode}</span>
- </td>
+  <td className="p-3 whitespace-nowrap">
+  <span className="font-semibold block text-white leading-tight">
+  {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
+  </span>
+  <div className="flex items-center gap-1.5 mt-0.5">
+    <span className="text-sm text-zinc-555 font-bold">{booking.mode}</span>
+    {(booking.utmCampaign || booking.utmSource || booking.fbclid) && (
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-1.5 py-0.5 rounded shadow-xs">
+        🎯 {booking.utmCampaign ? String(booking.utmCampaign).substring(0, 18) : (booking.utmSource ? `Ad (${booking.utmSource})` : 'Meta Ad')}
+      </span>
+    )}
+  </div>
+  </td>
  <td className="p-3 font-semibold text-zinc-300 whitespace-nowrap">
  <span className="block">{formatDateString(booking.date)}</span>
  <span className="text-sm text-zinc-500 font-bold">{booking.time}</span>

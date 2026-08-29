@@ -21,6 +21,25 @@ const triggerStorageEvent = () => {
   }
 };
 
+const getCampaignParams = () => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = sessionStorage.getItem('behold_campaign_params') || localStorage.getItem('behold_campaign_params');
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return {
+      utmSource: parsed.utm_source || '',
+      utmMedium: parsed.utm_medium || '',
+      utmCampaign: parsed.utm_campaign || '',
+      utmContent: parsed.utm_content || '',
+      utmTerm: parsed.utm_term || '',
+      fbclid: parsed.fbclid || ''
+    };
+  } catch {
+    return {};
+  }
+};
+
 let envUrl = (typeof process !== 'undefined' && (process.env.NEXT_PUBLIC_API_URL || process.env.VITE_API_URL)) ||
   (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_API_URL || import.meta.env.NEXT_PUBLIC_API_URL)) ||
   '/api';
@@ -399,10 +418,11 @@ const ApiService = {
     });
   },
 
-  async verifyOtp(phone, otpCode, isLogin = false, portal = 'user') {
+  async verifyOtp(phone, otpCode, isLogin = false, portal = 'user', extraData = {}) {
+    const campaign = getCampaignParams();
     const res = await request('/auth/verify-otp', {
       method: 'POST',
-      body: JSON.stringify({ phone, otpCode, isLogin, portal })
+      body: JSON.stringify({ phone, otpCode, isLogin, portal, ...campaign, ...extraData })
     });
     // If it was a login flow, update session
     if (isLogin && res.success && res.data && res.data.accessToken) {
@@ -791,10 +811,22 @@ const ApiService = {
   },
 
   // Inquiries //
-  async submitInquiry(name, email, message) {
+  async submitInquiry(nameOrPayload, email, message) {
+    const campaign = getCampaignParams();
+    let payload = {};
+    if (typeof nameOrPayload === 'object' && nameOrPayload !== null) {
+      payload = { ...campaign, ...nameOrPayload };
+    } else {
+      payload = {
+        name: nameOrPayload,
+        email,
+        message,
+        ...campaign
+      };
+    }
     return await request('/inquiries', {
       method: 'POST',
-      body: JSON.stringify({ name, email, message })
+      body: JSON.stringify(payload)
     });
   },
 
@@ -1228,6 +1260,14 @@ const ApiService = {
 
   async deleteReview(id) {
     return await request(`/admin/reviews/${id}`, { method: 'DELETE' });
+  },
+
+  // ─── Meta Ads / Campaign Tracking ──────────────────────────────────────────
+  async recordCampaignEvent(payload) {
+    return await request('/campaign-event', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
   }
 };
 

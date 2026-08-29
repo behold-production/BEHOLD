@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import { validateIndianPhone, parseIndianPhone } from '../../utils/validation';
 import OtpPinInput from '../../components/common/OtpPinInput';
+import { trackCompleteRegistration, setMetaUserData } from '../../utils/metaPixel';
 
 const OTP_RESEND_SECONDS = 60;
 
@@ -142,6 +143,17 @@ export default function AuthModals({ isOpen, onClose }) {
 
         if (res.success && res.data && res.data.user) {
           loggedUser = res.data.user;
+
+          // Track Meta Pixel CompleteRegistration & sync phone for Advanced Matching
+          setMetaUserData({
+            ph: cleanPhone,
+            id: loggedUser.id,
+            fn: loggedUser.name
+          });
+          trackCompleteRegistration({
+            method: 'whatsapp_otp',
+            role: loggedUser.role || 'user'
+          });
         } else {
           throw new Error(res.message || 'Invalid OTP');
         }

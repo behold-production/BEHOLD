@@ -440,6 +440,95 @@ export default function AnalyticsTab(props) {
  </div>
  </div>
  </div>
+
+ {/* Meta (Facebook) Ads & Campaign Tracking Performance */}
+ <div className="bg-zinc-955 border border-zinc-850 rounded-lg p-5 space-y-4">
+   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-900 pb-3">
+     <div className="flex items-center gap-2.5">
+       <div className="w-7 h-7 rounded-lg bg-[#00e5ff]/10 border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff] text-sm font-bold">
+         🎯
+       </div>
+       <div>
+         <h4 className="text-sm font-bold text-white">Meta (Facebook) Ads & Campaign Tracking</h4>
+         <span className="text-xs text-zinc-500 font-medium">Pixel ID: 2080399902866260 • Active Conversions & Attribution</span>
+       </div>
+     </div>
+     <div className="flex items-center gap-2">
+       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
+         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Pixel Active
+       </span>
+     </div>
+   </div>
+
+   {(() => {
+     const adBookings = bookingsDb.filter(b => b.utmSource || b.utmCampaign || b.fbclid);
+     const adUsers = (usersDb || []).filter(u => u.utmSource || u.utmCampaign || u.fbclid);
+     const adRevenue = adBookings
+       .filter(b => b.status === 'COMPLETED' || b.paymentStatus === 'PAID')
+       .reduce((sum, b) => sum + (Number(b.amountPaid) || 0), 0);
+
+     // Group by campaign name
+     const campaignStats = {};
+     adBookings.forEach(b => {
+       const cName = b.utmCampaign || b.utmSource || 'Direct Meta Ad';
+       if (!campaignStats[cName]) {
+         campaignStats[cName] = { name: cName, bookings: 0, revenue: 0, source: b.utmSource || 'meta' };
+       }
+       campaignStats[cName].bookings += 1;
+       if (b.status === 'COMPLETED' || b.paymentStatus === 'PAID') {
+         campaignStats[cName].revenue += Number(b.amountPaid) || 0;
+       }
+     });
+
+     const topCampaigns = Object.values(campaignStats);
+
+     return (
+       <div className="space-y-4">
+         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+           <div className="p-3.5 bg-zinc-900/50 rounded-lg border border-zinc-850">
+             <span className="text-xs text-zinc-500 font-bold block">Ad-Referred Students</span>
+             <span className="text-xl font-bold text-white mt-1 block">{adUsers.length}</span>
+             <span className="text-[11px] text-cyan-400 font-medium">Acquired via Meta Ads</span>
+           </div>
+           <div className="p-3.5 bg-zinc-900/50 rounded-lg border border-zinc-850">
+             <span className="text-xs text-zinc-500 font-bold block">Campaign Bookings</span>
+             <span className="text-xl font-bold text-white mt-1 block">{adBookings.length}</span>
+             <span className="text-[11px] text-cyan-400 font-medium">Attributed consultations</span>
+           </div>
+           <div className="p-3.5 bg-zinc-900/50 rounded-lg border border-zinc-850">
+             <span className="text-xs text-zinc-500 font-bold block">Meta Ads Attributed Revenue</span>
+             <span className="text-xl font-bold text-emerald-400 mt-1 block">₹{adRevenue.toLocaleString()}</span>
+             <span className="text-[11px] text-emerald-500/80 font-medium">Paid consultations from ads</span>
+           </div>
+         </div>
+
+         {topCampaigns.length > 0 ? (
+           <div className="space-y-2">
+             <span className="text-xs font-bold text-zinc-400 block">Active Campaign Breakdown</span>
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+               {topCampaigns.map((c, i) => (
+                 <div key={i} className="p-3 bg-zinc-900/30 rounded border border-zinc-855 flex items-center justify-between">
+                   <div>
+                     <span className="font-bold text-white text-xs block truncate max-w-[180px]">🎯 {c.name}</span>
+                     <span className="text-[10px] text-zinc-500 font-semibold uppercase">{c.source}</span>
+                   </div>
+                   <div className="text-right">
+                     <span className="text-xs font-bold text-cyan-400 block">{c.bookings} booking(s)</span>
+                     <span className="text-[10px] font-bold text-emerald-400">₹{c.revenue.toLocaleString()}</span>
+                   </div>
+                 </div>
+               ))}
+             </div>
+           </div>
+         ) : (
+           <div className="p-4 bg-zinc-900/20 rounded border border-zinc-855 text-center text-xs text-zinc-500">
+             Running campaigns with <code className="text-cyan-400 font-mono">?utm_source=facebook&utm_campaign=...</code> will display realtime conversion ROI and student attribution here.
+           </div>
+         )}
+       </div>
+     );
+   })()}
+ </div>
  </div>
  );
 }

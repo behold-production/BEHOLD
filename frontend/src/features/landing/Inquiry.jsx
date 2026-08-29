@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import ApiService from '../../services/api';
 import { renderTitleWithFullstopDot } from '../../components/common/BrandDot';
+import { trackLead, trackContact, setMetaUserData } from '../../utils/metaPixel';
 
 const steps = [
   {
@@ -61,6 +62,20 @@ export default function Inquiry({ testProfile, siteSettings }) {
     setIsSubmitting(true);
     try {
       await ApiService.submitInquiry(formData.name.trim(), formData.email.trim(), formData.message.trim());
+      
+      setMetaUserData({
+        em: formData.email.trim(),
+        fn: formData.name.trim()
+      });
+      trackLead({
+        content_name: 'Inquiry Form Submission',
+        content_category: 'Lead'
+      });
+      trackContact({
+        method: 'inquiry_form',
+        source: 'inquiry_component'
+      });
+
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' });
     } catch (err) {

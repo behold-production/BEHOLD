@@ -48,6 +48,19 @@ const UserController = {
       if (locationName !== undefined) updates.locationName = locationName;
       if (latitude !== undefined) updates.latitude = Number(latitude) || 0;
       if (longitude !== undefined) updates.longitude = Number(longitude) || 0;
+      if (req.body.isProfileCompleted !== undefined) updates.isProfileCompleted = req.body.isProfileCompleted;
+
+      // Mark profile as completed if name and real email are present
+      const finalName = updates.name !== undefined ? updates.name : req.user?.name;
+      const finalEmail = updates.email !== undefined ? updates.email : req.user?.email;
+      if (finalName && finalName !== 'New User' && !finalName.includes('Behold User') && finalEmail && !finalEmail.includes('@temp.behold')) {
+        updates.isProfileCompleted = true;
+      }
+
+      if (req.body.utmSource) updates.utmSource = req.body.utmSource;
+      if (req.body.utmCampaign) updates.utmCampaign = req.body.utmCampaign;
+      if (req.body.utmMedium) updates.utmMedium = req.body.utmMedium;
+      if (req.body.fbclid) updates.fbclid = req.body.fbclid;
 
       const updatedUser = await StorageService.update('users', req.user.id, updates);
       if (!updatedUser) {

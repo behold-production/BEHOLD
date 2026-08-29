@@ -37,10 +37,22 @@ const appointmentSchema = new mongoose.Schema(
     razorpaySplitError: { type: String, default: '' },
     commissionPercent: { type: Number, default: 50 },
     counsellorShareAmount: { type: Number, default: 0 },
+    utmSource: { type: String, default: '' },
+    utmMedium: { type: String, default: '' },
+    utmCampaign: { type: String, default: '' },
+    utmContent: { type: String, default: '' },
+    utmTerm: { type: String, default: '' },
+    fbclid: { type: String, default: '' },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null }
   },
   { timestamps: true }
 );
+
+appointmentSchema.index({ userId: 1, date: -1 });
+appointmentSchema.index({ counsellorId: 1, date: 1, time: 1 });
+appointmentSchema.index({ status: 1, paymentStatus: 1 });
+appointmentSchema.index({ razorpayOrderId: 1 });
+appointmentSchema.index({ utmCampaign: 1, utmSource: 1 });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

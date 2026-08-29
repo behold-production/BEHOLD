@@ -55,6 +55,12 @@
   <!-- Permissions Policy for Payment Gateways & OTP -->
   <meta http-equiv="Permissions-Policy" content="payment=(self 'https://checkout.razorpay.com' 'https://*.razorpay.com'), otp-credentials=*" />
 
+  <!-- Performance Resource Hints -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="dns-prefetch" href="https://connect.facebook.net">
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -64,9 +70,31 @@
 
   <!-- Razorpay Standard Checkout Script -->
   <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
+
+  <!-- Meta (Facebook) Pixel Code -->
+  <link rel="preconnect" href="https://connect.facebook.net">
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '2080399902866260');
+    fbq('track', 'PageView');
+  </script>
+  <!-- End Meta Pixel Code -->
 </head>
 
 <body class="bg-slate-50 antialiased font-sans text-slate-800">
+  <!-- Meta Pixel Noscript Fallback -->
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=2080399902866260&ev=PageView&noscript=1"
+      alt="Facebook Pixel" />
+  </noscript>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>

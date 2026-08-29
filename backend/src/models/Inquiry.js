@@ -7,7 +7,10 @@ const inquirySchema = new mongoose.Schema(
     email: { type: String, required: true },
     message: { type: String, required: true },
     status: { type: String, default: 'PENDING' },
-    note: { type: String, default: '' }
+    note: { type: String, default: '' },
+    utmSource: { type: String, default: '' },
+    utmCampaign: { type: String, default: '' },
+    fbclid: { type: String, default: '' }
   },
   { timestamps: true }
 );

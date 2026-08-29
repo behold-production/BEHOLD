@@ -707,6 +707,7 @@ const AuthController = {
 
       // If this is an OTP login flow, find the user and log them in
       if (isLogin) {
+        const { utmSource, utmCampaign, utmMedium, fbclid } = req.body;
         let match = await findAnyUserByPhone(phone, portal);
         if (!match && portal === 'user') {
           // Auto-register the user if they are using WhatsApp login for the first time
@@ -725,10 +726,23 @@ const AuthController = {
             grade: '',
             guardianName: '',
             guardianPhone: '',
-            groupCode: ''
+            groupCode: '',
+            utmSource: utmSource || '',
+            utmCampaign: utmCampaign || '',
+            utmMedium: utmMedium || '',
+            fbclid: fbclid || ''
           });
           
           match = { user: newUser, table: 'users' };
+        } else if (match && match.table === 'users' && !match.user.utmSource && (utmSource || fbclid)) {
+          try {
+            await StorageService.update('users', match.user.id, {
+              utmSource: utmSource || '',
+              utmCampaign: utmCampaign || '',
+              utmMedium: utmMedium || '',
+              fbclid: fbclid || ''
+            });
+          } catch {}
         } else if (!match) {
           return res.status(404).json({ 
             success: false, 

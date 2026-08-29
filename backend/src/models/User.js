@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema(
     locationName: { type: String, default: '' },
     latitude: { type: Number, default: 0 },
     longitude: { type: Number, default: 0 },
+    utmSource: { type: String, default: '' },
+    utmMedium: { type: String, default: '' },
+    utmCampaign: { type: String, default: '' },
+    fbclid: { type: String, default: '' },
+    isProfileCompleted: { type: Boolean, default: false },
     cigiResults: {
       type: [
         {
@@ -48,5 +53,10 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.index({ phone: 1 });
+userSchema.index({ role: 1, status: 1 });
+userSchema.index({ isProfileCompleted: 1 });
+userSchema.index({ utmCampaign: 1, utmSource: 1 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -399,6 +399,11 @@ export default function InquiriesTab(props) {
  {inq.status || 'PENDING'}
  </span>
  <span className="text-sm text-zinc-500 font-bold ">{formatDateString(inq.date)}</span>
+ {(inq.utmCampaign || inq.utmSource || inq.fbclid) && (
+   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-2 py-0.5 rounded shadow-xs">
+     🎯 {inq.utmCampaign ? String(inq.utmCampaign).substring(0, 18) : (inq.utmSource ? `Ad (${inq.utmSource})` : 'Meta Ad')}
+   </span>
+ )}
  </div>
 
  <div className="space-y-0.5">

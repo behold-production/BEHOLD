@@ -487,8 +487,26 @@ const PaymentController = {
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0,
         commissionPercent,
-        counsellorShareAmount
+        counsellorShareAmount,
+        utmSource: bookingDetails.utmSource || req.body.utmSource || '',
+        utmMedium: bookingDetails.utmMedium || req.body.utmMedium || '',
+        utmCampaign: bookingDetails.utmCampaign || req.body.utmCampaign || '',
+        utmContent: bookingDetails.utmContent || req.body.utmContent || '',
+        utmTerm: bookingDetails.utmTerm || req.body.utmTerm || '',
+        fbclid: bookingDetails.fbclid || req.body.fbclid || ''
       });
+
+      // If user profile has no UTM source, attach initial acquisition source
+      if (user && !user.utmSource && (bookingDetails.utmSource || bookingDetails.fbclid)) {
+        try {
+          await StorageService.update('users', user.id, {
+            utmSource: bookingDetails.utmSource || '',
+            utmMedium: bookingDetails.utmMedium || '',
+            utmCampaign: bookingDetails.utmCampaign || '',
+            fbclid: bookingDetails.fbclid || ''
+          });
+        } catch {}
+      }
 
       // Also ensure corresponding session record exists in sessions collection
       try {

@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
 import { formatExperience } from '../../utils/formatters';
 import SEO from '../../components/common/SEO';
+import { trackViewContent } from '../../utils/metaPixel';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -68,6 +69,12 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         if (res.success && res.data) {
           const psy = res.data;
           
+          trackViewContent({
+            content_name: psy.name || 'Specialist Profile',
+            content_type: 'advisor_profile',
+            content_id: advisorId
+          });
+
           const nextAvailable = calculateNextAvailable(psy.availability, psy.bookedSlots || []);
 
           const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');

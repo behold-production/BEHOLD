@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Brain, Compass, FileText, Sparkles, ArrowRight } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
 import SEO from '../../components/common/SEO';
+import { trackViewContent } from '../../utils/metaPixel';
 
 export default function Services({ setView, onBookTherapist, siteSettings, mode }) {
+  useEffect(() => {
+    trackViewContent({
+      content_name: 'Services & Consultations',
+      content_type: 'service_catalog'
+    });
+  }, []);
+
   const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
 
   const enablePsychology = settings.enablePsychology !== false;

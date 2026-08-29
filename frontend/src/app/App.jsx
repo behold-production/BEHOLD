@@ -58,6 +58,14 @@ import BlogSection from '../features/landing/BlogSection';
 import { useAuth } from '../context/AuthContext';
 import ApiService from '../services/api';
 import { requestNotificationPermission, syncAndNotifyLocal } from '../services/notificationHelper';
+import {
+  trackPageView,
+  captureUtmParameters,
+  trackContact,
+  trackLead,
+  trackSubmitApplication,
+  setMetaUserData
+} from '../utils/metaPixel';
  
 function ToastLimitManager() {
   const { toasts } = useToasterStore();
@@ -188,6 +196,28 @@ export default function App() {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Capture UTM / fbclid campaign parameters on app mount & route change
+  useEffect(() => {
+    captureUtmParameters();
+  }, [location.search]);
+
+  // Dynamic Meta Pixel SPA PageView Tracking
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location.pathname]);
+
+  // Sync user properties for Meta Advanced Matching
+  useEffect(() => {
+    if (user && user.id) {
+      setMetaUserData({
+        id: user.id,
+        email: user.email,
+        phone: user.phone,
+        name: user.name
+      });
+    }
+  }, [user]);
 
   // Setup global SPA navigate helper for legacy or external components
   useEffect(() => {
@@ -339,7 +369,14 @@ export default function App() {
           const d = new Date();
           return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         })()
-      }); //
+      });
+
+      // Track Meta Pixel standard events for aptitude test completion
+      trackSubmitApplication({ dominantDomain });
+      trackLead({
+        content_name: 'C-DAT Assessment Submission',
+        content_category: 'Aptitude Test'
+      });
     } catch (err) {
       console.error('Failed to save test results', err);
     }
@@ -526,11 +563,25 @@ export default function App() {
       
       {/* Mandatory profile completion for WhatsApp auto-registered or incomplete student users */}
       <CompleteProfileModal 
-        isOpen={user && (user.role === 'user' || !user.role) && (user.email?.includes('@temp.behold') || !user.name || user.name.includes('Behold User') || !user.age)} 
+        isOpen={Boolean(
+          user &&
+          (user.role === 'user' || !user.role) &&
+          !user.isProfileCompleted &&
+          (
+            !user.name ||
+            user.name === 'New User' ||
+            user.name.includes('Behold User') ||
+            !user.email ||
+            user.email.includes('@temp.behold') ||
+            !user.age
+          )
+        )} 
         onSuccess={() => {
-          if (window.dispatchEvent) window.dispatchEvent(new Event('storage'));
+          if (typeof window !== 'undefined' && window.dispatchEvent) {
+            window.dispatchEvent(new Event('storage'));
+          }
         }} 
-      /> {/* */}
+      />
 
       <ServiceBooking
         isOpen={isBookingModalOpen}
@@ -750,6 +801,7 @@ export default function App() {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackContact({ method: 'whatsapp', source: 'floating_button' })}
             className={`fixed ${isProfilePage ? 'bottom-20 lg:bottom-6' : 'bottom-6 sm:bottom-6'} right-4 sm:right-6 z-50 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3.5 sm:p-4 rounded-full shadow-[0_4px_16px_rgba(37,211,102,0.45)] hover:shadow-[0_6px_24px_rgba(37,211,102,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center cursor-pointer group`}
             title="Chat with us on WhatsApp"
             aria-label="Chat with us on WhatsApp"

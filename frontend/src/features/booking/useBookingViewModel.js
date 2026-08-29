@@ -4,9 +4,10 @@ import { useCustomDialog } from '../../context/CustomDialogContext';
 import toast from 'react-hot-toast';
 import ApiService from '../../services/api';
 import { jsPDF } from 'jspdf';
-import { formatDateString, calculateNextAvailable } from '../../utils/dateFormatter';
+import { formatDateString } from '../../utils/dateFormatter';
 import { sendLocalNotification } from '../../services/notificationHelper';
 import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../utils/validation';
+import { trackInitiateCheckout, trackPurchase, trackSchedule, getStoredCampaignData } from '../../utils/metaPixel';
 
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
@@ -816,6 +817,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         toast.error("This slot is already booked for this counsellor. Please select another slot.");
         return;
       }
+      // Track InitiateCheckout on entering checkout / payment step
+      trackInitiateCheckout({
+        service: bookingService,
+        mode: bookingMode,
+        duration: bookingDuration,
+        value: netTotal,
+        currency: 'INR'
+      });
     }
 
     if (newStep === 'advisor') {
@@ -1050,6 +1059,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         throw new Error("This slot is already booked for this counsellor. Please select another slot.");
       }
 
+      const campaign = getStoredCampaignData();
+
       const bookingDetails = {
         counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
         date: selectedDate,
@@ -1068,7 +1079,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         clientPhone: bookingForm.phone || user?.phone || '',
         clientLocationName: bookingForm.clientLocationName || '',
         clientLatitude: Number(bookingForm.clientLatitude) || 0,
-        clientLongitude: Number(bookingForm.clientLongitude) || 0
+        clientLongitude: Number(bookingForm.clientLongitude) || 0,
+        utmSource: campaign.utm_source || '',
+        utmMedium: campaign.utm_medium || '',
+        utmCampaign: campaign.utm_campaign || '',
+        utmContent: campaign.utm_content || '',
+        utmTerm: campaign.utm_term || '',
+        fbclid: campaign.fbclid || ''
       };
 
       if (netTotal === 0) {
@@ -1080,6 +1097,24 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             "Booking Confirmed!",
             `Your session with ${selectedAdvisor?.name || 'Assigned Advisor'} on ${selectedDate} at ${selectedTime} is confirmed.`
           );
+
+          // Meta Pixel conversion tracking for free appointment
+          trackPurchase({
+            orderId: bookRes.data?.id || 'free_booking',
+            value: 0.00,
+            currency: 'INR',
+            service: bookingService,
+            mode: bookingMode
+          });
+          trackSchedule({
+            advisorId: selectedAdvisor?.id,
+            advisorName: selectedAdvisor?.name,
+            date: selectedDate,
+            time: selectedTime,
+            mode: bookingMode,
+            service: bookingService
+          });
+
           setConfirmedBooking(bookRes.data || null);
           setConfirmedMeetLink(bookRes.data?.meetLink || '');
           setIsProcessingPayment(false);
@@ -1140,7 +1175,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               clientPhone: bookingForm.phone || user?.phone || '',
               clientLocationName: bookingForm.clientLocationName || '',
               clientLatitude: Number(bookingForm.clientLatitude) || 0,
-              clientLongitude: Number(bookingForm.clientLongitude) || 0
+              clientLongitude: Number(bookingForm.clientLongitude) || 0,
+              utmSource: campaign.utm_source || '',
+              utmMedium: campaign.utm_medium || '',
+              utmCampaign: campaign.utm_campaign || '',
+              utmContent: campaign.utm_content || '',
+              utmTerm: campaign.utm_term || '',
+              fbclid: campaign.fbclid || ''
             };
 
             const verifyRes = await ApiService.verifyPaymentAndBook(response, bookingDetails);
@@ -1150,8 +1191,27 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                 "Booking Confirmed!",
                 `Your session with ${selectedAdvisor?.name || 'Assigned Advisor'} on ${selectedDate} at ${selectedTime} is confirmed.`
               );
+
               const serverBooking = verifyRes.data || null;
               const serverMeetLink = serverBooking?.meetLink || '';
+
+              // Meta Pixel conversion tracking for paid appointment
+              trackPurchase({
+                orderId: serverBooking?.id || orderId,
+                value: netTotal,
+                currency: 'INR',
+                service: bookingService,
+                mode: bookingMode
+              });
+              trackSchedule({
+                advisorId: selectedAdvisor?.id,
+                advisorName: selectedAdvisor?.name,
+                date: selectedDate,
+                time: selectedTime,
+                mode: bookingMode,
+                service: bookingService
+              });
+
               setConfirmedBooking(serverBooking);
               if (serverMeetLink) setConfirmedMeetLink(serverMeetLink);
               setIsProcessingPayment(false);

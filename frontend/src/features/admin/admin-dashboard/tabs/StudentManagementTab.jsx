@@ -561,7 +561,14 @@ export default function StudentManagementTab(props) {
  </div>
  <div>
  <span className="font-bold text-white block leading-tight">{student.name}</span>
- <span className="text-sm text-zinc-500 break-all">ID: {student.id}</span>
+ <div className="flex items-center gap-1.5 mt-0.5">
+   <span className="text-sm text-zinc-500 break-all">ID: {student.id}</span>
+   {(student.utmCampaign || student.utmSource || student.fbclid) && (
+     <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-1 py-0.2 rounded shadow-xs">
+       🎯 {student.utmCampaign ? String(student.utmCampaign).substring(0, 14) : (student.utmSource ? `Ad (${student.utmSource})` : 'Meta Ad')}
+     </span>
+   )}
+ </div>
  </div>
  </div>
  </td>

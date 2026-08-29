@@ -6,6 +6,7 @@ import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 import SEO from '../../components/common/SEO';
+import { trackSearch, trackViewContent } from '../../utils/metaPixel';
 
 
 const POSTS_PER_PAGE = 6;
@@ -56,6 +57,12 @@ const BlogList = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+    if (searchQuery.trim()) {
+      trackSearch({
+        search_string: searchQuery.trim(),
+        content_category: selectedCategory || 'All'
+      });
+    }
     fetchBlogs();
   };
 

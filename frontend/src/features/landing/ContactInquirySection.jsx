@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import ApiService from '../../services/api'; //
-import { toast } from 'react-hot-toast'; //
+import ApiService from '../../services/api';
+import { toast } from 'react-hot-toast';
 import { Send, CheckCircle2 } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
+import { trackLead, trackContact, setMetaUserData } from '../../utils/metaPixel';
 
 export default function ContactInquirySection() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -16,7 +17,7 @@ export default function ContactInquirySection() {
       return;
     }
     setLoading(true);
-    try { //
+    try {
       await ApiService.submitInquiry({
         studentName: formData.name,
         email: formData.email,
@@ -24,6 +25,21 @@ export default function ContactInquirySection() {
         phone: 'Not provided',
         grade: 'General Inquiry'
       });
+
+      // Update user match data & track Meta conversion events
+      setMetaUserData({
+        em: formData.email,
+        fn: formData.name
+      });
+      trackLead({
+        content_name: 'General Contact Inquiry',
+        content_category: 'Contact Form'
+      });
+      trackContact({
+        method: 'inquiry_form',
+        source: 'contact_section'
+      });
+
       setSubmitted(true);
       toast.success('Thank you! We will reach out to you shortly.');
       setFormData({ name: '', email: '', message: '' });

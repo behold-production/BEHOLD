@@ -101,8 +101,8 @@ export function useStudentProfile() {
       if (res.success && res.data && user) {
         updateUser({
           ...user,
-          name: formData.name,
-          phone: formData.phone
+          ...res.data,
+          isProfileCompleted: true
         });
       }
 

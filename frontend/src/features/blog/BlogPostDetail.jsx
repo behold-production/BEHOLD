@@ -6,6 +6,7 @@ import greenTexture from '../../assets/greygreen.png';
 import { getImageUrl, formatBlogContent } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 import SEO from '../../components/common/SEO';
+import { trackViewContent } from '../../utils/metaPixel';
 
 const BlogPostDetail = () => {
   const { slug } = useParams();
@@ -55,6 +56,11 @@ const BlogPostDetail = () => {
         const res = await ApiService.getBlogBySlug(slug);
         if (res?.data) {
           setPost(res.data);
+          trackViewContent({
+            content_name: res.data.title || 'Blog Post',
+            content_type: 'blog_post',
+            content_id: res.data.id || res.data._id || slug
+          });
           const allRes = await ApiService.getBlogs({ limit: 4 });
           if (allRes?.data && Array.isArray(allRes.data)) {
             setRelatedBlogs(allRes.data.filter(b => b.slug !== slug).slice(0, 3));

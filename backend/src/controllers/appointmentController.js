@@ -69,11 +69,28 @@ const AppointmentController = {
         service: service || 'counselling',
         clientName: clientName || user.name || '',
         clientEmail: clientEmail || user.email || '',
-        clientPhone: clientPhone || user.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
-        clientLongitude: Number(clientLongitude) || 0
+        clientLongitude: Number(clientLongitude) || 0,
+        utmSource: req.body.utmSource || '',
+        utmMedium: req.body.utmMedium || '',
+        utmCampaign: req.body.utmCampaign || '',
+        utmContent: req.body.utmContent || '',
+        utmTerm: req.body.utmTerm || '',
+        fbclid: req.body.fbclid || ''
       });
+
+      // If user profile has no UTM source, attach initial acquisition source
+      if (user && !user.utmSource && (req.body.utmSource || req.body.fbclid)) {
+        try {
+          await StorageService.update('users', user.id, {
+            utmSource: req.body.utmSource || '',
+            utmMedium: req.body.utmMedium || '',
+            utmCampaign: req.body.utmCampaign || '',
+            fbclid: req.body.fbclid || ''
+          });
+        } catch {}
+      }
 
       // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
