@@ -132,8 +132,8 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-5 border-t border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400 text-left">
-          <div>
+        <div className="mt-8 pt-5 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 text-center sm:text-left">
+          <div className="text-center sm:text-left w-full sm:w-auto">
             {(() => {
               const year = new Date().getFullYear();
               if (!siteCopyright) return `© ${year} BEHOLD Ltd.. All rights reserved.`;
@@ -146,11 +146,11 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
               return `© ${year} ${clean} All rights reserved.`;
             })()}
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center w-full sm:w-auto">
             <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Privacy Policy</button>
-            <span className="text-slate-600 px-1">•</span>
+            <span className="text-slate-600 px-0.5">•</span>
             <button onClick={() => onOpenDocs?.('terms')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Terms & Conditions</button>
-            <span className="text-slate-600 px-1">•</span>
+            <span className="text-slate-600 px-0.5">•</span>
             <button onClick={() => onOpenDocs?.('refund')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Refund & Cancellation Policy</button>
           </div>
         </div>
