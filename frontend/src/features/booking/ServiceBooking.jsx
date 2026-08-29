@@ -1188,19 +1188,18 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 <div
                                                                                     key={advisor.id}
                                                                                     onClick={() => {
-                                                                                        if (!isAvailable) return;
                                                                                         setSelectedAdvisor(advisor);
-                                                                                        setAdvisorConfirmed(false); // Reset confirmation so Step 3 hides
+                                                                                        setAdvisorConfirmed(true);
                                                                                         if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-                                                                                        if (advisor.modes && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
+                                                                                        if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
                                                                                             setBookingMode(advisor.modes[0]);
                                                                                         }
                                                                                         setSelectedTime('');
+                                                                                        setTimeout(() => {
+                                                                                            step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                                                        }, 150);
                                                                                     }}
-                                                                                    className={`group p-4 sm:p-5 border-[2px] rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs ${!isAvailable
-                                                                                        ? 'bg-surface-50 border-surface-200 opacity-60 cursor-not-allowed'
-                                                                                        : 'bg-white border-surface-200 hover:border-[#06b6d4] hover:shadow-md cursor-pointer hover:-translate-y-1'
-                                                                                        }`}
+                                                                                    className="group p-4 sm:p-5 border-2 border-surface-200 bg-white hover:border-[#06b6d4] hover:shadow-md rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5"
                                                                                 >
                                                                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                                                                                         <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">

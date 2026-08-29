@@ -90,25 +90,29 @@ const UserController = {
 
       let allCounsellors = [];
       try {
-        allCounsellors = await StorageService.findAll('counsellors', {
+        const cList = await StorageService.findAll('counsellors', {
           isDeleted: { $ne: true }
         }) || [];
+        if (Array.isArray(cList)) allCounsellors.push(...cList);
       } catch (err) {
         console.error('Error querying counsellors collection:', err);
       }
 
-      if (!allCounsellors || allCounsellors.length === 0) {
-        try {
-          const userCounsellors = await StorageService.findAll('users', {
-            role: { $in: ['counsellor', 'psychologist', 'advisor'] },
-            isDeleted: { $ne: true }
-          }) || [];
-          if (userCounsellors.length > 0) {
-            allCounsellors = userCounsellors;
+      try {
+        const userCounsellors = await StorageService.findAll('users', {
+          role: { $in: ['counsellor', 'psychologist', 'advisor', 'therapist'] },
+          isDeleted: { $ne: true }
+        }) || [];
+        if (Array.isArray(userCounsellors)) {
+          for (const u of userCounsellors) {
+            const uId = u.id || u._id?.toString();
+            if (!allCounsellors.some(existing => (existing.id || existing._id?.toString()) === uId || existing.email === u.email)) {
+              allCounsellors.push(u);
+            }
           }
-        } catch (err) {
-          console.error('Error querying users collection for counsellors:', err);
         }
+      } catch (err) {
+        console.error('Error querying users collection for counsellors:', err);
       }
 
       // Filter out explicitly rejected or deleted counsellors
@@ -119,7 +123,10 @@ const UserController = {
       });
 
       if (mode && mode !== 'ALL') {
-        filtered = filtered.filter((c) => Array.isArray(c.modes) && c.modes.includes(mode.toUpperCase()));
+        filtered = filtered.filter((c) => {
+          if (!Array.isArray(c.modes) || c.modes.length === 0) return true;
+          return c.modes.includes(mode.toUpperCase());
+        });
       }
 
       if (specialty && specialty !== 'ALL') {
