@@ -182,90 +182,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
     return false;
   });
-  const DEFAULT_PSYCHOLOGISTS = [
-    {
-      id: 'counsellor_sarah_1',
-      name: 'Dr. Sarah Jenkins',
-      role: 'Consultant Clinical Psychologist',
-      availability: 'Available Today',
-      type: 'counselling',
-      defaultMeetLink: 'https://meet.google.com/beh-olds-psy',
-      price: 899,
-      halfSessionPrice: 499,
-      modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-      availabilitySlots: {
-        activeDays: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true },
-        availableSlots: ['09:00 AM', '10:00 AM', '11:00 AM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM']
-      },
-      bookedSlots: [],
-      locationName: 'Behold Mental Health Center, Calicut',
-      latitude: 11.2588,
-      longitude: 75.7804,
-      profilePic: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400',
-      image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400',
-      specialties: ['Anxiety & Depression', 'Relationship Guidance', 'Stress Management'],
-      bio: 'Licensed clinical psychologist specialized in cognitive behavioral therapy, emotional resilience, and holistic mental wellness.',
-      hours: 1200,
-      lang: 'English, Malayalam, Hindi',
-      rating: 4.9,
-      reviewCount: 124
-    },
-    {
-      id: 'counsellor_arjun_2',
-      name: 'Dr. Arjun Menon',
-      role: 'Senior Clinical Psychologist',
-      availability: 'Available Tomorrow',
-      type: 'counselling',
-      defaultMeetLink: 'https://meet.google.com/beh-olds-psy',
-      price: 999,
-      halfSessionPrice: 549,
-      modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-      availabilitySlots: {
-        activeDays: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true },
-        availableSlots: ['10:00 AM', '11:00 AM', '12:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM']
-      },
-      bookedSlots: [],
-      locationName: 'Behold Mental Health Center, Calicut',
-      latitude: 11.2588,
-      longitude: 75.7804,
-      profilePic: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400',
-      image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400',
-      specialties: ['Anxiety & Phobia', 'Adolescent Counselling', 'Trauma Recovery'],
-      bio: 'Dedicated mental health professional offering empathetic, evidence-based therapy tailored to individual growth and recovery.',
-      hours: 1850,
-      lang: 'English, Malayalam',
-      rating: 5.0,
-      reviewCount: 98
-    },
-    {
-      id: 'counsellor_priya_3',
-      name: 'Dr. Priya Nair',
-      role: 'Child & Adolescent Psychologist',
-      availability: 'Available This Week',
-      type: 'counselling',
-      defaultMeetLink: 'https://meet.google.com/beh-olds-psy',
-      price: 899,
-      halfSessionPrice: 499,
-      modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-      availabilitySlots: {
-        activeDays: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true },
-        availableSlots: ['09:00 AM', '10:00 AM', '11:00 AM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM']
-      },
-      bookedSlots: [],
-      locationName: 'Behold Mental Health Center, Calicut',
-      latitude: 11.2588,
-      longitude: 75.7804,
-      profilePic: 'https://images.unsplash.com/photo-1594824813581-229272370f7e?auto=format&fit=crop&q=80&w=400',
-      image: 'https://images.unsplash.com/photo-1594824813581-229272370f7e?auto=format&fit=crop&q=80&w=400',
-      specialties: ['Academic Stress', 'Parenting & Behavioral Therapy', 'Emotional Wellness'],
-      bio: 'Certified psychologist empowering youths, adolescents, and families through supportive and transformational counseling protocols.',
-      hours: 950,
-      lang: 'English, Hindi, Malayalam',
-      rating: 4.8,
-      reviewCount: 86
-    }
-  ];
-
   const [advisors, setAdvisors] = useState(() => {
     try {
       const cached = localStorage.getItem('behold_counsellors_cache');
@@ -291,7 +207,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             image: c.image || c.profilePic || '',
             specialties: c.specialties || [],
             bio: c.bio || '',
-            hours: c.hours || 100,
+            hours: c.hours || 0,
             lang: c.lang || '',
             rating: Number(c.rating) || 5.0,
             reviewCount: Number(c.reviewCount) || 0
@@ -299,7 +215,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
       }
     } catch {}
-    return DEFAULT_PSYCHOLOGISTS;
+    return [];
   });
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
@@ -309,13 +225,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     const initBookingData = async () => {
       try {
         let resolved = [];
-        const res = await ApiService.getCounsellors();
-        if (res.success && res.data && Array.isArray(res.data) && res.data.length > 0) {
+        const res = await ApiService.getCounsellors({}, true);
+        if (res && res.success && res.data && Array.isArray(res.data) && res.data.length > 0) {
           resolved = res.data.map(c => {
             return {
               id: c.id || c._id,
               name: c.name,
-              role: c.title || 'Consultant Psychologist',
+              role: c.title || c.role || 'Consultant Psychologist',
               availability: calculateNextAvailable(c.availability, c.bookedSlots || []),
               type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
@@ -335,19 +251,22 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               locationName: c.locationName || '',
               latitude: Number(c.latitude) || 0,
               longitude: Number(c.longitude) || 0,
-              profilePic: ((c.profilePic || c.image) && (c.profilePic || c.image).includes('res.cloudinary.com')) ? (c.profilePic || c.image) : '',
-              image: ((c.image || c.profilePic) && (c.image || c.profilePic).includes('res.cloudinary.com')) ? (c.image || c.profilePic) : '',
+              profilePic: c.profilePic || c.image || '',
+              image: c.image || c.profilePic || '',
               specialties: c.specialties || [],
               bio: c.bio || '',
-              hours: c.hours || c.completedHours || 100,
+              hours: c.hours || c.completedHours || 0,
               lang: c.lang || '',
               rating: Number(c.rating) || 5.0,
               reviewCount: Number(c.reviewCount) || 0
             };
           });
           setAdvisors(resolved);
-        } else if (advisors.length === 0) {
-          setAdvisors(DEFAULT_PSYCHOLOGISTS);
+
+          // Update cache with real database records
+          try {
+            localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data));
+          } catch {}
         }
 
         if (user) {
