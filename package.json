@@ -12,7 +12,25 @@
   },
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.10.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.5.2",
+    "googleapis": "^173.0.0",
+    "helmet": "^8.2.0",
+    "ics": "^3.12.0",
+    "ipaddr.js": "^2.4.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^7.4.0",
-    "next": "^16.3.1"
+    "mongoose": "^9.7.0",
+    "multer": "^2.1.1",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^9.0.3",
+    "razorpay": "^2.9.6",
+    "resend": "^6.19.0"
   }
 }

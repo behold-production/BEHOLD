@@ -573,110 +573,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   };
 
-  const getAvailableSlotsForDate = (dateStr, serviceType) => {
-    if (!dateStr) return [];
-
-    const todayStr = getLocalTodayString();
-    const isSlotInPast = (timeStr) => {
-      try {
-        const [time, modifier] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
-        if (modifier === 'PM' && hours < 12) hours += 12;
-        if (modifier === 'AM' && hours === 12) hours = 0;
-
-        const now = new Date();
-        const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-        return now >= slotDate;
-      } catch {
-        return false;
-      }
-    };
-
-    const DEFAULT_SLOTS = [
-      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
-      '06:00 PM', '07:00 PM', '08:00 PM'
-    ];
-
-    try {
-      const [year, month, day] = dateStr.split('-').map(Number);
-      const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay(); // 0 to 6
-
-      // If a specific advisor is selected, prioritize their schedule
-      if (selectedAdvisor) {
-        const parsed = selectedAdvisor.availabilitySlots || {};
-        const isDayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
-
-        if (isDayActive) {
-          const rawSlots = (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
-            ? parsed.availableSlots
-            : DEFAULT_SLOTS;
-
-          const bookings = selectedAdvisor.bookedSlots || [];
-          const list = rawSlots.filter(slot => {
-            if (dateStr === todayStr && isSlotInPast(slot)) {
-              return false;
-            }
-            return !bookings.some(b =>
-              b.date === dateStr &&
-              b.time === slot
-            );
-          });
-          const parseTimeToMinutes = (timeStr) => {
-            const [time, meridiem] = timeStr.split(' ');
-            let [hours, minutes] = time.split(':').map(Number);
-            if (meridiem === 'PM' && hours !== 12) hours += 12;
-            if (meridiem === 'AM' && hours === 12) hours = 0;
-            return hours * 60 + minutes;
-          };
-          return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
-        }
-        return [];
-      }
-
-      // Collect union of available slots across matching advisors or defaults
-      const activeSlotsSet = new Set();
-      const matchingAdvisors = advisors.filter(a => a.type === serviceType && (!a.modes || a.modes.includes(bookingMode)));
-
-      if (matchingAdvisors.length > 0) {
-        matchingAdvisors.forEach(advisor => {
-          const parsed = advisor.availabilitySlots || {};
-          const isDayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
-          if (isDayActive) {
-            const rawSlots = (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
-              ? parsed.availableSlots
-              : DEFAULT_SLOTS;
-            const bookings = advisor.bookedSlots || [];
-            rawSlots.forEach(slot => {
-              if (dateStr === todayStr && isSlotInPast(slot)) return;
-              const isBooked = bookings.some(b => b.date === dateStr && b.time === slot);
-              if (!isBooked) activeSlotsSet.add(slot);
-            });
-          }
-        });
-      } else {
-        DEFAULT_SLOTS.forEach(slot => {
-          if (dateStr === todayStr && isSlotInPast(slot)) return;
-          activeSlotsSet.add(slot);
-        });
-      }
-
-      const list = Array.from(activeSlotsSet);
-      const parseTimeToMinutes = (timeStr) => {
-        const [time, meridiem] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
-        if (meridiem === 'PM' && hours !== 12) hours += 12;
-        if (meridiem === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + minutes;
-      };
-      return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
-    } catch (err) {
-      console.error("Error generating dynamic slots", err);
-      return [];
-    }
-  };
-
-
   const getAdvisorSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
     if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
@@ -691,18 +587,22 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
     try {
       const [year, month, day] = dateStr.split('-').map(Number);
-      const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+      const dayOfWeek = new Date(year, month - 1, day).getDay();
       const parsed = advisor.availabilitySlots || {};
-      const dayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
+      
+      const hasActiveDaysConfig = parsed.activeDays && Object.keys(parsed.activeDays).length > 0;
+      const dayActive = hasActiveDaysConfig
+        ? (parsed.activeDays[dayOfWeek] === true || parsed.activeDays[String(dayOfWeek)] === true)
+        : true;
 
       if (!dayActive) return [];
 
-      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
+      const daySpecificSlots = parsed.daySlots && (parsed.daySlots[dayOfWeek] || parsed.daySlots[String(dayOfWeek)]);
       const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
         ? daySpecificSlots
         : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
           ? parsed.availableSlots
-          : DEFAULT_SLOTS;
+          : (!hasActiveDaysConfig ? DEFAULT_SLOTS : []);
 
       const bookings = advisor.bookedSlots || [];
       const todayStr = getLocalTodayString();
@@ -740,6 +640,74 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   };
 
+  const getAvailableSlotsForDate = (dateStr, serviceType) => {
+    if (!dateStr) return [];
+
+    const todayStr = getLocalTodayString();
+    const isSlotInPast = (timeStr) => {
+      try {
+        const [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+
+        const now = new Date();
+        const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        return now >= slotDate;
+      } catch {
+        return false;
+      }
+    };
+
+    const DEFAULT_SLOTS = [
+      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+      '06:00 PM', '07:00 PM', '08:00 PM'
+    ];
+
+    const parseTimeToMinutes = (timeStr) => {
+      const [time, meridiem] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+      if (meridiem === 'PM' && hours !== 12) hours += 12;
+      if (meridiem === 'AM' && hours === 12) hours = 0;
+      return hours * 60 + minutes;
+    };
+
+    try {
+      // If a specific advisor is selected, prioritize their schedule
+      if (selectedAdvisor) {
+        return getAdvisorSlotsForDate(selectedAdvisor, dateStr);
+      }
+
+      // Collect union of available slots across matching advisors or defaults
+      const activeSlotsSet = new Set();
+      const currentService = serviceType || bookingService;
+      const matchingAdvisors = advisors.filter(a => {
+        const isServiceMatch = !currentService || a.type === currentService || (currentService === 'counselling' && a.type !== 'career');
+        const isModeMatch = !a.modes || a.modes.length === 0 || a.modes.includes(bookingMode);
+        return isServiceMatch && isModeMatch;
+      });
+
+      if (matchingAdvisors.length > 0) {
+        matchingAdvisors.forEach(advisor => {
+          const slots = getAdvisorSlotsForDate(advisor, dateStr);
+          slots.forEach(slot => activeSlotsSet.add(slot));
+        });
+      } else {
+        DEFAULT_SLOTS.forEach(slot => {
+          if (dateStr === todayStr && isSlotInPast(slot)) return;
+          activeSlotsSet.add(slot);
+        });
+      }
+
+      const list = Array.from(activeSlotsSet);
+      return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
+    } catch (err) {
+      console.error("Error generating dynamic slots", err);
+      return [];
+    }
+  };
+
   const getAdvisorAllSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
     if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
@@ -754,17 +722,21 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
     try {
       const [year, month, day] = dateStr.split('-').map(Number);
-      const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+      const dayOfWeek = new Date(year, month - 1, day).getDay();
       const parsed = advisor.availabilitySlots || {};
-      const dayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
+      
+      const hasActiveDaysConfig = parsed.activeDays && Object.keys(parsed.activeDays).length > 0;
+      const dayActive = hasActiveDaysConfig
+        ? (parsed.activeDays[dayOfWeek] === true || parsed.activeDays[String(dayOfWeek)] === true)
+        : true;
       if (!dayActive) return [];
 
-      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
+      const daySpecificSlots = parsed.daySlots && (parsed.daySlots[dayOfWeek] || parsed.daySlots[String(dayOfWeek)]);
       const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
         ? daySpecificSlots
         : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
           ? parsed.availableSlots
-          : DEFAULT_SLOTS;
+          : (!hasActiveDaysConfig ? DEFAULT_SLOTS : []);
 
       const todayStr = getLocalTodayString();
       const isSlotInPast = (timeStr) => {
@@ -821,19 +793,27 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const getAdvisorAvailabilityStatus = (advisorId, dateStr, timeStr) => {
     if (!dateStr || !timeStr) return 'Available';
     const [year, month, day] = dateStr.split('-').map(Number);
-    const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+    const dayOfWeek = new Date(year, month - 1, day).getDay();
 
     const advisor = advisors.find(a => a.id === advisorId);
     if (!advisor || !advisor.availabilitySlots) {
-      return 'Unavailable';
+      return 'Available';
     }
 
     try {
       const parsed = advisor.availabilitySlots;
-      const isDayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-      // Check daySlots first (newer per-day structure), fall back to legacy availableSlots
-      const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
-      const slotsForDay = Array.isArray(daySpecificSlots) ? daySpecificSlots : (parsed.availableSlots || []);
+      const hasActiveDaysConfig = parsed.activeDays && Object.keys(parsed.activeDays).length > 0;
+      const isDayActive = hasActiveDaysConfig
+        ? (parsed.activeDays[dayOfWeek] === true || parsed.activeDays[String(dayOfWeek)] === true)
+        : true;
+      
+      const daySpecificSlots = parsed.daySlots && (parsed.daySlots[dayOfWeek] || parsed.daySlots[String(dayOfWeek)]);
+      const slotsForDay = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
+        ? daySpecificSlots
+        : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
+          ? parsed.availableSlots
+          : (!hasActiveDaysConfig ? [timeStr] : []);
+
       const isSlotActive = slotsForDay.includes(timeStr);
       if (isDayActive && isSlotActive) {
         const bookings = advisor.bookedSlots || [];

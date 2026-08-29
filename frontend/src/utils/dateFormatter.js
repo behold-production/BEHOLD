@@ -56,15 +56,27 @@ export const formatDateString = (dateInput) => {
 };
 
 export const calculateNextAvailable = (availability, bookedSlots) => {
-  if (!availability || !availability.availableSlots || availability.availableSlots.length === 0) {
+  if (!availability) {
     return 'Unavailable';
   }
 
   const activeDays = availability.activeDays || {};
+  const hasActiveDaysConfig = Object.keys(activeDays).length > 0;
   const hasActiveDays = Object.values(activeDays).some(v => v === true);
-  if (!hasActiveDays) {
+  if (hasActiveDaysConfig && !hasActiveDays) {
     return 'Unavailable';
   }
+
+  const hasAvailableSlotsConfig = Array.isArray(availability.availableSlots);
+  const hasDaySlotsConfig = availability.daySlots && typeof availability.daySlots === 'object';
+  
+  const hasAnySlots = (hasAvailableSlotsConfig && availability.availableSlots.length > 0) ||
+    (hasDaySlotsConfig && Object.values(availability.daySlots).some(arr => Array.isArray(arr) && arr.length > 0));
+
+  if ((hasAvailableSlotsConfig || hasDaySlotsConfig) && !hasAnySlots) {
+    return 'Unavailable';
+  }
+
 
   const today = new Date();
   
@@ -88,19 +100,34 @@ export const calculateNextAvailable = (availability, bookedSlots) => {
     return hours * 60 + minutes;
   };
 
+  const DEFAULT_SLOTS = [
+    '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+    '06:00 PM', '07:00 PM', '08:00 PM'
+  ];
+
   // Check next 30 days
   for (let i = 0; i < 30; i++) {
     const checkDate = new Date();
     checkDate.setDate(today.getDate() + i);
     
     const dayOfWeek = checkDate.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const isDayActive = activeDays[dayOfWeek] === true || activeDays[String(dayOfWeek)] === true;
+    const isDayActive = hasActiveDaysConfig
+      ? (activeDays[dayOfWeek] === true || activeDays[String(dayOfWeek)] === true)
+      : true;
     
     if (isDayActive) {
       const dateStr = formatDateStringLocal(checkDate);
       const bookingsForDate = (bookedSlots || []).filter(b => b && b.date === dateStr);
       
-      const freeSlots = availability.availableSlots.filter(slot => {
+      const daySpecificSlots = availability.daySlots && (availability.daySlots[dayOfWeek] || availability.daySlots[String(dayOfWeek)]);
+      const rawSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
+        ? daySpecificSlots
+        : (Array.isArray(availability.availableSlots) && availability.availableSlots.length > 0)
+          ? availability.availableSlots
+          : (!hasActiveDaysConfig ? DEFAULT_SLOTS : []);
+
+      const freeSlots = rawSlots.filter(slot => {
         const isBooked = bookingsForDate.some(b => b.time === slot);
         if (isBooked) return false;
         
@@ -128,4 +155,5 @@ export const calculateNextAvailable = (availability, bookedSlots) => {
 
   return 'Unavailable';
 };
+
 

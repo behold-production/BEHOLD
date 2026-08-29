@@ -14,11 +14,12 @@ let isConnected = false;
 let dbPromise = null;
 
 async function connectDB() {
-  if (isConnected && mongoose.connection.readyState === 1) {
+  if (mongoose.connection.readyState === 1) {
+    isConnected = true;
     return mongoose.connection;
   }
 
-  if (dbPromise) {
+  if (mongoose.connection.readyState === 2 && dbPromise) {
     return dbPromise;
   }
 
@@ -36,19 +37,19 @@ async function connectDB() {
       connectTimeoutMS: 20000,
       socketTimeoutMS: 45000
     })
-    .then(async (mongooseInstance) => {
+    .then((mongooseInstance) => {
       isConnected = true;
       console.log('[Database] MongoDB Connected successfully.');
-      try {
-        await StorageService.seedDefaultAdmin();
-      } catch (seedErr) {
+      // Seed default admin in background without blocking response
+      StorageService.seedDefaultAdmin().catch((seedErr) => {
         console.error('[Database] Failed to seed default admin:', seedErr.message);
-      }
+      });
       return mongooseInstance.connection;
     })
     .catch((err) => {
       console.error('[Database] MongoDB connection error:', err);
       dbPromise = null;
+      isConnected = false;
       throw new Error('Database connection error. Please verify database connectivity.');
     });
 
