@@ -38,11 +38,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         enablePsychology = parsed.enablePsychology !== false;
         enableCareerMentoring = parsed.enableCareerMentoring !== false;
       }
-    } catch {}
+    } catch { }
   }
 
   const isRescheduleParam = typeof window !== 'undefined' ? !!(new URLSearchParams(window.location.search).get('reschedule')) : false;
-  
+
   const getLocalTodayString = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -64,7 +64,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         if (urlService === 'career' || urlService === 'counselling' || urlService === 'counseling') {
           return urlService === 'counseling' ? 'counselling' : urlService;
         }
-      } catch {}
+      } catch { }
     }
     return 'counselling';
   }); // counselling, career
@@ -76,7 +76,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           const draft = JSON.parse(raw);
           if (draft.bookingMode) return draft.bookingMode;
         }
-      } catch {}
+      } catch { }
     }
     return 'ONLINE';
   }); // ONLINE, DOOR_STEP, OFFLINE
@@ -88,7 +88,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           const draft = JSON.parse(raw);
           if (draft.bookingDuration) return draft.bookingDuration;
         }
-      } catch {}
+      } catch { }
     }
     return 60; // 30 mins or 60 mins (default 60)
   });
@@ -113,7 +113,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           const draft = JSON.parse(raw);
           if (draft.bookingForm) return { ...defaultForm, ...draft.bookingForm };
         }
-      } catch {}
+      } catch { }
     }
     return defaultForm;
   });
@@ -125,7 +125,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           const draft = JSON.parse(raw);
           if (draft.selectedDate) return draft.selectedDate;
         }
-      } catch {}
+      } catch { }
     }
     return '';
   });
@@ -137,7 +137,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           const draft = JSON.parse(raw);
           if (draft.selectedTime) return draft.selectedTime;
         }
-      } catch {}
+      } catch { }
     }
     return '';
   });
@@ -149,7 +149,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     try {
       const stored = localStorage.getItem('behold_site_settings');
       if (stored) settings = JSON.parse(stored);
-    } catch {}
+    } catch { }
 
     const isOnlineEnabled = settings.enableOnline !== false;
     const isOfflineEnabled = settings.enableOffline !== false;
@@ -178,7 +178,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           const draft = JSON.parse(raw);
           if (typeof draft.advisorConfirmed === 'boolean') return draft.advisorConfirmed;
         }
-      } catch {}
+      } catch { }
     }
     return false;
   });
@@ -214,7 +214,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           }));
         }
       }
-    } catch {}
+    } catch { }
     return [];
   });
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -266,7 +266,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           // Update cache with real database records
           try {
             localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data));
-          } catch {}
+          } catch { }
         }
 
         if (user) {
@@ -285,7 +285,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               setRescheduleSession(foundSession);
               setBookingService(foundSession.service || 'counselling');
               setBookingMode(foundSession.mode || 'ONLINE');
-              
+
               // Resolve counsellor object
               const matchedCounsellor = resolved.find(a => a.id === foundSession.counsellorId);
               if (matchedCounsellor) {
@@ -340,7 +340,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isAutofilled, setIsAutofilled] = useState(false);
-  
+
   const isAdvisorLocked = !!preselectedAdvisorId;
   const [bookingStep, setBookingStep] = useState('config'); // 'config' | 'payment' | 'success'
   const [confirmedMeetLink, setConfirmedMeetLink] = useState(''); // meet link from server after payment
@@ -369,7 +369,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
       sitePromoCodes = parsed.promoCodes || [];
     }
-  } catch {}
+  } catch { }
 
   const getDurationPrice = (advisor, duration) => {
     const fullPrice = advisor ? (Number(advisor.price) || 899) : 899;
@@ -405,7 +405,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       doc.setFontSize(22);
       doc.setTextColor(9, 9, 11); // zinc-900
       doc.text('BEHOLD.', 20, 25);
-      
+
       doc.setFontSize(9);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(113, 113, 122); // zinc-500
@@ -433,7 +433,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(8.5);
       doc.setTextColor(82, 82, 91); // zinc-600
-      
+
       // Client info
       doc.text(`Name: ${bookingDetails.clientName}`, 20, 52);
       doc.text(`Email: ${bookingDetails.clientEmail || 'N/A'}`, 20, 58);
@@ -528,24 +528,24 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       doc.setTextColor(13, 148, 136); // Teal color for total price
       doc.setFontSize(10.5);
       doc.text(`INR ${detailsNetTotal.toFixed(2)}`, 160, tableY + 2);
-      
+
       tableY += 16;
 
       // Google Meet Session Link if Online
       if (bookingDetails.meetLink) {
         doc.setFillColor(240, 253, 250); // Light teal bg
         doc.roundedRect(20, tableY, 170, 18, 2, 2, 'F');
-        
+
         doc.setFont('Helvetica', 'bold');
         doc.setFontSize(8.5);
         doc.setTextColor(13, 148, 136);
         doc.text('Google Meet Session Link (Online Video Call):', 25, tableY + 6);
-        
+
         doc.setFont('Helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(6, 182, 212); // blue-link
         doc.text(bookingDetails.meetLink, 25, tableY + 12);
-        
+
         tableY += 28;
       } else {
         tableY += 10;
@@ -606,7 +606,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       if (selectedAdvisor) {
         const parsed = selectedAdvisor.availabilitySlots || {};
         const isDayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
-        
+
         if (isDayActive) {
           const rawSlots = (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
             ? parsed.availableSlots
@@ -617,8 +617,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             if (dateStr === todayStr && isSlotInPast(slot)) {
               return false;
             }
-            return !bookings.some(b => 
-              b.date === dateStr && 
+            return !bookings.some(b =>
+              b.date === dateStr &&
               b.time === slot
             );
           });
@@ -694,15 +694,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
       const parsed = advisor.availabilitySlots || {};
       const dayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
-      
+
       if (!dayActive) return [];
 
       const daySpecificSlots = parsed.daySlots && parsed.daySlots[dayOfWeek];
       const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
         ? daySpecificSlots
         : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
-        ? parsed.availableSlots
-        : DEFAULT_SLOTS;
+          ? parsed.availableSlots
+          : DEFAULT_SLOTS;
 
       const bookings = advisor.bookedSlots || [];
       const todayStr = getLocalTodayString();
@@ -739,7 +739,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       return [];
     }
   };
-  
+
   const getAdvisorAllSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
     if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
@@ -763,8 +763,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const activeSlots = (Array.isArray(daySpecificSlots) && daySpecificSlots.length > 0)
         ? daySpecificSlots
         : (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
-        ? parsed.availableSlots
-        : DEFAULT_SLOTS;
+          ? parsed.availableSlots
+          : DEFAULT_SLOTS;
 
       const todayStr = getLocalTodayString();
       const isSlotInPast = (timeStr) => {
@@ -837,8 +837,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const isSlotActive = slotsForDay.includes(timeStr);
       if (isDayActive && isSlotActive) {
         const bookings = advisor.bookedSlots || [];
-        const isAlreadyBooked = bookings.some(b => 
-          b.date === dateStr && 
+        const isAlreadyBooked = bookings.some(b =>
+          b.date === dateStr &&
           b.time === timeStr
         );
         if (isAlreadyBooked) {
@@ -846,7 +846,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
         return 'Available';
       }
-    } catch {}
+    } catch { }
 
     return 'Unavailable';
   };
@@ -1023,7 +1023,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               setBookingMode(found.modes[0]);
             }
           }, 0);
-          
+
           setTimeout(() => {
             const element = document.getElementById('booking-console');
             if (element) {
@@ -1046,12 +1046,17 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   }, [preselectedAdvisorId, clearPreselectedAdvisor, advisors, bookingMode]);
 
-  // Reset advisor if service type, mode, or location changes to avoid invalid combinations
+  // Ensure service and mode compatibility when advisor or mode changes
   useEffect(() => {
     if (selectedAdvisor) {
-      const isServiceMatch = selectedAdvisor.type === bookingService;
-      const isModeMatch = !selectedAdvisor.modes || selectedAdvisor.modes.includes(bookingMode);
-      
+      const isServiceMatch = !selectedAdvisor.type || selectedAdvisor.type === bookingService || bookingService === 'counselling' || selectedAdvisor.type === 'counselling';
+      const isModeMatch = !selectedAdvisor.modes || selectedAdvisor.modes.length === 0 || selectedAdvisor.modes.includes(bookingMode);
+
+      if (selectedAdvisor.modes && Array.isArray(selectedAdvisor.modes) && selectedAdvisor.modes.length > 0 && !selectedAdvisor.modes.includes(bookingMode)) {
+        setBookingMode(selectedAdvisor.modes[0]);
+        return;
+      }
+
       let isDistanceMatch = true;
       if (bookingMode === 'DOOR_STEP') {
         const clientLat = parseFloat(bookingForm.clientLatitude);
@@ -1068,7 +1073,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
       }
 
-      if (!isServiceMatch || !isModeMatch || !isDistanceMatch) {
+      if (!isServiceMatch || (!isModeMatch && (!selectedAdvisor.modes || selectedAdvisor.modes.length === 0)) || !isDistanceMatch) {
         setTimeout(() => {
           setSelectedAdvisor(null);
           setAdvisorConfirmed(false);
@@ -1204,7 +1209,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
 
       setPaymentStepText("Creating payment order...");
-      
+
       const orderRes = await ApiService.createPaymentOrder(selectedAdvisor ? selectedAdvisor.id : '', bookingDetails);
       if (!orderRes.success || !orderRes.data) {
         throw new Error(orderRes.message || 'Failed to create payment order');
@@ -1225,7 +1230,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         handler: async function (response) {
           try {
             setPaymentStepText("Verifying payment signature...");
-            
+
             const bookingDetails = {
               counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
               date: selectedDate,
@@ -1382,7 +1387,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
 
     setErrors({});
-    
+
     const baseErrors = {};
 
     const resolvedName = (bookingForm.name || user?.name || '').trim();
@@ -1400,23 +1405,23 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (bookingMode === 'DOOR_STEP') {
       const clientLat = parseFloat(bookingForm.clientLatitude);
       const clientLng = parseFloat(bookingForm.clientLongitude);
-      
+
       if (!bookingForm.clientLocationName?.trim()) {
         baseErrors.clientLocationName = 'Location Address is required for Doorstep sessions';
       }
-      
+
       if (isNaN(clientLat) || clientLat < -90 || clientLat > 90) {
         baseErrors.clientLatitude = 'Please enter a valid Latitude (-90 to 90)';
       }
       if (isNaN(clientLng) || clientLng < -180 || clientLng > 180) {
         baseErrors.clientLongitude = 'Please enter a valid Longitude (-180 to 180)';
       }
-      
+
       if (Object.keys(baseErrors).length === 0) {
         if (selectedAdvisor) {
           const advLat = Number(selectedAdvisor.latitude);
           const advLng = Number(selectedAdvisor.longitude);
-          
+
           if (!advLat && !advLng) {
             baseErrors.clientLocationName = 'Doorstep booking is temporarily unavailable for this psychologist (missing coordinates)';
           } else {
@@ -1483,15 +1488,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     const code = couponInput.toUpperCase().trim();
     const foundPromo = sitePromoCodes.find(p => p.code.toUpperCase() === code && p.isActive !== false);
     if (foundPromo) {
-       const discount = foundPromo.type === 'PERCENTAGE'
-         ? Math.round((baseFee + gstAmount) * (foundPromo.value / 100))
-         : foundPromo.value;
-       if (foundPromo.type === 'PERCENTAGE') {
-           setCouponMsg({ text: `${foundPromo.value}% discount applied!`, type: 'success' });
-       } else {
-           setCouponMsg({ text: `₹${foundPromo.value} discount applied!`, type: 'success' });
-       }
-       setAppliedDiscount(discount);
+      const discount = foundPromo.type === 'PERCENTAGE'
+        ? Math.round((baseFee + gstAmount) * (foundPromo.value / 100))
+        : foundPromo.value;
+      if (foundPromo.type === 'PERCENTAGE') {
+        setCouponMsg({ text: `${foundPromo.value}% discount applied!`, type: 'success' });
+      } else {
+        setCouponMsg({ text: `₹${foundPromo.value} discount applied!`, type: 'success' });
+      }
+      setAppliedDiscount(discount);
     } else {
       setCouponMsg({ text: 'Invalid promo code', type: 'error' });
     }
