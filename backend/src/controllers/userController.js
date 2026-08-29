@@ -88,12 +88,31 @@ const UserController = {
         return res.status(200).json(cachedResponse);
       }
 
-      const allCounsellors = await StorageService.findAll('counsellors', {
-        isDeleted: { $ne: true }
-      }) || [];
+      let allCounsellors = [];
+      try {
+        allCounsellors = await StorageService.findAll('counsellors', {
+          isDeleted: { $ne: true }
+        }) || [];
+      } catch (err) {
+        console.error('Error querying counsellors collection:', err);
+      }
+
+      if (!allCounsellors || allCounsellors.length === 0) {
+        try {
+          const userCounsellors = await StorageService.findAll('users', {
+            role: { $in: ['counsellor', 'psychologist', 'advisor'] },
+            isDeleted: { $ne: true }
+          }) || [];
+          if (userCounsellors.length > 0) {
+            allCounsellors = userCounsellors;
+          }
+        } catch (err) {
+          console.error('Error querying users collection for counsellors:', err);
+        }
+      }
 
       // Filter out explicitly rejected or deleted counsellors
-      let filtered = allCounsellors.filter(c => {
+      let filtered = (allCounsellors || []).filter(c => {
         if (!c || c.isDeleted === true) return false;
         if (c.status === 'REJECTED' || c.status === 'DELETED') return false;
         return true;
