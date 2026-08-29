@@ -340,164 +340,156 @@ export default function DateTimePicker({
  ))}
  </div>
 
- {/* Grid Days */}
- <div className="grid grid-cols-7 gap-1.5 p-3">
- {calendarCells.map((cell, idx) => {
- const meta = getDayMeta(cell.dateStr, cell.dateObj);
- const isSelected = selectedDate === cell.dateStr;
- const isToday = cell.dateStr === todayStr;
+  {/* Grid Days */}
+  <div className="grid grid-cols-7 gap-1.5 p-3">
+  {calendarCells.map((cell, idx) => {
+  const meta = getDayMeta(cell.dateStr, cell.dateObj);
+  const isSelected = selectedDate === cell.dateStr;
+  const isToday = cell.dateStr === todayStr;
 
- return (
- <button
- key={`${cell.dateStr}-${idx}`}
- type="button"
- disabled={meta.isPast}
- onClick={() => {
- if (!meta.isPast) {
- onDateChange(cell.dateStr);
- onTimeChange('');
- }
- }}
- className={`
- relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-[10px] transition-all duration-200 select-none border-2
- ${meta.isPast
- ? 'bg-surface-50 border-surface-50 text-surface-300 cursor-not-allowed opacity-40'
- : isSelected
- ? 'bg-surface-900 border-surface-900 text-white shadow-md font-semibold'
- : meta.isAvailable
- ? isToday
- ? 'bg-white border-surface-900 text-surface-800 hover:border-surface-900'
- : 'bg-white border-surface-200 text-surface-800 hover:border-surface-900'
- : isToday
- ? 'bg-surface-50 border-surface-900 text-surface-400 cursor-not-allowed opacity-50'
- : 'bg-surface-50 border-surface-100 text-surface-400 cursor-not-allowed opacity-50'
- }
- ${!cell.isCurrentMonth && !meta.isPast && !isSelected ? 'opacity-40 text-surface-400' : ''}
- `}
- >
- {/* Day Number */}
- <span className={`text-sm sm:text-base font-semibold leading-none ${
- isSelected ? 'text-white' : isToday ? 'text-surface-900' : ''
- }`}>
- {cell.dayNum}
- </span>
+  return (
+  <button
+  key={`${cell.dateStr}-${idx}`}
+  type="button"
+  disabled={meta.isPast}
+  onClick={() => {
+  if (!meta.isPast) {
+  onDateChange(cell.dateStr);
+  onTimeChange('');
+  }
+  }}
+  className={`
+  relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-[10px] transition-all duration-200 select-none border-2 cursor-pointer
+  ${meta.isPast
+  ? 'bg-zinc-100/60 border-transparent text-zinc-400 cursor-not-allowed opacity-50'
+  : isSelected
+  ? 'bg-zinc-950 border-zinc-950 text-white shadow-md font-bold'
+  : isToday
+  ? 'bg-white border-zinc-900 ring-2 ring-cyan-500/80 text-zinc-900 font-bold hover:bg-zinc-50'
+  : 'bg-white border-zinc-200 text-zinc-900 font-bold hover:border-zinc-900 hover:shadow-xs'
+  }
+  ${!cell.isCurrentMonth && !meta.isPast && !isSelected ? 'opacity-40 text-zinc-400' : ''}
+  `}
+  >
+  {/* Day Number */}
+  <span className={`text-sm sm:text-base font-bold leading-none ${
+  isSelected ? 'text-white' : meta.isPast ? 'text-zinc-400' : 'text-zinc-900'
+  }`}>
+  {cell.dayNum}
+  </span>
 
- {/* Availability Dot indicator */}
- {!meta.isPast && meta.isAvailable && (
- <span className={`w-1.5 h-1.5 rounded-full mt-1 shrink-0 ${
- isSelected
- ? 'bg-white'
- : meta.slotCount >= 3
- ? 'bg-emerald-500'
- : meta.slotCount >= 2
- ? 'bg-amber-500'
- : 'bg-rose-500'
- }`} />
- )}
- </button>
- );
- })}
- </div>
+  {/* Availability Dot indicator */}
+  {!meta.isPast && meta.isAvailable && (
+  <span className={`w-1.5 h-1.5 rounded-full mt-1 shrink-0 ${
+  isSelected
+  ? 'bg-white'
+  : meta.slotCount >= 3
+  ? 'bg-emerald-500'
+  : meta.slotCount >= 2
+  ? 'bg-amber-500'
+  : 'bg-rose-500'
+  }`} />
+  )}
+  </button>
+  );
+  })}
+  </div>
 
- {/* Calendar Color Legend */}
- <div className="flex flex-wrap items-center gap-4 px-4 py-2.5 bg-surface-50/50 border-t border-surface-150 text-[10px] sm:text-xs text-surface-500 font-medium">
- <span className="flex items-center gap-1.5">
- <span className="w-2 h-2 rounded-full bg-emerald-500" /> High Availability (3+ slots)
- </span>
- <span className="flex items-center gap-1.5">
- <span className="w-2 h-2 rounded-full bg-amber-500" /> Limited Availability (2 slots)
- </span>
- <span className="flex items-center gap-1.5">
- <span className="w-2 h-2 rounded-full bg-rose-500" /> Last Slots Remaining (1 slot)
- </span>
- </div>
- </div>
- ) : (
- /* Weekly Strip View (Original Layout) */
- <div className="relative group animate-in fade-in duration-300">
- {/* Left Arrow */}
- <button
- type="button"
- onClick={() => scrollBy(-1)}
- className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-[10px] bg-white border border-surface-200 shadow-md hover:bg-surface-50 items-center justify-center text-surface-500 hover:text-surface-900 transition cursor-pointer hidden sm:flex"
- aria-label="Scroll left"
- >
- <ChevronLeft className="w-3.5 h-3.5" />
- </button>
+  {/* Calendar Color Legend */}
+  <div className="flex flex-wrap items-center gap-4 px-4 py-2.5 bg-zinc-50 border-t border-zinc-200 text-[10px] sm:text-xs text-zinc-600 font-semibold">
+  <span className="flex items-center gap-1.5">
+  <span className="w-2 h-2 rounded-full bg-emerald-500" /> High Availability (3+ slots)
+  </span>
+  <span className="flex items-center gap-1.5">
+  <span className="w-2 h-2 rounded-full bg-amber-500" /> Limited Availability (2 slots)
+  </span>
+  <span className="flex items-center gap-1.5">
+  <span className="w-2 h-2 rounded-full bg-rose-500" /> Last Slots Remaining (1 slot)
+  </span>
+  </div>
+  </div>
+  ) : (
+  /* Weekly Strip View (Original Layout) */
+  <div className="relative group animate-in fade-in duration-300">
+  {/* Left Arrow */}
+  <button
+  type="button"
+  onClick={() => scrollBy(-1)}
+  className="absolute -left-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-[10px] bg-white border border-zinc-200 shadow-md hover:bg-zinc-50 items-center justify-center text-zinc-700 hover:text-zinc-950 transition cursor-pointer hidden sm:flex"
+  aria-label="Scroll left"
+  >
+  <ChevronLeft className="w-3.5 h-3.5" />
+  </button>
 
- {/* Scrollable Date Cards */}
- <div
- ref={scrollRef}
- className="flex gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth px-1 py-1"
- >
- {daysList.map((day) => {
- const meta = getDayMeta(day.dateStr, day.dateObj);
- const isSelected = selectedDate === day.dateStr;
- const isToday = day.dateStr === todayStr;
+  {/* Scrollable Date Cards */}
+  <div
+  ref={scrollRef}
+  className="flex gap-2 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth px-1 py-1"
+  >
+  {daysList.map((day) => {
+  const meta = getDayMeta(day.dateStr, day.dateObj);
+  const isSelected = selectedDate === day.dateStr;
+  const isToday = day.dateStr === todayStr;
 
- return (
- <button
- key={day.dateStr}
- data-date={day.dateStr}
- type="button"
- disabled={meta.isPast}
- onClick={() => {
- if (!meta.isPast) {
- onDateChange(day.dateStr);
- onTimeChange('');
- }
- }}
- className={`
- flex flex-col items-center justify-center snap-start
- min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
- rounded-[10px] border-2 transition-all duration-200 select-none
- ${meta.isPast
- ? 'bg-surface-50 border-surface-100 text-surface-300 cursor-not-allowed opacity-40'
- : isSelected
- ? 'bg-surface-900 border-surface-900 text-white shadow-lg cursor-pointer'
- : meta.isAvailable
- ? isToday
- ? 'bg-white border-surface-900 text-surface-800 hover:border-surface-900 hover:shadow-sm cursor-pointer'
- : 'bg-white border-surface-200 text-surface-800 hover:border-surface-900 hover:shadow-sm cursor-pointer'
- : isToday
- ? 'bg-surface-50 border-surface-900 text-surface-400 cursor-not-allowed opacity-50'
- : 'bg-surface-50 border-surface-150 text-surface-400 cursor-not-allowed opacity-50'
- }
- `}
- >
- {/* Weekday */}
- <span className={`text-[9px] sm:text-[10px] font-semibold tracking-widest leading-none ${
- isSelected ? 'text-surface-400' : 'text-surface-400'
- }`}>
- {day.weekday}
- </span>
+  return (
+  <button
+  key={day.dateStr}
+  data-date={day.dateStr}
+  type="button"
+  disabled={meta.isPast}
+  onClick={() => {
+  if (!meta.isPast) {
+  onDateChange(day.dateStr);
+  onTimeChange('');
+  }
+  }}
+  className={`
+  flex flex-col items-center justify-center snap-start
+  min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
+  rounded-[10px] border-2 transition-all duration-200 select-none cursor-pointer
+  ${meta.isPast
+  ? 'bg-zinc-100/60 border-zinc-100 text-zinc-400 cursor-not-allowed opacity-50'
+  : isSelected
+  ? 'bg-zinc-950 border-zinc-950 text-white shadow-lg font-bold'
+  : isToday
+  ? 'bg-white border-zinc-900 ring-2 ring-cyan-500/80 text-zinc-900 font-bold hover:bg-zinc-50'
+  : 'bg-white border-zinc-200 text-zinc-900 font-bold hover:border-zinc-900 hover:shadow-xs'
+  }
+  `}
+  >
+  {/* Weekday */}
+  <span className={`text-[9px] sm:text-[10px] font-bold tracking-widest leading-none ${
+  isSelected ? 'text-zinc-300' : 'text-zinc-500'
+  }`}>
+  {day.weekday}
+  </span>
 
- {/* Day Number */}
- <span className={`text-xl sm:text-2xl font-semibold leading-none mt-1 ${
- isSelected ? 'text-white' : isToday ? 'text-surface-900' : ''
- }`}>
- {day.day}
- </span>
+  {/* Day Number */}
+  <span className={`text-xl sm:text-2xl font-bold leading-none mt-1 ${
+  isSelected ? 'text-white' : meta.isPast ? 'text-zinc-400' : 'text-zinc-900'
+  }`}>
+  {day.day}
+  </span>
 
- {/* Month + availability dot */}
- <span className="flex items-center gap-1 mt-1.5">
- <span className={`text-[9px] sm:text-[10px] font-semibold leading-none ${
- isSelected ? 'text-surface-400' : 'text-surface-400'
- }`}>
- {day.month}
- </span>
- {!meta.isPast && meta.isAvailable && !isSelected && (
- <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
- meta.slotCount >= 3 ? 'bg-emerald-500' : meta.slotCount >= 2 ? 'bg-amber-500' : 'bg-rose-500'
- }`} />
- )}
- {isSelected && (
- <span className="w-1.5 h-1.5 rounded-full bg-brand shrink-0" />
- )}
- </span>
- </button>
- );
- })}
+  {/* Month + availability dot */}
+  <span className="flex items-center gap-1 mt-1.5">
+  <span className={`text-[9px] sm:text-[10px] font-semibold leading-none ${
+  isSelected ? 'text-zinc-300' : 'text-zinc-500'
+  }`}>
+  {day.month}
+  </span>
+  {!meta.isPast && meta.isAvailable && !isSelected && (
+  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+  meta.slotCount >= 3 ? 'bg-emerald-500' : meta.slotCount >= 2 ? 'bg-amber-500' : 'bg-rose-500'
+  }`} />
+  )}
+  {isSelected && (
+  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+  )}
+  </span>
+  </button>
+  );
+  })}
  </div>
 
  {/* Right Arrow */}

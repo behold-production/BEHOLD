@@ -590,87 +590,84 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
     };
 
+    const DEFAULT_SLOTS = [
+      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+      '06:00 PM', '07:00 PM', '08:00 PM'
+    ];
+
     try {
       const [year, month, day] = dateStr.split('-').map(Number);
       const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay(); // 0 to 6
 
       // If a specific advisor is selected, prioritize their schedule
       if (selectedAdvisor) {
-        const parsed = selectedAdvisor.availabilitySlots;
-        if (parsed) {
-          try {
-            const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-            if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-              const bookings = selectedAdvisor.bookedSlots || [];
-              const list = parsed.availableSlots.filter(slot => {
-                if (dateStr === todayStr && isSlotInPast(slot)) {
-                  return false;
-                }
-                return !bookings.some(b => 
-                  b.date === dateStr && 
-                  b.time === slot
-                );
-              });
-              const parseTimeToMinutes = (timeStr) => {
-                const [time, meridiem] = timeStr.split(' ');
-                let [hours, minutes] = time.split(':').map(Number);
-                if (meridiem === 'PM' && hours !== 12) hours += 12;
-                if (meridiem === 'AM' && hours === 12) hours = 0;
-                return hours * 60 + minutes;
-              };
-              return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
+        const parsed = selectedAdvisor.availabilitySlots || {};
+        const isDayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
+        
+        if (isDayActive) {
+          const rawSlots = (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
+            ? parsed.availableSlots
+            : DEFAULT_SLOTS;
+
+          const bookings = selectedAdvisor.bookedSlots || [];
+          const list = rawSlots.filter(slot => {
+            if (dateStr === todayStr && isSlotInPast(slot)) {
+              return false;
             }
-            return [];
-          } catch (err) {
-            console.error("Error parsing advisor availability in booking", err);
-          }
+            return !bookings.some(b => 
+              b.date === dateStr && 
+              b.time === slot
+            );
+          });
+          const parseTimeToMinutes = (timeStr) => {
+            const [time, meridiem] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':').map(Number);
+            if (meridiem === 'PM' && hours !== 12) hours += 12;
+            if (meridiem === 'AM' && hours === 12) hours = 0;
+            return hours * 60 + minutes;
+          };
+          return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
         }
         return [];
       }
 
-      // Collect union of available slots across matching advisors
+      // Collect union of available slots across matching advisors or defaults
       const activeSlotsSet = new Set();
       const matchingAdvisors = advisors.filter(a => a.type === serviceType && (!a.modes || a.modes.includes(bookingMode)));
 
-      matchingAdvisors.forEach(advisor => {
-        const parsed = advisor.availabilitySlots;
-        if (parsed) {
-          try {
-            const dayActive = parsed.activeDays && parsed.activeDays[dayOfWeek];
-            if (dayActive && parsed.availableSlots && parsed.availableSlots.length > 0) {
-              const bookings = advisor.bookedSlots || [];
-              parsed.availableSlots.forEach(slot => {
-                if (dateStr === todayStr && isSlotInPast(slot)) {
-                  return;
-                }
-                const isBooked = bookings.some(b => 
-                  b.date === dateStr && 
-                  b.time === slot
-                );
-                if (!isBooked) {
-                  activeSlotsSet.add(slot);
-                }
-              });
-            }
-          } catch (err) {
-            console.error("Error parsing advisor availability in booking", err);
+      if (matchingAdvisors.length > 0) {
+        matchingAdvisors.forEach(advisor => {
+          const parsed = advisor.availabilitySlots || {};
+          const isDayActive = parsed.activeDays ? parsed.activeDays[dayOfWeek] !== false : true;
+          if (isDayActive) {
+            const rawSlots = (Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0)
+              ? parsed.availableSlots
+              : DEFAULT_SLOTS;
+            const bookings = advisor.bookedSlots || [];
+            rawSlots.forEach(slot => {
+              if (dateStr === todayStr && isSlotInPast(slot)) return;
+              const isBooked = bookings.some(b => b.date === dateStr && b.time === slot);
+              if (!isBooked) activeSlotsSet.add(slot);
+            });
           }
-        }
-      });
-
-      if (activeSlotsSet.size > 0) {
-        const list = Array.from(activeSlotsSet);
-        const parseTimeToMinutes = (timeStr) => {
-          const [time, meridiem] = timeStr.split(' ');
-          let [hours, minutes] = time.split(':').map(Number);
-          if (meridiem === 'PM' && hours !== 12) hours += 12;
-          if (meridiem === 'AM' && hours === 12) hours = 0;
-          return hours * 60 + minutes;
-        };
-        return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
+        });
+      } else {
+        DEFAULT_SLOTS.forEach(slot => {
+          if (dateStr === todayStr && isSlotInPast(slot)) return;
+          activeSlotsSet.add(slot);
+        });
       }
 
-      return [];
+      const list = Array.from(activeSlotsSet);
+      const parseTimeToMinutes = (timeStr) => {
+        const [time, meridiem] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (meridiem === 'PM' && hours !== 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+      };
+      return list.sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
     } catch (err) {
       console.error("Error generating dynamic slots", err);
       return [];
