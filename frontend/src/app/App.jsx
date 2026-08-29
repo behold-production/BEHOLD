@@ -631,21 +631,40 @@ export default function App() {
           } />
 
           {/* About Page Route */}
-          <Route path="/about" element={ //
-            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
+          <Route path="/about" element={
+            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent min-h-screen">
               <About siteSettings={siteSettings} />
+              <Reviews siteSettings={siteSettings} />
+            </main>
+          } />
+
+          {/* Contact Page Route */}
+          <Route path="/contact" element={
+            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent min-h-screen">
+              <ContactInquirySection />
+            </main>
+          } />
+
+          {/* Reviews Route */}
+          <Route path="/reviews" element={
+            <main className="fade-in-up pt-16 sm:pt-20 bg-transparent min-h-screen">
               <Reviews siteSettings={siteSettings} />
             </main>
           } />
 
           {/* Blog & FAQ Routes */}
           <Route path="/blog" element={<BlogList />} />
+          <Route path="/blogs" element={<Navigate to="/blog" replace />} />
           <Route path="/blog/:slug" element={<BlogPostDetail />} />
           <Route path="/faqs" element={<FaqsPage />} />
+          <Route path="/faq" element={<Navigate to="/faqs" replace />} />
           <Route path="/test" element={<AptitudeTest onFinishTest={handleFinishTest} />} />
           <Route path="/results/:testId" element={<TestResultsTab />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<PrivacyPolicy />} />
+          <Route path="/terms-and-conditions" element={<PrivacyPolicy />} />
 
           {/* Aptitude routes: only active when admin enables aptitude */}
           {siteSettings.enableAptitude !== false ? (
@@ -661,8 +680,7 @@ export default function App() {
             <Route path="/sample-test" element={<Navigate to="/booking" replace />} />
           )}
 
-          {/* Services Page — Career Mentoring + Psychological Counselling + Expert Listing */} {/* */}
-          {/* C-DAT section shown only when admin has enabled aptitude */}
+          {/* Services Page — Career Mentoring + Psychological Counselling + Expert Listing */}
           <Route path="/booking" element={
             <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
@@ -671,6 +689,12 @@ export default function App() {
               )}
             </main>
           } />
+          <Route path="/services" element={<Navigate to="/booking" replace />} />
+          <Route path="/service" element={<Navigate to="/booking" replace />} />
+          <Route path="/counselling" element={<Navigate to="/booking" replace />} />
+          <Route path="/counsellors" element={<Navigate to="/booking" replace />} />
+          <Route path="/therapists" element={<Navigate to="/booking" replace />} />
+          <Route path="/advisors" element={<Navigate to="/booking" replace />} />
 
 
 
