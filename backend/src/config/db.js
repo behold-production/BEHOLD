@@ -1,4 +1,9 @@
+const path = require('path');
 require('dotenv').config();
+try { require('dotenv').config({ path: path.resolve(process.cwd(), '.env') }); } catch {}
+try { require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); } catch {}
+try { require('dotenv').config({ path: path.resolve(__dirname, '../../../backend/.env') }); } catch {}
+
 const mongoose = require('mongoose');
 const StorageService = require('../services/storageService');
 
@@ -17,7 +22,7 @@ async function connectDB() {
     return dbPromise;
   }
 
-  const mongoUri = process.env.MONGODB_URI;
+  const mongoUri = process.env.MONGODB_URI || process.env.DATABASE_URL || process.env.MONGO_URI || process.env.MONGO_URL;
   if (!mongoUri && process.env.NODE_ENV === 'production') {
     throw new Error("VERCEL ENVIRONMENT VARIABLE 'MONGODB_URI' is missing. Please add MONGODB_URI to Vercel Project Settings.");
   }

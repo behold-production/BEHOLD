@@ -88,9 +88,16 @@ const UserController = {
         return res.status(200).json(cachedResponse);
       }
 
-      const allCounsellors = await StorageService.findAll('counsellors', { isVerified: true, isActive: true });
+      const allCounsellors = await StorageService.findAll('counsellors', {
+        isDeleted: { $ne: true }
+      }) || [];
 
-      let filtered = allCounsellors;
+      // Filter out explicitly rejected or deleted counsellors
+      let filtered = allCounsellors.filter(c => {
+        if (!c || c.isDeleted === true) return false;
+        if (c.status === 'REJECTED' || c.status === 'DELETED') return false;
+        return true;
+      });
 
       if (mode && mode !== 'ALL') {
         filtered = filtered.filter((c) => Array.isArray(c.modes) && c.modes.includes(mode.toUpperCase()));
