@@ -182,7 +182,41 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
     return false;
   });
-  const [advisors, setAdvisors] = useState([]);
+  const [advisors, setAdvisors] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_counsellors_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map(c => ({
+            id: c.id || c._id,
+            name: c.name,
+            role: c.title || c.role || 'Consultant Psychologist',
+            availability: calculateNextAvailable(c.availability, c.bookedSlots || []),
+            type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
+            defaultMeetLink: c.defaultMeetLink || '',
+            price: Number(c.price) || 899,
+            halfSessionPrice: Number(c.halfSessionPrice) || 499,
+            modes: Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
+            availabilitySlots: c.availability || {},
+            bookedSlots: c.bookedSlots || [],
+            locationName: c.locationName || '',
+            latitude: Number(c.latitude) || 0,
+            longitude: Number(c.longitude) || 0,
+            profilePic: c.profilePic || c.image || '',
+            image: c.image || c.profilePic || '',
+            specialties: c.specialties || [],
+            bio: c.bio || '',
+            hours: c.hours || 100,
+            lang: c.lang || '',
+            rating: Number(c.rating) || 5.0,
+            reviewCount: Number(c.reviewCount) || 0
+          }));
+        }
+      }
+    } catch {}
+    return [];
+  });
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
   const [rescheduleSession, setRescheduleSession] = useState(null);
@@ -192,7 +226,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       try {
         let resolved = [];
         const res = await ApiService.getCounsellors();
-        if (res.success && res.data) {
+        if (res.success && res.data && Array.isArray(res.data) && res.data.length > 0) {
           resolved = res.data.map(c => {
             return {
               id: c.id || c._id,
@@ -228,6 +262,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             };
           });
           setAdvisors(resolved);
+
+          // Auto-select first psychologist if none selected yet
+          setSelectedAdvisor(prev => prev || resolved[0]);
         }
 
         if (user) {
