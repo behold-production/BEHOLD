@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "framework": "nextjs",
   "installCommand": "npm install",
   "buildCommand": "npm install --include=dev --prefix frontend && npm run build --prefix frontend",
-  "outputDirectory": "frontend/.next",
+  "outputDirectory": "frontend/dist",
   "functions": {
     "api/index.js": {
       "maxDuration": 30
@@ -17,6 +16,10 @@
     {
       "source": "/uploads/(.*)",
       "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
