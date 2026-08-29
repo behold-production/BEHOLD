@@ -15,6 +15,7 @@ const Role = require('../models/Role');
 const AptitudeQuestion = require('../models/AptitudeQuestion');
 const Otp = require('../models/Otp');
 const Blog = require('../models/Blog');
+const CampaignEvent = require('../models/CampaignEvent');
 
 const modelMap = {
   users: User,
@@ -31,7 +32,10 @@ const modelMap = {
   roles: Role,
   aptitudequestions: AptitudeQuestion,
   otps: Otp,
-  blogs: Blog
+  blogs: Blog,
+  campaignevents: CampaignEvent,
+  campaignevent: CampaignEvent,
+  campaign_events: CampaignEvent
 };
 
 function getRecordFilter(id) {

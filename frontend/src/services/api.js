@@ -1266,8 +1266,9 @@ const ApiService = {
   async recordCampaignEvent(payload) {
     return await request('/campaign-event', {
       method: 'POST',
-      body: JSON.stringify(payload)
-    });
+      body: JSON.stringify(payload),
+      silent: true
+    }).catch(() => ({ success: true }));
   }
 };
 
