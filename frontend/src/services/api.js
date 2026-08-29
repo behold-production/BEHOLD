@@ -220,8 +220,9 @@ async function executeRequest(endpoint, options = {}) {
       errorMsg = 'Server is temporarily unavailable. Please try again later.';
     }
 
-    // Only toast if it's not a background validation that's handled gracefully
-    if (!options.silent) {
+    // Only toast on explicit user-driven mutations (POST, PUT, DELETE), never on background GET queries
+    const isMutation = options.method && options.method !== 'GET';
+    if (!options.silent && isMutation) {
       toast.error(errorMsg, { id: endpoint });
     }
     throw new Error(errorMsg);
@@ -634,7 +635,7 @@ const ApiService = {
 
   // Notifications //
   async getNotifications() {
-    return await request('/notifications');
+    return await request('/notifications', { silent: true }).catch(() => ({ success: true, data: [] }));
   },
 
   async markNotificationRead(id) {
@@ -864,12 +865,16 @@ const ApiService = {
       }).catch(() => {});
       return this._settingsCache;
     }
-    const res = await request('/settings');
+    const res = await request('/settings', { silent: true }).catch(() => ({ success: true, data: {} }));
     if (res && res.success) {
       this._settingsCache = res;
       this._settingsCacheTime = Date.now();
     }
     return res;
+  },
+
+  async getPublicSettings(forceRefresh = false) {
+    return this.getSettings(forceRefresh);
   },
 
   // Test Results //
