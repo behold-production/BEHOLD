@@ -206,9 +206,12 @@ const ProfileDetailsTab = ({
  const hasValue = !!formData[field.name];
  return (
  <div key={field.name} className="space-y-1.5">
- <label htmlFor={`sp-${field.name}`} className="text-[10px] tracking-widest text-surface-600 font-semibold flex items-center gap-1">
- {field.label}
- {field.required && <span className="text-rose-500">*</span>}
+ <label htmlFor={`sp-${field.name}`} className="text-xs text-surface-700 font-semibold flex items-center justify-between">
+   <span className="flex items-center">
+     <span>{field.label}</span>
+     {field.required && <span className="text-rose-500 font-bold ml-1 text-sm leading-none">*</span>}
+   </span>
+   {!field.required && <span className="text-[10px] text-surface-400 font-normal font-sans">(Optional)</span>}
  </label>
  <div className="relative">
  {FIcon && (
