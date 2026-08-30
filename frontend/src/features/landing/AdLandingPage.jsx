@@ -23,6 +23,7 @@ import ApiService from '../../services/api';
 import SEO from '../../components/common/SEO';
 import { toast } from 'react-hot-toast';
 import { trackLead, trackContact, trackViewContent, setMetaUserData } from '../../utils/metaPixel';
+import { formatExperience } from '../../utils/formatters';
 import clinicImage from '../../assets/luxury_clinic_room.png';
 import headerBg from '../../assets/header.svg';
 
@@ -39,6 +40,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   // Counsellor list state
   const [advisors, setAdvisors] = useState([]);
   const [loadingAdvisors, setLoadingAdvisors] = useState(true);
+  const [expandedBios, setExpandedBios] = useState({});
 
   // Video interactive state
   const [activeStep, setActiveStep] = useState(0);
@@ -64,16 +66,23 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           const list = res.data.map(c => {
             const rawPhoto = c.profilePic || c.photo || c.avatar || c.profilePicture || c.image || c.user?.profilePic;
             const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
+            const rawHoursVal = (c.hours !== undefined && c.hours !== null && c.hours !== '') ? Number(c.hours) : (typeof c.experience === 'number' ? c.experience : (parseInt(c.experience, 10) || 0));
+            const expData = formatExperience(rawHoursVal);
+            const customTitle = c.title || (c.designation && c.designation.toLowerCase() !== 'counsellor' ? c.designation : null) || (c.role && c.role.toLowerCase() !== 'counsellor' ? c.role : null) || 'Consultant Psychologist';
+            
             return {
               id: c.id || c._id,
               name: c.name || c.user?.name || c.fullName || 'Consultant Psychologist',
-              title: c.title || c.designation || 'Consultant Psychologist',
+              title: customTitle,
+              designation: customTitle,
               fee: Number(c.fee || c.price || 1200),
-              hours: c.hours || '500+ hrs',
-              expYears: c.experience ? `${c.experience} yrs` : '5+ yrs',
-              specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags || ['Anxiety & Stress', 'Depression', 'Personal Growth']),
+              halfSessionPrice: Number(c.halfSessionPrice || Math.round((c.fee || c.price || 1200) * 0.5)),
+              hours: expData.rawHours,
+              expYears: expData.years,
+              bio: c.bio || 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
+              specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['Anxiety & Stress', 'Depression', 'Personal Growth']),
               photo: hasValidPhoto ? rawPhoto : null,
-              languages: Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'English, Malayalam')
+              languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'English, Malayalam')))
             };
           });
           setAdvisors(list);
@@ -83,9 +92,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               id: 'c1',
               name: 'Dr. Sarah Thomas',
               title: 'Senior Clinical Psychologist',
+              designation: 'Senior Clinical Psychologist',
               fee: 1200,
-              hours: '1,200+ hrs',
-              expYears: '8+ yrs',
+              halfSessionPrice: 600,
+              hours: 1200,
+              expYears: '1,200+ Hours Consulted',
+              bio: 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
               specialties: ['Anxiety & Stress', 'Depression', 'Self Esteem'],
               photo: null,
               languages: 'English, Malayalam'
@@ -94,9 +106,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               id: 'c2',
               name: 'Dr. Rahul Varma',
               title: 'Counselling Psychologist & Mentor',
+              designation: 'Counselling Psychologist & Mentor',
               fee: 1000,
-              hours: '950+ hrs',
-              expYears: '6+ yrs',
+              halfSessionPrice: 500,
+              hours: 950,
+              expYears: '950+ Hours Consulted',
+              bio: 'Specializing in emotional resilience, burnout recovery, and personalized roadmap creation.',
               specialties: ['Career Stress', 'Relationship Guidance', 'Burnout'],
               photo: null,
               languages: 'English, Hindi'
@@ -105,9 +120,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               id: 'c3',
               name: 'Dr. Ananya Nair',
               title: 'Child & Adolescent Specialist',
+              designation: 'Child & Adolescent Specialist',
               fee: 1400,
-              hours: '1,500+ hrs',
-              expYears: '10+ yrs',
+              halfSessionPrice: 700,
+              hours: 1500,
+              expYears: '1,500+ Hours Consulted',
+              bio: 'Dedicated to helping individuals discover clarity, build self-worth, and thrive.',
               specialties: ['Emotional Resilience', 'Identity Concerns', 'Mindfulness'],
               photo: null,
               languages: 'English, Malayalam'
@@ -178,7 +196,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
   const handleScrollCarousel = (direction) => {
     if (carouselRef.current) {
-      const scrollAmount = 320;
+      const scrollAmount = 340;
       carouselRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
@@ -351,7 +369,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </section>
 
-      {/* ── SECTION 2: COUNSELLOR / PSYCHOLOGIST CAROUSEL ── */}
+      {/* ── SECTION 2: COUNSELLOR / PSYCHOLOGIST CAROUSEL (Pixel-Perfect Alignment) ── */}
       <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -386,80 +404,141 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
           </div>
 
-          {/* Carousel Scroll Container */}
+          {/* Carousel Scroll Container with Standardized Cards */}
           <div
             ref={carouselRef}
             className="flex gap-6 overflow-x-auto pb-4 pt-1 scrollbar-none snap-x snap-mandatory scroll-smooth px-1"
           >
-            {advisors.map((advisor) => (
-              <div
-                key={advisor.id}
-                className="min-w-[280px] xs:min-w-[310px] sm:min-w-[340px] max-w-[340px] snap-start bg-slate-50/70 hover:bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between text-left group"
-              >
-                <div>
-                  {/* Psychologist Photo / Avatar */}
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-200 border-2 border-white shadow-md shrink-0 flex items-center justify-center">
+            {advisors.map((advisor) => {
+              const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
+              const minFee = advisor.halfSessionPrice || Math.round(advisor.fee * 0.5) || 499;
+
+              return (
+                <div
+                  key={advisor.id}
+                  className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start bg-white rounded-[24px] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6] transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group"
+                >
+                  {/* Top Gradient Header with Name, Designation, and Avatar */}
+                  <div className="relative w-full h-[120px] sm:h-[135px] p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px]">
+                    <div className="pr-2 space-y-1 z-10 max-w-[65%]">
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-sans text-base sm:text-lg font-extrabold text-slate-900 leading-tight line-clamp-1">
+                          {advisor.name}
+                        </h3>
+                        <ShieldCheck className="w-4 h-4 text-[#008b94] shrink-0" title="Verified Professional" />
+                      </div>
+                      <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
+                        {cardTitle}
+                      </p>
+                      <div className="flex items-center gap-1.5 pt-1">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/80 text-[#008b94] shadow-2xs">
+                          ★ 4.9 Rating
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Counsellor Profile Image / Avatar */}
+                    <div className="w-[100px] sm:w-[115px] h-[120px] sm:h-[135px] absolute right-2 bottom-0 z-10 flex items-end justify-center pointer-events-none">
                       {advisor.photo ? (
-                        <img src={advisor.photo} alt={advisor.name} className="w-full h-full object-cover" />
+                        <img
+                          src={advisor.photo}
+                          alt={advisor.name}
+                          className="w-full h-full object-cover object-top filter brightness-[1.02] drop-shadow-sm rounded-t-xl"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const fallback = e.currentTarget.nextElementSibling;
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                        />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-tr from-[#00c9d6] to-slate-800 text-white font-black text-xl flex items-center justify-center">
-                          {getInitial(advisor.name)}
+                        <div className="w-14 h-14 rounded-2xl bg-white/95 shadow-md flex items-center justify-center mb-2 border border-white">
+                          <span className="font-bold text-xl text-[#00c9d6]">
+                            {getInitial(advisor.name)}
+                          </span>
                         </div>
                       )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="text-base font-bold text-slate-900 truncate">{advisor.name}</h3>
-                        <ShieldCheck className="w-4 h-4 text-[#00c9d6] shrink-0" title="Verified Professional" />
-                      </div>
-                      <p className="text-xs text-slate-600 font-medium truncate mt-0.5">{advisor.title}</p>
-                      <div className="flex items-center gap-2 mt-1 text-[11px] font-semibold text-slate-500">
-                        <span className="flex items-center gap-0.5 text-amber-500">★ 4.9</span>
-                        <span>•</span>
-                        <span>{advisor.expYears} exp</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Specialties Pills */}
-                  <div className="space-y-1.5 mb-4">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Specialties:</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {advisor.specialties.slice(0, 3).map((spec, sIdx) => (
-                        <span
-                          key={sIdx}
-                          className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-[11px] font-semibold text-slate-700 shadow-2xs"
-                        >
-                          {spec}
+                      <div style={{ display: 'none' }} className="w-14 h-14 rounded-2xl bg-white/95 shadow-md items-center justify-center mb-2 border border-white">
+                        <span className="font-bold text-xl text-[#00c9d6]">
+                          {getInitial(advisor.name)}
                         </span>
-                      ))}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Languages */}
-                  <div className="text-[11px] text-slate-500 mb-5 flex items-center gap-1.5">
-                    <span className="font-semibold text-slate-700">Languages:</span>
-                    <span>{advisor.languages}</span>
+                  {/* White Body Card with Fixed Structure */}
+                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-white">
+                    
+                    {/* Specialties Tags Row */}
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Specialties:</span>
+                      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
+                        {advisor.specialties.slice(0, 3).map((spec, i) => (
+                          <span
+                            key={i}
+                            className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-800 text-[10.5px] font-semibold rounded-lg whitespace-nowrap shrink-0"
+                          >
+                            {spec}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Bio Snippet Box */}
+                    <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
+                      <p className={`text-[11px] text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
+                        "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
+                      </p>
+                      {advisor.bio && advisor.bio.length > 50 && (
+                        <button
+                          type="button"
+                          onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
+                          className="text-[10px] font-bold text-[#00c9d6] hover:text-[#008b94] cursor-pointer mt-1 inline-block"
+                        >
+                          {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
+                        </button>
+                      )}
+                    </div>
+
+                    {/* 3 Metric Stat Boxes */}
+                    <div className="grid grid-cols-3 gap-1.5 shrink-0">
+                      <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
+                        <span className="text-xs font-bold text-slate-900 block leading-none">
+                          {advisor.hours ? `${advisor.hours.toLocaleString()}+` : '500+'}
+                        </span>
+                        <span className="text-[9px] font-medium text-slate-500 block mt-1">Consult Hours</span>
+                      </div>
+                      <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left min-w-0" title={advisor.languages}>
+                        <span className="text-xs font-bold text-slate-900 block leading-tight truncate">
+                          {advisor.languages}
+                        </span>
+                        <span className="text-[9px] font-medium text-slate-500 block mt-1">Languages</span>
+                      </div>
+                      <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
+                        <span className="text-xs font-bold text-slate-900 block leading-none">₹{minFee}</span>
+                        <span className="text-[9px] font-medium text-slate-500 block mt-1">Starting Fee</span>
+                      </div>
+                    </div>
+
+                    {/* Card Footer: Next Available + Book Button */}
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <div className="text-left">
+                        <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Next Available</span>
+                        <span className="text-[11px] font-bold text-emerald-600 block mt-0.5 whitespace-nowrap">Available Today</span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleBook(advisor.id)}
+                        className="bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-xs px-4 py-2 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap"
+                      >
+                        Book Session
+                      </button>
+                    </div>
+
                   </div>
                 </div>
-
-                {/* Card Footer: Fee & Action */}
-                <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Session Fee</span>
-                    <span className="text-base font-black text-slate-900">₹{advisor.fee}</span>
-                  </div>
-
-                  <button
-                    onClick={() => handleBook(advisor.id)}
-                    className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs transition-all cursor-pointer shadow-xs"
-                  >
-                    Book with {advisor.name.split(' ')[0]}
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>
@@ -593,7 +672,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="bg-slate-900 text-white rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
               <div className="text-left">
                 <h4 className="text-sm sm:text-base font-bold text-white">Ready to speak with a psychologist?</h4>
-                <p className="text-xs text-slate-400 mt-0.5">Sessions start at just ₹1,000.</p>
+                <p className="text-xs text-slate-400 mt-0.5">Sessions start at just ₹499.</p>
               </div>
               <button
                 onClick={() => handleBook()}
