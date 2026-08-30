@@ -51,6 +51,7 @@ const ResetPassword = lazyWithRetry(() => import('../features/auth/ResetPassword
 const BlogList = lazyWithRetry(() => import('../features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('../features/blog/BlogPostDetail'));
 const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
+const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingPage'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
 import BlogSection from '../features/landing/BlogSection';
@@ -513,8 +514,18 @@ export default function App() {
     userRole === 'PSYCHOLOGIST' ||
     userRole === 'COUNSELLOR';
 
+  const isAdLandingRoute = [
+    '/ad',
+    '/ads',
+    '/lp',
+    '/counselling-ad',
+    '/offer',
+    '/landing'
+  ].includes(location.pathname);
+
   const hideNavbarAndFooter =
     isSpecialRole ||
+    isAdLandingRoute ||
     location.pathname === '/admin' ||
     location.pathname.startsWith('/admin/') ||
     location.pathname === '/counsellor' ||
@@ -651,6 +662,21 @@ export default function App() {
               <ContactInquirySection />
             </main>
           } />
+
+          {/* Dedicated Ad Landing Page Endpoints */}
+          <Route path="/ad" element={
+            <AdLandingPage 
+              onOpenBooking={() => setIsBookingModalOpen(true)}
+              onSelectAdvisor={handleBookTherapist}
+              siteSettings={siteSettings}
+              onOpenDocs={setActiveDocType}
+            />
+          } />
+          <Route path="/ads" element={<Navigate to="/ad" replace />} />
+          <Route path="/lp" element={<Navigate to="/ad" replace />} />
+          <Route path="/counselling-ad" element={<Navigate to="/ad" replace />} />
+          <Route path="/offer" element={<Navigate to="/ad" replace />} />
+          <Route path="/landing" element={<Navigate to="/ad" replace />} />
 
           {/* Reviews Route */}
           <Route path="/reviews" element={
