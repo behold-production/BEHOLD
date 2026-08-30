@@ -16,18 +16,42 @@ export const formatDateString = (dateInput) => {
         if (parts[0].length === 4) {
           // YYYY-MM-DD
           [year, month, day] = parts.map(Number);
-        } else {
-          // MM-DD-YYYY or DD-MM-YYYY
-          [month, day, year] = parts.map(Number);
+        } else if (parts[2] && parts[2].length === 4) {
+          // DD-MM-YYYY or MM-DD-YYYY
+          const p0 = Number(parts[0]);
+          const p1 = Number(parts[1]);
+          const p2 = Number(parts[2]);
+          if (p0 > 12) {
+            // Definitely DD-MM-YYYY
+            day = p0;
+            month = p1;
+            year = p2;
+          } else {
+            // Default to MM-DD-YYYY
+            month = p0;
+            day = p1;
+            year = p2;
+          }
         }
       } else if (dateStr.includes('/')) {
         const parts = dateStr.split('/');
         if (parts[0].length === 4) {
           // YYYY/MM/DD
           [year, month, day] = parts.map(Number);
-        } else {
-          // MM/DD/YYYY
-          [month, day, year] = parts.map(Number);
+        } else if (parts[2] && parts[2].length === 4) {
+          // DD/MM/YYYY or MM/DD/YYYY
+          const p0 = Number(parts[0]);
+          const p1 = Number(parts[1]);
+          const p2 = Number(parts[2]);
+          if (p0 > 12) {
+            day = p0;
+            month = p1;
+            year = p2;
+          } else {
+            month = p0;
+            day = p1;
+            year = p2;
+          }
         }
       }
       

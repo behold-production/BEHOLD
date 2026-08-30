@@ -136,14 +136,15 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           <div className="text-center sm:text-left w-full sm:w-auto">
             {(() => {
               const year = new Date().getFullYear();
-              if (!siteCopyright) return `© ${year} BEHOLD Ltd.. All rights reserved.`;
+              if (!siteCopyright) return `© ${year} BEHOLD Ltd. All rights reserved.`;
               let clean = String(siteCopyright)
                 .replace(/^©\s*/, '')
                 .replace(/\.?\s*All rights reserved\.?$/i, '')
                 .replace(/,?\s*\d{4}\.?$/, '')
-                .trim();
-              if (!clean) clean = 'BEHOLD Ltd..';
-              return `© ${year} ${clean} All rights reserved.`;
+                .trim()
+                .replace(/\.+$/, '');
+              if (!clean) clean = 'BEHOLD Ltd';
+              return `© ${year} ${clean}. All rights reserved.`;
             })()}
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center w-full sm:w-auto">

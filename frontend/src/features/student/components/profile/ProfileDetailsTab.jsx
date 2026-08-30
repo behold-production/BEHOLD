@@ -27,38 +27,36 @@ const ProfileDetailsTab = ({
    } catch (e) {}
    return true;
  })();
- const [prevLocationName, setPrevLocationName] = React.useState(formData.locationName);
  const [searchQuery, setSearchQuery] = React.useState(formData.locationName || '');
  const [searchResults, setSearchResults] = React.useState([]);
  const [isSearching, setIsSearching] = React.useState(false);
  const [isLocating, setIsLocating] = React.useState(false);
 
  React.useEffect(() => {
- if (!searchQuery.trim() || searchQuery.trim().length < 3 || searchQuery === formData.locationName) {
- const timer = setTimeout(() => {
- setSearchResults([]);
- }, 0);
- return () => clearTimeout(timer);
- }
- const timer = setTimeout(async () => {
- setIsSearching(true);
- try {
- const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
- const data = await res.json();
- setSearchResults(data);
- } catch (err) {
- console.error("Geocoding error", err);
- } finally {
- setIsSearching(false);
- }
- }, 600);
- return () => clearTimeout(timer);
- }, [searchQuery, formData.locationName]);
+   setSearchQuery(formData.locationName || '');
+ }, [formData.locationName]);
 
- if (formData.locationName !== prevLocationName) {
- setPrevLocationName(formData.locationName);
- setSearchQuery(formData.locationName || '');
- }
+ React.useEffect(() => {
+   if (!searchQuery.trim() || searchQuery.trim().length < 3 || searchQuery === formData.locationName) {
+     const timer = setTimeout(() => {
+       setSearchResults([]);
+     }, 0);
+     return () => clearTimeout(timer);
+   }
+   const timer = setTimeout(async () => {
+     setIsSearching(true);
+     try {
+       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+       const data = await res.json();
+       setSearchResults(data);
+     } catch (err) {
+       console.error("Geocoding error", err);
+     } finally {
+       setIsSearching(false);
+     }
+   }, 600);
+   return () => clearTimeout(timer);
+ }, [searchQuery, formData.locationName]);
 
  const setLocationFields = (locationName, latitude, longitude) => {
  handleChange({ target: { name: 'locationName', value: locationName } });
