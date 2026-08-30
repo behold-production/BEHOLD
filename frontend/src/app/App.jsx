@@ -96,7 +96,13 @@ function AdvisorProfileWrapper({ handleBookTherapist }) {
   );
 }
 
-
+function ScrollToTop() {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname, search]);
+  return null;
+}
 
 export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -533,6 +539,7 @@ export default function App() {
           },
         }}
       />
+      <ScrollToTop />
       <ToastLimitManager />
  
       {/* Top Banner Notice Alert */}

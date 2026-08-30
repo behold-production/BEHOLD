@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, HelpCircle, Search, X, MessageSquare, ArrowRight, ShieldCheck, Sparkles, Minus, Plus } from 'lucide-react';
-import Navbar from '../../components/common/Navbar';
-import Footer from '../../components/common/Footer';
 import ApiService from '../../services/api';
 import shadeGreenBg from '../../assets/greygreen.png';
 import SEO from '../../components/common/SEO';
@@ -108,7 +106,6 @@ export default function FaqsPage() {
         canonicalUrl="https://www.behold.co.in/faqs"
         schema={faqSchema}
       />
-      <Navbar />
 
       {/* Header Section */}
       <section className="relative py-12 sm:py-16 pt-24 sm:pt-28 border-b border-slate-200/80 bg-white overflow-hidden">
@@ -122,6 +119,18 @@ export default function FaqsPage() {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          {/* Breadcrumbs */}
+          <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 mb-4">
+            <button
+              onClick={() => navigate('/')}
+              className="hover:text-[#00c9d6] transition-colors cursor-pointer bg-transparent border-none p-0"
+            >
+              Home
+            </button>
+            <span className="text-slate-400">/</span>
+            <span className="text-slate-800">FAQs & Help</span>
+          </div>
+
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00c9d6]/10 text-[#008b94] font-bold text-[11px] uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" /> Help & Support Center
           </span>
@@ -250,8 +259,6 @@ export default function FaqsPage() {
           </button>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
