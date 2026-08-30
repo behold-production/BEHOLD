@@ -361,15 +361,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </section>
 
-      {/* ── SECTION 2: COUNSELLOR / PSYCHOLOGIST CAROUSEL (Pixel-Perfect Alignment) ── */}
+      {/* ── SECTION 2: COUNSELLOR / PSYCHOLOGIST CAROUSEL ── */}
       <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 text-left">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#00c9d6] block mb-1">
-                Verified Experts
-              </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
                 Meet Our Certified Psychologists
               </h2>
@@ -543,9 +540,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           {/* COLUMN 1: LANDSCAPE BOOKING VIDEO / INTERACTIVE WALKTHROUGH */}
           <div className="lg:col-span-6 space-y-6 text-left">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#00c9d6] block mb-1">
-                Simple 3-Step Process
-              </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                 How Booking Works
               </h2>
@@ -606,9 +600,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           {/* COLUMN 2: 4-5 KEY BENEFITS / USP */}
           <div className="lg:col-span-6 space-y-6 text-left">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#00c9d6] block mb-1">
-                Why Choose BEHOLD
-              </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                 Key Benefits & Service USPs
               </h2>
@@ -683,9 +674,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="max-w-xl mx-auto px-4 sm:px-6 text-center">
           
           <div className="mb-8">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#00c9d6] block mb-1">
-              Have Questions?
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Get in Touch with Our Team
             </h2>
