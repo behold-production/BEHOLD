@@ -38,3 +38,4 @@ backend/.env
 # Uploaded files (local only)
 backend/uploads/*
 !backend/uploads/.gitkeep
+.vercel
