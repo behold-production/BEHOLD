@@ -220,6 +220,9 @@ body {
   background-color: #f8fafc;
   color: #0F172A;
   font-family: 'Poppins', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: default;
+  -webkit-overflow-scrolling: touch;
 }
 
 html {
@@ -227,6 +230,44 @@ html {
   scroll-padding-top: 80px;
   /* keep sections clear of the sticky navbar */
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Prevent unwanted iOS Safari zoom on input focus */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Cross-Platform Sleek Scrollbars (Windows, macOS, Chrome, Firefox, Safari) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
 }
 
 
