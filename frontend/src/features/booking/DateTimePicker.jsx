@@ -160,21 +160,28 @@ export default function DateTimePicker({
     }
   }, [selectedDate, viewType]);
 
- // Adjust current month when selectedDate changes from outside (e.g. quick-jump)
- const [prevSelectedDate, setPrevSelectedDate] = useState(selectedDate);
- if (selectedDate !== prevSelectedDate) {
- setPrevSelectedDate(selectedDate);
- if (selectedDate) {
- const [y, m, d] = selectedDate.split('-').map(Number);
- const targetMonth = new Date(y, m - 1, 1);
- if (
- targetMonth.getFullYear() !== currentMonth.getFullYear() ||
- targetMonth.getMonth() !== currentMonth.getMonth()
- ) {
- setCurrentMonth(targetMonth);
- }
- }
- }
+  // Adjust current month when selectedDate changes from outside (e.g. quick-jump)
+  useEffect(() => {
+    if (selectedDate) {
+      const parts = selectedDate.split('-');
+      if (parts.length >= 2) {
+        const y = Number(parts[0]);
+        const m = Number(parts[1]);
+        if (y && m) {
+          const targetMonth = new Date(y, m - 1, 1);
+          setCurrentMonth((prev) => {
+            if (
+              targetMonth.getFullYear() !== prev.getFullYear() ||
+              targetMonth.getMonth() !== prev.getMonth()
+            ) {
+              return targetMonth;
+            }
+            return prev;
+          });
+        }
+      }
+    }
+  }, [selectedDate]);
 
  const scrollBy = (dir) => {
  if (scrollRef.current) {
