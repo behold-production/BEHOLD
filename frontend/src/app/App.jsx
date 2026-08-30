@@ -572,8 +572,7 @@ export default function App() {
             user.name === 'New User' ||
             user.name.includes('Behold User') ||
             !user.email ||
-            user.email.includes('@temp.behold') ||
-            !user.age
+            user.email.includes('@temp.behold')
           )
         )} 
         onSuccess={() => {
@@ -581,6 +580,7 @@ export default function App() {
             window.dispatchEvent(new Event('storage'));
           }
         }} 
+        onClose={() => {}}
       />
 
       <ServiceBooking

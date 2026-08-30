@@ -17,6 +17,16 @@ const UserController = {
       }
 
       const { password, ...userData } = user;
+
+      // If user already has real name and real email stored in database, guarantee isProfileCompleted is true
+      const hasRealName = userData.name && userData.name !== 'New User' && !userData.name.includes('Behold User');
+      const hasRealEmail = userData.email && !userData.email.includes('@temp.behold') && !userData.email.includes('temp.behold.co.in');
+
+      if (hasRealName && hasRealEmail && !userData.isProfileCompleted) {
+        userData.isProfileCompleted = true;
+        StorageService.update('users', req.user.id, { isProfileCompleted: true }).catch(() => {});
+      }
+
       res.status(200).json({
         success: true,
         message: 'Profile retrieved successfully',
@@ -32,6 +42,11 @@ const UserController = {
     try {
       const { name, email, phone, age, feelingLately, hadPriorTherapy, priorTherapyDetails, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
       const updates = {};
+
+      const existingUser = await StorageService.findById('users', req.user.id);
+      if (!existingUser) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
 
       if (name !== undefined) updates.name = name;
       if (email !== undefined) updates.email = email;
@@ -50,10 +65,16 @@ const UserController = {
       if (longitude !== undefined) updates.longitude = Number(longitude) || 0;
       if (req.body.isProfileCompleted !== undefined) updates.isProfileCompleted = req.body.isProfileCompleted;
 
-      // Mark profile as completed if name and real email are present
-      const finalName = updates.name !== undefined ? updates.name : req.user?.name;
-      const finalEmail = updates.email !== undefined ? updates.email : req.user?.email;
-      if (finalName && finalName !== 'New User' && !finalName.includes('Behold User') && finalEmail && !finalEmail.includes('@temp.behold')) {
+      // Mark profile as completed if valid name and real email are present
+      const finalName = (updates.name !== undefined ? updates.name : (existingUser.name || '')).trim();
+      const finalEmail = (updates.email !== undefined ? updates.email : (existingUser.email || '')).trim();
+      if (
+        finalName &&
+        finalName !== 'New User' &&
+        !finalName.includes('Behold User') &&
+        finalEmail &&
+        !finalEmail.includes('@temp.behold')
+      ) {
         updates.isProfileCompleted = true;
       }
 

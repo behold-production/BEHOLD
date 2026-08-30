@@ -84,8 +84,7 @@ export default function HomePage() {
             user.name === 'New User' ||
             user.name.includes('Behold User') ||
             !user.email ||
-            user.email.includes('@temp.behold') ||
-            !user.age
+            user.email.includes('@temp.behold')
           )
         )}
         onSuccess={() => {
@@ -93,6 +92,7 @@ export default function HomePage() {
             window.dispatchEvent(new Event('storage'));
           }
         }}
+        onClose={() => {}}
       />
 
       <ServiceBooking

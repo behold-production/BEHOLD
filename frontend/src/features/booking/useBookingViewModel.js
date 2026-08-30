@@ -1372,16 +1372,22 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
     const baseErrors = {};
 
-    const resolvedName = (bookingForm.name || user?.name || '').trim();
-    const resolvedEmail = (bookingForm.email || user?.email || '').trim();
+    const rawName = (bookingForm.name || user?.name || '').trim();
+    const rawEmail = (bookingForm.email || user?.email || '').trim();
     const resolvedPhone = (bookingForm.phone || user?.phone || '').trim();
 
+    const isPlaceholderName = !rawName || rawName === 'New User' || rawName.includes('Behold User');
+    const isPlaceholderEmail = !rawEmail || rawEmail.includes('@temp.behold') || !validateEmail(rawEmail);
+
+    const resolvedName = isPlaceholderName ? '' : rawName;
+    const resolvedEmail = isPlaceholderEmail ? '' : rawEmail;
+
     if (!resolvedName) {
-      baseErrors.name = 'Name is required';
+      baseErrors.name = 'Full name is required for booking confirmation';
     }
 
     if (!resolvedEmail) {
-      baseErrors.email = 'Email is required';
+      baseErrors.email = 'Valid email is required for session confirmations & receipts';
     }
 
     if (bookingMode === 'DOOR_STEP') {

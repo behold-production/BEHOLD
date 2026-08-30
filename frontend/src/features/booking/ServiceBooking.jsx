@@ -3,7 +3,7 @@ import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X, ArrowLeft } from 'lucide-react';
+import { FileDown, X, ArrowLeft, ArrowRight } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
@@ -1349,6 +1349,37 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             bookedSlots={getAdvisorBookedSlotsForDate(selectedAdvisor, selectedDate)}
                                                             errors={errors}
                                                         />
+
+                                                        {/* Prominent Primary Action Button directly below Time Selection */}
+                                                        {!rescheduleSession && (
+                                                            <div className="pt-6 mt-4 border-t border-surface-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                                                <div className="text-left w-full sm:w-auto">
+                                                                    <span className="text-xs text-surface-500 font-medium block">Selected Schedule</span>
+                                                                    <span className="text-sm font-bold text-surface-900 block">
+                                                                        {selectedDate} at {selectedTime || 'Choose a time slot above'} ({selectedAdvisor.name})
+                                                                    </span>
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    disabled={!selectedTime}
+                                                                    onClick={() => {
+                                                                        if (!selectedDate || !selectedTime || !selectedAdvisor) {
+                                                                            toast.error('Please select a date, time slot, and psychologist to proceed.');
+                                                                            return;
+                                                                        }
+                                                                        handleStepChange('payment');
+                                                                    }}
+                                                                    className={`w-full sm:w-auto px-7 py-3.5 min-h-[48px] rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-md ${
+                                                                        !selectedTime
+                                                                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                                                                            : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white active:scale-95 shadow-lg'
+                                                                    }`}
+                                                                >
+                                                                    <span>Proceed to Payment (₹{netTotal})</span>
+                                                                    <ArrowRight className="w-4 h-4" />
+                                                                </button>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
 
@@ -1378,29 +1409,68 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             Payment & Confirm
                                                         </h3>
                                                         <p className="text-sm font-normal text-surface-600 mt-1">
-                                                            {user ? 'Review your details and complete payment.' : 'You will be asked to sign in securely before completing payment.'}
+                                                            {user ? 'Review your details and complete payment.' : 'Please enter your details to receive session link & confirmation.'}
                                                         </p>
                                                     </div>
                                                 </div>
 
-                                                {user && (
-                                                    <div className="bg-surface-50 border border-surface-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-sm">
-                                                        <div className="flex-1 min-w-0">
-                                                            <span className="text-sm font-semibold text-surface-900 block truncate">
-                                                                {user.name && user.name !== 'New User' && !user.name.includes('Behold User') ? user.name : (user.phone || 'Client Account')}
+                                                {/* Contact Details Card */}
+                                                <div className="bg-white border border-surface-200 rounded-xl p-4 sm:p-5 space-y-4 text-left shadow-xs">
+                                                    <div className="flex items-center justify-between border-b border-surface-100 pb-2.5">
+                                                        <h4 className="text-xs font-bold text-surface-900 uppercase tracking-wider">
+                                                            Client & Booking Contact Details
+                                                        </h4>
+                                                        {user && (
+                                                            <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                                                                ✓ Verified
                                                             </span>
-                                                            {user.email && !user.email.includes('@temp.behold') && (
-                                                                <span className="text-sm font-semibold text-surface-600 truncate block">{user.email}</span>
-                                                            )}
-                                                            {user.phone && user.name && user.name !== 'New User' && !user.name.includes('Behold User') && (
-                                                                <span className="text-sm font-semibold text-surface-600 truncate block">{user.phone}</span>
-                                                            )}
-                                                        </div>
-                                                        <span className="shrink-0 text-sm font-semibold bg-surface-900 text-white px-2.5 py-1 rounded-xl">
-                                                            ✓ Authenticated
-                                                        </span>
+                                                        )}
                                                     </div>
-                                                )}
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                        {/* Full Name */}
+                                                        <div className="space-y-1">
+                                                            <label className="text-xs font-semibold text-zinc-700 block">
+                                                                Full Name <span className="text-rose-500">*</span>
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                name="name"
+                                                                value={bookingForm.name || ''}
+                                                                onChange={(e) => {
+                                                                    handleInputChange(e);
+                                                                    if (errors.name) setErrors(prev => ({ ...prev, name: null }));
+                                                                }}
+                                                                placeholder="e.g. Rahul Sharma"
+                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${
+                                                                    errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00c9d6] bg-zinc-50 focus:bg-white'
+                                                                }`}
+                                                            />
+                                                            {errors.name && <p className="text-[11px] text-rose-500 font-medium">{errors.name}</p>}
+                                                        </div>
+
+                                                        {/* Email Address */}
+                                                        <div className="space-y-1">
+                                                            <label className="text-xs font-semibold text-zinc-700 block">
+                                                                Email Address <span className="text-rose-500">*</span>
+                                                            </label>
+                                                            <input
+                                                                type="email"
+                                                                name="email"
+                                                                value={bookingForm.email || ''}
+                                                                onChange={(e) => {
+                                                                    handleInputChange(e);
+                                                                    if (errors.email) setErrors(prev => ({ ...prev, email: null }));
+                                                                }}
+                                                                placeholder="you@example.com"
+                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${
+                                                                    errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00c9d6] bg-zinc-50 focus:bg-white'
+                                                                }`}
+                                                            />
+                                                            {errors.email && <p className="text-[11px] text-rose-500 font-medium">{errors.email}</p>}
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                                 {/* DOORSTEP LOCATION SUMMARY - PAYMENT STEP */}
                                                 {bookingMode === 'DOOR_STEP' && (

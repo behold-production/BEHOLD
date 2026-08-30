@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Loader2, Mail, User, Calendar, Heart, AlertCircle } from 'lucide-react';
+import { Loader2, Mail, User, Calendar, Heart, AlertCircle, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import { validateEmail } from '../../utils/validation';
@@ -15,8 +15,9 @@ const FEELING_OPTIONS = [
   '😴 Exhausted / Burnout'
 ];
 
-export default function CompleteProfileModal({ isOpen, onSuccess }) {
+export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
   const { user, updateUser } = useAuth();
+  const [isDismissed, setIsDismissed] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name && user.name !== 'New User' && !user.name.includes('Behold User') ? user.name : '',
     email: user?.email && !user.email.includes('@temp.behold') ? user.email : '',
@@ -42,7 +43,31 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
     }
   }, [user, isOpen]);
 
-  if (!isOpen || !user || user.role === 'admin' || user.role === 'counsellor' || user.isProfileCompleted) return null;
+  // If user completed their profile or dismissed this session, don't show
+  const isProfileActuallyComplete = Boolean(
+    user?.isProfileCompleted ||
+    (user?.name &&
+      user.name !== 'New User' &&
+      !user.name.includes('Behold User') &&
+      user?.email &&
+      !user.email.includes('@temp.behold') &&
+      !user.email.includes('temp.behold.co.in'))
+  );
+
+  useEffect(() => {
+    if (isProfileActuallyComplete && isOpen) {
+      if (onClose) onClose();
+    }
+  }, [isProfileActuallyComplete, isOpen, onClose]);
+
+  if (!isOpen || isDismissed || !user || user.role === 'admin' || user.role === 'counsellor' || isProfileActuallyComplete) {
+    return null;
+  }
+
+  const handleCloseModal = () => {
+    setIsDismissed(true);
+    if (onClose) onClose();
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -126,6 +151,9 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
         const updatedUser = {
           ...user,
           ...res.data,
+          name: formData.name.trim(),
+          email: cleanEmail,
+          age: formData.age ? String(formData.age).trim() : '',
           isProfileCompleted: true
         };
         
@@ -146,8 +174,10 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
           method: 'profile_completion'
         });
 
+        setIsDismissed(true);
         toast.success('Profile completed successfully!');
         if (onSuccess) onSuccess(updatedUser);
+        if (onClose) onClose();
       } else {
         toast.error(res.message || 'Failed to update profile');
       }
@@ -163,28 +193,44 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
   return createPortal(
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-[200] bg-zinc-900/80 backdrop-blur-md animate-backdrop-in" aria-hidden="true" />
+      <div 
+        className="fixed inset-0 z-[200] bg-zinc-900/80 backdrop-blur-md animate-backdrop-in" 
+        onClick={handleCloseModal}
+        aria-hidden="true" 
+      />
 
       {/* Modal Container */}
-      <div className="fixed inset-0 z-[210] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-        <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl animate-modal-in border border-zinc-200 flex flex-col overflow-hidden">
+      <div className="fixed inset-0 z-[210] flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain">
+        <div 
+          className="relative w-full max-w-md my-auto bg-white rounded-2xl shadow-2xl animate-modal-in border border-zinc-200 flex flex-col max-h-[92vh] overflow-hidden text-left"
+          onClick={(e) => e.stopPropagation()}
+        >
           
           {/* Header */}
-          <div className="p-6 sm:p-7 border-b border-surface-200 text-center bg-gradient-to-b from-slate-50 to-white">
-            <h2 className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a] uppercase">
+          <div className="relative p-5 sm:p-6 border-b border-surface-200 text-center bg-gradient-to-b from-slate-50 to-white shrink-0">
+            <button
+              type="button"
+              onClick={handleCloseModal}
+              aria-label="Close profile modal"
+              className="absolute right-3.5 top-3.5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition-colors flex items-center justify-center border-none cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h2 className="text-lg sm:text-xl font-sans font-bold tracking-tight text-[#0f172a] uppercase pr-6">
               Complete Your Profile
             </h2>
-            <p className="text-xs text-surface-500 font-normal mt-2 leading-relaxed">
+            <p className="text-xs text-surface-500 font-normal mt-1.5 leading-relaxed max-w-xs mx-auto">
               Please enter your details to personalize your experience and confirm your sessions.
             </p>
-            <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200/60 rounded-full text-[11px] text-amber-800 font-medium">
+            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-0.5 bg-amber-50 border border-amber-200/60 rounded-full text-[11px] text-amber-800 font-medium">
               <span className="text-rose-500 font-bold text-xs">*</span>
               <span>Fields marked with red star are mandatory</span>
             </div>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Form with clean internal scrolling */}
+          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
             
             {/* Full Name - MANDATORY */}
             <div className="space-y-1.5">
@@ -200,7 +246,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="e.g. Rahul Sharma"
-                  className={`w-full pl-10 pr-4 py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
                     errors.name 
                       ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
                       : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
@@ -229,7 +275,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="you@example.com"
-                  className={`w-full pl-10 pr-4 py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
                     errors.email 
                       ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
                       : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
@@ -262,7 +308,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                   placeholder="e.g. 24"
                   min="5"
                   max="120"
-                  className={`w-full pl-10 pr-4 py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
                     errors.age 
                       ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
                       : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
@@ -307,7 +353,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
 
               {/* Custom Input */}
               <div className="relative pt-1">
-                <Heart className="absolute left-3 top-4 w-4 h-4 text-zinc-400" />
+                <Heart className="absolute left-3 top-3.5 w-4 h-4 text-zinc-400" />
                 <input
                   type="text"
                   name="feelingLately"
@@ -341,7 +387,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                         key={opt}
                         type="button"
                         onClick={() => handleSelectPriorTherapy(opt)}
-                        className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                        className={`flex-1 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                           selected
                             ? 'bg-[#0f172a] text-[#00c9d6] border-[#00c9d6] shadow-sm'
                             : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
@@ -366,20 +412,28 @@ export default function CompleteProfileModal({ isOpen, onSuccess }) {
                     value={formData.priorTherapyDetails}
                     onChange={handleInputChange}
                     placeholder="Tell us a little more about your prior therapy experience..."
-                    className="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:bg-white focus:border-brand outline-none font-medium resize-none"
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:bg-white focus:border-brand outline-none font-medium resize-none"
                   />
                 </div>
               )}
             </div>
 
-            {/* Submit */}
-            <div className="pt-2">
+            {/* Submit & Dismiss Row */}
+            <div className="pt-2 space-y-2">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                className="w-full py-3 sm:py-3.5 min-h-[46px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save & Continue'}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className="w-full py-2 text-xs font-medium text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer bg-transparent border-none text-center"
+              >
+                Skip for now & continue
               </button>
             </div>
           </form>

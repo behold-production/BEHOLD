@@ -9,27 +9,48 @@ export function AuthProvider({ children }) {
  const [isLoading, setIsLoading] = useState(true);
 
  useEffect(() => {
- const syncUserFromStorage = () => {
- const savedUser = localStorage.getItem('behold_auth_user');
- const savedToken = localStorage.getItem('behold_token');
- if (savedUser && savedToken) {
- try {
- setUser(JSON.parse(savedUser));
- } catch (e) {
- console.error("Failed to parse saved user", e);
- }
- } else {
- setUser(null);
- }
- setIsLoading(false);
- };
+    const syncUserFromStorage = () => {
+      const savedUser = localStorage.getItem('behold_auth_user');
+      const savedToken = localStorage.getItem('behold_token');
+      if (savedUser && savedToken) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch (e) {
+          console.error("Failed to parse saved user", e);
+        }
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    };
 
- syncUserFromStorage();
+    syncUserFromStorage();
 
- // Listen for cross-tab or programmatic storage changes to sync session instantly
- window.addEventListener('storage', syncUserFromStorage);
- return () => window.removeEventListener('storage', syncUserFromStorage);
- }, []);
+    // Fetch latest user data from database to ensure stored data is always fresh
+    const fetchLatestProfileFromDB = async () => {
+      const savedToken = localStorage.getItem('behold_token');
+      if (!savedToken) return;
+      try {
+        const res = await ApiService.getProfile();
+        if (res && res.success && res.data) {
+          const liveUser = res.data;
+          setUser((prev) => {
+            const merged = { ...(prev || {}), ...liveUser };
+            localStorage.setItem('behold_auth_user', JSON.stringify(merged));
+            return merged;
+          });
+        }
+      } catch (err) {
+        // Silent fail if offline
+      }
+    };
+
+    fetchLatestProfileFromDB();
+
+    // Listen for cross-tab or programmatic storage changes to sync session instantly
+    window.addEventListener('storage', syncUserFromStorage);
+    return () => window.removeEventListener('storage', syncUserFromStorage);
+  }, []);
 
  const login = async (email, password, portal = 'user') => {
  const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase() : email;
