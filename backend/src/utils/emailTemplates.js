@@ -97,13 +97,31 @@ const alertBox = (text, type = 'info') => {
   </div>`;
 };
 
+// Helper to sanitize display names and avoid generic/placeholder artifacts like "New User" or "Student"
+const sanitizeDisplayName = (name, fallback = '') => {
+  if (!name || typeof name !== 'string') return fallback;
+  const trimmed = name.trim();
+  const lower = trimmed.toLowerCase();
+  if (
+    !lower ||
+    ['new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there', 'behold user'].includes(lower) ||
+    lower.startsWith('behold user') ||
+    lower.startsWith('user_')
+  ) {
+    return fallback;
+  }
+  return trimmed;
+};
+
 // ─── Templates ───────────────────────────────────────────────────────────────
 
 // Auth
-const welcomeUser = ({ name }) =>
-  baseLayout(`
+const welcomeUser = ({ name }) => {
+  const displayName = sanitizeDisplayName(name, 'there');
+  const greeting = displayName === 'there' ? 'Welcome to BEHOLD.!' : `Hi ${displayName}, welcome to BEHOLD.!`;
+  return baseLayout(`
     ${badge('Welcome!')}
-    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Hi ${name}, welcome to BEHOLD.!</h2>
+    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">${greeting}</h2>
     <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Your account has been created. We're glad to have you here.</p>
     <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">BEHOLD. connects you with expert counsellors and psychologists to help you grow and thrive.</p>
     ${divider()}
@@ -115,11 +133,12 @@ const welcomeUser = ({ name }) =>
     </ul>
     ${btn('Explore BEHOLD. →', 'https://www.behold.co.in')}
   `);
+};
 
 const welcomeCounsellor = ({ name }) =>
   baseLayout(`
     ${badge('Application Received')}
-    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Hi ${name}!</h2>
+    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Hi ${sanitizeDisplayName(name, 'there')}!</h2>
     <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Thank you for applying to join the BEHOLD. counsellor network. Your application is currently <strong>under review</strong> by our admin team.</p>
     ${alertBox('⏳ Expected review time: 24–48 hours', 'warning')}
     ${btn('Go to Dashboard →', 'https://www.behold.co.in/counsellor')}
@@ -129,7 +148,7 @@ const passwordResetOTP = ({ name, otp }) =>
   baseLayout(`
     ${badge('Security — Password Reset')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Password Reset Code</h2>
-    <p style="margin:0 0 24px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${name || 'there'}</strong>, here is your one-time verification code to reset your password.</p>
+    <p style="margin:0 0 24px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${sanitizeDisplayName(name, 'there')}</strong>, here is your one-time verification code to reset your password.</p>
     <div style="text-align:center;margin:32px 0;">
       <p style="margin:0 0 10px;font-size:12px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:2px;">Your Code</p>
       <div style="display:inline-block;background:#0f172a;color:#ffffff;font-size:38px;font-weight:900;letter-spacing:14px;padding:20px 36px;border-radius:14px;font-family:monospace;">${otp}</div>
@@ -156,10 +175,11 @@ const appointmentApproved = ({
   duration,
   bookingId,
   meetLink
-}) =>
-  baseLayout(`
+}) => {
+  const clientDisplayName = sanitizeDisplayName(userName, 'Student');
+  return baseLayout(`
     ${badge('Appointment Confirmed ✓', '#22c55e')}
-    <p style="margin:0 0 16px;color:#0f172a;font-size:16px;line-height:1.7;">Dear <strong>${userName || 'Patient'}</strong>,</p>
+    <p style="margin:0 0 16px;color:#0f172a;font-size:16px;line-height:1.7;">Dear <strong>${clientDisplayName}</strong>,</p>
     <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Thank you for booking an appointment with our psychologist.</p>
     <p style="margin:0 0 24px;color:#15803d;font-size:15px;font-weight:700;line-height:1.7;background:#f0fdf4;padding:12px 18px;border-radius:10px;border-left:4px solid #22c55e;">
       Your appointment has been successfully confirmed.
@@ -201,6 +221,7 @@ const appointmentApproved = ({
       <a href="mailto:support@behold.co.in" style="color:${BLUE};text-decoration:none;">support@behold.co.in</a> | +91 94000 90106
     </p>
   `);
+};
 
 const appointmentBooked = appointmentApproved;
 
@@ -227,6 +248,7 @@ const appointmentApprovedCounsellor = ({
   const detailsDisplay = (isYes && priorTherapyDetails && priorTherapyDetails.trim())
     ? priorTherapyDetails.trim()
     : (isYes ? 'Client indicated prior counselling experience.' : 'N/A');
+  const clientDisplayName = sanitizeDisplayName(userName, 'Client');
 
   return baseLayout(`
     ${badge('New Session Booked', BLUE)}
@@ -237,7 +259,7 @@ const appointmentApprovedCounsellor = ({
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;margin:20px 0;">
       <h3 style="margin:0 0 14px;color:#0f172a;font-size:16px;font-weight:800;border-bottom:1px solid #e2e8f0;padding-bottom:10px;">Appointment Details</h3>
       ${infoTable(`
-        ${infoRow('Client Name', userName || 'Client')}
+        ${infoRow('Client Name', clientDisplayName)}
         ${infoRow('Client Email', userEmail || '—')}
         ${infoRow('Psychologist Email', counsellorEmail || '—')}
         ${infoRow('Session Date', date || '—')}
@@ -314,11 +336,12 @@ const appointmentApprovedCounsellor = ({
 const appointmentBookedCounsellor = appointmentApprovedCounsellor;
 
 /** Sent to STUDENT when booking is rejected */
-const appointmentRejected = ({ userName, counsellorName, date, reason }) =>
-  baseLayout(`
+const appointmentRejected = ({ userName, counsellorName, date, reason }) => {
+  const clientDisplayName = sanitizeDisplayName(userName, 'there');
+  return baseLayout(`
     ${badge('Session Update')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session could not be confirmed</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${userName}</strong>, unfortunately your session request could not be confirmed at this time.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${clientDisplayName}</strong>, unfortunately your session request could not be confirmed at this time.</p>
     ${infoTable(`
       ${infoRow('Psychologist', counsellorName)}
       ${infoRow('Requested Date', date)}
@@ -327,13 +350,15 @@ const appointmentRejected = ({ userName, counsellorName, date, reason }) =>
     <p style="margin:16px 0;color:#475569;font-size:14px;line-height:1.7;">You can browse other available psychologists on our platform.</p>
     ${btn('Find Another Psychologist →', 'https://www.behold.co.in/advisors')}
   `);
+};
 
 /** Sent to STUDENT/COUNSELLOR when cancelled */
-const appointmentCancelled = ({ recipientName, otherPartyName, date, time, cancelledBy, reason }) =>
-  baseLayout(`
+const appointmentCancelled = ({ recipientName, otherPartyName, date, time, cancelledBy, reason }) => {
+  const displayName = sanitizeDisplayName(recipientName, 'there');
+  return baseLayout(`
     ${badge('Session Cancelled', '#ef4444')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session cancelled</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${recipientName}</strong>, your session has been cancelled.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${displayName}</strong>, your session has been cancelled.</p>
     ${infoTable(`
       ${infoRow('With', otherPartyName)}
       ${infoRow('Date', date)}
@@ -343,14 +368,16 @@ const appointmentCancelled = ({ recipientName, otherPartyName, date, time, cance
     `)}
     ${btn('Book a New Session →', 'https://www.behold.co.in/advisors')}
   `);
+};
 
-const appointmentCancelledCounsellor = ({ recipientName, otherPartyName, date, time, cancelledBy, reason }) =>
-  baseLayout(`
+const appointmentCancelledCounsellor = ({ recipientName, otherPartyName, date, time, cancelledBy, reason }) => {
+  const otherDisplayName = sanitizeDisplayName(otherPartyName, 'Student');
+  return baseLayout(`
     ${badge('Session Cancelled', '#ef4444')}
-    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session with ${otherPartyName} cancelled</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${recipientName}</strong>, the following session has been cancelled.</p>
+    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session with ${otherDisplayName} cancelled</h2>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${sanitizeDisplayName(recipientName, 'Doctor')}</strong>, the following session has been cancelled.</p>
     ${infoTable(`
-      ${infoRow('Student', otherPartyName)}
+      ${infoRow('Student', otherDisplayName)}
       ${infoRow('Date', date)}
       ${infoRow('Time', time)}
       ${infoRow('Cancelled By', cancelledBy)}
@@ -358,13 +385,15 @@ const appointmentCancelledCounsellor = ({ recipientName, otherPartyName, date, t
     `)}
     ${btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}
   `);
+};
 
 /** Sent to both parties when rescheduled */
-const appointmentRescheduled = ({ recipientName, otherPartyName, newDate, newTime, mode }) =>
-  baseLayout(`
+const appointmentRescheduled = ({ recipientName, otherPartyName, newDate, newTime, mode }) => {
+  const displayName = sanitizeDisplayName(recipientName, 'there');
+  return baseLayout(`
     ${badge('Session Rescheduled', '#f59e0b')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Your session has been rescheduled</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${recipientName}</strong>, your session with <strong>${otherPartyName}</strong> has been moved to a new time.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${displayName}</strong>, your session with <strong>${otherPartyName}</strong> has been moved to a new time.</p>
     ${infoTable(`
       ${infoRow('New Date', newDate)}
       ${infoRow('New Time', newTime)}
@@ -373,27 +402,31 @@ const appointmentRescheduled = ({ recipientName, otherPartyName, newDate, newTim
     ${alertBox('⏳ Awaiting re-confirmation from the psychologist.', 'warning')}
     ${btn('View Updated Booking →', 'https://www.behold.co.in/profile?tab=booked')}
   `);
+};
 
-const appointmentRescheduledCounsellor = ({ recipientName, otherPartyName, newDate, newTime, mode }) =>
-  baseLayout(`
+const appointmentRescheduledCounsellor = ({ recipientName, otherPartyName, newDate, newTime, mode }) => {
+  const otherDisplayName = sanitizeDisplayName(otherPartyName, 'Student');
+  return baseLayout(`
     ${badge('Session Rescheduled', '#f59e0b')}
-    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session with ${otherPartyName} rescheduled</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${recipientName}</strong>, a session has been rescheduled and requires your approval.</p>
+    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session with ${otherDisplayName} rescheduled</h2>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${sanitizeDisplayName(recipientName, 'Doctor')}</strong>, a session has been rescheduled and requires your approval.</p>
     ${infoTable(`
-      ${infoRow('Student', otherPartyName)}
+      ${infoRow('Student', otherDisplayName)}
       ${infoRow('New Date', newDate)}
       ${infoRow('New Time', newTime)}
       ${infoRow('Mode', mode || 'Online')}
     `)}
     ${btn('Review in Dashboard →', 'https://www.behold.co.in/counsellor')}
   `);
+};
 
 /** Day-of reminder */
-const appointmentReminder = ({ recipientName, otherPartyName, date, time, mode, meetLink }) =>
-  baseLayout(`
+const appointmentReminder = ({ recipientName, otherPartyName, date, time, mode, meetLink }) => {
+  const displayName = sanitizeDisplayName(recipientName, 'there');
+  return baseLayout(`
     ${badge('Session Reminder — Today!', BLUE)}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Your session is today</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${recipientName}</strong>, this is a reminder about your session with <strong>${otherPartyName}</strong> today.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${displayName}</strong>, this is a reminder about your session with <strong>${otherPartyName}</strong> today.</p>
     ${infoTable(`
       ${infoRow('Date', date)}
       ${infoRow('Time', time)}
@@ -402,14 +435,16 @@ const appointmentReminder = ({ recipientName, otherPartyName, date, time, mode, 
     `)}
     ${meetLink ? btn('Join Meeting Now →', meetLink) : btn('View My Dashboard →', 'https://www.behold.co.in/profile?tab=booked')}
   `);
+};
 
-const appointmentReminderCounsellor = ({ recipientName, otherPartyName, date, time, mode, meetLink }) =>
-  baseLayout(`
+const appointmentReminderCounsellor = ({ recipientName, otherPartyName, date, time, mode, meetLink }) => {
+  const otherDisplayName = sanitizeDisplayName(otherPartyName, 'Student');
+  return baseLayout(`
     ${badge('Session Reminder — Today!', BLUE)}
-    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session today with ${otherPartyName}</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${recipientName}</strong>, you have a session today.</p>
+    <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Session today with ${otherDisplayName}</h2>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${sanitizeDisplayName(recipientName, 'Doctor')}</strong>, you have a session today.</p>
     ${infoTable(`
-      ${infoRow('Student', otherPartyName)}
+      ${infoRow('Student', otherDisplayName)}
       ${infoRow('Date', date)}
       ${infoRow('Time', time)}
       ${infoRow('Mode', mode || 'Online')}
@@ -417,13 +452,15 @@ const appointmentReminderCounsellor = ({ recipientName, otherPartyName, date, ti
     `)}
     ${meetLink ? btn('Start Meeting →', meetLink) : btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}
   `);
+};
 
 /** Payment receipt — student only */
-const paymentReceipt = ({ userName, amount, appointmentDate, appointmentTime, counsellorName, transactionId }) =>
-  baseLayout(`
+const paymentReceipt = ({ userName, amount, appointmentDate, appointmentTime, counsellorName, transactionId }) => {
+  const displayName = sanitizeDisplayName(userName, 'there');
+  return baseLayout(`
     ${badge('Payment Confirmed', '#22c55e')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Payment Successful!</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${userName}</strong>, your payment has been received. Here is your receipt.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${displayName}</strong>, your payment has been received. Here is your receipt.</p>
     ${infoTable(`
       ${infoRow('Amount Paid', `<strong style="color:${BLUE};font-size:16px;">₹${amount}</strong>`)}
       ${infoRow('Psychologist', counsellorName)}
@@ -434,13 +471,14 @@ const paymentReceipt = ({ userName, amount, appointmentDate, appointmentTime, co
     ${alertBox('✅ Payment received — your session is awaiting psychologist confirmation.', 'success')}
     ${btn('View My Bookings →', 'https://www.behold.co.in/profile?tab=booked')}
   `);
+};
 
 /** Admin: Counsellor verified */
 const counsellorVerified = ({ name }) =>
   baseLayout(`
     ${badge('Profile Verified ✓', '#22c55e')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">You're now verified!</h2>
-    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Congratulations, <strong>${name}</strong>! Your psychologist profile has been reviewed and <strong>approved</strong> by the BEHOLD. admin team.</p>
+    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Congratulations, <strong>${sanitizeDisplayName(name, 'Doctor')}</strong>! Your psychologist profile has been reviewed and <strong>approved</strong> by the BEHOLD. admin team.</p>
     <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Your profile is now live and students can book sessions with you. Complete your availability to start receiving bookings.</p>
     ${btn('Go to Your Dashboard →', 'https://www.behold.co.in/counsellor')}
   `);
@@ -449,7 +487,7 @@ const counsellorRejected = ({ name, reason }) =>
   baseLayout(`
     ${badge('Application Update')}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Application Update</h2>
-    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${name}</strong>, after reviewing your application, we are unable to approve your profile at this time.</p>
+    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${sanitizeDisplayName(name, 'Doctor')}</strong>, after reviewing your application, we are unable to approve your profile at this time.</p>
     ${reason ? alertBox(`<strong>Reason:</strong> ${reason}`, 'danger') : ''}
     <p style="margin:0 0 20px;color:#475569;font-size:14px;line-height:1.7;">Contact our support team if you believe this is an error.</p>
     ${btn('Contact Support →', 'mailto:support@behold.co.in')}
@@ -460,7 +498,7 @@ const broadcastEmail = ({ title, message, recipientName }) =>
   baseLayout(`
     ${badge('Announcement', BLUE)}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">${title}</h2>
-    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${recipientName || 'there'}</strong>,</p>
+    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${sanitizeDisplayName(recipientName, 'there')}</strong>,</p>
     <div style="background:#f8fafc;border-radius:12px;padding:20px 24px;margin:16px 0;border:1px solid #e2e8f0;">
       <p style="margin:0;color:#334155;font-size:15px;line-height:1.8;white-space:pre-line;">${message}</p>
     </div>
@@ -468,11 +506,12 @@ const broadcastEmail = ({ title, message, recipientName }) =>
   `);
 
 /** Meet link notification */
-const meetLinkAdded = ({ userName, counsellorName, date, time, meetLink }) =>
-  baseLayout(`
+const meetLinkAdded = ({ userName, counsellorName, date, time, meetLink }) => {
+  const displayName = sanitizeDisplayName(userName, 'there');
+  return baseLayout(`
     ${badge('Meeting Link Ready', BLUE)}
     <h2 style="margin:0 0 12px;font-size:24px;color:#0f172a;font-weight:800;">Your meeting link is ready!</h2>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${userName}</strong>, your psychologist has added the meeting link for your upcoming session.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Hi <strong>${displayName}</strong>, your psychologist has added the meeting link for your upcoming session.</p>
     ${infoTable(`
       ${infoRow('Psychologist', counsellorName)}
       ${infoRow('Date', date)}
@@ -481,6 +520,7 @@ const meetLinkAdded = ({ userName, counsellorName, date, time, meetLink }) =>
     `)}
     ${btn('Join Meeting →', meetLink)}
   `);
+};
 
 module.exports = {
   welcomeUser,

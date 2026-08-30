@@ -97,8 +97,11 @@ const AppointmentController = {
         const userPhone = resolveAnyPhone(user, newAppointment, clientPhone);
         const counsellorPhone = resolveAnyPhone(counsellor);
 
-        const sName = clientName || user?.name || 'Student';
+        const sName = (clientName && clientName !== 'New User' && !String(clientName).startsWith('Behold User'))
+          ? clientName
+          : ((user?.name && user.name !== 'New User' && !String(user.name).startsWith('Behold User')) ? user.name : '');
         const cName = counsellor?.name || 'Psychologist';
+        const studentDisplay = sName || 'A student';
 
         console.log(`[Create Booking WhatsApp] User Phone: "${userPhone}" | Counsellor Phone: "${counsellorPhone}"`);
 
@@ -107,7 +110,7 @@ const AppointmentController = {
             recipientId: counsellor.id,
             recipientRole: 'counsellor',
             title: 'New Appointment Request',
-            message: `Student ${sName} has requested an appointment on ${date} at ${time}.`,
+            message: `${studentDisplay} has requested an appointment on ${date} at ${time}.`,
             type: 'appointment_created',
             isRead: false
           }),

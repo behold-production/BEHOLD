@@ -120,7 +120,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           if (setBookingForm) {
             setBookingForm(prev => ({
               ...prev,
-              name: (res.data.user?.name && !res.data.user.name.includes('Behold User')) ? res.data.user.name : prev.name,
+              name: (res.data.user?.name && !res.data.user.name.includes('Behold User') && res.data.user.name !== 'New User') ? res.data.user.name : prev.name,
               phone: otpPhone,
               email: (res.data.user?.email && !res.data.user.email.includes('@temp.behold')) ? res.data.user.email : prev.email,
               age: res.data.user?.age || prev.age || '',

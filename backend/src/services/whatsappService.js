@@ -168,7 +168,7 @@ class WhatsAppService {
    */
   async sendBookingAlert(phone, action, details = {}) {
     const {
-      studentName    = 'there',
+      studentName    = '',
       counsellorName = 'Psychologist',
       date           = 'N/A',
       time           = 'N/A',
@@ -186,6 +186,22 @@ class WhatsAppService {
     const catalogUrl = 'https://www.behold.co.in/advisors';
     const finalMeetLink = meetLink || bookingUrl;
 
+    // Helper to sanitize student name and avoid placeholder artifacts like "New User" or "Student"
+    const isGenericPlaceholder = (name) => {
+      if (!name || typeof name !== 'string') return true;
+      const lower = name.trim().toLowerCase();
+      return (
+        !lower ||
+        ['new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there', 'behold user'].includes(lower) ||
+        lower.startsWith('behold user') ||
+        lower.startsWith('user_')
+      );
+    };
+
+    const cleanStudentName = isGenericPlaceholder(studentName) ? '' : studentName.trim();
+    const greeting = cleanStudentName ? `Hi *${cleanStudentName}* 👋` : `Hi there 👋`;
+    const formalGreeting = cleanStudentName ? `Hi *${cleanStudentName}*,` : `Hi there,`;
+
     let text = '';
 
     switch (action) {
@@ -197,7 +213,7 @@ class WhatsAppService {
       case 'booking_confirmed':
         text =
           `*Session Confirmed — BEHOLD.*\n\n` +
-          `Hi *${studentName}* 👋\n\n` +
+          `${greeting}\n\n` +
           `Great news! Your counselling session has been successfully confirmed.\n\n` +
           `• *Psychologist:* ${counsellorName}\n` +
           `• *Date:* ${date}\n` +
@@ -215,7 +231,7 @@ class WhatsAppService {
       case 'booking_cancelled':
         text =
           `*Session Cancelled — BEHOLD.*\n\n` +
-          `Hi *${studentName}*,\n\n` +
+          `${formalGreeting}\n\n` +
           `Your counselling session has been cancelled.\n\n` +
           `• *Psychologist:* ${counsellorName}\n` +
           `• *Date:* ${date}\n` +
@@ -232,7 +248,7 @@ class WhatsAppService {
       case 'rejected':
         text =
           `*Session Update — BEHOLD.*\n\n` +
-          `Hi *${studentName}*,\n\n` +
+          `${formalGreeting}\n\n` +
           `We’re sorry to inform you that your counselling session with *${counsellorName}* scheduled for *${date}* at *${time}* has been cancelled by the psychologist.\n\n` +
           `You can choose another available psychologist or select a different appointment time.\n\n` +
           `📅 *Book Another Session:* ${catalogUrl}\n\n` +
@@ -245,7 +261,7 @@ class WhatsAppService {
       case 'session_rescheduled':
         text =
           `*Session Rescheduled — BEHOLD.*\n\n` +
-          `Hi *${studentName}*,\n\n` +
+          `${formalGreeting}\n\n` +
           `Your counselling session has been successfully rescheduled.\n\n` +
           `*Psychologist:* ${counsellorName}\n\n` +
           `*Previous Schedule*\n` +
@@ -266,7 +282,7 @@ class WhatsAppService {
       case 'reminder_24_hour':
         text =
           `*Reminder: Your Session Is Tomorrow — BEHOLD.*\n\n` +
-          `Hi *${studentName}* 👋\n\n` +
+          `${greeting}\n\n` +
           `This is a friendly reminder about your counselling session tomorrow.\n\n` +
           `• *Psychologist:* ${counsellorName}\n` +
           `• *Date:* ${date}\n` +
@@ -285,7 +301,7 @@ class WhatsAppService {
       case 'reminder':
         text =
           `*Your Session Starts Soon — BEHOLD.*\n\n` +
-          `Hi *${studentName}* 👋\n\n` +
+          `${greeting}\n\n` +
           `Your counselling session with *${counsellorName}* starts in approximately 1 hour.\n\n` +
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
@@ -300,7 +316,7 @@ class WhatsAppService {
       case 'session_completed':
         text =
           `*Session Completed — BEHOLD.*\n\n` +
-          `Hi *${studentName}*,\n\n` +
+          `${formalGreeting}\n\n` +
           `Your counselling session with *${counsellorName}* has been completed successfully.\n\n` +
           `• *Date:* ${date}\n` +
           `• *Time:* ${time}\n` +
@@ -316,7 +332,7 @@ class WhatsAppService {
       default:
         text =
           `*BEHOLD. — Session Update*\n\n` +
-          `Hi *${studentName}*,\n` +
+          `${formalGreeting}\n` +
           `• *Psychologist:* ${counsellorName}\n` +
           `• *Date:* ${date}\n` +
           `• *Time:* ${time}\n\n` +
@@ -365,18 +381,30 @@ class WhatsAppService {
   async sendFeedbackReceived(phone, details = {}) {
     const {
       counsellorName = 'Psychologist',
-      studentName    = 'A client',
+      studentName    = '',
       rating         = 5,
       comment        = ''
     } = details;
 
+    const isGenericPlaceholder = (name) => {
+      if (!name || typeof name !== 'string') return true;
+      const lower = name.trim().toLowerCase();
+      return (
+        !lower ||
+        ['new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there', 'behold user'].includes(lower) ||
+        lower.startsWith('behold user') ||
+        lower.startsWith('user_')
+      );
+    };
+
+    const cleanStudentName = isGenericPlaceholder(studentName) ? 'A client' : studentName.trim();
     const stars = '⭐'.repeat(Math.max(1, Math.min(5, Number(rating))));
     const profileUrl = 'https://www.behold.co.in/counsellor';
 
     const text =
       `*New Client Review — BEHOLD.*\n\n` +
       `Hi *${counsellorName}*,\n\n` +
-      `Great news! *${studentName}* just left you a review.\n\n` +
+      `Great news! *${cleanStudentName}* just left you a review.\n\n` +
       `${stars} *${rating}/5 Stars*\n` +
       (comment ? `_"${comment}"_\n\n` : '\n') +
       `This review has been recorded and will be reflected in your public rating.\n\n` +

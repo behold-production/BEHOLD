@@ -868,9 +868,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (user) {
       setTimeout(() => {
         setBookingForm(prev => {
+          const validUserName = user.name && user.name !== 'New User' && !user.name.includes('Behold User') ? user.name : '';
+          const validUserEmail = user.email && !user.email.includes('@temp.behold') ? user.email : '';
           const merged = {
-            name: prev.name && prev.name.trim().length > 0 ? prev.name : (user.name || ''),
-            email: user.email || prev.email || '',
+            name: prev.name && prev.name.trim().length > 0 ? prev.name : validUserName,
+            email: prev.email && prev.email.trim().length > 0 ? prev.email : validUserEmail,
             phone: prev.phone && prev.phone.trim().length > 0 ? prev.phone : (user.phone || ''),
             groupCode: prev.groupCode || user.groupCode || '',
             clientLocationName: prev.clientLocationName || user.locationName || '',
@@ -1102,8 +1104,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         baseFee: baseFee,
         gstAmount: gstAmount,
         amount: netTotal,
-        clientName: bookingForm.name || user?.name || '',
-        clientEmail: bookingForm.email || user?.email || '',
+        clientName: (bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User'))
+          ? bookingForm.name
+          : ((user?.name && user.name !== 'New User' && !user.name.includes('Behold User')) ? user.name : ''),
+        clientEmail: (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
+          ? bookingForm.email
+          : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : ''),
         clientPhone: bookingForm.phone || user?.phone || '',
         clientLocationName: bookingForm.clientLocationName || '',
         clientLatitude: Number(bookingForm.clientLatitude) || 0,
@@ -1149,41 +1155,55 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           setIsSuccess(true);
           setBookingStep('success');
           window.history.pushState({ component: 'booking', step: 'success' }, '');
+          return;
         } else {
-          throw new Error(bookRes.message || 'Failed to book free appointment');
+          throw new Error(bookRes.message || "Failed to confirm free booking.");
         }
-        return;
       }
 
-      const isScriptLoaded = await loadRazorpayScript();
-      if (!isScriptLoaded) {
-        toast.error("Failed to load Razorpay Payment Gateway. Check your connection.");
-        setIsProcessingPayment(false);
-        return;
+      setPaymentStepText("Initializing Razorpay checkout...");
+
+      // 1. Create Razorpay order via backend
+      const orderRes = await ApiService.createOrder({
+        amount: netTotal,
+        currency: 'INR',
+        receipt: `rcpt_${Date.now()}`,
+        counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
+        date: selectedDate,
+        time: selectedTime,
+        duration: bookingDuration,
+        bookingDuration: bookingDuration,
+        mode: bookingMode,
+        service: bookingService,
+        couponCode: couponInput,
+        clientLocationName: bookingForm.clientLocationName || '',
+        clientLatitude: Number(bookingForm.clientLatitude) || 0,
+        clientLongitude: Number(bookingForm.clientLongitude) || 0,
+        utmSource: campaign.utm_source || '',
+        utmMedium: campaign.utm_medium || '',
+        utmCampaign: campaign.utm_campaign || '',
+        utmContent: campaign.utm_content || '',
+        utmTerm: campaign.utm_term || '',
+        fbclid: campaign.fbclid || ''
+      });
+
+      if (!orderRes.success || !orderRes.order) {
+        throw new Error(orderRes.message || "Failed to initialize payment gateway.");
       }
 
-      setPaymentStepText("Creating payment order...");
+      const { id: orderId, keyId } = orderRes.order;
 
-      const orderRes = await ApiService.createPaymentOrder(selectedAdvisor ? selectedAdvisor.id : '', bookingDetails);
-      if (!orderRes.success || !orderRes.data) {
-        throw new Error(orderRes.message || 'Failed to create payment order');
-      }
-
-      const { keyId, orderId, amount: orderAmountPaise, currency } = orderRes.data;
-
-      setPaymentStepText("Awaiting payment...");
-
+      // 2. Open Razorpay checkout modal
       const options = {
-        key: keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_THJcTWUaeHzOnn',
-        amount: orderAmountPaise || orderRes.amount || Math.round(netTotal * 100),
-        currency: currency || 'INR',
+        key: keyId,
+        amount: Math.round(netTotal * 100),
+        currency: "INR",
         name: "BEHOLD.",
-        description: `${bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} Session (${bookingDuration === 30 ? '30 Mins' : '1 Hour'})`,
-        image: "https://www.behold.co.in/pwa-512.png",
+        description: `${bookingService.toUpperCase()} Consultation with ${selectedAdvisor?.name || 'Psychologist'}`,
         order_id: orderId,
         handler: async function (response) {
           try {
-            setPaymentStepText("Verifying payment signature...");
+            setPaymentStepText("Verifying payment signature with server...");
 
             const bookingDetails = {
               counsellorId: selectedAdvisor ? selectedAdvisor.id : '',
@@ -1198,8 +1218,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               baseFee: baseFee,
               gstAmount: gstAmount,
               amount: netTotal,
-              clientName: bookingForm.name || user?.name || '',
-              clientEmail: bookingForm.email || user?.email || '',
+              clientName: (bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User'))
+                ? bookingForm.name
+                : ((user?.name && user.name !== 'New User' && !user.name.includes('Behold User')) ? user.name : ''),
+              clientEmail: (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
+                ? bookingForm.email
+                : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : ''),
               clientPhone: bookingForm.phone || user?.phone || '',
               clientLocationName: bookingForm.clientLocationName || '',
               clientLatitude: Number(bookingForm.clientLatitude) || 0,
@@ -1256,8 +1280,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           }
         },
         prefill: {
-          name: bookingForm.name || user?.name || '',
-          email: bookingForm.email || user?.email || '',
+          name: (bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User'))
+            ? bookingForm.name
+            : ((user?.name && user.name !== 'New User' && !user.name.includes('Behold User')) ? user.name : ''),
+          email: (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
+            ? bookingForm.email
+            : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : ''),
           contact: bookingForm.phone || user?.phone || ''
         },
         theme: {

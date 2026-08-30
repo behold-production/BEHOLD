@@ -21,7 +21,10 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
       user
     );
 
-    const sName = appointment.clientName || reqBody?.clientName || reqBody?.bookingDetails?.clientName || user?.name || 'Student';
+    const candidateName = appointment.clientName || reqBody?.clientName || reqBody?.bookingDetails?.clientName || user?.name || '';
+    const isGeneric = (n) => !n || ['new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there'].includes(String(n).trim().toLowerCase()) || String(n).toLowerCase().startsWith('behold user');
+    const sName = isGeneric(candidateName) ? '' : String(candidateName).trim();
+    const studentDisplay = sName || 'A student';
     const cName = counsellor?.name || 'Psychologist';
     const date = appointment.date;
     const time = appointment.time;
@@ -29,14 +32,14 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
     const netTotal = appointment.amountPaid || 0;
     const finalMeetLink = appointment.meetLink || '';
 
-    console.log(`[Payment Booking WhatsApp Trigger] Target User Phone: "${targetUserPhone}" | Student: "${sName}" | Counsellor: "${cName}"`);
+    console.log(`[Payment Booking WhatsApp Trigger] Target User Phone: "${targetUserPhone}" | Student: "${sName || 'Anonymous'}" | Counsellor: "${cName}"`);
 
     await Promise.allSettled([
       StorageService.create('notifications', {
         recipientId: appointment.counsellorId,
         recipientRole: 'counsellor',
         title: 'New Paid Appointment Request',
-        message: `Student ${sName} booked an appointment on ${date} at ${time}. Payment confirmed.`,
+        message: `${studentDisplay} booked an appointment on ${date} at ${time}. Payment confirmed.`,
         type: 'appointment_created',
         isRead: false
       }),
@@ -480,8 +483,8 @@ const PaymentController = {
         amountPaid: netTotal,
         appliedDiscount,
         couponCode,
-        clientName: clientName || user.name || '',
-        clientEmail: clientEmail || user.email || '',
+        clientName: (clientName && clientName !== 'New User' && !String(clientName).startsWith('Behold User')) ? clientName : ((user.name && user.name !== 'New User' && !String(user.name).startsWith('Behold User')) ? user.name : ''),
+        clientEmail: (clientEmail && !clientEmail.includes('@temp.behold')) ? clientEmail : ((user.email && !user.email.includes('@temp.behold')) ? user.email : ''),
         clientPhone: normPhone || clientPhone || user.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,

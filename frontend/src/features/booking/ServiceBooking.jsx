@@ -501,11 +501,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-normal mt-1">
                                             {rescheduleSession ? (
                                                 <>
-                                                    Your reschedule request for <strong className="font-semibold text-slate-900">{bookingForm.name || user?.name || 'User'}</strong> has been submitted to <strong className="font-semibold text-slate-900">{selectedAdvisor?.name}</strong>.
+                                                    Your reschedule request {bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') ? <>for <strong className="font-semibold text-slate-900">{bookingForm.name}</strong> </> : ''}has been submitted to <strong className="font-semibold text-slate-900">{selectedAdvisor?.name}</strong>.
                                                 </>
                                             ) : (
                                                 <>
-                                                    Thank you, <strong className="font-semibold text-slate-900">{bookingForm.name || 'User'}</strong>. Your payment is verified and your session is successfully booked.
+                                                    Thank you{bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') ? <>, <strong className="font-semibold text-slate-900">{bookingForm.name}</strong></> : ''}! Your payment is verified and your session is successfully booked.
                                                 </>
                                             )}
                                         </p>
@@ -1386,9 +1386,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 {user && (
                                                     <div className="bg-surface-50 border border-surface-200 rounded-xl p-4 flex items-center justify-between gap-3 animate-in fade-in duration-300 shadow-sm">
                                                         <div className="flex-1 min-w-0">
-                                                            <span className="text-sm font-semibold text-surface-900 block truncate">{user.name}</span>
-                                                            <span className="text-sm font-semibold text-surface-600 truncate block">{user.email}</span>
-                                                            {user.phone && <span className="text-sm font-semibold text-surface-600 truncate block">{user.phone}</span>}
+                                                            <span className="text-sm font-semibold text-surface-900 block truncate">
+                                                                {user.name && user.name !== 'New User' && !user.name.includes('Behold User') ? user.name : (user.phone || 'Client Account')}
+                                                            </span>
+                                                            {user.email && !user.email.includes('@temp.behold') && (
+                                                                <span className="text-sm font-semibold text-surface-600 truncate block">{user.email}</span>
+                                                            )}
+                                                            {user.phone && user.name && user.name !== 'New User' && !user.name.includes('Behold User') && (
+                                                                <span className="text-sm font-semibold text-surface-600 truncate block">{user.phone}</span>
+                                                            )}
                                                         </div>
                                                         <span className="shrink-0 text-sm font-semibold bg-surface-900 text-white px-2.5 py-1 rounded-xl">
                                                             ✓ Authenticated
