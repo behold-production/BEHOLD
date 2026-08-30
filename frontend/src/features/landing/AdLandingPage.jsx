@@ -237,9 +237,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-baseline">
               BEHOLD<span className="text-[#00c9d6] font-black text-2xl leading-none">.</span>
             </span>
-            <span className="hidden sm:inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-              <ShieldCheck className="w-3 h-3 text-emerald-600" /> Verified Clinical Care
-            </span>
           </div>
 
           <div className="flex items-center gap-2.5 sm:gap-3">
@@ -304,15 +301,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
           {/* RIGHT: Session Copy & Call-to-Action */}
           <div className="lg:col-span-6 order-1 lg:order-2 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#00c9d6]/15 text-[#008b94] text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Personalized Psychological Counselling</span>
-            </div>
-
             <div className="space-y-2">
-              <h1 className="text-3xl xs:text-4xl sm:text-5xl font-black text-slate-950 tracking-tight leading-[1.1]">
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[1.08]">
                 Whatever you feel, <br />
-                <span className="text-[#00c9d6] font-rough text-[42px] xs:text-[52px] sm:text-[64px] font-normal leading-none block mt-1">
+                <span className="text-[#00c9d6] font-rough text-[50px] xs:text-[60px] sm:text-[72px] lg:text-[80px] font-normal leading-[0.9] block mt-1">
                   it’s okay to be not okay.
                 </span>
               </h1>
