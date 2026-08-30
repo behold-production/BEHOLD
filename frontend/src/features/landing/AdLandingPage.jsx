@@ -271,30 +271,20 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <img
                 src={clinicImage}
                 alt="BEHOLD Professional Counselling Room"
-                className="w-full h-[280px] xs:h-[340px] sm:h-[420px] object-cover object-center group-hover:scale-105 transition-transform duration-700 opacity-90"
+                className="w-full h-[300px] xs:h-[360px] sm:h-[440px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
               
-              {/* Floating Shield Badge */}
-              <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-slate-100 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[11px] font-bold text-slate-800 tracking-wide">100% Confidential & Secure</span>
+              {/* Sleek Minimal Confidentiality Badge */}
+              <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-white/10 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[11px] font-medium text-white/90 tracking-wide">100% Private & Confidential</span>
               </div>
 
-              {/* Bottom Visual Highlights */}
-              <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md rounded-2xl p-3 sm:p-4 border border-white/40 shadow-xl flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#00c9d6]/20 border border-[#00c9d6]/40 flex items-center justify-center text-[#008b94] shrink-0 font-black">
-                    4.9★
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900">Rated 4.9/5 by Clients</h4>
-                    <p className="text-[11px] text-slate-600">Over 500+ therapy sessions conducted</p>
-                  </div>
-                </div>
-                <div className="hidden sm:flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                  Online & Offline
-                </div>
+              {/* Minimal Trust Indicator */}
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white/90 text-xs font-medium px-2">
+                <span className="drop-shadow-md">★ 4.9/5 Client Rating (500+ Sessions)</span>
+                <span className="text-xs text-white/80 drop-shadow-md">Online Video & In-Person</span>
               </div>
             </div>
           </div>
