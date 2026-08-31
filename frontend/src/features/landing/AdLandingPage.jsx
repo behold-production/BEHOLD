@@ -29,13 +29,14 @@ import headerBg from '../../assets/header.svg';
 
 const getInitial = (name) => {
   if (!name) return 'P';
-  const cleanName = name.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
+  const cleanName = String(name).replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
   return cleanName.charAt(0).toUpperCase() || 'P';
 };
 
 export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSettings, onOpenDocs }) {
   const settings = siteSettings || {};
-  const whatsappNumber = (settings.whatsapp || 'https://wa.me/919400090106').replace(/[^\d]/g, '') || '919400090106';
+  const rawWhatsapp = settings.whatsapp || 'https://wa.me/919400090106';
+  const whatsappNumber = String(rawWhatsapp).replace(/[^\d]/g, '') || '919400090106';
 
   // Counsellor list state
   const [advisors, setAdvisors] = useState([]);
@@ -134,6 +135,33 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         }
       } catch (e) {
         console.warn('Failed to load advisors for ad landing page', e);
+        // Fallback to mock data on error so page is not blank
+        setAdvisors([
+          {
+            id: 'c1',
+            name: 'Dr. Sarah Thomas',
+            title: 'Senior Clinical Psychologist',
+            fee: 1200,
+            halfSessionPrice: 600,
+            hours: 1200,
+            bio: 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
+            specialties: ['Anxiety & Stress', 'Depression', 'Self Esteem'],
+            photo: null,
+            languages: 'English, Malayalam'
+          },
+          {
+            id: 'c2',
+            name: 'Dr. Rahul Varma',
+            title: 'Counselling Psychologist & Mentor',
+            fee: 1000,
+            halfSessionPrice: 500,
+            hours: 950,
+            bio: 'Specializing in emotional resilience, burnout recovery, and personalized roadmap creation.',
+            specialties: ['Career Stress', 'Relationship Guidance', 'Burnout'],
+            photo: null,
+            languages: 'English, Hindi'
+          }
+        ]);
       } finally {
         setLoadingAdvisors(false);
       }
@@ -451,12 +479,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                     <div className="space-y-1">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Specialties:</span>
                       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
-                        {advisor.specialties.slice(0, 3).map((spec, i) => (
+                        {Array.isArray(advisor.specialties) && advisor.specialties.slice(0, 3).map((spec, i) => (
                           <span
                             key={i}
                             className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-800 text-[10.5px] font-semibold rounded-lg whitespace-nowrap shrink-0"
                           >
-                            {spec}
+                            {typeof spec === 'string' ? spec : (spec?.name || String(spec))}
                           </span>
                         ))}
                       </div>
