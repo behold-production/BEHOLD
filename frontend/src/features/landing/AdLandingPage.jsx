@@ -50,8 +50,67 @@ const RECENT_BOOKINGS = [
   { name: 'Anjali', time: '19m ago', location: 'Thrissur' }
 ];
 
+const DEFAULT_FAQS = [
+  {
+    q: "ഇത് confidential ആണോ?",
+    a: "100%. നിങ്ങളുടെ വ്യക്തിഗത വിവരങ്ങൾ, സംഭാഷണങ്ങൾ എന്നിവ തികച്ചും രഹസ്യമായി സൂക്ഷിക്കും. നിങ്ങളുടെ അനുവാദമില്ലാതെ ആരുമായും share ചെയ്യില്ല."
+  },
+  {
+    q: "Session reschedule/cancel ചെയ്യാൻ പറ്റുമോ?",
+    a: "തീർച്ചയായും. Session തുടങ്ങുന്നതിന് 1 മണിക്കൂർ മുൻപ് അറിയിച്ചാൽ സൗജന്യമായി നിങ്ങൾക്ക് അനുയോജ്യമായ മറ്റൊരു സമയത്തേക്ക് reschedule ചെയ്യാവുന്നതാണ്."
+  },
+  {
+    q: "Payment കഴിഞ്ഞാൽ എന്ത് സംഭവിക്കും?",
+    a: "Payment പൂർത്തിയായ ഉടൻ തന്നെ നിങ്ങളുടെ Booking confirm ആകും. ഒപ്പം Private Google Meet session link നിങ്ങളുടെ WhatsApp & Email വഴി തൽക്ഷണം ലഭിക്കും."
+  },
+  {
+    q: "എനിക്ക് ഇഷ്ടമുള്ള psychologist-നെ choose ചെയ്യാൻ പറ്റുമോ?",
+    a: "തീർച്ചയായും. നിങ്ങളുടെ പ്രയാസങ്ങൾക്കും മുൻഗണനയ്ക്കും അനുയോജ്യമായ psychologist-നെ പ്രൊഫൈൽ കണ്ട് നേരിട്ട് തിരഞ്ഞെടുക്കാം."
+  },
+  {
+    q: "Sessions Malayalam-ൽ മാത്രമേ ഉള്ളൂവോ?",
+    a: "ഇല്ല, നിങ്ങൾക്ക് കൂടുതൽ എളുപ്പമുള്ള രീതിയിൽ Malayalam-ലും English-ലും sessions ലഭ്യമാണ്."
+  }
+];
+
 export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSettings, onOpenDocs }) {
   const settings = siteSettings || {};
+
+  // Dynamic Content with Fallbacks
+  const heroTitle = settings.adHeroTitle || "മനസ്സിലാക്കപ്പെടുന്നത് ഇവിടെ തുടങ്ങുന്നു.";
+  const heroSub = settings.adHeroSub || "Qualified psychologists-നൊപ്പം, വീട്ടിലിരുന്ന് തന്നെ ഒന്ന് തുറന്നു സംസാരിക്കാം. വെറും ₹" + (settings.adHeroPrice || 899) + "-ന് ഒരു session ബുക്ക് ചെയ്യാം.";
+  const heroPrice = Number(settings.adHeroPrice) || 899;
+  const heroBtnText = settings.adHeroBtnText || "Book My Session";
+  const heroBadge = settings.adHeroBadge || "100% Confidential & Secure";
+  const heroRating = settings.adHeroRatingText || "★ 4.9/5 Rating (500+ Consultations)";
+  const heroImg = settings.adHeroImage || clinicImage;
+
+  const trustBadge1Title = settings.adTrustBadge1Title || "11 Qualified";
+  const trustBadge1Sub = settings.adTrustBadge1Sub || "Psychologists";
+  const trustBadge2Title = settings.adTrustBadge2Title || "100% Confidential";
+  const trustBadge2Sub = settings.adTrustBadge2Sub || "Strict Privacy Ethics";
+  const trustBadge3Title = settings.adTrustBadge3Title || "Malayalam & English";
+  const trustBadge3Sub = settings.adTrustBadge3Sub || "Sessions Available";
+  const trustBadge4Title = settings.adTrustBadge4Title || "Secure Online Payment";
+  const trustBadge4Sub = settings.adTrustBadge4Sub || "Instant UPI & Cards";
+
+  const reflectionTag = settings.adReflectionTag || "Self Reflection";
+  const reflectionTitle = settings.adReflectionTitle || "ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?";
+  const reflectionSub = settings.adReflectionSub || "(Does this feel familiar?)";
+  const reflectionPrompt1 = settings.adReflectionPrompt1 || "എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ, rest എടുത്തിട്ടും?";
+  const reflectionPrompt2 = settings.adReflectionPrompt2 || "ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതെ ആണോ?";
+  const reflectionPrompt3 = settings.adReflectionPrompt3 || "Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?";
+  const reflectionPrompt4 = settings.adReflectionPrompt4 || "എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?";
+  const reflectionClosing = settings.adReflectionClosing || "ഇത് weakness അല്ല. ഇത് ഒന്ന് സംസാരിക്കേണ്ട സമയമാണ്.";
+
+  const psychologistTitle = settings.adPsychologistTitle || "നിങ്ങൾക്കൊപ്പം സംസാരിക്കുന്നത് ഇവരാണ്";
+  const psychologistSub = settings.adPsychologistSub || "Qualified. Experienced. Judgment-free. നിങ്ങളുടെ concern-ന് ചേരുന്ന ഒരാളെ തിരഞ്ഞെടുക്കൂ.";
+
+  const videoTitle = settings.adVideoTitle || "How It Works";
+  const videoSub = settings.adVideoSub || "ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.";
+  const videoUrl = settings.adVideoUrl || "";
+
+  const faqsList = Array.isArray(settings.adFaqs) && settings.adFaqs.length > 0 ? settings.adFaqs : DEFAULT_FAQS;
 
   // Counsellor list state
   const [advisors, setAdvisors] = useState([]);
@@ -76,12 +135,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   useEffect(() => {
     if (socialToastDismissed) return;
 
-    // Initial popup after 2.5 seconds
     const initialTimer = setTimeout(() => {
       setShowSocialToast(true);
     }, 2500);
 
-    // Rotating timer: show for 4.5s, hide for 4s, next item
     const interval = setInterval(() => {
       setShowSocialToast(false);
       setTimeout(() => {
@@ -118,8 +175,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               name: c.name || c.user?.name || c.fullName || 'Consultant Psychologist',
               title: customTitle,
               designation: customTitle,
-              fee: Number(c.fee || c.price || 899),
-              halfSessionPrice: Number(c.halfSessionPrice || Math.round((c.fee || c.price || 899) * 0.5)),
+              fee: Number(c.fee || c.price || heroPrice),
+              halfSessionPrice: Number(c.halfSessionPrice || Math.round((c.fee || c.price || heroPrice) * 0.5)),
               hours: expData.rawHours,
               expYears: expData.years,
               bio: c.bio || 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
@@ -136,7 +193,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               name: 'Dr. Sarah Thomas',
               title: 'Senior Clinical Psychologist',
               designation: 'Senior Clinical Psychologist',
-              fee: 899,
+              fee: heroPrice,
               halfSessionPrice: 499,
               hours: 1200,
               expYears: '1,200+ Hours Consulted',
@@ -150,7 +207,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               name: 'Dr. Rahul Varma',
               title: 'Counselling Psychologist & Mentor',
               designation: 'Counselling Psychologist & Mentor',
-              fee: 899,
+              fee: heroPrice,
               halfSessionPrice: 499,
               hours: 950,
               expYears: '950+ Hours Consulted',
@@ -164,7 +221,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               name: 'Dr. Ananya Nair',
               title: 'Child & Adolescent Specialist',
               designation: 'Child & Adolescent Specialist',
-              fee: 899,
+              fee: heroPrice,
               halfSessionPrice: 499,
               hours: 1500,
               expYears: '1,500+ Hours Consulted',
@@ -182,7 +239,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             id: 'c1',
             name: 'Dr. Sarah Thomas',
             title: 'Senior Clinical Psychologist',
-            fee: 899,
+            fee: heroPrice,
             halfSessionPrice: 499,
             hours: 1200,
             bio: 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
@@ -197,13 +254,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
     };
 
     fetchAdvisors();
-  }, []);
+  }, [heroPrice]);
 
   const handleBook = (advisorId = null) => {
     trackInitiateCheckout({
       content_name: 'Book My Session Click',
       content_category: 'Ad Campaign CTA',
-      value: 899,
+      value: heroPrice,
       currency: 'INR'
     });
 
@@ -238,39 +295,16 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
     },
     {
       title: "3. സുരക്ഷിതമായി ബുക്ക് ചെയ്യുക",
-      desc: "വെറും ₹899-ന് ബുക്കിംഗ് പൂർത്തിയാക്കൂ. ലിങ്ക് WhatsApp/Email വഴി ഉടൻ ലഭിക്കും.",
+      desc: `വെറും ₹${heroPrice}-ന് ബുക്കിംഗ് പൂർത്തിയാക്കൂ. ലിങ്ക് WhatsApp/Email വഴി ഉടൻ ലഭിക്കും.`,
       badge: "Step 3"
     }
   ];
 
-  const faqs = [
-    {
-      q: "ഇത് confidential ആണോ?",
-      a: "100%. നിങ്ങളുടെ വ്യക്തിഗത വിവരങ്ങൾ, സംഭാഷണങ്ങൾ എന്നിവ തികച്ചും രഹസ്യമായി സൂക്ഷിക്കും. നിങ്ങളുടെ അനുവാദമില്ലാതെ ആരുമായും share ചെയ്യില്ല."
-    },
-    {
-      q: "Session reschedule/cancel ചെയ്യാൻ പറ്റുമോ?",
-      a: "തീർച്ചയായും. Session തുടങ്ങുന്നതിന് 1 മണിക്കൂർ മുൻപ് അറിയിച്ചാൽ സൗജന്യമായി നിങ്ങൾക്ക് അനുയോജ്യമായ മറ്റൊരു സമയത്തേക്ക് reschedule ചെയ്യാവുന്നതാണ്."
-    },
-    {
-      q: "Payment കഴിഞ്ഞാൽ എന്ത് സംഭവിക്കും?",
-      a: "Payment പൂർത്തിയായ ഉടൻ തന്നെ നിങ്ങളുടെ Booking confirm ആകും. ഒപ്പം Private Google Meet session link നിങ്ങളുടെ WhatsApp & Email വഴി തൽക്ഷണം ലഭിക്കും."
-    },
-    {
-      q: "എനിക്ക് ഇഷ്ടമുള്ള psychologist-നെ choose ചെയ്യാൻ പറ്റുമോ?",
-      a: "തീർച്ചയായും. നിങ്ങളുടെ പ്രയാസങ്ങൾക്കും മുൻഗണനയ്ക്കും അനുയോജ്യമായ psychologist-നെ പ്രൊഫൈൽ കണ്ട് നേരിട്ട് തിരഞ്ഞെടുക്കാം."
-    },
-    {
-      q: "Sessions Malayalam-ൽ മാത്രമേ ഉള്ളൂവോ?",
-      a: "ഇല്ല, നിങ്ങൾക്ക് കൂടുതൽ എളുപ്പമുള്ള രീതിയിൽ Malayalam-ലും English-ലും sessions ലഭ്യമാണ്."
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-[#0f172a] font-sans antialiased overflow-x-hidden pb-24 sm:pb-12">
+    <div className="min-h-screen bg-[#f8fafc] text-[#0f172a] font-sans antialiased overflow-x-hidden pb-28 sm:pb-12">
       <SEO 
-        title="BEHOLD | മനസ്സിലാക്കപ്പെടുന്നത് ഇവിടെ തുടങ്ങുന്നു - Confidential Online Counselling" 
-        description="Qualified psychologists-നൊപ്പം, വീട്ടിലിരുന്ന് തന്നെ ഒന്ന് തുറന്നു സംസാരിക്കാം. വെറും ₹899-ന് ഒരു confidential session ബുക്ക് ചെയ്യാം." 
+        title={`BEHOLD | ${heroTitle} - Confidential Online Counselling`} 
+        description={heroSub} 
         canonicalUrl="https://www.behold.co.in/ad"
       />
 
@@ -279,16 +313,16 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-baseline">
-              BEHOLD<span className="text-[#00c9d6] font-black text-2xl leading-none">.</span>
+              {(settings.siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00c9d6] font-black text-2xl leading-none">.</span>
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleBook()}
-              className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-95 border-none"
             >
-              <span>Book My Session</span>
+              <span>{heroBtnText}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -306,7 +340,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <div className="lg:col-span-6 order-2 lg:order-1">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
               <img
-                src={clinicImage}
+                src={heroImg}
                 alt="BEHOLD Calm & Confidential Counselling Room"
                 className="w-full h-[280px] xs:h-[340px] sm:h-[420px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
@@ -315,12 +349,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               {/* Minimal Confidentiality Badge */}
               <div className="absolute top-4 left-4 bg-slate-900/85 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-white/10 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[11px] font-semibold text-white tracking-wide">100% Confidential & Secure</span>
+                <span className="text-[11px] font-semibold text-white tracking-wide">{heroBadge}</span>
               </div>
 
               {/* Verified Doctors Indicator */}
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs font-medium px-2">
-                <span className="drop-shadow-md">★ 4.9/5 Rating (500+ Consultations)</span>
+                <span className="drop-shadow-md">{heroRating}</span>
                 <span className="text-xs text-white/90 drop-shadow-md">Malayalam & English</span>
               </div>
             </div>
@@ -331,19 +365,24 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00c9d6]/15 border border-[#00c9d6]/30 text-slate-900 text-xs font-bold tracking-wide">
                 <Sparkles className="w-3.5 h-3.5 text-[#008b94]" />
-                <span>Professional Mental Wellbeing Care</span>
+                <span>{settings.adHeroEyebrow || "Professional Mental Wellbeing Care"}</span>
               </div>
 
               <h1 className="text-3xl xs:text-4xl sm:text-5xl font-black text-slate-950 tracking-tight leading-[1.25]">
-                മനസ്സിലാക്കപ്പെടുന്നത് <br className="hidden sm:inline" />
-                <span className="text-[#008b94] font-black underline decoration-[#00c9d6]/50 underline-offset-4">
-                  ഇവിടെ തുടങ്ങുന്നു.
-                </span>
+                {heroTitle.includes(" ") ? (
+                  <>
+                    {heroTitle.split(" ").slice(0, -2).join(" ")} <br className="hidden sm:inline" />
+                    <span className="text-[#008b94] font-black underline decoration-[#00c9d6]/50 underline-offset-4">
+                      {heroTitle.split(" ").slice(-2).join(" ")}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-[#008b94] font-black">{heroTitle}</span>
+                )}
               </h1>
 
               <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal pt-1">
-                Qualified psychologists-നൊപ്പം, വീട്ടിലിരുന്ന് തന്നെ ഒന്ന് തുറന്നു സംസാരിക്കാം. <br className="hidden sm:inline" />
-                വെറും <strong className="text-slate-950 font-bold text-base sm:text-lg">₹899</strong>-ന് ഒരു session ബുക്ക് ചെയ്യാം.
+                {heroSub}
               </p>
             </div>
 
@@ -351,9 +390,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
               <button
                 onClick={() => handleBook()}
-                className="px-8 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-98"
+                className="px-8 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-98 border-none"
               >
-                <span>Book My Session</span>
+                <span>{heroBtnText}</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>
@@ -377,8 +416,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <GraduationCap className="w-5 h-5 text-[#00c9d6]" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-white">11 Qualified</h4>
-                <p className="text-[11px] text-slate-400">Psychologists</p>
+                <h4 className="text-xs sm:text-sm font-bold text-white">{trustBadge1Title}</h4>
+                <p className="text-[11px] text-slate-400">{trustBadge1Sub}</p>
               </div>
             </div>
 
@@ -387,8 +426,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <Lock className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-white">100% Confidential</h4>
-                <p className="text-[11px] text-slate-400">Strict Privacy Ethics</p>
+                <h4 className="text-xs sm:text-sm font-bold text-white">{trustBadge2Title}</h4>
+                <p className="text-[11px] text-slate-400">{trustBadge2Sub}</p>
               </div>
             </div>
 
@@ -397,8 +436,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <Languages className="w-5 h-5 text-indigo-400" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-white">Malayalam & English</h4>
-                <p className="text-[11px] text-slate-400">Sessions Available</p>
+                <h4 className="text-xs sm:text-sm font-bold text-white">{trustBadge3Title}</h4>
+                <p className="text-[11px] text-slate-400">{trustBadge3Sub}</p>
               </div>
             </div>
 
@@ -407,8 +446,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <CreditCard className="w-5 h-5 text-amber-400" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-white">Secure Online Payment</h4>
-                <p className="text-[11px] text-slate-400">Instant UPI & Cards</p>
+                <h4 className="text-xs sm:text-sm font-bold text-white">{trustBadge4Title}</h4>
+                <p className="text-[11px] text-slate-400">{trustBadge4Sub}</p>
               </div>
             </div>
 
@@ -416,23 +455,21 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </section>
 
-      {/* ── SECTION 3: "ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?" (Does this feel familiar?) ── */}
+      {/* ── SECTION 3: PROBLEM REFLECTION SECTION ── */}
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
         
-        {/* Section Header */}
         <div className="space-y-2 mb-10 text-center">
           <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#008b94] bg-[#00c9d6]/15 px-3.5 py-1 rounded-full border border-[#00c9d6]/30">
-            Self Reflection
+            {reflectionTag}
           </span>
           <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?
+            {reflectionTitle}
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 font-medium">
-            (Does this feel familiar?)
+            {reflectionSub}
           </p>
         </div>
 
-        {/* 4 Emotional Reflection Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
           
           <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
@@ -441,7 +478,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ, rest എടുത്തിട്ടും?
+                {reflectionPrompt1}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
                 Constant emotional fatigue that sleep alone doesn't fix.
@@ -455,7 +492,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതെ ആണോ?
+                {reflectionPrompt2}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
                 Overthinking cycles disrupting your peace and restful sleep.
@@ -469,7 +506,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?
+                {reflectionPrompt3}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
                 Workplace pressure spilling over into personal and family life.
@@ -483,7 +520,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?
+                {reflectionPrompt4}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
                 Feeling a quiet void or confusion without knowing the exact root cause.
@@ -493,17 +530,16 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
         </div>
 
-        {/* Closing Affirmation & CTA */}
         <div className="mt-8 sm:mt-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-[#0f242c] text-white shadow-xl space-y-4">
           <p className="text-base sm:text-xl font-bold leading-relaxed text-[#d7f9fb]">
-            "ഇത് weakness അല്ല. ഇത് ഒന്ന് സംസാരിക്കേണ്ട സമയമാണ്."
+            "{reflectionClosing}"
           </p>
           <div className="pt-1">
             <button
               onClick={() => handleBook()}
-              className="px-8 py-3.5 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-sm tracking-wide transition-all shadow-md cursor-pointer hover-scale-btn inline-flex items-center gap-2"
+              className="px-8 py-3.5 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-sm tracking-wide transition-all shadow-md cursor-pointer inline-flex items-center gap-2 border-none"
             >
-              <span>Book My Session</span>
+              <span>{heroBtnText}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -518,10 +554,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 text-left">
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-                നിങ്ങൾക്കൊപ്പം സംസാരിക്കുന്നത് ഇവരാണ്
+                {psychologistTitle}
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-1.5 max-w-2xl font-normal leading-relaxed">
-                Qualified. Experienced. Judgment-free. നിങ്ങളുടെ concern-ന് ചേരുന്ന ഒരാളെ തിരഞ്ഞെടുക്കൂ.
+                {psychologistSub}
               </p>
             </div>
 
@@ -543,21 +579,19 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
           </div>
 
-          {/* Carousel Scroll Container with Standardized Cards */}
           <div
             ref={carouselRef}
             className="flex gap-6 overflow-x-auto pb-4 pt-1 scrollbar-none snap-x snap-mandatory scroll-smooth px-1"
           >
             {advisors.map((advisor) => {
               const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
-              const minFee = advisor.fee || 899;
+              const minFee = advisor.fee || heroPrice;
 
               return (
                 <div
                   key={advisor.id}
                   className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start bg-white rounded-[24px] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6] transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group"
                 >
-                  {/* Top Gradient Header with Name, Designation, and Avatar */}
                   <div className="relative w-full h-[120px] sm:h-[135px] p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px]">
                     <div className="pr-2 space-y-1 z-10 max-w-[65%]">
                       <div className="flex items-center gap-1.5">
@@ -576,7 +610,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       </div>
                     </div>
 
-                    {/* Counsellor Profile Image / Avatar */}
                     <div className="w-[100px] sm:w-[115px] h-[120px] sm:h-[135px] absolute right-2 bottom-0 z-10 flex items-end justify-center pointer-events-none">
                       {advisor.photo ? (
                         <img
@@ -604,10 +637,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                     </div>
                   </div>
 
-                  {/* White Body Card with Fixed Structure */}
                   <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-white">
-                    
-                    {/* Specialties Tags Row */}
                     <div className="space-y-1">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Specialties:</span>
                       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
@@ -622,7 +652,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       </div>
                     </div>
 
-                    {/* Bio Snippet Box */}
                     <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
                       <p className={`text-[11px] text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
                         "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
@@ -638,7 +667,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       )}
                     </div>
 
-                    {/* 3 Metric Stat Boxes */}
                     <div className="grid grid-cols-3 gap-1.5 shrink-0">
                       <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
                         <span className="text-xs font-bold text-slate-900 block leading-none">
@@ -658,7 +686,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       </div>
                     </div>
 
-                    {/* Card Footer: Next Available + Book Button */}
                     <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                       <div className="text-left">
                         <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Next Available</span>
@@ -668,9 +695,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       <button
                         type="button"
                         onClick={() => handleBook(advisor.id)}
-                        className="bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-xs px-4 py-2 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap"
+                        className="bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-xs px-4 py-2 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none"
                       >
-                        Book My Session
+                        {heroBtnText}
                       </button>
                     </div>
 
@@ -683,22 +710,55 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </section>
 
-      {/* ── SECTION 5: HOW IT WORKS & BENEFITS ── */}
+      {/* ── SECTION 5: VIDEO & HOW IT WORKS ── */}
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          {/* COLUMN 1: HOW IT WORKS */}
+          {/* COLUMN 1: VIDEO OR INTERACTIVE WALKTHROUGH */}
           <div className="lg:col-span-6 space-y-6 text-left">
             <div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                How It Works
+                {videoTitle}
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.
+                {videoSub}
               </p>
             </div>
 
-            {/* Visual Step Cards */}
+            {videoUrl ? (
+              <div className="relative aspect-video rounded-3xl overflow-hidden bg-slate-950 border-2 border-slate-200 shadow-xl">
+                <iframe
+                  src={videoUrl}
+                  title={videoTitle}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ) : (
+              <div className="relative aspect-video rounded-3xl overflow-hidden bg-slate-950 border-2 border-slate-200 shadow-xl flex items-center justify-center group">
+                <img
+                  src={settings.adVideoPoster || headerBg}
+                  alt="Booking Process"
+                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
+                />
+                
+                <div className="relative z-10 text-center p-6 space-y-3">
+                  <button
+                    onClick={() => handleBook()}
+                    className="w-16 h-16 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 flex items-center justify-center mx-auto shadow-lg hover:scale-110 transition-transform cursor-pointer border-none"
+                    aria-label="Start Booking"
+                  >
+                    <Play className="w-7 h-7 fill-slate-950 ml-1" />
+                  </button>
+                  <div className="text-white">
+                    <h4 className="text-sm sm:text-base font-bold">Interactive Booking Walkthrough</h4>
+                    <p className="text-xs text-slate-400">Click to start picking a session slot now</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-3.5 pt-2">
               {bookingSteps.map((step, idx) => (
                 <div 
@@ -726,9 +786,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="pt-2">
               <button
                 onClick={() => handleBook()}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border-none"
               >
-                <span>Book My Session Now</span>
+                <span>{heroBtnText} Now</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -755,7 +815,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 {
                   icon: <CreditCard className="w-5 h-5 text-emerald-600" />,
                   title: "Secure & Affordable",
-                  desc: "വെറും ₹899-ന് ആരംഭിക്കുന്ന സുതാര്യമായ ഫീസ്. യാതൊരു മറഞ്ഞിരിക്കുന്ന ചാർജുകളുമില്ല."
+                  desc: `വെറും ₹${heroPrice}-ന് ആരംഭിക്കുന്ന സുതാര്യമായ ഫീസ്. യാതൊരു മറഞ്ഞിരിക്കുന്ന ചാർജുകളുമില്ല.`
                 },
                 {
                   icon: <GraduationCap className="w-5 h-5 text-indigo-600" />,
@@ -803,7 +863,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
 
         <div className="space-y-3.5">
-          {faqs.map((faq, idx) => {
+          {faqsList.map((faq, idx) => {
             const isOpen = openFaqIndex === idx;
             return (
               <div 
@@ -841,20 +901,20 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           </div>
           <button
             onClick={() => handleBook()}
-            className="px-8 py-3.5 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-sm tracking-wide transition-all shadow-md cursor-pointer shrink-0"
+            className="px-8 py-3.5 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-sm tracking-wide transition-all shadow-md cursor-pointer shrink-0 border-none"
           >
-            Book My Session
+            {heroBtnText}
           </button>
         </div>
 
       </section>
 
-      {/* ── LIVE SOCIAL PROOF POPUP NOTIFICATION (Bottom-Right Floating Toast) ── */}
+      {/* ── LIVE SOCIAL PROOF POPUP NOTIFICATION ── */}
       {showSocialToast && !socialToastDismissed && (
         <aside 
           aria-live="polite"
           aria-label="Recent booking notification"
-          className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 animate-in fade-in slide-in-from-bottom-5 duration-300 pointer-events-auto"
+          className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-40 animate-in fade-in slide-in-from-bottom-5 duration-300 pointer-events-auto"
         >
           <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 shadow-2xl border border-slate-200/90 flex items-center gap-3.5 max-w-[320px] text-left">
             <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0">
@@ -880,7 +940,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             <button
               onClick={() => setSocialToastDismissed(true)}
-              className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer border-none bg-transparent"
               title="Dismiss notification"
               aria-label="Dismiss notification"
             >
@@ -901,7 +961,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Available Today</span>
           </div>
           <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="text-xl font-black text-slate-950 tracking-tight">₹899</span>
+            <span className="text-xl font-black text-slate-950 tracking-tight">₹{heroPrice}</span>
             <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
               100% Private
             </span>
@@ -912,7 +972,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           onClick={() => handleBook()}
           className="flex-1 max-w-[220px] py-3.5 px-5 rounded-2xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer border-none"
         >
-          <span>Book My Session</span>
+          <span>{heroBtnText}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </nav>
@@ -920,7 +980,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── MINIMAL FOOTER (Terms / Privacy Compliance) ── */}
       <footer className="py-8 bg-slate-900 text-slate-400 text-xs text-center border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 space-y-2">
-          <p>© {new Date().getFullYear()} BEHOLD Ltd. All rights reserved. Confidential Psychological Care.</p>
+          <p>© {new Date().getFullYear()} {(settings.siteCopyright || 'BEHOLD Ltd.')}. All rights reserved. Confidential Psychological Care.</p>
           <div className="flex flex-wrap items-center justify-center gap-3 text-slate-400 text-[11px]">
             <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00c9d6] transition-colors cursor-pointer bg-transparent border-none p-0">Privacy Policy</button>
             <span>•</span>

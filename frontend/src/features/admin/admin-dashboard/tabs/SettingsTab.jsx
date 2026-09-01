@@ -380,8 +380,9 @@ export default function SettingsTab(props) {
 
   const settingsTabs = [
     { id: 'general', label: 'General & Contact', icon: Settings },
-    { id: 'landing', label: 'Landing Page Content', icon: Brain },
-    { id: 'modes', label: 'Services & Session Modes', icon: Video },
+    { id: 'adLanding', label: 'Ad Campaign & Landing Page', icon: Video },
+    { id: 'landing', label: 'Main Website Content', icon: Brain },
+    { id: 'modes', label: 'Services & Session Modes', icon: Award },
     { id: 'payments', label: 'Payments & Taxation', icon: KeyRound },
     { id: 'security', label: 'Security & System', icon: ShieldCheck },
     { id: 'promo', label: 'Promo Codes', icon: FileSpreadsheet },
@@ -1831,6 +1832,482 @@ export default function SettingsTab(props) {
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Promo Codes</span>
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* TAB: Ad Campaign & Landing Page */}
+            {activeSettingsTab === 'adLanding' && (
+              <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
+                <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
+                  <Video className="w-4 h-4 text-brand" />
+                  <h4 className="text-sm font-bold text-white tracking-wider">Ad Campaign & Landing Page Management (/ad)</h4>
+                </div>
+
+                {/* 1. Hero Section */}
+                <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-lg space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+                    <Brain className="w-3.5 h-3.5 text-brand" />
+                    Ad Hero Section Content
+                  </h4>
+
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400">Hero Main Headline (Malayalam / English)</label>
+                        <input
+                          type="text"
+                          value={settingsForm.adHeroTitle || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, adHeroTitle: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          placeholder="e.g. മനസ്സിലാക്കപ്പെടുന്നത് ഇവിടെ തുടങ്ങുന്നു."
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400">Hero Button CTA Text</label>
+                        <input
+                          type="text"
+                          value={settingsForm.adHeroBtnText || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, adHeroBtnText: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          placeholder="e.g. Book My Session"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Hero Sub-Headline / Description</label>
+                      <textarea
+                        rows={3}
+                        value={settingsForm.adHeroSub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adHeroSub: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-none transition-colors"
+                        placeholder="e.g. Qualified psychologists-നൊപ്പം, വീട്ടിലിരുന്ന് തന്നെ ഒന്ന് തുറന്നു സംസാരിക്കാം. വെറും ₹899-ന് ഒരു session ബുക്ക് ചെയ്യാം."
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400">Session Price (₹)</label>
+                        <input
+                          type="number"
+                          value={settingsForm.adHeroPrice || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, adHeroPrice: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          placeholder="899"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400">Hero Top Floating Badge</label>
+                        <input
+                          type="text"
+                          value={settingsForm.adHeroBadge || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, adHeroBadge: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          placeholder="e.g. 100% Confidential & Secure"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-zinc-400">Hero Rating Text</label>
+                        <input
+                          type="text"
+                          value={settingsForm.adHeroRatingText || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, adHeroRatingText: e.target.value })}
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          placeholder="e.g. ★ 4.9/5 Rating (500+ Consultations)"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Showcase Room Image URL / Upload */}
+                    <div className="space-y-2 pt-2 border-t border-zinc-800/60">
+                      <label className="text-xs font-bold text-zinc-400">Showcase Clinic / Room Image (URL or Upload)</label>
+                      <div className="flex flex-col sm:flex-row gap-3 items-center">
+                        <input
+                          type="url"
+                          value={settingsForm.adHeroImage || ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, adHeroImage: e.target.value })}
+                          placeholder="Paste image URL (https://...)"
+                          className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-medium w-full"
+                        />
+                        <label className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold rounded-lg cursor-pointer transition shrink-0 border border-zinc-700 flex items-center gap-1.5">
+                          <Download className="w-3.5 h-3.5 text-brand" />
+                          <span>Upload File</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (re) => setSettingsForm({ ...settingsForm, adHeroImage: re.target?.result });
+                                reader.readAsDataURL(file);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                      {settingsForm.adHeroImage && (
+                        <div className="relative w-32 h-20 rounded-lg overflow-hidden border border-zinc-700 mt-2">
+                          <img src={settingsForm.adHeroImage} alt="Ad Hero Preview" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => setSettingsForm({ ...settingsForm, adHeroImage: '' })}
+                            className="absolute top-1 right-1 p-1 bg-red-500/80 hover:bg-red-500 text-white rounded-full text-xs"
+                            title="Remove image"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Video & Interactive Walkthrough Section */}
+                <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+                    <Video className="w-3.5 h-3.5 text-brand" />
+                    Video & Booking Walkthrough Section
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Video Section Title</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adVideoTitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adVideoTitle: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. How Booking Works"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Video Section Sub-headline</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adVideoSub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adVideoSub: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Custom Video Embed / Direct MP4 URL</label>
+                      <input
+                        type="url"
+                        value={settingsForm.adVideoUrl || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adVideoUrl: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. https://www.youtube.com/embed/XXXXX or https://.../video.mp4"
+                      />
+                      <p className="text-[11px] text-zinc-500">Leave empty to use interactive visual walkthrough card.</p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Video Poster / Cover Image URL</label>
+                      <input
+                        type="url"
+                        value={settingsForm.adVideoPoster || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adVideoPoster: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. https://www.behold.co.in/assets/video_cover.jpg"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Trust Bar Badges */}
+                <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+                    <ShieldCheck className="w-3.5 h-3.5 text-brand" />
+                    Trust Bar Badges (4 Items)
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2 p-3 bg-zinc-900/60 rounded-lg border border-zinc-800">
+                      <span className="text-[11px] font-bold text-brand uppercase tracking-wider block">Trust Badge 1</span>
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge1Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge1Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. 11 Qualified"
+                      />
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge1Sub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge1Sub: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-zinc-400"
+                        placeholder="e.g. Psychologists"
+                      />
+                    </div>
+
+                    <div className="space-y-2 p-3 bg-zinc-900/60 rounded-lg border border-zinc-800">
+                      <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">Trust Badge 2</span>
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge2Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge2Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. 100% Confidential"
+                      />
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge2Sub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge2Sub: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-zinc-400"
+                        placeholder="e.g. Strict Privacy Ethics"
+                      />
+                    </div>
+
+                    <div className="space-y-2 p-3 bg-zinc-900/60 rounded-lg border border-zinc-800">
+                      <span className="text-[11px] font-bold text-indigo-400 uppercase tracking-wider block">Trust Badge 3</span>
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge3Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge3Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. Malayalam & English"
+                      />
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge3Sub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge3Sub: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-zinc-400"
+                        placeholder="e.g. Sessions Available"
+                      />
+                    </div>
+
+                    <div className="space-y-2 p-3 bg-zinc-900/60 rounded-lg border border-zinc-800">
+                      <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block">Trust Badge 4</span>
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge4Title || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge4Title: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. Secure Online Payment"
+                      />
+                      <input
+                        type="text"
+                        value={settingsForm.adTrustBadge4Sub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge4Sub: e.target.value })}
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-zinc-400"
+                        placeholder="e.g. Instant UPI & Cards"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Self Reflection Section */}
+                <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+                    <HeartHandshake className="w-3.5 h-3.5 text-brand" />
+                    Problem Reflection Prompts ("ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?")
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Section Title</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adReflectionTitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionTitle: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Section Subtitle</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adReflectionSub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionSub: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. (Does this feel familiar?)"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Reflection Card 1</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adReflectionPrompt1 || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt1: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ, rest എടുത്തിട്ടും?"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Reflection Card 2</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adReflectionPrompt2 || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt2: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതെ ആണോ?"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Reflection Card 3</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adReflectionPrompt3 || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt3: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Reflection Card 4</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adReflectionPrompt4 || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt4: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        placeholder="e.g. എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?"
+                      />
+                    </div>
+
+                    <div className="space-y-1 pt-2">
+                      <label className="text-xs font-bold text-brand">Closing Affirmation Line</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adReflectionClosing || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionClosing: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-brand/50 rounded-lg text-sm text-white font-bold"
+                        placeholder="e.g. ഇത് weakness അല്ല. ഇത് ഒന്ന് സംസാരിക്കേണ്ട സമയമാണ്."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 5. Psychologist Section Header */}
+                <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
+                  <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+                    <User className="w-3.5 h-3.5 text-brand" />
+                    Psychologist Section Headline & Intro
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Section Headline</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adPsychologistTitle || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adPsychologistTitle: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. നിങ്ങൾക്കൊപ്പം സംസാരിക്കുന്നത് ഇവരാണ്"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-zinc-400">Section Intro Line</label>
+                      <input
+                        type="text"
+                        value={settingsForm.adPsychologistSub || ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, adPsychologistSub: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        placeholder="e.g. Qualified. Experienced. Judgment-free. നിങ്ങളുടെ concern-ന് ചേരുന്ന ഒരാളെ തിരഞ്ഞെടുക്കൂ."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 6. Ad FAQs Editor */}
+                <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
+                      <HelpCircle className="w-3.5 h-3.5 text-brand" />
+                      Ad Landing Page FAQs ({Array.isArray(settingsForm.adFaqs) ? settingsForm.adFaqs.length : 0})
+                    </h4>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const current = Array.isArray(settingsForm.adFaqs) ? settingsForm.adFaqs : [];
+                        setSettingsForm({
+                          ...settingsForm,
+                          adFaqs: [...current, { q: 'പുതിയ ചോദ്യം?', a: 'ഉത്തരം ഇവിടെ എഴുതുക...' }]
+                        });
+                      }}
+                      className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand border border-brand/30 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer transition"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Ad FAQ</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+                    {Array.isArray(settingsForm.adFaqs) && settingsForm.adFaqs.map((faq, idx) => (
+                      <div key={idx} className="p-3.5 bg-zinc-900/70 border border-zinc-800 rounded-lg space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-bold text-zinc-400">Question #{idx + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = settingsForm.adFaqs.filter((_, i) => i !== idx);
+                              setSettingsForm({ ...settingsForm, adFaqs: updated });
+                            }}
+                            className="p-1 text-red-400 hover:text-red-300 transition cursor-pointer"
+                            title="Delete FAQ"
+                          >
+                            <Trash className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          value={faq.q || ''}
+                          onChange={(e) => {
+                            const updated = [...settingsForm.adFaqs];
+                            updated[idx] = { ...updated[idx], q: e.target.value };
+                            setSettingsForm({ ...settingsForm, adFaqs: updated });
+                          }}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white font-semibold"
+                          placeholder="ചോദ്യം (Question)..."
+                        />
+                        <textarea
+                          rows={2}
+                          value={faq.a || ''}
+                          onChange={(e) => {
+                            const updated = [...settingsForm.adFaqs];
+                            updated[idx] = { ...updated[idx], a: e.target.value };
+                            setSettingsForm({ ...settingsForm, adFaqs: updated });
+                          }}
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-zinc-300 resize-none"
+                          placeholder="ഉത്തരം (Answer)..."
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {settingsSuccess && (
+                  <p className="text-xs text-emerald-500 font-bold tracking-wide">{settingsSuccess}</p>
+                )}
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSavingSettings}
+                    className={`px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
+                    <span>Save Ad Campaign Settings</span>
                   </button>
                 </div>
               </form>
