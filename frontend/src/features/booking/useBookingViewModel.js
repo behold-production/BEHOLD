@@ -28,19 +28,24 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const { user, updateUser } = useAuth();
   const { showAlert } = useCustomDialog();
 
-  let enablePsychology = true;
-  let enableCareerMentoring = true;
-  if (typeof window !== 'undefined') {
+  const [siteSettings, setSiteSettings] = useState(() => {
     try {
-      const stored = localStorage.getItem('behold_site_settings');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        enablePsychology = parsed.enablePsychology !== false;
-        enableCareerMentoring = parsed.enableCareerMentoring !== false;
-      }
-    } catch { }
-  }
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('behold_site_settings') : null;
+      return stored ? JSON.parse(stored) : {};
+    } catch { return {}; }
+  });
 
+  useEffect(() => {
+    ApiService.getSettings().then(res => {
+      if (res && res.success && res.data) {
+        setSiteSettings(res.data);
+        try { localStorage.setItem('behold_site_settings', JSON.stringify(res.data)); } catch {}
+      }
+    }).catch(() => {});
+  }, []);
+
+  const enablePsychology = siteSettings.enablePsychology !== false;
+  const enableCareerMentoring = siteSettings.enableCareerMentoring !== false;
   const isRescheduleParam = typeof window !== 'undefined' ? !!(new URLSearchParams(window.location.search).get('reschedule')) : false;
 
   const getLocalTodayString = () => {
@@ -357,19 +362,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const [showSummary, setShowSummary] = useState(true);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
 
-  // Read GST & Promo settings from site settings
-  let gstEnabled = false;
-  let gstPercent = 0;
-  let sitePromoCodes = [];
-  try {
-    const stored = localStorage.getItem('behold_site_settings');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      gstEnabled = parsed.gstEnabled === true;
-      gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
-      sitePromoCodes = parsed.promoCodes || [];
-    }
-  } catch { }
+  // Read GST & Promo settings from reactive site settings
+  const gstEnabled = siteSettings.gstEnabled === true;
+  const gstPercent = typeof siteSettings.gstPercent === 'number' ? siteSettings.gstPercent : 0;
+  const sitePromoCodes = Array.isArray(siteSettings.promoCodes) ? siteSettings.promoCodes : [];
 
   const getDurationPrice = (advisor, duration) => {
     const fullPrice = advisor ? (Number(advisor.price) || 899) : 899;
@@ -1080,6 +1076,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setPaymentStepText("Initializing secure checkout...");
 
     try {
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded || typeof window === 'undefined' || !window.Razorpay) {
+        throw new Error("Unable to load payment gateway SDK. Please check your internet connection and try again.");
+      }
+
       const clientEmail = bookingForm.email || user?.email || '';
       const clientPhone = bookingForm.phone || user?.phone || '';
 
@@ -1532,7 +1533,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const handleApplyCoupon = () => {
     const code = couponInput.toUpperCase().trim();
-    const foundPromo = sitePromoCodes.find(p => p.code.toUpperCase() === code && p.isActive !== false);
+    if (!code) {
+      setCouponMsg({ text: 'Please enter a promo code', type: 'error' });
+      return;
+    }
+    const foundPromo = sitePromoCodes.find(p => p.code && p.code.toUpperCase() === code && p.isActive !== false);
     if (foundPromo) {
       const discount = foundPromo.type === 'PERCENTAGE'
         ? Math.round((baseFee + gstAmount) * (foundPromo.value / 100))
@@ -1603,6 +1608,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     downloadingPdf,
     enablePsychology,
     enableCareerMentoring,
+    enableOnline: siteSettings.enableOnline !== false,
+    enableDoorstep: siteSettings.enableDoorstep !== false,
+    enableOffline: siteSettings.enableOffline !== false,
     isRescheduleParam,
     baseFee,
     gstEnabled,

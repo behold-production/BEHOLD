@@ -108,25 +108,59 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
   }
 
   // 5. Counsellor Availability Schedule check
-  const availability = counsellor.availability;
-  if (!availability || (!availability.activeDays && !availability.daySlots)) {
-    return { valid: false, message: 'Counsellor has no availability configured.' };
-  }
+  const availability = counsellor.availability || counsellor.availabilitySlots;
+  if (availability) {
+    let parsed = availability;
+    if (typeof parsed === 'string') {
+      try {
+        parsed = JSON.parse(parsed);
+      } catch {
+        parsed = {};
+      }
+    }
 
-  const [year, month, day] = date.split('-').map(Number);
-  const dayOfWeek = new Date(Date.UTC(year, month - 1, day)).getUTCDay(); // 0 = Sunday, 6 = Saturday
-  const isDayActive = availability.activeDays ? availability.activeDays[dayOfWeek] : false;
+    const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const [year, month, day] = date.split('-').map(Number);
+    const dayOfWeek = new Date(year, month - 1, day).getDay();
+    const dayName = DAY_NAMES[dayOfWeek];
+    const dayNameLower = dayName ? dayName.toLowerCase() : '';
 
-  if (!isDayActive) {
-    const weekdayName = new Date(Date.UTC(year, month - 1, day)).toLocaleDateString('en-IN', { weekday: 'long', timeZone: 'UTC' });
-    return { valid: false, message: `Counsellor is not available on ${weekdayName}s.` };
-  }
+    const activeDays = parsed.activeDays;
+    const hasActiveDaysConfig = activeDays && typeof activeDays === 'object' && Object.keys(activeDays).length > 0;
 
-  const daySpecificSlots = availability.daySlots && availability.daySlots[dayOfWeek];
-  const activeSlots = Array.isArray(daySpecificSlots) ? daySpecificSlots : (availability.availableSlots || []);
+    let isDayActive = true;
+    if (hasActiveDaysConfig) {
+      isDayActive = Boolean(
+        activeDays[dayOfWeek] === true ||
+        activeDays[String(dayOfWeek)] === true ||
+        (dayName && activeDays[dayName] === true) ||
+        (dayNameLower && activeDays[dayNameLower] === true)
+      );
+    } else if (parsed[dayName] !== undefined || parsed[dayNameLower] !== undefined) {
+      const direct = parsed[dayName] !== undefined ? parsed[dayName] : parsed[dayNameLower];
+      isDayActive = Array.isArray(direct) ? direct.length > 0 : Boolean(direct);
+    }
 
-  if (!activeSlots.includes(time)) {
-    return { valid: false, message: `Counsellor is not available at ${time}.` };
+    if (!isDayActive) {
+      return { valid: false, message: `Counsellor is not available on ${dayName}s.` };
+    }
+
+    let activeSlots = [];
+    if (parsed.daySlots && typeof parsed.daySlots === 'object') {
+      const s = parsed.daySlots[dayOfWeek] || parsed.daySlots[String(dayOfWeek)] || (dayName && parsed.daySlots[dayName]) || (dayNameLower && parsed.daySlots[dayNameLower]);
+      if (Array.isArray(s) && s.length > 0) activeSlots = s;
+    }
+    if (activeSlots.length === 0 && (parsed[dayName] || parsed[dayNameLower])) {
+      const s = parsed[dayName] || parsed[dayNameLower];
+      if (Array.isArray(s) && s.length > 0) activeSlots = s;
+    }
+    if (activeSlots.length === 0 && Array.isArray(parsed.availableSlots) && parsed.availableSlots.length > 0) {
+      activeSlots = parsed.availableSlots;
+    }
+
+    if (activeSlots.length > 0 && !activeSlots.includes(time)) {
+      return { valid: false, message: `Counsellor is not available at ${time}.` };
+    }
   }
 
   return { valid: true, counsellor };

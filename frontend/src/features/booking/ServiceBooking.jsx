@@ -93,6 +93,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         downloadingPdf,
         enablePsychology,
         enableCareerMentoring,
+        enableOnline,
+        enableDoorstep,
+        enableOffline,
         isRescheduleParam,
         baseFee,
         gstEnabled,
@@ -735,20 +738,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     <div className="space-y-2">
                                                         <label className="text-sm font-semibold text-surface-700 block">Select Session Mode</label>
                                                         <div className="flex flex-wrap gap-2.5">
-                                                            {(() => {
-                                                                let siteSettings = {};
-                                                                try {
-                                                                    const stored = localStorage.getItem('behold_site_settings');
-                                                                    if (stored) siteSettings = JSON.parse(stored);
-                                                                } catch {
-                                                                    // ignore
-                                                                }
-
-                                                                return [
-                                                                    { id: 'ONLINE', label: 'Online', desc: 'Video call', active: siteSettings.enableOnline !== false },
-                                                                    { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', active: siteSettings.enableDoorstep !== false },
-                                                                    { id: 'OFFLINE', label: 'Offline', desc: 'At center', active: siteSettings.enableOffline !== false }
-                                                                ].filter(m => m.active).map((m) => {
+                                                            {[
+                                                                { id: 'ONLINE', label: 'Online', desc: 'Video call', active: enableOnline !== false },
+                                                                { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', active: enableDoorstep !== false },
+                                                                { id: 'OFFLINE', label: 'Offline', desc: 'At center', active: enableOffline !== false }
+                                                            ].filter(m => m.active).map((m) => {
                                                                     return (
                                                                         <button
                                                                             type="button"
@@ -769,8 +763,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             </span>
                                                                         </button>
                                                                     );
-                                                                });
-                                                            })()}
+                                                                })}
                                                         </div>
                                                     </div>
 

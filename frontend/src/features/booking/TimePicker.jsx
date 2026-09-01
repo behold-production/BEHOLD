@@ -146,26 +146,26 @@ export default function TimePicker({
               );
             })}
           </div>
- ) : (
- <div className="py-8 text-center space-y-2">
- <p className="text-[10px] font-semibold text-rose-600 tracking-widest">
- No Slots Available
- </p>
- <p className="text-[10px] font-semibold text-surface-500 tracking-widest leading-relaxed px-4 mt-2">
- No advisors have availability on {formatHumanDate(selectedDate)}. Try a different day.
- </p>
- </div>
- )
- ) : (
- <div className="py-10 text-center space-y-2">
- <p className="text-[10px] font-semibold text-surface-500 tracking-widest">
- Pick an Advisor First
- </p>
- <p className="text-[10px] font-semibold text-surface-400 tracking-widest leading-relaxed px-4 mt-2">
- Select an advisor to see available 1-hour time slots.
- </p>
- </div>
- )}
+        ) : (
+          <div className="py-8 text-center space-y-2">
+            <p className="text-xs font-semibold text-rose-600">
+              No Slots Available
+            </p>
+            <p className="text-xs text-surface-500 leading-relaxed px-4 mt-1">
+              No consultation slots available on {formatHumanDate(selectedDate)}. Please choose another date.
+            </p>
+          </div>
+        )
+      ) : (
+        <div className="py-10 text-center space-y-2">
+          <p className="text-xs font-semibold text-surface-600">
+            Select a Date First
+          </p>
+          <p className="text-xs text-surface-400 leading-relaxed px-4 mt-1">
+            Choose a date from the calendar to view available consultation slots.
+          </p>
+        </div>
+      )}
  
  {errors.time && <p className="text-sm font-medium text-rose-500 mt-2" role="alert">{errors.time}</p>}
  </div>

@@ -44,17 +44,60 @@ const AppointmentController = {
       }
 
       const counsellor = validation.counsellor;
+      const settings = (await StorageService.findOne('settings')) || {};
 
-      // Enforce checkout payment if the counsellor is not free
-      if (counsellor.price && Number(counsellor.price) > 0) {
+      const durationVal = Number(duration) || Number(bookingDuration) || 60;
+      const isHalfSession = durationVal === 30;
+      const sessionDurationStr = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+
+      const rawPrice = Number(counsellor.price) || 0;
+      const halfPrice = counsellor.halfSessionPrice !== undefined && Number(counsellor.halfSessionPrice) > 0
+        ? Number(counsellor.halfSessionPrice)
+        : (rawPrice <= 899 ? 499 : rawPrice >= 1200 ? 699 : Math.round(rawPrice * 0.5));
+      const baseFee = isHalfSession ? halfPrice : rawPrice;
+
+      const gstEnabled = settings.gstEnabled === true;
+      const gstPercent = gstEnabled ? Number(settings.gstPercent) || 0 : 0;
+      const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
+      const totalBeforeDiscount = baseFee + gstAmount;
+
+      let isCouponFree = false;
+      let appliedDiscount = 0;
+      if (req.body.couponCode && settings.promoCodes && Array.isArray(settings.promoCodes)) {
+        const cleanCoupon = req.body.couponCode.toUpperCase().trim();
+        const foundPromo = settings.promoCodes.find(
+          (p) => p.code.toUpperCase() === cleanCoupon && p.isActive !== false
+        );
+        if (foundPromo) {
+          appliedDiscount = foundPromo.type === 'PERCENTAGE'
+            ? Math.round(totalBeforeDiscount * (foundPromo.value / 100))
+            : foundPromo.value;
+          if (appliedDiscount >= totalBeforeDiscount) {
+            isCouponFree = true;
+          }
+        }
+      }
+
+      // Enforce checkout payment if the counsellor is not free and no 100% coupon was applied
+      if (!isCouponFree && rawPrice > 0) {
         return res.status(400).json({
           success: false,
           message: 'This counsellor requires a paid booking. Please complete payment via checkout.'
         });
       }
 
-      const durationVal = Number(duration) || Number(bookingDuration) || 60;
-      const sessionDurationStr = durationVal === 30 ? '30 Minutes' : '1 Hour (60 Mins)';
+      let finalMeetLink = '';
+      if (mode === 'ONLINE') {
+        const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+        finalMeetLink = await generateSessionMeetingLink({
+          counsellor,
+          user,
+          date,
+          time,
+          service,
+          appointmentId: `app_${Date.now()}`
+        }).catch(() => counsellor.defaultMeetLink || '');
+      }
 
       // Create appointment
       const newAppointment = await StorageService.create('appointments', {
@@ -63,12 +106,19 @@ const AppointmentController = {
         date,
         time,
         duration: sessionDurationStr,
-        mode, // ONLINE or OFFLINE
-        meetLink: mode === 'ONLINE' ? counsellor.defaultMeetLink || '' : '',
-        status: 'PENDING',
+        mode, // ONLINE, DOOR_STEP, or OFFLINE
+        meetLink: finalMeetLink,
+        status: isCouponFree ? 'CONFIRMED' : 'PENDING',
+        paymentStatus: isCouponFree ? 'PAID' : 'FREE',
+        amountPaid: isCouponFree ? 0 : 0,
+        appliedDiscount,
+        couponCode: req.body.couponCode || '',
+        baseFee,
+        gstAmount,
         service: service || 'counselling',
         clientName: clientName || user.name || '',
         clientEmail: clientEmail || user.email || '',
+        clientPhone: clientPhone || user.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0,
@@ -79,6 +129,24 @@ const AppointmentController = {
         utmTerm: req.body.utmTerm || '',
         fbclid: req.body.fbclid || ''
       });
+
+      // Also ensure session record exists if confirmed free booking
+      if (isCouponFree) {
+        try {
+          await StorageService.create('sessions', {
+            appointmentId: newAppointment.id,
+            userId,
+            counsellorId,
+            date,
+            time,
+            duration: sessionDurationStr,
+            mode,
+            meetLink: finalMeetLink,
+            status: 'UPCOMING',
+            service: service || 'counselling'
+          });
+        } catch {}
+      }
 
       // If user profile has no UTM source, attach initial acquisition source
       if (user && !user.utmSource && (req.body.utmSource || req.body.fbclid)) {
