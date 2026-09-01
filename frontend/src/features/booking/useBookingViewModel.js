@@ -1157,12 +1157,16 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             service: bookingService
           });
 
+          const bookingId = bookRes.data?.id || `BEH-${Date.now().toString().slice(-6)}`;
           setConfirmedBooking(bookRes.data || null);
           setConfirmedMeetLink(bookRes.data?.meetLink || '');
           try {
             sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
+              id: bookingId,
               advisorName: selectedAdvisor?.name || 'Assigned Psychologist',
               advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
+              advisorPhoto: selectedAdvisor?.photo || '',
+              advisorId: selectedAdvisor?.id || '',
               date: selectedDate,
               time: selectedTime,
               duration: bookingDuration === 30 ? '30 Mins' : '1 Hour',
@@ -1172,13 +1176,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               meetLink: bookRes.data?.meetLink || '',
               userName: bookingForm.name || user?.name || 'Student',
               userEmail: bookingForm.email || user?.email || '',
-              userPhone: bookingForm.phone || user?.phone || ''
+              userPhone: bookingForm.phone || user?.phone || '',
+              status: 'CONFIRMED',
+              paymentStatus: 'FREE'
             }));
           } catch (e) {}
           setIsProcessingPayment(false);
           setIsSuccess(true);
           setBookingStep('success');
-          window.history.pushState({ component: 'booking', step: 'success' }, '');
+          window.location.href = `/thank-you?bookingId=${bookingId}`;
           return;
         } else {
           throw new Error(bookRes.message || "Failed to confirm free booking.");
@@ -1291,10 +1297,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
               setConfirmedBooking(serverBooking);
               if (serverMeetLink) setConfirmedMeetLink(serverMeetLink);
+              const bookingId = verifyRes.data?.bookingId || verifyRes.data?.id || serverBooking?.id || `BEH-${Date.now().toString().slice(-6)}`;
               try {
                 sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
+                  id: bookingId,
                   advisorName: selectedAdvisor?.name || 'Assigned Psychologist',
                   advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
+                  advisorPhoto: selectedAdvisor?.photo || '',
+                  advisorId: selectedAdvisor?.id || '',
                   date: selectedDate,
                   time: selectedTime,
                   duration: bookingDuration === 30 ? '30 Mins' : '1 Hour',
@@ -1304,13 +1314,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                   meetLink: serverMeetLink || '',
                   userName: bookingForm.name || user?.name || 'Student',
                   userEmail: bookingForm.email || user?.email || '',
-                  userPhone: bookingForm.phone || user?.phone || ''
+                  userPhone: bookingForm.phone || user?.phone || '',
+                  status: 'CONFIRMED',
+                  paymentStatus: 'PAID'
                 }));
               } catch (e) {}
               setIsProcessingPayment(false);
               setIsSuccess(true);
               setBookingStep('success');
-              window.history.pushState({ component: 'booking', step: 'success' }, '');
+              window.location.href = `/thank-you?bookingId=${bookingId}`;
             } else {
               throw new Error(verifyRes.message || "Verification failed");
             }
@@ -1369,8 +1381,24 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           "Reschedule Requested",
           `Your reschedule request for ${selectedDate} at ${selectedTime} has been submitted.`
         );
+        try {
+          sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
+            id: apptId,
+            advisorName: rescheduleSession.advisorName || selectedAdvisor?.name || 'Assigned Psychologist',
+            advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
+            date: selectedDate,
+            time: selectedTime,
+            duration: '1 Hour',
+            service: 'Psychological Counselling',
+            mode: 'ONLINE',
+            amountPaid: 0,
+            status: 'RESCHEDULE_REQUESTED',
+            paymentStatus: 'PAID'
+          }));
+        } catch (e) {}
         setIsSuccess(true);
         setBookingStep('success');
+        window.location.href = `/thank-you?type=rescheduled&bookingId=${apptId}`;
       } else {
         toast.error(res.message || "Rescheduling failed.");
       }
