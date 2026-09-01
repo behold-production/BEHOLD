@@ -798,20 +798,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </button>
       </nav>
 
-      {/* ── MINIMAL FOOTER (Terms / Privacy Compliance) ── */}
-      <footer className="py-8 bg-slate-900 text-slate-400 text-xs text-center border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 space-y-2">
-          <p>© {new Date().getFullYear()} {(settings.siteCopyright || 'BEHOLD Ltd.')}. All rights reserved. Confidential Psychological Care.</p>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-slate-400 text-[11px]">
-            <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00c9d6] transition-colors cursor-pointer bg-transparent border-none p-0">Privacy Policy</button>
-            <span>•</span>
-            <button onClick={() => onOpenDocs?.('terms')} className="hover:text-[#00c9d6] transition-colors cursor-pointer bg-transparent border-none p-0">Terms & Conditions</button>
-            <span>•</span>
-            <button onClick={() => onOpenDocs?.('refund')} className="hover:text-[#00c9d6] transition-colors cursor-pointer bg-transparent border-none p-0">Refund Policy</button>
-          </div>
-        </div>
-      </footer>
-
     </div>
   );
 }
