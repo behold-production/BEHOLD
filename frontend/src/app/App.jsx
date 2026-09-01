@@ -52,6 +52,7 @@ const BlogList = lazyWithRetry(() => import('../features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('../features/blog/BlogPostDetail'));
 const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
 const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingPage'));
+const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
 import BlogSection from '../features/landing/BlogSection';
@@ -677,6 +678,12 @@ export default function App() {
           <Route path="/counselling-ad" element={<Navigate to="/ad" replace />} />
           <Route path="/offer" element={<Navigate to="/ad" replace />} />
           <Route path="/landing" element={<Navigate to="/ad" replace />} />
+
+          {/* Dedicated Thank You & Booking Confirmation Routes */}
+          <Route path="/thank-you" element={<ThankYouPage />} />
+          <Route path="/thankyou" element={<Navigate to="/thank-you" replace />} />
+          <Route path="/booking-confirmed" element={<Navigate to="/thank-you" replace />} />
+          <Route path="/booking/confirmation" element={<Navigate to="/thank-you" replace />} />
 
           {/* Reviews Route */}
           <Route path="/reviews" element={

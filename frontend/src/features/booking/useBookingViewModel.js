@@ -1159,6 +1159,22 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
           setConfirmedBooking(bookRes.data || null);
           setConfirmedMeetLink(bookRes.data?.meetLink || '');
+          try {
+            sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
+              advisorName: selectedAdvisor?.name || 'Assigned Psychologist',
+              advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
+              date: selectedDate,
+              time: selectedTime,
+              duration: bookingDuration === 30 ? '30 Mins' : '1 Hour',
+              service: bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring',
+              mode: bookingMode,
+              amountPaid: 0,
+              meetLink: bookRes.data?.meetLink || '',
+              userName: bookingForm.name || user?.name || 'Student',
+              userEmail: bookingForm.email || user?.email || '',
+              userPhone: bookingForm.phone || user?.phone || ''
+            }));
+          } catch (e) {}
           setIsProcessingPayment(false);
           setIsSuccess(true);
           setBookingStep('success');
@@ -1275,6 +1291,22 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
               setConfirmedBooking(serverBooking);
               if (serverMeetLink) setConfirmedMeetLink(serverMeetLink);
+              try {
+                sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
+                  advisorName: selectedAdvisor?.name || 'Assigned Psychologist',
+                  advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
+                  date: selectedDate,
+                  time: selectedTime,
+                  duration: bookingDuration === 30 ? '30 Mins' : '1 Hour',
+                  service: bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring',
+                  mode: bookingMode,
+                  amountPaid: netTotal,
+                  meetLink: serverMeetLink || '',
+                  userName: bookingForm.name || user?.name || 'Student',
+                  userEmail: bookingForm.email || user?.email || '',
+                  userPhone: bookingForm.phone || user?.phone || ''
+                }));
+              } catch (e) {}
               setIsProcessingPayment(false);
               setIsSuccess(true);
               setBookingStep('success');
