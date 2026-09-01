@@ -1187,11 +1187,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         fbclid: campaign.fbclid || ''
       });
 
-      if (!orderRes.success || !orderRes.order) {
-        throw new Error(orderRes.message || "Failed to initialize payment gateway.");
+      if (!orderRes || !orderRes.success || (!orderRes.order && !orderRes.order_id && !orderRes.data?.orderId)) {
+        throw new Error(orderRes?.message || "Failed to initialize payment gateway.");
       }
 
-      const { id: orderId, keyId } = orderRes.order;
+      const orderId = orderRes.order?.id || orderRes.order_id || orderRes.data?.orderId;
+      const keyId = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '') || 'rzp_test_THJcTWUaeHzOnn';
 
       // 2. Open Razorpay checkout modal
       const options = {

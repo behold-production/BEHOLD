@@ -531,14 +531,14 @@ const ApiService = {
   },
 
   async createPaymentOrder(counsellorId, bookingDetails = {}) {
-    return await request('/payments/order', {
+    return await request('/payments/create-order', {
       method: 'POST',
       body: JSON.stringify({ counsellorId, ...bookingDetails })
     });
   },
 
   async createOrder(payload) {
-    return await request('/create-order', {
+    return await request('/payments/create-order', {
       method: 'POST',
       body: JSON.stringify(payload)
     });
@@ -557,7 +557,7 @@ const ApiService = {
   },
 
   async verifyPayment(paymentData) {
-    return await request('/verify-payment', {
+    return await request('/payments/verify-payment', {
       method: 'POST',
       body: JSON.stringify(paymentData)
     });

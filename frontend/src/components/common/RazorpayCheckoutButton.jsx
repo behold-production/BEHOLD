@@ -70,8 +70,8 @@ export default function RazorpayCheckoutButton({
         throw new Error(orderRes?.message || 'Failed to create payment order');
       }
 
-      const orderId = orderRes.order_id || orderRes.data?.orderId;
-      const keyId = orderRes.data?.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_THJcTWUaeHzOnn';
+      const orderId = orderRes.order?.id || orderRes.order_id || orderRes.data?.orderId;
+      const keyId = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '') || 'rzp_test_THJcTWUaeHzOnn';
 
       // 3. Configure Razorpay modal options
       const options = {

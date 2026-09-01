@@ -273,6 +273,13 @@ const PaymentController = {
         order_id: order.id,
         amount: order.amount,
         currency: order.currency,
+        order: {
+          id: order.id,
+          keyId: process.env.RAZORPAY_KEY_ID,
+          amount: order.amount,
+          currency: order.currency,
+          receipt: order.receipt
+        },
         data: {
           keyId: process.env.RAZORPAY_KEY_ID,
           orderId: order.id,
@@ -417,8 +424,29 @@ const PaymentController = {
         conflictWarning = validation.message;
       }
 
-      const user = await StorageService.findById('users', userId);
-      if (!user) return res.status(404).json({ success: false, message: 'Student profile not found' });
+      let user = null;
+      if (userId) {
+        user = await StorageService.findById('users', userId);
+      }
+      if (!user && (clientEmail || clientPhone)) {
+        const queryOr = [];
+        if (clientEmail) queryOr.push({ email: clientEmail.toLowerCase().trim() });
+        if (clientPhone) queryOr.push({ phone: clientPhone.trim() });
+        if (queryOr.length > 0) {
+          user = await StorageService.findOne('users', { $or: queryOr });
+        }
+      }
+      if (!user) {
+        const normPhone = normalizePhoneWithCountryCode(clientPhone);
+        user = await StorageService.create('users', {
+          name: clientName || 'Student',
+          email: clientEmail || `user_${Date.now()}@temp.behold.co.in`,
+          phone: normPhone || clientPhone || '',
+          role: 'user',
+          isVerified: true
+        });
+      }
+      const resolvedUserId = user ? user.id : (userId || '');
       
       let counsellor = validation.counsellor;
       if (!counsellor) {
@@ -461,12 +489,12 @@ const PaymentController = {
 
       const normPhone = normalizePhoneWithCountryCode(clientPhone || user?.phone);
       if (normPhone && user && user.phone !== normPhone) {
-        StorageService.update('users', userId, { phone: normPhone }).catch(() => {});
+        StorageService.update('users', resolvedUserId, { phone: normPhone }).catch(() => {});
       }
 
       // 5. Create appointment with CONFIRMED status
       const newAppointment = await StorageService.create('appointments', {
-        userId,
+        userId: resolvedUserId,
         counsellorId,
         date,
         time,
@@ -517,7 +545,7 @@ const PaymentController = {
         if (!existingSession) {
           await StorageService.create('sessions', {
             appointmentId: newAppointment.id,
-            userId,
+            userId: resolvedUserId,
             counsellorId,
             date,
             time,
