@@ -367,7 +367,7 @@ const BookedSessionsTab = ({
                           <button
                             type="button"
                             onClick={() => handleCancelSession(session.id)}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-[10px] text-[10px] tracking-widest font-semibold transition-colors"
+                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-[10px] text-[10px] tracking-widest font-semibold transition-colors cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Cancel
                           </button>
