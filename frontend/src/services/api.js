@@ -567,6 +567,10 @@ const ApiService = {
     return await request('/appointments');
   },
 
+  async getBookingConfirmation(id) {
+    return await request(`/booking-confirmation/${id}`);
+  },
+
   async cancelAppointment(id, reason) {
     return await request(`/appointments/${id}/cancel`, {
       method: 'PUT',

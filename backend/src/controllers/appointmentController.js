@@ -971,6 +971,73 @@ const AppointmentController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  // Get Public Booking Confirmation by ID (for /booking-confirmed and /thank-you pages)
+  async getPublicBookingConfirmation(req, res, next) {
+    try {
+      const { id } = req.params;
+      if (!id || typeof id !== 'string') {
+        return res.status(400).json({ success: false, message: 'Booking ID is required' });
+      }
+
+      let appt = await StorageService.findById('appointments', id);
+      if (!appt) {
+        appt = await StorageService.findOne('appointments', {
+          $or: [
+            { razorpayOrderId: id },
+            { razorpayPaymentId: id },
+            { id: id }
+          ]
+        });
+      }
+
+      if (!appt) {
+        return res.status(404).json({ success: false, message: 'Booking not found' });
+      }
+
+      let counsellor = null;
+      if (appt.counsellorId) {
+        counsellor = await StorageService.findById('counsellors', appt.counsellorId);
+        if (!counsellor) {
+          counsellor = await StorageService.findById('users', appt.counsellorId);
+        }
+      }
+
+      let user = null;
+      if (appt.userId) {
+        user = await StorageService.findById('users', appt.userId);
+      }
+
+      const advisorName = counsellor?.name || counsellor?.user?.name || appt.counsellorName || 'Assigned Psychologist';
+      const advisorRole = counsellor?.title || counsellor?.designation || counsellor?.role || 'Consultant Psychologist';
+
+      const confirmationData = {
+        id: appt.id,
+        advisorName,
+        advisorRole,
+        date: appt.date,
+        time: appt.time,
+        duration: appt.duration || '1 Hour',
+        service: appt.service === 'career' ? 'Career Mentoring' : 'Psychological Counselling',
+        mode: appt.mode || 'ONLINE',
+        amountPaid: appt.amountPaid !== undefined ? appt.amountPaid : (appt.amount || 0),
+        meetLink: appt.meetLink || '',
+        userName: appt.clientName || user?.name || 'Student',
+        userEmail: appt.clientEmail || user?.email || '',
+        userPhone: appt.clientPhone || user?.phone || '',
+        status: appt.status || 'CONFIRMED',
+        paymentStatus: appt.paymentStatus || 'PAID',
+        createdAt: appt.createdAt
+      };
+
+      return res.status(200).json({
+        success: true,
+        data: confirmationData
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

@@ -4,6 +4,8 @@ const reviewController = require('../controllers/reviewController');
 const { verifyJWT } = require('../middleware/authMiddleware');
 const { cacheMiddleware } = require('../middleware/cacheMiddleware');
 
+const AppointmentController = require('../controllers/appointmentController');
+
 const router = express.Router();
 
 router.post('/inquiries', PublicController.submitInquiry);
@@ -12,6 +14,7 @@ router.get('/settings', cacheMiddleware(300), PublicController.getSettings);
 router.post('/test-results', PublicController.saveTestResult);
 router.get('/aptitude-questions', cacheMiddleware(300), PublicController.getAptitudeQuestions);
 router.get('/sitemap.xml', cacheMiddleware(3600), PublicController.getSitemap);
+router.get('/booking-confirmation/:id', AppointmentController.getPublicBookingConfirmation);
 
 // Campaign & Meta Ads Event Tracking Routes
 router.post('/campaign-event', PublicController.recordCampaignEvent);
