@@ -207,7 +207,91 @@ const PublicController = {
   // Get active Aptitude Questions
   async getAptitudeQuestions(req, res, next) {
     try {
-      const questions = await StorageService.findAll('aptitudequestions', { isActive: true });
+      let questions = await StorageService.findAll('aptitudequestions', { isActive: true });
+      if (!Array.isArray(questions) || questions.length === 0) {
+        questions = [
+          {
+            id: 'q1',
+            category: 'Logical',
+            question: "When presented with a complex problem, what is your initial approach?",
+            options: [
+              { text: "Break it down into sequential logical steps and analyze root causes.", weight: 3 },
+              { text: "Look for recurring patterns from previous similar situations.", weight: 2 },
+              { text: "Rely on intuitive judgment and brainstorm spontaneous solutions.", weight: 1 }
+            ]
+          },
+          {
+            id: 'q2',
+            category: 'Aptitude',
+            question: "How do you prefer to handle quantitative data and mathematical analysis?",
+            options: [
+              { text: "I enjoy identifying formulas, comparing statistics, and deductive modeling.", weight: 3 },
+              { text: "I can work through numbers when structured with clear instructions.", weight: 2 },
+              { text: "I prefer qualitative conceptual thinking over quantitative computation.", weight: 1 }
+            ]
+          },
+          {
+            id: 'q3',
+            category: 'Emotional',
+            question: "How do you respond when a colleague or peer is experiencing emotional distress?",
+            options: [
+              { text: "I practice active, non-judgmental listening and create a safe space for them.", weight: 3 },
+              { text: "I offer practical, actionable steps to help alleviate their challenge.", weight: 2 },
+              { text: "I give them personal space and let them process independently.", weight: 1 }
+            ]
+          },
+          {
+            id: 'q4',
+            category: 'Creativity',
+            question: "When designing a project, what kind of ideas excite you the most?",
+            options: [
+              { text: "Unconventional, lateral ideas that challenge conventional templates.", weight: 3 },
+              { text: "Enhancing and refining proven, existing designs with modern aesthetics.", weight: 2 },
+              { text: "Standardized, pragmatic solutions that minimize execution risk.", weight: 1 }
+            ]
+          },
+          {
+            id: 'q5',
+            category: 'Leadership',
+            question: "In a team setting where consensus is lacking, what role do you naturally assume?",
+            options: [
+              { text: "Synthesize differing viewpoints, align on shared goals, and drive milestone decisions.", weight: 3 },
+              { text: "Advocate for the most efficient technical strategy.", weight: 2 },
+              { text: "Support the consensus once a designated leader establishes direction.", weight: 1 }
+            ]
+          },
+          {
+            id: 'q6',
+            category: 'Communication',
+            question: "How do you explain a complex, technical concept to someone with no background in the topic?",
+            options: [
+              { text: "Use relatable everyday analogies, simplified language, and check for understanding.", weight: 3 },
+              { text: "Provide visual diagrams and stepwise summaries.", weight: 2 },
+              { text: "Explain using technical terms first, then clarify if asked.", weight: 1 }
+            ]
+          },
+          {
+            id: 'q7',
+            category: 'Career',
+            question: "What type of professional impact feels most fulfilling to you?",
+            options: [
+              { text: "Building scalable systems and guiding individuals to achieve long-term growth.", weight: 3 },
+              { text: "Mastering deep specialized subject matter expertise.", weight: 2 },
+              { text: "Achieving predictable, consistent organizational outcomes.", weight: 1 }
+            ]
+          },
+          {
+            id: 'q8',
+            category: 'Personality',
+            question: "How do you manage your personal daily focus and priority milestones?",
+            options: [
+              { text: "Set clear intentional focus blocks and evaluate progress objectively.", weight: 3 },
+              { text: "Maintain a dynamic to-do list and adapt to urgent tasks.", weight: 2 },
+              { text: "Work organically as inspiration arises throughout the day.", weight: 1 }
+            ]
+          }
+        ];
+      }
       res.status(200).json({ success: true, data: questions });
     } catch (error) {
       next(error);
