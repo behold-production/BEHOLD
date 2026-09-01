@@ -25,7 +25,7 @@ export const getHaversineDistance = (lat1, lon1, lat2, lon2) => {
 };
 
 export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor }) {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { showAlert } = useCustomDialog();
 
   let enablePsychology = true;
@@ -840,6 +840,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         toast.error("This slot is already booked for this counsellor. Please select another slot.");
         return;
       }
+
+      // If user is not authenticated, prompt WhatsApp OTP sign in first
+      if (!user) {
+        setShowAuthModal(true);
+        return;
+      }
+
       // Track InitiateCheckout on entering checkout / payment step
       trackInitiateCheckout({
         service: bookingService,
@@ -1341,10 +1348,36 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   };
 
-  const handleAuthSuccess = (_authData) => {
+  const handleAuthSuccess = (authData) => {
     setShowAuthModal(false);
     setIsSubmitting(false);
-    processPayment();
+
+    if (authData) {
+      if (updateUser) updateUser(authData);
+      const validUserName = authData.name && authData.name !== 'New User' && !authData.name.includes('Behold User') ? authData.name : '';
+      const validUserEmail = authData.email && !authData.email.includes('@temp.behold') ? authData.email : '';
+      setBookingForm(prev => ({
+        ...prev,
+        name: prev.name && prev.name.trim().length > 0 ? prev.name : validUserName,
+        email: prev.email && prev.email.trim().length > 0 ? prev.email : validUserEmail,
+        phone: authData.phone || prev.phone || '',
+        clientLocationName: prev.clientLocationName || authData.locationName || '',
+        clientLatitude: prev.clientLatitude || authData.latitude || '',
+        clientLongitude: prev.clientLongitude || authData.longitude || ''
+      }));
+    }
+
+    // Always navigate to Step 2 ("payment" screen) so user can enter/verify basic details before paying
+    setBookingStep('payment');
+    window.history.pushState({ component: 'booking', step: 'payment' }, '');
+
+    trackInitiateCheckout({
+      service: bookingService,
+      mode: bookingMode,
+      duration: bookingDuration,
+      value: netTotal,
+      currency: 'INR'
+    });
   };
 
   // getHaversineDistance moved to top of file
@@ -1359,7 +1392,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     return getHaversineDistance(clientLat, clientLng, advLat, advLng);
   };
 
-  const handlePaymentSubmit = (e) => {
+  const handlePaymentSubmit = async (e) => {
     if (e && typeof e.preventDefault === 'function') {
       e.preventDefault();
     }
@@ -1436,6 +1469,30 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       email: resolvedEmail,
       phone: resolvedPhone
     }));
+
+    // Store / sync user basic details to backend profile so their account is permanently updated
+    if (user) {
+      const profileUpdates = {};
+      if (resolvedName && user.name !== resolvedName) profileUpdates.name = resolvedName;
+      if (resolvedEmail && user.email !== resolvedEmail) profileUpdates.email = resolvedEmail;
+      if (resolvedPhone && user.phone !== resolvedPhone) profileUpdates.phone = resolvedPhone;
+      if (bookingForm.clientLocationName && user.locationName !== bookingForm.clientLocationName) {
+        profileUpdates.locationName = bookingForm.clientLocationName;
+        profileUpdates.latitude = Number(bookingForm.clientLatitude) || 0;
+        profileUpdates.longitude = Number(bookingForm.clientLongitude) || 0;
+      }
+      if (Object.keys(profileUpdates).length > 0) {
+        try {
+          const updateRes = await ApiService.updateProfile(profileUpdates);
+          if (updateRes && updateRes.success && updateRes.data) {
+            const updatedUserObj = { ...user, ...updateRes.data };
+            if (updateUser) updateUser(updatedUserObj);
+          }
+        } catch (profErr) {
+          console.warn('[User Profile Update Error in Booking]:', profErr);
+        }
+      }
+    }
 
     try {
       const draft = {
