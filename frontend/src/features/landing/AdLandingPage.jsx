@@ -486,9 +486,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       </section>
 
       {/* ── SECTION 4: MEET THE PSYCHOLOGISTS ── */}
-      <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative overflow-hidden">
-        {/* Header container */}
+      <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Header container */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8 text-left">
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-900 tracking-tight">
@@ -516,20 +517,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Full-width carousel track with edge fades and smooth padding */}
-        <div className="relative w-full">
-          {/* Left Edge Fade Mask */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
-          
-          {/* Right Edge Fade Mask */}
-          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
-
-          <div
-            ref={carouselRef}
-            className="flex gap-6 overflow-x-auto py-4 px-4 sm:px-6 md:px-8 lg:px-[max(calc((100vw-80rem)/2+2rem),2rem)] scrollbar-none snap-x snap-mandatory scroll-smooth"
-          >
+          {/* Carousel container inside max-w-7xl with clean spacing */}
+          <div className="relative">
+            <div
+              ref={carouselRef}
+              className="flex gap-6 overflow-x-auto py-4 px-1 scrollbar-none snap-x snap-mandatory scroll-smooth"
+            >
             {advisors.map((advisor) => {
               const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
               const minFee = advisor.fee || heroPrice;
@@ -652,6 +646,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
       </section>
