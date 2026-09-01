@@ -682,6 +682,8 @@ export default function App() {
           {/* Dedicated Thank You & Booking Confirmation Routes */}
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/thankyou" element={<Navigate to="/thank-you" replace />} />
+          <Route path="/ad/thank-you" element={<Navigate to="/thank-you" replace />} />
+          <Route path="/ad/thankyou" element={<Navigate to="/thank-you" replace />} />
           <Route path="/booking-confirmed" element={<Navigate to="/thank-you" replace />} />
           <Route path="/booking/confirmation" element={<Navigate to="/thank-you" replace />} />
 
