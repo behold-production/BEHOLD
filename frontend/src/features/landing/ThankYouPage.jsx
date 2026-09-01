@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { 
-  CheckCircle2, 
-  Video, 
-  Calendar, 
-  Clock, 
-  ShieldCheck, 
-  Copy, 
-  Check, 
-  ExternalLink, 
-  ArrowRight, 
-  Download, 
-  HeartHandshake, 
-  User, 
-  Mail, 
+import {
+  CheckCircle2,
+  Video,
+  Calendar,
+  Clock,
+  ShieldCheck,
+  Copy,
+  Check,
+  ExternalLink,
+  ArrowRight,
+  Download,
+  HeartHandshake,
+  User,
+  Mail,
   Phone,
   FileText,
   Home
@@ -112,8 +112,8 @@ export default function ThankYouPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center relative overflow-hidden">
-      <SEO 
-        title="Booking Confirmed | BEHOLD Psychological Counselling" 
+      <SEO
+        title="Booking Confirmed | BEHOLD Psychological Counselling"
         description="Your confidential psychological counselling session is confirmed. We look forward to meeting you."
         canonicalUrl="https://www.behold.co.in/thank-you"
         noIndex={true}
@@ -123,7 +123,7 @@ export default function ThankYouPage() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[35rem] h-[35rem] bg-[#00c9d6]/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-2xl mx-auto space-y-6">
-        
+
         {/* Animated Checkmark & Success Banner */}
         <div className="text-center space-y-3">
           <div className="w-20 h-20 bg-emerald-50 border-2 border-emerald-300 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-lg shadow-emerald-500/10 animate-bounce duration-1000">
@@ -145,7 +145,7 @@ export default function ThankYouPage() {
 
         {/* Booking Details Card */}
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6 text-left">
-          
+
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Appointment Summary</span>
@@ -228,7 +228,7 @@ export default function ThankYouPage() {
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
               ഇനി എന്ത് ചെയ്യണം? (What Happens Next)
             </h3>
-            
+
             <div className="space-y-2.5 text-xs text-slate-600">
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
