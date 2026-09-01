@@ -890,22 +890,27 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </aside>
       )}
 
-      {/* ── STICKY BOTTOM MOBILE CTA BAR (High Mobile Conversion) ── */}
+      {/* ── STICKY BOTTOM MOBILE CTA BAR (High Mobile Conversion & Safe Area Support) ── */}
       <nav 
-        aria-label="Mobile sticky booking action"
-        className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] flex items-center justify-between gap-3"
+        aria-label="Sticky booking action bar"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] flex items-center justify-between gap-3 sm:hidden"
       >
-        <div className="text-left">
-          <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Session Starting at</span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-lg font-black text-slate-950">₹899</span>
-            <span className="text-[10px] text-emerald-600 font-bold">100% Private</span>
+        <div className="text-left flex flex-col justify-center">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Available Today</span>
+          </div>
+          <div className="flex items-baseline gap-1.5 mt-0.5">
+            <span className="text-xl font-black text-slate-950 tracking-tight">₹899</span>
+            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+              100% Private
+            </span>
           </div>
         </div>
 
         <button
           onClick={() => handleBook()}
-          className="flex-1 max-w-[200px] py-3 rounded-xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+          className="flex-1 max-w-[220px] py-3.5 px-5 rounded-2xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer border-none"
         >
           <span>Book My Session</span>
           <ArrowRight className="w-4 h-4" />
