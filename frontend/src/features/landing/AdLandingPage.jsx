@@ -19,8 +19,6 @@ import {
   GraduationCap,
   Globe,
   Languages,
-  ChevronDown,
-  ChevronUp,
   X,
   Clock,
   UserCheck,
@@ -50,28 +48,7 @@ const RECENT_BOOKINGS = [
   { name: 'Anjali', time: '19m ago', location: 'Thrissur' }
 ];
 
-const DEFAULT_FAQS = [
-  {
-    q: "ഇത് confidential ആണോ?",
-    a: "100%. നിങ്ങളുടെ വ്യക്തിഗത വിവരങ്ങൾ, സംഭാഷണങ്ങൾ എന്നിവ തികച്ചും രഹസ്യമായി സൂക്ഷിക്കും. നിങ്ങളുടെ അനുവാദമില്ലാതെ ആരുമായും share ചെയ്യില്ല."
-  },
-  {
-    q: "Session reschedule/cancel ചെയ്യാൻ പറ്റുമോ?",
-    a: "തീർച്ചയായും. Session തുടങ്ങുന്നതിന് 1 മണിക്കൂർ മുൻപ് അറിയിച്ചാൽ സൗജന്യമായി നിങ്ങൾക്ക് അനുയോജ്യമായ മറ്റൊരു സമയത്തേക്ക് reschedule ചെയ്യാവുന്നതാണ്."
-  },
-  {
-    q: "Payment കഴിഞ്ഞാൽ എന്ത് സംഭവിക്കും?",
-    a: "Payment പൂർത്തിയായ ഉടൻ തന്നെ നിങ്ങളുടെ Booking confirm ആകും. ഒപ്പം Private Google Meet session link നിങ്ങളുടെ WhatsApp & Email വഴി തൽക്ഷണം ലഭിക്കും."
-  },
-  {
-    q: "എനിക്ക് ഇഷ്ടമുള്ള psychologist-നെ choose ചെയ്യാൻ പറ്റുമോ?",
-    a: "തീർച്ചയായും. നിങ്ങളുടെ പ്രയാസങ്ങൾക്കും മുൻഗണനയ്ക്കും അനുയോജ്യമായ psychologist-നെ പ്രൊഫൈൽ കണ്ട് നേരിട്ട് തിരഞ്ഞെടുക്കാം."
-  },
-  {
-    q: "Sessions Malayalam-ൽ മാത്രമേ ഉള്ളൂവോ?",
-    a: "ഇല്ല, നിങ്ങൾക്ക് കൂടുതൽ എളുപ്പമുള്ള രീതിയിൽ Malayalam-ലും English-ലും sessions ലഭ്യമാണ്."
-  }
-];
+
 
 export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSettings, onOpenDocs }) {
   const settings = siteSettings || {};
@@ -81,8 +58,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   const heroSub = settings.adHeroSub || "Qualified psychologists-നൊപ്പം, വീട്ടിലിരുന്ന് തന്നെ ഒന്ന് തുറന്നു സംസാരിക്കാം. വെറും ₹" + (settings.adHeroPrice || 899) + "-ന് ഒരു session ബുക്ക് ചെയ്യാം.";
   const heroPrice = Number(settings.adHeroPrice) || 899;
   const heroBtnText = settings.adHeroBtnText || "Book My Session";
-  const heroBadge = settings.adHeroBadge || "100% Confidential & Secure";
-  const heroRating = settings.adHeroRatingText || "★ 4.9/5 Rating (500+ Consultations)";
   const heroImg = settings.adHeroImage || clinicImage;
 
   const trustBadge1Title = settings.adTrustBadge1Title || "11 Qualified";
@@ -94,14 +69,11 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   const trustBadge4Title = settings.adTrustBadge4Title || "Secure Online Payment";
   const trustBadge4Sub = settings.adTrustBadge4Sub || "Instant UPI & Cards";
 
-  const reflectionTag = settings.adReflectionTag || "Self Reflection";
   const reflectionTitle = settings.adReflectionTitle || "ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?";
-  const reflectionSub = settings.adReflectionSub || "(Does this feel familiar?)";
   const reflectionPrompt1 = settings.adReflectionPrompt1 || "എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ, rest എടുത്തിട്ടും?";
   const reflectionPrompt2 = settings.adReflectionPrompt2 || "ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതെ ആണോ?";
   const reflectionPrompt3 = settings.adReflectionPrompt3 || "Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?";
   const reflectionPrompt4 = settings.adReflectionPrompt4 || "എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?";
-  const reflectionClosing = settings.adReflectionClosing || "ഇത് weakness അല്ല. ഇത് ഒന്ന് സംസാരിക്കേണ്ട സമയമാണ്.";
 
   const psychologistTitle = settings.adPsychologistTitle || "നിങ്ങൾക്കൊപ്പം സംസാരിക്കുന്നത് ഇവരാണ്";
   const psychologistSub = settings.adPsychologistSub || "Qualified. Experienced. Judgment-free. നിങ്ങളുടെ concern-ന് ചേരുന്ന ഒരാളെ തിരഞ്ഞെടുക്കൂ.";
@@ -110,7 +82,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   const videoSub = settings.adVideoSub || "ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.";
   const videoUrl = settings.adVideoUrl || "";
 
-  const faqsList = Array.isArray(settings.adFaqs) && settings.adFaqs.length > 0 ? settings.adFaqs : DEFAULT_FAQS;
 
   // Counsellor list state
   const [advisors, setAdvisors] = useState([]);
@@ -120,8 +91,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   // Video interactive state
   const [activeStep, setActiveStep] = useState(0);
 
-  // FAQ Accordion State
-  const [openFaqIndex, setOpenFaqIndex] = useState(0);
+
 
   // Social Proof Toast State
   const [currentSocialIndex, setCurrentSocialIndex] = useState(0);
@@ -274,7 +244,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
   const handleScrollCarousel = (direction) => {
     if (carouselRef.current) {
-      const scrollAmount = 340;
+      const scrollAmount = 374;
       carouselRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
@@ -305,7 +275,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       <SEO 
         title={`BEHOLD | ${heroTitle} - Confidential Online Counselling`} 
         description={heroSub} 
-        canonicalUrl="https://www.behold.co.in/ad"
+        canonicalUrl="https://www.behold.co.in/bookmysession"
       />
 
       {/* ── TOP FOCUSED BRAND BAR (Clean & Direct) ── */}
@@ -344,19 +314,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 alt="BEHOLD Calm & Confidential Counselling Room"
                 className="w-full h-[280px] xs:h-[340px] sm:h-[420px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-              
-              {/* Minimal Confidentiality Badge */}
-              <div className="absolute top-4 left-4 bg-slate-900/85 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-white/10 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[11px] font-semibold text-white tracking-wide">{heroBadge}</span>
-              </div>
-
-              {/* Verified Doctors Indicator */}
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs font-medium px-2">
-                <span className="drop-shadow-md">{heroRating}</span>
-                <span className="text-xs text-white/90 drop-shadow-md">Malayalam & English</span>
-              </div>
             </div>
           </div>
 
@@ -458,16 +415,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── SECTION 3: PROBLEM REFLECTION SECTION ── */}
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
         
-        <div className="space-y-2 mb-10 text-center">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#008b94] bg-[#00c9d6]/15 px-3.5 py-1 rounded-full border border-[#00c9d6]/30">
-            {reflectionTag}
-          </span>
+        <div className="mb-10 text-center">
           <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             {reflectionTitle}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 font-medium">
-            {reflectionSub}
-          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
@@ -530,28 +481,15 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
         </div>
 
-        <div className="mt-8 sm:mt-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-[#0f242c] text-white shadow-xl space-y-4">
-          <p className="text-base sm:text-xl font-bold leading-relaxed text-[#d7f9fb]">
-            "{reflectionClosing}"
-          </p>
-          <div className="pt-1">
-            <button
-              onClick={() => handleBook()}
-              className="px-8 py-3.5 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-sm tracking-wide transition-all shadow-md cursor-pointer inline-flex items-center gap-2 border-none"
-            >
-              <span>{heroBtnText}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+
 
       </section>
 
       {/* ── SECTION 4: MEET THE PSYCHOLOGISTS ── */}
-      <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative">
+      <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative overflow-hidden">
+        {/* Header container */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12 text-left">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8 text-left">
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
                 {psychologistTitle}
@@ -564,24 +502,33 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="flex items-center gap-2 self-end">
               <button
                 onClick={() => handleScrollCarousel('left')}
-                className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 shadow-2xs hover:shadow-sm transition-all cursor-pointer"
+                className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 shadow-2xs hover:shadow-sm transition-all cursor-pointer active:scale-95"
                 aria-label="Previous psychologist"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={() => handleScrollCarousel('right')}
-                className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 shadow-2xs hover:shadow-sm transition-all cursor-pointer"
+                className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 shadow-2xs hover:shadow-sm transition-all cursor-pointer active:scale-95"
                 aria-label="Next psychologist"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Full-width carousel track with edge fades and smooth padding */}
+        <div className="relative w-full">
+          {/* Left Edge Fade Mask */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+          
+          {/* Right Edge Fade Mask */}
+          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
           <div
             ref={carouselRef}
-            className="flex gap-6 overflow-x-auto pb-4 pt-1 scrollbar-none snap-x snap-mandatory scroll-smooth px-1"
+            className="flex gap-6 overflow-x-auto py-4 px-4 sm:px-6 md:px-8 lg:px-[max(calc((100vw-80rem)/2+2rem),2rem)] scrollbar-none snap-x snap-mandatory scroll-smooth"
           >
             {advisors.map((advisor) => {
               const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
@@ -590,7 +537,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               return (
                 <div
                   key={advisor.id}
-                  className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start bg-white rounded-[24px] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6] transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group"
+                  className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start bg-white rounded-[24px] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6] transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group shrink-0"
                 >
                   <div className="relative w-full h-[120px] sm:h-[135px] p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px]">
                     <div className="pr-2 space-y-1 z-10 max-w-[65%]">
@@ -706,208 +653,95 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               );
             })}
           </div>
-
         </div>
       </section>
 
       {/* ── SECTION 5: VIDEO & HOW IT WORKS ── */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <div className="space-y-6 text-left">
           
-          {/* COLUMN 1: VIDEO OR INTERACTIVE WALKTHROUGH */}
-          <div className="lg:col-span-6 space-y-6 text-left">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                {videoTitle}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                {videoSub}
-              </p>
-            </div>
-
-            {videoUrl ? (
-              <div className="relative aspect-video rounded-3xl overflow-hidden bg-slate-950 border-2 border-slate-200 shadow-xl">
-                <iframe
-                  src={videoUrl}
-                  title={videoTitle}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            ) : (
-              <div className="relative aspect-video rounded-3xl overflow-hidden bg-slate-950 border-2 border-slate-200 shadow-xl flex items-center justify-center group">
-                <img
-                  src={settings.adVideoPoster || headerBg}
-                  alt="Booking Process"
-                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
-                />
-                
-                <div className="relative z-10 text-center p-6 space-y-3">
-                  <button
-                    onClick={() => handleBook()}
-                    className="w-16 h-16 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 flex items-center justify-center mx-auto shadow-lg hover:scale-110 transition-transform cursor-pointer border-none"
-                    aria-label="Start Booking"
-                  >
-                    <Play className="w-7 h-7 fill-slate-950 ml-1" />
-                  </button>
-                  <div className="text-white">
-                    <h4 className="text-sm sm:text-base font-bold">Interactive Booking Walkthrough</h4>
-                    <p className="text-xs text-slate-400">Click to start picking a session slot now</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-3.5 pt-2">
-              {bookingSteps.map((step, idx) => (
-                <div 
-                  key={idx}
-                  onClick={() => setActiveStep(idx)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${
-                    activeStep === idx 
-                      ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/20' 
-                      : 'bg-white/70 border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 ${
-                    activeStep === idx ? 'bg-[#00c9d6] text-slate-950' : 'bg-slate-100 text-slate-600'
-                  }`}>
-                    {step.badge}
-                  </span>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900">{step.title}</h4>
-                    <p className="text-xs text-slate-600 mt-1 font-normal leading-relaxed">{step.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-2">
-              <button
-                onClick={() => handleBook()}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border-none"
-              >
-                <span>{heroBtnText} Now</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+          {/* VIDEO OR INTERACTIVE WALKTHROUGH */}
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              {videoTitle}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
+              {videoSub}
+            </p>
           </div>
 
-          {/* COLUMN 2: KEY BENEFITS */}
-          <div className="lg:col-span-6 space-y-6 text-left">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Why Choose BEHOLD?
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                വിശ്വാസ്യതയും രഹസ്യസ്വഭാവവും ഉറപ്പുനൽകുന്ന കൗൺസിലിംഗ്.
-              </p>
+          {videoUrl ? (
+            <div className="relative aspect-video rounded-3xl overflow-hidden bg-slate-950 border-2 border-slate-200 shadow-xl">
+              <iframe
+                src={videoUrl}
+                title={videoTitle}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
-
-            <div className="space-y-3.5">
-              {[
-                {
-                  icon: <Video className="w-5 h-5 text-[#00c9d6]" />,
-                  title: "Online Sessions",
-                  desc: "യാത്രകൾ ഒഴിവാക്കി, നിങ്ങളുടെ സ്വന്തം മുറിയിലിരുന്ന് തികച്ചും സ്വകാര്യമായി സംസാരിക്കാം."
-                },
-                {
-                  icon: <CreditCard className="w-5 h-5 text-emerald-600" />,
-                  title: "Secure & Affordable",
-                  desc: `വെറും ₹${heroPrice}-ന് ആരംഭിക്കുന്ന സുതാര്യമായ ഫീസ്. യാതൊരു മറഞ്ഞിരിക്കുന്ന ചാർജുകളുമില്ല.`
-                },
-                {
-                  icon: <GraduationCap className="w-5 h-5 text-indigo-600" />,
-                  title: "Qualified Professionals",
-                  desc: "ക്ലിനിക്കൽ യോഗ്യതയും പരിചയസമ്പന്നതയുമുള്ള സർട്ടിഫൈഡ് വിദഗ്ദ്ധർ."
-                },
-                {
-                  icon: <HeartHandshake className="w-5 h-5 text-rose-500" />,
-                  title: "100% Confidential & Judgment-Free",
-                  desc: "നിങ്ങളുടെ ആശങ്കകൾ തുറന്നു പറയാവുന്ന സുരക്ഷിതമായ ഒരു ഇടം."
-                }
-              ].map((benefit, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-4.5 shadow-2xs hover:shadow-md transition-all flex items-start gap-4"
+          ) : (
+            <div className="relative aspect-video rounded-3xl overflow-hidden bg-slate-950 border-2 border-slate-200 shadow-xl flex items-center justify-center group">
+              <img
+                src={settings.adVideoPoster || headerBg}
+                alt="Booking Process"
+                className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
+              />
+              
+              <div className="relative z-10 text-center p-6 space-y-3">
+                <button
+                  onClick={() => handleBook()}
+                  className="w-16 h-16 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 flex items-center justify-center mx-auto shadow-lg hover:scale-110 transition-transform cursor-pointer border-none"
+                  aria-label="Start Booking"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0">
-                    {benefit.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900">{benefit.title}</h3>
-                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed font-normal">{benefit.desc}</p>
-                  </div>
+                  <Play className="w-7 h-7 fill-slate-950 ml-1" />
+                </button>
+                <div className="text-white">
+                  <h4 className="text-sm sm:text-base font-bold">Interactive Booking Walkthrough</h4>
+                  <p className="text-xs text-slate-400">Click to start picking a session slot now</p>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
+          )}
 
-        </div>
-      </section>
-
-      {/* ── SECTION 6: FAQS (ACCORDION) ── */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-left">
-        
-        <div className="text-center mb-8 sm:mb-12">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#008b94] bg-[#00c9d6]/15 px-3.5 py-1 rounded-full border border-[#00c9d6]/30 mb-2">
-            Frequently Asked Questions
-          </span>
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            സാധാരണയായി ചോദിക്കുന്ന ചോദ്യങ്ങൾ
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1">
-            സെഷനുകളെക്കുറിച്ചുള്ള നിങ്ങളുടെ സംശയങ്ങൾക്ക് വ്യക്തമായ ഉത്തരങ്ങൾ.
-          </p>
-        </div>
-
-        <div className="space-y-3.5">
-          {faqsList.map((faq, idx) => {
-            const isOpen = openFaqIndex === idx;
-            return (
+          <div className="space-y-3.5 pt-2">
+            {bookingSteps.map((step, idx) => (
               <div 
                 key={idx}
-                className={`rounded-2xl border transition-all ${isOpen ? 'bg-white border-[#00c9d6] shadow-sm' : 'bg-white/80 border-slate-200 hover:border-slate-300'}`}
+                onClick={() => setActiveStep(idx)}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${
+                  activeStep === idx 
+                    ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/20' 
+                    : 'bg-white/70 border-slate-200 hover:border-slate-300'
+                }`}
               >
-                <button
-                  type="button"
-                  onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                  className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left cursor-pointer border-none bg-transparent"
-                >
-                  <span className="font-bold text-sm sm:text-base text-slate-900">
-                    {faq.q}
-                  </span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${isOpen ? 'bg-[#00c9d6]/20 text-[#008b94]' : 'bg-slate-100 text-slate-600'}`}>
-                    {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
-                </button>
-
-                {isOpen && (
-                  <div className="px-4 pb-5 sm:px-5 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal border-t border-slate-100 pt-3">
-                    {faq.a}
-                  </div>
-                )}
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 ${
+                  activeStep === idx ? 'bg-[#00c9d6] text-slate-950' : 'bg-slate-100 text-slate-600'
+                }`}>
+                  {step.badge}
+                </span>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">{step.title}</h4>
+                  <p className="text-xs text-slate-600 mt-1 font-normal leading-relaxed">{step.desc}</p>
+                </div>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom CTA Card */}
-        <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl text-center sm:text-left">
-          <div className="space-y-1">
-            <h3 className="text-lg sm:text-xl font-bold text-white">ഇനിയും സംശയങ്ങൾ ഉണ്ടോ?</h3>
-            <p className="text-xs text-slate-400">ഇന്നുതന്നെ ഒരു confidential session ആരംഭിച്ച് മനസ്സിന് ശാന്തത കണ്ടെത്തൂ.</p>
+            ))}
           </div>
-          <button
-            onClick={() => handleBook()}
-            className="px-8 py-3.5 rounded-full bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-black text-sm tracking-wide transition-all shadow-md cursor-pointer shrink-0 border-none"
-          >
-            {heroBtnText}
-          </button>
-        </div>
 
+          <div className="pt-2">
+            <button
+              onClick={() => handleBook()}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border-none"
+            >
+              <span>{heroBtnText} Now</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+        </div>
       </section>
+
+
 
       {/* ── LIVE SOCIAL PROOF POPUP NOTIFICATION ── */}
       {showSocialToast && !socialToastDismissed && (
@@ -953,24 +787,11 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── STICKY BOTTOM MOBILE CTA BAR (High Mobile Conversion & Safe Area Support) ── */}
       <nav 
         aria-label="Sticky booking action bar"
-        className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] flex items-center justify-between gap-3 sm:hidden"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] flex items-center justify-center sm:hidden"
       >
-        <div className="text-left flex flex-col justify-center">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Available Today</span>
-          </div>
-          <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="text-xl font-black text-slate-950 tracking-tight">₹{heroPrice}</span>
-            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
-              100% Private
-            </span>
-          </div>
-        </div>
-
         <button
           onClick={() => handleBook()}
-          className="flex-1 max-w-[220px] py-3.5 px-5 rounded-2xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer border-none"
+          className="w-full py-3.5 px-5 rounded-2xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer border-none"
         >
           <span>{heroBtnText}</span>
           <ArrowRight className="w-4 h-4" />

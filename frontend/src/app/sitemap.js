@@ -58,6 +58,12 @@ export default async function sitemap() {
       priority: 0.8,
     },
     {
+      url: `${BASE_URL}/bookmysession`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
       url: `${BASE_URL}/aptitude`,
       lastModified: new Date(),
       changeFrequency: 'weekly',

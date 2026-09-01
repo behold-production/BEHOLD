@@ -665,7 +665,7 @@ export default function App() {
           } />
 
           {/* Dedicated Ad Landing Page Endpoints */}
-          <Route path="/ad" element={
+          <Route path="/bookmysession" element={
             <AdLandingPage 
               onOpenBooking={() => setIsBookingModalOpen(true)}
               onSelectAdvisor={handleBookTherapist}
@@ -673,15 +673,17 @@ export default function App() {
               onOpenDocs={setActiveDocType}
             />
           } />
-          <Route path="/ads" element={<Navigate to="/ad" replace />} />
-          <Route path="/lp" element={<Navigate to="/ad" replace />} />
-          <Route path="/counselling-ad" element={<Navigate to="/ad" replace />} />
-          <Route path="/offer" element={<Navigate to="/ad" replace />} />
-          <Route path="/landing" element={<Navigate to="/ad" replace />} />
+          <Route path="/ad" element={<Navigate to="/bookmysession" replace />} />
+          <Route path="/ads" element={<Navigate to="/bookmysession" replace />} />
+          <Route path="/lp" element={<Navigate to="/bookmysession" replace />} />
+          <Route path="/counselling-ad" element={<Navigate to="/bookmysession" replace />} />
+          <Route path="/offer" element={<Navigate to="/bookmysession" replace />} />
+          <Route path="/landing" element={<Navigate to="/bookmysession" replace />} />
 
           {/* Dedicated Thank You & Booking Confirmation Routes */}
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/thankyou" element={<Navigate to="/thank-you" replace />} />
+          <Route path="/bookmysession/thank-you" element={<Navigate to="/thank-you" replace />} />
           <Route path="/ad/thank-you" element={<Navigate to="/thank-you" replace />} />
           <Route path="/ad/thankyou" element={<Navigate to="/thank-you" replace />} />
           <Route path="/booking-confirmed" element={<Navigate to="/thank-you" replace />} />
