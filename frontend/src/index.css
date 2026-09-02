@@ -198,7 +198,7 @@ button,
 input,
 select,
 textarea {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', 'Noto Sans Malayalam', sans-serif;
 }
 
 /* Headings — Poppins */
@@ -210,7 +210,7 @@ h5,
 h6,
 .font-header,
 .font-heading {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', 'Noto Sans Malayalam', sans-serif;
 }
 
 html,
@@ -219,7 +219,7 @@ body {
   overflow-x: clip;
   background-color: #f8fafc;
   color: #0F172A;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', 'Noto Sans Malayalam', sans-serif;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: default;
   -webkit-overflow-scrolling: touch;

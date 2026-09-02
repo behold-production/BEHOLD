@@ -89,7 +89,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           {/* Main Title Block */}
           <div className="relative leading-none flex flex-col items-center lg:items-start group">
             {/* Line 1 - Slender, Elegant & Moderately Sized Headline */}
-            <h1 className="font-sans font-semibold text-slate-900 text-2xl xs:text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
+            <h1 className="font-sans font-bold text-slate-900 text-2xl xs:text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
               {eyebrowLine1}
             </h1>
 
@@ -120,7 +120,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           <div className="flex justify-center lg:justify-start w-full animate-fade-scale delay-300">
             <button
               onClick={handleConnectClick}
-              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base sm:text-lg font-bold px-8 py-2.5 rounded-2xl shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer"
+              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base font-semibold px-8 py-3 min-h-[44px] rounded-2xl shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
             >
               {btnText}
             </button>

@@ -625,7 +625,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       </div>
 
                       <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
-                        <p className={`text-[11px] text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
+                        <p className={`text-xs text-slate-700 font-normal leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
                           "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
                         </p>
                         {advisor.bio && advisor.bio.length > 50 && (
@@ -690,10 +690,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
               Simple 3-Step Booking
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
               How It Works
             </h2>
-            <p className="text-xs sm:text-sm text-slate-700 font-semibold leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
               ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.
             </p>
           </div>
@@ -713,8 +713,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   {step.badge}
                 </span>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-950">{step.title}</h4>
-                  <p className="text-xs text-slate-800 mt-1 font-semibold leading-relaxed">{step.desc}</p>
+                  <h4 className="text-xs sm:text-sm font-semibold text-slate-950">{step.title}</h4>
+                  <p className="text-xs text-slate-600 mt-1 font-medium leading-relaxed">{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -739,10 +739,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
             Got Questions?
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-xs sm:text-sm text-slate-800 max-w-xl mx-auto font-bold leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
             സെഷനെക്കുറിച്ചും ബുക്കിംഗിനെക്കുറിച്ചുമുള്ള പ്രധാന വിവരങ്ങൾ താഴെ കാണാം.
           </p>
         </div>
@@ -781,7 +781,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                         A
                       </span>
-                      <p className="font-semibold text-slate-800 leading-relaxed">{faq.a}</p>
+                      <p className="font-normal text-slate-700 leading-relaxed">{faq.a}</p>
                     </div>
                   </div>
                 )}
@@ -794,7 +794,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="pt-10 text-center space-y-3">
           <button
             onClick={() => handleBook()}
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer border-none active:scale-98"
+            className="inline-flex items-center gap-2 px-8 py-4 min-h-[44px] rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
           >
             <span>{heroBtnText}</span>
             <ArrowRight className="w-5 h-5" />

@@ -75,7 +75,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-1">
               <div>
                 <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Dual Support Architecture</h3>
-                <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">
                   Transition seamlessly between clinical psychologists and career strategists under one roof.
                 </p>
               </div>
@@ -88,8 +88,8 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
             {/* Cell 2: Safe & Scientific */}
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-2">
               <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">100% Safe & Scientific</h3>
-                <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
+                <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">100% Safe & Scientific</h3>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">
                   Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
                 </p>
               </div>
@@ -103,8 +103,8 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
             {siteSettings?.enableAptitude !== false ? (
               <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-3">
                 <div>
-                  <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h3>
-                  <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
+                  <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">C-DAT Aptitude Assessment</h3>
+                  <p className="text-xs text-slate-600 font-medium leading-relaxed">
                     Evaluations designed for grades 8–12 to align cognitive strengths with career aspirations.
                   </p>
                 </div>
@@ -116,8 +116,8 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
             ) : (
               <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00e5ff] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-3">
                 <div>
-                  <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] uppercase mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
-                  <p className="text-[11px] sm:text-xs text-surface-600 font-normal leading-relaxed">
+                  <h3 className="text-xs sm:text-sm font-semibold text-[#0f172a] mb-1.5 font-sans leading-snug group-hover:text-[#00e5ff] transition-colors">Personalised Career Roadmap</h3>
+                  <p className="text-xs text-slate-600 font-medium leading-relaxed">
                     CIGI-certified mentors craft tailored stream & degree roadmaps aligned with each student's strengths.
                   </p>
                 </div>
@@ -136,7 +136,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
               <div className="pt-2">
                 <button
                   onClick={handleBook}
-                  className="w-full py-2.5 bg-[#00e5ff] hover:bg-[#00cce6] hover-scale-btn text-[#0f172a] font-semibold text-[10px] sm:text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs text-center"
+                  className="w-full py-3 min-h-[44px] bg-[#00e5ff] hover:bg-[#00cce6] hover-scale-btn text-[#0f172a] font-semibold text-xs uppercase tracking-widest rounded-full transition-all border-none cursor-pointer shadow-xs text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a]"
                 >
                   Book a Session
                 </button>

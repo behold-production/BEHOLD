@@ -214,7 +214,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       key={label}
                       ref={(el) => (navRefs.current[idx] = el)}
                       onClick={action}
-                      className={`text-sm font-semibold transition-colors duration-200 bg-transparent cursor-pointer py-1 border-none ${isActive
+                      className={`text-sm font-semibold transition-colors duration-200 bg-transparent cursor-pointer py-1 px-1 rounded-md border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] ${isActive
                         ? 'text-[#00c9d6]'
                         : 'text-slate-700 hover:text-[#00c9d6]'
                         }`}
@@ -229,7 +229,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all shadow-sm cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent hover-scale-btn"
+                  className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all shadow-sm cursor-pointer border bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 border-transparent hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
                 >
                   Book Session
                 </button>
@@ -239,7 +239,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                     onClick={handleProfileClick}
                     title={`Logged in as ${user.name || user.email}`}
                     aria-label="User Profile"
-                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer border shrink-0 bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs hover-scale-btn"
+                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer border shrink-0 bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
                   >
                     <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 bg-[#00c9d6]/10 flex items-center justify-center border border-[#00c9d6]/30">
                       {user.profilePic ? (
@@ -256,7 +256,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn"
+                    className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
                   >
                     Sign In
                   </button>

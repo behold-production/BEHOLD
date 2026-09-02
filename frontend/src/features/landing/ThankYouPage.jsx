@@ -357,7 +357,7 @@ export default function ThankYouPage() {
                   What Happens Next
                 </h3>
 
-                <div className="space-y-2.5 text-xs text-slate-600">
+                <div className="space-y-2.5 text-sm text-slate-600">
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <span>Your booking confirmation and session room link have been sent to your WhatsApp & Email.</span>
@@ -413,7 +413,7 @@ export default function ThankYouPage() {
       </main>
 
       {/* ── MINIMAL COMPACT FOOTER ── */}
-      <footer className="py-4 text-slate-400 text-[11px] text-center border-t border-slate-200/80 bg-white/50">
+      <footer className="py-4 text-slate-400 text-xs text-center border-t border-slate-200/80 bg-white/50">
         <p>© {new Date().getFullYear()} BEHOLD. All rights reserved. Confidential Psychological Care.</p>
       </footer>
 

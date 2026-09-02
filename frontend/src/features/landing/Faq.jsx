@@ -95,12 +95,12 @@ export default function Faq({ siteSettings }) {
                   <button
                     type="button"
                     onClick={() => setOpenIndex(isOpen ? null : idx)}
-                    className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none"
+                    className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6]"
                   >
-                    <span className={`font-semibold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#00e5ff]' : 'text-[#0f172a]'}`}>
+                    <span className={`font-semibold text-sm sm:text-base leading-snug ${isOpen ? 'text-[#00c9d6]' : 'text-[#0f172a]'}`}>
                       {faq.question}
                     </span>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#0f172a] text-[#00e5ff] rotate-180 border border-[#00e5ff]/40' : 'bg-surface-100 text-[#0f172a]'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-[#0f172a] text-[#00c9d6] rotate-180 border border-[#00c9d6]/40' : 'bg-surface-100 text-[#0f172a]'}`}>
                       <ChevronDown className="w-4 h-4" />
                     </div>
                   </button>
@@ -126,7 +126,7 @@ export default function Faq({ siteSettings }) {
               const el = document.getElementById('inquiry');
               if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs"
+            className="px-7 py-3 min-h-[44px] bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
           >
             Contact Our Team
           </button>
