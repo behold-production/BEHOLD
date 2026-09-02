@@ -41,6 +41,11 @@ export default function ThankYouPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
 
+    // Clean address bar: ensure clean /confirmed URL with no exposed query parameters or IDs
+    if (window.location.search && (window.location.search.includes('id=') || window.location.search.includes('bookingId=') || window.location.search.includes('orderId=') || window.location.search.includes('appointmentId='))) {
+      window.history.replaceState({}, '', '/confirmed' + (isRescheduled ? '?type=rescheduled' : ''));
+    }
+
     const loadBooking = async () => {
       const paramId = searchParams.get('id') || searchParams.get('bookingId') || searchParams.get('appointmentId') || searchParams.get('orderId');
 
@@ -232,21 +237,13 @@ export default function ThankYouPage() {
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Appointment Summary</span>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="text-xs font-mono font-semibold text-slate-700">
-                  Ref: {bookingData?.id ? String(bookingData.id).slice(0, 18) : `BEH-${Date.now().toString().slice(-6)}`}
-                </span>
-                <button
-                  onClick={handleCopyRef}
-                  className="text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer border-none bg-transparent"
-                  title="Copy Reference ID"
-                >
-                  {copiedRef ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
-                </button>
-              </div>
+              <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5">
+                Private Consultation Session
+              </p>
             </div>
-            <span className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-xs font-semibold">
-              {bookingData?.status || 'Confirmed'}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-xs font-semibold">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>{bookingData?.status || 'Confirmed'}</span>
             </span>
           </div>
 

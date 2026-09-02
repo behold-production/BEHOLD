@@ -517,6 +517,7 @@ export default function App() {
 
   const isAdLandingRoute = [
     '/bookmysession',
+    '/bookyoursession',
     '/ad',
     '/ads',
     '/lp',
@@ -683,6 +684,7 @@ export default function App() {
               onOpenDocs={setActiveDocType}
             />
           } />
+          <Route path="/bookyoursession" element={<Navigate to="/bookmysession" replace />} />
           <Route path="/ad" element={<Navigate to="/bookmysession" replace />} />
           <Route path="/ads" element={<Navigate to="/bookmysession" replace />} />
           <Route path="/lp" element={<Navigate to="/bookmysession" replace />} />
@@ -697,7 +699,7 @@ export default function App() {
           <Route path="/booking-confirmed" element={<Navigate to="/confirmed" replace />} />
           <Route path="/booking/confirmation" element={<Navigate to="/confirmed" replace />} />
           <Route path="/bookmysession/confirmed" element={<Navigate to="/confirmed" replace />} />
-          <Route path="/bookmysession/thank-you" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/bookyoursession/confirmed" element={<Navigate to="/confirmed" replace />} />
           <Route path="/ad/confirmed" element={<Navigate to="/confirmed" replace />} />
           <Route path="/ad/thank-you" element={<Navigate to="/confirmed" replace />} />
           <Route path="/ad/thankyou" element={<Navigate to="/confirmed" replace />} />

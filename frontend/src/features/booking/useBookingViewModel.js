@@ -1184,7 +1184,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           setIsProcessingPayment(false);
           setIsSuccess(true);
           setBookingStep('success');
-          window.location.href = `/confirmed?bookingId=${bookingId}`;
+          window.location.href = '/confirmed';
           return;
         } else {
           throw new Error(bookRes.message || "Failed to confirm free booking.");
@@ -1322,7 +1322,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               setIsProcessingPayment(false);
               setIsSuccess(true);
               setBookingStep('success');
-              window.location.href = `/confirmed?bookingId=${bookingId}`;
+              window.location.href = '/confirmed';
             } else {
               throw new Error(verifyRes.message || "Verification failed");
             }
@@ -1398,7 +1398,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         } catch (e) {}
         setIsSuccess(true);
         setBookingStep('success');
-        window.location.href = `/confirmed?type=rescheduled&bookingId=${apptId}`;
+        window.location.href = '/confirmed?type=rescheduled';
       } else {
         toast.error(res.message || "Rescheduling failed.");
       }

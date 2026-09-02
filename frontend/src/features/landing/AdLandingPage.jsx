@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   ShieldCheck, 
   Sparkles, 
@@ -36,6 +37,7 @@ const getInitial = (name) => {
 };
 
 export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSettings, onOpenDocs }) {
+  const navigate = useNavigate();
   const settings = siteSettings || {};
 
   // Dynamic Content with Fallbacks
@@ -224,6 +226,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
     }
     if (onOpenBooking) {
       onOpenBooking();
+    } else {
+      navigate('/booking' + (advisorId ? `?counsellorId=${advisorId}` : ''));
     }
   };
 
@@ -315,7 +319,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 </span>
               </h1>
 
-              <p className="text-sm sm:text-base lg:text-lg text-slate-800 leading-relaxed font-semibold pt-1">
+              <p className="text-sm sm:text-base lg:text-lg text-slate-900 leading-relaxed font-bold pt-1">
                 {heroSub}
               </p>
             </div>
@@ -410,29 +414,29 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-8">
           
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0 mt-0.5">
               <AlertCircle className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
-                rest എടുത്തിട്ടും,എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ,?
+                rest എടുത്തിട്ടും, എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 mt-0.5">
               <Clock className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
-                ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതിരിക്കാറുണ്ടോ ?
+                ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതിരിക്കാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 mt-0.5">
               <HeartHandshake className="w-5 h-5" />
             </div>
@@ -443,7 +447,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
               <Sparkles className="w-5 h-5" />
             </div>
@@ -476,7 +480,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
                 {psychologistHeading}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-700 mt-1.5 max-w-2xl font-semibold leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-800 mt-1.5 max-w-2xl font-bold leading-relaxed">
                 {psychologistIntro}
               </p>
             </div>
@@ -633,14 +637,17 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       </section>
 
       {/* ── SECTION 5: HOW IT WORKS ── */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
         <div className="space-y-6 text-left">
           
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight">
+          <div className="space-y-2">
+            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
+              Simple 3-Step Booking
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
               How It Works
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1">
+            <p className="text-xs sm:text-sm text-slate-700 font-semibold leading-relaxed">
               ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.
             </p>
           </div>
@@ -650,20 +657,20 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <div 
                 key={idx}
                 onClick={() => setActiveStep(idx)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${
+                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${
                   activeStep === idx 
                     ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/20' 
-                    : 'bg-white/70 border-slate-200 hover:border-slate-300'
+                    : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
                 }`}
               >
-                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider shrink-0 ${
-                  activeStep === idx ? 'bg-[#00c9d6] text-slate-950' : 'bg-slate-100 text-slate-600'
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${
+                  activeStep === idx ? 'bg-[#00c9d6] text-slate-950' : 'bg-slate-100 text-slate-700'
                 }`}>
                   {step.badge}
                 </span>
                 <div>
                   <h4 className="text-xs sm:text-sm font-bold text-slate-950">{step.title}</h4>
-                  <p className="text-xs text-slate-700 mt-1 font-medium leading-relaxed">{step.desc}</p>
+                  <p className="text-xs text-slate-800 mt-1 font-semibold leading-relaxed">{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -691,7 +698,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-xs sm:text-sm text-slate-700 max-w-xl mx-auto font-medium">
+          <p className="text-xs sm:text-sm text-slate-800 max-w-xl mx-auto font-bold leading-relaxed">
             സെഷനെക്കുറിച്ചും ബുക്കിംഗിനെക്കുറിച്ചുമുള്ള പ്രധാന വിവരങ്ങൾ താഴെ കാണാം.
           </p>
         </div>
