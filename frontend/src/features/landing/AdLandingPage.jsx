@@ -256,7 +256,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-[#0f172a] font-sans antialiased overflow-x-hidden pb-28 sm:pb-12">
+    <div className="min-h-screen bg-[#f8fafc] text-[#0f172a] font-sans antialiased overflow-x-hidden flex flex-col justify-between">
       <SEO 
         title={`BEHOLD | ${heroTitleLine1} - Confidential Online Counselling`} 
         description={heroSub} 
@@ -755,24 +755,30 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </section>
 
-      {/* ── FOCUSED FOOTER ── */}
-      <footer className="w-full bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-xs">
+      {/* ── FOCUSED FOOTER (Flushes to the bottom, zero white gap) ── */}
+      <footer className="w-full bg-slate-950 text-slate-400 pt-10 pb-28 sm:pb-10 border-t border-slate-800/90 text-xs mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div>
-            <span className="text-white font-semibold text-sm">BEHOLD.</span>
-            <span className="ml-2 text-slate-400">© {new Date().getFullYear()} All rights reserved. Confidential Online Psychological Counselling.</span>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+            <span className="text-white font-semibold text-sm tracking-tight flex items-baseline">
+              BEHOLD<span className="text-[#00c9d6] font-bold text-base leading-none">.</span>
+            </span>
+            <span className="hidden sm:inline text-slate-600">•</span>
+            <span className="text-slate-400">
+              © {new Date().getFullYear()} BEHOLD. All rights reserved. Confidential Online Psychological Counselling.
+            </span>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="flex items-center gap-5">
             <button
               onClick={() => onOpenDocs ? onOpenDocs('privacy') : window.open('/privacy', '_blank')}
-              className="hover:text-white transition-colors cursor-pointer bg-transparent border-none text-slate-400 text-xs"
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none text-xs p-0 underline-offset-4 hover:underline"
             >
               Privacy Policy
             </button>
-            <span>•</span>
+            <span className="text-slate-700">•</span>
             <button
               onClick={() => onOpenDocs ? onOpenDocs('terms') : window.open('/terms', '_blank')}
-              className="hover:text-white transition-colors cursor-pointer bg-transparent border-none text-slate-400 text-xs"
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none text-xs p-0 underline-offset-4 hover:underline"
             >
               Terms of Service
             </button>
