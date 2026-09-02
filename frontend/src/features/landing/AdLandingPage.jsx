@@ -835,18 +835,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </aside>
       )}
 
-      {/* ── STICKY BOTTOM MOBILE CTA BAR (High Mobile Conversion & Safe Area Support) ── */}
+      {/* ── STICKY BOTTOM MOBILE CTA BAR ── */}
       <nav 
         aria-label="Sticky booking action bar"
-        className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] flex items-center justify-between gap-3 sm:hidden"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:hidden"
       >
-        <div className="text-left">
-          <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 block">1-on-1 Session</span>
-          <span className="text-sm font-bold text-slate-950 block">₹{heroPrice} <span className="text-[10px] font-normal text-slate-500">/ Session</span></span>
-        </div>
         <button
           onClick={() => handleBook()}
-          className="flex-1 py-3 px-5 rounded-2xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-semibold text-xs tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none"
+          className="w-full py-3.5 px-5 rounded-2xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-semibold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
         >
           <span>{heroBtnText}</span>
           <ArrowRight className="w-4 h-4" />
