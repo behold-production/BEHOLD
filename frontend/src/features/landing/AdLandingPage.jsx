@@ -343,7 +343,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
           {/* LEFT: Image / Visual Card */}
           <div className="lg:col-span-6 order-2 lg:order-1">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
+            <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200/80 bg-slate-900 group">
               <img
                 src={heroImg}
                 alt="BEHOLD Calm & Confidential Counselling Room"
@@ -392,8 +392,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 1 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-11 h-11 rounded-2xl bg-[#00c9d6]/15 border border-[#00c9d6]/30 flex items-center justify-center shrink-0">
-                <GraduationCap className="w-5 h-5 text-[#00c9d6]" />
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+                <GraduationCap className="w-5 h-5" />
               </div>
               <div>
                 <h4 className="text-xs sm:text-sm font-semibold text-white tracking-wide">
@@ -405,8 +405,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 2 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-11 h-11 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
-                <Lock className="w-5 h-5 text-emerald-400" />
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+                <Lock className="w-5 h-5" />
               </div>
               <div>
                 <h4 className="text-xs sm:text-sm font-semibold text-white tracking-wide">
@@ -418,8 +418,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 3 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-11 h-11 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0">
-                <Languages className="w-5 h-5 text-indigo-400" />
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+                <Languages className="w-5 h-5" />
               </div>
               <div>
                 <h4 className="text-xs sm:text-sm font-semibold text-white tracking-wide">
@@ -431,8 +431,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 4 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0">
-                <CreditCard className="w-5 h-5 text-amber-400" />
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+                <CreditCard className="w-5 h-5" />
               </div>
               <div>
                 <h4 className="text-xs sm:text-sm font-semibold text-white tracking-wide">
@@ -458,47 +458,47 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left mb-8">
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0 mt-0.5">
-              <AlertCircle className="w-5 h-5" />
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
+              <AlertCircle className="w-4.5 h-4.5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
                 rest എടുത്തിട്ടും, എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 mt-0.5">
-              <Clock className="w-5 h-5" />
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
+              <Clock className="w-4.5 h-4.5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
                 ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതിരിക്കാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 mt-0.5">
-              <HeartHandshake className="w-5 h-5" />
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
+              <HeartHandshake className="w-4.5 h-4.5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
                 Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
-              <Sparkles className="w-5 h-5" />
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
+              <Sparkles className="w-4.5 h-4.5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
                 എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?
               </h3>
             </div>
@@ -507,7 +507,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
 
         {/* Reassuring Closing Line */}
-        <div className="bg-gradient-to-r from-teal-50 via-[#e6fafc] to-emerald-50 border border-[#00c9d6]/30 rounded-2xl p-5 sm:p-6 flex items-center justify-center gap-3 shadow-xs">
+        <div className="bg-[#00c9d6]/5 border border-[#00c9d6]/20 rounded-2xl p-5 sm:p-6 flex items-center justify-center gap-3">
           <Sparkles className="w-5 h-5 text-[#008b94] shrink-0" />
           <p className="text-sm sm:text-base md:text-lg font-bold text-slate-950 tracking-tight">
             {reflectionClosing}
@@ -753,25 +753,17 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left cursor-pointer bg-transparent border-none"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-[#00c9d6]/15 text-[#008b94] text-xs font-bold flex items-center justify-center shrink-0">
-                      Q
-                    </span>
+                  <span className="text-sm sm:text-base font-semibold text-slate-900">
                     {faq.q}
                   </span>
-                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 text-slate-600">
+                  <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center shrink-0 text-slate-500">
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-800 text-xs sm:text-sm leading-relaxed border-t border-slate-100 mt-1">
-                    <div className="pt-3 flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
-                        A
-                      </span>
-                      <p className="font-normal text-slate-700 leading-relaxed">{faq.a}</p>
-                    </div>
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100 mt-1">
+                    <p className="pt-3 font-normal leading-relaxed">{faq.a}</p>
                   </div>
                 )}
               </div>
