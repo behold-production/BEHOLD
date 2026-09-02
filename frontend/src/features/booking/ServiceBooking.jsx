@@ -3,7 +3,7 @@ import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X, ArrowLeft, ArrowRight } from 'lucide-react';
+import { FileDown, X, ArrowLeft, ArrowRight, Lock } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
