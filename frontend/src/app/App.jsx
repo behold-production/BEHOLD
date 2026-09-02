@@ -516,6 +516,7 @@ export default function App() {
     userRole === 'COUNSELLOR';
 
   const isAdLandingRoute = [
+    '/bookmysession',
     '/ad',
     '/ads',
     '/lp',

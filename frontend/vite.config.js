@@ -12,6 +12,7 @@ export default defineConfig({
   server: {
     host: true, // Expose to LAN so other devices can connect
     port: 5173,
+    allowedHosts: true,
   },
   build: {
     chunkSizeWarningLimit: 1600,
