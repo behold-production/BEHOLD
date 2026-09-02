@@ -170,7 +170,7 @@ export default function ThankYouPage() {
       <SEO
         title="Booking Confirmed | BEHOLD Psychological Counselling"
         description="Your confidential psychological counselling session is confirmed. We look forward to meeting you."
-        canonicalUrl="https://www.behold.co.in/thank-you"
+        canonicalUrl="https://www.behold.co.in/confirmed"
         noIndex={true}
       />
 

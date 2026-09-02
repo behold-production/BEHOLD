@@ -973,7 +973,7 @@ const AppointmentController = {
     }
   },
 
-  // Get Public Booking Confirmation by ID (for /booking-confirmed and /thank-you pages)
+  // Get Public Booking Confirmation by ID (for /confirmed and /booking-confirmed pages)
   async getPublicBookingConfirmation(req, res, next) {
     try {
       const { id } = req.params;

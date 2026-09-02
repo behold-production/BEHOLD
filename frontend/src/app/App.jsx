@@ -525,9 +525,18 @@ export default function App() {
     '/landing'
   ].includes(location.pathname);
 
+  const isConfirmationRoute = [
+    '/confirmed',
+    '/thank-you',
+    '/thankyou',
+    '/booking-confirmed',
+    '/booking/confirmation'
+  ].includes(location.pathname);
+
   const hideNavbarAndFooter =
     isSpecialRole ||
     isAdLandingRoute ||
+    isConfirmationRoute ||
     location.pathname === '/admin' ||
     location.pathname.startsWith('/admin/') ||
     location.pathname === '/counsellor' ||
@@ -681,14 +690,17 @@ export default function App() {
           <Route path="/offer" element={<Navigate to="/bookmysession" replace />} />
           <Route path="/landing" element={<Navigate to="/bookmysession" replace />} />
 
-          {/* Dedicated Thank You & Booking Confirmation Routes */}
-          <Route path="/thank-you" element={<ThankYouPage />} />
-          <Route path="/thankyou" element={<Navigate to="/thank-you" replace />} />
-          <Route path="/bookmysession/thank-you" element={<Navigate to="/thank-you" replace />} />
-          <Route path="/ad/thank-you" element={<Navigate to="/thank-you" replace />} />
-          <Route path="/ad/thankyou" element={<Navigate to="/thank-you" replace />} />
-          <Route path="/booking-confirmed" element={<Navigate to="/thank-you" replace />} />
-          <Route path="/booking/confirmation" element={<Navigate to="/thank-you" replace />} />
+          {/* Dedicated Booking Confirmation Routes (/confirmed is primary) */}
+          <Route path="/confirmed" element={<ThankYouPage />} />
+          <Route path="/thank-you" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/thankyou" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/booking-confirmed" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/booking/confirmation" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/bookmysession/confirmed" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/bookmysession/thank-you" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/ad/confirmed" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/ad/thank-you" element={<Navigate to="/confirmed" replace />} />
+          <Route path="/ad/thankyou" element={<Navigate to="/confirmed" replace />} />
 
           {/* Reviews Route */}
           <Route path="/reviews" element={
