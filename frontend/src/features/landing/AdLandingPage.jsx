@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ShieldCheck, 
-  Sparkles, 
-  CheckCircle2, 
-  ArrowRight, 
-  Play, 
-  ChevronLeft, 
-  ChevronRight, 
-  Lock, 
-  CreditCard, 
+import {
+  ShieldCheck,
+  Sparkles,
+  CheckCircle2,
+  ArrowRight,
+  Play,
+  ChevronLeft,
+  ChevronRight,
+  Lock,
+  CreditCard,
   GraduationCap,
-  Languages, 
-  X, 
-  Clock, 
+  Languages,
+  X,
+  Clock,
   AlertCircle,
   ChevronDown,
   ChevronUp,
@@ -92,23 +92,69 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   // FAQ Accordion State (first open by default)
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
-  // Time-based Swiggy-style Popup State (appears after 3.5s)
-  const [showSwiggyPopup, setShowSwiggyPopup] = useState(false);
-  const [popupDismissed, setPopupDismissed] = useState(false);
-
   // Carousel ref
   const carouselRef = useRef(null);
 
-  // Time-based popup trigger
+  // Sequential dual-popup state
+  const [activePopup, setActivePopup] = useState(null); // null | 1 | 2
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupDismissed, setPopupDismissed] = useState(false);
+
+  const popups = [
+    {
+      id: 1,
+      label: 'A Gentle Reminder',
+      message: 'You deserve better sleep.',
+      icon: Moon,
+    },
+    {
+      id: 2,
+      label: 'Just for You',
+      message: 'You deserve a better smile.',
+      icon: Smile,
+    }
+  ];
+
+  // Sequential popup orchestration: popup 1 at 4s, popup 2 at 11s
   useEffect(() => {
     if (popupDismissed) return;
 
-    const timer = setTimeout(() => {
-      setShowSwiggyPopup(true);
-    }, 3500);
+    // Popup 1: appear at 4s, auto-hide at 9s
+    const show1 = setTimeout(() => {
+      setActivePopup(1);
+      setPopupVisible(true);
+    }, 4000);
 
-    return () => clearTimeout(timer);
+    const hide1 = setTimeout(() => {
+      setPopupVisible(false);
+      setTimeout(() => setActivePopup(null), 400);
+    }, 9000);
+
+    // Popup 2: appear at 11s, auto-hide at 16s
+    const show2 = setTimeout(() => {
+      setActivePopup(2);
+      setPopupVisible(true);
+    }, 11000);
+
+    const hide2 = setTimeout(() => {
+      setPopupVisible(false);
+      setTimeout(() => setActivePopup(null), 400);
+    }, 16000);
+
+    return () => {
+      clearTimeout(show1);
+      clearTimeout(hide1);
+      clearTimeout(show2);
+      clearTimeout(hide2);
+    };
   }, [popupDismissed]);
+
+  const handleDismissPopup = () => {
+    setPopupVisible(false);
+    setTimeout(() => setActivePopup(null), 400);
+    setPopupDismissed(true);
+  };
+
 
   useEffect(() => {
     trackViewContent({
@@ -126,7 +172,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             const rawHoursVal = (c.hours !== undefined && c.hours !== null && c.hours !== '') ? Number(c.hours) : (typeof c.experience === 'number' ? c.experience : (parseInt(c.experience, 10) || 0));
             const expData = formatExperience(rawHoursVal);
             const customTitle = c.title || (c.designation && c.designation.toLowerCase() !== 'counsellor' ? c.designation : null) || (c.role && c.role.toLowerCase() !== 'counsellor' ? c.role : null) || 'Consultant Psychologist';
-            
+
             return {
               id: c.id || c._id,
               name: c.name || c.user?.name || c.fullName || 'Consultant Psychologist',
@@ -261,9 +307,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-[#0f172a] font-sans antialiased overflow-x-hidden flex flex-col justify-between">
-      <SEO 
-        title={`BEHOLD | ${heroTitleLine1} - Confidential Online Counselling`} 
-        description={heroSub} 
+      <SEO
+        title={`BEHOLD | ${heroTitleLine1} - Confidential Online Counselling`}
+        description={heroSub}
         canonicalUrl="https://www.behold.co.in/bookmysession"
       />
 
@@ -294,7 +340,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#00c9d6]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
+
           {/* LEFT: Image / Visual Card */}
           <div className="lg:col-span-6 order-2 lg:order-1">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
@@ -343,7 +389,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       <section className="w-full bg-slate-950 text-white py-6 border-y border-slate-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 items-center">
-            
+
             {/* Trust Item 1 */}
             <div className="flex items-center gap-3 p-2 text-left">
               <div className="w-11 h-11 rounded-2xl bg-[#00c9d6]/15 border border-[#00c9d6]/30 flex items-center justify-center shrink-0">
@@ -402,7 +448,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
       {/* ── SECTION 3: PROBLEM REFLECTION SECTION ── */}
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
-        
+
         <div className="mb-10 text-center space-y-2">
           <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
             {reflectionSub}
@@ -413,7 +459,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-8">
-          
+
           <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-[#00c9d6]/50 hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0 mt-0.5">
               <AlertCircle className="w-5 h-5" />
@@ -473,7 +519,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── SECTION 4: MEET THE PSYCHOLOGISTS ── */}
       <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Header container */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8 text-left">
             <div>
@@ -509,128 +555,128 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               ref={carouselRef}
               className="flex gap-6 overflow-x-auto py-4 px-1 scrollbar-none snap-x snap-mandatory scroll-smooth"
             >
-            {advisors.map((advisor) => {
-              const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
-              const minFee = advisor.fee || heroPrice;
+              {advisors.map((advisor) => {
+                const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
+                const minFee = advisor.fee || heroPrice;
 
-              return (
-                <div
-                  key={advisor.id}
-                  className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start bg-white rounded-[24px] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6] transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group shrink-0"
-                >
-                  <div className="relative w-full h-[120px] sm:h-[135px] p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px]">
-                    <div className="pr-2 space-y-1 z-10 max-w-[65%]">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="font-sans text-base sm:text-lg font-semibold text-slate-900 leading-tight line-clamp-1">
-                          {advisor.name}
-                        </h3>
-                        <ShieldCheck className="w-4 h-4 text-[#008b94] shrink-0" title="Verified Professional" />
+                return (
+                  <div
+                    key={advisor.id}
+                    className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start bg-white rounded-[24px] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6] transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group shrink-0"
+                  >
+                    <div className="relative w-full h-[120px] sm:h-[135px] p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px]">
+                      <div className="pr-2 space-y-1 z-10 max-w-[65%]">
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="font-sans text-base sm:text-lg font-semibold text-slate-900 leading-tight line-clamp-1">
+                            {advisor.name}
+                          </h3>
+                          <ShieldCheck className="w-4 h-4 text-[#008b94] shrink-0" title="Verified Professional" />
+                        </div>
+                        <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
+                          {cardTitle}
+                        </p>
+                        <div className="flex items-center gap-1.5 pt-1">
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/80 text-[#008b94] shadow-2xs">
+                            ★ 4.9 Rating
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
-                        {cardTitle}
-                      </p>
-                      <div className="flex items-center gap-1.5 pt-1">
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/80 text-[#008b94] shadow-2xs">
-                          ★ 4.9 Rating
-                        </span>
-                      </div>
-                    </div>
 
-                    <div className="w-[100px] sm:w-[115px] h-[120px] sm:h-[135px] absolute right-2 bottom-0 z-10 flex items-end justify-center pointer-events-none">
-                      {advisor.photo ? (
-                        <img
-                          src={advisor.photo}
-                          alt={advisor.name}
-                          className="w-full h-full object-cover object-top filter brightness-[1.02] drop-shadow-sm rounded-t-xl"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            const fallback = e.currentTarget.nextElementSibling;
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-14 h-14 rounded-2xl bg-white/95 shadow-md flex items-center justify-center mb-2 border border-white">
+                      <div className="w-[100px] sm:w-[115px] h-[120px] sm:h-[135px] absolute right-2 bottom-0 z-10 flex items-end justify-center pointer-events-none">
+                        {advisor.photo ? (
+                          <img
+                            src={advisor.photo}
+                            alt={advisor.name}
+                            className="w-full h-full object-cover object-top filter brightness-[1.02] drop-shadow-sm rounded-t-xl"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const fallback = e.currentTarget.nextElementSibling;
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-14 h-14 rounded-2xl bg-white/95 shadow-md flex items-center justify-center mb-2 border border-white">
+                            <span className="font-semibold text-xl text-[#00c9d6]">
+                              {getInitial(advisor.name)}
+                            </span>
+                          </div>
+                        )}
+                        <div style={{ display: 'none' }} className="w-14 h-14 rounded-2xl bg-white/95 shadow-md items-center justify-center mb-2 border border-white">
                           <span className="font-semibold text-xl text-[#00c9d6]">
                             {getInitial(advisor.name)}
                           </span>
                         </div>
-                      )}
-                      <div style={{ display: 'none' }} className="w-14 h-14 rounded-2xl bg-white/95 shadow-md items-center justify-center mb-2 border border-white">
-                        <span className="font-semibold text-xl text-[#00c9d6]">
-                          {getInitial(advisor.name)}
-                        </span>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-white">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Specialties:</span>
-                      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
-                        {Array.isArray(advisor.specialties) && advisor.specialties.slice(0, 3).map((spec, i) => (
-                          <span
-                            key={i}
-                            className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-800 text-[10.5px] font-semibold rounded-lg whitespace-nowrap shrink-0"
+                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-white">
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Specialties:</span>
+                        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
+                          {Array.isArray(advisor.specialties) && advisor.specialties.slice(0, 3).map((spec, i) => (
+                            <span
+                              key={i}
+                              className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-800 text-[10.5px] font-semibold rounded-lg whitespace-nowrap shrink-0"
+                            >
+                              {typeof spec === 'string' ? spec : (spec?.name || String(spec))}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
+                        <p className={`text-[11px] text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
+                          "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
+                        </p>
+                        {advisor.bio && advisor.bio.length > 50 && (
+                          <button
+                            type="button"
+                            onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
+                            className="text-[10px] font-semibold text-[#00c9d6] hover:text-[#008b94] cursor-pointer mt-1 inline-block bg-transparent border-none p-0"
                           >
-                            {typeof spec === 'string' ? spec : (spec?.name || String(spec))}
-                          </span>
-                        ))}
+                            {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
+                          </button>
+                        )}
                       </div>
-                    </div>
 
-                    <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
-                      <p className={`text-[11px] text-slate-700 italic font-medium leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
-                        "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
-                      </p>
-                      {advisor.bio && advisor.bio.length > 50 && (
+                      <div className="grid grid-cols-3 gap-1.5 shrink-0">
+                        <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
+                          <span className="text-xs font-semibold text-slate-900 block leading-none">
+                            {advisor.hours ? `${advisor.hours.toLocaleString()}+` : '500+'}
+                          </span>
+                          <span className="text-[9px] font-medium text-slate-500 block mt-1">Consult Hours</span>
+                        </div>
+                        <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left min-w-0" title={advisor.languages}>
+                          <span className="text-xs font-semibold text-slate-900 block leading-tight truncate">
+                            {advisor.languages}
+                          </span>
+                          <span className="text-[9px] font-medium text-slate-500 block mt-1">Languages</span>
+                        </div>
+                        <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
+                          <span className="text-xs font-semibold text-slate-900 block leading-none">₹{minFee}</span>
+                          <span className="text-[9px] font-medium text-slate-500 block mt-1">Fee per session</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <div className="text-left">
+                          <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Next Available</span>
+                          <span className="text-[11px] font-semibold text-emerald-600 block mt-0.5 whitespace-nowrap">Available Today</span>
+                        </div>
+
                         <button
                           type="button"
-                          onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                          className="text-[10px] font-semibold text-[#00c9d6] hover:text-[#008b94] cursor-pointer mt-1 inline-block bg-transparent border-none p-0"
+                          onClick={() => handleBook(advisor.id)}
+                          className="bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-1"
                         >
-                          {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
+                          {heroBtnText}
                         </button>
-                      )}
+                      </div>
+
                     </div>
-
-                    <div className="grid grid-cols-3 gap-1.5 shrink-0">
-                      <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
-                        <span className="text-xs font-semibold text-slate-900 block leading-none">
-                          {advisor.hours ? `${advisor.hours.toLocaleString()}+` : '500+'}
-                        </span>
-                        <span className="text-[9px] font-medium text-slate-500 block mt-1">Consult Hours</span>
-                      </div>
-                      <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left min-w-0" title={advisor.languages}>
-                        <span className="text-xs font-semibold text-slate-900 block leading-tight truncate">
-                          {advisor.languages}
-                        </span>
-                        <span className="text-[9px] font-medium text-slate-500 block mt-1">Languages</span>
-                      </div>
-                      <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
-                        <span className="text-xs font-semibold text-slate-900 block leading-none">₹{minFee}</span>
-                        <span className="text-[9px] font-medium text-slate-500 block mt-1">Fee per session</span>
-                      </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                      <div className="text-left">
-                        <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Next Available</span>
-                        <span className="text-[11px] font-semibold text-emerald-600 block mt-0.5 whitespace-nowrap">Available Today</span>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => handleBook(advisor.id)}
-                        className="bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-1"
-                      >
-                        {heroBtnText}
-                      </button>
-                    </div>
-
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -639,7 +685,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── SECTION 5: HOW IT WORKS ── */}
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
         <div className="space-y-6 text-left">
-          
+
           <div className="space-y-2">
             <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
               Simple 3-Step Booking
@@ -654,18 +700,16 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
           <div className="space-y-3.5 pt-2">
             {bookingSteps.map((step, idx) => (
-              <div 
+              <div
                 key={idx}
                 onClick={() => setActiveStep(idx)}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${
-                  activeStep === idx 
-                    ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/20' 
+                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${activeStep === idx
+                    ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/20'
                     : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
-                }`}
+                  }`}
               >
-                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${
-                  activeStep === idx ? 'bg-[#00c9d6] text-slate-950' : 'bg-slate-100 text-slate-700'
-                }`}>
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00c9d6] text-slate-950' : 'bg-slate-100 text-slate-700'
+                  }`}>
                   {step.badge}
                 </span>
                 <div>
@@ -709,11 +753,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             return (
               <div
                 key={index}
-                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
-                  isOpen
+                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen
                     ? 'bg-white border-[#00c9d6]/80 shadow-md ring-1 ring-[#00c9d6]/20'
                     : 'bg-white border-slate-200/90 hover:border-slate-300'
-                }`}
+                  }`}
               >
                 <button
                   type="button"
@@ -793,50 +836,54 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </footer>
 
-      {/* ── SWIGGY-BASED TIME-BASED POPUP (Bottom Right Corner) ── */}
-      {showSwiggyPopup && !popupDismissed && (
-        <aside 
-          aria-live="polite"
-          aria-label="Encouragement note"
-          className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-40 animate-in fade-in slide-in-from-bottom-5 duration-300 pointer-events-auto"
-        >
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-4.5 shadow-2xl border border-[#00c9d6]/30 flex items-start gap-3.5 max-w-[340px] text-left ring-1 ring-slate-900/5">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#00c9d6]/20 to-emerald-500/20 border border-[#00c9d6]/30 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
-              <Smile className="w-5 h-5 text-[#008b94]" />
-            </div>
-
-            <div className="flex-1 pr-1">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#008b94]">
-                  A Gentle Reminder
-                </span>
+      {/* ── SEQUENTIAL DUAL POPUP (bottom-right, auto-dismissed) ── */}
+      {activePopup !== null && (() => {
+        const popup = popups.find(p => p.id === activePopup);
+        const Icon = popup?.icon;
+        return (
+          <aside
+            aria-live="polite"
+            aria-label={popup?.label}
+            className={`fixed bottom-20 sm:bottom-8 right-4 sm:right-6 z-40 max-w-[300px] sm:max-w-[320px] pointer-events-auto transition-all duration-400 ${popupVisible
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-4 pointer-events-none'
+              }`}
+          >
+            <div className="bg-white rounded-2xl p-4 shadow-2xl border border-slate-200/80 ring-1 ring-slate-900/5 flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#00c9d6]/10 border border-[#00c9d6]/25 flex items-center justify-center shrink-0 mt-0.5">
+                {Icon && <Icon className="w-4.5 h-4.5 text-[#008b94]" />}
               </div>
-              <p className="text-xs sm:text-[13px] font-semibold text-slate-900 leading-snug mt-1">
-                You deserve better sleep. You deserve a better smile.
-              </p>
+
+              <div className="flex-1 min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#008b94] block">
+                  {popup?.label}
+                </span>
+                <p className="text-sm font-semibold text-slate-900 leading-snug mt-0.5">
+                  {popup?.message}
+                </p>
+                <button
+                  onClick={() => handleBook()}
+                  className="mt-2 text-[11px] font-semibold text-[#008b94] hover:text-[#00b5c2] flex items-center gap-1 cursor-pointer bg-transparent border-none p-0 transition-colors"
+                >
+                  <span>{heroBtnText}</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+
               <button
-                onClick={() => handleBook()}
-                className="mt-2 text-[11px] font-semibold text-[#008b94] hover:text-[#00c9d6] flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+                onClick={handleDismissPopup}
+                className="text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer border-none bg-transparent shrink-0 transition-colors"
+                aria-label="Dismiss"
               >
-                <span>{heroBtnText}</span>
-                <ArrowRight className="w-3 h-3" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
-
-            <button
-              onClick={() => setPopupDismissed(true)}
-              className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer border-none bg-transparent shrink-0"
-              title="Dismiss note"
-              aria-label="Dismiss note"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </aside>
-      )}
+          </aside>
+        );
+      })()}
 
       {/* ── STICKY BOTTOM MOBILE CTA BAR ── */}
-      <nav 
+      <nav
         aria-label="Sticky booking action bar"
         className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:hidden"
       >
