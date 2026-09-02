@@ -220,14 +220,14 @@ export default function ThankYouPage() {
             <span>{isRescheduled ? 'Reschedule Submitted' : '100% Confirmed & Paid'}</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-slate-900 tracking-tight">
-            {isRescheduled ? 'റീഷെഡ്യൂൾ റിക്വസ്റ്റ് സമർപ്പിച്ചു!' : 'ബുക്കിംഗ് വിജയകരമായി പൂർത്തിയായി!'}
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+            {isRescheduled ? 'Reschedule Request Submitted!' : 'Booking Confirmed Successfully!'}
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium">
             {isRescheduled 
-              ? 'നിങ്ങളുടെ പുതിയ സമയക്രമം കൗൺസിലറുടെ അംഗീകാരത്തിനായി സമർപ്പിച്ചിരിക്കുന്നു. വിവരങ്ങൾ താഴെ കാണാം.'
-              : 'നിങ്ങളുടെ psychological counselling session confirm ചെയ്തിരിക്കുന്നു. വിവരങ്ങൾ താഴെ കാണാം.'}
+              ? 'Your requested time slot has been submitted for counselor confirmation. Review your appointment details below.'
+              : 'Your confidential psychological counselling session is confirmed. Review your appointment details below.'}
           </p>
         </div>
 
@@ -354,21 +354,21 @@ export default function ThankYouPage() {
               {/* What happens next instructions */}
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
                 <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
-                  ഇനി എന്ത് ചെയ്യണം? (What Happens Next)
+                  What Happens Next
                 </h3>
 
                 <div className="space-y-2.5 text-xs text-slate-600">
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>Booking Confirmation-ഉം Meeting Link-ഉം നിങ്ങളുടെ WhatsApp & Email വഴി ഉടൻ ലഭിക്കും.</span>
+                    <span>Your booking confirmation and session room link have been sent to your WhatsApp & Email.</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>Session സമയത്തിന് 5 മിനിറ്റ് മുൻപ് സ്വസ്ഥമായ ഒരു മുറിയിലിരുന്ന് Google Meet link-ൽ ജോയിൻ ചെയ്യുക.</span>
+                    <span>Please join the secure Google Meet link 5 minutes prior to your session from a quiet, comfortable room.</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>എന്തെങ്കിലും മാറ്റങ്ങൾ വരുത്തണമെങ്കിൽ Session-ന് 1 മണിക്കൂർ മുൻപ് സൗജന്യമായി reschedule ചെയ്യാവുന്നതാണ്.</span>
+                    <span>Need to make changes? You can easily reschedule your session free of charge up to 1 hour beforehand.</span>
                   </div>
                 </div>
               </div>
