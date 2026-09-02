@@ -1550,23 +1550,24 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-zinc-200 mt-6">
+                                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-zinc-200 mt-6">
                                                         <button
                                                             type="button"
                                                             onClick={() => handleStepChange('config')}
-                                                            className="px-5 py-3 min-h-[44px] bg-white border border-surface-200 text-surface-900 hover:bg-surface-50 font-semibold text-xs rounded-xl transition cursor-pointer w-full sm:w-auto text-center"
+                                                            className="inline-flex items-center justify-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 font-semibold py-2.5 px-3 transition-colors cursor-pointer bg-transparent border-none order-2 sm:order-1"
                                                         >
-                                                            Back to Schedule
+                                                            <ArrowLeft className="w-3.5 h-3.5" />
+                                                            <span>Back to Schedule</span>
                                                         </button>
 
                                                         <button
                                                             type="submit"
                                                             disabled={isProcessingPayment || !termsAgreed}
                                                             title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
-                                                            className={`px-8 py-3.5 min-h-[48px] font-bold text-xs rounded-xl transition flex items-center justify-center border-none w-full sm:w-auto ${
+                                                            className={`px-8 py-4 min-h-[48px] font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 border-none w-full sm:w-auto order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2 ${
                                                                 !termsAgreed || isProcessingPayment
                                                                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60 shadow-none'
-                                                                    : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white cursor-pointer active:scale-95 shadow-md'
+                                                                    : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white cursor-pointer active:scale-[0.98] shadow-lg'
                                                             }`}
                                                         >
                                                             {isProcessingPayment ? (
@@ -1575,7 +1576,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     <span>Processing Payment...</span>
                                                                 </div>
                                                             ) : (
-                                                                <span>Pay & Confirm (₹{netTotal})</span>
+                                                                <>
+                                                                    <Lock className="w-4 h-4" />
+                                                                    <span>Pay & Confirm (₹{netTotal})</span>
+                                                                </>
                                                             )}
                                                         </button>
                                                     </div>
@@ -1734,23 +1738,6 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                         </div>
 
-                                        {/* Standalone Action Button in right column for config step */}
-                                        {bookingStep === 'config' && (
-                                            <button
-                                                type="button"
-                                                disabled={isProcessingPayment}
-                                                onClick={() => {
-                                                    if (!selectedDate || !selectedTime || !selectedAdvisor) {
-                                                        toast.error('Please select date, time slot, and psychologist to proceed.');
-                                                    } else {
-                                                        handleStepChange('payment');
-                                                    }
-                                                }}
-                                                className="w-full py-4 bg-[#0f172a] hover:bg-slate-800 active:scale-[0.98] text-[#00c9d6] hover:text-white font-semibold text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl cursor-pointer text-center border-none block mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                                            >
-                                                Proceed to Payment
-                                            </button>
-                                        )}
                                     </div>
 
                                 </div>

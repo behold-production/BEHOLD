@@ -719,17 +719,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               </div>
             ))}
           </div>
-
-          <div className="pt-2">
-            <button
-              onClick={() => handleBook()}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
-            >
-              <span>{heroBtnText}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
         </div>
       </section>
 
@@ -861,13 +850,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <p className="text-sm font-semibold text-slate-900 leading-snug mt-0.5">
                   {popup?.message}
                 </p>
-                <button
-                  onClick={() => handleBook()}
-                  className="mt-2 text-[11px] font-semibold text-[#008b94] hover:text-[#00b5c2] flex items-center gap-1 cursor-pointer bg-transparent border-none p-0 transition-colors"
-                >
-                  <span>{heroBtnText}</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
               </div>
 
               <button
