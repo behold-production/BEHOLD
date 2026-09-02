@@ -279,7 +279,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleBook()}
-              className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-95 border-none"
+              className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-[0.97] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
             >
               <span>{heroBtnText}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -328,7 +328,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
               <button
                 onClick={() => handleBook()}
-                className="px-8 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-98 border-none"
+                className="px-8 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
               >
                 <span>{heroBtnText}</span>
                 <ArrowRight className="w-5 h-5" />
@@ -621,7 +621,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       <button
                         type="button"
                         onClick={() => handleBook(advisor.id)}
-                        className="bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-xs px-4 py-2 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none"
+                        className="bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-1"
                       >
                         {heroBtnText}
                       </button>
@@ -679,7 +679,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <div className="pt-2">
             <button
               onClick={() => handleBook()}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border-none active:scale-98"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
             >
               <span>{heroBtnText}</span>
               <ArrowRight className="w-4 h-4" />

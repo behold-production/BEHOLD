@@ -211,7 +211,7 @@ export default function ThankYouPage() {
 
         {/* Animated Checkmark & Success Banner */}
         <div className="text-center space-y-3">
-          <div className="w-20 h-20 bg-emerald-50 border-2 border-emerald-300 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-lg shadow-emerald-500/10 animate-bounce duration-1000">
+          <div className="w-20 h-20 bg-emerald-50 border-2 border-emerald-300 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-lg shadow-emerald-500/10 animate-pulse-gentle">
             <CheckCircle2 className="w-11 h-11" />
           </div>
 
@@ -220,7 +220,7 @@ export default function ThankYouPage() {
             <span>{isRescheduled ? 'Reschedule Submitted' : '100% Confirmed & Paid'}</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
             {isRescheduled ? 'Reschedule Request Submitted!' : 'Booking Confirmed Successfully!'}
           </h1>
 
@@ -385,17 +385,17 @@ export default function ThankYouPage() {
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
             <button
               onClick={handleDownloadReceipt}
-              className="w-full sm:flex-1 py-3.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none"
+              className="w-full sm:flex-1 py-3.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
             >
-              <Download className="w-4 h-4 text-[#00c9d6]" />
-              <span>Download Official Receipt (PDF)</span>
+              <Download className="w-4 h-4 text-[#00c9d6] shrink-0" />
+              <span>Download Receipt</span>
             </button>
 
             <button
               onClick={() => navigate('/')}
-              className="w-full sm:w-auto py-3.5 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-2xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none"
+              className="w-full sm:w-auto py-3.5 px-6 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-semibold text-sm rounded-2xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
             >
-              <Home className="w-4 h-4" />
+              <Home className="w-4 h-4 shrink-0" />
               <span>Return Home</span>
             </button>
           </div>
@@ -403,9 +403,9 @@ export default function ThankYouPage() {
         </div>
 
         {/* Support note */}
-        <p className="text-xs text-slate-500 text-center">
-          Questions or need assistance? Our support team is available 24/7 at{' '}
-          <a href="mailto:support@behold.co.in" className="text-[#008b94] font-semibold underline">
+        <p className="text-[13px] text-slate-500 text-center leading-relaxed">
+          Questions or need help?{' '}
+          <a href="mailto:support@behold.co.in" className="text-[#008b94] font-semibold underline underline-offset-2 hover:text-[#00c9d6] transition-colors">
             support@behold.co.in
           </a>
         </p>
