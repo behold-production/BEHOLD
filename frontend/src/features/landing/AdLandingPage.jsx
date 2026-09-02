@@ -306,16 +306,16 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           {/* RIGHT: High-Converting Headline & Subtitle (No internal trust badges) */}
           <div className="lg:col-span-6 order-1 lg:order-2 space-y-6 text-left">
             <div className="space-y-4">
-              <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-950 tracking-tight leading-[1.3] space-y-2">
-                <span className="block text-slate-900">
+              <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-950 tracking-tight leading-[1.3] space-y-2">
+                <span className="block text-slate-900 font-extrabold">
                   {heroTitleLine1}
                 </span>
-                <span className="block text-[#008b94]">
+                <span className="block text-[#008b94] font-extrabold">
                   {heroTitleLine2}
                 </span>
               </h1>
 
-              <p className="text-sm sm:text-base lg:text-lg text-slate-700 leading-relaxed font-normal pt-1">
+              <p className="text-sm sm:text-base lg:text-lg text-slate-800 leading-relaxed font-semibold pt-1">
                 {heroSub}
               </p>
             </div>
@@ -403,7 +403,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
             {reflectionSub}
           </span>
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-slate-950 tracking-tight">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
             {reflectionTitle}
           </h2>
         </div>
@@ -415,7 +415,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <AlertCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
                 rest എടുത്തിട്ടും,എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ,?
               </h3>
             </div>
@@ -426,7 +426,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <Clock className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
                 ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതിരിക്കാറുണ്ടോ ?
               </h3>
             </div>
@@ -437,7 +437,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <HeartHandshake className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
                 Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?
               </h3>
             </div>
@@ -448,7 +448,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-bold text-slate-950 leading-snug">
                 എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?
               </h3>
             </div>
@@ -459,7 +459,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         {/* Reassuring Closing Line */}
         <div className="bg-gradient-to-r from-teal-50 via-[#e6fafc] to-emerald-50 border border-[#00c9d6]/30 rounded-2xl p-5 sm:p-6 flex items-center justify-center gap-3 shadow-xs">
           <Sparkles className="w-5 h-5 text-[#008b94] shrink-0" />
-          <p className="text-sm sm:text-base md:text-lg font-semibold text-slate-900 tracking-tight">
+          <p className="text-sm sm:text-base md:text-lg font-bold text-slate-950 tracking-tight">
             {reflectionClosing}
           </p>
         </div>
@@ -473,10 +473,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           {/* Header container */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8 text-left">
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
                 {psychologistHeading}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 max-w-2xl font-normal leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-700 mt-1.5 max-w-2xl font-semibold leading-relaxed">
                 {psychologistIntro}
               </p>
             </div>
@@ -662,8 +662,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   {step.badge}
                 </span>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-semibold text-slate-900">{step.title}</h4>
-                  <p className="text-xs text-slate-600 mt-1 font-normal leading-relaxed">{step.desc}</p>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-950">{step.title}</h4>
+                  <p className="text-xs text-slate-700 mt-1 font-medium leading-relaxed">{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -688,10 +688,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
             Got Questions?
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-950 tracking-tight">
-            പതിവായി ചോദിക്കുന്ന ചോദ്യങ്ങൾ (FAQ)
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
+            Frequently Asked Questions
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-slate-700 max-w-xl mx-auto font-medium">
             സെഷനെക്കുറിച്ചും ബുക്കിംഗിനെക്കുറിച്ചുമുള്ള പ്രധാന വിവരങ്ങൾ താഴെ കാണാം.
           </p>
         </div>
@@ -714,7 +714,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left cursor-pointer bg-transparent border-none"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-sm sm:text-base font-semibold text-slate-900 flex items-center gap-2.5">
+                  <span className="text-sm sm:text-base font-bold text-slate-950 flex items-center gap-2.5">
                     <span className="w-6 h-6 rounded-full bg-[#00c9d6]/15 text-[#008b94] text-xs font-bold flex items-center justify-center shrink-0">
                       Q
                     </span>
@@ -726,12 +726,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-700 text-xs sm:text-sm leading-relaxed border-t border-slate-100 mt-1">
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-800 text-xs sm:text-sm leading-relaxed border-t border-slate-100 mt-1">
                     <div className="pt-3 flex items-start gap-2.5">
                       <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                         A
                       </span>
-                      <p className="font-normal text-slate-700 leading-relaxed">{faq.a}</p>
+                      <p className="font-semibold text-slate-800 leading-relaxed">{faq.a}</p>
                     </div>
                   </div>
                 )}
