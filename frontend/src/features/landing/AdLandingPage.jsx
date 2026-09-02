@@ -95,6 +95,18 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   // Carousel ref
   const carouselRef = useRef(null);
 
+  // Scroll state to show sticky bottom bar only when past hero
+  const [showMobileBottomBar, setShowMobileBottomBar] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowMobileBottomBar(window.scrollY > 350);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Sequential dual-popup state
   const [activePopup, setActivePopup] = useState(null); // null | 1 | 2
   const [popupVisible, setPopupVisible] = useState(false);
@@ -325,7 +337,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleBook()}
-              className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-[0.97] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-[0.97] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
             >
               <span>{heroBtnText}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -856,10 +868,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         );
       })()}
 
-      {/* ── STICKY BOTTOM MOBILE CTA BAR ── */}
+      {/* ── STICKY BOTTOM MOBILE CTA BAR (appears only after scrolling past hero) ── */}
       <nav
         aria-label="Sticky booking action bar"
-        className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:hidden"
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:hidden transition-all duration-300 ease-out ${
+          showMobileBottomBar
+            ? 'translate-y-0 opacity-100 pointer-events-auto'
+            : 'translate-y-full opacity-0 pointer-events-none'
+        }`}
       >
         <button
           onClick={() => handleBook()}

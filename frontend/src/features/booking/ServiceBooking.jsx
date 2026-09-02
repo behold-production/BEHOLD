@@ -344,7 +344,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-md overflow-y-auto overscroll-contain animate-backdrop-in">
-            <SEO 
+            <SEO
                 title="Book a Session | Psychological Counselling & Career Mentoring"
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
                 canonicalUrl="https://www.behold.co.in/booking"
@@ -743,27 +743,27 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 { id: 'DOOR_STEP', label: 'Doorstep', desc: 'Home visit', active: enableDoorstep !== false },
                                                                 { id: 'OFFLINE', label: 'Offline', desc: 'At center', active: enableOffline !== false }
                                                             ].filter(m => m.active).map((m) => {
-                                                                    return (
-                                                                        <button
-                                                                            type="button"
-                                                                            key={m.id}
-                                                                            disabled={rescheduleSession}
-                                                                            onClick={() => {
-                                                                                if (rescheduleSession) return;
-                                                                                setBookingMode(m.id);
-                                                                            }}
-                                                                            className={`flex-1 min-w-[120px] max-w-[160px] flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
-                                                                                ? 'bg-[#0f172a] text-white border-[#06b6d4] shadow-xs'
-                                                                                : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#06b6d4] hover:bg-surface-50'
-                                                                                } ${rescheduleSession ? 'opacity-40 cursor-not-allowed' : ''}`}
-                                                                        >
-                                                                            <span className="flex flex-col items-center">
-                                                                                <span className={`font-semibold text-sm ${bookingMode === m.id ? 'text-white' : 'text-[#0f172a]'}`}>{m.label}</span>
-                                                                                <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#06b6d4]' : 'text-surface-500'}`}>{m.desc}</span>
-                                                                            </span>
-                                                                        </button>
-                                                                    );
-                                                                })}
+                                                                return (
+                                                                    <button
+                                                                        type="button"
+                                                                        key={m.id}
+                                                                        disabled={rescheduleSession}
+                                                                        onClick={() => {
+                                                                            if (rescheduleSession) return;
+                                                                            setBookingMode(m.id);
+                                                                        }}
+                                                                        className={`flex-1 min-w-[120px] max-w-[160px] flex flex-col items-center justify-center gap-1 px-3 py-2 border rounded-xl transition cursor-pointer text-center min-h-[48px] leading-tight ${bookingMode === m.id
+                                                                            ? 'bg-[#0f172a] text-white border-[#06b6d4] shadow-xs'
+                                                                            : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#06b6d4] hover:bg-surface-50'
+                                                                            } ${rescheduleSession ? 'opacity-40 cursor-not-allowed' : ''}`}
+                                                                    >
+                                                                        <span className="flex flex-col items-center">
+                                                                            <span className={`font-semibold text-sm ${bookingMode === m.id ? 'text-white' : 'text-[#0f172a]'}`}>{m.label}</span>
+                                                                            <span className={`text-xs mt-0.5 ${bookingMode === m.id ? 'text-[#06b6d4]' : 'text-surface-500'}`}>{m.desc}</span>
+                                                                        </span>
+                                                                    </button>
+                                                                );
+                                                            })}
                                                         </div>
                                                     </div>
 
@@ -1159,11 +1159,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                                 step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                                                                             }, 150);
                                                                                         }}
-                                                                                        className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${
-                                                                                            isAvailable 
-                                                                                                ? 'border-surface-200 hover:border-[#06b6d4] hover:shadow-md' 
+                                                                                        className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${isAvailable
+                                                                                                ? 'border-surface-200 hover:border-[#06b6d4] hover:shadow-md'
                                                                                                 : 'border-surface-100 opacity-75 hover:opacity-100 hover:border-surface-300'
-                                                                                        }`}
+                                                                                            }`}
                                                                                     >
                                                                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                                                                                             <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
@@ -1362,11 +1361,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         }
                                                                         handleStepChange('payment');
                                                                     }}
-                                                                    className={`w-full sm:w-auto px-7 py-3.5 min-h-[48px] rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-md ${
-                                                                        !selectedTime
+                                                                    className={`w-full sm:w-auto px-7 py-3.5 min-h-[48px] rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-md ${!selectedTime
                                                                             ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
                                                                             : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white active:scale-95 shadow-lg'
-                                                                    }`}
+                                                                        }`}
                                                                 >
                                                                     <span>Proceed to Payment (₹{netTotal})</span>
                                                                     <ArrowRight className="w-4 h-4" />
@@ -1435,9 +1433,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     if (errors.name) setErrors(prev => ({ ...prev, name: null }));
                                                                 }}
                                                                 placeholder="e.g. Rahul Sharma"
-                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${
-                                                                    errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00c9d6] bg-zinc-50 focus:bg-white'
-                                                                }`}
+                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00c9d6] bg-zinc-50 focus:bg-white'
+                                                                    }`}
                                                             />
                                                             {errors.name && <p className="text-[11px] text-rose-500 font-medium">{errors.name}</p>}
                                                         </div>
@@ -1456,9 +1453,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     if (errors.email) setErrors(prev => ({ ...prev, email: null }));
                                                                 }}
                                                                 placeholder="you@example.com"
-                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${
-                                                                    errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00c9d6] bg-zinc-50 focus:bg-white'
-                                                                }`}
+                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00c9d6] bg-zinc-50 focus:bg-white'
+                                                                    }`}
                                                             />
                                                             {errors.email && <p className="text-[11px] text-rose-500 font-medium">{errors.email}</p>}
                                                         </div>
@@ -1564,11 +1560,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             type="submit"
                                                             disabled={isProcessingPayment || !termsAgreed}
                                                             title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
-                                                            className={`px-8 py-4 min-h-[48px] font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 border-none w-full sm:w-auto order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2 ${
-                                                                !termsAgreed || isProcessingPayment
+                                                            className={`px-8 py-4 min-h-[48px] font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 border-none w-full sm:w-auto order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2 ${!termsAgreed || isProcessingPayment
                                                                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60 shadow-none'
                                                                     : 'bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white cursor-pointer active:scale-[0.98] shadow-lg'
-                                                            }`}
+                                                                }`}
                                                         >
                                                             {isProcessingPayment ? (
                                                                 <div className="flex items-center gap-2">
