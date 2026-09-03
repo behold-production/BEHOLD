@@ -453,238 +453,175 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </header>
 
-      {/* ── SECTION 1: HERO SECTION WITH INTERACTIVE VIDEO GUIDE ── */}
-      <section className="relative pt-6 sm:pt-10 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+      {/* ── SECTION 1: HERO SECTION ── */}
+      <section className="relative pt-8 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
         {/* Subtle ambient light glow */}
-        <div className="absolute top-1/4 left-1/3 -translate-y-1/2 w-[600px] h-[600px] bg-[#00c9d6]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#00c9d6]/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="space-y-8 sm:space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
-          {/* Hero Header & Value Proposition */}
-          <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-4 py-1.5 rounded-full border border-[#00c9d6]/25">
-              <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse"></span>
-              <span>Watch 26s Video Guide • ലളിതമായ 3 ഘട്ടങ്ങൾ</span>
-            </div>
+          {/* LEFT: ONLY THE VIDEO! */}
+          <div className="lg:col-span-6 flex flex-col items-center justify-center order-2 lg:order-1">
+            <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#00c9d6]/40 transition-transform duration-300">
 
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-slate-950 tracking-tight leading-[1.25]">
-              <span className="block text-slate-900 font-extrabold">
-                {heroTitleLine1}
-              </span>
-              <span className="block text-[#008b94] font-extrabold">
-                {heroTitleLine2}
-              </span>
-            </h1>
+              {/* Phone Top Island Bar */}
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#00c9d6] animate-ping"></div>
+                <span>Behold Quick Guide</span>
+              </div>
 
-            <p className="text-sm sm:text-base lg:text-lg text-slate-700 max-w-2xl mx-auto font-medium leading-relaxed">
-              {heroSub}
-            </p>
-          </div>
-
-          {/* Video & Steps Two-Column Layout (Centerpiece of Hero) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
-
-            {/* Left/Center Column: Mobile Mockup Video Player */}
-            <div className="lg:col-span-5 flex flex-col items-center justify-center">
-              <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#00c9d6]/40 transition-transform duration-300">
-
-                {/* Phone Top Island Bar */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#00c9d6] animate-ping"></div>
-                  <span>Behold Quick Guide</span>
-                </div>
-
-                {/* Video Container (9:16 Aspect Ratio) */}
-                <div
-                  className="relative w-full aspect-[9/16] rounded-[28px] overflow-hidden bg-slate-900 cursor-pointer group select-none"
-                  onClick={handleTogglePlay}
+              {/* Video Container (9:16 Aspect Ratio) */}
+              <div
+                className="relative w-full aspect-[9/16] rounded-[28px] overflow-hidden bg-slate-900 cursor-pointer group select-none"
+                onClick={handleTogglePlay}
+              >
+                <video
+                  ref={videoRef}
+                  playsInline
+                  preload="metadata"
+                  onTimeUpdate={handleTimeUpdate}
+                  onLoadedMetadata={handleLoadedMetadata}
+                  onEnded={handleVideoEnded}
+                  className="w-full h-full object-cover"
                 >
-                  <video
-                    ref={videoRef}
-                    playsInline
-                    preload="metadata"
-                    onTimeUpdate={handleTimeUpdate}
-                    onLoadedMetadata={handleLoadedMetadata}
-                    onEnded={handleVideoEnded}
-                    className="w-full h-full object-cover"
-                  >
-                    <source src="/videos/behold_session_guide.mp4" type="video/mp4" />
-                    <source src="/videos/behold_session_guide_light.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <source src="/videos/behold_session_guide.mp4" type="video/mp4" />
+                  <source src="/videos/behold_session_guide_light.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
 
-                  {/* Subtle Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/40 transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`} />
+                {/* Subtle Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/40 transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`} />
 
-                  {/* Top Right Audio Mute/Unmute Pill */}
-                  <button
-                    type="button"
-                    onClick={handleToggleMute}
-                    aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-                    className="absolute top-12 right-3 z-30 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-sm"
-                  >
-                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#00c9d6]" />}
-                  </button>
+                {/* Top Right Audio Mute/Unmute Pill */}
+                <button
+                  type="button"
+                  onClick={handleToggleMute}
+                  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                  className="absolute top-12 right-3 z-30 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-sm"
+                >
+                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#00c9d6]" />}
+                </button>
 
-                  {/* Center Play/Pause Overlay */}
-                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
-                    {!isPlaying ? (
-                      <div className="flex flex-col items-center gap-2 pointer-events-auto transform transition-transform group-hover:scale-110">
-                        <div className="w-16 h-16 rounded-full bg-[#00c9d6] text-slate-950 flex items-center justify-center shadow-[0_0_30px_rgba(0,201,214,0.6)] ring-4 ring-[#00c9d6]/30">
-                          {isEnded ? (
-                            <RotateCcw className="w-7 h-7" />
-                          ) : (
-                            <Play className="w-7 h-7 fill-slate-950 ml-1" />
-                          )}
-                        </div>
-                        <span className="text-[11px] font-bold text-white bg-black/70 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10 tracking-wide">
-                          {isEnded ? 'വീണ്ടും കാണുക • Replay' : 'വാച്ച് വീഡിയോ • 26s'}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <div className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/20">
-                          <Pause className="w-6 h-6" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Bottom Video Controls Bar */}
-                  <div
-                    className={`absolute bottom-0 inset-x-0 p-3.5 z-30 space-y-2 transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {/* Scrubbable Progress Bar */}
-                    <div
-                      className="w-full h-1.5 bg-white/30 hover:h-2.5 rounded-full cursor-pointer transition-all relative overflow-hidden"
-                      onClick={handleSeek}
-                    >
-                      <div
-                        className="h-full bg-gradient-to-r from-[#008b94] to-[#00c9d6] rounded-full transition-all duration-100"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between text-white text-[11px] font-semibold">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={handleTogglePlay}
-                          className="hover:text-[#00c9d6] transition cursor-pointer"
-                        >
-                          {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                        </button>
-                        <span>{currentTimeStr} / {durationStr}</span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={handleToggleMute}
-                          className="hover:text-[#00c9d6] transition cursor-pointer"
-                        >
-                          {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleFullscreen}
-                          className="hover:text-[#00c9d6] transition cursor-pointer"
-                        >
-                          <Maximize2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Trust Indicators below video */}
-              <div className="mt-3.5 flex items-center justify-center gap-4 text-xs font-semibold text-slate-500">
-                <span className="flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-emerald-600" />
-                  100% സ്വകാര്യം
-                </span>
-                <span>•</span>
-                <span className="flex items-center gap-1.5">
-                  <Languages className="w-3.5 h-3.5 text-[#008b94]" />
-                  മലയാളം & English
-                </span>
-              </div>
-            </div>
-
-            {/* Right Column: 3 Steps & Booking Action */}
-            <div className="lg:col-span-7 space-y-4 text-left">
-              <div className="space-y-3">
-                {bookingSteps.map((step, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => seekToStep(idx)}
-                    className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${activeStep === idx
-                        ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/25 translate-x-1'
-                        : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
-                      }`}
-                  >
-                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00c9d6] text-slate-950 shadow-xs' : 'bg-slate-100 text-slate-700'
-                      }`}>
-                      {step.badge}
-                    </span>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-950">{step.title}</h4>
-                        {activeStep === idx && (
-                          <span className="text-[10px] font-bold text-[#008b94] uppercase tracking-wider bg-[#00c9d6]/10 px-2 py-0.5 rounded-md">
-                            Active Step
-                          </span>
+                {/* Center Play/Pause Overlay */}
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+                  {!isPlaying ? (
+                    <div className="flex flex-col items-center gap-2 pointer-events-auto transform transition-transform group-hover:scale-110">
+                      <div className="w-16 h-16 rounded-full bg-[#00c9d6] text-slate-950 flex items-center justify-center shadow-[0_0_30px_rgba(0,201,214,0.6)] ring-4 ring-[#00c9d6]/30">
+                        {isEnded ? (
+                          <RotateCcw className="w-7 h-7" />
+                        ) : (
+                          <Play className="w-7 h-7 fill-slate-950 ml-1" />
                         )}
                       </div>
-                      <p className="text-xs text-slate-600 mt-1 font-medium leading-relaxed">{step.desc}</p>
+                      <span className="text-[11px] font-bold text-white bg-black/70 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10 tracking-wide">
+                        {isEnded ? 'വീണ്ടും കാണുക • Replay' : 'വാച്ച് വീഡിയോ • 26s'}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/20">
+                        <Pause className="w-6 h-6" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Bottom Video Controls Bar */}
+                <div
+                  className={`absolute bottom-0 inset-x-0 p-3.5 z-30 space-y-2 transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Scrubbable Progress Bar */}
+                  <div
+                    className="w-full h-1.5 bg-white/30 hover:h-2.5 rounded-full cursor-pointer transition-all relative overflow-hidden"
+                    onClick={handleSeek}
+                  >
+                    <div
+                      className="h-full bg-gradient-to-r from-[#008b94] to-[#00c9d6] rounded-full transition-all duration-100"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-white text-[11px] font-semibold">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleTogglePlay}
+                        className="hover:text-[#00c9d6] transition cursor-pointer"
+                      >
+                        {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                      </button>
+                      <span>{currentTimeStr} / {durationStr}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleToggleMute}
+                        className="hover:text-[#00c9d6] transition cursor-pointer"
+                      >
+                        {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleFullscreen}
+                        className="hover:text-[#00c9d6] transition cursor-pointer"
+                      >
+                        <Maximize2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-
-              {/* Instant Action CTA Card */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 text-white shadow-xl border border-slate-800 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold tracking-widest text-[#00c9d6] block">
-                      Special Introductory Offer
-                    </span>
-                    <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
-                      Ready to start your first session?
-                    </h3>
-                    <p className="text-xs text-slate-300 mt-0.5">
-                      Get full personalized psychological consultation starting at ₹499.
-                    </p>
-                  </div>
-
-                  <div className="text-left sm:text-right shrink-0">
-                    <span className="text-2xl font-extrabold text-[#00c9d6]">₹499</span>
-                    <span className="text-[10px] text-slate-400 block uppercase tracking-wider">Introductory Session</span>
-                  </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-xs text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Instant Google Meet link on WhatsApp & Email</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleBook()}
-                    className="w-full sm:w-auto bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(0,201,214,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
-                  >
-                    <span>{heroBtnText}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
               </div>
-
             </div>
 
+            {/* Trust Indicators below video */}
+            <div className="mt-3.5 flex items-center justify-center gap-4 text-xs font-semibold text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                100% സ്വകാര്യം
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5">
+                <Languages className="w-3.5 h-3.5 text-[#008b94]" />
+                മലയാളം & English
+              </span>
+            </div>
+          </div>
+
+          {/* RIGHT: High-Converting Headline & Subtitle & CTA Button (LIKE BEFORE!) */}
+          <div className="lg:col-span-6 order-1 lg:order-2 space-y-6 text-left">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
+                <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse"></span>
+                <span>Special Introductory Session • ₹499</span>
+              </div>
+
+              <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-950 tracking-tight leading-[1.3] space-y-2">
+                <span className="block text-slate-900 font-extrabold">
+                  {heroTitleLine1}
+                </span>
+                <span className="block text-[#008b94] font-extrabold">
+                  {heroTitleLine2}
+                </span>
+              </h1>
+
+              <p className="text-sm sm:text-base lg:text-lg text-slate-900 leading-relaxed font-bold pt-1">
+                {heroSub}
+              </p>
+            </div>
+
+            {/* CTA Button */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+              <button
+                onClick={() => handleBook()}
+                className="px-8 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+              >
+                <span>{heroBtnText}</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
         </div>
@@ -987,52 +924,89 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </section>
 
-      {/* ── SECTION 5: OUR CARE COMMITMENT ── */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-200/80">
-        <div className="space-y-8 text-center sm:text-left">
+      {/* ── SECTION 5: HOW IT WORKS ── */}
+      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
+        <div className="space-y-6 text-left">
+
           <div className="space-y-2">
             <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
-              Our Care Commitment
+              Simple 3-Step Booking
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
-              Why People Choose Behold
+              How It Works
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-xl">
-              വിദഗ്ദ്ധരായ സൈക്കോളജിസ്റ്റുകളുടെ പിന്തുണയോടെ സുരക്ഷിതമായ മനസ്സിന്.
+            <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+              ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#00c9d6]/10 text-[#008b94] flex items-center justify-center">
-                <Lock className="w-5 h-5" />
+          <div className="space-y-3.5 pt-2">
+            {bookingSteps.map((step, idx) => (
+              <div
+                key={idx}
+                onClick={() => seekToStep(idx)}
+                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${activeStep === idx
+                    ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/25'
+                    : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
+                  }`}
+              >
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00c9d6] text-slate-950 shadow-xs' : 'bg-slate-100 text-slate-700'
+                  }`}>
+                  {step.badge}
+                </span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-950">{step.title}</h4>
+                    {activeStep === idx && (
+                      <span className="text-[10px] font-bold text-[#008b94] uppercase tracking-wider bg-[#00c9d6]/10 px-2 py-0.5 rounded-md">
+                        Active Step
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-600 mt-1 font-medium leading-relaxed">{step.desc}</p>
+                </div>
               </div>
-              <h3 className="text-sm font-bold text-slate-950">100% Confidential Care</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                എല്ലാ സെഷനുകളും പൂർണ്ണമായും സ്വകാര്യവും പ്രൊഫഷണൽ എത്തിക്സ് പ്രകാരം സുരക്ഷിതവുമാണ്. നിങ്ങളുടെ വിവരങ്ങൾ ആരോടും പങ്കിടില്ല.
-              </p>
+            ))}
+          </div>
+
+          {/* Instant Action CTA Card */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 text-white shadow-xl border border-slate-800 space-y-4 mt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#00c9d6] block">
+                  Special Introductory Offer
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
+                  Ready to start your first session?
+                </h3>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  Get full personalized psychological consultation starting at ₹499.
+                </p>
+              </div>
+
+              <div className="text-left sm:text-right shrink-0">
+                <span className="text-2xl font-extrabold text-[#00c9d6]">₹499</span>
+                <span className="text-[10px] text-slate-400 block uppercase tracking-wider">Introductory Session</span>
+              </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#00c9d6]/10 text-[#008b94] flex items-center justify-center">
-                <GraduationCap className="w-5 h-5" />
+            <div className="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-slate-300">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Instant Google Meet link on WhatsApp & Email</span>
               </div>
-              <h3 className="text-sm font-bold text-slate-950">Licensed Psychologists</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                വിദ്യാഭ്യാസവും വർഷങ്ങളുടെ ക്ലിനിക്കൽ അനുഭവസമ്പത്തുമുള്ള വിദഗ്ദ്ധരായ സൈക്കോളജിസ്റ്റുകൾ.
-              </p>
-            </div>
 
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#00c9d6]/10 text-[#008b94] flex items-center justify-center">
-                <Clock className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-950">Flexible Scheduling</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                നിങ്ങളുടെ സൗകര്യത്തിനനുസരിച്ച് സമയം തിരഞ്ഞെടുക്കാം. 4 മണിക്കൂർ മുൻപ് അറിയിച്ചാൽ reschedule ചെയ്യാവുന്നതാണ്.
-              </p>
+              <button
+                type="button"
+                onClick={() => handleBook()}
+                className="w-full sm:w-auto bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(0,201,214,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
+              >
+                <span>{heroBtnText}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
+
         </div>
       </section>
 
