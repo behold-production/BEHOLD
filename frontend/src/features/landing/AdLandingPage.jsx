@@ -454,15 +454,48 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       </header>
 
       {/* ── SECTION 1: HERO SECTION ── */}
-      <section className="relative pt-8 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+      <section className="relative pt-8 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto overflow-hidden text-center">
         {/* Subtle ambient light glow */}
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#00c9d6]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00c9d6]/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="space-y-6 sm:space-y-8 relative z-10">
 
-          {/* LEFT: ONLY THE VIDEO! */}
-          <div className="lg:col-span-6 flex flex-col items-center justify-center order-2 lg:order-1">
-            <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#00c9d6]/40 transition-transform duration-300">
+          {/* Top Pill / Badge */}
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-4 py-1.5 rounded-full border border-[#00c9d6]/25 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse"></span>
+            <span>Special Introductory Session • ₹499</span>
+          </div>
+
+          {/* Centered Headline */}
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-slate-950 tracking-tight leading-[1.3] space-y-2 max-w-3xl mx-auto">
+            <span className="block text-slate-900 font-extrabold">
+              {heroTitleLine1}
+            </span>
+            <span className="block text-[#008b94] font-extrabold">
+              {heroTitleLine2}
+            </span>
+          </h1>
+
+          {/* Centered Sub-headline */}
+          <p className="text-sm sm:text-base lg:text-lg text-slate-700 max-w-2xl mx-auto font-medium leading-relaxed">
+            {heroSub}
+          </p>
+
+          {/* Centered Primary CTA Button */}
+          <div className="pt-2 flex justify-center items-center">
+            <button
+              type="button"
+              onClick={() => handleBook()}
+              className="px-9 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+            >
+              <span>{heroBtnText}</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Centered Smartphone Mockup Video Player */}
+          <div className="pt-4 flex flex-col items-center justify-center">
+            <div className="relative w-full max-w-[300px] sm:max-w-[320px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#00c9d6]/40 transition-transform duration-300 hover:scale-[1.01]">
 
               {/* Phone Top Island Bar */}
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
@@ -577,7 +610,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
 
             {/* Trust Indicators below video */}
-            <div className="mt-3.5 flex items-center justify-center gap-4 text-xs font-semibold text-slate-500">
+            <div className="mt-3 flex items-center justify-center gap-4 text-xs font-semibold text-slate-500">
               <span className="flex items-center gap-1.5">
                 <Lock className="w-3.5 h-3.5 text-emerald-600" />
                 100% സ്വകാര്യം
@@ -587,40 +620,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <Languages className="w-3.5 h-3.5 text-[#008b94]" />
                 മലയാളം & English
               </span>
-            </div>
-          </div>
-
-          {/* RIGHT: High-Converting Headline & Subtitle & CTA Button (LIKE BEFORE!) */}
-          <div className="lg:col-span-6 order-1 lg:order-2 space-y-6 text-left">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
-                <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse"></span>
-                <span>Special Introductory Session • ₹499</span>
-              </div>
-
-              <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-950 tracking-tight leading-[1.3] space-y-2">
-                <span className="block text-slate-900 font-extrabold">
-                  {heroTitleLine1}
-                </span>
-                <span className="block text-[#008b94] font-extrabold">
-                  {heroTitleLine2}
-                </span>
-              </h1>
-
-              <p className="text-sm sm:text-base lg:text-lg text-slate-900 leading-relaxed font-bold pt-1">
-                {heroSub}
-              </p>
-            </div>
-
-            {/* CTA Button */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-              <button
-                onClick={() => handleBook()}
-                className="px-8 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
-              >
-                <span>{heroBtnText}</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
             </div>
           </div>
 
