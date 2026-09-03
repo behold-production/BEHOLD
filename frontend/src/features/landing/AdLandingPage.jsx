@@ -20,7 +20,12 @@ import {
   HeartHandshake,
   HelpCircle,
   Smile,
-  Moon
+  Moon,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  RotateCcw
 } from 'lucide-react';
 import ApiService from '../../services/api';
 import SEO from '../../components/common/SEO';
@@ -86,8 +91,110 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   const [loadingAdvisors, setLoadingAdvisors] = useState(true);
   const [expandedBios, setExpandedBios] = useState({});
 
-  // Video interactive state
+  // Video interactive & playback state
+  const videoRef = useRef(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTimeStr, setCurrentTimeStr] = useState('0:00');
+  const [durationStr, setDurationStr] = useState('0:26');
+  const [isEnded, setIsEnded] = useState(false);
+
+  const formatTime = (secs) => {
+    if (isNaN(secs) || secs < 0) return '0:00';
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  const handleTogglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused || videoRef.current.ended) {
+      videoRef.current.play().then(() => {
+        setIsPlaying(true);
+        setIsEnded(false);
+      }).catch((err) => {
+        console.warn('Playback prevented:', err);
+      });
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const handleToggleMute = (e) => {
+    e?.stopPropagation();
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setIsMuted(videoRef.current.muted);
+  };
+
+  const handleTimeUpdate = () => {
+    if (!videoRef.current) return;
+    const current = videoRef.current.currentTime;
+    const dur = videoRef.current.duration || 26;
+    setProgress((current / dur) * 100);
+    setCurrentTimeStr(formatTime(current));
+
+    // Dynamic step sync with video playback
+    if (current < 8.5) {
+      setActiveStep(0);
+    } else if (current < 17) {
+      setActiveStep(1);
+    } else {
+      setActiveStep(2);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (!videoRef.current) return;
+    setDurationStr(formatTime(videoRef.current.duration || 26));
+  };
+
+  const handleSeek = (e) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const newTime = Math.max(0, Math.min(1, clickX / width)) * (videoRef.current.duration || 26);
+    videoRef.current.currentTime = newTime;
+    setProgress((newTime / (videoRef.current.duration || 26)) * 100);
+    if (!isPlaying) {
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  };
+
+  const handleFullscreen = (e) => {
+    e?.stopPropagation();
+    if (!videoRef.current) return;
+    if (videoRef.current.requestFullscreen) {
+      videoRef.current.requestFullscreen();
+    } else if (videoRef.current.webkitEnterFullscreen) {
+      videoRef.current.webkitEnterFullscreen();
+    }
+  };
+
+  const handleVideoEnded = () => {
+    setIsPlaying(false);
+    setIsEnded(true);
+    setProgress(100);
+  };
+
+  const seekToStep = (idx) => {
+    setActiveStep(idx);
+    if (videoRef.current) {
+      const stepTimes = [0, 8.5, 17];
+      videoRef.current.currentTime = stepTimes[idx] || 0;
+      if (videoRef.current.paused) {
+        videoRef.current.play().then(() => {
+          setIsPlaying(true);
+          setIsEnded(false);
+        }).catch(() => {});
+      }
+    }
+  };
 
   // FAQ Accordion State (first open by default)
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
@@ -312,7 +419,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
     },
     {
       title: "3. സുരക്ഷിതമായി ബുക്ക് ചെയ്യുക",
-      desc: `വെറും ₹${heroPrice}-ന് ബുക്കിംഗ് പൂർത്തിയാക്കൂ. ലിങ്ക് WhatsApp/Email വഴി ഉടൻ ലഭിക്കും.`,
+      desc: `വെറും ₹499-ന് ബുക്കിംഗ് പൂർത്തിയാക്കൂ. ലിങ്ക് WhatsApp/Email വഴി ഉടൻ ലഭിക്കും.`,
       badge: "Step 3"
     }
   ];
@@ -694,43 +801,230 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
       </section>
 
-      {/* ── SECTION 5: HOW IT WORKS ── */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
-        <div className="space-y-6 text-left">
+      {/* ── SECTION 5: HOW IT WORKS & VIDEO GUIDE ── */}
+      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-slate-200/80">
+        <div className="space-y-10">
 
-          <div className="space-y-2">
-            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
-              Simple 3-Step Booking
-            </span>
+          {/* Section Header */}
+          <div className="text-center sm:text-left space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
+              <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse"></span>
+              <span>Watch Video • ലളിതമായ 3 ഘട്ടങ്ങൾ</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
-              How It Works
+              How Behold Sessions Work
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
-              ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.
+              വീട്ടിലിരുന്ന് സ്വകാര്യമായി കൗൺസിലിംഗ് ചെയ്യുന്ന വിധം 26 സെക്കൻഡിൽ കാണാം.
             </p>
           </div>
 
-          <div className="space-y-3.5 pt-2">
-            {bookingSteps.map((step, idx) => (
-              <div
-                key={idx}
-                onClick={() => setActiveStep(idx)}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${activeStep === idx
-                    ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/20'
-                    : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
-                  }`}
-              >
-                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00c9d6] text-slate-950' : 'bg-slate-100 text-slate-700'
-                  }`}>
-                  {step.badge}
-                </span>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-semibold text-slate-950">{step.title}</h4>
-                  <p className="text-xs text-slate-600 mt-1 font-medium leading-relaxed">{step.desc}</p>
+          {/* Video & Steps Two-Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+            {/* Left/Center Column: Mobile Mockup Video Player */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center">
+              <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#00c9d6]/40 transition-transform duration-300">
+
+                {/* Phone Top Island Bar */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#00c9d6] animate-ping"></div>
+                  <span>Behold Quick Guide</span>
+                </div>
+
+                {/* Video Container (9:16 Aspect Ratio) */}
+                <div
+                  className="relative w-full aspect-[9/16] rounded-[28px] overflow-hidden bg-slate-900 cursor-pointer group select-none"
+                  onClick={handleTogglePlay}
+                >
+                  <video
+                    ref={videoRef}
+                    playsInline
+                    preload="metadata"
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onEnded={handleVideoEnded}
+                    className="w-full h-full object-cover"
+                  >
+                    <source src="/videos/behold_session_guide.mp4" type="video/mp4" />
+                    <source src="/videos/behold_session_guide_light.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+
+                  {/* Subtle Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/40 transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`} />
+
+                  {/* Top Right Audio Mute/Unmute Pill */}
+                  <button
+                    type="button"
+                    onClick={handleToggleMute}
+                    aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                    className="absolute top-12 right-3 z-30 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-sm"
+                  >
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#00c9d6]" />}
+                  </button>
+
+                  {/* Center Play/Pause Overlay */}
+                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+                    {!isPlaying ? (
+                      <div className="flex flex-col items-center gap-2 pointer-events-auto transform transition-transform group-hover:scale-110">
+                        <div className="w-16 h-16 rounded-full bg-[#00c9d6] text-slate-950 flex items-center justify-center shadow-[0_0_30px_rgba(0,201,214,0.6)] ring-4 ring-[#00c9d6]/30">
+                          {isEnded ? (
+                            <RotateCcw className="w-7 h-7" />
+                          ) : (
+                            <Play className="w-7 h-7 fill-slate-950 ml-1" />
+                          )}
+                        </div>
+                        <span className="text-[11px] font-bold text-white bg-black/70 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10 tracking-wide">
+                          {isEnded ? 'വീണ്ടും കാണുക • Replay' : 'വാച്ച് വീഡിയോ • 26s'}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <div className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/20">
+                          <Pause className="w-6 h-6" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Bottom Video Controls Bar */}
+                  <div
+                    className={`absolute bottom-0 inset-x-0 p-3.5 z-30 space-y-2 transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Scrubbable Progress Bar */}
+                    <div
+                      className="w-full h-1.5 bg-white/30 hover:h-2.5 rounded-full cursor-pointer transition-all relative overflow-hidden"
+                      onClick={handleSeek}
+                    >
+                      <div
+                        className="h-full bg-gradient-to-r from-[#008b94] to-[#00c9d6] rounded-full transition-all duration-100"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-white text-[11px] font-semibold">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleTogglePlay}
+                          className="hover:text-[#00c9d6] transition cursor-pointer"
+                        >
+                          {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                        </button>
+                        <span>{currentTimeStr} / {durationStr}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleToggleMute}
+                          className="hover:text-[#00c9d6] transition cursor-pointer"
+                        >
+                          {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleFullscreen}
+                          className="hover:text-[#00c9d6] transition cursor-pointer"
+                        >
+                          <Maximize2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
-            ))}
+
+              {/* Trust Indicators below video */}
+              <div className="mt-3.5 flex items-center justify-center gap-4 text-xs font-semibold text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                  100% സ്വകാര്യം
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1.5">
+                  <Languages className="w-3.5 h-3.5 text-[#008b94]" />
+                  മലയാളം & English
+                </span>
+              </div>
+            </div>
+
+            {/* Right Column: 3 Steps & Booking Action */}
+            <div className="lg:col-span-7 space-y-4 text-left">
+              <div className="space-y-3">
+                {bookingSteps.map((step, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => seekToStep(idx)}
+                    className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${activeStep === idx
+                        ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/25 translate-x-1'
+                        : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
+                      }`}
+                  >
+                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00c9d6] text-slate-950 shadow-xs' : 'bg-slate-100 text-slate-700'
+                      }`}>
+                      {step.badge}
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-950">{step.title}</h4>
+                        {activeStep === idx && (
+                          <span className="text-[10px] font-bold text-[#008b94] uppercase tracking-wider bg-[#00c9d6]/10 px-2 py-0.5 rounded-md">
+                            Active Step
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-600 mt-1 font-medium leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Instant Action CTA Card */}
+              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 text-white shadow-xl border border-slate-800 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-[#00c9d6] block">
+                      Special Introductory Offer
+                    </span>
+                    <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
+                      Ready to start your first session?
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-0.5">
+                      Get full personalized psychological consultation starting at ₹499.
+                    </p>
+                  </div>
+
+                  <div className="text-left sm:text-right shrink-0">
+                    <span className="text-2xl font-extrabold text-[#00c9d6]">₹499</span>
+                    <span className="text-[10px] text-slate-400 block uppercase tracking-wider">Introductory Session</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-xs text-slate-300">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Instant Google Meet link on WhatsApp & Email</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleBook()}
+                    className="w-full sm:w-auto bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(0,201,214,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
+                  >
+                    <span>{heroBtnText}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
           </div>
+
         </div>
       </section>
 

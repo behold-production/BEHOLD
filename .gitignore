@@ -39,3 +39,7 @@ backend/.env
 backend/uploads/*
 !backend/uploads/.gitkeep
 .vercel
+
+# Raw video recordings
+*.MOV
+*.mov
