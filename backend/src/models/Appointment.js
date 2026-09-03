@@ -23,6 +23,7 @@ const appointmentSchema = new mongoose.Schema(
     razorpayOrderId: { type: String, default: '' },
     razorpayPaymentId: { type: String, default: '' },
     duration: { type: String, default: '1 Hour (60 Mins)' },
+    isIntroductory: { type: Boolean, default: false },
     baseFee: { type: Number, default: 0 },
     gstAmount: { type: Number, default: 0 },
     appliedDiscount: { type: Number, default: 0 },

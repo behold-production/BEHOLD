@@ -90,7 +90,7 @@ export default function TimePicker({
           </span>
         </div>
         <span className="text-[10px] font-extrabold text-[#06b6d4] bg-[#06b6d4]/10 border border-[#06b6d4]/30 px-2.5 py-1 rounded-[10px] tracking-wider uppercase">
-          {bookingDuration === 30 ? '30 Mins (Half Session)' : '1 Hour (Full Session)'}
+          {bookingDuration === 30 ? '30 Mins (Introductory Session)' : '1 Hour (Standard Session)'}
         </span>
       </div>
 

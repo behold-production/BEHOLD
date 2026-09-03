@@ -4,6 +4,7 @@ const { autoExpireSessions } = require('../utils/sessionHelper');
 const WhatsAppService = require('../services/whatsappService');
 const EmailService = require('../services/emailService');
 const { resolveAnyPhone } = require('../utils/phoneUtils');
+const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
 const AppointmentController = {
   // Create Appointment (User / Student)
@@ -48,7 +49,23 @@ const AppointmentController = {
 
       const durationVal = Number(duration) || Number(bookingDuration) || 60;
       const isHalfSession = durationVal === 30;
-      const sessionDurationStr = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+
+      // Enforce one-time introductory session rule
+      if (isHalfSession) {
+        const alreadyUsedIntro = await checkIntroductoryUsed({
+          userId,
+          email: clientEmail || user.email,
+          phone: clientPhone || user.phone
+        });
+        if (alreadyUsedIntro) {
+          return res.status(400).json({
+            success: false,
+            message: 'You have already used your one-time introductory session. Please select the standard 1-hour session.'
+          });
+        }
+      }
+
+      const sessionDurationStr = isHalfSession ? '30 Minutes (Introductory Session)' : '1 Hour (60 Mins)';
 
       const rawPrice = Number(counsellor.price) || 0;
       const halfPrice = counsellor.halfSessionPrice !== undefined && Number(counsellor.halfSessionPrice) > 0
@@ -106,6 +123,7 @@ const AppointmentController = {
         date,
         time,
         duration: sessionDurationStr,
+        isIntroductory: isHalfSession,
         mode, // ONLINE, DOOR_STEP, or OFFLINE
         meetLink: finalMeetLink,
         status: isCouponFree ? 'CONFIRMED' : 'PENDING',
@@ -129,6 +147,10 @@ const AppointmentController = {
         utmTerm: req.body.utmTerm || '',
         fbclid: req.body.fbclid || ''
       });
+
+      if (isHalfSession) {
+        markIntroductoryUsed({ userId, email: clientEmail || user.email, phone: clientPhone || user.phone }).catch(() => {});
+      }
 
       // Also ensure session record exists if confirmed free booking
       if (isCouponFree) {
@@ -1034,6 +1056,24 @@ const AppointmentController = {
       return res.status(200).json({
         success: true,
         data: confirmationData
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Check if a user/client is eligible for the one-time introductory session
+  async checkIntroductoryEligibility(req, res, next) {
+    try {
+      const userId = req.user ? req.user.id : null;
+      const email = (req.query.email || (req.user ? req.user.email : '') || '').trim();
+      const phone = (req.query.phone || (req.user ? req.user.phone : '') || '').trim();
+
+      const alreadyUsed = await checkIntroductoryUsed({ userId, email, phone });
+      return res.status(200).json({
+        success: true,
+        eligible: !alreadyUsed,
+        hasUsedIntroductory: alreadyUsed
       });
     } catch (error) {
       next(error);

@@ -290,6 +290,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   <div>
                     <p className="text-xs text-slate-500 font-medium">Session Fee</p>
                     <p className="text-sm font-bold text-slate-900">₹{advisor.price.toLocaleString('en-IN')} <span className="text-xs font-normal">/ hr</span></p>
+                    <span className="text-[11px] text-[#00a680] font-semibold block">Introductory: ₹{advisor.halfSessionPrice || 499}</span>
                   </div>
                 </div>
 
@@ -360,7 +361,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     </div>
                     <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
                       <CheckCircle2 className="w-4 h-4 text-[#00a680]" />
-                      <span>Includes 60-min session & report</span>
+                      <span>Introductory (30-min) & Standard (60-min) sessions</span>
                     </div>
                   </div>
 

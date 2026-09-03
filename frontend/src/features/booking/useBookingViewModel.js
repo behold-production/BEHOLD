@@ -86,16 +86,24 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     return 'ONLINE';
   }); // ONLINE, DOOR_STEP, OFFLINE
   const [bookingDuration, setBookingDuration] = useState(() => {
+    if (user && user.hasUsedIntroductory) return 60;
     if (typeof window !== 'undefined') {
       try {
         const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
         if (raw) {
           const draft = JSON.parse(raw);
-          if (draft.bookingDuration) return draft.bookingDuration;
+          if (draft.bookingDuration) {
+            if (draft.bookingDuration === 30 && user?.hasUsedIntroductory) return 60;
+            return draft.bookingDuration;
+          }
         }
       } catch { }
     }
-    return 60; // 30 mins or 60 mins (default 60)
+    return 60; // 30 mins (Introductory) or 60 mins (Standard)
+  });
+  const [isIntroductoryEligible, setIsIntroductoryEligible] = useState(() => {
+    if (user && user.hasUsedIntroductory) return false;
+    return true;
   });
   const [bookingForm, setBookingForm] = useState(() => {
     const defaultForm = {
@@ -319,6 +327,48 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
     initBookingData();
   }, [user]);
+
+  // Monitor introductory session eligibility for user or entered email/phone
+  useEffect(() => {
+    let isMounted = true;
+    if (user && user.hasUsedIntroductory) {
+      setIsIntroductoryEligible(false);
+      if (bookingDuration === 30) {
+        setBookingDuration(60);
+      }
+      return;
+    }
+
+    const checkPhone = bookingForm.phone || user?.phone;
+    const checkEmail = bookingForm.email || user?.email;
+    if (checkPhone || checkEmail || user) {
+      const timer = setTimeout(async () => {
+        try {
+          const res = await ApiService.checkIntroductoryEligibility({
+            phone: checkPhone,
+            email: checkEmail
+          });
+          if (isMounted && res && res.success) {
+            if (res.eligible === false || res.hasUsedIntroductory === true) {
+              setIsIntroductoryEligible(false);
+              if (bookingDuration === 30) {
+                setBookingDuration(60);
+                toast.info('You have already taken your one-time Introductory Session. Switched to Standard Session (1 Hour).');
+              }
+            } else {
+              setIsIntroductoryEligible(true);
+            }
+          }
+        } catch {
+          // Keep current eligibility on network fail
+        }
+      }, 400);
+      return () => {
+        isMounted = false;
+        clearTimeout(timer);
+      };
+    }
+  }, [user, bookingForm.phone, bookingForm.email, bookingDuration]);
 
   // Auto-preselect advisor when preselectedAdvisorId prop or URL param ?advisor= / ?counsellor= is present
   useEffect(() => {
@@ -1169,7 +1219,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               advisorId: selectedAdvisor?.id || '',
               date: selectedDate,
               time: selectedTime,
-              duration: bookingDuration === 30 ? '30 Mins' : '1 Hour',
+              duration: bookingDuration === 30 ? '30 Mins (Introductory Session)' : '1 Hour (Standard Session)',
               service: bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring',
               mode: bookingMode,
               amountPaid: 0,
@@ -1307,7 +1357,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                   advisorId: selectedAdvisor?.id || '',
                   date: selectedDate,
                   time: selectedTime,
-                  duration: bookingDuration === 30 ? '30 Mins' : '1 Hour',
+                  duration: bookingDuration === 30 ? '30 Mins (Introductory Session)' : '1 Hour (Standard Session)',
                   service: bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring',
                   mode: bookingMode,
                   amountPaid: netTotal,
@@ -1697,6 +1747,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     getCalculatedDistance,
     getHaversineDistance,
     confirmedMeetLink,
-    confirmedBooking
+    confirmedBooking,
+    isIntroductoryEligible,
+    hasUsedIntroductory: !isIntroductoryEligible,
+    getDurationPrice
   };
 }

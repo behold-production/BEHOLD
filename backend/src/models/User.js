@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema(
     utmCampaign: { type: String, default: '' },
     fbclid: { type: String, default: '' },
     isProfileCompleted: { type: Boolean, default: false },
+    hasUsedIntroductory: { type: Boolean, default: false },
     cigiResults: {
       type: [
         {
@@ -57,6 +58,7 @@ const userSchema = new mongoose.Schema(
 userSchema.index({ phone: 1 });
 userSchema.index({ role: 1, status: 1 });
 userSchema.index({ isProfileCompleted: 1 });
+userSchema.index({ hasUsedIntroductory: 1 });
 userSchema.index({ utmCampaign: 1, utmSource: 1 });
 
 module.exports = mongoose.model('User', userSchema);

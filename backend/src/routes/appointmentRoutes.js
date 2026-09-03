@@ -5,6 +5,7 @@ const { verifyJWT, requireRole } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.get('/', verifyJWT, AppointmentController.getUserAppointments);
+router.get('/introductory-eligibility', verifyJWT, AppointmentController.checkIntroductoryEligibility);
 router.post('/', verifyJWT, requireRole('user'), AppointmentController.createAppointment);
 router.put('/:id/approve', verifyJWT, requireRole('counsellor', 'psychologist', 'admin', 'super_admin', 'sub_admin'), AppointmentController.approveAppointment);
 router.put('/:id/reject', verifyJWT, requireRole('counsellor', 'psychologist', 'admin', 'super_admin', 'sub_admin'), AppointmentController.rejectAppointment);

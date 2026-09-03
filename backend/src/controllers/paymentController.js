@@ -5,6 +5,7 @@ const { validateBookingDetails } = require('../utils/bookingValidator');
 const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
 const { resolveAnyPhone, normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
 async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackClientPhone = '') {
   try {
@@ -136,7 +137,23 @@ const PaymentController = {
 
         const durationVal = Number(duration) || Number(bookingDuration) || Number(req.body.bookingDetails?.duration) || Number(req.body.bookingDetails?.bookingDuration) || 60;
         const isHalfSession = durationVal === 30;
-        calculatedDuration = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+
+        // Enforce one-time introductory session rule
+        if (isHalfSession) {
+          const alreadyUsedIntro = await checkIntroductoryUsed({
+            userId: req.user ? req.user.id : '',
+            email: clientEmail || (req.user ? req.user.email : ''),
+            phone: clientPhone || (req.user ? req.user.phone : '')
+          });
+          if (alreadyUsedIntro) {
+            return res.status(400).json({
+              success: false,
+              message: 'You have already used your one-time introductory session. Please choose the standard 1-hour session.'
+            });
+          }
+        }
+
+        calculatedDuration = isHalfSession ? '30 Minutes (Introductory Session)' : '1 Hour (60 Mins)';
 
         const rawPrice = Number(counsellor.price) || 899;
         const halfPrice = counsellor.halfSessionPrice !== undefined && Number(counsellor.halfSessionPrice) > 0
@@ -186,6 +203,7 @@ const PaymentController = {
           time,
           duration: calculatedDuration,
           bookingDuration: String(durationVal),
+          isIntroductory: String(isHalfSession),
           mode,
           service: service || 'counselling',
           couponCode: couponCode || '',
@@ -458,7 +476,7 @@ const PaymentController = {
       const settings = (await StorageService.findOne('settings')) || {};
       const durationVal = Number(bDuration) || Number(bBookingDuration) || Number(req.body.duration) || Number(req.body.bookingDuration) || 60;
       const isHalfSession = durationVal === 30;
-      const sessionDurationStr = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+      const sessionDurationStr = isHalfSession ? '30 Minutes (Introductory Session)' : '1 Hour (60 Mins)';
 
       const rawPrice = Number(counsellor.price) || 899;
       const halfPrice = counsellor.halfSessionPrice !== undefined && Number(counsellor.halfSessionPrice) > 0
@@ -499,6 +517,7 @@ const PaymentController = {
         date,
         time,
         duration: sessionDurationStr,
+        isIntroductory: isHalfSession,
         mode,
         meetLink: finalMeetLink,
         status: 'CONFIRMED',
@@ -526,6 +545,14 @@ const PaymentController = {
         utmTerm: bookingDetails.utmTerm || req.body.utmTerm || '',
         fbclid: bookingDetails.fbclid || req.body.fbclid || ''
       });
+
+      if (isHalfSession) {
+        markIntroductoryUsed({
+          userId: resolvedUserId,
+          email: clientEmail || user?.email,
+          phone: normPhone || clientPhone || user?.phone
+        }).catch(() => {});
+      }
 
       // If user profile has no UTM source, attach initial acquisition source
       if (user && !user.utmSource && (bookingDetails.utmSource || bookingDetails.fbclid)) {
@@ -668,8 +695,8 @@ const PaymentController = {
             const counsellorShareAmount = Number((netTotal * (commissionPercent / 100)).toFixed(2));
 
             const durationVal = notes.bookingDuration ? Number(notes.bookingDuration) : (notes.duration === '30 Minutes' || Number(notes.duration) === 30 ? 30 : 60);
-            const isHalfSession = durationVal === 30;
-            const sessionDurationStr = isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)';
+            const isHalfSession = durationVal === 30 || notes.isIntroductory === 'true';
+            const sessionDurationStr = isHalfSession ? '30 Minutes (Introductory Session)' : '1 Hour (60 Mins)';
 
             const { generateSessionMeetingLink } = require('../utils/calendarHelper');
             const autoMeetLink = notes.mode === 'ONLINE' ? await generateSessionMeetingLink({
@@ -687,6 +714,7 @@ const PaymentController = {
               date: notes.date,
               time: notes.time,
               duration: sessionDurationStr,
+              isIntroductory: isHalfSession,
               mode: notes.mode,
               meetLink: autoMeetLink,
               status: 'CONFIRMED',
@@ -708,6 +736,14 @@ const PaymentController = {
               commissionPercent,
               counsellorShareAmount
             });
+
+            if (isHalfSession) {
+              markIntroductoryUsed({
+                userId: notes.userId || '',
+                email: notes.clientEmail || '',
+                phone: notes.clientPhone || ''
+              }).catch(() => {});
+            }
 
             console.log(`[Razorpay Webhook]: Auto-created booking ${newBooking.id} via captured payment event.`);
             cleanDuplicateAppointments().catch(() => {});

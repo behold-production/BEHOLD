@@ -1293,6 +1293,15 @@ const ApiService = {
       body: JSON.stringify(payload),
       silent: true
     }).catch(() => ({ success: true }));
+  },
+
+  // ─── Introductory Session Eligibility ──────────────────────────────────────
+  async checkIntroductoryEligibility(params = {}) {
+    const query = new URLSearchParams();
+    if (params.email) query.append('email', params.email);
+    if (params.phone) query.append('phone', params.phone);
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return await request(`/check-introductory-eligibility${qs}`, { silent: true }).catch(() => ({ success: true, eligible: true }));
   }
 };
 

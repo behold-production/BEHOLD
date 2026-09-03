@@ -5,6 +5,7 @@ const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary, uploadProfilePicToCloudinary } = require('../utils/cloudinaryHelper');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { checkIntroductoryUsed } = require('../utils/introductoryHelper');
 const cacheHelper = require('../utils/cacheHelper');
 
 const UserController = {
@@ -25,6 +26,18 @@ const UserController = {
       if (hasRealName && hasRealEmail && !userData.isProfileCompleted) {
         userData.isProfileCompleted = true;
         StorageService.update('users', req.user.id, { isProfileCompleted: true }).catch(() => {});
+      }
+
+      // Check if user has already used their one-time introductory session
+      if (!userData.hasUsedIntroductory) {
+        const used = await checkIntroductoryUsed({
+          userId: req.user.id,
+          email: userData.email,
+          phone: userData.phone
+        });
+        if (used) {
+          userData.hasUsedIntroductory = true;
+        }
       }
 
       res.status(200).json({

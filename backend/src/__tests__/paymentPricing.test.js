@@ -37,7 +37,7 @@ describe('Payment Pricing & Session Duration Calculations', () => {
       appliedDiscount,
       netTotal,
       amountInPaise,
-      durationStr: isHalfSession ? '30 Minutes' : '1 Hour (60 Mins)'
+      durationStr: isHalfSession ? '30 Minutes (Introductory Session)' : '1 Hour (60 Mins)'
     };
   };
 
@@ -47,7 +47,7 @@ describe('Payment Pricing & Session Duration Calculations', () => {
     expect(result.baseFee).toBe(499);
     expect(result.netTotal).toBe(499);
     expect(result.amountInPaise).toBe(49900);
-    expect(result.durationStr).toBe('30 Minutes');
+    expect(result.durationStr).toBe('30 Minutes (Introductory Session)');
   });
 
   test('should calculate 899 (89900 paise) for a 60-min session when counsellor price is 899', () => {
