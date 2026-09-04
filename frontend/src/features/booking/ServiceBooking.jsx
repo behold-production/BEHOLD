@@ -18,17 +18,17 @@ const getInitials = (name) => {
 
 const COUNSELLING_FLOW = {
     online: [
-        "Schedule Date, Time & choose consultant psychologist",
+        "Choose psychologist, schedule date & time",
         "Fill user profile & process online payment fee",
         "Access Google Meet link, schedule, & WhatsApp notifications"
     ],
     doorstep: [
-        "Schedule Date, Time & choose consultant psychologist",
+        "Choose psychologist, schedule date & time",
         "Fill user profile & process online payment fee",
         "Receive doorstep counselor assignment & WhatsApp notifications"
     ],
     offline: [
-        "Schedule Date, Time & choose consultant psychologist",
+        "Choose psychologist, schedule date & time",
         "Fill user profile & process online payment fee",
         "Receive center address, instructions, & WhatsApp notifications"
     ]
@@ -108,6 +108,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         getAdvisorSlotsForDate,
         getAdvisorAllSlotsForDate,
         getAdvisorBookedSlotsForDate,
+        getAdvisorEarliestAvailableDate,
+        getAdvisorEarliestAvailableInfo,
         handleDateChange,
         handleStepChange,
         handleInputChange,
@@ -661,50 +663,18 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                     {/* Left Column: Active Step Form Panel */}
                                     <div className="lg:col-span-8 text-left min-h-[380px] relative">
 
-                                        {/* STEP 1: Schedule & Advisor */}
+                                        {/* STEP 1: Advisor & Schedule */}
                                         {bookingStep === 'config' && (
                                             <div className="space-y-6 animate-in fade-in duration-300">
                                                 <div className="border-b border-surface-200 pb-3">
                                                     <h3 className="text-base sm:text-lg font-semibold text-surface-900 flex items-center gap-2">
                                                         <span className="w-6 h-6 rounded-md bg-surface-900 text-white text-xs flex items-center justify-center shrink-0 font-semibold">1</span>
-                                                        Schedule & Advisor
+                                                        Advisor & Schedule
                                                     </h3>
-                                                    <p className="text-sm text-surface-600 mt-1">Select a date, choose your psychologist, and pick a time.</p>
+                                                    <p className="text-sm text-surface-600 mt-1">Choose your psychologist, select an available date, and pick a time.</p>
                                                 </div>
 
                                                 <div className="space-y-6">
-                                                    {/* Selected Psychologist Banner Card */}
-                                                    {selectedAdvisor && (
-                                                        <div className="p-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-sky-50 border-2 border-[#00c9d6] rounded-2xl flex items-center justify-between gap-4 shadow-sm mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                                                            <div className="flex items-center gap-3.5 min-w-0">
-                                                                <div className="w-12 h-12 rounded-xl bg-white border border-teal-200 overflow-hidden shrink-0 flex items-center justify-center shadow-xs">
-                                                                    {selectedAdvisor.profilePic || selectedAdvisor.image ? (
-                                                                        <img src={selectedAdvisor.profilePic || selectedAdvisor.image} alt={selectedAdvisor.name} className="w-full h-full object-cover" />
-                                                                    ) : (
-                                                                        <span className="font-semibold text-lg text-[#00c9d6] uppercase">{getInitials(selectedAdvisor.name)}</span>
-                                                                    )}
-                                                                </div>
-                                                                <div className="min-w-0 text-left">
-                                                                    <div className="flex items-center gap-2">
-                                                                        <span className="px-2.5 py-0.5 bg-[#00c9d6] text-white text-[9.5px] font-semibold uppercase tracking-wider rounded-md">Selected Psychologist</span>
-                                                                    </div>
-                                                                    <h4 className="font-semibold text-slate-900 text-sm sm:text-base truncate mt-0.5">{selectedAdvisor.name}</h4>
-                                                                    <p className="text-xs text-slate-600 font-medium truncate">{selectedAdvisor.role || 'Consultant Psychologist'}</p>
-                                                                </div>
-                                                            </div>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    setSelectedAdvisor(null);
-                                                                    setSelectedTime('');
-                                                                    clearPreselectedAdvisor?.();
-                                                                }}
-                                                                className="px-3.5 py-1.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-xs font-semibold transition shrink-0 cursor-pointer shadow-xs"
-                                                            >
-                                                                Change
-                                                            </button>
-                                                        </div>
-                                                    )}
 
                                                     {/* Service Type Selection */}
                                                     <div className="space-y-2">
@@ -1022,38 +992,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     )}
                                                 </div>
 
-                                                {/* Step 1: Select Date */}
+                                                {/* Step 1: Psychologist / Advisor Selection */}
                                                 {!(bookingMode === 'DOOR_STEP' && (!bookingForm.clientLatitude || !bookingForm.clientLongitude)) ? (
-                                                    <div className="space-y-2 pt-4 border-t border-surface-200 animate-in fade-in duration-300">
-                                                        <label className="text-sm font-semibold text-surface-900 block ">1. Select Date</label>
-                                                        <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-xl">
-                                                            <DateTimePicker
-                                                                selectedDate={selectedDate}
-                                                                selectedTime={selectedTime}
-                                                                bookingDuration={bookingDuration}
-                                                                onDateChange={handleDateChange}
-                                                                onTimeChange={(t) => {
-                                                                    setSelectedTime(t);
-                                                                    if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                                                                }}
-                                                                getAvailableSlotsForDate={(date) => getAvailableSlotsForDate(date, bookingService)}
-                                                                errors={errors}
-                                                                selectedMode={bookingMode}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <div className="p-4 sm:p-6 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm mt-4">
-                                                        Please search or detect your location address to show available psychologists within 10 km.
-                                                    </div>
-                                                )}
-
-                                                {/* Step 2: Advisor Selection */}
-                                                {selectedDate && (
-                                                    <div ref={step2Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                    <div className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
                                                         <div className="flex items-center justify-between mb-2">
                                                             <label className="text-sm font-semibold text-surface-900 block">
-                                                                {selectedAdvisor ? '2. Selected Psychologist' : '2. Choose Psychologist'}
+                                                                {selectedAdvisor ? '1. Selected Psychologist' : (bookingService === 'counselling' ? '1. Choose Psychologist' : '1. Choose Advisor')}
                                                             </label>
                                                             {selectedAdvisor && !isAdvisorLocked && (
                                                                 <button
@@ -1065,7 +1009,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     }}
                                                                     className="text-xs font-semibold text-[#00c9d6] hover:underline cursor-pointer"
                                                                 >
-                                                                    Change
+                                                                    Change Psychologist
                                                                 </button>
                                                             )}
                                                         </div>
@@ -1109,16 +1053,24 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     Selected
                                                                                 </span>
                                                                                 {(() => {
-                                                                                    const slots = getAdvisorSlotsForDate(selectedAdvisor, selectedDate);
-                                                                                    return slots.length > 0 ? (
+                                                                                    if (selectedDate) {
+                                                                                        const slots = getAdvisorSlotsForDate(selectedAdvisor, selectedDate);
+                                                                                        return slots.length > 0 ? (
+                                                                                            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[9px] font-bold uppercase tracking-wider rounded-md">
+                                                                                                {slots.length} Slots on {selectedDate}
+                                                                                            </span>
+                                                                                        ) : (
+                                                                                            <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[9px] font-bold uppercase tracking-wider rounded-md">
+                                                                                                No slots on {selectedDate}
+                                                                                            </span>
+                                                                                        );
+                                                                                    }
+                                                                                    const info = getAdvisorEarliestAvailableInfo(selectedAdvisor);
+                                                                                    return info.available ? (
                                                                                         <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[9px] font-bold uppercase tracking-wider rounded-md">
-                                                                                            {slots.length} Slots on this date
+                                                                                            {info.label}
                                                                                         </span>
-                                                                                    ) : (
-                                                                                        <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-[9px] font-bold uppercase tracking-wider rounded-md">
-                                                                                            No slots on this date
-                                                                                        </span>
-                                                                                    );
+                                                                                    ) : null;
                                                                                 })()}
                                                                             </div>
                                                                             <h4 className="font-semibold text-base sm:text-lg text-slate-900 leading-snug truncate mt-1">
@@ -1198,13 +1150,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         );
                                                                     }
 
-                                                                    // Sort advisors: advisors with slots on selectedDate come first!
+                                                                    // Sort advisors: advisors with available upcoming slots come first!
                                                                     const sortedAdvisors = [...filteredAdvisors].sort((a, b) => {
-                                                                        const aSlots = getAdvisorSlotsForDate(a, selectedDate).length;
-                                                                        const bSlots = getAdvisorSlotsForDate(b, selectedDate).length;
-                                                                        if (aSlots > 0 && bSlots === 0) return -1;
-                                                                        if (bSlots > 0 && aSlots === 0) return 1;
-                                                                        return bSlots - aSlots;
+                                                                        const aInfo = getAdvisorEarliestAvailableInfo(a);
+                                                                        const bInfo = getAdvisorEarliestAvailableInfo(b);
+                                                                        if (aInfo.available && !bInfo.available) return -1;
+                                                                        if (bInfo.available && !aInfo.available) return 1;
+                                                                        return bInfo.slotCount - aInfo.slotCount;
                                                                     });
 
                                                                     const totalPages = Math.max(1, Math.ceil(sortedAdvisors.length / 4));
@@ -1214,22 +1166,27 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     return (
                                                                         <>
                                                                             {advisorsToRender.map((advisor) => {
-                                                                                const slots = getAdvisorSlotsForDate(advisor, selectedDate);
-                                                                                const isAvailable = slots.length > 0;
+                                                                                const info = getAdvisorEarliestAvailableInfo(advisor);
+                                                                                const isAvailable = info.available;
 
                                                                                 return (
                                                                                     <div
                                                                                         key={advisor.id}
                                                                                         onClick={() => {
+                                                                                            if (!isAvailable) return;
+                                                                                            const earliestDate = getAdvisorEarliestAvailableDate(advisor);
                                                                                             setSelectedAdvisor(advisor);
                                                                                             setAdvisorConfirmed(true);
+                                                                                            if (earliestDate) {
+                                                                                                setSelectedDate(earliestDate);
+                                                                                            }
+                                                                                            setSelectedTime('');
                                                                                             if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
                                                                                             if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
                                                                                                 setBookingMode(advisor.modes[0]);
                                                                                             }
-                                                                                            setSelectedTime('');
                                                                                             setTimeout(() => {
-                                                                                                step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                                                                step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                                                                             }, 150);
                                                                                         }}
                                                                                         className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${isAvailable
@@ -1313,11 +1270,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                                     {isAvailable ? (
                                                                                                         <span className="text-xs text-emerald-600 font-semibold mt-1.5 inline-flex items-center gap-1.5">
                                                                                                             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                                                                                            {slots.length} {slots.length === 1 ? 'Slot' : 'Slots'} Available on {selectedDate}
+                                                                                                            {info.label}
                                                                                                         </span>
                                                                                                     ) : (
                                                                                                         <span className="text-xs text-rose-500 font-medium mt-1.5 inline-block">
-                                                                                                            No slots available on this date
+                                                                                                            No upcoming slots available
                                                                                                         </span>
                                                                                                     )}
                                                                                                 </div>
@@ -1396,12 +1353,44 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                         {errors.advisor && <p className="text-xs text-rose-500 font-medium mt-1">{errors.advisor}</p>}
                                                     </div>
+                                                ) : (
+                                                    <div className="p-4 sm:p-6 border border-dashed border-surface-200 rounded-xl bg-surface-50 text-surface-600 text-center font-medium text-sm mt-4">
+                                                        Please search or detect your location address to show available psychologists within 10 km.
+                                                    </div>
+                                                )}
+
+                                                {/* Step 2: Select Date (Shown after Psychologist is selected) */}
+                                                {selectedAdvisor && (
+                                                    <div ref={step2Ref} className="space-y-2 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                        <label className="text-sm font-semibold text-surface-900 block">2. Select Date</label>
+                                                        <p className="text-xs text-surface-500 mb-2">Choose an available date for your session with {selectedAdvisor.name}. Dates with no available slots are disabled.</p>
+                                                        <div className="p-0 sm:p-4 bg-transparent sm:bg-surface-50 border-0 sm:border border-surface-200 rounded-xl">
+                                                            <DateTimePicker
+                                                                selectedDate={selectedDate}
+                                                                selectedTime={selectedTime}
+                                                                bookingDuration={bookingDuration}
+                                                                onDateChange={(d) => {
+                                                                    handleDateChange(d);
+                                                                    setTimeout(() => {
+                                                                        step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                                    }, 150);
+                                                                }}
+                                                                onTimeChange={(t) => {
+                                                                    setSelectedTime(t);
+                                                                    if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                                                                }}
+                                                                getAvailableSlotsForDate={(date) => getAdvisorSlotsForDate(selectedAdvisor, date)}
+                                                                errors={errors}
+                                                                selectedMode={bookingMode}
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 )}
 
                                                 {/* Step 3: Time Selection */}
                                                 {selectedDate && selectedAdvisor && (
                                                     <div ref={step3Ref} className="space-y-3 pt-6 border-t border-surface-200 animate-in fade-in slide-in-from-top-2 duration-300">
-                                                        <label className="text-sm font-semibold text-surface-900 block ">{isAdvisorLocked ? '2' : '3'}. Select Time</label>
+                                                        <label className="text-sm font-semibold text-surface-900 block">3. Select Time</label>
                                                         <TimePicker
                                                             selectedDate={selectedDate}
                                                             selectedTime={selectedTime}

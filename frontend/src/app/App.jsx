@@ -351,8 +351,14 @@ export default function App() {
     } //
   }, [location.pathname, pendingScrollSection]);
 
-  const handleBookTherapist = (advisorId) => {
-    setBookingAdvisor(advisorId);
+  const handleOpenGeneralBooking = () => {
+    setBookingAdvisor(null);
+    setIsBookingModalOpen(true);
+  };
+
+  const handleBookTherapist = (advisorOrId = null) => {
+    const id = (advisorOrId && typeof advisorOrId === 'object') ? (advisorOrId.id || advisorOrId._id) : advisorOrId;
+    setBookingAdvisor(id || null);
     setIsBookingModalOpen(true);
   };
 
@@ -615,7 +621,10 @@ export default function App() {
 
       <ServiceBooking
         isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
+        onClose={() => {
+          setIsBookingModalOpen(false);
+          setBookingAdvisor(null);
+        }}
         preselectedAdvisorId={bookingAdvisor}
         clearPreselectedAdvisor={() => setBookingAdvisor(null)}
         onOpenDocs={setActiveDocType}
@@ -627,7 +636,7 @@ export default function App() {
           navigateToSection={navigateToSection}
           currentView={location.pathname}
           onOpenAuth={() => setIsAuthModalOpen(true)}
-          onOpenBooking={() => setIsBookingModalOpen(true)}
+          onOpenBooking={handleOpenGeneralBooking}
           siteName={siteSettings.siteName}
           siteSettings={siteSettings}
         />
@@ -653,7 +662,7 @@ export default function App() {
           {/* Landing Page - Exactly 4 Sections */}
           <Route path="/" element={ //
             <main className="fade-in-up">
-              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={() => setIsBookingModalOpen(true)} />
+              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} />
               <FaqBlogSection />
               <ContactInquirySection />
@@ -678,7 +687,7 @@ export default function App() {
           {/* Dedicated Ad Landing Page Endpoints */}
           <Route path="/bookmysession" element={
             <AdLandingPage 
-              onOpenBooking={() => setIsBookingModalOpen(true)}
+              onOpenBooking={handleOpenGeneralBooking}
               onSelectAdvisor={handleBookTherapist}
               siteSettings={siteSettings}
               onOpenDocs={setActiveDocType}
@@ -760,7 +769,7 @@ export default function App() {
           {/* Student Profile */}
           <Route path="/profile" element={ //
             <ProtectedRoute allowedRoles={['USER']}>
-              <StudentProfile onOpenBooking={() => setIsBookingModalOpen(true)} />
+              <StudentProfile onOpenBooking={handleOpenGeneralBooking} />
             </ProtectedRoute>
           } />
 
@@ -815,7 +824,7 @@ export default function App() {
           enablePsychology={siteSettings.enablePsychology !== false}
           enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
           siteSettings={siteSettings}
-          onOpenBooking={() => setIsBookingModalOpen(true)}
+          onOpenBooking={handleOpenGeneralBooking}
         />
       )}
  

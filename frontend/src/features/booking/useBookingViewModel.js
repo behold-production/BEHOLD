@@ -386,6 +386,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           if (match.modes && match.modes.length > 0 && !match.modes.includes(bookingMode)) {
             setBookingMode(match.modes[0]);
           }
+          setSelectedDate(prevDate => {
+            if (prevDate && getAdvisorSlotsForDate(match, prevDate).length > 0) {
+              return prevDate;
+            }
+            return getAdvisorEarliestAvailableDate(match) || prevDate || '';
+          });
         }, 0);
       }
     }
@@ -805,18 +811,69 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       .map(b => b.time);
   };
 
+  const getAdvisorEarliestAvailableDate = (advisor, preferredDate = null) => {
+    if (!advisor) return null;
+    if (preferredDate && getAdvisorSlotsForDate(advisor, preferredDate).length > 0) {
+      return preferredDate;
+    }
+    const today = new Date();
+    for (let i = 0; i <= 60; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+      const slots = getAdvisorSlotsForDate(advisor, dateStr);
+      if (slots.length > 0) {
+        return dateStr;
+      }
+    }
+    return null;
+  };
+
+  const getAdvisorEarliestAvailableInfo = (advisor) => {
+    if (!advisor) return { available: false, dateStr: null, slotCount: 0, label: 'Unavailable' };
+    const todayStr = getLocalTodayString();
+    const todaySlots = getAdvisorSlotsForDate(advisor, todayStr);
+    if (todaySlots.length > 0) {
+      return {
+        available: true,
+        dateStr: todayStr,
+        slotCount: todaySlots.length,
+        label: `Available Today (${todaySlots.length} ${todaySlots.length === 1 ? 'slot' : 'slots'})`
+      };
+    }
+
+    const today = new Date();
+    for (let i = 1; i <= 60; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+      const slots = getAdvisorSlotsForDate(advisor, dateStr);
+      if (slots.length > 0) {
+        const isTomorrow = i === 1;
+        const formattedDate = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        return {
+          available: true,
+          dateStr,
+          slotCount: slots.length,
+          label: isTomorrow
+            ? `Available Tomorrow (${slots.length} ${slots.length === 1 ? 'slot' : 'slots'})`
+            : `Available ${formattedDate} (${slots.length} ${slots.length === 1 ? 'slot' : 'slots'})`
+        };
+      }
+    }
+    return { available: false, dateStr: null, slotCount: 0, label: 'No upcoming slots' };
+  };
+
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
     setSelectedTime('');
     if (errors.date) setErrors(prev => ({ ...prev, date: null }));
-
-    if (!isAdvisorLocked && selectedAdvisor) {
-      const slots = getAdvisorSlotsForDate(selectedAdvisor, newDate);
-      if (slots.length === 0) {
-        setSelectedAdvisor(null);
-        setAdvisorConfirmed(false);
-      }
-    }
   };
 
   const getAdvisorAvailabilityStatus = (advisorId, dateStr, timeStr) => {
@@ -1031,6 +1088,12 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             if (found.modes && found.modes.length > 0 && !found.modes.includes(bookingMode)) {
               setBookingMode(found.modes[0]);
             }
+            setSelectedDate(prevDate => {
+              if (prevDate && getAdvisorSlotsForDate(found, prevDate).length > 0) {
+                return prevDate;
+              }
+              return getAdvisorEarliestAvailableDate(found) || prevDate || '';
+            });
           }, 0);
 
           setTimeout(() => {
@@ -1733,6 +1796,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     getAdvisorSlotsForDate,
     getAdvisorAllSlotsForDate,
     getAdvisorBookedSlotsForDate,
+    getAdvisorEarliestAvailableDate,
+    getAdvisorEarliestAvailableInfo,
     handleDateChange,
     getAdvisorAvailabilityStatus,
     handleStepChange,

@@ -191,14 +191,24 @@ export default function DateTimePicker({
 
  const getChipClass = (targetStr) => {
  const isSelected = selectedDate === targetStr;
- const base = "shrink-0 px-3 min-h-[34px] rounded-[10px] text-[11px] font-semibold transition-all duration-200 cursor-pointer flex items-center border";
- if (isSelected) {
- return `${base} bg-surface-900 border-surface-900 text-white`;
+ const targetObj = new Date(targetStr + 'T00:00:00');
+ const meta = getDayMeta(targetStr, targetObj);
+ const isDisabled = meta.isPast || !meta.isAvailable;
+
+ const base = "shrink-0 px-3 min-h-[34px] rounded-[10px] text-[11px] font-semibold transition-all duration-200 flex items-center border";
+ if (isDisabled) {
+ return `${base} bg-zinc-50 border-zinc-200 text-zinc-300 cursor-not-allowed opacity-50`;
  }
- return `${base} bg-white border-surface-200 text-surface-600 hover:border-surface-400 hover:bg-surface-50`;
+ if (isSelected) {
+ return `${base} bg-surface-900 border-surface-900 text-white cursor-pointer`;
+ }
+ return `${base} bg-white border-surface-200 text-surface-600 hover:border-surface-400 hover:bg-surface-50 cursor-pointer`;
  };
 
  const handleQuickJump = (dateStr) => {
+ const targetObj = new Date(dateStr + 'T00:00:00');
+ const meta = getDayMeta(dateStr, targetObj);
+ if (meta.isPast || !meta.isAvailable) return;
  onDateChange(dateStr);
  onTimeChange('');
  };
@@ -278,10 +288,10 @@ export default function DateTimePicker({
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
  {/* Quick-jump chips */}
  <div className="flex flex-wrap gap-1.5">
- <button type="button" onClick={() => handleQuickJump(todayStr)} className={getChipClass(todayStr)}>Today</button>
- <button type="button" onClick={() => handleQuickJump(tomorrowStr)} className={getChipClass(tomorrowStr)}>Tomorrow</button>
- <button type="button" onClick={() => handleQuickJump(weekendStr)} className={getChipClass(weekendStr)}>Weekend</button>
- <button type="button" onClick={() => handleQuickJump(nextWeekStr)} className={getChipClass(nextWeekStr)}>Next Week</button>
+ <button type="button" disabled={getDayMeta(todayStr, today).isPast || !getDayMeta(todayStr, today).isAvailable} onClick={() => handleQuickJump(todayStr)} className={getChipClass(todayStr)}>Today</button>
+ <button type="button" disabled={getDayMeta(tomorrowStr, new Date(tomorrowStr + 'T00:00:00')).isPast || !getDayMeta(tomorrowStr, new Date(tomorrowStr + 'T00:00:00')).isAvailable} onClick={() => handleQuickJump(tomorrowStr)} className={getChipClass(tomorrowStr)}>Tomorrow</button>
+ <button type="button" disabled={getDayMeta(weekendStr, new Date(weekendStr + 'T00:00:00')).isPast || !getDayMeta(weekendStr, new Date(weekendStr + 'T00:00:00')).isAvailable} onClick={() => handleQuickJump(weekendStr)} className={getChipClass(weekendStr)}>Weekend</button>
+ <button type="button" disabled={getDayMeta(nextWeekStr, new Date(nextWeekStr + 'T00:00:00')).isPast || !getDayMeta(nextWeekStr, new Date(nextWeekStr + 'T00:00:00')).isAvailable} onClick={() => handleQuickJump(nextWeekStr)} className={getChipClass(nextWeekStr)}>Next Week</button>
  </div>
 
  <div className="flex items-center bg-surface-100 p-0.5 rounded-[10px] border border-surface-200 shrink-0 self-start sm:self-auto">
@@ -353,29 +363,30 @@ export default function DateTimePicker({
   const meta = getDayMeta(cell.dateStr, cell.dateObj);
   const isSelected = selectedDate === cell.dateStr;
   const isToday = cell.dateStr === todayStr;
+  const isDisabled = meta.isPast || !meta.isAvailable;
 
   return (
   <button
   key={`${cell.dateStr}-${idx}`}
   type="button"
-  disabled={meta.isPast}
+  disabled={isDisabled}
   onClick={() => {
-  if (!meta.isPast) {
+  if (!isDisabled) {
   onDateChange(cell.dateStr);
   onTimeChange('');
   }
   }}
   className={`
-  relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-[10px] transition-all duration-200 select-none border-2 cursor-pointer
-  ${meta.isPast
-  ? 'bg-zinc-100/60 border-transparent text-zinc-400 cursor-not-allowed opacity-50'
+  relative flex flex-col items-center justify-center h-11 sm:h-12 w-full rounded-[10px] transition-all duration-200 select-none border-2
+  ${isDisabled
+  ? 'bg-zinc-100/60 border-transparent text-zinc-300 cursor-not-allowed opacity-50'
   : isSelected
-  ? 'bg-zinc-950 border-zinc-950 text-white shadow-md font-bold'
+  ? 'bg-zinc-950 border-zinc-950 text-white shadow-md font-bold cursor-pointer'
   : isToday
-  ? 'bg-white border-zinc-900 ring-2 ring-cyan-500/80 text-zinc-900 font-bold hover:bg-zinc-50'
-  : 'bg-white border-zinc-200 text-zinc-900 font-bold hover:border-zinc-900 hover:shadow-xs'
+  ? 'bg-white border-zinc-900 ring-2 ring-cyan-500/80 text-zinc-900 font-bold hover:bg-zinc-50 cursor-pointer'
+  : 'bg-white border-zinc-200 text-zinc-900 font-bold hover:border-zinc-900 hover:shadow-xs cursor-pointer'
   }
-  ${!cell.isCurrentMonth && !meta.isPast && !isSelected ? 'opacity-40 text-zinc-400' : ''}
+  ${!cell.isCurrentMonth && !isDisabled && !isSelected ? 'opacity-40 text-zinc-400' : ''}
   `}
   >
   {/* Day Number */}
@@ -437,15 +448,16 @@ export default function DateTimePicker({
   const meta = getDayMeta(day.dateStr, day.dateObj);
   const isSelected = selectedDate === day.dateStr;
   const isToday = day.dateStr === todayStr;
+  const isDisabled = meta.isPast || !meta.isAvailable;
 
   return (
   <button
   key={day.dateStr}
   data-date={day.dateStr}
   type="button"
-  disabled={meta.isPast}
+  disabled={isDisabled}
   onClick={() => {
-  if (!meta.isPast) {
+  if (!isDisabled) {
   onDateChange(day.dateStr);
   onTimeChange('');
   }
@@ -453,14 +465,14 @@ export default function DateTimePicker({
   className={`
   flex flex-col items-center justify-center snap-start
   min-w-[60px] sm:min-w-[66px] h-[82px] sm:h-[88px]
-  rounded-[10px] border-2 transition-all duration-200 select-none cursor-pointer
-  ${meta.isPast
-  ? 'bg-zinc-100/60 border-zinc-100 text-zinc-400 cursor-not-allowed opacity-50'
+  rounded-[10px] border-2 transition-all duration-200 select-none
+  ${isDisabled
+  ? 'bg-zinc-100/60 border-zinc-100 text-zinc-300 cursor-not-allowed opacity-50'
   : isSelected
-  ? 'bg-zinc-950 border-zinc-950 text-white shadow-lg font-bold'
+  ? 'bg-zinc-950 border-zinc-950 text-white shadow-lg font-bold cursor-pointer'
   : isToday
-  ? 'bg-white border-zinc-900 ring-2 ring-cyan-500/80 text-zinc-900 font-bold hover:bg-zinc-50'
-  : 'bg-white border-zinc-200 text-zinc-900 font-bold hover:border-zinc-900 hover:shadow-xs'
+  ? 'bg-white border-zinc-900 ring-2 ring-cyan-500/80 text-zinc-900 font-bold hover:bg-zinc-50 cursor-pointer'
+  : 'bg-white border-zinc-200 text-zinc-900 font-bold hover:border-zinc-900 hover:shadow-xs cursor-pointer'
   }
   `}
   >

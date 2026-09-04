@@ -32,6 +32,7 @@ import SEO from '../../components/common/SEO';
 import { toast } from 'react-hot-toast';
 import { trackViewContent, trackInitiateCheckout } from '../../utils/metaPixel';
 import { formatExperience } from '../../utils/formatters';
+import { calculateNextAvailable } from '../../utils/dateFormatter';
 import clinicImage from '../../assets/luxury_clinic_room.png';
 import headerBg from '../../assets/header.svg';
 
@@ -304,7 +305,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               bio: c.bio || 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
               specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['Anxiety & Stress', 'Depression', 'Personal Growth']),
               photo: hasValidPhoto ? rawPhoto : null,
-              languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam, English')))
+              languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam, English'))),
+              availability: c.availability || c.availabilitySlots || null,
+              bookedSlots: c.bookedSlots || []
             };
           });
           setAdvisors(list);
@@ -386,13 +389,20 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       currency: 'INR'
     });
 
-    if (advisorId && onSelectAdvisor) {
-      onSelectAdvisor(advisorId);
-    }
-    if (onOpenBooking) {
-      onOpenBooking();
+    if (advisorId) {
+      if (onSelectAdvisor) {
+        onSelectAdvisor(advisorId);
+      } else if (onOpenBooking) {
+        onOpenBooking();
+      } else {
+        navigate(`/booking?counsellorId=${advisorId}`);
+      }
     } else {
-      navigate('/booking' + (advisorId ? `?counsellorId=${advisorId}` : ''));
+      if (onOpenBooking) {
+        onOpenBooking();
+      } else {
+        navigate('/booking');
+      }
     }
   };
 
@@ -813,6 +823,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               {advisors.map((advisor) => {
                 const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
                 const minFee = advisor.fee || heroPrice;
+                const nextAvail = calculateNextAvailable(advisor.availability, advisor.bookedSlots || []);
+                const isAvailToday = nextAvail === 'Available Today';
+                const isUnavailable = nextAvail === 'Unavailable';
 
                 return (
                   <div
@@ -916,7 +929,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                         <div className="text-left">
                           <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Next Available</span>
-                          <span className="text-[11px] font-semibold text-emerald-600 block mt-0.5 whitespace-nowrap">Available Today</span>
+                          <span className={`text-[11px] font-semibold block mt-0.5 whitespace-nowrap ${isUnavailable ? 'text-zinc-400' : isAvailToday ? 'text-emerald-600' : 'text-[#008b94]'}`}>
+                            {nextAvail}
+                          </span>
                         </div>
 
                         <button
@@ -924,7 +939,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                           onClick={() => handleBook(advisor.id)}
                           className="bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-1"
                         >
-                          {heroBtnText}
+                          Select Advisor
                         </button>
                       </div>
 
