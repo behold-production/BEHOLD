@@ -70,7 +70,7 @@ export default function AptitudeLanding({ setView }) {
 
           {/* Main Teaser Hook Card */}
           <div className="bg-[#0f172a] text-white rounded-xl p-8 sm:p-12 max-w-3xl mx-auto border border-[#00e5ff]/30 text-left mb-14 shadow-lg">
-            <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#00e5ff] text-[#0f172a] text-[10px] font-extrabold uppercase tracking-widest mb-4">
+            <span className="inline-block px-3 py-1 rounded-md bg-[#00e5ff] text-[#0f172a] text-[10px] font-extrabold uppercase tracking-widest mb-4">
               Teaser Assessment
             </span>
             <h3 className="text-2xl sm:text-3xl font-sans font-semibold uppercase text-white mb-3">
@@ -82,7 +82,7 @@ export default function AptitudeLanding({ setView }) {
 
             <button
               onClick={handleProceed}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-semibold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-semibold text-xs uppercase tracking-widest rounded-xl transition-all shadow-md border-none cursor-pointer"
             >
               Try a Sample Test ›
             </button>
@@ -99,7 +99,7 @@ export default function AptitudeLanding({ setView }) {
                 className="bg-white p-7 rounded-xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
               >
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-2.5 py-1 rounded-md border border-surface-200 inline-block mb-4">
                     Full C-DAT Test
                   </span>
                   <h5 className="font-semibold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Detailed Explanation & Pricing</h5>
@@ -112,7 +112,7 @@ export default function AptitudeLanding({ setView }) {
                 className="bg-white p-7 rounded-xl border border-surface-200 hover:border-[#00e5ff] transition-all shadow-xs cursor-pointer flex flex-col justify-between group"
               >
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-3 py-1 rounded-full border border-surface-200 inline-block mb-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#0f172a] bg-surface-100 px-2.5 py-1 rounded-md border border-surface-200 inline-block mb-4">
                     Expert Assignment
                   </span>
                   <h5 className="font-semibold uppercase text-[#0f172a] group-hover:text-[#00e5ff] transition-colors text-base mb-2 font-sans">Psychologist & Mentor Assignment</h5>

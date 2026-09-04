@@ -270,7 +270,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                     onClick={handleProfileClick}
                     title={`Logged in as ${user.name || user.email}`}
                     aria-label="User Profile"
-                    className="flex items-center gap-1.5 p-0.5 rounded-full transition-all cursor-pointer border bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs active:scale-95"
+                    className="flex items-center gap-1.5 p-0.5 rounded-xl transition-all cursor-pointer border bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs active:scale-95"
                   >
                     <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#00c9d6] flex items-center justify-center text-slate-950 font-extrabold text-sm shadow-xs border-2 border-white">
                       {user.profilePic ? (

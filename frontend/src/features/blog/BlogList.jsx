@@ -168,7 +168,7 @@ const BlogList = () => {
                     key={cat}
                     type="button"
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border whitespace-nowrap shrink-0 ${
+                    className={`px-4 py-1.5 rounded-xl text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border whitespace-nowrap shrink-0 ${
                       active
                         ? 'bg-[#0f172a] text-white border-[#0f172a] shadow-sm'
                         : 'bg-white/90 text-slate-700 border-slate-200/90 hover:border-slate-400 hover:text-slate-900'

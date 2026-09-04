@@ -358,7 +358,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                     <button
                         type="button"
                         onClick={handleModalBack}
-                        className="min-h-[38px] px-4 py-1.5 bg-surface-100 hover:bg-surface-200 text-surface-900 border border-surface-200 rounded-full flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-xs hover-scale-btn"
+                        className="min-h-[38px] px-4 py-1.5 bg-surface-100 hover:bg-surface-200 text-surface-900 border border-surface-200 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-xs hover-scale-btn"
                         aria-label="Go Back"
                     >
                         <ArrowLeft className="w-4 h-4 text-surface-700" />
@@ -369,7 +369,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                         type="button"
                         onClick={onClose}
                         aria-label="Close Booking"
-                        className="w-9 h-9 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-full flex items-center justify-center transition-colors cursor-pointer border-none"
+                        className="w-9 h-9 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-xl flex items-center justify-center transition-colors cursor-pointer border-none"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -498,7 +498,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                     </div>
 
                                     <div className="space-y-2 animate-scale-pop relative z-10 text-center flex flex-col items-center justify-center">
-                                        <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1 rounded-full font-semibold w-fit mx-auto block shadow-xs">
+                                        <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1 rounded-md font-semibold w-fit mx-auto block shadow-xs">
                                             {rescheduleSession ? 'Reschedule Requested' : 'Session Confirmed & Paid'}
                                         </span>
                                         <h3 className="text-2xl sm:text-3xl font-semibold font-sans text-slate-900 tracking-tight mt-2">
@@ -523,7 +523,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <span className="text-xs font-semibold text-slate-500">
                                                 {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation Summary'}
                                             </span>
-                                            <span className="text-xs font-semibold text-emerald-600 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
+                                            <span className="text-xs font-semibold text-emerald-600 bg-emerald-100/80 px-2.5 py-0.5 rounded-md">
                                                 ✓ Paid
                                             </span>
                                         </div>
@@ -596,7 +596,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 onClick={() => {
                                                     window.location.href = '/profile?tab=booked';
                                                 }}
-                                                className="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-full transition cursor-pointer text-center shadow-sm"
+                                                className="w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition cursor-pointer text-center shadow-sm"
                                             >
                                                 Go to My Sessions
                                             </button>
@@ -743,7 +743,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <div className="flex items-center justify-between">
                                                             <label className="text-sm font-semibold text-surface-800 block">Select Session Plan</label>
                                                             {!isIntroductoryEligible && (
-                                                                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                                                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md flex items-center gap-1">
                                                                     <span>✓</span> Introductory Session Completed
                                                                 </span>
                                                             )}
@@ -771,7 +771,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     } ${rescheduleSession ? 'opacity-50 cursor-not-allowed' : ''}`}
                                                                             >
                                                                                 <div className="w-full flex items-center justify-between gap-2 mb-2">
-                                                                                    <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${bookingDuration === 30 ? 'bg-[#06b6d4]/20 text-[#00c9d6] border border-[#06b6d4]/40' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                                                                    <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${bookingDuration === 30 ? 'bg-[#06b6d4]/20 text-[#00c9d6] border border-[#06b6d4]/40' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                                                                         }`}>
                                                                                         ✨ One-Time Intro Offer
                                                                                     </span>
@@ -798,7 +798,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     } ${rescheduleSession ? 'opacity-50 cursor-not-allowed' : ''}`}
                                                                             >
                                                                                 <div className="w-full flex items-center justify-between gap-2 mb-2">
-                                                                                    <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${bookingDuration === 60 ? 'bg-white/10 text-slate-200 border border-white/20' : 'bg-surface-100 text-surface-600 border border-surface-200'
+                                                                                    <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${bookingDuration === 60 ? 'bg-white/10 text-slate-200 border border-white/20' : 'bg-surface-100 text-surface-600 border border-surface-200'
                                                                                         }`}>
                                                                                         Comprehensive
                                                                                     </span>
@@ -822,7 +822,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             <div className="w-full bg-[#0f172a] text-white p-4 rounded-xl border border-[#06b6d4]/40 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                                                 <div>
                                                                     <div className="flex items-center gap-2 mb-1">
-                                                                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#06b6d4]/20 text-[#00c9d6] border border-[#06b6d4]/40">
+                                                                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-[#06b6d4]/20 text-[#00c9d6] border border-[#06b6d4]/40">
                                                                             Full Therapy Consultation
                                                                         </span>
                                                                         <span className="text-xs text-slate-300">1 Hour (60 Mins)</span>
@@ -876,7 +876,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         type="button"
                                                                         onClick={handleClientAddressSearch}
                                                                         disabled={isClientSearching}
-                                                                        className="w-full sm:w-auto px-4 py-2.5 bg-surface-900 text-white text-sm font-semibold rounded-full hover:bg-black transition cursor-pointer shrink-0 text-center border-none"
+                                                                        className="w-full sm:w-auto px-4 py-2.5 bg-surface-900 text-white text-sm font-semibold rounded-xl hover:bg-black transition cursor-pointer shrink-0 text-center border-none"
                                                                     >
                                                                         {isClientSearching ? 'Searching...' : 'Search'}
                                                                     </button>
@@ -970,7 +970,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     type="button"
                                                                     disabled={isClientLocating}
                                                                     onClick={handleClientDetectLocation}
-                                                                    className="px-4 py-2 border border-surface-200 hover:border-surface-300 text-surface-900 bg-white font-semibold text-sm rounded-full transition cursor-pointer flex items-center justify-center gap-1.5 shadow-none disabled:opacity-50 "
+                                                                    className="px-4 py-2 border border-surface-200 hover:border-surface-300 text-surface-900 bg-white font-semibold text-sm rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 shadow-none disabled:opacity-50 "
                                                                 >
                                                                     {isClientLocating ? (
                                                                         <>
@@ -1100,7 +1100,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 {bookingDuration === 30 ? 'Introductory Session (30 Mins)' : 'Standard Session (1 Hour)'}
                                                                             </span>
                                                                         </div>
-                                                                        {!isAdvisorLocked && (
+                                                                        {selectedAdvisor && !preselectedAdvisorId && !rescheduleSession && (
                                                                             <button
                                                                                 type="button"
                                                                                 onClick={() => {
@@ -1108,7 +1108,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     setSelectedTime('');
                                                                                     clearPreselectedAdvisor?.();
                                                                                 }}
-                                                                                className="px-4 py-1.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-xs font-semibold transition cursor-pointer shadow-xs"
+                                                                                className="px-4 py-1.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-800 hover:bg-slate-900 hover:text-white rounded-lg text-xs font-semibold transition cursor-pointer shadow-xs"
                                                                             >
                                                                                 Change Psychologist
                                                                             </button>
@@ -1311,7 +1311,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         onClick={() => setAdvisorPage(p => Math.max(1, p - 1))}
                                                                                         disabled={advisorPage === 1}
                                                                                         aria-label="Previous Page"
-                                                                                        className={`w-8 h-8 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === 1
+                                                                                        className={`w-8 h-8 rounded-lg text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === 1
                                                                                             ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                                                                                             : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                                                                                             }`}
@@ -1323,7 +1323,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                             key={num}
                                                                                             type="button"
                                                                                             onClick={() => setAdvisorPage(num)}
-                                                                                            className={`w-8 h-8 rounded-full text-xs font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === num
+                                                                                            className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === num
                                                                                                 ? 'bg-[#0f172a] text-[#06b6d4] border-[#06b6d4] shadow-xs'
                                                                                                 : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#06b6d4]'
                                                                                                 }`}
@@ -1336,7 +1336,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         onClick={() => setAdvisorPage(p => Math.min(Math.ceil(sortedAdvisors.length / 4), p + 1))}
                                                                                         disabled={advisorPage === Math.ceil(sortedAdvisors.length / 4)}
                                                                                         aria-label="Next Page"
-                                                                                        className={`w-8 h-8 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === Math.ceil(sortedAdvisors.length / 4)
+                                                                                        className={`w-8 h-8 rounded-lg text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${advisorPage === Math.ceil(sortedAdvisors.length / 4)
                                                                                             ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
                                                                                             : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
                                                                                             }`}
@@ -1443,7 +1443,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             type="button"
                                                             disabled={!selectedDate || !selectedTime || isSubmitting}
                                                             onClick={handleRescheduleConfirm}
-                                                            className="px-6 py-2.5 min-h-[48px] bg-surface-900 text-white font-semibold text-sm rounded-full transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
+                                                            className="px-6 py-2.5 min-h-[48px] bg-surface-900 text-white font-semibold text-sm rounded-xl transition hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
                                                         >
                                                             {isSubmitting ? 'Rescheduling...' : 'Confirm Reschedule'}
                                                         </button>
@@ -1490,7 +1490,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             Client & Booking Contact Details
                                                         </h4>
                                                         {user && (
-                                                            <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                                                            <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-md">
                                                                 ✓ Verified
                                                             </span>
                                                         )}
@@ -1711,7 +1711,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <span className="font-semibold text-surface-900 block text-left">
                                                             {bookingDuration === 30 ? 'Introductory Session' : 'Standard Session'}
                                                         </span>
-                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${bookingDuration === 30 ? 'bg-cyan-50 text-[#0891b2] border border-cyan-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}`}>
+                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${bookingDuration === 30 ? 'bg-cyan-50 text-[#0891b2] border border-cyan-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}`}>
                                                             {bookingDuration === 30 ? '30 Mins' : '1 Hour'}
                                                         </span>
                                                     </div>
@@ -1768,7 +1768,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             <button
                                                                 type="button"
                                                                 onClick={handleRemoveCoupon}
-                                                                className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-full text-xs font-semibold transition cursor-pointer"
+                                                                className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-semibold transition cursor-pointer"
                                                             >
                                                                 Remove
                                                             </button>
@@ -1776,7 +1776,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             <button
                                                                 type="button"
                                                                 onClick={handleApplyCoupon}
-                                                                className="px-3.5 py-1.5 bg-surface-900 hover:bg-black text-white rounded-full text-xs font-semibold transition cursor-pointer border-none "
+                                                                className="px-3.5 py-1.5 bg-surface-900 hover:bg-black text-white rounded-lg text-xs font-semibold transition cursor-pointer border-none "
                                                             >
                                                                 Apply
                                                             </button>
@@ -1866,7 +1866,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                             <button
                                 type="button"
                                 onClick={() => setShowNoCounsellorsModal(false)}
-                                className="w-full py-2.5 bg-surface-900 hover:bg-black text-white font-semibold text-xs rounded-full cursor-pointer transition border-none shadow-none"
+                                className="w-full py-2.5 bg-surface-900 hover:bg-black text-white font-semibold text-xs rounded-xl cursor-pointer transition border-none shadow-none"
                             >
                                 OK
                             </button>

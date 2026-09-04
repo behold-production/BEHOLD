@@ -201,7 +201,7 @@ export default function OverviewTab({
                     <p className="text-xs sm:text-sm font-bold text-[#0f172a]">{s.advisorName}</p>
                     <p className="text-xs text-surface-600 font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
                   </div>
-                  <span className="text-xs font-bold text-[#0f172a] bg-surface-100 border border-surface-200 px-3 py-1 rounded-full">Completed</span>
+                  <span className="text-xs font-bold text-[#0f172a] bg-surface-100 border border-surface-200 px-3 py-1 rounded-md">Completed</span>
                 </div>
               ))}
             </div>
@@ -239,9 +239,9 @@ export default function OverviewTab({
                   {a.label}
                 </span>
                 {a.done ? (
-                  <span className="text-[10px] sm:text-xs font-bold text-[#00c9d6] bg-slate-900 px-2.5 py-0.5 rounded-full shadow-2xs border border-[#00c9d6]/30">Done</span>
+                  <span className="text-[10px] sm:text-xs font-bold text-[#00c9d6] bg-slate-900 px-2.5 py-0.5 rounded-md shadow-2xs border border-[#00c9d6]/30">Done</span>
                 ) : (
-                  <span className="text-[10px] sm:text-xs font-bold text-surface-500 bg-surface-100 px-2.5 py-0.5 rounded-full border border-surface-200">Pending</span>
+                  <span className="text-[10px] sm:text-xs font-bold text-surface-500 bg-surface-100 px-2.5 py-0.5 rounded-md border border-surface-200">Pending</span>
                 )}
               </div>
             ))

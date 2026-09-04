@@ -96,7 +96,7 @@ export default function CdatSection({ setView, siteSettings }) {
             <div className="pt-2">
               <button
                 onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs inline-flex items-center justify-center"
+                className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs inline-flex items-center justify-center"
               >
                 Try a Free Sample Test
               </button>

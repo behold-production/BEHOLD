@@ -131,7 +131,7 @@ export default function FaqsPage() {
             <span className="text-slate-800">FAQs & Help</span>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00c9d6]/10 text-[#008b94] font-bold text-[11px] uppercase tracking-wider mb-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#00c9d6]/10 text-[#008b94] font-bold text-[11px] uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" /> Help & Support Center
           </span>
 
@@ -157,7 +157,7 @@ export default function FaqsPage() {
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3.5 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                  className="absolute right-3.5 p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -172,7 +172,7 @@ export default function FaqsPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                  className={`px-4 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                     selectedCategory === cat
                       ? 'bg-slate-900 text-white shadow-sm'
                       : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'

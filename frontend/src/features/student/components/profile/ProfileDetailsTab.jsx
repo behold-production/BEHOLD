@@ -308,7 +308,7 @@ const ProfileDetailsTab = ({
  type="button"
  onClick={handleDetectLocation}
  disabled={isLocating}
- className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-full tracking-widest text-[10px] font-semibold transition cursor-pointer border-none shadow-none disabled:opacity-50"
+ className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-xl tracking-widest text-[10px] font-semibold transition cursor-pointer border-none shadow-none disabled:opacity-50"
  >
  <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
  {isLocating ? 'Locating...' : 'Detect Location'}
@@ -343,7 +343,7 @@ const ProfileDetailsTab = ({
  type="button"
  onClick={handleAddressSearch}
  disabled={isSearching}
- className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] tracking-widest font-semibold rounded-full transition cursor-pointer border-none shadow-none"
+ className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] tracking-widest font-semibold rounded-xl transition cursor-pointer border-none shadow-none"
  >
  {isSearching ? 'Searching...' : 'Search'}
  </button>
@@ -468,7 +468,7 @@ const ProfileDetailsTab = ({
  <button
  type="button"
  onClick={handleEnableNotifications}
- className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-full text-[10px] tracking-widest font-semibold transition cursor-pointer border-none shadow-none"
+ className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer border-none shadow-none"
  >
  Enable Notifications
  </button>
@@ -477,7 +477,7 @@ const ProfileDetailsTab = ({
  <button
  type="button"
  onClick={handleTestNotification}
- className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-full text-[10px] tracking-widest font-semibold transition cursor-pointer shadow-none"
+ className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer shadow-none"
  >
  Test Alert Notification
  </button>

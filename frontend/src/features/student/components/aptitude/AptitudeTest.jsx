@@ -429,7 +429,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <button
  id="btn-restart-test"
  onClick={handleRestart}
- className="px-5 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 rounded-full font-semibold text-[10px] tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
+ className="px-5 py-2.5 bg-white border border-surface-200 hover:border-surface-900 hover:bg-surface-50 text-surface-900 rounded-xl font-semibold text-[10px] tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
  >
  <RotateCcw className="w-3.5 h-3.5" />
  <span>Retake Test</span>

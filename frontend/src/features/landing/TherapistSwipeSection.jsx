@@ -330,7 +330,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   navigate(`/advisor/${advisor.id}`);
                 }}
-                className="px-2 sm:px-3.5 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-full text-[9.5px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
+                className="px-2 sm:px-3.5 py-1.5 sm:py-2 border border-slate-300 hover:border-slate-900 text-slate-800 hover:bg-slate-900 hover:text-white rounded-xl text-[9.5px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap hover-scale-btn shadow-xs"
               >
                 View Profile
               </button>
@@ -341,7 +341,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-extrabold text-[9.5px] sm:text-xs tracking-wider px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
+                className="bg-[#00c9d6] hover:bg-[#00b2be] text-slate-950 font-extrabold text-[9.5px] sm:text-xs tracking-wider px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
               >
                 Book Session
               </button>
@@ -536,7 +536,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
               <button
                 onClick={handleConnectClick}
-                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
+                className="bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
               >
                 Let's Connect
               </button>

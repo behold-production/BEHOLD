@@ -305,7 +305,7 @@ const BlogPostDetail = () => {
               {post.tags.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-[10px] font-semibold tracking-wider text-slate-900 shadow-2xs"
+                  className="px-3.5 py-1.5 rounded-md bg-white border border-slate-200 text-[10px] font-semibold tracking-wider text-slate-900 shadow-2xs"
                 >
                   #{tag}
                 </span>
@@ -322,13 +322,13 @@ const BlogPostDetail = () => {
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 {post.primaryKeyword && (
-                  <span className="px-3.5 py-1.5 rounded-full bg-[#0f172a] text-white text-[11px] font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
+                  <span className="px-3.5 py-1.5 rounded-md bg-[#0f172a] text-white text-[11px] font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
                     <span className="w-2 h-2 rounded-full bg-[#00e5ff] animate-pulse"></span>
                     Primary: {post.primaryKeyword}
                   </span>
                 )}
                 {post.secondaryKeywords && post.secondaryKeywords.map((sk, idx) => (
-                  <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-[10px] font-semibold tracking-wide">
+                  <span key={idx} className="px-3 py-1 rounded-md bg-white border border-slate-200 text-slate-700 text-[10px] font-semibold tracking-wide">
                     {sk}
                   </span>
                 ))}

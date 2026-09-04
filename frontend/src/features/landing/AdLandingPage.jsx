@@ -454,7 +454,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleBook()}
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-[0.97] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs font-semibold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-[0.97] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
             >
               <span>{heroBtnText}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -475,7 +475,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#00c9d6]/40 transition-transform duration-300 hover:scale-[1.01]">
 
               {/* Phone Top Island Bar */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#00c9d6] animate-ping"></div>
                 <span>Behold Quick Guide</span>
               </div>
@@ -523,7 +523,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                           <Play className="w-7 h-7 fill-slate-950 ml-1" />
                         )}
                       </div>
-                      <span className="text-[11px] font-bold text-white bg-black/70 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10 tracking-wide">
+                      <span className="text-[11px] font-bold text-white bg-black/70 px-3 py-1 rounded-md backdrop-blur-sm border border-white/10 tracking-wide">
                         {isEnded ? 'വീണ്ടും കാണുക • Replay' : 'വാച്ച് വീഡിയോ • 26s'}
                       </span>
                     </div>
@@ -603,7 +603,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           {/* RIGHT: High-Converting Headline, Subtitle, & Primary CTA Button */}
           <div className="lg:col-span-7 space-y-6 text-left order-1 lg:order-2">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-4 py-1.5 rounded-full border border-[#00c9d6]/25 shadow-2xs">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-md border border-[#00c9d6]/25 shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse"></span>
                 <span>Special Introductory Session • ₹499</span>
               </div>
@@ -715,7 +715,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
 
         <div className="mb-10 text-center space-y-2">
-          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3 py-1 rounded-md border border-[#00c9d6]/25">
             {reflectionSub}
           </span>
           <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
@@ -957,7 +957,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="space-y-6 text-left">
 
           <div className="space-y-2">
-            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
+            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3 py-1 rounded-md border border-[#00c9d6]/25">
               Simple 3-Step Booking
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
@@ -1041,7 +1041,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── SECTION 6: FAQ SECTION ── */}
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
         <div className="text-center mb-10 space-y-2">
-          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-full border border-[#00c9d6]/25">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3 py-1 rounded-md border border-[#00c9d6]/25">
             Got Questions?
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
