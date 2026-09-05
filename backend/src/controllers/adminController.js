@@ -54,6 +54,16 @@ async function ensureEmailAvailable(email, excludeId) {
   return normalizedEmail;
 }
 
+function flushCounsellorCaches() {
+  try {
+    cacheHelper.clear();
+    const { cache } = require('../middleware/cacheMiddleware');
+    if (cache && typeof cache.flushAll === 'function') {
+      cache.flushAll();
+    }
+  } catch (e) {}
+}
+
 const AdminController = {
   // Admin Dashboard Statistics
   async getDashboard(req, res, next) {
@@ -203,6 +213,8 @@ Your verification status has been updated. Please log in to your dashboard for d
 https://www.behold.co.in/counsellor`;
         WhatsAppService.sendNotification(updated.phone, waMsg).catch(err => console.error('[WA Verify Error]:', err));
       }
+
+      flushCounsellorCaches();
 
       res.status(200).json({
         success: true,
@@ -756,6 +768,7 @@ If you have questions or would like to reapply with updated information, please 
         isTopFive: isTopFive === true || isTopFive === 'true',
         commissionPercent: normalizedCommission
       });
+      flushCounsellorCaches();
       const { password: _, ...counsellorData } = newCounsellor;
       res.status(201).json({ success: true, message: 'Counsellor created successfully', data: counsellorData });
     } catch (error) {
@@ -848,7 +861,19 @@ If you have questions or would like to reapply with updated information, please 
         const salt = await bcrypt.genSalt(10);
         updates.password = await bcrypt.hash(password, salt);
       }
-      const updated = await StorageService.update('counsellors', id, updates);
+      let updated = await StorageService.update('counsellors', id, updates);
+      if (!updated) {
+        updated = await StorageService.update('users', id, updates);
+      } else if (updates.isActive !== undefined && updated.email) {
+        try {
+          const userRecs = await StorageService.findAll('users', { email: updated.email.toLowerCase() });
+          if (Array.isArray(userRecs)) {
+            for (const u of userRecs) {
+              await StorageService.update('users', u.id || u._id, { isActive: updates.isActive });
+            }
+          }
+        } catch (e) {}
+      }
       if (!updated) return res.status(404).json({ success: false, message: 'Counsellor not found' });
 
       // Send WhatsApp Notification if status changed
@@ -859,6 +884,8 @@ If you have questions or would like to reapply with updated information, please 
           : `Notice: Your counsellor profile has been Deactivated. Please contact support.`;
         WhatsAppService.sendNotification(updated.phone, msg).catch(err => console.error(err));
       }
+
+      flushCounsellorCaches();
 
       const { password: _, ...counsellorData } = updated;
       res.status(200).json({ success: true, message: 'Counsellor updated successfully', data: counsellorData });
@@ -882,6 +909,7 @@ If you have questions or would like to reapply with updated information, please 
       // Cascade soft-delete: mark all related appointments as deleted too
       const Appointment = require('../models/Appointment');
       await Appointment.updateMany({ counsellorId: id, isDeleted: { $ne: true } }, { $set: { isDeleted: true, deletedAt: now } });
+      flushCounsellorCaches();
       res.status(200).json({ success: true, message: 'Psychologist moved to trash. Can be restored within 30 days.' });
     } catch (error) {
       next(error);
@@ -936,6 +964,7 @@ If you have questions or would like to reapply with updated information, please 
         { counsellorId: id, isDeleted: true, deletedAt: counsellor.deletedAt },
         { $set: { isDeleted: false, deletedAt: null } }
       );
+      flushCounsellorCaches();
       const { password, ...data } = restored;
       res.status(200).json({ success: true, message: 'Psychologist restored successfully', data });
     } catch (error) {
@@ -999,6 +1028,7 @@ If you have questions or would like to reapply with updated information, please 
       const Appointment = require('../models/Appointment');
       await Appointment.deleteMany({ counsellorId: id, isDeleted: true });
       await StorageService.delete('counsellors', id);
+      flushCounsellorCaches();
       res.status(200).json({ success: true, message: 'Psychologist permanently deleted.' });
     } catch (error) {
       next(error);
@@ -1868,6 +1898,8 @@ If you have questions or would like to reapply with updated information, please 
         profilePic: uploadResult.secure_url,
         profilePicPublicId: uploadResult.public_id
       });
+
+      flushCounsellorCaches();
 
       const { password, ...counsellorData } = updated || counsellor;
 

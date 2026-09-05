@@ -286,7 +286,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       try {
         const res = await ApiService.getCounsellors();
         if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-          const list = res.data.map(c => {
+          const list = res.data
+            .filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')
+            .map(c => {
             const rawPhoto = c.profilePic || c.photo || c.avatar || c.profilePicture || c.image || c.user?.profilePic;
             const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
             const rawHoursVal = (c.hours !== undefined && c.hours !== null && c.hours !== '') ? Number(c.hours) : (typeof c.experience === 'number' ? c.experience : (parseInt(c.experience, 10) || 0));

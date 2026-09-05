@@ -304,7 +304,8 @@ const PublicController = {
       const baseUrl = 'https://www.behold.co.in';
       
       const blogs = await StorageService.findAll('blogs', { status: 'published' });
-      const counsellors = await StorageService.findAll('counsellors', { status: 'active', isVerified: true });
+      const rawCounsellors = await StorageService.findAll('counsellors', { isDeleted: { $ne: true } }) || [];
+      const counsellors = rawCounsellors.filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED' && (c.isVerified !== false || c.status === 'APPROVED' || c.status === 'ACTIVE'));
       
       let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
       xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;

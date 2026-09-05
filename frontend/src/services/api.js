@@ -704,11 +704,21 @@ const ApiService = {
     });
   },
 
+  _clearCounsellorsCache() {
+    this._counsellorsCache = null;
+    this._counsellorsCacheTime = 0;
+    try { safeStorage.removeItem('behold_counsellors_cache'); } catch (e) {}
+    try { invalidateCache('/admin/counsellors'); } catch (e) {}
+    try { invalidateCache('/users/counsellors'); } catch (e) {}
+    try { invalidateCache('/counsellors'); } catch (e) {}
+  },
+
   async getAdminCounsellors() {
     return await request('/admin/counsellors');
   },
 
   async createAdminCounsellor(data) {
+    this._clearCounsellorsCache();
     return await request('/admin/counsellors', {
       method: 'POST',
       body: JSON.stringify(data)
@@ -716,6 +726,7 @@ const ApiService = {
   },
 
   async updateAdminCounsellor(id, data) {
+    this._clearCounsellorsCache();
     return await request(`/admin/counsellors/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data)
@@ -723,12 +734,14 @@ const ApiService = {
   },
 
   async deleteAdminCounsellor(id) {
+    this._clearCounsellorsCache();
     return await request(`/admin/counsellors/${id}`, {
       method: 'DELETE'
     });
   },
 
   async verifyCounsellor(id, isVerified) {
+    this._clearCounsellorsCache();
     return await request(`/admin/counsellors/${id}/verify`, {
       method: 'PUT',
       body: JSON.stringify({ isVerified })
@@ -736,6 +749,7 @@ const ApiService = {
   },
 
   async rejectCounsellor(id, reason) {
+    this._clearCounsellorsCache();
     return await request(`/admin/counsellors/${id}/reject`, {
       method: 'PUT',
       body: JSON.stringify({ reason })
@@ -1150,6 +1164,7 @@ const ApiService = {
   },
 
   async adminUpdateCounsellorProfilePic(counsellorId, formData) {
+    this._clearCounsellorsCache();
     return await request(`/admin/counsellors/${counsellorId}/profile-pic`, {
       method: 'PUT',
       body: formData
@@ -1201,6 +1216,7 @@ const ApiService = {
   },
 
   async restoreCounsellor(id) {
+    this._clearCounsellorsCache();
     return await request(`/admin/counsellors/${id}/restore`, { method: 'POST' });
   },
 
@@ -1213,6 +1229,7 @@ const ApiService = {
   },
 
   async permanentDeleteCounsellor(id) {
+    this._clearCounsellorsCache();
     return await request(`/admin/counsellors/${id}/permanent`, { method: 'DELETE' });
   },
 

@@ -201,7 +201,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map(c => ({
+          return parsed
+            .filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')
+            .map(c => ({
             id: c.id || c._id,
             name: c.name,
             role: c.title || c.role || 'Consultant Psychologist',
@@ -240,7 +242,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         let resolved = [];
         const res = await ApiService.getCounsellors({}, true);
         if (res && res.success && res.data && Array.isArray(res.data) && res.data.length > 0) {
-          resolved = res.data.map(c => {
+          resolved = res.data
+            .filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')
+            .map(c => {
             return {
               id: c.id || c._id,
               name: c.name,
@@ -278,7 +282,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
           // Update cache with real database records
           try {
-            localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data));
+            localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data.filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')));
           } catch { }
         }
 

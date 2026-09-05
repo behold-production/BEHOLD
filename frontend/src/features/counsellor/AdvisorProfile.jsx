@@ -66,7 +66,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       try {
         setLoading(true);
         const res = await ApiService.getCounsellorDetails(advisorId);
-        if (res.success && res.data) {
+        if (res && res.success && res.data && res.data.isActive !== false && res.data.isDeleted !== true) {
           const psy = res.data;
           
           trackViewContent({

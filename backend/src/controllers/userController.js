@@ -149,10 +149,12 @@ const UserController = {
         console.error('Error querying users collection for counsellors:', err);
       }
 
-      // Filter out explicitly rejected or deleted counsellors
+      // Filter out explicitly rejected, deleted, paused/inactive, or unverified counsellors
       let filtered = (allCounsellors || []).filter(c => {
         if (!c || c.isDeleted === true) return false;
         if (c.status === 'REJECTED' || c.status === 'DELETED') return false;
+        if (c.isActive === false) return false;
+        if (c.isVerified === false && c.status !== 'APPROVED' && c.status !== 'ACTIVE') return false;
         return true;
       });
 
@@ -249,9 +251,19 @@ const UserController = {
   async getCounsellorDetails(req, res, next) {
     try {
       const { id } = req.params;
-      const counsellor = await StorageService.findById('counsellors', id);
-      if (!counsellor || counsellor.isActive === false || counsellor.isDeleted === true || counsellor.isVerified === false) {
-        return res.status(404).json({ success: false, message: 'Counsellor not found or pending admin approval' });
+      let counsellor = await StorageService.findById('counsellors', id);
+      if (!counsellor) {
+        counsellor = await StorageService.findById('users', id);
+      }
+      if (
+        !counsellor ||
+        counsellor.isActive === false ||
+        counsellor.isDeleted === true ||
+        counsellor.status === 'REJECTED' ||
+        counsellor.status === 'DELETED' ||
+        (counsellor.isVerified === false && counsellor.status !== 'APPROVED' && counsellor.status !== 'ACTIVE')
+      ) {
+        return res.status(404).json({ success: false, message: 'Psychologist not found or temporarily unavailable' });
       }
 
       const { password, ...counsellorData } = counsellor;

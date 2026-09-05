@@ -28,6 +28,10 @@ const cacheHelper = {
         memoryCache.delete(key);
       }
     }
+  },
+
+  flush(prefix) {
+    this.clear(prefix);
   }
 };
 

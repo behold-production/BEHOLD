@@ -17,7 +17,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       const cached = localStorage.getItem('behold_counsellors_cache');
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED');
+        }
       }
     } catch (e) { }
     return [];
@@ -47,7 +49,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         const res = await ApiService.getCounsellors();
         if (isMounted) {
           if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-            const formatted = res.data.map((c) => {
+            const formatted = res.data
+              .filter((c) => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')
+              .map((c) => {
               const rawPhoto = c.profilePic || c.photo || c.avatar || c.profilePicture || c.image || c.user?.profilePic;
               const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
               const rawHoursVal = (c.hours !== undefined && c.hours !== null && c.hours !== '') ? Number(c.hours) : (typeof c.experience === 'number' ? c.experience : (parseInt(c.experience, 10) || 0));

@@ -30,12 +30,21 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
   }
 
   // 2. Fetch counsellor
-  const counsellor = await StorageService.findById('counsellors', counsellorId);
+  let counsellor = await StorageService.findById('counsellors', counsellorId);
   if (!counsellor) {
-    return { valid: false, message: 'Counsellor not found' };
+    counsellor = await StorageService.findById('users', counsellorId);
   }
-  if (counsellor.isActive === false) {
-    return { valid: false, message: 'This psychologist is temporarily suspended or unavailable.' };
+  if (!counsellor) {
+    return { valid: false, message: 'Psychologist not found' };
+  }
+  if (
+    counsellor.isActive === false ||
+    counsellor.isDeleted === true ||
+    counsellor.status === 'REJECTED' ||
+    counsellor.status === 'DELETED' ||
+    (counsellor.isVerified === false && counsellor.status !== 'APPROVED' && counsellor.status !== 'ACTIVE')
+  ) {
+    return { valid: false, message: 'This psychologist is temporarily paused or unavailable for bookings.' };
   }
 
   // Check global mode constraints
