@@ -4,6 +4,7 @@ const StorageService = require('../services/storageService');
 const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
 const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { updateActiveSessionCache, invalidateSessionCache } = require('../middleware/authMiddleware');
 const PasswordResetOtp = require('../models/PasswordResetOtp');
 
 const ACCESS_EXPIRY = '15m';
@@ -14,8 +15,9 @@ function buildEmailQuery(email) {
   return { email: { $regex: new RegExp(`^${escaped}$`, 'i') } };
 }
 
-const generateTokens = (user) => {
-  const payload = { id: user.id, email: user.email, role: user.role };
+const generateTokens = (user, sessionToken = '') => {
+  const sess = sessionToken || user.sessionToken || '';
+  const payload = { id: user.id, email: user.email, role: user.role, sessionToken: sess };
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET || 'behold_jwt_secret_key_2026_xyz', {
     expiresIn: ACCESS_EXPIRY
   });
@@ -23,6 +25,17 @@ const generateTokens = (user) => {
     expiresIn: REFRESH_EXPIRY
   });
   return { accessToken, refreshToken };
+};
+
+// Issues a fresh session token, invalidating any previous active session/device
+const issueNewSession = async (user, table) => {
+  const sessionToken = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+  try {
+    await StorageService.update(table, user.id || user._id, { sessionToken });
+  } catch (err) {}
+  user.sessionToken = sessionToken;
+  updateActiveSessionCache(user.id, user.role, sessionToken);
+  return sessionToken;
 };
 
 // Helper to find any user across all tables by email
@@ -260,8 +273,9 @@ const AuthController = {
         groupCode: ''
       });
 
+      const sessionToken = await issueNewSession(newUser, 'users');
       const { password: _, ...userData } = newUser;
-      const tokens = generateTokens(newUser);
+      const tokens = generateTokens(newUser, sessionToken);
 
       if (newUser.phone) {
         WhatsAppService.sendNotification(newUser.phone, `Welcome to BEHOLD., ${newUser.name}! Your account has been created successfully.`).catch(err => console.error(err));
@@ -364,8 +378,9 @@ const AuthController = {
         longitude: Number(longitude) || 0
       });
 
+      const sessionToken = await issueNewSession(newCounsellor, 'counsellors');
       const { password: _, ...counsellorData } = newCounsellor;
-      const tokens = generateTokens(newCounsellor);
+      const tokens = generateTokens(newCounsellor, sessionToken);
 
       // Send welcome email to counsellor (Email ONLY for counsellors)
       EmailService.sendWelcomeCounsellor(newCounsellor).catch(err => console.error('[Email Welcome Counsellor Error]:', err));
@@ -436,8 +451,9 @@ const AuthController = {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
 
+      const sessionToken = await issueNewSession(user, table);
       const { password: _, ...userData } = user;
-      const tokens = generateTokens(user);
+      const tokens = generateTokens(user, sessionToken);
 
       res.status(200).json({
         success: true,
@@ -473,7 +489,16 @@ const AuthController = {
           return res.status(401).json({ success: false, message: 'User not found' });
         }
 
-        const tokens = generateTokens(userRecord);
+        // Check if token session matches active session in DB
+        if (decoded.sessionToken && userRecord.sessionToken && decoded.sessionToken !== userRecord.sessionToken) {
+          return res.status(401).json({
+            success: false,
+            code: 'CONCURRENT_LOGIN_LOGOUT',
+            message: 'Your account was signed in on another device. You have been logged out.'
+          });
+        }
+
+        const tokens = generateTokens(userRecord, userRecord.sessionToken);
         res.status(200).json({
           success: true,
           message: 'Tokens refreshed successfully',
@@ -901,8 +926,9 @@ const AuthController = {
           }
         }
 
+        const sessionToken = await issueNewSession(user, table);
         const { password: _, ...userData } = user;
-        const tokens = generateTokens(user);
+        const tokens = generateTokens(user, sessionToken);
 
         return res.status(200).json({
           success: true,
@@ -922,8 +948,15 @@ const AuthController = {
     }
   },
 
-  // Logout (noop in jwt stateless auth but standard response endpoint)
+  // Logout
   async logout(req, res, next) {
+    if (req.user && req.user.id) {
+      try {
+        const table = req.user.role === 'admin' ? 'admins' : (req.user.role === 'counsellor' || req.user.role === 'psychologist' ? 'counsellors' : 'users');
+        await StorageService.update(table, req.user.id, { sessionToken: '' });
+        invalidateSessionCache(req.user.id, req.user.role);
+      } catch (e) {}
+    }
     res.status(200).json({
       success: true,
       message: 'Logged out successfully'

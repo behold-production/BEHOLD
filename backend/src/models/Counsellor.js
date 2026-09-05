@@ -42,6 +42,7 @@ const counsellorSchema = new mongoose.Schema(
     bankIfscCode: { type: String, default: '' },
     bankAccountName: { type: String, default: '' },
     commissionPercent: { type: Number, default: 50 },
+    sessionToken: { type: String, default: '' },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null }
   },

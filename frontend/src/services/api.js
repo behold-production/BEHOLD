@@ -114,6 +114,19 @@ async function executeRequest(endpoint, options = {}) {
 
   // Handle expired/missing token transparently
   if (response.status === 401) {
+    if (data.code === 'CONCURRENT_LOGIN_LOGOUT' || (data.message && data.message.includes('another device'))) {
+      safeStorage.removeItem('behold_token');
+      safeStorage.removeItem('behold_refresh_token');
+      safeStorage.removeItem('behold_auth_user');
+      safeStorage.removeItem('behold_student_profile');
+      if (typeof window !== 'undefined') {
+        triggerStorageEvent();
+        if (window.spaNavigate) window.spaNavigate('/');
+        toast.error('You were signed out because your account was logged into on another device.', { id: 'concurrent-login' });
+      }
+      throw new Error('Your account was signed in on another device.');
+    }
+
     if (data.message === 'Access Denied: No Token Provided') {
       safeStorage.removeItem('behold_token');
       safeStorage.removeItem('behold_refresh_token');
@@ -160,17 +173,15 @@ async function executeRequest(endpoint, options = {}) {
             }
             isRefreshing = false;
             onRefreshed(refreshResult.data.accessToken);
-          } else {
-            isRefreshing = false;
-            safeStorage.removeItem('behold_token');
-            safeStorage.removeItem('behold_refresh_token');
-            safeStorage.removeItem('behold_auth_user');
+            const isAnotherDevice = refreshResult.code === 'CONCURRENT_LOGIN_LOGOUT' || (refreshResult.message && refreshResult.message.includes('another device'));
+            const alertMsg = isAnotherDevice ? 'You were signed out because your account was logged into on another device.' : 'Session expired. Please log in again.';
+            const alertId = isAnotherDevice ? 'concurrent-login' : 'session-expired';
             if (typeof window !== 'undefined') {
               triggerStorageEvent();
               if (window.spaNavigate) window.spaNavigate('/');
-              toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+              toast.error(alertMsg, { id: alertId });
             }
-            throw new Error('Session expired. Please log in again.');
+            throw new Error(alertMsg);
           }
         } catch (err) {
           isRefreshing = false;
@@ -180,7 +191,7 @@ async function executeRequest(endpoint, options = {}) {
           if (typeof window !== 'undefined') {
             triggerStorageEvent();
             if (window.spaNavigate) window.spaNavigate('/');
-            toast.error('Session expired. Please log in again.', { id: 'session-expired' });
+            toast.error(err.message && err.message.includes('another device') ? err.message : 'Session expired. Please log in again.', { id: 'session-expired' });
           }
           throw err;
         }

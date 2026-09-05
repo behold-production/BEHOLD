@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
     fbclid: { type: String, default: '' },
     isProfileCompleted: { type: Boolean, default: false },
     hasUsedIntroductory: { type: Boolean, default: false },
+    sessionToken: { type: String, default: '' },
     cigiResults: {
       type: [
         {
