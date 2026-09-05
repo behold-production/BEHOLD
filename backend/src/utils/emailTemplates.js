@@ -169,54 +169,65 @@ const appointmentApproved = ({
   counsellorName,
   userEmail,
   counsellorEmail,
+  service,
   date,
   time,
+  timeZone,
   mode,
   duration,
   bookingId,
-  meetLink
+  meetLink,
+  amountPaid,
+  paymentStatus
 }) => {
-  const clientDisplayName = sanitizeDisplayName(userName, 'Student');
+  const clientDisplayName = sanitizeDisplayName(userName, 'Client');
+  const modeDisplay = mode === 'ONLINE' ? 'Online (Google Meet)' : mode === 'OFFLINE' ? 'In-person (BEHOLD. Clinic)' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online');
+  const drName = counsellorName ? `Dr. ${counsellorName.replace(/^Dr\.\s*/i, '')}` : 'Consultant Psychologist';
+
   return baseLayout(`
     ${badge('Appointment Confirmed ✓', '#22c55e')}
     <p style="margin:0 0 16px;color:#0f172a;font-size:16px;line-height:1.7;">Dear <strong>${clientDisplayName}</strong>,</p>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Thank you for booking an appointment with our psychologist.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">Thank you for booking a session with <strong>${drName}</strong> on <strong>BEHOLD.</strong>.</p>
     <p style="margin:0 0 24px;color:#15803d;font-size:15px;font-weight:700;line-height:1.7;background:#f0fdf4;padding:12px 18px;border-radius:10px;border-left:4px solid #22c55e;">
-      Your appointment has been successfully confirmed.
+      Your session is confirmed.
     </p>
 
     <!-- Appointment Details -->
-    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;margin:24px 0;">
-      <h3 style="margin:0 0 14px;color:#0f172a;font-size:16px;font-weight:800;border-bottom:1px solid #e2e8f0;padding-bottom:10px;">Appointment Details:</h3>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:22px 24px;margin:24px 0;">
+      <h3 style="margin:0 0 14px;color:#0f172a;font-size:16px;font-weight:800;border-bottom:1px solid #e2e8f0;padding-bottom:10px;">Session Details</h3>
       ${infoTable(`
-        ${infoRow('Psychologist', counsellorName ? `Dr. ${counsellorName.replace(/^Dr\.\s*/i, '')}` : 'Consultant Psychologist')}
-        ${infoRow('Patient Email', userEmail || '—')}
-        ${infoRow('Psychologist Email', counsellorEmail || '—')}
-        ${infoRow('Date', date || '—')}
-        ${infoRow('Time', time || '—')}
-        ${infoRow('Session Type', mode === 'ONLINE' ? 'Online (Google Meet)' : mode === 'OFFLINE' ? 'In-person' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online'))}
+        ${infoRow('Service', service || 'Individual Counselling')}
+        ${infoRow('Psychologist', `<strong>${drName}</strong>`)}
+        ${infoRow('Session Date', `<strong>${date || '—'}</strong>`)}
+        ${infoRow('Session Time', `<strong>${time || '—'}</strong>`)}
+        ${infoRow('Time Zone', timeZone || 'IST (Asia/Kolkata)')}
+        ${infoRow('Session Format', `<strong>${modeDisplay}</strong>`)}
         ${infoRow('Duration', duration || '1 Hour (60 Mins)')}
-        ${infoRow('Booking ID', `<code style="font-size:12px;background:#f1f5f9;padding:3px 8px;border-radius:6px;color:#0369a1;font-weight:700;">${bookingId || 'N/A'}</code>`)}
+        ${amountPaid ? infoRow('Amount', `₹${amountPaid}`) : ''}
+        ${infoRow('Booking ID', `<code style="font-size:12px;background:#e2e8f0;padding:3px 8px;border-radius:6px;color:#0369a1;font-weight:700;">${bookingId || 'N/A'}</code>`)}
       `)}
     </div>
 
+    ${mode === 'ONLINE' ? `
+    <div style="margin:24px 0;text-align:center;">
+      <p style="margin:0 0 12px;color:#475569;font-size:14px;line-height:1.7;">
+        For your online session, please ensure you are in a quiet and comfortable space. You can join directly using Google Meet:
+      </p>
+      ${meetLink ? btn('Join Session (Google Meet) →', meetLink) : `<p style="margin:12px 0;color:#0369a1;font-size:13px;font-weight:600;">Meeting link will be made available prior to your session in your dashboard.</p>`}
+    </div>
+    ` : `
     <p style="margin:0 0 16px;color:#475569;font-size:14px;line-height:1.7;">
-      Please make sure to be available a few minutes before the scheduled time. For online sessions, you can join using the link provided below:
+      Please arrive 5–10 minutes before your scheduled appointment time.
     </p>
+    `}
 
-    ${meetLink ? btn('Join Session (Google Meet) →', meetLink) : `<p style="margin:12px 0;color:#0369a1;font-size:13px;font-weight:600;">Meeting link will be made available prior to your session.</p>`}
-
-    <p style="margin:24px 0 12px;color:#475569;font-size:14px;line-height:1.7;">
-      If you need to reschedule or cancel your appointment, please contact us in advance.
-    </p>
-
-    <p style="margin:0 0 24px;color:#475569;font-size:14px;line-height:1.7;">
-      Thank you for choosing <strong>BEHOLD.</strong>. We look forward to supporting you.
+    <p style="margin:20px 0 12px;color:#475569;font-size:14px;line-height:1.7;">
+      If you need to reschedule or have questions, please reach out to us at <a href="mailto:support@behold.co.in" style="color:${BLUE};font-weight:600;text-decoration:none;">support@behold.co.in</a> or WhatsApp support.
     </p>
 
     ${divider()}
     <p style="margin:0;font-size:13px;color:#64748b;line-height:1.7;">
-      Best regards,<br/>
+      Warm regards,<br/>
       <strong>BEHOLD. Team</strong><br/>
       <a href="mailto:support@behold.co.in" style="color:${BLUE};text-decoration:none;">support@behold.co.in</a> | +91 94000 90106
     </p>
@@ -230,7 +241,19 @@ const appointmentApprovedCounsellor = ({
   userName,
   counsellorName,
   userEmail,
+  realUserEmail,
   counsellorEmail,
+  userPhone,
+  userAge,
+  schoolName,
+  grade,
+  guardianName,
+  guardianPhone,
+  clientLocationName,
+  service,
+  amountPaid,
+  paymentStatus,
+  isIntroductory,
   date,
   time,
   timeZone,
@@ -249,34 +272,60 @@ const appointmentApprovedCounsellor = ({
     ? priorTherapyDetails.trim()
     : (isYes ? 'Client indicated prior counselling experience.' : 'N/A');
   const clientDisplayName = sanitizeDisplayName(userName, 'Client');
+  
+  const displayEmail = realUserEmail || (userEmail && !userEmail.includes('@temp.behold') ? userEmail : (userPhone ? `Registered via WhatsApp (${userPhone})` : '—'));
+  const ageDisplay = userAge ? `${userAge} years` : '—';
+  const modeDisplay = mode === 'ONLINE' ? 'Online (Google Meet)' : mode === 'OFFLINE' ? 'In-person (BEHOLD. Clinic)' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online');
+  const paymentBadge = paymentStatus === 'PAID' ? '<span style="color:#16a34a;font-weight:700;">Paid Online ✓</span>' : isIntroductory ? '<span style="color:#0284c7;font-weight:700;">Introductory Session</span>' : '<span style="color:#64748b;font-weight:600;">Confirmed</span>';
 
   return baseLayout(`
     ${badge('New Session Booked', BLUE)}
     <p style="margin:0 0 16px;color:#0f172a;font-size:16px;line-height:1.7;">Dear <strong>Dr. ${(counsellorName || 'Psychologist').replace(/^Dr\.\s*/i, '')}</strong>,</p>
-    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">A new counselling session has been booked with you through <strong>BEHOLD.</strong>.</p>
+    <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7;">A new counselling session has been confirmed and scheduled with you on <strong>BEHOLD.</strong>.</p>
 
-    <!-- Appointment Details Header -->
-    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;margin:20px 0;">
-      <h3 style="margin:0 0 14px;color:#0f172a;font-size:16px;font-weight:800;border-bottom:1px solid #e2e8f0;padding-bottom:10px;">Appointment Details</h3>
+    <!-- ── 1. CLIENT DETAILS CARD ── -->
+    <div style="background:#ffffff;border:1px solid #cbd5e1;border-radius:14px;padding:22px 24px;margin:22px 0;box-shadow:0 2px 10px rgba(0,0,0,0.04);">
+      <h3 style="margin:0 0 14px;color:#0369a1;font-size:16px;font-weight:800;border-bottom:2px solid #e0f2fe;padding-bottom:10px;display:flex;align-items:center;">
+        👤 Client Profile &amp; Contact Details
+      </h3>
       ${infoTable(`
-        ${infoRow('Client Name', clientDisplayName)}
-        ${infoRow('Client Email', userEmail || '—')}
-        ${infoRow('Psychologist Email', counsellorEmail || '—')}
-        ${infoRow('Session Date', date || '—')}
-        ${infoRow('Session Time', time || '—')}
-        ${infoRow('Time Zone', timeZone || 'IST (Asia/Kolkata)')}
-        ${infoRow('Session Duration', duration || '1 Hour (60 Mins)')}
-        ${infoRow('Session Type', mode === 'ONLINE' ? 'Online (Google Meet)' : mode === 'OFFLINE' ? 'In-person' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online'))}
-        ${infoRow('Booking ID', `<code style="font-size:12px;background:#f1f5f9;padding:3px 8px;border-radius:6px;color:#0369a1;font-weight:700;">${bookingId || 'N/A'}</code>`)}
+        ${infoRow('Full Name', `<strong>${clientDisplayName}</strong>`)}
+        ${infoRow('Age', ageDisplay)}
+        ${infoRow('Email Address', displayEmail)}
+        ${infoRow('Phone / WhatsApp', userPhone ? `<a href="tel:${userPhone}" style="color:${BLUE};font-weight:600;text-decoration:none;">${userPhone}</a>` : '—')}
+        ${schoolName ? infoRow('School / College / Workplace', schoolName) : ''}
+        ${grade ? infoRow('Class / Grade / Role', grade) : ''}
+        ${guardianName ? infoRow('Parent / Guardian Name', guardianName) : ''}
+        ${guardianPhone ? infoRow('Guardian Contact', `<a href="tel:${guardianPhone}" style="color:${BLUE};font-weight:600;text-decoration:none;">${guardianPhone}</a>`) : ''}
+        ${clientLocationName ? infoRow('Client Location', clientLocationName) : ''}
       `)}
     </div>
 
-    <!-- Client Intake Information -->
-    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:14px;padding:20px 24px;margin:24px 0;">
-      <h3 style="margin:0 0 16px;color:#0369a1;font-size:16px;font-weight:800;border-bottom:1px solid #bae6fd;padding-bottom:10px;">Client Intake Information</h3>
+    <!-- ── 2. SESSION & LOGISTICS DETAILS CARD ── -->
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:22px 24px;margin:22px 0;">
+      <h3 style="margin:0 0 14px;color:#0f172a;font-size:16px;font-weight:800;border-bottom:1px solid #e2e8f0;padding-bottom:10px;">
+        📅 Session &amp; Booking Details
+      </h3>
+      ${infoTable(`
+        ${infoRow('Service', service || 'Individual Counselling')}
+        ${infoRow('Session Date', `<strong>${date || '—'}</strong>`)}
+        ${infoRow('Session Time', `<strong>${time || '—'}</strong>`)}
+        ${infoRow('Time Zone', timeZone || 'IST (Asia/Kolkata)')}
+        ${infoRow('Duration', duration || '1 Hour (60 Mins)')}
+        ${infoRow('Session Format', `<strong>${modeDisplay}</strong>`)}
+        ${infoRow('Payment Status', paymentBadge)}
+        ${infoRow('Booking ID', `<code style="font-size:12px;background:#e2e8f0;padding:4px 8px;border-radius:6px;color:#0f172a;font-weight:700;">${bookingId || 'N/A'}</code>`)}
+      `)}
+    </div>
+
+    <!-- ── 3. CLIENT INTAKE & CLINICAL INFORMATION ── -->
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:14px;padding:22px 24px;margin:24px 0;">
+      <h3 style="margin:0 0 16px;color:#0369a1;font-size:16px;font-weight:800;border-bottom:1px solid #bae6fd;padding-bottom:10px;">
+        📝 Client Intake Information
+      </h3>
 
       <div style="margin-bottom:18px;">
-        <span style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Reason for Seeking Counselling</span>
+        <span style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Reason for Seeking Counselling / Current Feelings</span>
         <p style="margin:0;font-size:14px;color:#0f172a;font-weight:500;line-height:1.6;background:#ffffff;padding:12px 16px;border-radius:10px;border:1px solid #e2e8f0;">
           ${reason || 'General Counselling & Mental Wellbeing'}
         </p>
@@ -300,7 +349,7 @@ const appointmentApprovedCounsellor = ({
 
       ${additionalInfo ? `
       <div style="margin-bottom:10px;">
-        <span style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Additional Information</span>
+        <span style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Additional Notes / Location Information</span>
         <p style="margin:0;font-size:14px;color:#0f172a;font-weight:500;line-height:1.6;background:#ffffff;padding:12px 16px;border-radius:10px;border:1px solid #e2e8f0;">
           ${additionalInfo}
         </p>
@@ -308,25 +357,25 @@ const appointmentApprovedCounsellor = ({
       ` : ''}
     </div>
 
-    <!-- Session Access -->
-    <div style="margin:24px 0;">
-      <h3 style="margin:0 0 10px;color:#0f172a;font-size:15px;font-weight:800;">Session Access</h3>
-      ${meetLink ? btn('Join Session (Google Meet) →', meetLink) : `<p style="margin:0;color:#64748b;font-size:14px;">Meeting link will be made available in your dashboard.</p>`}
+    <!-- ── 4. SESSION ACCESS ── -->
+    <div style="margin:24px 0;text-align:center;">
+      <h3 style="margin:0 0 10px;color:#0f172a;font-size:16px;font-weight:800;">Session Access</h3>
+      ${meetLink ? btn('Join Session (Google Meet) →', meetLink) : `<p style="margin:0;color:#64748b;font-size:14px;font-style:italic;">Meeting link is accessible in your psychologist dashboard prior to session time.</p>`}
     </div>
 
     <p style="margin:24px 0 14px;color:#475569;font-size:13px;line-height:1.7;">
-      Please review the available client information before the scheduled session and be available at the confirmed time.
+      Please review the client intake notes in advance to prepare for the session and ensure you are available at the confirmed schedule.
     </p>
 
-    ${alertBox('🔒 <strong>Confidentiality Notice:</strong> Client information is confidential and should be handled in accordance with applicable privacy and professional confidentiality requirements.', 'info')}
+    ${alertBox('🔒 <strong>Clinical Confidentiality:</strong> All client information provided herein is confidential and subject to professional mental health ethics and privacy standards.', 'info')}
 
     <p style="margin:16px 0 24px;color:#475569;font-size:13px;line-height:1.7;">
-      If you have any questions regarding this appointment, please contact the <strong>BEHOLD. Support Team</strong>.
+      For any scheduling assistance, please contact the <strong>BEHOLD. Support Team</strong>.
     </p>
 
     ${divider()}
     <p style="margin:0;font-size:13px;color:#64748b;line-height:1.7;">
-      Best regards,<br/>
+      Warm regards,<br/>
       <strong>BEHOLD. Team</strong><br/>
       <a href="mailto:support@behold.co.in" style="color:${BLUE};text-decoration:none;">support@behold.co.in</a> | +91 94000 90106
     </p>
@@ -522,6 +571,31 @@ const meetLinkAdded = ({ userName, counsellorName, date, time, meetLink }) => {
   `);
 };
 
+/** Contact Form Inquiry (to Admin) */
+const contactInquiry = ({ name, email, phone, message }) => {
+  return baseLayout(`
+    ${badge('New Website Inquiry', BLUE)}
+    <h2 style="margin:0 0 12px;font-size:22px;color:#0f172a;font-weight:800;">New Contact Form Message</h2>
+    <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">A visitor has submitted a new contact inquiry via <strong>BEHOLD.</strong> website.</p>
+    
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;margin:20px 0;">
+      <h3 style="margin:0 0 12px;color:#0f172a;font-size:15px;font-weight:700;border-bottom:1px solid #e2e8f0;padding-bottom:8px;">Sender Information</h3>
+      ${infoTable(`
+        ${infoRow('Full Name', name || 'Anonymous')}
+        ${infoRow('Email', email ? `<a href="mailto:${email}" style="color:${BLUE};font-weight:600;text-decoration:none;">${email}</a>` : '—')}
+        ${phone ? infoRow('Phone', `<a href="tel:${phone}" style="color:${BLUE};font-weight:600;text-decoration:none;">${phone}</a>`) : ''}
+      `)}
+    </div>
+
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:14px;padding:20px 24px;margin:20px 0;">
+      <h3 style="margin:0 0 12px;color:#0369a1;font-size:15px;font-weight:700;">Inquiry Message</h3>
+      <p style="margin:0;color:#334155;font-size:14px;line-height:1.7;white-space:pre-line;background:#ffffff;padding:14px 18px;border-radius:10px;border:1px solid #e2e8f0;">${message}</p>
+    </div>
+
+    ${btn('View in Admin Dashboard →', 'https://www.behold.co.in/admin')}
+  `);
+};
+
 module.exports = {
   welcomeUser,
   welcomeCounsellor,
@@ -541,5 +615,6 @@ module.exports = {
   counsellorVerified,
   counsellorRejected,
   broadcastEmail,
-  meetLinkAdded
+  meetLinkAdded,
+  contactInquiry
 };

@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const ics = require('ics');
+const { resolveAnyPhone } = require('../utils/phoneUtils');
 
 /**
  * BEHOLD. — Email Service
@@ -315,28 +316,63 @@ function _buildBookingPayload(user, counsellor, appointment) {
   const appt = appointment || {};
   const usr = user || {};
   const csl = counsellor || {};
+  const bookingDetails = appt.bookingDetails || {};
 
   const bookingId = appt.id || appt._id || appt.appointmentId || `BEHOLD_${Date.now()}`;
-  const userEmail = usr.email || appt.clientEmail || '—';
+  
+  // Real email or sanitized placeholder
+  const rawUserEmail = usr.email || appt.clientEmail || bookingDetails.email || '';
+  const isTempEmail = rawUserEmail.includes('@temp.behold') || rawUserEmail.includes('@localhost') || rawUserEmail.startsWith('whatsapp_');
+  const userEmail = isTempEmail ? (rawUserEmail.startsWith('whatsapp_') ? 'Registered via WhatsApp' : '—') : (rawUserEmail || '—');
+  const realUserEmail = (!isTempEmail && rawUserEmail && rawUserEmail.includes('@')) ? rawUserEmail : '';
+
   const counsellorEmail = csl.email || '—';
-  const userName = usr.name || appt.clientName || 'Patient';
+  const userName = (appt.clientName && appt.clientName !== 'New User' && !String(appt.clientName).startsWith('Behold User'))
+    ? appt.clientName
+    : ((usr.name && usr.name !== 'New User' && !String(usr.name).startsWith('Behold User')) ? usr.name : (bookingDetails.name || 'Patient'));
+  
   const counsellorName = csl.name || appt.counsellorName || 'Psychologist';
+  
+  const userPhone = resolveAnyPhone(usr, appt, bookingDetails) || appt.clientPhone || usr.phone || '';
+  const userAge = appt.age || appt.clientAge || usr.age || bookingDetails.age || '';
+  const schoolName = appt.schoolName || usr.schoolName || bookingDetails.schoolName || '';
+  const grade = appt.grade || usr.grade || bookingDetails.grade || '';
+  const guardianName = appt.guardianName || usr.guardianName || bookingDetails.guardianName || '';
+  const guardianPhone = appt.guardianPhone || usr.guardianPhone || bookingDetails.guardianPhone || '';
+  const clientLocationName = appt.clientLocationName || usr.locationName || bookingDetails.clientLocationName || '';
+
   const date = appt.date || '—';
   const time = appt.time || '—';
   const mode = appt.mode || 'ONLINE';
   const duration = appt.duration || appt.sessionDuration || '1 Hour (60 Mins)';
+  const service = appt.service || 'Individual Counselling';
   const meetLink = appt.meetLink || '';
+  const amountPaid = appt.amountPaid !== undefined ? appt.amountPaid : 0;
+  const paymentStatus = appt.paymentStatus || (amountPaid > 0 ? 'PAID' : 'FREE');
+  const isIntroductory = appt.isIntroductory || false;
 
-  const reason = usr.feelingLately || appt.feelingLately || appt.reason || usr.reason || 'General Counselling & Mental Wellbeing';
-  const hadPriorTherapy = usr.hadPriorTherapy || appt.hadPriorTherapy || 'No';
-  const priorTherapyDetails = usr.priorTherapyDetails || appt.priorTherapyDetails || '';
-  const additionalInfo = appt.notes || appt.clientLocationName || '';
+  const reason = appt.feelingLately || usr.feelingLately || appt.reason || usr.reason || bookingDetails.feelingLately || 'General Counselling & Mental Wellbeing';
+  const hadPriorTherapy = appt.hadPriorTherapy || usr.hadPriorTherapy || bookingDetails.hadPriorTherapy || 'No';
+  const priorTherapyDetails = appt.priorTherapyDetails || usr.priorTherapyDetails || bookingDetails.priorTherapyDetails || '';
+  const additionalInfo = appt.notes || clientLocationName || bookingDetails.notes || '';
 
   return {
     userName,
     counsellorName,
     userEmail,
+    realUserEmail,
     counsellorEmail,
+    userPhone,
+    userAge,
+    schoolName,
+    grade,
+    guardianName,
+    guardianPhone,
+    clientLocationName,
+    service,
+    amountPaid,
+    paymentStatus,
+    isIntroductory,
     date,
     time,
     timeZone: 'IST (Asia/Kolkata)',
@@ -376,19 +412,19 @@ const EmailService = {
     const payload = _buildBookingPayload(user, counsellor, appointment);
 
     console.log('[Email] 📋 sendAppointmentBooked triggered');
-    console.log(`[Email]    User:        ${payload.userName} <${payload.userEmail}>`);
+    console.log(`[Email]    Client:       ${payload.userName} (Age: ${payload.userAge || '—'}, Phone: ${payload.userPhone || '—'})`);
     console.log(`[Email]    Psychologist: ${payload.counsellorName} <${payload.counsellorEmail}>`);
     console.log(`[Email]    Session:      ${payload.date} at ${payload.time} (${payload.mode})`);
 
-    // ── 1. Send to USER (student) ─────────────────────────────────────────
-    if (!payload.userEmail || payload.userEmail === '—') {
-      console.warn('[Email] ⚠️  User has no email address in database — skipping user notification');
+    // ── 1. Send to USER (student/patient) ─────────────────────────────────
+    if (!payload.realUserEmail) {
+      console.log('[Email] ℹ️  User has no standard email address (or logged in via WhatsApp) — user email skipped; WhatsApp alert is dispatched');
     } else {
       const userAttachments = _createIcsAttachment(
-        appointment, payload.userName, payload.userEmail, payload.counsellorName, payload.counsellorEmail
+        appointment, payload.userName, payload.realUserEmail, payload.counsellorName, payload.counsellorEmail
       );
       await sendEmail(
-        payload.userEmail,
+        payload.realUserEmail,
         'Session Confirmed — BEHOLD.',
         Templates.appointmentApproved(payload),
         userAttachments
@@ -398,15 +434,15 @@ const EmailService = {
     // ── 2. Send to PSYCHOLOGIST (counsellor) ──────────────────────────────
     if (!payload.counsellorEmail || payload.counsellorEmail === '—') {
       console.warn('[Email] ⚠️  Psychologist has no email address in database — skipping psychologist notification');
-    } else if (payload.userEmail && payload.counsellorEmail.toLowerCase() === payload.userEmail.toLowerCase()) {
+    } else if (payload.realUserEmail && payload.counsellorEmail.toLowerCase() === payload.realUserEmail.toLowerCase()) {
       console.log('[Email] ℹ️  Student & Psychologist have identical email address — skipping duplicate send.');
     } else {
       const counsellorAttachments = _createIcsAttachment(
-        appointment, payload.counsellorName, payload.counsellorEmail, payload.userName, payload.userEmail
+        appointment, payload.counsellorName, payload.counsellorEmail, payload.userName, payload.realUserEmail
       );
       await sendEmail(
         payload.counsellorEmail,
-        'New Session Booked — BEHOLD.',
+        `New Session Booked — ${payload.userName} (BEHOLD.)`,
         Templates.appointmentApprovedCounsellor(payload),
         counsellorAttachments
       );
@@ -543,6 +579,12 @@ const EmailService = {
       }
     }
     return results;
+  },
+
+  async sendContactInquiry({ name, email, phone, message }) {
+    const adminEmail = (process.env.DEFAULT_ADMIN_EMAIL || 'beholdoffice@gmail.com').trim();
+    const html = Templates.contactInquiry({ name, email, phone, message });
+    return sendEmail(adminEmail, `🔔 New Contact Inquiry from ${name} — BEHOLD.`, html);
   }
 };
 

@@ -91,25 +91,70 @@ async function findAnyUserByEmail(email, portal = 'any') {
 
 // Helper to find any user across all tables by phone
 async function findAnyUserByPhone(phone, portal = 'any') {
-  // Normalize phone (strip non-digits, etc if needed, or just exact match)
-  const phoneClean = phone.replace(/\D/g, '');
+  if (!phone) return null;
+  const rawStr = String(phone).trim();
+  const phoneClean = rawStr.replace(/\D/g, '');
+  if (!phoneClean) return null;
+  const last10 = phoneClean.length >= 10 ? phoneClean.slice(-10) : phoneClean;
+  const normalizedWithCountry = normalizePhoneWithCountryCode(rawStr);
+  const digitsOnly = normalizedWithCountry.replace(/\D/g, '');
 
-  // Helper inner function
-  const checkMatch = (userPhone) => {
-    if (!userPhone) return false;
-    const uPhone = userPhone.replace(/\D/g, '');
-    // Match last 10 digits to handle country code differences
-    if (uPhone.length >= 10 && phoneClean.length >= 10) {
-      return uPhone.slice(-10) === phoneClean.slice(-10);
+  // Helper inner predicate to check an in-memory document
+  const isMatch = (item) => {
+    if (!item) return false;
+    // 1. Match phone field
+    if (item.phone) {
+      const uPhone = String(item.phone).replace(/\D/g, '');
+      if (last10.length >= 10 && uPhone.length >= 10 && uPhone.slice(-10) === last10) return true;
+      if (uPhone && (uPhone === phoneClean || uPhone === digitsOnly)) return true;
     }
-    return uPhone === phoneClean;
+    // 2. Match guardian phone field
+    if (item.guardianPhone) {
+      const gPhone = String(item.guardianPhone).replace(/\D/g, '');
+      if (last10.length >= 10 && gPhone.length >= 10 && gPhone.slice(-10) === last10) return true;
+    }
+    // 3. Match WhatsApp temp email (e.g. whatsapp_917034060882@temp.behold.co.in)
+    if (item.email && typeof item.email === 'string') {
+      const em = item.email.toLowerCase();
+      if (em.includes('whatsapp_') && (em.includes(last10) || em.includes(phoneClean) || em.includes(digitsOnly))) {
+        return true;
+      }
+    }
+    return false;
   };
 
-  const records = [];
-
   const tryFind = async (table) => {
-    const items = await StorageService.findAll(table, table === 'admins' ? {} : { status: { $ne: 'DELETED' } });
-    return items.find((item) => checkMatch(item.phone));
+    const baseFilter = table === 'admins' ? {} : { status: { $ne: 'DELETED' } };
+    const orClauses = [];
+
+    if (last10 && last10.length >= 10) {
+      orClauses.push({ phone: { $regex: last10 + '$' } });
+      orClauses.push({ email: { $regex: last10, $options: 'i' } });
+    }
+    if (phoneClean) {
+      orClauses.push({ phone: phoneClean });
+      orClauses.push({ phone: `+${phoneClean}` });
+      orClauses.push({ phone: digitsOnly });
+      orClauses.push({ phone: normalizedWithCountry });
+    }
+
+    // Try direct indexed/regex query first
+    if (orClauses.length > 0) {
+      try {
+        const found = await StorageService.findOne(table, { ...baseFilter, $or: orClauses });
+        if (found && isMatch(found)) return found;
+      } catch (err) {
+        // Fallback to table scan if regex or complex filter fails
+      }
+    }
+
+    // Fallback: in-memory scan
+    try {
+      const items = await StorageService.findAll(table, baseFilter);
+      return items.find((item) => isMatch(item)) || null;
+    } catch (err) {
+      return null;
+    }
   };
 
   if (portal === 'user') {
@@ -345,7 +390,10 @@ const AuthController = {
         return res.status(400).json({ success: false, message: 'Email and password are required' });
       }
 
-      const match = await findAnyUserByEmail(normalizedEmail, portal);
+      let match = await findAnyUserByEmail(normalizedEmail, portal);
+      if (!match && (!normalizedEmail.includes('@') || /^\+?\d+$/.test(normalizedEmail.replace(/\s+/g, '')))) {
+        match = await findAnyUserByPhone(normalizedEmail, portal);
+      }
       if (!match) {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
@@ -691,9 +739,18 @@ const AuthController = {
       // Normalize phone to match how it was stored during sendOtp
       const phoneClean = String(phone).replace(/\D/g, '');
       const normalizedPhone = phoneClean.length === 10 ? '91' + phoneClean : phoneClean;
+      const last10 = normalizedPhone.slice(-10);
+      const formattedPhone = normalizePhoneWithCountryCode(phone) || `+${normalizedPhone}`;
 
-      // Find OTP records using normalized phone
-      const otps = await StorageService.findAll('otps', { phone: normalizedPhone });
+      // Find OTP records using normalized phone and fallback formats
+      const otps = await StorageService.findAll('otps', {
+        $or: [
+          { phone: normalizedPhone },
+          { phone: phoneClean },
+          { phone: `+${normalizedPhone}` },
+          { phone: last10 }
+        ]
+      });
       // Get the latest unused, non-expired OTP
       const validOtps = otps.filter((o) => !o.used && new Date(o.expiresAt) > new Date());
       const latestOtp = validOtps.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
@@ -703,40 +760,101 @@ const AuthController = {
       }
 
       // Mark as used
-      await StorageService.update('otps', latestOtp.id, { used: true });
+      await StorageService.update('otps', latestOtp.id || latestOtp._id, { used: true });
 
       // If this is an OTP login flow, find the user and log them in
       if (isLogin) {
         const { utmSource, utmCampaign, utmMedium, fbclid } = req.body;
         let match = await findAnyUserByPhone(phone, portal);
-        if (!match && portal === 'user') {
-          // Auto-register the user if they are using WhatsApp login for the first time
-          const tempEmail = `whatsapp_${normalizedPhone}@temp.behold.co.in`;
-          
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
 
-          const newUser = await StorageService.create('users', {
-            name: 'New User',
-            email: tempEmail,
-            password: hashedPassword,
-            phone: normalizedPhone,
-            role: 'user',
-            schoolName: '',
-            grade: '',
-            guardianName: '',
-            guardianPhone: '',
-            groupCode: '',
-            utmSource: utmSource || '',
-            utmCampaign: utmCampaign || '',
-            utmMedium: utmMedium || '',
-            fbclid: fbclid || ''
+        if (!match && portal === 'user') {
+          // Auto-register or recover the user if they are using WhatsApp login
+          const tempEmail = `whatsapp_${normalizedPhone}@temp.behold.co.in`;
+
+          // Check if an existing account with this temp email or phone already exists
+          let existingUser = await StorageService.findOne('users', {
+            $or: [
+              { email: tempEmail.toLowerCase() },
+              { email: `whatsapp_${last10}@temp.behold.co.in` },
+              { email: `whatsapp_91${last10}@temp.behold.co.in` },
+              { email: new RegExp(`whatsapp_.*${last10}`, 'i') },
+              { phone: formattedPhone },
+              { phone: normalizedPhone },
+              { phone: last10 },
+              { phone: `+${last10}` }
+            ]
           });
-          
-          match = { user: newUser, table: 'users' };
+
+          if (existingUser) {
+            try {
+              const updated = await StorageService.update('users', existingUser.id || existingUser._id, {
+                phone: formattedPhone,
+                ...(utmSource && !existingUser.utmSource ? { utmSource, utmCampaign, utmMedium, fbclid } : {})
+              });
+              match = { user: updated || existingUser, table: 'users' };
+            } catch (uErr) {
+              match = { user: existingUser, table: 'users' };
+            }
+          } else {
+            // Attempt creation with duplicate key resilience
+            try {
+              const salt = await bcrypt.genSalt(10);
+              const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
+
+              const newUser = await StorageService.create('users', {
+                name: 'New User',
+                email: tempEmail,
+                password: hashedPassword,
+                phone: formattedPhone,
+                role: 'user',
+                schoolName: '',
+                grade: '',
+                guardianName: '',
+                guardianPhone: '',
+                groupCode: '',
+                utmSource: utmSource || '',
+                utmCampaign: utmCampaign || '',
+                utmMedium: utmMedium || '',
+                fbclid: fbclid || ''
+              });
+
+              match = { user: newUser, table: 'users' };
+            } catch (createErr) {
+              console.warn('[verifyOtp] Duplicate key error caught during auto-registration:', createErr.message);
+              // Recover user from DB instead of failing
+              const fallback = await StorageService.findOne('users', {
+                $or: [
+                  { email: tempEmail.toLowerCase() },
+                  { email: new RegExp(last10, 'i') },
+                  { phone: formattedPhone },
+                  { phone: normalizedPhone }
+                ]
+              });
+
+              if (fallback) {
+                match = { user: fallback, table: 'users' };
+              } else {
+                const uniqueTempEmail = `whatsapp_${normalizedPhone}_${Date.now()}@temp.behold.co.in`;
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
+                const retryUser = await StorageService.create('users', {
+                  name: 'New User',
+                  email: uniqueTempEmail,
+                  password: hashedPassword,
+                  phone: formattedPhone,
+                  role: 'user',
+                  utmSource: utmSource || '',
+                  utmCampaign: utmCampaign || '',
+                  utmMedium: utmMedium || '',
+                  fbclid: fbclid || ''
+                });
+                match = { user: retryUser, table: 'users' };
+              }
+            }
+          }
         } else if (match && match.table === 'users' && !match.user.utmSource && (utmSource || fbclid)) {
           try {
-            await StorageService.update('users', match.user.id, {
+            await StorageService.update('users', match.user.id || match.user._id, {
               utmSource: utmSource || '',
               utmCampaign: utmCampaign || '',
               utmMedium: utmMedium || '',
@@ -744,9 +862,9 @@ const AuthController = {
             });
           } catch {}
         } else if (!match) {
-          return res.status(404).json({ 
-            success: false, 
-            message: 'No account found with this phone number. Please register.' 
+          return res.status(404).json({
+            success: false,
+            message: 'No account found with this phone number. Please register.'
           });
         }
 

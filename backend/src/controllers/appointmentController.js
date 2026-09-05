@@ -116,6 +116,17 @@ const AppointmentController = {
         }).catch(() => counsellor.defaultMeetLink || '');
       }
 
+      // Extract client intake & profile fields from request body
+      const age = req.body.age || req.body.clientAge || user?.age || '';
+      const feelingLately = req.body.feelingLately || req.body.reason || user?.feelingLately || '';
+      const hadPriorTherapy = req.body.hadPriorTherapy || user?.hadPriorTherapy || 'No';
+      const priorTherapyDetails = req.body.priorTherapyDetails || user?.priorTherapyDetails || '';
+      const schoolName = req.body.schoolName || user?.schoolName || '';
+      const grade = req.body.grade || user?.grade || '';
+      const guardianName = req.body.guardianName || user?.guardianName || '';
+      const guardianPhone = req.body.guardianPhone || user?.guardianPhone || '';
+      const notes = req.body.notes || '';
+
       // Create appointment
       const newAppointment = await StorageService.create('appointments', {
         userId,
@@ -137,9 +148,18 @@ const AppointmentController = {
         clientName: clientName || user.name || '',
         clientEmail: clientEmail || user.email || '',
         clientPhone: clientPhone || user.phone || '',
-        clientLocationName: clientLocationName || '',
+        clientLocationName: clientLocationName || user?.locationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0,
+        age,
+        feelingLately,
+        hadPriorTherapy,
+        priorTherapyDetails,
+        schoolName,
+        grade,
+        guardianName,
+        guardianPhone,
+        notes,
         utmSource: req.body.utmSource || '',
         utmMedium: req.body.utmMedium || '',
         utmCampaign: req.body.utmCampaign || '',
@@ -150,6 +170,32 @@ const AppointmentController = {
 
       if (isHalfSession) {
         markIntroductoryUsed({ userId, email: clientEmail || user.email, phone: clientPhone || user.phone }).catch(() => {});
+      }
+
+      // Update user profile with latest intake information if provided
+      if (user) {
+        const userUpdates = {};
+        if (age && !user.age) userUpdates.age = age;
+        if (feelingLately && !user.feelingLately) userUpdates.feelingLately = feelingLately;
+        if (hadPriorTherapy && !user.hadPriorTherapy) userUpdates.hadPriorTherapy = hadPriorTherapy;
+        if (priorTherapyDetails && !user.priorTherapyDetails) userUpdates.priorTherapyDetails = priorTherapyDetails;
+        if (schoolName && !user.schoolName) userUpdates.schoolName = schoolName;
+        if (grade && !user.grade) userUpdates.grade = grade;
+        if (guardianName && !user.guardianName) userUpdates.guardianName = guardianName;
+        if (guardianPhone && !user.guardianPhone) userUpdates.guardianPhone = guardianPhone;
+        if (clientLocationName && !user.locationName) userUpdates.locationName = clientLocationName;
+        if (!user.utmSource && (req.body.utmSource || req.body.fbclid)) {
+          userUpdates.utmSource = req.body.utmSource || '';
+          userUpdates.utmMedium = req.body.utmMedium || '';
+          userUpdates.utmCampaign = req.body.utmCampaign || '';
+          userUpdates.fbclid = req.body.fbclid || '';
+        }
+        if (Object.keys(userUpdates).length > 0) {
+          try {
+            const updatedUser = await StorageService.update('users', user.id || user._id, userUpdates);
+            if (updatedUser) user = updatedUser;
+          } catch {}
+        }
       }
 
       // Also ensure session record exists if confirmed free booking
@@ -166,18 +212,6 @@ const AppointmentController = {
             meetLink: finalMeetLink,
             status: 'UPCOMING',
             service: service || 'counselling'
-          });
-        } catch {}
-      }
-
-      // If user profile has no UTM source, attach initial acquisition source
-      if (user && !user.utmSource && (req.body.utmSource || req.body.fbclid)) {
-        try {
-          await StorageService.update('users', user.id, {
-            utmSource: req.body.utmSource || '',
-            utmMedium: req.body.utmMedium || '',
-            utmCampaign: req.body.utmCampaign || '',
-            fbclid: req.body.fbclid || ''
           });
         } catch {}
       }

@@ -122,6 +122,8 @@ export default function App() {
       bannerNotice: '',
       termsOfUse: '',
       privacyPolicy: '',
+      refundPolicy: '',
+      consentPolicy: '',
       whatsapp: 'https://wa.me/919497174011',
       contactEmail: 'support@behold.com',
       enablePsychology: true,
@@ -481,8 +483,8 @@ export default function App() {
       const { jsPDF } = await import('jspdf');
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-      const title = activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : 'Privacy Policy';
-      const content = activeDocType === 'terms' ? siteSettings.termsOfUse : activeDocType === 'refund' ? siteSettings.refundPolicy : siteSettings.privacyPolicy;
+      const title = activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : activeDocType === 'consent' ? 'Informed Consent & Client Agreement' : 'Privacy Policy';
+      const content = activeDocType === 'terms' ? siteSettings.termsOfUse : activeDocType === 'refund' ? siteSettings.refundPolicy : activeDocType === 'consent' ? siteSettings.consentPolicy : siteSettings.privacyPolicy;
 
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(16);
@@ -836,7 +838,7 @@ export default function App() {
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
               <h3 className="text-sm font-semibold text-white font-header flex items-center gap-2">
-                <span>{activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : 'Privacy Policy'}</span> {/* */}
+                <span>{activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : activeDocType === 'consent' ? 'Informed Consent & Client Agreement' : 'Privacy Policy'}</span> {/* */}
                 <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-semibold ">DOC</span>
               </h3>
               <button
@@ -850,7 +852,7 @@ export default function App() {
  
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto text-left text-zinc-300 text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
-              {activeDocType === 'terms' ? siteSettings.termsOfUse : activeDocType === 'refund' ? siteSettings.refundPolicy : siteSettings.privacyPolicy}
+              {activeDocType === 'terms' ? siteSettings.termsOfUse : activeDocType === 'refund' ? siteSettings.refundPolicy : activeDocType === 'consent' ? siteSettings.consentPolicy : siteSettings.privacyPolicy}
             </div>
 
             {/* Modal Footer */}

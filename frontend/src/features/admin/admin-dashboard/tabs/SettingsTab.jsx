@@ -2357,6 +2357,18 @@ export default function SettingsTab(props) {
                       placeholder="Write Platform Return & Refund Policy..."
                     />
                   </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-zinc-400 ">Informed Consent & Client Agreement</label>
+                    <textarea
+                      rows={12}
+                      required
+                      value={settingsForm.consentPolicy}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, consentPolicy: e.target.value })}
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+                      placeholder="Write Client Informed Consent Agreement..."
+                    />
+                  </div>
                 </div>
 
                 {settingsSuccess && (

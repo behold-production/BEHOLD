@@ -428,7 +428,7 @@ const PaymentController = {
         });
       }
 
-      let notes = {};
+      let rzNotes = {};
       // HMAC signature is already 100% cryptographically verified above.
       // We set default notes from booking details directly to prevent unnecessary network latency.
       const appliedDiscount = Number(bookingDetails.appliedDiscount) || Number(req.body.appliedDiscount) || 0;
@@ -510,6 +510,17 @@ const PaymentController = {
         StorageService.update('users', resolvedUserId, { phone: normPhone }).catch(() => {});
       }
 
+      // Extract intake details
+      const age = bookingDetails.age || req.body.age || user?.age || '';
+      const feelingLately = bookingDetails.feelingLately || bookingDetails.reason || req.body.feelingLately || user?.feelingLately || '';
+      const hadPriorTherapy = bookingDetails.hadPriorTherapy || req.body.hadPriorTherapy || user?.hadPriorTherapy || 'No';
+      const priorTherapyDetails = bookingDetails.priorTherapyDetails || req.body.priorTherapyDetails || user?.priorTherapyDetails || '';
+      const schoolName = bookingDetails.schoolName || req.body.schoolName || user?.schoolName || '';
+      const grade = bookingDetails.grade || req.body.grade || user?.grade || '';
+      const guardianName = bookingDetails.guardianName || req.body.guardianName || user?.guardianName || '';
+      const guardianPhone = bookingDetails.guardianPhone || req.body.guardianPhone || user?.guardianPhone || '';
+      const notes = bookingDetails.notes || req.body.notes || '';
+
       // 5. Create appointment with CONFIRMED status
       const newAppointment = await StorageService.create('appointments', {
         userId: resolvedUserId,
@@ -533,9 +544,18 @@ const PaymentController = {
         clientName: (clientName && clientName !== 'New User' && !String(clientName).startsWith('Behold User')) ? clientName : ((user.name && user.name !== 'New User' && !String(user.name).startsWith('Behold User')) ? user.name : ''),
         clientEmail: (clientEmail && !clientEmail.includes('@temp.behold')) ? clientEmail : ((user.email && !user.email.includes('@temp.behold')) ? user.email : ''),
         clientPhone: normPhone || clientPhone || user.phone || '',
-        clientLocationName: clientLocationName || '',
+        clientLocationName: clientLocationName || user?.locationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0,
+        age,
+        feelingLately,
+        hadPriorTherapy,
+        priorTherapyDetails,
+        schoolName,
+        grade,
+        guardianName,
+        guardianPhone,
+        notes,
         commissionPercent,
         counsellorShareAmount,
         utmSource: bookingDetails.utmSource || req.body.utmSource || '',
@@ -554,16 +574,30 @@ const PaymentController = {
         }).catch(() => {});
       }
 
-      // If user profile has no UTM source, attach initial acquisition source
-      if (user && !user.utmSource && (bookingDetails.utmSource || bookingDetails.fbclid)) {
-        try {
-          await StorageService.update('users', user.id, {
-            utmSource: bookingDetails.utmSource || '',
-            utmMedium: bookingDetails.utmMedium || '',
-            utmCampaign: bookingDetails.utmCampaign || '',
-            fbclid: bookingDetails.fbclid || ''
-          });
-        } catch {}
+      // Update user profile with latest details
+      if (user) {
+        const userUpdates = {};
+        if (age && !user.age) userUpdates.age = age;
+        if (feelingLately && !user.feelingLately) userUpdates.feelingLately = feelingLately;
+        if (hadPriorTherapy && !user.hadPriorTherapy) userUpdates.hadPriorTherapy = hadPriorTherapy;
+        if (priorTherapyDetails && !user.priorTherapyDetails) userUpdates.priorTherapyDetails = priorTherapyDetails;
+        if (schoolName && !user.schoolName) userUpdates.schoolName = schoolName;
+        if (grade && !user.grade) userUpdates.grade = grade;
+        if (guardianName && !user.guardianName) userUpdates.guardianName = guardianName;
+        if (guardianPhone && !user.guardianPhone) userUpdates.guardianPhone = guardianPhone;
+        if (clientLocationName && !user.locationName) userUpdates.locationName = clientLocationName;
+        if (!user.utmSource && (bookingDetails.utmSource || bookingDetails.fbclid)) {
+          userUpdates.utmSource = bookingDetails.utmSource || '';
+          userUpdates.utmMedium = bookingDetails.utmMedium || '';
+          userUpdates.utmCampaign = bookingDetails.utmCampaign || '';
+          userUpdates.fbclid = bookingDetails.fbclid || '';
+        }
+        if (Object.keys(userUpdates).length > 0) {
+          try {
+            const updatedUser = await StorageService.update('users', user.id || user._id, userUpdates);
+            if (updatedUser) user = updatedUser;
+          } catch {}
+        }
       }
 
       // Also ensure corresponding session record exists in sessions collection

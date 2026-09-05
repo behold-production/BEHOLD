@@ -3,7 +3,7 @@ import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X, ArrowLeft, ArrowRight, Lock } from 'lucide-react';
+import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
@@ -132,6 +132,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const [expandedBios, setExpandedBios] = useState({});
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
     const [termsAgreed, setTermsAgreed] = useState(false);
+    const [showConsentModal, setShowConsentModal] = useState(false);
 
     const isAdvisorLocked = !!preselectedAdvisorId;
     const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
@@ -1601,46 +1602,127 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 <form onSubmit={handlePaymentSubmit} className="space-y-6">
 
-                                                    <div className="p-4 bg-surface-50 border border-surface-200 rounded-xl space-y-4">
-                                                        <div className="flex flex-col sm:flex-row items-center gap-4 text-left">
-                                                            <div className="w-12 h-12 bg-white border border-surface-200 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-                                                                <svg className="w-6 h-6 text-surface-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                                                </svg>
+                                                    {/* Razorpay Gateway Notice */}
+                                                    <div className="p-4 bg-surface-50 border border-surface-200 rounded-xl space-y-2">
+                                                        <div className="flex items-center gap-3 text-left">
+                                                            <div className="w-10 h-10 bg-white border border-surface-200 rounded-xl flex items-center justify-center shrink-0 shadow-xs">
+                                                                <Lock className="w-5 h-5 text-surface-900" />
                                                             </div>
                                                             <div>
-                                                                <h5 className="text-sm font-semibold text-surface-900 ">Secure Payment Gateway</h5>
-                                                                <p className="text-sm text-surface-500 font-semibold mt-1">
-                                                                    A secure Razorpay checkout overlay will open to complete your payment using UPI, Cards, Netbanking, or Wallet.
+                                                                <h5 className="text-sm font-semibold text-surface-900">Secure Payment Gateway</h5>
+                                                                <p className="text-xs text-surface-500 font-medium">
+                                                                    100% encrypted Razorpay gateway supporting UPI, Google Pay, PhonePe, Cards, Netbanking, and Wallets.
                                                                 </p>
-                                                                <div className="flex items-start gap-2.5 mt-3 pt-3 border-t border-surface-200/80">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        id="booking-terms-checkbox"
-                                                                        checked={termsAgreed}
-                                                                        onChange={(e) => setTermsAgreed(e.target.checked)}
-                                                                        className="w-4 h-4 mt-0.5 rounded border-surface-300 text-brand focus:ring-brand accent-[#00c9d6] cursor-pointer shrink-0"
-                                                                    />
-                                                                    <label htmlFor="booking-terms-checkbox" className="text-xs text-surface-700 font-semibold leading-relaxed cursor-pointer select-none">
-                                                                        By proceeding, you agree to our platform{' '}
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => onOpenDocs?.('terms')}
-                                                                            className="font-semibold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
-                                                                        >
-                                                                            Terms
-                                                                        </button>{' '}
-                                                                        and{' '}
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => onOpenDocs?.('refund')}
-                                                                            className="font-semibold text-[#00c9d6] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
-                                                                        >
-                                                                            Return & Refund Policy
-                                                                        </button>.
-                                                                    </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Informed Client Consent & Agreement Card */}
+                                                    <div className="p-4 sm:p-5 bg-gradient-to-br from-slate-50 via-white to-slate-50/80 border border-slate-200/90 rounded-2xl text-left space-y-4 shadow-xs">
+                                                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-200/80">
+                                                            <div className="flex items-center gap-2.5">
+                                                                <div className="w-7 h-7 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-600">
+                                                                    <ShieldCheck className="w-4 h-4" />
+                                                                </div>
+                                                                <div>
+                                                                    <h5 className="text-sm font-bold text-slate-900 leading-tight">Informed Client Consent & Agreement</h5>
+                                                                    <p className="text-[11px] text-slate-500 font-medium mt-0.5">Please review the professional care disclosures before confirming</p>
                                                                 </div>
                                                             </div>
+                                                            <span className="text-[10px] font-bold uppercase tracking-wider bg-teal-50 text-teal-700 border border-teal-200/60 px-2 py-0.5 rounded-md">
+                                                                Required
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Summary Key Points */}
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-slate-200/70">
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" />
+                                                                <div className="leading-snug">
+                                                                    <span className="font-bold text-slate-800 block text-[11px]">Strict Confidentiality</span>
+                                                                    <span className="text-[10.5px] text-slate-500">Session notes & discussions protected under clinical ethics.</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-slate-200/70">
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" />
+                                                                <div className="leading-snug">
+                                                                    <span className="font-bold text-slate-800 block text-[11px]">Voluntary Care</span>
+                                                                    <span className="text-[10.5px] text-slate-500">Collaborative process with freedom to ask questions anytime.</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-slate-200/70">
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" />
+                                                                <div className="leading-snug">
+                                                                    <span className="font-bold text-slate-800 block text-[11px]">24-Hour Full Refund</span>
+                                                                    <span className="text-[10.5px] text-slate-500">100% refund for cancellations made 24+ hours in advance.</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-slate-200/70">
+                                                                <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                                                                <div className="leading-snug">
+                                                                    <span className="font-bold text-slate-800 block text-[11px]">Crisis Disclaimer</span>
+                                                                    <span className="text-[10.5px] text-slate-500">Scheduled consultations; not a 24/7 suicide crisis line.</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Read Full Form Link */}
+                                                        <div className="flex items-center justify-between gap-3 pt-1">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    if (onOpenDocs) {
+                                                                        onOpenDocs('consent');
+                                                                    } else {
+                                                                        setShowConsentModal(true);
+                                                                    }
+                                                                }}
+                                                                className="text-xs font-bold text-teal-600 hover:text-teal-700 underline flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer transition-colors"
+                                                            >
+                                                                <FileText className="w-3.5 h-3.5" />
+                                                                <span>Read Full Informed Consent Document</span>
+                                                            </button>
+                                                        </div>
+
+                                                        {/* Agreement Checkbox */}
+                                                        <div className="flex items-start gap-3 pt-3 border-t border-slate-200/80 bg-slate-50/50 p-3 rounded-xl">
+                                                            <input
+                                                                type="checkbox"
+                                                                id="booking-consent-checkbox"
+                                                                checked={termsAgreed}
+                                                                onChange={(e) => setTermsAgreed(e.target.checked)}
+                                                                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500 accent-[#00c9d6] cursor-pointer shrink-0"
+                                                            />
+                                                            <label htmlFor="booking-consent-checkbox" className="text-xs text-slate-700 font-medium leading-relaxed cursor-pointer select-none">
+                                                                I confirm that I have read, understood, and voluntarily agree to the{' '}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => onOpenDocs ? onOpenDocs('consent') : setShowConsentModal(true)}
+                                                                    className="font-bold text-teal-600 hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                >
+                                                                    Informed Consent Agreement
+                                                                </button>
+                                                                ,{' '}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => onOpenDocs?.('terms')}
+                                                                    className="font-bold text-teal-600 hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                >
+                                                                    Platform Terms
+                                                                </button>
+                                                                , and{' '}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => onOpenDocs?.('refund')}
+                                                                    className="font-bold text-teal-600 hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                >
+                                                                    Return & Refund Policy
+                                                                </button>
+                                                                .
+                                                            </label>
                                                         </div>
                                                     </div>
 
@@ -1890,6 +1972,92 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                             >
                                 OK
                             </button>
+                        </div>
+                    </div>
+                )}
+                {/* Standalone Informed Consent Modal */}
+                {showConsentModal && (
+                    <div className="fixed inset-0 z-[220] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+                        <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
+                            <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-8 h-8 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-600">
+                                        <ShieldCheck className="w-4.5 h-4.5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-bold text-slate-900 leading-tight">Informed Consent Agreement</h3>
+                                        <p className="text-[11px] text-slate-500 font-medium">Professional Psychological Counselling & Mentorship</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setShowConsentModal(false)}
+                                    className="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer border-none bg-transparent"
+                                    title="Close modal"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            <div className="p-6 overflow-y-auto text-slate-700 text-xs font-medium leading-relaxed space-y-4 max-h-[60vh] custom-scrollbar">
+                                <div className="p-3 bg-teal-50/60 border border-teal-200/60 rounded-xl text-teal-900 text-[11px] leading-relaxed">
+                                    <span className="font-bold block mb-1">Notice to Client / Guardian:</span>
+                                    This informed consent document details your rights, ethical standards, confidentiality guidelines, and expectations regarding psychological consultations and mentorship at BEHOLD.
+                                </div>
+
+                                <div className="space-y-3 text-slate-700">
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold text-slate-900">1. Nature of Services & Voluntary Participation</h4>
+                                        <p>Psychological counselling and career mentorship are collaborative, goal-directed processes designed to enhance personal wellbeing and decision-making. Participation is voluntary, and you have the right to ask questions or discuss your session goals at any time.</p>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold text-slate-900">2. Confidentiality & Ethical Safeguards</h4>
+                                        <p>All discussions, case notes, and personal information are strictly confidential and protected in accordance with professional clinical ethics. Information may only be disclosed without prior consent if mandated by law—namely, if there is clear, imminent danger of harm to yourself or others, suspected child or vulnerable adult abuse, or by formal court order.</p>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold text-slate-900">3. Tele-Consultation & Privacy Guidelines</h4>
+                                        <p>For online video consultations, sessions are conducted through secure, end-to-end encrypted video channels. Please ensure you are in a private, quiet room with minimal distractions. Unauthorized audio or video recording of sessions by either party is strictly prohibited without explicit mutual written consent.</p>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold text-slate-900">4. Emergency & Crisis Notice</h4>
+                                        <p>Behold provides scheduled appointment consultations and is not an emergency crisis or suicide intervention service. If you are experiencing an acute life-threatening emergency, please immediately reach out to national emergency services (112), KIRAN Helpline (1800-599-0019), or Tele-MANAS (14416).</p>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold text-slate-900">5. Cancellation, Rescheduling & Refund Policy</h4>
+                                        <p>Appointments can be cancelled up to 24 hours prior to scheduled start time for a 100% full refund. Rescheduling is available free of charge up to 12 hours before your appointment. Late cancellations or no-shows are non-refundable.</p>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <h4 className="text-xs font-bold text-slate-900">6. Minor / Guardian Consent</h4>
+                                        <p>For clients under 18 years of age, parent or legal guardian acknowledgment and consent is affirmed upon booking.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between gap-3 bg-slate-50">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConsentModal(false)}
+                                    className="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs rounded-xl cursor-pointer transition border border-slate-300 shadow-xs"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setTermsAgreed(true);
+                                        setShowConsentModal(false);
+                                        toast.success('Informed Consent acknowledged and agreed.');
+                                    }}
+                                    className="px-5 py-2.5 bg-[#0f172a] hover:bg-black text-[#00c9d6] hover:text-white font-bold text-xs rounded-xl cursor-pointer transition border-none shadow-sm flex items-center gap-1.5"
+                                >
+                                    <CheckCircle2 className="w-4 h-4" />
+                                    <span>I Agree & Accept</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
