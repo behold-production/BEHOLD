@@ -2318,56 +2318,131 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <ShieldCheck className="w-4 h-4 text-brand" />
-                  <h4 className="text-sm font-bold text-white tracking-wider">Policies & Legal</h4>
+                  <h4 className="text-sm font-bold text-white tracking-wider">Policies, Legal & Client Consent Agreements</h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 ">Terms of Use Document</label>
+                <p className="text-xs text-zinc-400 font-medium leading-relaxed">
+                  Customize the Informed Consent & Client Agreement, Terms of Use, Privacy Policy, and Refund documents shown to users during session booking and platform navigation.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Terms of Use */}
+                  <div className="space-y-1.5 bg-zinc-950/40 p-4 rounded-xl border border-zinc-800/80">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="text-xs font-bold text-zinc-300">Terms of Use Document</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const defaultTerms = 'Welcome to BEHOLD. By accessing or using our psychological counselling, assessment, and career mentoring platform, you agree to comply with and be bound by the terms and conditions.\n\n1. Use of Services:\n- All users agree to provide accurate, up-to-date information during booking and account creation.\n- Services provided are intended for personal guidance, counseling, and mentorship purposes.\n\n2. Intellectual Property:\n- All assessment materials, psychometric tools, tests, reports, logos, and website content are the exclusive intellectual property of BEHOLD Ltd.\n\n3. Prohibited Activities:\n- Users may not record, reproduce, distribute, or exploit consultation sessions or platform content without prior written permission.';
+                          setSettingsForm({ ...settingsForm, termsOfUse: defaultTerms });
+                          toast.success('Terms of Use template loaded!');
+                        }}
+                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                      >
+                        Reset Template
+                      </button>
+                    </div>
                     <textarea
                       rows={12}
                       required
-                      value={settingsForm.termsOfUse}
+                      value={settingsForm.termsOfUse || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, termsOfUse: e.target.value })}
                       className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Platform Terms & Conditions..."
                     />
+                    <span className="text-[10px] text-zinc-500 font-medium block text-right">
+                      {(settingsForm.termsOfUse || '').length} characters
+                    </span>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 ">Privacy Policy Document</label>
+                  {/* Privacy Policy */}
+                  <div className="space-y-1.5 bg-zinc-950/40 p-4 rounded-xl border border-zinc-800/80">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="text-xs font-bold text-zinc-300">Privacy Policy Document</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const defaultPrivacy = 'BEHOLD Privacy & Data Protection Policy:\n\nYour privacy is paramount. This policy describes how we collect, handle, and safeguard your personal information:\n\n1. Information We Collect:\n- Basic personal details (name, phone number, email address, age/grade).\n- Booking history, schedule preferences, and payment transaction metadata.\n- Clinical consultation notes and assessment responses stored with strict encryption.\n\n2. How We Use Information:\n- To facilitate scheduled appointments with your chosen psychologist or mentor.\n- To deliver customized aptitude assessment reports and career roadmaps.\n\n3. Data Confidentiality & Security:\n- We do not sell, rent, or trade your personal or health data to third parties.\n- Data is accessible only to your assigned psychologist and authorized clinical administrators.';
+                          setSettingsForm({ ...settingsForm, privacyPolicy: defaultPrivacy });
+                          toast.success('Privacy Policy template loaded!');
+                        }}
+                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                      >
+                        Reset Template
+                      </button>
+                    </div>
                     <textarea
                       rows={12}
                       required
-                      value={settingsForm.privacyPolicy}
+                      value={settingsForm.privacyPolicy || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
                       className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Platform Privacy Policy..."
                     />
+                    <span className="text-[10px] text-zinc-500 font-medium block text-right">
+                      {(settingsForm.privacyPolicy || '').length} characters
+                    </span>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 ">Return & Refund Policy Document</label>
+                  {/* Return & Refund Policy */}
+                  <div className="space-y-1.5 bg-zinc-950/40 p-4 rounded-xl border border-zinc-800/80">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="text-xs font-bold text-zinc-300">Return & Refund Policy Document</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const defaultRefund = 'BEHOLD Return, Cancellation & Refund Policy:\n\n1. Appointment Cancellations:\n- Clients can request session cancellation up to 24 hours prior to the scheduled session start time for a full 100% refund.\n- Cancellations made less than 24 hours before the scheduled session start time or no-shows are non-refundable.\n\n2. Refund Processing:\n- Approved refunds will be processed back to the original payment source within 5-7 business days.\n- In case of technical platform errors or counselor unavailability, a 100% automatic refund or priority rescheduling will be provided.\n\n3. Rescheduling:\n- Sessions can be rescheduled free of charge up to 12 hours before the appointment start time.';
+                          setSettingsForm({ ...settingsForm, refundPolicy: defaultRefund });
+                          toast.success('Refund Policy template loaded!');
+                        }}
+                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                      >
+                        Reset Template
+                      </button>
+                    </div>
                     <textarea
                       rows={12}
                       required
-                      value={settingsForm.refundPolicy}
+                      value={settingsForm.refundPolicy || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, refundPolicy: e.target.value })}
                       className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Platform Return & Refund Policy..."
                     />
+                    <span className="text-[10px] text-zinc-500 font-medium block text-right">
+                      {(settingsForm.refundPolicy || '').length} characters
+                    </span>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-zinc-400 ">Informed Consent & Client Agreement</label>
+                  {/* Informed Consent & Client Agreement */}
+                  <div className="space-y-1.5 bg-zinc-950/40 p-4 rounded-xl border border-brand/30 ring-1 ring-brand/15">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="text-xs font-bold text-white flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                        Informed Consent & Client Agreement
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const defaultConsent = 'BEHOLD Informed Consent & Client Agreement for Psychological Counselling & Mentorship:\n\n1. Purpose & Voluntary Participation:\n- Psychological counselling is a collaborative, goal-directed process aimed at facilitating personal growth, emotional wellbeing, and resilience.\n- Participation in all sessions is entirely voluntary. You may ask questions about therapeutic approaches, goals, or techniques at any time.\n\n2. Confidentiality & Privacy:\n- Information shared during sessions is strictly confidential and protected by professional psychological codes of ethics and data protection standards.\n- Exceptions to confidentiality: Confidentiality may be breached only where legally mandated—specifically if there is clear and imminent danger of harm to yourself or others, suspected abuse of children or vulnerable persons, or by formal order of a court of law.\n\n3. Online / Tele-Consultation Guidelines:\n- Tele-counselling sessions are conducted over secure, end-to-end encrypted video channels.\n- Please ensure you are in a private, quiet room with minimal distractions and a stable internet connection.\n- Unauthorized audio or video recording of sessions by either party without explicit written mutual consent is strictly prohibited.\n\n4. Emergency & Crisis Disclaimer:\n- Behold counselling sessions are scheduled professional consultations and are NOT an emergency suicide/crisis intervention service.\n- If you or someone you know is experiencing acute psychiatric distress or an immediate life-threatening emergency, please contact national emergency services (112), KIRAN Mental Health Helpline (1800-599-0019), or Tele-MANAS (14416) immediately.\n\n5. Cancellations & Rescheduling:\n- Cancellations requested 24 hours prior to scheduled start time receive a 100% full refund.\n- Rescheduling is available free of charge up to 12 hours before your appointment.\n\n6. Minor / Guardian Consent:\n- For clients under 18 years of age, parent/guardian acknowledgment and consent is required.';
+                          setSettingsForm({ ...settingsForm, consentPolicy: defaultConsent });
+                          toast.success('Informed Consent template loaded!');
+                        }}
+                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                      >
+                        Reset Template
+                      </button>
+                    </div>
                     <textarea
                       rows={12}
                       required
-                      value={settingsForm.consentPolicy}
+                      value={settingsForm.consentPolicy || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, consentPolicy: e.target.value })}
                       className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Client Informed Consent Agreement..."
                     />
+                    <span className="text-[10px] text-zinc-500 font-medium block text-right">
+                      {(settingsForm.consentPolicy || '').length} characters
+                    </span>
                   </div>
                 </div>
 

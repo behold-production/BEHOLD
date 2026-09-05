@@ -1285,10 +1285,27 @@ If you have questions or would like to reapply with updated information, please 
           ]
         });
       }
+
+      const defaultConsentPolicy =
+        'BEHOLD Informed Consent & Client Agreement for Psychological Counselling & Mentorship:\n\n1. Purpose & Voluntary Participation:\n- Psychological counselling is a collaborative, goal-directed process aimed at facilitating personal growth, emotional wellbeing, and resilience.\n- Participation in all sessions is entirely voluntary. You may ask questions about therapeutic approaches, goals, or techniques at any time.\n\n2. Confidentiality & Privacy:\n- Information shared during sessions is strictly confidential and protected by professional psychological codes of ethics and data protection standards.\n- Exceptions to confidentiality: Confidentiality may be breached only where legally mandated—specifically if there is clear and imminent danger of harm to yourself or others, suspected abuse of children or vulnerable persons, or by formal order of a court of law.\n\n3. Online / Tele-Consultation Guidelines:\n- Tele-counselling sessions are conducted over secure, end-to-end encrypted video channels.\n- Please ensure you are in a private, quiet room with minimal distractions and a stable internet connection.\n- Unauthorized audio or video recording of sessions by either party without explicit written mutual consent is strictly prohibited.\n\n4. Emergency & Crisis Disclaimer:\n- Behold counselling sessions are scheduled professional consultations and are NOT an emergency suicide/crisis intervention service.\n- If you or someone you know is experiencing acute psychiatric distress or an immediate life-threatening emergency, please contact national emergency services (112), KIRAN Mental Health Helpline (1800-599-0019), or Tele-MANAS (14416) immediately.\n\n5. Cancellations & Rescheduling:\n- Cancellations requested 24 hours prior to scheduled start time receive a 100% full refund.\n- Rescheduling is available free of charge up to 12 hours before your appointment.\n\n6. Minor / Guardian Consent:\n- For clients under 18 years of age, parent/guardian acknowledgment and consent is required.';
+
+      const defaultRefundPolicy =
+        'BEHOLD Return, Cancellation & Refund Policy:\n\n1. Appointment Cancellations:\n- Clients can request session cancellation up to 24 hours prior to the scheduled session start time for a full 100% refund.\n- Cancellations made less than 24 hours before the scheduled session start time or no-shows are non-refundable.\n\n2. Refund Processing:\n- Approved refunds will be processed back to the original payment source within 5-7 business days.\n- In case of technical platform errors or counselor unavailability, a 100% automatic refund or priority rescheduling will be provided.\n\n3. Rescheduling:\n- Sessions can be rescheduled free of charge up to 12 hours before the appointment start time.';
+
+      const defaultTermsOfUse =
+        'Welcome to BEHOLD. By accessing or using our psychological counselling, assessment, and career mentoring platform, you agree to comply with and be bound by the terms and conditions.\n\n1. Use of Services:\n- All users agree to provide accurate, up-to-date information during booking and account creation.\n- Services provided are intended for personal guidance, counseling, and mentorship purposes.\n\n2. Intellectual Property:\n- All assessment materials, psychometric tools, tests, reports, logos, and website content are the exclusive intellectual property of BEHOLD Ltd.\n\n3. Prohibited Activities:\n- Users may not record, reproduce, distribute, or exploit consultation sessions or platform content without prior written permission.';
+
+      const defaultPrivacyPolicy =
+        'BEHOLD Privacy & Data Protection Policy:\n\nYour privacy is paramount. This policy describes how we collect, handle, and safeguard your personal information:\n\n1. Information We Collect:\n- Basic personal details (name, phone number, email address, age/grade).\n- Booking history, schedule preferences, and payment transaction metadata.\n- Clinical consultation notes and assessment responses stored with strict encryption.\n\n2. How We Use Information:\n- To facilitate scheduled appointments with your chosen psychologist or mentor.\n- To deliver customized aptitude assessment reports and career roadmaps.\n\n3. Data Confidentiality & Security:\n- We do not sell, rent, or trade your personal or health data to third parties.\n- Data is accessible only to your assigned psychologist and authorized clinical administrators.';
+
       res.status(200).json({
         success: true,
         data: {
           ...settings,
+          consentPolicy: settings.consentPolicy && settings.consentPolicy.trim().length > 0 ? settings.consentPolicy : defaultConsentPolicy,
+          refundPolicy: settings.refundPolicy && settings.refundPolicy.trim().length > 0 ? settings.refundPolicy : defaultRefundPolicy,
+          termsOfUse: settings.termsOfUse && settings.termsOfUse.trim().length > 0 ? settings.termsOfUse : defaultTermsOfUse,
+          privacyPolicy: settings.privacyPolicy && settings.privacyPolicy.trim().length > 0 ? settings.privacyPolicy : defaultPrivacyPolicy,
           heroStats: Array.isArray(settings.heroStats) && settings.heroStats.length > 0 ? settings.heroStats : [
             { num: '500+', label: 'Students Guided' },
             { num: '98%', label: 'Clarity & Peace' },

@@ -2004,37 +2004,60 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                     This informed consent document details your rights, ethical standards, confidentiality guidelines, and expectations regarding psychological consultations and mentorship at BEHOLD.
                                 </div>
 
-                                <div className="space-y-3 text-slate-700">
-                                    <div className="space-y-1">
-                                        <h4 className="text-xs font-bold text-slate-900">1. Nature of Services & Voluntary Participation</h4>
-                                        <p>Psychological counselling and career mentorship are collaborative, goal-directed processes designed to enhance personal wellbeing and decision-making. Participation is voluntary, and you have the right to ask questions or discuss your session goals at any time.</p>
-                                    </div>
+                                {(() => {
+                                    let activeConsent = '';
+                                    try {
+                                        const raw = localStorage.getItem('behold_site_settings');
+                                        if (raw) {
+                                            const parsed = JSON.parse(raw);
+                                            if (parsed && parsed.consentPolicy && parsed.consentPolicy.trim().length > 0) {
+                                                activeConsent = parsed.consentPolicy;
+                                            }
+                                        }
+                                    } catch (e) {}
 
-                                    <div className="space-y-1">
-                                        <h4 className="text-xs font-bold text-slate-900">2. Confidentiality & Ethical Safeguards</h4>
-                                        <p>All discussions, case notes, and personal information are strictly confidential and protected in accordance with professional clinical ethics. Information may only be disclosed without prior consent if mandated by law—namely, if there is clear, imminent danger of harm to yourself or others, suspected child or vulnerable adult abuse, or by formal court order.</p>
-                                    </div>
+                                    if (activeConsent) {
+                                        return (
+                                            <div className="text-slate-700 text-xs font-medium leading-relaxed whitespace-pre-wrap font-sans">
+                                                {activeConsent}
+                                            </div>
+                                        );
+                                    }
 
-                                    <div className="space-y-1">
-                                        <h4 className="text-xs font-bold text-slate-900">3. Tele-Consultation & Privacy Guidelines</h4>
-                                        <p>For online video consultations, sessions are conducted through secure, end-to-end encrypted video channels. Please ensure you are in a private, quiet room with minimal distractions. Unauthorized audio or video recording of sessions by either party is strictly prohibited without explicit mutual written consent.</p>
-                                    </div>
+                                    return (
+                                        <div className="space-y-3 text-slate-700">
+                                            <div className="space-y-1">
+                                                <h4 className="text-xs font-bold text-slate-900">1. Nature of Services & Voluntary Participation</h4>
+                                                <p>Psychological counselling and career mentorship are collaborative, goal-directed processes designed to enhance personal wellbeing and decision-making. Participation is voluntary, and you have the right to ask questions or discuss your session goals at any time.</p>
+                                            </div>
 
-                                    <div className="space-y-1">
-                                        <h4 className="text-xs font-bold text-slate-900">4. Emergency & Crisis Notice</h4>
-                                        <p>Behold provides scheduled appointment consultations and is not an emergency crisis or suicide intervention service. If you are experiencing an acute life-threatening emergency, please immediately reach out to national emergency services (112), KIRAN Helpline (1800-599-0019), or Tele-MANAS (14416).</p>
-                                    </div>
+                                            <div className="space-y-1">
+                                                <h4 className="text-xs font-bold text-slate-900">2. Confidentiality & Ethical Safeguards</h4>
+                                                <p>All discussions, case notes, and personal information are strictly confidential and protected in accordance with professional clinical ethics. Information may only be disclosed without prior consent if mandated by law—namely, if there is clear, imminent danger of harm to yourself or others, suspected child or vulnerable adult abuse, or by formal court order.</p>
+                                            </div>
 
-                                    <div className="space-y-1">
-                                        <h4 className="text-xs font-bold text-slate-900">5. Cancellation, Rescheduling & Refund Policy</h4>
-                                        <p>Appointments can be cancelled up to 24 hours prior to scheduled start time for a 100% full refund. Rescheduling is available free of charge up to 12 hours before your appointment. Late cancellations or no-shows are non-refundable.</p>
-                                    </div>
+                                            <div className="space-y-1">
+                                                <h4 className="text-xs font-bold text-slate-900">3. Tele-Consultation & Privacy Guidelines</h4>
+                                                <p>For online video consultations, sessions are conducted through secure, end-to-end encrypted video channels. Please ensure you are in a private, quiet room with minimal distractions. Unauthorized audio or video recording of sessions by either party is strictly prohibited without explicit mutual written consent.</p>
+                                            </div>
 
-                                    <div className="space-y-1">
-                                        <h4 className="text-xs font-bold text-slate-900">6. Minor / Guardian Consent</h4>
-                                        <p>For clients under 18 years of age, parent or legal guardian acknowledgment and consent is affirmed upon booking.</p>
-                                    </div>
-                                </div>
+                                            <div className="space-y-1">
+                                                <h4 className="text-xs font-bold text-slate-900">4. Emergency & Crisis Notice</h4>
+                                                <p>Behold provides scheduled appointment consultations and is not an emergency crisis or suicide intervention service. If you are experiencing an acute life-threatening emergency, please immediately reach out to national emergency services (112), KIRAN Helpline (1800-599-0019), or Tele-MANAS (14416).</p>
+                                            </div>
+
+                                            <div className="space-y-1">
+                                                <h4 className="text-xs font-bold text-slate-900">5. Cancellation, Rescheduling & Refund Policy</h4>
+                                                <p>Appointments can be cancelled up to 24 hours prior to scheduled start time for a 100% full refund. Rescheduling is available free of charge up to 12 hours before your appointment. Late cancellations or no-shows are non-refundable.</p>
+                                            </div>
+
+                                            <div className="space-y-1">
+                                                <h4 className="text-xs font-bold text-slate-900">6. Minor / Guardian Consent</h4>
+                                                <p>For clients under 18 years of age, parent or legal guardian acknowledgment and consent is affirmed upon booking.</p>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
                             <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between gap-3 bg-slate-50">
