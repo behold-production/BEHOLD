@@ -4,6 +4,7 @@ import ApiService from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search, ChevronDown } from 'lucide-react';
 import { formatExperience } from '../../utils/formatters';
+import { calculateNextAvailable } from '../../utils/dateFormatter';
 
 const getInitial = (name) => {
   if (!name) return 'P';
@@ -71,14 +72,14 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 bio: c.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.',
                 photo: hasValidPhoto ? rawPhoto : null,
                 specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['Identity Concerns', 'Anxiety Stress & Panic', 'Depression']),
-                languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'English, Malayalam')))
+                languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'English, Malayalam'))),
+                availability: c.availability || {},
+                bookedSlots: c.bookedSlots || []
               };
             });
             setAdvisors(formatted);
-            localStorage.setItem('behold_counsellors_cache', JSON.stringify(formatted));
           } else {
             setAdvisors([]);
-            localStorage.removeItem('behold_counsellors_cache');
           }
         }
       } catch (err) {
@@ -225,6 +226,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       ? (advisor.lang || advisor.languages)
       : String(advisor.lang || advisor.languages || 'Malayalam, English').split(',').map(l => l.trim()).filter(Boolean);
     const displayLanguages = rawLangs.join(', ');
+    const nextAvail = calculateNextAvailable(advisor.availability, advisor.bookedSlots || []);
+    const isAvailToday = nextAvail === 'Available Today';
+    const isUnavailable = nextAvail === 'Unavailable';
 
     return (
       <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[24px] sm:rounded-[26px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00c9d6] shadow-[0_16px_40px_rgba(0,201,214,0.20)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
@@ -324,7 +328,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
           <div className="pt-1.5 sm:pt-2 flex items-center justify-between gap-1.5 sm:gap-2 border-t border-slate-100 shrink-0">
             <div className="text-left shrink-0">
               <span className="text-[8.5px] sm:text-[10px] font-semibold text-slate-400 block tracking-wider">Next available</span>
-              <span className="text-[10px] sm:text-xs font-semibold text-slate-900 block mt-0.5 whitespace-nowrap">Available Today</span>
+              <span className={`text-[10px] sm:text-xs font-semibold block mt-0.5 whitespace-nowrap ${isUnavailable ? 'text-slate-400' : isAvailToday ? 'text-emerald-600' : 'text-slate-900'}`}>
+                {nextAvail}
+              </span>
             </div>
 
             <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">

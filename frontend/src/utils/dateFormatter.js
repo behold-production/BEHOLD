@@ -183,15 +183,36 @@ export const calculateNextAvailable = (availability, bookedSlots) => {
 
   const parseTimeToMinutes = (timeStr) => {
     if (!timeStr) return 0;
-    const parts = timeStr.trim().split(/\s+/);
-    if (parts.length < 2) return 0;
-    const [time, meridiem] = parts;
-    const timeParts = time.split(':');
-    let hours = Number(timeParts[0]);
-    let minutes = Number(timeParts[1] || 0);
-    if (meridiem === 'PM' && hours !== 12) hours += 12;
-    if (meridiem === 'AM' && hours === 12) hours = 0;
-    return hours * 60 + minutes;
+    const clean = String(timeStr).trim();
+    // 12-hour format: e.g. "10:00 AM", "10:00AM", "10 AM"
+    const match12 = clean.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i);
+    if (match12) {
+      let hours = Number(match12[1]);
+      const minutes = Number(match12[2] || 0);
+      const meridiem = match12[3].toUpperCase();
+      if (meridiem === 'PM' && hours !== 12) hours += 12;
+      if (meridiem === 'AM' && hours === 12) hours = 0;
+      return hours * 60 + minutes;
+    }
+    // 24-hour format: e.g. "14:30", "09:00"
+    const match24 = clean.match(/^(\d{1,2}):(\d{2})$/);
+    if (match24) {
+      const hours = Number(match24[1]);
+      const minutes = Number(match24[2]);
+      return hours * 60 + minutes;
+    }
+    // General whitespace split fallback
+    const parts = clean.split(/\s+/);
+    if (parts.length >= 2) {
+      const [time, meridiem] = parts;
+      const timeParts = time.split(':');
+      let hours = Number(timeParts[0]);
+      let minutes = Number(timeParts[1] || 0);
+      if (meridiem && meridiem.toUpperCase() === 'PM' && hours !== 12) hours += 12;
+      if (meridiem && meridiem.toUpperCase() === 'AM' && hours === 12) hours = 0;
+      return hours * 60 + minutes;
+    }
+    return 0;
   };
 
   const DEFAULT_SLOTS = [

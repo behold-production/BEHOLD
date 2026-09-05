@@ -119,7 +119,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             halfSessionPrice: (Number.isFinite(rawHalf) && rawHalf >= 100) ? rawHalf : (validPrice <= 899 ? 499 : validPrice >= 1200 ? 699 : Math.round(validPrice * 0.5)),
             rating: Number(psy.rating) || 5.0,
             reviewCount: Number(psy.reviewCount) || 0,
-            nextAvailable: nextAvailable || 'Available Today',
+            nextAvailable: nextAvailable || 'Unavailable',
             education: eduText,
             about: bioText,
             type: 'counselling',
@@ -230,8 +230,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   <Video className="w-4 h-4 text-slate-500" />
                   <span>{advisor.modes && advisor.modes.length > 0 ? advisor.modes.map(m => m === 'DOOR_STEP' ? 'Doorstep' : m.charAt(0) + m.slice(1).toLowerCase()).join(' & ') : 'Online'}</span>
                 </span>
-                <span className="flex items-center gap-1.5 text-[#00a680]">
-                  <span className="w-2 h-2 rounded-full bg-[#00a680]" />
+                <span className={`flex items-center gap-1.5 ${advisor.nextAvailable === 'Unavailable' ? 'text-slate-400' : 'text-[#00a680]'}`}>
+                  <span className={`w-2 h-2 rounded-full ${advisor.nextAvailable === 'Unavailable' ? 'bg-slate-400' : 'bg-[#00a680]'}`} />
                   <span>{advisor.nextAvailable}</span>
                 </span>
               </div>
