@@ -131,19 +131,64 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const step3TimeRef = useRef(null);
     const stepSummaryRef = useRef(null);
     const scrollContainerRef = useRef(null);
+    const scrollAnimationIdRef = useRef(null);
 
-    const scrollToTarget = useCallback((targetRef, offsetAdjust = 20) => {
-        setTimeout(() => {
-            if (!targetRef?.current || !scrollContainerRef?.current) return;
-            const container = scrollContainerRef.current;
-            const target = targetRef.current;
-            if (!container || !target) return;
-            const containerRect = container.getBoundingClientRect();
-            const targetRect = target.getBoundingClientRect();
-            const offset = targetRect.top - containerRect.top + container.scrollTop - offsetAdjust;
-            container.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
-        }, 120);
+    const smoothScrollElement = useCallback((container, targetY, duration = 650) => {
+        if (!container) return;
+        if (scrollAnimationIdRef.current) {
+            cancelAnimationFrame(scrollAnimationIdRef.current);
+        }
+
+        const startY = container.scrollTop;
+        const difference = targetY - startY;
+        if (Math.abs(difference) < 4) return;
+
+        const startTime = performance.now();
+        // Buttery-smooth cubic easing for elegant, non-abrupt motion
+        const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = easeInOutCubic(progress);
+
+            container.scrollTop = startY + difference * easeProgress;
+
+            if (progress < 1) {
+                scrollAnimationIdRef.current = requestAnimationFrame(animate);
+            } else {
+                scrollAnimationIdRef.current = null;
+            }
+        };
+
+        scrollAnimationIdRef.current = requestAnimationFrame(animate);
     }, []);
+
+    const scrollToTarget = useCallback((targetRef, offsetAdjust = 24, duration = 650) => {
+        setTimeout(() => {
+            const container = scrollContainerRef.current;
+            if (!container) return;
+
+            let attempts = 0;
+            const checkAndScroll = () => {
+                const target = targetRef?.current;
+                if (!target) {
+                    if (attempts < 8) {
+                        attempts++;
+                        setTimeout(checkAndScroll, 50);
+                    }
+                    return;
+                }
+
+                const containerRect = container.getBoundingClientRect();
+                const targetRect = target.getBoundingClientRect();
+                const targetOffset = targetRect.top - containerRect.top + container.scrollTop - offsetAdjust;
+                smoothScrollElement(container, Math.max(0, targetOffset), duration);
+            };
+
+            checkAndScroll();
+        }, 80);
+    }, [smoothScrollElement]);
 
     const [expandedBios, setExpandedBios] = useState({});
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
@@ -370,7 +415,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
                 canonicalUrl="https://www.behold.co.in/booking"
             />
-            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full ${bookingStep === 'success' ? 'max-w-3xl' : 'max-w-7xl'} h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain animate-modal-in transition-all duration-300`}>
+            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full ${bookingStep === 'success' ? 'max-w-3xl' : 'max-w-7xl'} h-full sm:h-auto sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain animate-modal-in transition-all duration-300 scroll-smooth`}>
                 {/* Top Action Bar (Back & Close) */}
                 <div className="sticky top-0 z-30 flex items-center justify-between p-4 bg-white/90 backdrop-blur-md border-b border-surface-200">
                     <button
