@@ -140,7 +140,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
       } catch { }
     }
-    return '';
+    return getLocalTodayString();
   });
   const [selectedTime, setSelectedTime] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -944,7 +944,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
       const status = getAdvisorAvailabilityStatus(selectedAdvisor.id, selectedDate, selectedTime);
       if (status === 'Booked' || status === 'Unavailable') {
-        toast.error("This slot is already booked for this counsellor. Please select another slot.");
+        toast.error("This time slot is no longer available. Please choose another available time.");
         return;
       }
 

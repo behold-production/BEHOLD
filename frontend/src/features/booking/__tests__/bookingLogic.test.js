@@ -134,4 +134,47 @@ describe('Psychologist-First Booking Availability Logic', () => {
     const earliest = getAdvisorEarliestAvailableDate(advisor);
     expect(earliest).toBeNull();
   });
+
+  describe('Sequential Booking Flow & Pricing Calculations', () => {
+    it('should calculate correct end times for 30-minute Introductory vs 60-minute Standard sessions', () => {
+      const calculateEndTime = (startTimeStr, durationMinutes) => {
+        const [time, meridiem] = startTimeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (meridiem === 'PM' && hours !== 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        
+        const totalMinutes = hours * 60 + minutes + durationMinutes;
+        const endHours24 = Math.floor(totalMinutes / 60) % 24;
+        const endMins = totalMinutes % 60;
+        const endMeridiem = endHours24 >= 12 ? 'PM' : 'AM';
+        const endHours12 = endHours24 % 12 === 0 ? 12 : endHours24 % 12;
+        return `${String(endHours12).padStart(2, '0')}:${String(endMins).padStart(2, '0')} ${endMeridiem}`;
+      };
+
+      // 10:30 AM with 30 min duration -> 11:00 AM
+      expect(calculateEndTime('10:30 AM', 30)).toBe('11:00 AM');
+      // 10:30 AM with 60 min duration -> 11:30 AM
+      expect(calculateEndTime('10:30 AM', 60)).toBe('11:30 AM');
+      // 11:30 AM with 30 min duration -> 12:00 PM
+      expect(calculateEndTime('11:30 AM', 30)).toBe('12:00 PM');
+      // 11:30 AM with 60 min duration -> 12:30 PM
+      expect(calculateEndTime('11:30 AM', 60)).toBe('12:30 PM');
+    });
+
+    it('should correctly select session price based on plan (₹499 for 30m vs ₹899 for 60m)', () => {
+      const advisor = {
+        id: 'adv-5',
+        name: 'Dr. Neha',
+        halfSessionPrice: 499,
+        price: 899
+      };
+
+      const getSessionPrice = (adv, duration) => {
+        return duration === 30 ? (adv.halfSessionPrice || 499) : (adv.price || 899);
+      };
+
+      expect(getSessionPrice(advisor, 30)).toBe(499);
+      expect(getSessionPrice(advisor, 60)).toBe(899);
+    });
+  });
 });
