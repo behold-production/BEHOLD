@@ -687,7 +687,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <span className="text-[10px] font-extrabold text-teal-700 bg-teal-50 border border-teal-200/60 px-2.5 py-1 rounded-lg uppercase tracking-wider hidden sm:inline-block">
                                                             Step 1
                                                         </span>
-                                                                                                    {/* Service Type & Mode Selection (Clean Flat Segmented Controls) */}
+                                                    </div>
+
+                                                    {/* Service Type & Mode Selection (Clean Flat Segmented Controls) */}
                                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-slate-100">
                                                         {/* Service Type */}
                                                         <div className="space-y-2">
@@ -784,34 +786,34 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
 
                                                         {isIntroductoryEligible ? (
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                                 {/* 1. Introductory Session */}
                                                                 <button
                                                                     type="button"
                                                                     disabled={rescheduleSession}
                                                                     onClick={() => setBookingDuration(30)}
-                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left relative ${
+                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${
                                                                         bookingDuration === 30
-                                                                            ? 'bg-teal-50/40 border-2 border-[#00c9d6] ring-2 ring-[#00c9d6]/30 shadow-sm'
-                                                                            : 'bg-white hover:bg-slate-50 border-2 border-slate-200/80 text-slate-900 shadow-none'
+                                                                            ? 'border-[#00c9d6] bg-teal-50/30 ring-2 ring-[#00c9d6]/30 shadow-xs'
+                                                                            : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
                                                                     }`}
                                                                 >
-                                                                    <div className="w-full flex items-center justify-between gap-2 mb-2.5">
-                                                                        <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-md bg-teal-100/70 text-teal-800 border border-teal-200/60">
+                                                                    <div className="w-full flex items-center justify-between gap-2 mb-3">
+                                                                        <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-1 rounded-md bg-teal-100/80 text-teal-800 border border-teal-200/60">
                                                                             ✨ One-Time Intro Offer
                                                                         </span>
-                                                                        <span className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                                                                        <span className="text-xl sm:text-2xl font-extrabold text-slate-900 shrink-0">
                                                                             ₹{selectedAdvisor ? (selectedAdvisor.halfSessionPrice || 499) : 499}
                                                                         </span>
                                                                     </div>
                                                                     <div>
-                                                                        <div className="flex items-center gap-1.5">
+                                                                        <div className="flex items-center justify-between gap-2">
                                                                             <h4 className="font-bold text-base text-slate-900">Introductory Session</h4>
-                                                                            {bookingDuration === 30 && <CheckCircle2 className="w-4 h-4 text-teal-600" />}
+                                                                            {bookingDuration === 30 && <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />}
                                                                         </div>
-                                                                        <span className="text-xs block mt-1 text-slate-500 leading-relaxed">
+                                                                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                                                                             30 Minutes • First session consultation & assessment
-                                                                        </span>
+                                                                        </p>
                                                                     </div>
                                                                 </button>
 
@@ -820,28 +822,28 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     type="button"
                                                                     disabled={rescheduleSession}
                                                                     onClick={() => setBookingDuration(60)}
-                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left relative ${
+                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${
                                                                         bookingDuration === 60
-                                                                            ? 'bg-teal-50/40 border-2 border-[#00c9d6] ring-2 ring-[#00c9d6]/30 shadow-sm'
-                                                                            : 'bg-white hover:bg-slate-50 border-2 border-slate-200/80 text-slate-900 shadow-none'
+                                                                            ? 'border-[#00c9d6] bg-teal-50/30 ring-2 ring-[#00c9d6]/30 shadow-xs'
+                                                                            : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
                                                                     }`}
                                                                 >
-                                                                    <div className="w-full flex items-center justify-between gap-2 mb-2.5">
-                                                                        <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                                                                    <div className="w-full flex items-center justify-between gap-2 mb-3">
+                                                                        <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
                                                                             Comprehensive
                                                                         </span>
-                                                                        <span className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                                                                        <span className="text-xl sm:text-2xl font-extrabold text-slate-900 shrink-0">
                                                                             ₹{selectedAdvisor ? (selectedAdvisor.price || 899) : 899}
                                                                         </span>
                                                                     </div>
                                                                     <div>
-                                                                        <div className="flex items-center gap-1.5">
+                                                                        <div className="flex items-center justify-between gap-2">
                                                                             <h4 className="font-bold text-base text-slate-900">Standard Session</h4>
-                                                                            {bookingDuration === 60 && <CheckCircle2 className="w-4 h-4 text-teal-600" />}
+                                                                            {bookingDuration === 60 && <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />}
                                                                         </div>
-                                                                        <span className="text-xs block mt-1 text-slate-500 leading-relaxed">
+                                                                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                                                                             1 Hour (60 Minutes) • Full comprehensive therapeutic consultation
-                                                                        </span>
+                                                                        </p>
                                                                     </div>
                                                                 </button>
                                                             </div>
@@ -864,7 +866,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 </span>
                                                             </div>
                                                         )}
-                                                    </div>                                         </div>
+                                                    </div>
 
                                                     {/* DOORSTEP LOCATION INPUTS IF ACTIVE */}
                                                     {bookingMode === 'DOOR_STEP' && (
