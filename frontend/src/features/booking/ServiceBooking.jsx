@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
@@ -1856,7 +1857,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                     setBookingForm={setBookingForm}
                 />
 
-                {showNoCounsellorsModal && (
+                {showNoCounsellorsModal && typeof document !== 'undefined' && createPortal(
                     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
                         <div className="bg-white border border-surface-200 rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200">
                             <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-semibold ">
@@ -1878,10 +1879,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                 OK
                             </button>
                         </div>
-                    </div>
+                    </div>,
+                    document.body
                 )}
                 {/* Standalone Informed Consent Modal */}
-                {showConsentModal && (
+                {showConsentModal && typeof document !== 'undefined' && createPortal(
                     <div className="fixed inset-0 z-[220] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
                         <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
                             <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
@@ -1987,7 +1989,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div>,
+                    document.body
                 )}
             </div>
         </div>

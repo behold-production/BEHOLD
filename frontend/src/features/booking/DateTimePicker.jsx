@@ -1,4 +1,5 @@
 import { useMemo, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, Check, Clock } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 
@@ -170,15 +171,15 @@ export default function DateTimePicker({
   const handleSelectDate = (dateStr, dateObj) => {
     const meta = getDayMeta(dateStr, dateObj);
     if (meta.isPast || !meta.isAvailable) return;
-    onDateChange(dateStr);
     if (onClose) onClose();
+    onDateChange(dateStr);
   };
 
   if (!isOpen) return null;
 
-  return (
+  const modalNode = (
     <div
-      className="fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md animate-backdrop-in overflow-y-auto"
+      className="fixed inset-0 z-[250] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md animate-backdrop-in overflow-y-auto"
       onClick={onClose}
     >
       <div
@@ -369,4 +370,6 @@ export default function DateTimePicker({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalNode, document.body) : null;
 }
