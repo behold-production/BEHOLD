@@ -348,7 +348,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-md overflow-y-auto overscroll-contain animate-backdrop-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-md overflow-hidden animate-backdrop-in">
             <SEO
                 title="Book a Session | Psychological Counselling & Career Mentoring"
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
@@ -937,7 +937,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 </div>
 
                                                 {/* STEP 2 — SELECT PSYCHOLOGIST */}
-                                                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
+                                                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 text-left">
                                                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                         <div className="flex items-center gap-2.5">
                                                             <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00c9d6] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -945,289 +945,233 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </span>
                                                             <div>
                                                                 <h3 className="font-bold text-base sm:text-lg text-slate-900 leading-tight">
-                                                                    {selectedAdvisor ? 'Selected Psychologist' : 'Select Psychologist'}
+                                                                    Select Psychologist
                                                                 </h3>
                                                                 <p className="text-xs text-slate-500 font-medium">
                                                                     Certified licensed clinical psychologists & therapeutic advisors
                                                                 </p>
                                                             </div>
                                                         </div>
-
-                                                        {selectedAdvisor && !isAdvisorLocked && (
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    setSelectedAdvisor(null);
-                                                                    setSelectedTime('');
-                                                                    clearPreselectedAdvisor?.();
-                                                                }}
-                                                                className="text-xs font-bold text-teal-600 hover:text-teal-700 hover:underline cursor-pointer bg-transparent border-none p-0"
-                                                            >
-                                                                Change Psychologist
-                                                            </button>
-                                                        )}
+                                                        <span className="text-[10px] font-extrabold text-teal-700 bg-teal-50 border border-teal-200/60 px-2.5 py-1 rounded-lg uppercase tracking-wider hidden sm:inline-block">
+                                                            Step 2
+                                                        </span>
                                                     </div>
 
-                                                    {selectedAdvisor ? (
-                                                        /* Selected Psychologist Summary Card */
-                                                        <div className="border-2 border-[#00c9d6] rounded-2xl bg-gradient-to-r from-teal-50/70 via-cyan-50/40 to-white p-4 sm:p-5 shadow-sm text-left relative animate-in fade-in">
-                                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                                                <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
-                                                                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center border-2 border-[#00c9d6] bg-white shadow-sm overflow-hidden relative">
-                                                                        {selectedAdvisor.profilePic || selectedAdvisor.image ? (
-                                                                            <img
-                                                                                src={selectedAdvisor.profilePic || selectedAdvisor.image}
-                                                                                alt={selectedAdvisor.name}
-                                                                                className="w-full h-full object-cover"
-                                                                                onError={(e) => {
-                                                                                    e.currentTarget.style.display = 'none';
-                                                                                    const fallback = e.currentTarget.nextElementSibling;
-                                                                                    if (fallback) fallback.style.display = 'flex';
-                                                                                }}
-                                                                            />
-                                                                        ) : null}
-                                                                        <span className="font-bold text-xl text-teal-600 flex items-center justify-center w-full h-full">
-                                                                            {getInitials(selectedAdvisor.name)}
-                                                                        </span>
-                                                                    </div>
-
-                                                                    <div className="space-y-1 min-w-0 flex-1">
-                                                                        <div className="flex items-center gap-2 flex-wrap">
-                                                                            <span className="px-2 py-0.5 bg-[#00c9d6] text-slate-950 text-[10px] font-extrabold uppercase tracking-wider rounded-md">
-                                                                                Selected
-                                                                            </span>
-                                                                            <span className="text-xs text-slate-600 font-semibold">
-                                                                                {selectedAdvisor.role || 'Consultant Psychologist'}
-                                                                            </span>
-                                                                        </div>
-
-                                                                        <h4 className="font-bold text-base sm:text-lg text-slate-900 leading-snug truncate">
-                                                                            {selectedAdvisor.name}
-                                                                        </h4>
-
-                                                                        {selectedAdvisor.bio && (
-                                                                            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                                                                                {selectedAdvisor.bio}
-                                                                            </p>
-                                                                        )}
-
-                                                                        {selectedAdvisor.specialties?.length > 0 && (
-                                                                            <div className="flex flex-wrap gap-1 pt-1">
-                                                                                {selectedAdvisor.specialties.slice(0, 4).map((spec, i) => (
-                                                                                    <span key={i} className="px-2 py-0.5 bg-white border border-slate-200 text-slate-700 text-[10px] font-semibold rounded-md">
-                                                                                        {spec}
-                                                                                    </span>
-                                                                                ))}
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-
-                                                                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 shrink-0 border-t sm:border-t-0 border-slate-200/60 pt-3 sm:pt-0">
-                                                                    <div className="text-left sm:text-right">
-                                                                        <span className="font-extrabold text-xl sm:text-2xl text-slate-900 block leading-none">
-                                                                            ₹{bookingDuration === 30 ? (selectedAdvisor.halfSessionPrice || 499) : (selectedAdvisor.price || 899)}
-                                                                        </span>
-                                                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 block">
-                                                                            {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
-                                                                        </span>
-                                                                    </div>
-                                                                    {!isAdvisorLocked && (
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                setSelectedAdvisor(null);
-                                                                                setSelectedTime('');
-                                                                                clearPreselectedAdvisor?.();
-                                                                            }}
-                                                                            className="px-3 py-1.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-800 rounded-lg text-xs font-bold transition cursor-pointer shadow-xs"
-                                                                        >
-                                                                            Change
-                                                                        </button>
-                                                                    )}
-                                                                </div>
+                                                    {/* Active Selection Quick Banner */}
+                                                    {selectedAdvisor && (
+                                                        <div className="p-3 bg-gradient-to-r from-teal-50/80 via-cyan-50/40 to-white border border-[#00c9d6]/40 rounded-xl flex items-center justify-between gap-3 text-xs">
+                                                            <div className="flex items-center gap-2 min-w-0">
+                                                                <span className="w-2.5 h-2.5 rounded-full bg-[#00c9d6] animate-pulse shrink-0" />
+                                                                <span className="font-bold text-slate-900 truncate">
+                                                                    Selected: <strong className="text-teal-800">{selectedAdvisor.name}</strong> • ₹{bookingDuration === 30 ? (selectedAdvisor.halfSessionPrice || 499) : (selectedAdvisor.price || 899)} ({bookingDuration === 30 ? '30m Plan' : '1h Plan'})
+                                                                </span>
                                                             </div>
+                                                            <span className="text-[11px] font-bold text-teal-700 shrink-0 hidden sm:inline-block">
+                                                                Choose Date & Time below ↓
+                                                            </span>
                                                         </div>
-                                                    ) : (
-                                                        /* Psychologist Cards List */
-                                                        <div className="space-y-3">
-                                                            {(() => {
-                                                                const filtered = advisors.filter(adv => {
-                                                                    const match = !bookingService || adv.type === bookingService || (bookingService === 'counselling' && adv.type !== 'career');
-                                                                    return match;
-                                                                });
+                                                    )}
 
-                                                                if (filtered.length === 0) {
-                                                                    return (
-                                                                        <div className="p-6 border border-dashed border-slate-200 rounded-2xl bg-slate-50 text-slate-600 text-center font-medium text-xs">
-                                                                            No psychologists found matching your selection.
-                                                                        </div>
-                                                                    );
-                                                                }
+                                                    {/* Psychologist Cards List */}
+                                                    <div className="space-y-3">
+                                                        {(() => {
+                                                            const filtered = advisors.filter(adv => {
+                                                                const match = !bookingService || adv.type === bookingService || (bookingService === 'counselling' && adv.type !== 'career');
+                                                                return match;
+                                                            });
 
-                                                                const sortedAdvisors = [...filtered].sort((a, b) => {
-                                                                    const aInfo = getAdvisorEarliestAvailableInfo(a);
-                                                                    const bInfo = getAdvisorEarliestAvailableInfo(b);
-                                                                    if (aInfo.available && !bInfo.available) return -1;
-                                                                    if (bInfo.available && !aInfo.available) return 1;
-                                                                    return bInfo.slotCount - aInfo.slotCount;
-                                                                });
-
-                                                                const totalPages = Math.max(1, Math.ceil(sortedAdvisors.length / 4));
-                                                                const currentPage = Math.min(effectiveAdvisorPage, totalPages);
-                                                                const advisorsToRender = sortedAdvisors.slice((currentPage - 1) * 4, currentPage * 4);
-
+                                                            if (filtered.length === 0) {
                                                                 return (
-                                                                    <>
-                                                                        {advisorsToRender.map((advisor) => {
-                                                                            const info = getAdvisorEarliestAvailableInfo(advisor);
-                                                                            const isAvailable = info.available;
-                                                                            const isBioExpanded = expandedBios[advisor.id];
+                                                                    <div className="p-6 border border-dashed border-slate-200 rounded-2xl bg-slate-50 text-slate-600 text-center font-medium text-xs">
+                                                                        No psychologists found matching your selection.
+                                                                    </div>
+                                                                );
+                                                            }
 
-                                                                            return (
-                                                                                <div
-                                                                                    key={advisor.id}
-                                                                                    onClick={() => {
-                                                                                        if (!isAvailable) return;
-                                                                                        setSelectedAdvisor(advisor);
-                                                                                        setAdvisorConfirmed(true);
-                                                                                        setSelectedTime('');
-                                                                                        if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-                                                                                        setTimeout(() => {
-                                                                                            step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                                                                        }, 150);
-                                                                                    }}
-                                                                                    className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${
-                                                                                        isAvailable
-                                                                                            ? 'border-slate-200 hover:border-teal-500 hover:shadow-md'
-                                                                                            : 'border-slate-100 opacity-70 hover:opacity-100'
-                                                                                    }`}
-                                                                                >
-                                                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                                                                        <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
-                                                                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center border-2 border-slate-200 group-hover:border-[#00c9d6] bg-white shadow-xs overflow-hidden relative transition-colors">
-                                                                                                {advisor.profilePic || advisor.image ? (
-                                                                                                    <img
-                                                                                                        src={advisor.profilePic || advisor.image}
-                                                                                                        alt={advisor.name}
-                                                                                                        className="w-full h-full object-cover"
-                                                                                                    />
-                                                                                                ) : (
-                                                                                                    <span className="font-bold text-xl text-teal-600">
-                                                                                                        {getInitials(advisor.name)}
-                                                                                                    </span>
-                                                                                                )}
-                                                                                            </div>
+                                                            const sortedAdvisors = [...filtered].sort((a, b) => {
+                                                                const aInfo = getAdvisorEarliestAvailableInfo(a);
+                                                                const bInfo = getAdvisorEarliestAvailableInfo(b);
+                                                                if (aInfo.available && !bInfo.available) return -1;
+                                                                if (bInfo.available && !aInfo.available) return 1;
+                                                                return bInfo.slotCount - aInfo.slotCount;
+                                                            });
 
-                                                                                            <div className="space-y-1 min-w-0 flex-1">
-                                                                                                <div className="flex items-center gap-2 flex-wrap">
-                                                                                                    <h4 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-teal-700 transition-colors truncate">
-                                                                                                        {advisor.name}
-                                                                                                    </h4>
-                                                                                                    <span className="text-xs text-slate-500 font-semibold">
-                                                                                                        • {advisor.role || 'Consultant Psychologist'}
-                                                                                                    </span>
-                                                                                                </div>
+                                                            const totalPages = Math.max(1, Math.ceil(sortedAdvisors.length / 4));
+                                                            const currentPage = Math.min(effectiveAdvisorPage, totalPages);
+                                                            const advisorsToRender = sortedAdvisors.slice((currentPage - 1) * 4, currentPage * 4);
 
-                                                                                                {advisor.bio && (
-                                                                                                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                                                                                                        {advisor.bio}
-                                                                                                    </p>
-                                                                                                )}
+                                                            return (
+                                                                <>
+                                                                    {advisorsToRender.map((advisor) => {
+                                                                        const info = getAdvisorEarliestAvailableInfo(advisor);
+                                                                        const isAvailable = info.available;
+                                                                        const isSelected = selectedAdvisor?.id === advisor.id;
 
-                                                                                                {advisor.specialties?.length > 0 && (
-                                                                                                    <div className="flex flex-wrap gap-1 pt-1">
-                                                                                                        {advisor.specialties.slice(0, 3).map((spec, i) => (
-                                                                                                            <span key={i} className="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold rounded-md">
-                                                                                                                {spec}
-                                                                                                            </span>
-                                                                                                        ))}
-                                                                                                        {advisor.specialties.length > 3 && (
-                                                                                                            <span className="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-500 text-[10px] font-semibold rounded-md">
-                                                                                                                +{advisor.specialties.length - 3}
-                                                                                                            </span>
-                                                                                                        )}
-                                                                                                    </div>
-                                                                                                )}
-
-                                                                                                {isAvailable ? (
-                                                                                                    <span className="text-xs text-emerald-700 font-bold mt-1 inline-flex items-center gap-1.5">
-                                                                                                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                                                                                        {info.label}
-                                                                                                    </span>
-                                                                                                ) : (
-                                                                                                    <span className="text-xs text-rose-500 font-medium mt-1 inline-block">
-                                                                                                        No upcoming slots
-                                                                                                    </span>
-                                                                                                )}
-                                                                                            </div>
+                                                                        return (
+                                                                            <div
+                                                                                key={advisor.id}
+                                                                                onClick={() => {
+                                                                                    if (!isAvailable) return;
+                                                                                    setSelectedAdvisor(advisor);
+                                                                                    setAdvisorConfirmed(true);
+                                                                                    setSelectedTime('');
+                                                                                    if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
+                                                                                    setTimeout(() => {
+                                                                                        if (scrollContainerRef.current && step2Ref.current) {
+                                                                                            const container = scrollContainerRef.current;
+                                                                                            const target = step2Ref.current;
+                                                                                            const containerRect = container.getBoundingClientRect();
+                                                                                            const targetRect = target.getBoundingClientRect();
+                                                                                            const offset = targetRect.top - containerRect.top + container.scrollTop - 24;
+                                                                                            container.scrollTo({ top: offset, behavior: 'smooth' });
+                                                                                        }
+                                                                                    }, 100);
+                                                                                }}
+                                                                                className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${
+                                                                                    isSelected
+                                                                                        ? 'border-[#00c9d6] ring-2 ring-[#00c9d6]/50 bg-teal-50/30 shadow-md'
+                                                                                        : isAvailable
+                                                                                        ? 'border-slate-200 hover:border-teal-500 hover:shadow-md'
+                                                                                        : 'border-slate-100 opacity-70 hover:opacity-100'
+                                                                                }`}
+                                                                            >
+                                                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                                                                    <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
+                                                                                        <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center border-2 bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#00c9d6]' : 'border-slate-200 group-hover:border-[#00c9d6]'}`}>
+                                                                                            {advisor.profilePic || advisor.image ? (
+                                                                                                <img
+                                                                                                    src={advisor.profilePic || advisor.image}
+                                                                                                    alt={advisor.name}
+                                                                                                    className="w-full h-full object-cover"
+                                                                                                />
+                                                                                            ) : (
+                                                                                                <span className="font-bold text-xl text-teal-600">
+                                                                                                    {getInitials(advisor.name)}
+                                                                                                </span>
+                                                                                            )}
                                                                                         </div>
 
-                                                                                        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 shrink-0 border-t sm:border-t-0 border-slate-100 pt-3 sm:pt-0">
-                                                                                            <div className="text-left sm:text-right">
-                                                                                                <span className="font-extrabold text-xl sm:text-2xl text-slate-900 block leading-none">
-                                                                                                    ₹{bookingDuration === 30 ? (advisor.halfSessionPrice || 499) : (advisor.price || 899)}
-                                                                                                </span>
-                                                                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 block">
-                                                                                                    {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
+                                                                                        <div className="space-y-1 min-w-0 flex-1">
+                                                                                            <div className="flex items-center gap-2 flex-wrap">
+                                                                                                <h4 className={`font-bold text-base sm:text-lg transition-colors truncate ${isSelected ? 'text-teal-950 font-extrabold' : 'text-slate-900 group-hover:text-teal-700'}`}>
+                                                                                                    {advisor.name}
+                                                                                                </h4>
+                                                                                                <span className="text-xs text-slate-500 font-semibold">
+                                                                                                    • {advisor.role || 'Consultant Psychologist'}
                                                                                                 </span>
                                                                                             </div>
 
-                                                                                            {isAvailable ? (
-                                                                                                <div className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl group-hover:bg-[#00c9d6] group-hover:text-slate-950 transition-all flex items-center gap-1 shadow-xs">
-                                                                                                    <span>Select</span>
-                                                                                                    <ArrowRight className="w-3.5 h-3.5" />
+                                                                                            {advisor.bio && (
+                                                                                                <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                                                                                    {advisor.bio}
+                                                                                                </p>
+                                                                                            )}
+
+                                                                                            {advisor.specialties?.length > 0 && (
+                                                                                                <div className="flex flex-wrap gap-1 pt-1">
+                                                                                                    {advisor.specialties.slice(0, 3).map((spec, i) => (
+                                                                                                        <span key={i} className="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold rounded-md">
+                                                                                                            {spec}
+                                                                                                        </span>
+                                                                                                    ))}
+                                                                                                    {advisor.specialties.length > 3 && (
+                                                                                                        <span className="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-500 text-[10px] font-semibold rounded-md">
+                                                                                                            +{advisor.specialties.length - 3}
+                                                                                                        </span>
+                                                                                                    )}
                                                                                                 </div>
+                                                                                            )}
+
+                                                                                            {isAvailable ? (
+                                                                                                <span className="text-xs text-emerald-700 font-bold mt-1 inline-flex items-center gap-1.5">
+                                                                                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                                                                    {info.label}
+                                                                                                </span>
                                                                                             ) : (
-                                                                                                <span className="text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg">
-                                                                                                    Unavailable
+                                                                                                <span className="text-xs text-rose-500 font-medium mt-1 inline-block">
+                                                                                                    No upcoming slots
                                                                                                 </span>
                                                                                             )}
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
-                                                                            );
-                                                                        })}
 
-                                                                        {totalPages > 1 && (
-                                                                            <div className="flex items-center justify-center gap-2 pt-3">
-                                                                                <button
-                                                                                    type="button"
-                                                                                    onClick={() => setAdvisorPage(p => Math.max(1, p - 1))}
-                                                                                    disabled={advisorPage === 1}
-                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
-                                                                                >
-                                                                                    ‹
-                                                                                </button>
-                                                                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                                                                                    <button
-                                                                                        key={num}
-                                                                                        type="button"
-                                                                                        onClick={() => setAdvisorPage(num)}
-                                                                                        className={`w-8 h-8 rounded-lg text-xs font-bold border flex items-center justify-center ${
-                                                                                            advisorPage === num
-                                                                                                ? 'bg-slate-900 text-[#00c9d6] border-slate-900 shadow-xs'
-                                                                                                : 'bg-white text-slate-800 border-slate-200 hover:border-slate-400'
-                                                                                        }`}
-                                                                                    >
-                                                                                        {num}
-                                                                                    </button>
-                                                                                ))}
-                                                                                <button
-                                                                                    type="button"
-                                                                                    onClick={() => setAdvisorPage(p => Math.min(totalPages, p + 1))}
-                                                                                    disabled={advisorPage === totalPages}
-                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center"
-                                                                                >
-                                                                                    ›
-                                                                                </button>
+                                                                                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 shrink-0 border-t sm:border-t-0 border-slate-100 pt-3 sm:pt-0">
+                                                                                        <div className="text-left sm:text-right">
+                                                                                            <span className="font-extrabold text-xl sm:text-2xl text-slate-900 block leading-none">
+                                                                                                ₹{bookingDuration === 30 ? (advisor.halfSessionPrice || 499) : (advisor.price || 899)}
+                                                                                            </span>
+                                                                                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 block">
+                                                                                                {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
+                                                                                            </span>
+                                                                                        </div>
+
+                                                                                        {isSelected ? (
+                                                                                            <div className="px-4 py-2 bg-[#00c9d6] text-slate-950 text-xs font-extrabold rounded-xl transition-all flex items-center gap-1 shadow-xs">
+                                                                                                <span>✓ Selected</span>
+                                                                                            </div>
+                                                                                        ) : isAvailable ? (
+                                                                                            <div className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl group-hover:bg-[#00c9d6] group-hover:text-slate-950 transition-all flex items-center gap-1 shadow-xs">
+                                                                                                <span>Select</span>
+                                                                                                <ArrowRight className="w-3.5 h-3.5" />
+                                                                                            </div>
+                                                                                        ) : (
+                                                                                            <span className="text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg">
+                                                                                                Unavailable
+                                                                                            </span>
+                                                                                        )}
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
-                                                                        )}
-                                                                    </>
-                                                                );
-                                                            })()}
-                                                        </div>
-                                                    )}
+                                                                        );
+                                                                    })}
+
+                                                                    {totalPages > 1 && (
+                                                                        <div className="flex items-center justify-center gap-2 pt-3">
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    setAdvisorPage(p => Math.max(1, p - 1));
+                                                                                }}
+                                                                                disabled={advisorPage === 1}
+                                                                                className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                            >
+                                                                                ‹
+                                                                            </button>
+                                                                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                                                                                <button
+                                                                                    key={num}
+                                                                                    type="button"
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        setAdvisorPage(num);
+                                                                                    }}
+                                                                                    className={`w-8 h-8 rounded-lg text-xs font-bold border flex items-center justify-center cursor-pointer ${
+                                                                                        advisorPage === num
+                                                                                            ? 'bg-slate-900 text-[#00c9d6] border-slate-900 shadow-xs'
+                                                                                            : 'bg-white text-slate-800 border-slate-200 hover:border-slate-400'
+                                                                                    }`}
+                                                                                >
+                                                                                    {num}
+                                                                                </button>
+                                                                            ))}
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    setAdvisorPage(p => Math.min(totalPages, p + 1));
+                                                                                }}
+                                                                                disabled={advisorPage === totalPages}
+                                                                                className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                            >
+                                                                                ›
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            );
+                                                        })()}
+                                                    </div>
 
                                                     {errors.advisor && <p className="text-xs text-rose-500 font-medium">{errors.advisor}</p>}
                                                 </div>
