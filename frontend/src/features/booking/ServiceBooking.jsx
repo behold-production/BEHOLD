@@ -687,22 +687,20 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <span className="text-[10px] font-extrabold text-teal-700 bg-teal-50 border border-teal-200/60 px-2.5 py-1 rounded-lg uppercase tracking-wider hidden sm:inline-block">
                                                             Step 1
                                                         </span>
-                                                    </div>
-
-                                                    {/* Service Type & Mode Selection */}
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                                                                                    {/* Service Type & Mode Selection (Clean Flat Segmented Controls) */}
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-slate-100">
                                                         {/* Service Type */}
-                                                        <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                                                        <div className="space-y-2">
                                                             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Service Type</span>
                                                             <div className="flex flex-wrap gap-2">
                                                                 <button
                                                                     type="button"
                                                                     disabled={rescheduleSession}
                                                                     onClick={() => setBookingService('counselling')}
-                                                                    className={`px-3.5 py-2 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                                                                    className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                         bookingService === 'counselling'
-                                                                            ? 'bg-slate-900 text-white shadow-xs ring-2 ring-[#00c9d6]'
-                                                                            : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                                                                            ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
+                                                                            : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80'
                                                                     }`}
                                                                 >
                                                                     <span>🧠 Psychological Counselling</span>
@@ -712,10 +710,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         type="button"
                                                                         disabled={rescheduleSession}
                                                                         onClick={() => setBookingService('career')}
-                                                                        className={`px-3.5 py-2 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                                                                        className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                             bookingService === 'career'
-                                                                                ? 'bg-slate-900 text-white shadow-xs ring-2 ring-[#00c9d6]'
-                                                                                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                                                                                ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
+                                                                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80'
                                                                         }`}
                                                                     >
                                                                         <span>🧭 Career Mentoring</span>
@@ -725,17 +723,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
 
                                                         {/* Session Mode */}
-                                                        <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                                                        <div className="space-y-2">
                                                             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Session Mode</span>
                                                             <div className="flex flex-wrap gap-2">
                                                                 <button
                                                                     type="button"
                                                                     disabled={rescheduleSession}
                                                                     onClick={() => setBookingMode('ONLINE')}
-                                                                    className={`px-3.5 py-2 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                                                                    className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                         bookingMode === 'ONLINE'
-                                                                            ? 'bg-slate-900 text-white shadow-xs ring-2 ring-[#00c9d6]'
-                                                                            : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                                                                            ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
+                                                                            : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80'
                                                                     }`}
                                                                 >
                                                                     <span>🎥 Online — Video Call</span>
@@ -745,10 +743,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         type="button"
                                                                         disabled={rescheduleSession}
                                                                         onClick={() => setBookingMode('DOOR_STEP')}
-                                                                        className={`px-3.5 py-2 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                                                                        className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                             bookingMode === 'DOOR_STEP'
-                                                                                ? 'bg-slate-900 text-white shadow-xs ring-2 ring-[#00c9d6]'
-                                                                            : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                                                                                ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
+                                                                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80'
                                                                         }`}
                                                                     >
                                                                         <span>🏠 Doorstep Visit</span>
@@ -759,10 +757,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         type="button"
                                                                         disabled={rescheduleSession}
                                                                         onClick={() => setBookingMode('OFFLINE')}
-                                                                        className={`px-3.5 py-2 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                                                                        className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                             bookingMode === 'OFFLINE'
-                                                                                ? 'bg-slate-900 text-white shadow-xs ring-2 ring-[#00c9d6]'
-                                                                            : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+                                                                                ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
+                                                                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80'
                                                                         }`}
                                                                     >
                                                                         <span>🏢 In-Center Visit</span>
@@ -773,9 +771,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     </div>
 
                                                     {/* Session Plan Selector: Introductory (₹499) vs Standard (₹899) */}
-                                                    <div className="space-y-2.5 pt-2">
+                                                    <div className="space-y-3 pt-1">
                                                         <div className="flex items-center justify-between">
-                                                            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                                                            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">
                                                                 Choose Session Plan
                                                             </label>
                                                             {!isIntroductoryEligible && (
@@ -792,27 +790,26 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     type="button"
                                                                     disabled={rescheduleSession}
                                                                     onClick={() => setBookingDuration(30)}
-                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between text-left border relative overflow-hidden ${
+                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left relative ${
                                                                         bookingDuration === 30
-                                                                            ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white border-slate-900 shadow-lg ring-2 ring-[#00c9d6]'
-                                                                            : 'bg-white hover:bg-teal-50/40 border-slate-200 text-slate-900 hover:border-teal-400 shadow-xs'
+                                                                            ? 'bg-teal-50/40 border-2 border-[#00c9d6] ring-2 ring-[#00c9d6]/30 shadow-sm'
+                                                                            : 'bg-white hover:bg-slate-50 border-2 border-slate-200/80 text-slate-900 shadow-none'
                                                                     }`}
                                                                 >
-                                                                    <div className="w-full flex items-center justify-between gap-2 mb-3">
-                                                                        <span className={`text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-1 rounded-lg border ${
-                                                                            bookingDuration === 30
-                                                                                ? 'bg-[#00c9d6]/20 text-[#00c9d6] border-[#00c9d6]/40'
-                                                                                : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                                                        }`}>
+                                                                    <div className="w-full flex items-center justify-between gap-2 mb-2.5">
+                                                                        <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-md bg-teal-100/70 text-teal-800 border border-teal-200/60">
                                                                             ✨ One-Time Intro Offer
                                                                         </span>
-                                                                        <span className={`text-xl sm:text-2xl font-extrabold ${bookingDuration === 30 ? 'text-[#00c9d6]' : 'text-slate-900'}`}>
+                                                                        <span className="text-xl sm:text-2xl font-extrabold text-slate-900">
                                                                             ₹{selectedAdvisor ? (selectedAdvisor.halfSessionPrice || 499) : 499}
                                                                         </span>
                                                                     </div>
                                                                     <div>
-                                                                        <h4 className="font-bold text-base block">Introductory Session</h4>
-                                                                        <span className={`text-xs block mt-1 leading-relaxed ${bookingDuration === 30 ? 'text-slate-300' : 'text-slate-500'}`}>
+                                                                        <div className="flex items-center gap-1.5">
+                                                                            <h4 className="font-bold text-base text-slate-900">Introductory Session</h4>
+                                                                            {bookingDuration === 30 && <CheckCircle2 className="w-4 h-4 text-teal-600" />}
+                                                                        </div>
+                                                                        <span className="text-xs block mt-1 text-slate-500 leading-relaxed">
                                                                             30 Minutes • First session consultation & assessment
                                                                         </span>
                                                                     </div>
@@ -823,52 +820,51 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     type="button"
                                                                     disabled={rescheduleSession}
                                                                     onClick={() => setBookingDuration(60)}
-                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between text-left border relative overflow-hidden ${
+                                                                    className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left relative ${
                                                                         bookingDuration === 60
-                                                                            ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white border-slate-900 shadow-lg ring-2 ring-[#00c9d6]'
-                                                                            : 'bg-white hover:bg-teal-50/40 border-slate-200 text-slate-900 hover:border-teal-400 shadow-xs'
+                                                                            ? 'bg-teal-50/40 border-2 border-[#00c9d6] ring-2 ring-[#00c9d6]/30 shadow-sm'
+                                                                            : 'bg-white hover:bg-slate-50 border-2 border-slate-200/80 text-slate-900 shadow-none'
                                                                     }`}
                                                                 >
-                                                                    <div className="w-full flex items-center justify-between gap-2 mb-3">
-                                                                        <span className={`text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-1 rounded-lg border ${
-                                                                            bookingDuration === 60
-                                                                                ? 'bg-white/10 text-slate-200 border-white/20'
-                                                                                : 'bg-slate-100 text-slate-600 border-slate-200'
-                                                                        }`}>
+                                                                    <div className="w-full flex items-center justify-between gap-2 mb-2.5">
+                                                                        <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
                                                                             Comprehensive
                                                                         </span>
-                                                                        <span className={`text-xl sm:text-2xl font-extrabold ${bookingDuration === 60 ? 'text-[#00c9d6]' : 'text-slate-900'}`}>
+                                                                        <span className="text-xl sm:text-2xl font-extrabold text-slate-900">
                                                                             ₹{selectedAdvisor ? (selectedAdvisor.price || 899) : 899}
                                                                         </span>
                                                                     </div>
                                                                     <div>
-                                                                        <h4 className="font-bold text-base block">Standard Session</h4>
-                                                                        <span className={`text-xs block mt-1 leading-relaxed ${bookingDuration === 60 ? 'text-slate-300' : 'text-slate-500'}`}>
+                                                                        <div className="flex items-center gap-1.5">
+                                                                            <h4 className="font-bold text-base text-slate-900">Standard Session</h4>
+                                                                            {bookingDuration === 60 && <CheckCircle2 className="w-4 h-4 text-teal-600" />}
+                                                                        </div>
+                                                                        <span className="text-xs block mt-1 text-slate-500 leading-relaxed">
                                                                             1 Hour (60 Minutes) • Full comprehensive therapeutic consultation
                                                                         </span>
                                                                     </div>
                                                                 </button>
                                                             </div>
                                                         ) : (
-                                                            <div className="p-4 bg-slate-900 text-white rounded-2xl border border-teal-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                                            <div className="p-4 bg-teal-50/40 rounded-2xl border-2 border-[#00c9d6] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                                                 <div>
                                                                     <div className="flex items-center gap-2 mb-1">
-                                                                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-[#00c9d6]/20 text-[#00c9d6] border border-[#00c9d6]/40">
+                                                                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-teal-100 text-teal-800 border border-teal-200">
                                                                             Full Therapeutic Care
                                                                         </span>
-                                                                        <span className="text-xs text-slate-300">1 Hour (60 Mins)</span>
+                                                                        <span className="text-xs text-slate-600 font-semibold">1 Hour (60 Mins)</span>
                                                                     </div>
-                                                                    <h4 className="font-bold text-sm">Standard Comprehensive Session</h4>
-                                                                    <p className="text-xs text-slate-400 mt-0.5">
+                                                                    <h4 className="font-bold text-sm text-slate-900">Standard Comprehensive Session</h4>
+                                                                    <p className="text-xs text-slate-500 mt-0.5">
                                                                         Introductory session already completed. Continuing with full standard consultation.
                                                                     </p>
                                                                 </div>
-                                                                <span className="text-2xl font-extrabold text-[#00c9d6]">
+                                                                <span className="text-2xl font-extrabold text-slate-900">
                                                                     ₹{selectedAdvisor?.price || 899}
                                                                 </span>
                                                             </div>
                                                         )}
-                                                    </div>
+                                                    </div>                                         </div>
 
                                                     {/* DOORSTEP LOCATION INPUTS IF ACTIVE */}
                                                     {bookingMode === 'DOOR_STEP' && (
@@ -1210,29 +1206,29 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                         {/* STEP 6 & 7 — COMPACT BOOKING SUMMARY & PROCEED TO PAYMENT */}
                                                         {selectedTime && (
-                                                            <div className="p-4 sm:p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl shadow-xl border border-slate-700/80 space-y-4 text-left animate-in fade-in slide-in-from-top-2 duration-300">
-                                                                <div className="flex items-center justify-between border-b border-slate-700/80 pb-3">
+                                                            <div className="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in fade-in slide-in-from-top-2 duration-300">
+                                                                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse" />
-                                                                        <h4 className="font-extrabold text-sm uppercase tracking-wider text-[#00c9d6]">
+                                                                        <span className="w-2.5 h-2.5 rounded-full bg-[#00c9d6] animate-pulse" />
+                                                                        <h4 className="font-extrabold text-sm uppercase tracking-wider text-slate-900">
                                                                             Booking Summary Review
                                                                         </h4>
                                                                     </div>
-                                                                    <span className="text-lg font-extrabold text-[#00c9d6]">
+                                                                    <span className="text-xl font-extrabold text-slate-900">
                                                                         ₹{netTotal}
                                                                     </span>
                                                                 </div>
 
-                                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1">
+                                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs py-1">
+                                                                    <div className="space-y-1">
                                                                         <span className="text-[10px] uppercase font-bold text-slate-400 block">Psychologist</span>
                                                                         <div className="flex items-center justify-between">
-                                                                            <span className="font-bold text-white text-sm truncate">{selectedAdvisor.name}</span>
+                                                                            <span className="font-bold text-slate-900 text-sm truncate">{selectedAdvisor.name}</span>
                                                                             {!isAdvisorLocked && (
                                                                                 <button
                                                                                     type="button"
                                                                                     onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); }}
-                                                                                    className="text-[11px] text-[#00c9d6] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
+                                                                                    className="text-[11px] text-teal-600 hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
                                                                                 >
                                                                                     Change
                                                                                 </button>
@@ -1240,24 +1236,24 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1">
+                                                                    <div className="space-y-1">
                                                                         <span className="text-[10px] uppercase font-bold text-slate-400 block">Service & Mode</span>
-                                                                        <span className="font-bold text-white text-sm block">
+                                                                        <span className="font-bold text-slate-900 text-sm block">
                                                                             {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} • {bookingMode === 'ONLINE' ? 'Online Video Call' : bookingMode === 'DOOR_STEP' ? 'Doorstep Visit' : 'In-Center'}
                                                                         </span>
                                                                     </div>
 
-                                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1">
+                                                                    <div className="space-y-1">
                                                                         <span className="text-[10px] uppercase font-bold text-slate-400 block">Session Plan</span>
                                                                         <div className="flex items-center justify-between">
-                                                                            <span className="font-bold text-white text-sm">
+                                                                            <span className="font-bold text-slate-900 text-sm">
                                                                                 {bookingDuration === 30 ? 'Introductory Session (30 Mins)' : 'Standard Session (1 Hour)'}
                                                                             </span>
                                                                             {isIntroductoryEligible && (
                                                                                 <button
                                                                                     type="button"
                                                                                     onClick={() => setBookingDuration(bookingDuration === 30 ? 60 : 30)}
-                                                                                    className="text-[11px] text-[#00c9d6] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
+                                                                                    className="text-[11px] text-teal-600 hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
                                                                                 >
                                                                                     Switch
                                                                                 </button>
@@ -1265,16 +1261,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1">
+                                                                    <div className="space-y-1">
                                                                         <span className="text-[10px] uppercase font-bold text-slate-400 block">Date & Time</span>
                                                                         <div className="flex items-center justify-between">
-                                                                            <span className="font-bold text-white text-sm">
+                                                                            <span className="font-bold text-slate-900 text-sm">
                                                                                 {formatDateString(selectedDate)} at {selectedTime}
                                                                             </span>
                                                                             <button
                                                                                 type="button"
                                                                                 onClick={() => setIsDatePickerOpen(true)}
-                                                                                className="text-[11px] text-[#00c9d6] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
+                                                                                className="text-[11px] text-teal-600 hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
                                                                             >
                                                                                 Change
                                                                             </button>
@@ -1284,20 +1280,20 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                                 {/* Primary Proceed Action */}
                                                                 {!rescheduleSession && (
-                                                                    <div className="pt-3 border-t border-slate-700/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                                                    <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                                                                         <div className="text-left w-full sm:w-auto">
-                                                                            <span className="text-[11px] text-slate-400 block">Total Amount Payable</span>
-                                                                            <span className="text-xl font-extrabold text-[#00c9d6]">₹{netTotal}</span>
+                                                                            <span className="text-[11px] text-slate-400 block font-medium">Total Amount Payable</span>
+                                                                            <span className="text-2xl font-extrabold text-slate-900">₹{netTotal}</span>
                                                                         </div>
 
                                                                         <button
                                                                             type="button"
                                                                             disabled={!selectedAdvisor || !selectedDate || !selectedTime}
                                                                             onClick={() => handleStepChange('payment')}
-                                                                            className="w-full sm:w-auto px-8 py-4 bg-[#00c9d6] hover:bg-[#00b5c0] text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg hover:shadow-cyan-500/25 flex items-center justify-center gap-2 cursor-pointer border-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                            className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                                                                         >
                                                                             <span>Proceed to Payment (₹{netTotal})</span>
-                                                                            <ArrowRight className="w-4 h-4 stroke-[3]" />
+                                                                            <ArrowRight className="w-4 h-4 stroke-[3] text-[#00c9d6]" />
                                                                         </button>
                                                                     </div>
                                                                 )}
