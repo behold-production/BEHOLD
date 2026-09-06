@@ -125,9 +125,24 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         confirmedBooking
     } = useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvisor });
 
-    const step2Ref = useRef(null);
-    const step3Ref = useRef(null);
+    const step1Ref = useRef(null);
+    const step2AdvisorRef = useRef(null);
+    const step3TimeRef = useRef(null);
+    const stepSummaryRef = useRef(null);
     const scrollContainerRef = useRef(null);
+
+    const scrollToTarget = useCallback((targetRef, offsetAdjust = 20) => {
+        setTimeout(() => {
+            if (!targetRef?.current || !scrollContainerRef?.current) return;
+            const container = scrollContainerRef.current;
+            const target = targetRef.current;
+            if (!container || !target) return;
+            const containerRect = container.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            const offset = targetRect.top - containerRect.top + container.scrollTop - offsetAdjust;
+            container.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
+        }, 120);
+    }, []);
 
     const [expandedBios, setExpandedBios] = useState({});
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
@@ -669,7 +684,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
                                                 
                                                 {/* STEP 1 — SELECT SERVICE & SESSION PLAN */}
-                                                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
+                                                <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
                                                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                         <div className="flex items-center gap-2.5">
                                                             <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00c9d6] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -698,7 +713,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 <button
                                                                     type="button"
                                                                     disabled={rescheduleSession}
-                                                                    onClick={() => setBookingService('counselling')}
+                                                                    onClick={() => {
+                                                                        setBookingService('counselling');
+                                                                        scrollToTarget(step2AdvisorRef);
+                                                                    }}
                                                                     className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                         bookingService === 'counselling'
                                                                             ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
@@ -711,7 +729,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     <button
                                                                         type="button"
                                                                         disabled={rescheduleSession}
-                                                                        onClick={() => setBookingService('career')}
+                                                                        onClick={() => {
+                                                                            setBookingService('career');
+                                                                            scrollToTarget(step2AdvisorRef);
+                                                                        }}
                                                                         className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                             bookingService === 'career'
                                                                                 ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
@@ -731,7 +752,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 <button
                                                                     type="button"
                                                                     disabled={rescheduleSession}
-                                                                    onClick={() => setBookingMode('ONLINE')}
+                                                                    onClick={() => {
+                                                                        setBookingMode('ONLINE');
+                                                                        scrollToTarget(step2AdvisorRef);
+                                                                    }}
                                                                     className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                         bookingMode === 'ONLINE'
                                                                             ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
@@ -744,7 +768,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     <button
                                                                         type="button"
                                                                         disabled={rescheduleSession}
-                                                                        onClick={() => setBookingMode('DOOR_STEP')}
+                                                                        onClick={() => {
+                                                                            setBookingMode('DOOR_STEP');
+                                                                            scrollToTarget(step2AdvisorRef);
+                                                                        }}
                                                                         className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                             bookingMode === 'DOOR_STEP'
                                                                                 ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
@@ -758,7 +785,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     <button
                                                                         type="button"
                                                                         disabled={rescheduleSession}
-                                                                        onClick={() => setBookingMode('OFFLINE')}
+                                                                        onClick={() => {
+                                                                            setBookingMode('OFFLINE');
+                                                                            scrollToTarget(step2AdvisorRef);
+                                                                        }}
                                                                         className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                                                                             bookingMode === 'OFFLINE'
                                                                                 ? 'bg-slate-900 text-[#00c9d6] shadow-sm ring-2 ring-[#00c9d6]/50'
@@ -791,7 +821,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 <button
                                                                     type="button"
                                                                     disabled={rescheduleSession}
-                                                                    onClick={() => setBookingDuration(30)}
+                                                                    onClick={() => {
+                                                                        setBookingDuration(30);
+                                                                        scrollToTarget(step2AdvisorRef);
+                                                                    }}
                                                                     className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${
                                                                         bookingDuration === 30
                                                                             ? 'border-[#00c9d6] bg-teal-50/30 ring-2 ring-[#00c9d6]/30 shadow-xs'
@@ -821,7 +854,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 <button
                                                                     type="button"
                                                                     disabled={rescheduleSession}
-                                                                    onClick={() => setBookingDuration(60)}
+                                                                    onClick={() => {
+                                                                        setBookingDuration(60);
+                                                                        scrollToTarget(step2AdvisorRef);
+                                                                    }}
                                                                     className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${
                                                                         bookingDuration === 60
                                                                             ? 'border-[#00c9d6] bg-teal-50/30 ring-2 ring-[#00c9d6]/30 shadow-xs'
@@ -935,7 +971,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 </div>
 
                                                 {/* STEP 2 — SELECT PSYCHOLOGIST */}
-                                                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 text-left">
+                                                <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 text-left">
                                                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                         <div className="flex items-center gap-2.5">
                                                             <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00c9d6] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -1014,16 +1050,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     setAdvisorConfirmed(true);
                                                                                     setSelectedTime('');
                                                                                     if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-                                                                                    setTimeout(() => {
-                                                                                        if (scrollContainerRef.current && step2Ref.current) {
-                                                                                            const container = scrollContainerRef.current;
-                                                                                            const target = step2Ref.current;
-                                                                                            const containerRect = container.getBoundingClientRect();
-                                                                                            const targetRect = target.getBoundingClientRect();
-                                                                                            const offset = targetRect.top - containerRect.top + container.scrollTop - 24;
-                                                                                            container.scrollTo({ top: offset, behavior: 'smooth' });
-                                                                                        }
-                                                                                    }, 100);
+                                                                                    scrollToTarget(step3TimeRef);
                                                                                 }}
                                                                                 className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${
                                                                                     isSelected
@@ -1176,7 +1203,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 {/* STEP 3 & 4 — SCHEDULE THE SESSION & TIME SLOT */}
                                                 {selectedAdvisor && (
-                                                    <div ref={step2Ref} className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                    <div ref={step3TimeRef} className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                                         {/* TimePicker with Today slots by default and Choose Another Date button */}
                                                         <TimePicker
                                                             selectedDate={selectedDate}
@@ -1186,6 +1213,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             onTimeChange={(t) => {
                                                                 setSelectedTime(t);
                                                                 if (errors.time) setErrors(prev => ({ ...prev, time: null }));
+                                                                scrollToTarget(stepSummaryRef);
                                                             }}
                                                             availableSlots={getAdvisorSlotsForDate(selectedAdvisor, selectedDate)}
                                                             bookedSlots={getAdvisorBookedSlotsForDate(selectedAdvisor, selectedDate)}
@@ -1208,7 +1236,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                         {/* STEP 6 & 7 — COMPACT BOOKING SUMMARY & PROCEED TO PAYMENT */}
                                                         {selectedTime && (
-                                                            <div className="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in fade-in slide-in-from-top-2 duration-300">
+                                                            <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in fade-in slide-in-from-top-2 duration-300">
                                                                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                                     <div className="flex items-center gap-2">
                                                                         <span className="w-2.5 h-2.5 rounded-full bg-[#00c9d6] animate-pulse" />
