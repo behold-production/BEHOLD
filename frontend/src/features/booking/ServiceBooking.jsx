@@ -446,7 +446,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 </div>
 
                 <div
-                    className="min-h-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]"
+                    className="min-h-full pt-6 sm:pt-10 pb-28 sm:pb-12 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]"
                 >
                     <div className="space-y-8 sm:space-y-10">
 
@@ -1864,36 +1864,6 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                 </div>
                             )}
 
-                            {/* Mobile Sticky Quick-Proceed Action Bar */}
-                            {bookingStep === 'config' && selectedAdvisor && selectedTime && !rescheduleSession && (
-                                <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 p-3 sm:p-4 shadow-2xl animate-in slide-in-from-bottom duration-300">
-                                    <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
-                                        <div className="text-left min-w-0 flex-1">
-                                            <div className="flex items-center gap-1.5 truncate">
-                                                <span className="font-extrabold text-white text-xs truncate">
-                                                    {selectedAdvisor.name}
-                                                </span>
-                                                <span className="text-[10px] text-[#00c9d6] font-bold">
-                                                    • {selectedTime}
-                                                </span>
-                                            </div>
-                                            <span className="text-[11px] font-bold text-slate-400 block">
-                                                Total: <strong className="text-[#00c9d6] text-sm">₹{netTotal}</strong>
-                                            </span>
-                                        </div>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => handleStepChange('payment')}
-                                            className="px-5 py-2.5 bg-[#00c9d6] hover:bg-[#00b5c0] text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer border-none shrink-0"
-                                        >
-                                            <span>Proceed</span>
-                                            <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
                         </div>
                     </div>
                 </div>
@@ -2040,6 +2010,37 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                     <span>I Agree & Accept</span>
                                 </button>
                             </div>
+                        </div>
+                    </div>,
+                    document.body
+                )}
+
+                {/* Mobile Sticky Quick-Proceed Action Bar - Portaled to document.body so it anchors strictly to the viewport bottom and never scrolls with inner modal content */}
+                {bookingStep === 'config' && selectedAdvisor && selectedTime && !rescheduleSession && !showAuthModal && !showConsentModal && !showNoCounsellorsModal && typeof document !== 'undefined' && createPortal(
+                    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[115] bg-slate-950/95 backdrop-blur-md border-t border-slate-800 p-3 sm:p-4 pb-[max(env(safe-area-inset-bottom),14px)] shadow-2xl animate-in slide-in-from-bottom duration-300 pointer-events-auto">
+                        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
+                            <div className="text-left min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5 truncate">
+                                    <span className="font-extrabold text-white text-xs truncate">
+                                        {selectedAdvisor.name}
+                                    </span>
+                                    <span className="text-[10px] text-[#00c9d6] font-bold">
+                                        • {selectedTime}
+                                    </span>
+                                </div>
+                                <span className="text-[11px] font-bold text-slate-400 block">
+                                    Total: <strong className="text-[#00c9d6] text-sm">₹{netTotal}</strong>
+                                </span>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => handleStepChange('payment')}
+                                className="px-5 py-2.5 bg-[#00c9d6] hover:bg-[#00b5c0] text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer border-none shrink-0"
+                            >
+                                <span>Proceed</span>
+                                <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+                            </button>
                         </div>
                     </div>,
                     document.body
