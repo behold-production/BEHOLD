@@ -27,17 +27,37 @@ export default function RazorpayCheckoutButton({
 }) {
   const [loading, setLoading] = useState(false);
 
-  const loadScript = () => {
+  const loadScript = (retries = 2) => {
     return new Promise((resolve) => {
-      if (window.Razorpay) {
+      if (typeof window !== 'undefined' && window.Razorpay) {
         resolve(true);
         return;
       }
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
+      const tryLoad = (remaining) => {
+        const existing = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+        if (existing) {
+          existing.remove();
+        }
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        script.onload = () => {
+          if (window.Razorpay) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        };
+        script.onerror = () => {
+          if (remaining > 0) {
+            setTimeout(() => tryLoad(remaining - 1), 1000);
+          } else {
+            resolve(false);
+          }
+        };
+        document.body.appendChild(script);
+      };
+      tryLoad(retries);
     });
   };
 
@@ -53,7 +73,7 @@ export default function RazorpayCheckoutButton({
 
       // 1. Ensure Razorpay checkout script is loaded
       const scriptLoaded = await loadScript();
-      if (!scriptLoaded) {
+      if (!scriptLoaded || typeof window === 'undefined' || !window.Razorpay) {
         toast.error('Failed to load Razorpay SDK. Check your internet connection.');
         setLoading(false);
         return;
@@ -71,7 +91,11 @@ export default function RazorpayCheckoutButton({
       }
 
       const orderId = orderRes.order?.id || orderRes.order_id || orderRes.data?.orderId;
-      const keyId = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '') || 'rzp_test_THJcTWUaeHzOnn';
+      const rawKey = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '');
+      const keyId = (rawKey || '').trim().replace(/^["']|["']$/g, '');
+
+      const rawPhone = prefill.contact || '';
+      const cleanContact = rawPhone.replace(/[^0-9]/g, '').slice(-10);
 
       // 3. Configure Razorpay modal options
       const options = {
@@ -108,7 +132,7 @@ export default function RazorpayCheckoutButton({
         prefill: {
           name: prefill.name || '',
           email: prefill.email || '',
-          contact: prefill.contact || ''
+          contact: cleanContact
         },
         theme: {
           color: '#00E5FF'

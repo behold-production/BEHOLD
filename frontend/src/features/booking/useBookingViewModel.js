@@ -1166,17 +1166,37 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     }
   };
 
-  const loadRazorpayScript = () => {
+  const loadRazorpayScript = (retries = 2) => {
     return new Promise((resolve) => {
-      if (window.Razorpay) {
+      if (typeof window !== 'undefined' && window.Razorpay) {
         resolve(true);
         return;
       }
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
+      const tryLoad = (remaining) => {
+        const existing = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+        if (existing) {
+          existing.remove();
+        }
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        script.onload = () => {
+          if (window.Razorpay) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        };
+        script.onerror = () => {
+          if (remaining > 0) {
+            setTimeout(() => tryLoad(remaining - 1), 1000);
+          } else {
+            resolve(false);
+          }
+        };
+        document.body.appendChild(script);
+      };
+      tryLoad(retries);
     });
   };
 
@@ -1333,7 +1353,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
 
       const orderId = orderRes.order?.id || orderRes.order_id || orderRes.data?.orderId;
-      const keyId = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '') || 'rzp_test_THJcTWUaeHzOnn';
+      const rawKey = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '');
+      const keyId = (rawKey || '').trim().replace(/^["']|["']$/g, '');
+
+      const rawPhone = bookingForm.phone || user?.phone || '';
+      const cleanPhone = rawPhone.replace(/[^0-9]/g, '').slice(-10);
 
       // 2. Open Razorpay checkout modal
       const options = {
@@ -1366,7 +1390,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               clientEmail: (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
                 ? bookingForm.email
                 : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : ''),
-              clientPhone: bookingForm.phone || user?.phone || '',
+              clientPhone: cleanPhone || rawPhone,
               clientLocationName: bookingForm.clientLocationName || '',
               clientLatitude: Number(bookingForm.clientLatitude) || 0,
               clientLongitude: Number(bookingForm.clientLongitude) || 0,
@@ -1425,7 +1449,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                   meetLink: serverMeetLink || '',
                   userName: bookingForm.name || user?.name || 'Student',
                   userEmail: bookingForm.email || user?.email || '',
-                  userPhone: bookingForm.phone || user?.phone || '',
+                  userPhone: cleanPhone || rawPhone,
                   status: 'CONFIRMED',
                   paymentStatus: 'PAID'
                 }));
@@ -1450,7 +1474,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           email: (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
             ? bookingForm.email
             : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : ''),
-          contact: bookingForm.phone || user?.phone || ''
+          contact: cleanPhone
         },
         theme: {
           color: "#00E5FF"

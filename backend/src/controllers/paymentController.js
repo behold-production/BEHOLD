@@ -289,17 +289,18 @@ const PaymentController = {
       res.status(200).json({
         success: true,
         order_id: order.id,
+        keyId: keyId,
         amount: order.amount,
         currency: order.currency,
         order: {
           id: order.id,
-          keyId: process.env.RAZORPAY_KEY_ID,
+          keyId: keyId,
           amount: order.amount,
           currency: order.currency,
           receipt: order.receipt
         },
         data: {
-          keyId: process.env.RAZORPAY_KEY_ID,
+          keyId: keyId,
           orderId: order.id,
           amount: order.amount,
           currency: order.currency,
