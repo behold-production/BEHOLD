@@ -658,7 +658,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           if (modifier === 'AM' && hours === 12) hours = 0;
           const now = new Date();
           const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-          return now >= slotDate;
+          const leadTimeMs = 15 * 60 * 1000; // 15 minutes lead time
+          return (slotDate.getTime() - now.getTime()) < leadTimeMs;
         } catch { return false; }
       };
 
@@ -697,7 +698,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
         const now = new Date();
         const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-        return now >= slotDate;
+        const leadTimeMs = 15 * 60 * 1000; // 15 minutes lead time
+        return (slotDate.getTime() - now.getTime()) < leadTimeMs;
       } catch {
         return false;
       }
@@ -783,7 +785,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           if (modifier === 'AM' && hours === 12) hours = 0;
           const now = new Date();
           const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-          return now >= slotDate;
+          const leadTimeMs = 15 * 60 * 1000; // 15 minutes lead time
+          return (slotDate.getTime() - now.getTime()) < leadTimeMs;
         } catch { return false; }
       };
 
@@ -879,6 +882,23 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAdvisorAvailabilityStatus = (advisorId, dateStr, timeStr) => {
     if (!dateStr || !timeStr) return 'Available';
+
+    const todayStr = getLocalTodayString();
+    if (dateStr === todayStr) {
+      try {
+        const [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+        const now = new Date();
+        const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        const leadTimeMs = 15 * 60 * 1000;
+        if ((slotDate.getTime() - now.getTime()) < leadTimeMs) {
+          return 'Unavailable';
+        }
+      } catch {}
+    }
+
     const [year, month, day] = dateStr.split('-').map(Number);
     const dayOfWeek = new Date(year, month - 1, day).getDay();
 
@@ -1223,6 +1243,24 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         throw new Error("Please enter a valid 10-digit Indian phone number.");
       }
 
+      const todayStr = getLocalTodayString();
+      if (selectedDate === todayStr) {
+        try {
+          const [time, modifier] = selectedTime.split(' ');
+          let [hours, minutes] = time.split(':').map(Number);
+          if (modifier === 'PM' && hours < 12) hours += 12;
+          if (modifier === 'AM' && hours === 12) hours = 0;
+          const now = new Date();
+          const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+          const leadTimeMs = 15 * 60 * 1000;
+          if ((slotDate.getTime() - now.getTime()) < leadTimeMs) {
+            throw new Error("Sessions must be booked at least 15 minutes in advance. Please select another slot.");
+          }
+        } catch (e) {
+          if (e.message && e.message.includes('15 minutes')) throw e;
+        }
+      }
+
       const status = getAdvisorAvailabilityStatus(selectedAdvisor?.id, selectedDate, selectedTime);
       if (status === 'Booked' || status === 'Unavailable') {
         throw new Error("This slot is already booked for this counsellor. Please select another slot.");
@@ -1506,6 +1544,24 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       toast.error("Please select a date and time slot first.");
       return;
     }
+
+    const todayStr = getLocalTodayString();
+    if (selectedDate === todayStr) {
+      try {
+        const [time, modifier] = selectedTime.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+        const now = new Date();
+        const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        const leadTimeMs = 15 * 60 * 1000;
+        if ((slotDate.getTime() - now.getTime()) < leadTimeMs) {
+          toast.error("Sessions must be rescheduled at least 15 minutes in advance. Please select another slot.");
+          return;
+        }
+      } catch {}
+    }
+
     setIsSubmitting(true);
     try {
       const apptId = rescheduleSession.appointmentId;

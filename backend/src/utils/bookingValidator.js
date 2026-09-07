@@ -24,9 +24,9 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
   if (selectedDateTime <= now) {
     return { valid: false, message: 'Cannot book a date or time in the past' };
   }
-  const leadTimeMs = 30 * 60 * 1000; // 30 minutes lead time
+  const leadTimeMs = 15 * 60 * 1000; // 15 minutes lead time
   if (selectedDateTime.getTime() - now.getTime() < leadTimeMs) {
-    return { valid: false, message: 'Sessions must be booked at least 30 minutes in advance.' };
+    return { valid: false, message: 'Sessions must be booked at least 15 minutes in advance.' };
   }
 
   // 2. Fetch counsellor
