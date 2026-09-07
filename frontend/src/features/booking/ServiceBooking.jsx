@@ -208,12 +208,19 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             handleStepChange('config');
             return;
         }
-        if (advisorConfirmed && !isAdvisorLocked) {
+        if (selectedTime) {
+            setSelectedTime('');
+            scrollToTarget(step3TimeRef);
+            return;
+        }
+        if (selectedAdvisor && !isAdvisorLocked) {
+            setSelectedAdvisor(null);
             setAdvisorConfirmed(false);
+            scrollToTarget(step2AdvisorRef);
             return;
         }
         onClose();
-    }, [bookingStep, advisorConfirmed, isAdvisorLocked, handleStepChange, setAdvisorConfirmed, onClose]);
+    }, [bookingStep, selectedTime, selectedAdvisor, isAdvisorLocked, handleStepChange, setSelectedTime, setSelectedAdvisor, setAdvisorConfirmed, scrollToTarget, onClose]);
 
     // Handle Browser / Mobile Hardware Back Button (popstate)
     useEffect(() => {

@@ -99,7 +99,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
       } catch { }
     }
-    return 60; // 30 mins (Introductory) or 60 mins (Standard)
+    return (user && user.hasUsedIntroductory) ? 60 : 30; // 30 mins (Introductory ₹499) by default for new users, 60 mins (Standard ₹899)
   });
   const [isIntroductoryEligible, setIsIntroductoryEligible] = useState(() => {
     if (user && user.hasUsedIntroductory) return false;
@@ -391,10 +391,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             setBookingMode(match.modes[0]);
           }
           setSelectedDate(prevDate => {
-            if (prevDate && getAdvisorSlotsForDate(match, prevDate).length > 0) {
-              return prevDate;
-            }
-            return getAdvisorEarliestAvailableDate(match) || prevDate || '';
+            return prevDate || getLocalTodayString();
           });
         }, 0);
       }
@@ -1093,10 +1090,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               setBookingMode(found.modes[0]);
             }
             setSelectedDate(prevDate => {
-              if (prevDate && getAdvisorSlotsForDate(found, prevDate).length > 0) {
-                return prevDate;
-              }
-              return getAdvisorEarliestAvailableDate(found) || prevDate || '';
+              return prevDate || getLocalTodayString();
             });
           }, 0);
 
@@ -1698,7 +1692,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setIsSuccess(false);
     setConfirmedBooking(null);
     setConfirmedMeetLink('');
-    setSelectedDate('');
+    setSelectedDate(getLocalTodayString());
     setSelectedTime('');
     setSelectedAdvisor(null);
     setAdvisorConfirmed(false);
