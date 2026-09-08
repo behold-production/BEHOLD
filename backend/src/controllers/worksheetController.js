@@ -2,7 +2,7 @@ const StorageService = require('../services/storageService');
 const { uploadPrivateToCloudinary, getPrivateDownloadUrl } = require('../utils/cloudinaryHelper');
 const WhatsAppService = require('../services/whatsappService');
 const crypto = require('crypto');
-const request = require('request');
+const https = require('https');
 
 const WorksheetController = {
   // ─── PSYCHOLOGIST ENDPOINTS ──────────────────────────────────────────────────
@@ -135,7 +135,7 @@ const WorksheetController = {
       }
 
       const downloadUrl = getPrivateDownloadUrl(worksheet.storageKey, 'pdf');
-      request(downloadUrl).pipe(res);
+      https.get(downloadUrl, (stream) => stream.pipe(res)).on('error', (e) => res.status(500).send('Error loading file stream'));
     } catch (error) {
       console.error('[streamOriginalFile] Error:', error);
       res.status(500).send('Error streaming file');
@@ -153,7 +153,7 @@ const WorksheetController = {
       }
 
       const downloadUrl = getPrivateDownloadUrl(worksheet.submissionStorageKey, 'pdf');
-      request(downloadUrl).pipe(res);
+      https.get(downloadUrl, (stream) => stream.pipe(res)).on('error', (e) => res.status(500).send('Error loading file stream'));
     } catch (error) {
       console.error('[streamSubmissionFile] Error:', error);
       res.status(500).send('Error streaming file');
@@ -203,7 +203,7 @@ const WorksheetController = {
       if (worksheet.clientId !== req.user.id) return res.status(403).send('Unauthorized');
 
       const downloadUrl = getPrivateDownloadUrl(worksheet.storageKey, 'pdf');
-      request(downloadUrl).pipe(res);
+      https.get(downloadUrl, (stream) => stream.pipe(res)).on('error', (e) => res.status(500).send('Error loading file stream'));
     } catch (error) {
       console.error('[streamOriginalFileClient] Error:', error);
       res.status(500).send('Error streaming file');
