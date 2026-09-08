@@ -41,6 +41,9 @@ router.put('/counsellors/:id/verify', AdminController.verifyCounsellor);
 router.put('/counsellors/:id/reject', AdminController.rejectCounsellor);
 
 router.get('/appointments', AdminController.getAppointments);
+router.post('/appointments/admin-booking', AdminController.createAdminBooking);
+router.get('/appointments/admin-booking/:id/payment', AdminController.checkAdminBookingPayment);
+router.post('/appointments/admin-booking/:id/mark-paid', AdminController.markAdminBookingPaid);
 router.post('/appointments', AdminController.createAppointment);
 router.put('/appointments/:id', AdminController.updateAppointment);
 router.delete('/appointments/:id', AdminController.deleteAppointment);

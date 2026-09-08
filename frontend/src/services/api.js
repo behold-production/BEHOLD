@@ -778,6 +778,24 @@ const ApiService = {
     });
   },
 
+  async createAdminBookingWithPayment(data) {
+    return await request('/admin/appointments/admin-booking', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async checkAdminBookingPaymentStatus(id) {
+    return await request(`/admin/appointments/admin-booking/${id}/payment`);
+  },
+
+  async markAdminBookingPaid(id, transactionReference) {
+    return await request(`/admin/appointments/admin-booking/${id}/mark-paid`, {
+      method: 'POST',
+      body: JSON.stringify({ transactionReference })
+    });
+  },
+
   async updateAdminAppointment(id, data) {
     return await request(`/admin/appointments/${id}`, {
       method: 'PUT',

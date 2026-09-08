@@ -78,6 +78,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
 }
 
 const PaymentController = {
+  dispatchBookingNotifications,
   // Create Razorpay Order
   async createOrder(req, res, next) {
     try {

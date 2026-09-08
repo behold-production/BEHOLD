@@ -7,6 +7,11 @@ const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const cacheHelper = require('../utils/cacheHelper');
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+const PaymentController = require('./paymentController');
+const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { cleanDuplicateAppointments } = require('../utils/appointmentDeduplicator');
 
 const COUNSELLOR_MODES = new Set(['ONLINE', 'OFFLINE', 'DOOR_STEP']);
 
@@ -1496,6 +1501,210 @@ If you have questions or would like to reapply with updated information, please 
   },
 
   // Appointments management
+  async createAdminBooking(req, res, next) {
+    try {
+      const { clientName, whatsappNumber, email, psychologistId, date, time, sessionDetails } = req.body;
+      
+      if (!clientName || !whatsappNumber || !email || !psychologistId || !date || !time) {
+        return res.status(400).json({ success: false, message: 'Missing required booking fields' });
+      }
+
+      const counsellor = await StorageService.findById('counsellors', psychologistId);
+      if (!counsellor) {
+        return res.status(404).json({ success: false, message: 'Psychologist not found' });
+      }
+
+      // Check user existence by email/phone or create one
+      const normEmail = email.toLowerCase().trim();
+      const normPhone = normalizePhoneWithCountryCode(whatsappNumber) || whatsappNumber;
+      
+      let user = await StorageService.findOne('users', { $or: [{ email: normEmail }, { phone: normPhone }] });
+      if (!user) {
+        user = await StorageService.create('users', {
+          name: clientName,
+          email: normEmail,
+          phone: normPhone,
+          role: 'user',
+          isVerified: true
+        });
+      }
+
+      // 899 Amount
+      const amountInPaise = 899 * 100; 
+
+      const keyId = (process.env.RAZORPAY_KEY_ID || '').trim().replace(/^["']|["']$/g, '');
+      const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim().replace(/^["']|["']$/g, '');
+
+      if (!keyId || !keySecret) {
+        return res.status(500).json({ success: false, message: 'Razorpay keys not configured' });
+      }
+
+      const razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
+      
+      const orderNotes = {
+        userId: user.id || user._id,
+        counsellorId: psychologistId,
+        date,
+        time,
+        mode: 'ONLINE', 
+        service: 'counselling',
+        clientName: clientName,
+        clientPhone: normPhone,
+        clientEmail: normEmail,
+        isAdminBooking: 'true'
+      };
+
+      const options = {
+        amount: amountInPaise,
+        currency: 'INR',
+        receipt: `admin_rcpt_${Date.now()}`,
+        notes: orderNotes
+      };
+
+      const order = await razorpay.orders.create(options);
+
+      const newAppointment = await StorageService.create('appointments', {
+        userId: user.id || user._id,
+        counsellorId: psychologistId,
+        service: 'counselling',
+        mode: 'ONLINE',
+        date,
+        time,
+        status: 'PENDING',
+        paymentStatus: 'PENDING',
+        razorpayOrderId: order.id,
+        amountPaid: 899,
+        baseFee: 899,
+        clientName,
+        clientEmail: normEmail,
+        clientPhone: normPhone,
+        notes: sessionDetails || '',
+        isAdminCreated: true
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'Admin booking initialized successfully',
+        data: {
+          appointment: newAppointment,
+          order: {
+            id: order.id,
+            amount: order.amount,
+            currency: order.currency,
+            keyId: keyId
+          }
+        }
+      });
+    } catch (error) {
+      console.error('[Admin Booking Error]:', error);
+      res.status(500).json({ success: false, message: error.message || 'Server error creating booking' });
+    }
+  },
+
+  async checkAdminBookingPayment(req, res, next) {
+    try {
+      const { id } = req.params;
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Booking not found' });
+      }
+      res.status(200).json({
+        success: true,
+        data: {
+          paymentStatus: appointment.paymentStatus,
+          status: appointment.status
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async markAdminBookingPaid(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { transactionReference } = req.body;
+      
+      const appointment = await StorageService.findById('appointments', id);
+      if (!appointment) {
+        return res.status(404).json({ success: false, message: 'Booking not found' });
+      }
+
+      if (appointment.paymentStatus === 'PAID') {
+        return res.status(400).json({ success: false, message: 'Payment is already marked as PAID' });
+      }
+
+      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+      const user = await StorageService.findById('users', appointment.userId);
+
+      const settings = (await StorageService.findOne('settings')) || {};
+      const commissionPercent = counsellor.commissionPercent !== undefined 
+          ? Number(counsellor.commissionPercent) 
+          : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);
+      const counsellorShareAmount = Number((appointment.amountPaid * (commissionPercent / 100)).toFixed(2));
+
+      let finalMeetLink = appointment.meetLink;
+      if (!finalMeetLink || finalMeetLink === '') {
+        const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+        finalMeetLink = await generateSessionMeetingLink({
+          counsellor,
+          user,
+          date: appointment.date,
+          time: appointment.time,
+          service: appointment.service || 'counselling',
+          appointmentId: appointment.id
+        }).catch(() => '');
+      }
+
+      const updateFields = {
+        paymentStatus: 'PAID',
+        status: 'CONFIRMED',
+        commissionPercent,
+        counsellorShareAmount,
+        meetLink: finalMeetLink,
+        transactionReference: transactionReference || '',
+        markedPaidBy: req.user ? req.user.id : 'Admin',
+        paidAt: new Date().toISOString()
+      };
+
+      await StorageService.update('appointments', id, updateFields);
+      Object.assign(appointment, updateFields);
+
+      cleanDuplicateAppointments().catch(() => {});
+
+      const existingSession = await StorageService.findOne('sessions', { appointmentId: id });
+      if (!existingSession) {
+        await StorageService.create('sessions', {
+          appointmentId: id,
+          userId: appointment.userId,
+          counsellorId: appointment.counsellorId,
+          date: appointment.date,
+          time: appointment.time,
+          duration: appointment.duration || '1 Hour (60 Mins)',
+          mode: appointment.mode || 'ONLINE',
+          meetLink: finalMeetLink,
+          status: 'CONFIRMED',
+          notes: appointment.notes || '',
+          feedback: '',
+          clientLocationName: appointment.clientLocationName || '',
+          clientLatitude: Number(appointment.clientLatitude) || 0,
+          clientLongitude: Number(appointment.clientLongitude) || 0
+        });
+      }
+
+      await PaymentController.dispatchBookingNotifications(appointment, {}, appointment.clientPhone);
+
+      res.status(200).json({
+        success: true,
+        message: 'Payment manually marked as PAID and After-Payment flow triggered successfully',
+        data: appointment
+      });
+    } catch (error) {
+      console.error('[Mark Admin Booking Paid Error]:', error);
+      res.status(500).json({ success: false, message: error.message || 'Server error marking booking as paid' });
+    }
+  },
+
   async createAppointment(req, res, next) {
     try {
       const { userId, advisorId, service, mode, date, time, status, meetLink, clientLocationName, clientLatitude, clientLongitude } = req.body;

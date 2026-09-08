@@ -4,6 +4,7 @@ import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
 import ApiService from '../../../../services/api';
 import toast from 'react-hot-toast';
+import AdminBookingFlow from '../components/AdminBookingFlow';
 
 export default function BookingManagementTab(props) {
  const {
@@ -370,6 +371,8 @@ export default function BookingManagementTab(props) {
   });
 
   const [viewingReportBooking, setViewingReportBooking] = useState(null);
+  const [isDownloadingReport, setIsDownloadingReport] = useState(null);
+  const [showAdminBookingFlow, setShowAdminBookingFlow] = useState(false);
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -416,6 +419,14 @@ export default function BookingManagementTab(props) {
  className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
  >
  <Plus className="w-3.5 h-3.5 text-zinc-955" /> Schedule Booking
+ </button>
+ )}
+ {canAddBookings && (
+ <button
+ onClick={() => setShowAdminBookingFlow(true)}
+ className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+ >
+ <Plus className="w-3.5 h-3.5" /> Admin Booking
  </button>
  )}
  </div>
@@ -777,6 +788,20 @@ export default function BookingManagementTab(props) {
       </div>
     </div>
   )}
+
+  {showAdminBookingFlow && (
+   <AdminBookingFlow 
+     onClose={() => setShowAdminBookingFlow(false)}
+     counsellorsDb={usersDb.filter(u => u.role === 'PSYCHOLOGIST' || u.role === 'COUNSELLOR')}
+     onComplete={() => {
+       // Refresh bookings
+       if (typeof props.setSearchBooking === 'function') {
+         props.setSearchBooking(searchBooking + ' '); // force re-render/fetch
+         setTimeout(() => props.setSearchBooking(searchBooking), 100);
+       }
+     }}
+   />
+ )}
   </div>
   );
 }
