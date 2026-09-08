@@ -375,6 +375,17 @@ class WhatsAppService {
     return this.sendBookingAlert(phone, 'reminder_1h', details);
   }
 
+  async sendWorksheetNotification(phone, details) {
+    const { clientName, secureLink } = details;
+    const text = 
+      `Hi ${clientName},\n\n` +
+      `Your BEHOLD activity sheet is ready.\n\n` +
+      `You can access it securely here:\n\n` +
+      `${secureLink}\n\n` +
+      `Thank you,\nBEHOLD`;
+    return this._dispatch(phone, text);
+  }
+
   /**
    * Notify a psychologist when a client submits a star rating / review
    */

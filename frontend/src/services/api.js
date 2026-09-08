@@ -49,6 +49,9 @@ if (envUrl && !envUrl.endsWith('/api') && envUrl !== '/api') {
   envUrl = envUrl.endsWith('/') ? `${envUrl}api` : `${envUrl}/api`;
 }
 const BASE_URL = envUrl;
+
+export const getApiUrl = () => BASE_URL;
+
 let isRefreshing = false;
 let refreshSubscribers = [];
 
@@ -795,6 +798,49 @@ const ApiService = {
       body: JSON.stringify({ transactionReference })
     });
   },
+
+  // ─── WORKSHEETS (PSYCHOLOGIST) ───────────────────────────────────────────────
+  
+  async getSessionWorksheets(sessionId) {
+    return await request(`/worksheets/psychologist/sessions/${sessionId}`);
+  },
+
+  async uploadWorksheet(sessionId, clientId, file, optionalMessage) {
+    const formData = new FormData();
+    formData.append('sessionId', sessionId);
+    formData.append('clientId', clientId);
+    formData.append('file', file);
+    if (optionalMessage) formData.append('optionalMessage', optionalMessage);
+    
+    return await request(`/worksheets/psychologist/sessions/${sessionId}/upload`, {
+      method: 'POST',
+      body: formData // DO NOT JSON.stringify for FormData
+    }, true);
+  },
+
+  async shareWorksheet(worksheetId) {
+    return await request(`/worksheets/psychologist/${worksheetId}/share`, {
+      method: 'POST'
+    });
+  },
+
+  // ─── WORKSHEETS (CLIENT) ───────────────────────────────────────────────────
+
+  async getClientWorksheetByToken(token) {
+    return await request(`/worksheets/client/${token}`);
+  },
+
+  async submitCompletedWorksheet(token, file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return await request(`/worksheets/client/${token}/submit`, {
+      method: 'POST',
+      body: formData
+    }, true);
+  },
+
+  // ─── END WORKSHEETS ────────────────────────────────────────────────────────
 
   async updateAdminAppointment(id, data) {
     return await request(`/admin/appointments/${id}`, {

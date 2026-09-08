@@ -23,6 +23,7 @@ const googleAuthRoutes = require('./routes/googleAuthRoutes');
 const cronRoutes = require('./routes/cronRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const whatsappRoutes = require('./routes/whatsappRoutes');
+const worksheetRoutes = require('./routes/worksheetRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const webhookRoutes = require('./routes/webhookRoutes');
 
@@ -178,6 +179,7 @@ app.use('/api/google', googleAuthRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
+app.use('/api/worksheets', worksheetRoutes);
 app.use('/api', publicRoutes);
 app.use('/', publicRoutes);
 

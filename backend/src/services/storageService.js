@@ -16,6 +16,7 @@ const AptitudeQuestion = require('../models/AptitudeQuestion');
 const Otp = require('../models/Otp');
 const Blog = require('../models/Blog');
 const CampaignEvent = require('../models/CampaignEvent');
+const Worksheet = require('../models/Worksheet');
 
 const Review = require('../models/Review');
 const PasswordResetOtp = require('../models/PasswordResetOtp');
@@ -64,7 +65,9 @@ const modelMap = {
   review: Review,
   whatsappmessages: WhatsAppMessage,
   whatsappmessage: WhatsAppMessage,
-  whatsapp_messages: WhatsAppMessage
+  whatsapp_messages: WhatsAppMessage,
+  worksheets: Worksheet,
+  worksheet: Worksheet
 };
 
 function getRecordFilter(id) {

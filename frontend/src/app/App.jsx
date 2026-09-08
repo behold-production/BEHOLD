@@ -20,6 +20,7 @@ import CompleteProfileModal from '../features/auth/CompleteProfileModal';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import FaqBlogSection from '../features/landing/FaqBlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
+import ActivitySheetView from '../features/student/ActivitySheetView';
 import globalBg from '../assets/greygreen.png';
 import globalBgTexture from '../assets/greygreen.png';
 
@@ -716,6 +717,10 @@ export default function App() {
           <Route path="/landing" element={<Navigate to="/bookmysession" replace />} />
 
           {/* Dedicated Booking Confirmation Routes (/confirmed is primary) */}
+          <Route path="/ad/:campaignId?" element={<AdLandingPage />} />
+          <Route path="/activity-sheet/:token" element={<ActivitySheetView />} />
+
+          {/* PROTECTED ROUTES - COMMON */}
           <Route path="/confirmed" element={<ThankYouPage />} />
           <Route path="/thank-you" element={<Navigate to="/confirmed" replace />} />
           <Route path="/thankyou" element={<Navigate to="/confirmed" replace />} />

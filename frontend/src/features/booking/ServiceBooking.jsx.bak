@@ -195,7 +195,6 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const [termsAgreed, setTermsAgreed] = useState(false);
     const [showConsentModal, setShowConsentModal] = useState(false);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-    const [wizardStep, setWizardStep] = useState(1); // 1: Service, 2: Advisor, 3: DateTime, 4: Summary
 
     const isAdvisorLocked = !!preselectedAdvisorId;
     const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
@@ -209,12 +208,19 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             handleStepChange('config');
             return;
         }
-        if (wizardStep > 1) {
-            setWizardStep(prev => prev - 1);
+        if (selectedTime) {
+            setSelectedTime('');
+            scrollToTarget(step3TimeRef);
+            return;
+        }
+        if (selectedAdvisor && !isAdvisorLocked) {
+            setSelectedAdvisor(null);
+            setAdvisorConfirmed(false);
+            scrollToTarget(step2AdvisorRef);
             return;
         }
         onClose();
-    }, [bookingStep, wizardStep, handleStepChange, onClose]);
+    }, [bookingStep, selectedTime, selectedAdvisor, isAdvisorLocked, handleStepChange, setSelectedTime, setSelectedAdvisor, setAdvisorConfirmed, scrollToTarget, onClose]);
 
     // Handle Browser / Mobile Hardware Back Button (popstate)
     useEffect(() => {
@@ -731,8 +737,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
                                                 
                                                 {/* STEP 1 — SELECT SERVICE & SESSION PLAN */}
-                                                {wizardStep === 1 && (
-                                                <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-in slide-in-from-right-4 duration-300">
+                                                <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
                                                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                         <div className="flex items-center gap-2.5">
                                                             <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00c9d6] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -1016,23 +1021,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </div>
                                                         </div>
                                                     )}
-                                                    
-                                                    {/* Next Button for Step 1 */}
-                                                    <div className="pt-6 border-t border-slate-100 flex justify-end">
-                                                        <button 
-                                                            type="button" 
-                                                            onClick={() => setWizardStep(2)} 
-                                                            className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-sm transition"
-                                                        >
-                                                            Continue to Next Step ➔
-                                                        </button>
-                                                    </div>
                                                 </div>
-                                                )}
 
                                                 {/* STEP 2 — SELECT PSYCHOLOGIST */}
-                                                {wizardStep === 2 && (
-                                                <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
+                                                <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 text-left">
                                                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                         <div className="flex items-center gap-2.5">
                                                             <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00c9d6] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -1260,31 +1252,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     </div>
 
                                                     {errors.advisor && <p className="text-xs text-rose-500 font-medium">{errors.advisor}</p>}
-                                                    
-                                                    {/* Next/Back Button for Step 2 */}
-                                                    <div className="pt-6 border-t border-slate-100 flex justify-between">
-                                                        <button 
-                                                            type="button" 
-                                                            onClick={() => setWizardStep(1)} 
-                                                            className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition"
-                                                        >
-                                                            Back
-                                                        </button>
-                                                        <button 
-                                                            type="button" 
-                                                            onClick={() => setWizardStep(3)} 
-                                                            disabled={!selectedAdvisor}
-                                                            className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-sm transition disabled:opacity-50"
-                                                        >
-                                                            Continue to Date & Time ➔
-                                                        </button>
-                                                    </div>
                                                 </div>
-                                                )}
 
                                                 {/* STEP 3 & 4 — SCHEDULE THE SESSION & TIME SLOT */}
-                                                {wizardStep === 3 && (
-                                                    <div ref={step3TimeRef} className="space-y-4 animate-in slide-in-from-right-4 duration-300">
+                                                {selectedAdvisor && (
+                                                    <div ref={step3TimeRef} className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                                         {/* TimePicker with Today slots by default and Choose Another Date button */}
                                                         <TimePicker
                                                             selectedDate={selectedDate}
@@ -1314,32 +1286,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             }}
                                                             getAvailableSlotsForDate={(date) => getAdvisorSlotsForDate(selectedAdvisor, date)}
                                                         />
-                                                        
-                                                        {/* Next/Back Button for Step 3 */}
-                                                        <div className="pt-6 border-t border-slate-100 flex justify-between">
-                                                            <button 
-                                                                type="button" 
-                                                                onClick={() => setWizardStep(2)} 
-                                                                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition"
-                                                            >
-                                                                Back
-                                                            </button>
-                                                            <button 
-                                                                type="button" 
-                                                                onClick={() => setWizardStep(4)} 
-                                                                disabled={!selectedTime}
-                                                                className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-sm transition disabled:opacity-50"
-                                                            >
-                                                                Continue to Summary ➔
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                )}
 
-                                                {/* STEP 4 — COMPACT BOOKING SUMMARY & PROCEED TO PAYMENT */}
-                                                {wizardStep === 4 && (
-                                                    <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
-                                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                                                        {/* STEP 6 & 7 — COMPACT BOOKING SUMMARY & PROCEED TO PAYMENT */}
+                                                        {selectedTime && (
+                                                            <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in fade-in slide-in-from-top-2 duration-300">
+                                                                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                                     <div className="flex items-center gap-2">
                                                                         <span className="w-2.5 h-2.5 rounded-full bg-[#00c9d6] animate-pulse" />
                                                                         <h4 className="font-extrabold text-sm uppercase tracking-wider text-slate-900">
@@ -1418,24 +1369,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             <span className="text-2xl font-extrabold text-slate-900">₹{netTotal}</span>
                                                                         </div>
 
-                                                                        <div className="flex gap-3 w-full sm:w-auto mt-4 sm:mt-0">
-                                                                            <button 
-                                                                                type="button" 
-                                                                                onClick={() => setWizardStep(3)} 
-                                                                                className="px-6 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition flex items-center justify-center"
-                                                                            >
-                                                                                Back
-                                                                            </button>
-                                                                            <button
-                                                                                type="button"
-                                                                                disabled={!selectedAdvisor || !selectedDate || !selectedTime}
-                                                                                onClick={() => handleStepChange('payment')}
-                                                                                className="w-full sm:w-auto flex-1 px-8 py-4 bg-slate-900 hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                                            >
-                                                                                <span>Proceed to Payment (₹{netTotal})</span>
-                                                                                <ArrowRight className="w-4 h-4 stroke-[3] text-[#00c9d6]" />
-                                                                            </button>
-                                                                        </div>
+                                                                        <button
+                                                                            type="button"
+                                                                            disabled={!selectedAdvisor || !selectedDate || !selectedTime}
+                                                                            onClick={() => handleStepChange('payment')}
+                                                                            className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                        >
+                                                                            <span>Proceed to Payment (₹{netTotal})</span>
+                                                                            <ArrowRight className="w-4 h-4 stroke-[3] text-[#00c9d6]" />
+                                                                        </button>
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -1443,14 +1385,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                         {/* Reschedule confirmation button */}
                                                         {rescheduleSession && (
-                                                            <div className="flex items-center justify-between pt-4">
-                                                                <button 
-                                                                    type="button" 
-                                                                    onClick={() => setWizardStep(3)} 
-                                                                    className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition"
-                                                                >
-                                                                    Back
-                                                                </button>
+                                                            <div className="flex items-center justify-end pt-4">
                                                                 <button
                                                                     type="button"
                                                                     disabled={!selectedDate || !selectedTime || isSubmitting}
@@ -1461,6 +1396,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 </button>
                                                             </div>
                                                         )}
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
 

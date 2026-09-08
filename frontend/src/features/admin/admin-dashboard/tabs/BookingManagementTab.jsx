@@ -5,6 +5,7 @@ import { formatDateString } from '../utils';
 import ApiService from '../../../../services/api';
 import toast from 'react-hot-toast';
 import AdminBookingFlow from '../components/AdminBookingFlow';
+import ActivitySheetModal from '../components/ActivitySheetModal';
 
 export default function BookingManagementTab(props) {
  const {
@@ -373,6 +374,7 @@ export default function BookingManagementTab(props) {
   const [viewingReportBooking, setViewingReportBooking] = useState(null);
   const [isDownloadingReport, setIsDownloadingReport] = useState(null);
   const [showAdminBookingFlow, setShowAdminBookingFlow] = useState(false);
+  const [viewingActivitySheetsBooking, setViewingActivitySheetsBooking] = useState(null);
 
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
@@ -651,6 +653,15 @@ export default function BookingManagementTab(props) {
  <Eye className="w-3.5 h-3.5" />
  </button>
  )}
+ {['CONFIRMED', 'COMPLETED', 'RESCHEDULED'].includes(booking.status) && (
+   <button
+     onClick={() => setViewingActivitySheetsBooking(booking)}
+     className="p-1.5 bg-zinc-900 text-blue-400 hover:text-white hover:bg-blue-900 rounded border border-zinc-800 transition cursor-pointer"
+     title="Activity Sheets"
+   >
+     <FileText className="w-3.5 h-3.5" />
+   </button>
+ )}
  {canEditBookings && (
  <button
  onClick={() => handleOpenEditBooking(booking)}
@@ -800,6 +811,13 @@ export default function BookingManagementTab(props) {
          setTimeout(() => props.setSearchBooking(searchBooking), 100);
        }
      }}
+   />
+ )}
+
+ {viewingActivitySheetsBooking && (
+   <ActivitySheetModal
+     booking={viewingActivitySheetsBooking}
+     onClose={() => setViewingActivitySheetsBooking(null)}
    />
  )}
   </div>
