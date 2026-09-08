@@ -411,10 +411,17 @@ const ApiService = {
     triggerStorageEvent();
   },
 
-  async forgotPassword(email) {
+  async forgotPassword(email, portal = 'any') {
     return await request('/auth/forgot-password', {
       method: 'POST',
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, portal })
+    });
+  },
+
+  async verifyResetOtp(email, otpCode) {
+    return await request('/auth/verify-reset-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email, otpCode })
     });
   },
 

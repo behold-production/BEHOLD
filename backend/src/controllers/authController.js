@@ -512,25 +512,31 @@ const AuthController = {
     }
   },
 
-  // Forgot Password — sends 6-digit OTP to user's registered WhatsApp (and Email backup)
+  // Forgot Password — sends 6-digit OTP to user's registered Email (and WhatsApp if available)
   async forgotPassword(req, res, next) {
     try {
-      const { email, phone } = req.body;
+      const { email, phone, portal = 'any' } = req.body;
       if (!email && !phone) {
         return res.status(400).json({ success: false, message: 'Email address or phone number is required' });
       }
 
       let match = null;
       if (email) {
-        match = await findAnyUserByEmail(email.toLowerCase().trim());
+        match = await findAnyUserByEmail(email.toLowerCase().trim(), portal);
       } else if (phone) {
-        match = await findAnyUserByPhone(phone);
+        match = await findAnyUserByPhone(phone, portal);
       }
 
       if (!match) {
+        if (portal === 'counsellor') {
+          return res.status(404).json({
+            success: false,
+            message: 'No registered Psychologist account found with this email address.'
+          });
+        }
         return res.status(200).json({
           success: true,
-          message: 'If registered, a 6-digit verification code has been sent to your WhatsApp number.'
+          message: 'If registered, a 6-digit verification code has been sent to your email address.'
         });
       }
 
@@ -559,9 +565,18 @@ const AuthController = {
       console.log(`📱 FOR PHONE: ${targetPhone} | EMAIL: ${cleanEmail}`);
       console.log(`======================================\n`);
 
-      // ── 1. WhatsApp OTP Delivery (Primary) ─────────────────────────
+      // ── 1. Email Delivery (Primary for email requests) ───────────────
+      let emailResult = null;
+      if (cleanEmail) {
+        emailResult = await EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'Psychologist', otpCode).catch((err) => {
+          console.error('[Email Reset OTP Error]:', err?.message || err);
+          return null;
+        });
+      }
+
+      // ── 2. WhatsApp OTP Delivery (If phone requested or user has phone) ─────
       let waSuccess = false;
-      if (targetPhone && targetPhone.trim() !== '') {
+      if (targetPhone && targetPhone.trim() !== '' && (!email || phone)) {
         const waMsg = `*BEHOLD. — Password Reset Code*\n\nYour 6-digit verification code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
         const waRes = await WhatsAppService.sendNotification(targetPhone, waMsg).catch(err => {
           console.error('[WhatsApp Reset OTP Error]:', err.message);
@@ -570,25 +585,59 @@ const AuthController = {
         waSuccess = Boolean(waRes && (waRes.success || waRes.mock));
       }
 
-      // ── 2. Email Backup Delivery ───────────────────────────────────
-      let emailResult = null;
-      if (cleanEmail) {
-        emailResult = await EmailService.sendPasswordResetOTP(cleanEmail, user.name || 'User', otpCode).catch(() => null);
-      }
-
       const maskedPhone = targetPhone ? targetPhone.replace(/.(?=.{4})/g, '•') : '';
+      const maskedEmail = cleanEmail.replace(/(.{2})(.*)(?=@)/, (_, g1, g2) => g1 + '•'.repeat(Math.max(1, g2.length)));
+
+      const responseMessage = email
+        ? `A 6-digit verification code has been sent to ${cleanEmail}.`
+        : 'A 6-digit verification code has been sent to your WhatsApp number.';
 
       res.status(200).json({
         success: true,
-        message: targetPhone 
-          ? 'A 6-digit verification code has been sent via WhatsApp to your registered phone number.' 
-          : 'A 6-digit reset code has been sent to your email address.',
+        message: responseMessage,
         data: {
+          email: cleanEmail,
+          maskedEmail,
           maskedPhone,
+          emailSent: Boolean(emailResult?.success),
           waSent: waSuccess,
           ...(emailResult?.previewUrl ? { previewUrl: emailResult.previewUrl } : {}),
           ...(process.env.NODE_ENV !== 'production' || !process.env.WASENDER_TOKEN ? { devOtp: otpCode } : {})
         }
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Verify Reset OTP
+  async verifyResetOtp(req, res, next) {
+    try {
+      const { email, otpCode } = req.body;
+      if (!email || !otpCode) {
+        return res.status(400).json({ success: false, message: 'Email and verification code are required' });
+      }
+
+      const cleanEmail = email.toLowerCase().trim();
+      const cleanOtp = String(otpCode).trim();
+
+      const otpRecord = await PasswordResetOtp.findOne({
+        email: cleanEmail,
+        otpCode: cleanOtp,
+        used: false,
+        expiresAt: { $gt: new Date() }
+      });
+
+      if (!otpRecord) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid or expired verification code. Please check and try again.'
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Verification code verified successfully.'
       });
     } catch (error) {
       next(error);
@@ -601,23 +650,26 @@ const AuthController = {
       const { email, otpCode, newPassword } = req.body;
 
       if (!email || !otpCode || !newPassword) {
-        return res.status(400).json({ success: false, message: 'Email, OTP code, and new password are required' });
+        return res.status(400).json({ success: false, message: 'Email, verification code, and new password are required' });
       }
 
       if (newPassword.length < 6) {
         return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
       }
 
+      const cleanEmail = email.toLowerCase().trim();
+      const cleanOtp = String(otpCode).trim();
+
       // Find valid OTP
       const otpRecord = await PasswordResetOtp.findOne({
-        email: email.toLowerCase().trim(),
-        otpCode: otpCode.trim(),
+        email: cleanEmail,
+        otpCode: cleanOtp,
         used: false,
         expiresAt: { $gt: new Date() }
       });
 
       if (!otpRecord) {
-        return res.status(400).json({ success: false, message: 'Invalid or expired reset code. Please request a new one.' });
+        return res.status(400).json({ success: false, message: 'Invalid or expired verification code. Please request a new one.' });
       }
 
       // Mark OTP as used
@@ -625,9 +677,9 @@ const AuthController = {
       await otpRecord.save();
 
       // Find user and update password
-      const match = await findAnyUserByEmail(email);
+      const match = await findAnyUserByEmail(cleanEmail);
       if (!match) {
-        return res.status(404).json({ success: false, message: 'User not found' });
+        return res.status(404).json({ success: false, message: 'User account not found' });
       }
 
       const { user, table } = match;
@@ -640,7 +692,7 @@ const AuthController = {
       if (user.phone) {
         WhatsAppService.sendNotification(
           user.phone,
-          `*BEHOLD.*\n\nYour password has been successfully reset. If you did not do this, please contact our support team immediately.`
+          `*BEHOLD.*\n\nYour account password has been successfully reset. If you did not do this, please contact our support team immediately.`
         ).catch(() => {});
       }
 

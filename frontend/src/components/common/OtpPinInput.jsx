@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-export default function OtpPinInput({ value = '', onChange, hasError, disabled = false }) {
+export default function OtpPinInput({ value = '', onChange, hasError, disabled = false, isDark = false }) {
   const inputRefs = useRef([]);
 
   // Ensure refs array has 6 entries
@@ -115,11 +115,19 @@ export default function OtpPinInput({ value = '', onChange, hasError, disabled =
             onKeyDown={(e) => handleKeyDown(e, index)}
             className={`w-9 h-11 xs:w-10 xs:h-12 sm:w-12 sm:h-14 text-center font-mono font-semibold text-base sm:text-xl rounded-xl transition-all outline-none border ${
               disabled
-                ? 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
+                ? isDark
+                  ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
+                  : 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
                 : hasError
-                ? 'bg-rose-50/50 border-rose-400 text-rose-900 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                ? isDark
+                  ? 'bg-red-950/40 border-red-500/80 text-red-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
+                  : 'bg-rose-50/50 border-rose-400 text-rose-900 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
                 : isFilled
-                ? 'bg-white border-[#00c9d6] text-zinc-900 shadow-sm ring-2 ring-[#00c9d6]/15'
+                ? isDark
+                  ? 'bg-[#050811] border-[#00E5FF] text-white shadow-sm ring-2 ring-[#00E5FF]/25'
+                  : 'bg-white border-[#00c9d6] text-zinc-900 shadow-sm ring-2 ring-[#00c9d6]/15'
+                : isDark
+                ? 'bg-[#050811] border-slate-800 text-white focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20'
                 : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:bg-white focus:border-[#00c9d6] focus:ring-2 focus:ring-[#00c9d6]/20'
             }`}
           />

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
  User, ShieldAlert, Award, Globe, Edit, LogOut,
- X, Mail, Shield, Menu, Eye, EyeOff, MapPin, Navigation
+ X, Mail, Shield, Menu, Eye, EyeOff, MapPin, Navigation,
+ KeyRound, ArrowLeft, RefreshCw, CheckCircle2, Lock, ShieldCheck
 } from 'lucide-react';
 import {
  getNotificationPermission,
@@ -13,6 +14,7 @@ import { useCustomDialog } from '../../context/CustomDialogContext';
 import LogoutConfirmModal from '../../components/common/LogoutConfirmModal';
 import BrandIcon from '../../components/common/BrandIcon';
 import ApiService from '../../services/api';
+import OtpPinInput from '../../components/common/OtpPinInput';
 import jsPDF from 'jspdf';
 
 // Extracted Components
@@ -141,8 +143,23 @@ export default function PsychologistDashboard({ setView: _setView }) {
  const [loginError, setLoginError] = useState('');
  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
+ // Forgot Password Gate states
+ const [forgotStep, setForgotStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
+ const [forgotEmail, setForgotEmail] = useState('');
+ const [forgotOtp, setForgotOtp] = useState('');
+ const [forgotNewPassword, setForgotNewPassword] = useState('');
+ const [forgotConfirmPassword, setForgotConfirmPassword] = useState('');
+ const [showForgotNewPassword, setShowForgotNewPassword] = useState(false);
+ const [showForgotConfirmPassword, setShowForgotConfirmPassword] = useState(false);
+ const [isForgotLoading, setIsForgotLoading] = useState(false);
+ const [forgotError, setForgotError] = useState('');
+ const [forgotSuccess, setForgotSuccess] = useState('');
+ const [forgotResendTimer, setForgotResendTimer] = useState(0);
+ const [isForgotResending, setIsForgotResending] = useState(false);
+ const forgotTimerRef = useRef(null);
+
  // Onboarding & Registration Gate states
- const [gateMode, setGateMode] = useState('login'); // 'login' or 'register'
+ const [gateMode, setGateMode] = useState('login'); // 'login', 'register', or 'forgot-password'
  const [onboardingStep, setOnboardingStep] = useState(1); // 1, 2, or 3
 
  // Registration Form States
@@ -754,10 +771,143 @@ reportRegError("Please enter a valid email address.");
  };
 
  const toggleRegDay = (dayIndex) => {
- setRegActiveDays(prev => ({ ...prev, [dayIndex]: !prev[dayIndex] }));
- };
+    setRegActiveDays(prev => ({ ...prev, [dayIndex]: !prev[dayIndex] }));
+  };
 
- // Auth Submit Handlers
+  // --- FORGOT PASSWORD HANDLERS ---
+  const startForgotResendTimer = useCallback(() => {
+    setForgotResendTimer(60);
+    clearInterval(forgotTimerRef.current);
+    forgotTimerRef.current = setInterval(() => {
+      setForgotResendTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(forgotTimerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      clearInterval(forgotTimerRef.current);
+    };
+  }, []);
+
+  const handleSendForgotOtp = async (e) => {
+    if (e) e.preventDefault();
+    setForgotError('');
+    if (!forgotEmail.trim()) {
+      setForgotError('Please enter your email address.');
+      return;
+    }
+    const cleanEmail = forgotEmail.trim().toLowerCase();
+    setIsForgotLoading(true);
+    try {
+      const res = await ApiService.forgotPassword(cleanEmail, 'counsellor');
+      if (res.success) {
+        toast.success(res.message || 'Verification code sent to your email!');
+        setForgotStep(2);
+        startForgotResendTimer();
+      } else {
+        setForgotError(res.message || 'Failed to send verification code.');
+      }
+    } catch (err) {
+      setForgotError(err.message || 'Failed to send verification code.');
+    } finally {
+      setIsForgotLoading(false);
+    }
+  };
+
+  const handleResendForgotOtp = async () => {
+    if (forgotResendTimer > 0 || isForgotResending) return;
+    setIsForgotResending(true);
+    setForgotError('');
+    try {
+      const res = await ApiService.forgotPassword(forgotEmail.trim().toLowerCase(), 'counsellor');
+      if (res.success) {
+        setForgotOtp('');
+        startForgotResendTimer();
+        toast.success('A new verification code has been sent to your email.');
+      } else {
+        setForgotError(res.message || 'Failed to resend verification code.');
+      }
+    } catch (err) {
+      setForgotError(err.message || 'Failed to resend verification code.');
+    } finally {
+      setIsForgotResending(false);
+    }
+  };
+
+  const handleVerifyForgotOtp = async (e) => {
+    if (e) e.preventDefault();
+    setForgotError('');
+    if (!forgotOtp || forgotOtp.trim().length !== 6) {
+      setForgotError('Please enter the 6-digit verification code.');
+      return;
+    }
+    setIsForgotLoading(true);
+    try {
+      const res = await ApiService.verifyResetOtp(forgotEmail.trim().toLowerCase(), forgotOtp.trim());
+      if (res.success) {
+        toast.success('Code verified! Please create your new password.');
+        setForgotStep(3);
+      } else {
+        setForgotError(res.message || 'Invalid or expired verification code.');
+      }
+    } catch (err) {
+      setForgotError(err.message || 'Invalid or expired verification code.');
+    } finally {
+      setIsForgotLoading(false);
+    }
+  };
+
+  const handleResetPasswordSubmit = async (e) => {
+    if (e) e.preventDefault();
+    setForgotError('');
+    if (!forgotNewPassword) {
+      setForgotError('Please enter a new password.');
+      return;
+    }
+    if (forgotNewPassword.length < 6) {
+      setForgotError('Password must be at least 6 characters long.');
+      return;
+    }
+    if (forgotNewPassword !== forgotConfirmPassword) {
+      setForgotError('Passwords do not match. Please re-enter.');
+      return;
+    }
+
+    setIsForgotLoading(true);
+    try {
+      const res = await ApiService.resetPassword(
+        forgotEmail.trim().toLowerCase(),
+        forgotOtp.trim(),
+        forgotNewPassword
+      );
+      if (res.success) {
+        toast.success('Password updated successfully! Please sign in.');
+        setLoginEmail(forgotEmail.trim().toLowerCase());
+        setLoginPassword('');
+        setForgotSuccess('Password reset successfully! You can now sign in with your new password.');
+        setGateMode('login');
+        setForgotStep(1);
+        setForgotOtp('');
+        setForgotNewPassword('');
+        setForgotConfirmPassword('');
+        clearInterval(forgotTimerRef.current);
+      } else {
+        setForgotError(res.message || 'Failed to reset password.');
+      }
+    } catch (err) {
+      setForgotError(err.message || 'Failed to reset password.');
+    } finally {
+      setIsForgotLoading(false);
+    }
+  };
+
+  // Auth Submit Handlers
  const handleCounsellorLogin = async (e) => {
  e.preventDefault();
  setLoginError('');
@@ -1171,19 +1321,19 @@ reportRegError("Please enter a valid email address.");
           <div className='flex border-b border-slate-800/80'>
             <button
               type='button'
-              onClick={() => setGateMode('login')}
+              onClick={() => { setGateMode('login'); setForgotError(''); setLoginError(''); }}
               className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
-                gateMode === 'login' ? 'text-white' : 'text-slate-500 hover:text-slate-350'
+                gateMode === 'login' || gateMode === 'forgot-password' ? 'text-white' : 'text-slate-500 hover:text-slate-350'
               }`}
             >
               Sign In
-              {gateMode === 'login' && (
+              {(gateMode === 'login' || gateMode === 'forgot-password') && (
                 <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-[#00E5FF] shadow-[0_2px_8px_rgba(0,229,255,0.4)]' />
               )}
             </button>
             <button
               type='button'
-              onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); }}
+              onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); setForgotError(''); setLoginError(''); }}
               className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
                 gateMode === 'register' ? 'text-white' : 'text-slate-500 hover:text-slate-350'
               }`}
@@ -1196,12 +1346,265 @@ reportRegError("Please enter a valid email address.");
           </div>
 
           <div className='p-8'>
-            {gateMode === 'login' ? (
+            {gateMode === 'forgot-password' ? (
+              <div className='animate-in fade-in duration-200'>
+                {/* Header with Back Button and Steps Tracker */}
+                <div className='flex items-center justify-between mb-5'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      if (forgotStep > 1) {
+                        setForgotStep(prev => prev - 1);
+                        setForgotError('');
+                      } else {
+                        setGateMode('login');
+                        setForgotError('');
+                      }
+                    }}
+                    className='flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition cursor-pointer bg-transparent border-none p-0 outline-none'
+                  >
+                    <ArrowLeft className='w-3.5 h-3.5' />
+                    <span>{forgotStep === 1 ? 'Back to Sign In' : 'Back'}</span>
+                  </button>
+
+                  <div className='flex items-center gap-1.5 text-[11px] font-semibold'>
+                    <span className={forgotStep === 1 ? 'text-[#00E5FF]' : 'text-slate-500'}>1. Email</span>
+                    <span className='text-slate-700'>&gt;</span>
+                    <span className={forgotStep === 2 ? 'text-[#00E5FF]' : 'text-slate-500'}>2. Verify OTP</span>
+                    <span className='text-slate-700'>&gt;</span>
+                    <span className={forgotStep === 3 ? 'text-[#00E5FF]' : 'text-slate-500'}>3. Password</span>
+                  </div>
+                </div>
+
+                {forgotError && (
+                  <div className='mb-5 p-3.5 bg-red-955/30 border border-red-900/50 rounded-lg text-red-200 text-xs font-medium text-left'>
+                    {forgotError}
+                  </div>
+                )}
+
+                {/* STEP 1: Enter Email & Request OTP */}
+                {forgotStep === 1 && (
+                  <div className='text-left'>
+                    <div className='flex items-center gap-2.5 mb-2'>
+                      <div className='w-8 h-8 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF]'>
+                        <KeyRound className='w-4 h-4' />
+                      </div>
+                      <h2 className='text-lg font-bold text-white font-header'>Forgot Password</h2>
+                    </div>
+                    <p className='text-xs text-slate-400 mt-1 mb-6 leading-relaxed'>
+                      Enter your registered psychologist email address. We'll send a 6-digit verification code to reset your password.
+                    </p>
+
+                    <form onSubmit={handleSendForgotOtp} className='space-y-5 text-left'>
+                      <div>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Registered Email Address
+                        </label>
+                        <input
+                          type='email'
+                          required
+                          placeholder='counsellor@example.com'
+                          value={forgotEmail}
+                          onChange={(e) => setForgotEmail(e.target.value)}
+                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          disabled={isForgotLoading}
+                          autoFocus
+                        />
+                      </div>
+
+                      <div className='pt-2'>
+                        <button
+                          type='submit'
+                          disabled={isForgotLoading}
+                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-2'
+                        >
+                          {isForgotLoading ? (
+                            <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
+                          ) : (
+                            <>
+                              <Mail className='w-4 h-4' />
+                              <span>Send Verification Code</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          type='button'
+                          onClick={() => { setGateMode('login'); setForgotError(''); }}
+                          className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-4 cursor-pointer block bg-transparent border-none'
+                        >
+                          Cancel and return to Sign In
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {/* STEP 2: Verify 6-digit OTP */}
+                {forgotStep === 2 && (
+                  <div className='text-left'>
+                    <div className='flex items-center gap-2.5 mb-2'>
+                      <div className='w-8 h-8 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF]'>
+                        <ShieldCheck className='w-4 h-4' />
+                      </div>
+                      <h2 className='text-lg font-bold text-white font-header'>Verify Email Code</h2>
+                    </div>
+                    <p className='text-xs text-slate-400 mt-1 mb-6 leading-relaxed'>
+                      A 6-digit code has been sent to <span className='text-white font-semibold'>{forgotEmail}</span>. Enter the code below:
+                    </p>
+
+                    <form onSubmit={handleVerifyForgotOtp} className='space-y-5 text-left'>
+                      <div>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          6-Digit Verification Code
+                        </label>
+                        <OtpPinInput
+                          value={forgotOtp}
+                          onChange={(val) => { setForgotOtp(val); setForgotError(''); }}
+                          disabled={isForgotLoading}
+                          isDark={true}
+                          hasError={Boolean(forgotError)}
+                        />
+                      </div>
+
+                      {/* Resend Row */}
+                      <div className='flex items-center justify-between text-xs pt-1'>
+                        <span className='text-slate-500'>Didn't receive code?</span>
+                        {forgotResendTimer === 0 ? (
+                          <button
+                            type='button'
+                            onClick={handleResendForgotOtp}
+                            disabled={isForgotResending}
+                            className='text-[#00E5FF] hover:text-[#00bccc] font-medium transition cursor-pointer bg-transparent border-none p-0 flex items-center gap-1.5'
+                          >
+                            <RefreshCw className={`w-3.5 h-3.5 ${isForgotResending ? 'animate-spin' : ''}`} />
+                            <span>Resend Code</span>
+                          </button>
+                        ) : (
+                          <span className='text-slate-400 tabular-nums'>
+                            Resend in <span className='text-[#00E5FF] font-semibold'>0:{String(forgotResendTimer).padStart(2, '0')}</span>
+                          </span>
+                        )}
+                      </div>
+
+                      <div className='pt-2 space-y-3'>
+                        <button
+                          type='submit'
+                          disabled={isForgotLoading || forgotOtp.length !== 6}
+                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed'
+                        >
+                          {isForgotLoading ? (
+                            <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
+                          ) : (
+                            'Verify Code'
+                          )}
+                        </button>
+
+                        <button
+                          type='button'
+                          onClick={() => { setForgotStep(1); setForgotError(''); }}
+                          className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none p-0'
+                        >
+                          ← Change email address
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {/* STEP 3: Create New Password */}
+                {forgotStep === 3 && (
+                  <div className='text-left'>
+                    <div className='flex items-center gap-2.5 mb-2'>
+                      <div className='w-8 h-8 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF]'>
+                        <Lock className='w-4 h-4' />
+                      </div>
+                      <h2 className='text-lg font-bold text-white font-header'>Set New Password</h2>
+                    </div>
+                    <p className='text-xs text-slate-400 mt-1 mb-6 leading-relaxed'>
+                      Create a strong new password for your Psychologist account.
+                    </p>
+
+                    <form onSubmit={handleResetPasswordSubmit} className='space-y-4 text-left'>
+                      <div>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          New Password
+                        </label>
+                        <div className='relative'>
+                          <input
+                            type={showForgotNewPassword ? 'text' : 'password'}
+                            required
+                            placeholder='At least 6 characters'
+                            value={forgotNewPassword}
+                            onChange={(e) => setForgotNewPassword(e.target.value)}
+                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
+                            disabled={isForgotLoading}
+                            autoFocus
+                          />
+                          <button
+                            type='button'
+                            onClick={() => setShowForgotNewPassword(v => !v)}
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                          >
+                            {showForgotNewPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          Confirm New Password
+                        </label>
+                        <div className='relative'>
+                          <input
+                            type={showForgotConfirmPassword ? 'text' : 'password'}
+                            required
+                            placeholder='Re-enter new password'
+                            value={forgotConfirmPassword}
+                            onChange={(e) => setForgotConfirmPassword(e.target.value)}
+                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
+                            disabled={isForgotLoading}
+                          />
+                          <button
+                            type='button'
+                            onClick={() => setShowForgotConfirmPassword(v => !v)}
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                          >
+                            {showForgotConfirmPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className='pt-3'>
+                        <button
+                          type='submit'
+                          disabled={isForgotLoading}
+                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1'
+                        >
+                          {isForgotLoading ? (
+                            <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
+                          ) : (
+                            'Save Password & Sign In'
+                          )}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </div>
+            ) : gateMode === 'login' ? (
               <div>
                 <h2 className='text-lg font-bold text-white text-left font-header'>Psychologist Sign In</h2>
                 <p className='text-xs text-slate-500 text-left mt-1.5 mb-6 leading-relaxed'>
                   Access schedules, update clinic slots, and edit video rooms.
                 </p>
+
+                {forgotSuccess && (
+                  <div className='mb-5 p-3.5 bg-emerald-950/40 border border-emerald-500/40 rounded-lg text-emerald-300 text-xs font-medium text-left flex items-start gap-2.5'>
+                    <CheckCircle2 className='w-4 h-4 text-emerald-400 shrink-0 mt-0.5' />
+                    <span className='leading-relaxed'>{forgotSuccess}</span>
+                  </div>
+                )}
 
                 {loginError && (
                   <div className='mb-5 p-3.5 bg-red-955/30 border border-red-900/50 rounded-lg text-red-200 text-xs font-medium text-left'>
@@ -1226,9 +1629,27 @@ reportRegError("Please enter a valid email address.");
                   </div>
 
                   <div>
-                    <label className='block text-xs font-medium text-slate-400 mb-2'>
-                      Password
-                    </label>
+                    <div className='flex items-center justify-between mb-2'>
+                      <label className='block text-xs font-medium text-slate-400'>
+                        Password
+                      </label>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          setForgotEmail(loginEmail.trim());
+                          setGateMode('forgot-password');
+                          setForgotStep(1);
+                          setForgotError('');
+                          setForgotSuccess('');
+                          setForgotOtp('');
+                          setForgotNewPassword('');
+                          setForgotConfirmPassword('');
+                        }}
+                        className='text-xs text-[#00E5FF] hover:text-[#00bccc] hover:underline transition cursor-pointer bg-transparent border-none p-0 outline-none font-medium'
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
                     <div className='relative'>
                       <input
                         type={showPassword ? 'text' : 'password'}

@@ -11,6 +11,7 @@ router.post('/register-counsellor', validateRegister, AuthController.registerCou
 router.post('/login', validateLogin, AuthController.login);
 router.post('/refresh-token', AuthController.refreshToken);
 router.post('/forgot-password', AuthController.forgotPassword);
+router.post('/verify-reset-otp', AuthController.verifyResetOtp);
 router.post('/reset-password', AuthController.resetPassword);
 
 // OTP routes
