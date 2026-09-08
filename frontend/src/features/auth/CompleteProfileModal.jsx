@@ -230,7 +230,8 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
           </div>
 
           {/* Form with clean internal scrolling */}
-          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+          <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
+            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
             
             {/* Full Name - MANDATORY */}
             <div className="space-y-1.5">
@@ -418,8 +419,10 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
               )}
             </div>
 
+            </div>
+
             {/* Submit & Dismiss Row */}
-            <div className="pt-2 space-y-2">
+            <div className="p-4 sm:p-5 border-t border-zinc-100 bg-white shrink-0 space-y-2">
               <button
                 type="submit"
                 disabled={isLoading}
