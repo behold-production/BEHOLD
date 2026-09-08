@@ -96,6 +96,40 @@ const UserController = {
       if (req.body.utmMedium) updates.utmMedium = req.body.utmMedium;
       if (req.body.fbclid) updates.fbclid = req.body.fbclid;
 
+      // Check for email collision and handle account linking automatically
+      if (finalEmail && existingUser.email !== finalEmail) {
+        const emailExists = await StorageService.findOne('users', { email: finalEmail.toLowerCase() });
+        if (emailExists && emailExists._id.toString() !== existingUser._id.toString()) {
+          const userPhoneStr = String(existingUser.phone || '').replace(/\D/g, '');
+          const existingPhoneStr = String(emailExists.phone || '').replace(/\D/g, '');
+
+          // If the real account has no phone, or matches this phone
+          if (!existingPhoneStr || existingPhoneStr === userPhoneStr || userPhoneStr.includes(existingPhoneStr.slice(-10))) {
+            // Update the REAL account with this phone number and their profile completions
+            const mergedUpdates = { ...updates, phone: existingUser.phone };
+            await StorageService.update('users', emailExists._id, mergedUpdates);
+
+            // Disable the TEMP account to avoid conflicts
+            await StorageService.update('users', existingUser._id, {
+              phone: '',
+              email: `merged_${Date.now()}_${existingUser.email}`,
+              status: 'DELETED'
+            });
+
+            return res.status(400).json({
+              success: false,
+              message: 'We found an existing account with your email and successfully linked your phone number! Please log out and log in again to access your account.',
+              action: 'LOGOUT_REQUIRED'
+            });
+          } else {
+            return res.status(400).json({
+              success: false,
+              message: 'This email is already linked to another phone number. Please login using that phone number, or use a different email address.'
+            });
+          }
+        }
+      }
+
       const updatedUser = await StorageService.update('users', req.user.id, updates);
       if (!updatedUser) {
         return res.status(404).json({ success: false, message: 'User not found' });
