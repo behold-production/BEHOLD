@@ -10,7 +10,7 @@ const cacheHelper = require('../utils/cacheHelper');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const PaymentController = require('./paymentController');
-const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { normalizePhoneWithCountryCode, resolveStudentName } = require('../utils/phoneUtils');
 const { cleanDuplicateAppointments } = require('../utils/appointmentDeduplicator');
 
 const COUNSELLOR_MODES = new Set(['ONLINE', 'OFFLINE', 'DOOR_STEP']);
@@ -312,16 +312,16 @@ If you have questions or would like to reapply with updated information, please 
       const populated = appointments.map((a) => {
         const user = userMap.get(a.userId);
         const counsellor = counsellorMap.get(a.counsellorId);
-        const session = sessionMap.get(a.id);
+        const sName = resolveStudentName(a.clientName, user?.name) || user?.name || 'Student';
         return {
           ...a,
-          studentName: a.clientName || (user ? user.name : 'Unknown Student'),
+          studentName: sName,
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
           notes: session ? session.notes || a.notes || '' : a.notes || '',
           feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',
           nextSession: session ? session.nextSession || a.nextSession || '' : a.nextSession || '',
           student: {
-            name: a.clientName || (user ? user.name : 'Unknown Student'),
+            name: sName,
             email: a.clientEmail || (user ? user.email : ''),
             phone: a.clientPhone || (user ? user.phone : ''),
             schoolName: user ? user.schoolName : '',
@@ -2204,12 +2204,13 @@ If you have questions or would like to reapply with updated information, please 
         .map((a) => {
           const user = userMap.get(a.userId);
           const counsellor = counsellorMap.get(a.counsellorId);
+          const sName = resolveStudentName(a.clientName, user?.name) || user?.name || 'Student';
           return {
             ...a,
-            studentName: a.clientName || (user ? user.name : 'Unknown Student'),
+            studentName: sName,
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             student: {
-              name: a.clientName || (user ? user.name : 'Unknown Student'),
+              name: sName,
               email: a.clientEmail || (user ? user.email : ''),
               phone: a.clientPhone || (user ? user.phone : '')
             },

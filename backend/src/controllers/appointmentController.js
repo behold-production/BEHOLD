@@ -1041,7 +1041,7 @@ const AppointmentController = {
           }
           return {
             ...apptData,
-            studentName: user ? user.name : 'Unknown Student',
+            studentName: resolveStudentName(a.clientName, user?.name) || user?.name || 'Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             notes: session ? session.notes || a.notes || '' : a.notes || '',
             feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',

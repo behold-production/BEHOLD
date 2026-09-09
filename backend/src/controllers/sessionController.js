@@ -1,5 +1,6 @@
 const StorageService = require('../services/storageService');
 const { autoExpireSessions } = require('../utils/sessionHelper');
+const { resolveStudentName } = require('../utils/phoneUtils');
 
 const SessionController = {
   // Get Sessions (List for User or Counsellor)
@@ -89,7 +90,7 @@ const SessionController = {
             notes: s.notes || (appt ? appt.notes : ''),
             feedback: s.feedback || (appt ? appt.feedback : ''),
             nextSession: s.nextSession || (appt ? appt.nextSession : ''),
-            studentName: user ? user.name : 'Unknown Student',
+            studentName: resolveStudentName(appt?.clientName, user?.name) || user?.name || 'Student',
             counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
             advisorRole: counsellor ? counsellor.role || 'Consultation' : 'Consultation',
@@ -212,7 +213,7 @@ const SessionController = {
           notes: session.notes || (appt ? appt.notes : ''),
           feedback: session.feedback || (appt ? appt.feedback : ''),
           nextSession: session.nextSession || (appt ? appt.nextSession : ''),
-          studentName: user ? user.name : 'Unknown Student',
+          studentName: resolveStudentName(appt?.clientName, user?.name) || user?.name || 'Student',
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
           advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
           advisorRole: counsellor ? counsellor.role || 'Consultation' : 'Consultation',

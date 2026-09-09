@@ -43,8 +43,8 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
       const rawUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').trim();
       const baseDomain = rawUrl.replace(/\/counsellor\/?$/, '').replace(/\/profile\/?$/, '').replace(/\/$/, '');
       const organizerEmail = (process.env.RESEND_FROM_EMAIL || process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
-
-      const studentName = user?.name || 'Student';
+      const { resolveStudentName } = require('./phoneUtils');
+      const studentName = resolveStudentName(user?.name) || 'Student';
       const counsellorName = counsellor?.name || 'Psychologist';
 
       const attendees = [

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const StorageService = require('../services/storageService');
 const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
-const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { normalizePhoneWithCountryCode, cleanUserName } = require('../utils/phoneUtils');
 const { updateActiveSessionCache, invalidateSessionCache } = require('../middleware/authMiddleware');
 const PasswordResetOtp = require('../models/PasswordResetOtp');
 
@@ -278,7 +278,11 @@ const AuthController = {
       const tokens = generateTokens(newUser, sessionToken);
 
       if (newUser.phone) {
-        WhatsAppService.sendNotification(newUser.phone, `Welcome to BEHOLD., ${newUser.name}! Your account has been created successfully.`).catch(err => console.error(err));
+        const cleanName = cleanUserName(newUser.name);
+        const welcomeText = cleanName
+          ? `Welcome to BEHOLD., ${cleanName}! Your account has been created successfully.`
+          : `Welcome to BEHOLD.! Your account has been created successfully.`;
+        WhatsAppService.sendNotification(newUser.phone, welcomeText).catch(err => console.error(err));
       }
       // Send welcome email
       EmailService.sendWelcomeUser(newUser).catch(err => console.error('[Email Welcome Error]:', err));
