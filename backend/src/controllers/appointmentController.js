@@ -5,6 +5,15 @@ const WhatsAppService = require('../services/whatsappService');
 const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
 const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
+async function findCounsellorRecord(counsellorId) {
+  if (!counsellorId) return null;
+  let counsellor = await StorageService.findById('counsellors', counsellorId);
+  if (!counsellor) {
+    counsellor = await StorageService.findById('users', counsellorId);
+  }
+  return counsellor;
+}
+
 const AppointmentController = {
   // Create Appointment (User / Student)
   async createAppointment(req, res, next) {
@@ -292,7 +301,7 @@ const AppointmentController = {
       }
 
       const user = await StorageService.findById('users', appointment.userId);
-      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+      const counsellor = await findCounsellorRecord(appointment.counsellorId);
 
       let meetLink =
         appointment.mode === 'ONLINE'
@@ -424,7 +433,7 @@ const AppointmentController = {
 
       // Synchronous/Awaited Processing for Notifications & Emails
       try {
-        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const counsellor = await findCounsellorRecord(appointment.counsellorId);
         const user = await StorageService.findById('users', appointment.userId);
         const targetUserPhone = resolveAnyPhone(user, appointment);
 
@@ -599,7 +608,7 @@ const AppointmentController = {
         const targetRole = isStudentRescheduling ? 'counsellor' : 'user';
         const actorName = req.user.role === 'user' ? 'The student' : 'The counsellor';
         const user = await StorageService.findById('users', appointment.userId);
-        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const counsellor = await findCounsellorRecord(appointment.counsellorId);
 
         const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, user);
         const sName = resolveStudentName(appointment.clientName, user?.name);
@@ -732,7 +741,7 @@ const AppointmentController = {
         const reasonText = reason ? ` Reason: "${reason}"` : '';
 
         const user = await StorageService.findById('users', appointment.userId);
-        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const counsellor = await findCounsellorRecord(appointment.counsellorId);
 
         const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, user);
         const sName = resolveStudentName(appointment.clientName, user?.name);
@@ -800,7 +809,7 @@ const AppointmentController = {
       // Notify user via email & WhatsApp that meet link is ready
       if (meetLink) {
         const meetUser = await StorageService.findById('users', appointment.userId);
-        const meetCounsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const meetCounsellor = await findCounsellorRecord(appointment.counsellorId);
         const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, meetUser);
         const sName = resolveStudentName(appointment.clientName, meetUser?.name);
         
@@ -911,7 +920,7 @@ const AppointmentController = {
 
       // Send WhatsApp Session Completed alert (User ONLY)
       try {
-        const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+        const counsellor = await findCounsellorRecord(appointment.counsellorId);
         const user = await StorageService.findById('users', appointment.userId);
         const userPhone = resolveAnyPhone(user, appointment);
         if (userPhone) {
@@ -996,7 +1005,7 @@ const AppointmentController = {
 
       const updated = await StorageService.update('appointments', id, updates);
 
-      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+      const counsellor = await findCounsellorRecord(appointment.counsellorId);
 
       await StorageService.create('notifications', {
         recipientId: 'admin',
@@ -1033,7 +1042,7 @@ const AppointmentController = {
             StorageService.update('appointments', a.id, { status: 'CONFIRMED' }).catch(() => {});
           }
           const user = await StorageService.findById('users', a.userId);
-          const counsellor = await StorageService.findById('counsellors', a.counsellorId);
+          const counsellor = await findCounsellorRecord(a.counsellorId);
           const session = await StorageService.findOne('sessions', { appointmentId: a.id });
           const apptData = { ...a };
           if (req.user.role !== 'admin') {
@@ -1110,7 +1119,7 @@ const AppointmentController = {
 
       let counsellor = null;
       if (appt.counsellorId) {
-        counsellor = await StorageService.findById('counsellors', appt.counsellorId);
+        counsellor = await findCounsellorRecord(appt.counsellorId);
         if (!counsellor) {
           counsellor = await StorageService.findById('users', appt.counsellorId);
         }

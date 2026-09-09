@@ -953,10 +953,10 @@ const AuthController = {
         } else if (match && match.table === 'users') {
           // If existing user has placeholder name/email and user provided real info
           const userUpdates = {};
-          if (cleanInputName && (!match.user.name || match.user.name === 'New User' || match.user.name.includes('Behold User'))) {
+          if (cleanInputName && !cleanUserName(match.user.name)) {
             userUpdates.name = cleanInputName;
           }
-          if (cleanInputEmail && (!match.user.email || match.user.email.includes('@temp.behold'))) {
+          if (cleanInputEmail && (!match.user.email || match.user.email.includes('@temp.behold') || match.user.email.includes('@example.com'))) {
             userUpdates.email = cleanInputEmail;
           }
           if (!match.user.utmSource && (utmSource || fbclid)) {
@@ -1015,8 +1015,21 @@ const AuthController = {
         const { password: _, ...userData } = user;
         const tokens = generateTokens(user, sessionToken);
 
-        const hasRealName = Boolean(userData.name && userData.name !== 'New User' && !userData.name.includes('Behold User') && !userData.name.toLowerCase().includes('test student'));
-        const hasRealEmail = Boolean(userData.email && !userData.email.includes('@temp.behold') && !userData.email.includes('temp.behold.co.in') && userData.email.includes('@'));
+        const cleanedName = cleanUserName(userData.name);
+        const hasRealName = Boolean(cleanedName);
+        userData.name = hasRealName ? cleanedName : '';
+
+        const hasRealEmail = Boolean(
+          userData.email &&
+          !userData.email.includes('@temp.behold') &&
+          !userData.email.includes('temp.behold.co.in') &&
+          !userData.email.includes('@example.com') &&
+          userData.email.includes('@')
+        );
+        if (!hasRealEmail && userData.email && (userData.email.includes('@temp.behold') || userData.email.includes('@example.com'))) {
+          userData.email = '';
+        }
+
         const isDetailsNeeded = !hasRealName || !hasRealEmail;
 
         return res.status(200).json({

@@ -10,7 +10,10 @@ const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introd
 async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackClientPhone = '') {
   try {
     const user = appointment?.userId ? await StorageService.findById('users', appointment.userId) : null;
-    const counsellor = appointment?.counsellorId ? await StorageService.findById('counsellors', appointment.counsellorId) : null;
+    let counsellor = appointment?.counsellorId ? await StorageService.findById('counsellors', appointment.counsellorId) : null;
+    if (!counsellor && appointment?.counsellorId) {
+      counsellor = await StorageService.findById('users', appointment.counsellorId);
+    }
 
     const targetUserPhone = resolveAnyPhone(
       appointment?.clientPhone,
