@@ -179,7 +179,49 @@ const StorageService = {
   },
 
   // Seed Admin utility
-  seedDefaultAdmin
+  seedDefaultAdmin,
+
+  /**
+   * Always returns the canonical site settings document (id='global').
+   * Self-heals the `id` field if missing from an existing doc.
+   * Falls back to empty object — never throws.
+   */
+  async getGlobalSettings() {
+    try {
+      // Primary: find by canonical id
+      let settings = await this.findOne('settings', { id: 'global' });
+      if (settings) return settings;
+
+      // Fallback: get first settings doc that belongs to BEHOLD (not other products)
+      const all = await this.findAll('settings', {
+        $or: [
+          { storeName: 'BEHOLD.' },
+          { siteName: { $regex: 'behold', $options: 'i' } },
+          { enableOnline: { $exists: true } }
+        ]
+      });
+      settings = all[0] || null;
+
+      if (!settings) {
+        // Second fallback: any settings doc at all
+        const anyAll = await this.findAll('settings');
+        settings = anyAll[0] || null;
+      }
+
+      if (settings && !settings.id) {
+        // Self-heal: stamp the id so future calls hit the primary path
+        const idToUse = settings._id ? settings._id.toString() : null;
+        if (idToUse) {
+          await this.update('settings', idToUse, { id: 'global' });
+          settings.id = 'global';
+        }
+      }
+      return settings || {};
+    } catch (err) {
+      console.error('[StorageService] getGlobalSettings error:', err.message);
+      return {};
+    }
+  }
 };
 
 module.exports = StorageService;

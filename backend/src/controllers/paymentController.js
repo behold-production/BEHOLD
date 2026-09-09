@@ -146,7 +146,7 @@ const PaymentController = {
         }
 
         const counsellor = validation.counsellor;
-        const settings = (await StorageService.findOne('settings')) || {};
+        const settings = await StorageService.getGlobalSettings();
 
         const durationVal = Number(duration) || Number(bookingDuration) || Number(req.body.bookingDetails?.duration) || Number(req.body.bookingDetails?.bookingDuration) || 60;
         const isHalfSession = durationVal === 30;
@@ -531,7 +531,7 @@ const PaymentController = {
       if (!counsellor) return res.status(404).json({ success: false, message: 'Counsellor not found' });
 
       // 4. Compute price & commission
-      const settings = (await StorageService.findOne('settings')) || {};
+      const settings = await StorageService.getGlobalSettings();
       const durationVal = Number(bDuration) || Number(bBookingDuration) || Number(req.body.duration) || Number(req.body.bookingDuration) || 60;
       const isHalfSession = durationVal === 30;
       const sessionDurationStr = isHalfSession ? '30 Minutes (Introductory Session)' : '1 Hour (60 Mins)';
@@ -809,7 +809,7 @@ const PaymentController = {
 
           if (validation.valid) {
             const counsellor = validation.counsellor;
-            const settings = (await StorageService.findOne('settings')) || {};
+            const settings = await StorageService.getGlobalSettings();
             const commissionPercent = counsellor.commissionPercent !== undefined 
               ? Number(counsellor.commissionPercent) 
               : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);

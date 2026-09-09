@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema(
   {
     id: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    name: { type: String, default: '' },
+    email: { type: String, default: '', sparse: true },
     password: { type: String, required: true },
     phone: { type: String, default: '' },
     age: { type: String, default: '' },
@@ -57,6 +57,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.index({ phone: 1 });
+userSchema.index({ email: 1 }, { unique: true, sparse: true });
 userSchema.index({ role: 1, status: 1 });
 userSchema.index({ isProfileCompleted: 1 });
 userSchema.index({ hasUsedIntroductory: 1 });

@@ -1227,10 +1227,10 @@ If you have questions or would like to reapply with updated information, please 
   // Settings management
   async getSettings(req, res, next) {
     try {
-      let settingsList = await StorageService.findAll('settings');
-      let settings = settingsList[0];
-      if (!settings) {
+      let settings = await StorageService.getGlobalSettings();
+      if (!settings || !settings.id) {
         settings = await StorageService.create('settings', {
+          id: 'global',
           heroTitle: 'Bridging You \nTo Your {True Growth.}',
           heroSub:
             'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.',
@@ -1344,12 +1344,11 @@ If you have questions or would like to reapply with updated information, please 
   async updateSettings(req, res, next) {
     try {
       const updates = req.body;
-      let settingsList = await StorageService.findAll('settings');
-      let settings = settingsList[0];
-      if (!settings) {
-        settings = await StorageService.create('settings', updates);
+      let settings = await StorageService.getGlobalSettings();
+      if (!settings || !settings.id) {
+        settings = await StorageService.create('settings', { id: 'global', ...updates });
       } else {
-        settings = await StorageService.update('settings', settings.id, updates);
+        settings = await StorageService.update('settings', settings.id || settings._id, updates);
       }
       cacheHelper.clear('public_settings');
       cacheHelper.clear('counsellors_list_');
@@ -1363,8 +1362,7 @@ If you have questions or would like to reapply with updated information, please 
   async getBlockedIps(req, res, next) {
     try {
       const { invalidateIpCache } = require('../middleware/ipBlockMiddleware');
-      let settingsList = await StorageService.findAll('settings');
-      const settings = settingsList[0];
+      const settings = await StorageService.getGlobalSettings();
       res.status(200).json({ success: true, data: settings?.blockedIps ?? [] });
     } catch (error) {
       next(error);
@@ -1384,16 +1382,15 @@ If you have questions or would like to reapply with updated information, please 
         return res.status(400).json({ success: false, message: 'Invalid IP address format' });
       }
 
-      let settingsList = await StorageService.findAll('settings');
-      let settings = settingsList[0];
-      if (!settings) {
-        settings = await StorageService.create('settings', { blockedIps: [ipTrimmed] });
+      let settings = await StorageService.getGlobalSettings();
+      if (!settings || !settings.id) {
+        settings = await StorageService.create('settings', { id: 'global', blockedIps: [ipTrimmed] });
       } else {
         const current = settings.blockedIps ?? [];
         if (current.includes(ipTrimmed)) {
           return res.status(409).json({ success: false, message: 'IP is already blocked' });
         }
-        settings = await StorageService.update('settings', settings.id, {
+        settings = await StorageService.update('settings', settings.id || settings._id, {
           blockedIps: [...current, ipTrimmed]
         });
       }
@@ -1410,16 +1407,15 @@ If you have questions or would like to reapply with updated information, please 
     try {
       const { invalidateIpCache } = require('../middleware/ipBlockMiddleware');
       const ipToRemove = decodeURIComponent(req.params.ip);
-      let settingsList = await StorageService.findAll('settings');
-      let settings = settingsList[0];
-      if (!settings) {
+      let settings = await StorageService.getGlobalSettings();
+      if (!settings || !settings.id) {
         return res.status(404).json({ success: false, message: 'Settings not found' });
       }
       const current = settings.blockedIps ?? [];
       if (!current.includes(ipToRemove)) {
         return res.status(404).json({ success: false, message: 'IP not found in blocklist' });
       }
-      settings = await StorageService.update('settings', settings.id, {
+      settings = await StorageService.update('settings', settings.id || settings._id, {
         blockedIps: current.filter((i) => i !== ipToRemove)
       });
       invalidateIpCache();
@@ -1642,7 +1638,7 @@ If you have questions or would like to reapply with updated information, please 
       const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
       const user = await StorageService.findById('users', appointment.userId);
 
-      const settings = (await StorageService.findOne('settings')) || {};
+      const settings = await StorageService.getGlobalSettings();
       const commissionPercent = counsellor.commissionPercent !== undefined 
           ? Number(counsellor.commissionPercent) 
           : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);

@@ -53,7 +53,7 @@ const AppointmentController = {
       }
 
       const counsellor = validation.counsellor;
-      const settings = (await StorageService.findOne('settings')) || {};
+      const settings = await StorageService.getGlobalSettings();
 
       const durationVal = Number(duration) || Number(bookingDuration) || 60;
       const isHalfSession = durationVal === 30;
