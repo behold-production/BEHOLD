@@ -65,6 +65,17 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
   }
 
   const handleCloseModal = () => {
+    if (!isProfileActuallyComplete) {
+      ApiService.logout();
+      if (updateUser) updateUser(null);
+      try {
+        localStorage.removeItem('behold_auth_user');
+        localStorage.removeItem('behold_token');
+        localStorage.removeItem('behold_refresh_token');
+        window.dispatchEvent(new Event('storage'));
+      } catch {}
+      toast('Please sign in and enter your name and email to continue.');
+    }
     setIsDismissed(true);
     if (onClose) onClose();
   };

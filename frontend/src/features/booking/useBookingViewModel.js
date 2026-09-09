@@ -1625,8 +1625,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const validUserEmail = authData.email && !authData.email.includes('@temp.behold') ? authData.email : '';
       setBookingForm(prev => ({
         ...prev,
-        name: prev.name && prev.name.trim().length > 0 ? prev.name : validUserName,
-        email: prev.email && prev.email.trim().length > 0 ? prev.email : validUserEmail,
+        name: validUserName || (prev.name && prev.name !== 'New User' && !prev.name.includes('Behold User') ? prev.name : ''),
+        email: validUserEmail || (prev.email && !prev.email.includes('@temp.behold') ? prev.email : ''),
         phone: authData.phone || prev.phone || '',
         clientLocationName: prev.clientLocationName || authData.locationName || '',
         clientLatitude: prev.clientLatitude || authData.latitude || '',

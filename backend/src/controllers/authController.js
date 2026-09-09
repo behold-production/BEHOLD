@@ -845,16 +845,22 @@ const AuthController = {
 
       // If this is an OTP login flow, find the user and log them in
       if (isLogin) {
-        const { utmSource, utmCampaign, utmMedium, fbclid } = req.body;
+        const { name: directName, email: directEmail, utmSource, utmCampaign, utmMedium, fbclid } = req.body;
+        const cleanInputName = cleanUserName(directName);
+        const cleanInputEmail = (directEmail && typeof directEmail === 'string' && !directEmail.includes('@temp.behold') && directEmail.includes('@'))
+          ? directEmail.trim().toLowerCase()
+          : '';
+
         let match = await findAnyUserByPhone(phone, portal);
 
         if (!match && portal === 'user') {
           // Auto-register or recover the user if they are using WhatsApp login
-          const tempEmail = `whatsapp_${normalizedPhone}@temp.behold.co.in`;
+          const tempEmail = cleanInputEmail || `whatsapp_${normalizedPhone}@temp.behold.co.in`;
 
           // Check if an existing account with this temp email or phone already exists
           let existingUser = await StorageService.findOne('users', {
             $or: [
+              ...(cleanInputEmail ? [{ email: cleanInputEmail }] : []),
               { email: tempEmail.toLowerCase() },
               { email: `whatsapp_${last10}@temp.behold.co.in` },
               { email: `whatsapp_91${last10}@temp.behold.co.in` },
@@ -868,10 +874,20 @@ const AuthController = {
 
           if (existingUser) {
             try {
-              const updated = await StorageService.update('users', existingUser.id || existingUser._id, {
-                phone: formattedPhone,
-                ...(utmSource && !existingUser.utmSource ? { utmSource, utmCampaign, utmMedium, fbclid } : {})
-              });
+              const profileUpdates = { phone: formattedPhone };
+              if (cleanInputName && (!existingUser.name || existingUser.name === 'New User' || existingUser.name.includes('Behold User'))) {
+                profileUpdates.name = cleanInputName;
+              }
+              if (cleanInputEmail && (!existingUser.email || existingUser.email.includes('@temp.behold'))) {
+                profileUpdates.email = cleanInputEmail;
+              }
+              if (utmSource && !existingUser.utmSource) {
+                profileUpdates.utmSource = utmSource;
+                profileUpdates.utmCampaign = utmCampaign || '';
+                profileUpdates.utmMedium = utmMedium || '';
+                profileUpdates.fbclid = fbclid || '';
+              }
+              const updated = await StorageService.update('users', existingUser.id || existingUser._id, profileUpdates);
               match = { user: updated || existingUser, table: 'users' };
             } catch (uErr) {
               match = { user: existingUser, table: 'users' };
@@ -883,7 +899,7 @@ const AuthController = {
               const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
 
               const newUser = await StorageService.create('users', {
-                name: 'New User',
+                name: cleanInputName || 'New User',
                 email: tempEmail,
                 password: hashedPassword,
                 phone: formattedPhone,
@@ -905,6 +921,7 @@ const AuthController = {
               // Recover user from DB instead of failing
               const fallback = await StorageService.findOne('users', {
                 $or: [
+                  ...(cleanInputEmail ? [{ email: cleanInputEmail }] : []),
                   { email: tempEmail.toLowerCase() },
                   { email: new RegExp(last10, 'i') },
                   { phone: formattedPhone },
@@ -915,11 +932,11 @@ const AuthController = {
               if (fallback) {
                 match = { user: fallback, table: 'users' };
               } else {
-                const uniqueTempEmail = `whatsapp_${normalizedPhone}_${Date.now()}@temp.behold.co.in`;
+                const uniqueTempEmail = cleanInputEmail || `whatsapp_${normalizedPhone}_${Date.now()}@temp.behold.co.in`;
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
                 const retryUser = await StorageService.create('users', {
-                  name: 'New User',
+                  name: cleanInputName || 'New User',
                   email: uniqueTempEmail,
                   password: hashedPassword,
                   phone: formattedPhone,
@@ -933,15 +950,27 @@ const AuthController = {
               }
             }
           }
-        } else if (match && match.table === 'users' && !match.user.utmSource && (utmSource || fbclid)) {
-          try {
-            await StorageService.update('users', match.user.id || match.user._id, {
-              utmSource: utmSource || '',
-              utmCampaign: utmCampaign || '',
-              utmMedium: utmMedium || '',
-              fbclid: fbclid || ''
-            });
-          } catch {}
+        } else if (match && match.table === 'users') {
+          // If existing user has placeholder name/email and user provided real info
+          const userUpdates = {};
+          if (cleanInputName && (!match.user.name || match.user.name === 'New User' || match.user.name.includes('Behold User'))) {
+            userUpdates.name = cleanInputName;
+          }
+          if (cleanInputEmail && (!match.user.email || match.user.email.includes('@temp.behold'))) {
+            userUpdates.email = cleanInputEmail;
+          }
+          if (!match.user.utmSource && (utmSource || fbclid)) {
+            userUpdates.utmSource = utmSource || '';
+            userUpdates.utmCampaign = utmCampaign || '';
+            userUpdates.utmMedium = utmMedium || '';
+            userUpdates.fbclid = fbclid || '';
+          }
+          if (Object.keys(userUpdates).length > 0) {
+            try {
+              const updated = await StorageService.update('users', match.user.id || match.user._id, userUpdates);
+              if (updated) match.user = updated;
+            } catch {}
+          }
         } else if (!match) {
           return res.status(404).json({
             success: false,
@@ -986,10 +1015,19 @@ const AuthController = {
         const { password: _, ...userData } = user;
         const tokens = generateTokens(user, sessionToken);
 
+        const hasRealName = Boolean(userData.name && userData.name !== 'New User' && !userData.name.includes('Behold User') && !userData.name.toLowerCase().includes('test student'));
+        const hasRealEmail = Boolean(userData.email && !userData.email.includes('@temp.behold') && !userData.email.includes('temp.behold.co.in') && userData.email.includes('@'));
+        const isDetailsNeeded = !hasRealName || !hasRealEmail;
+
         return res.status(200).json({
           success: true,
           message: 'OTP verified successfully. Logged in.',
-          data: { user: userData, ...tokens }
+          data: {
+            user: userData,
+            isDetailsNeeded,
+            isNewUser: isDetailsNeeded,
+            ...tokens
+          }
         });
       }
 
