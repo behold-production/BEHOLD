@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const ics = require('ics');
-const { resolveAnyPhone } = require('../utils/phoneUtils');
+const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
 
 /**
  * BEHOLD. — Email Service
@@ -327,9 +327,7 @@ function _buildBookingPayload(user, counsellor, appointment) {
   const realUserEmail = (!isTempEmail && rawUserEmail && rawUserEmail.includes('@')) ? rawUserEmail : '';
 
   const counsellorEmail = csl.email || '—';
-  const userName = (appt.clientName && appt.clientName !== 'New User' && !String(appt.clientName).startsWith('Behold User'))
-    ? appt.clientName
-    : ((usr.name && usr.name !== 'New User' && !String(usr.name).startsWith('Behold User')) ? usr.name : (bookingDetails.name || 'Patient'));
+  const userName = resolveStudentName(appt.clientName, usr.name, bookingDetails.name) || 'Student';
   
   const counsellorName = csl.name || appt.counsellorName || 'Psychologist';
   

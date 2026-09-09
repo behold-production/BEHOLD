@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { normalizePhoneWithCountryCode, cleanUserName } = require('../utils/phoneUtils');
 
 /**
  * BEHOLD. — WhatsApp Notification Service
@@ -172,7 +172,7 @@ class WhatsAppService {
       counsellorName = 'Psychologist',
       date           = 'N/A',
       time           = 'N/A',
-      mode           = '',
+      mode           = 'ONLINE',
       duration       = '1 Hour (60 Mins)',
       bookingId      = '',
       reason         = '',
@@ -181,24 +181,13 @@ class WhatsAppService {
       oldTime        = ''
     } = details;
 
-    const modeLabel = mode === 'ONLINE' ? 'Online' : mode === 'OFFLINE' ? 'In-Person' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online');
+    const isOnline = !mode || mode === 'ONLINE';
+    const modeLabel = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
     const bookingUrl = 'https://www.behold.co.in/profile?tab=booked';
     const catalogUrl = 'https://www.behold.co.in/advisors';
-    const finalMeetLink = meetLink || bookingUrl;
+    const finalMeetLink = (isOnline && meetLink) ? meetLink : (isOnline ? bookingUrl : '');
 
-    // Helper to sanitize student name and avoid placeholder artifacts like "New User" or "Student"
-    const isGenericPlaceholder = (name) => {
-      if (!name || typeof name !== 'string') return true;
-      const lower = name.trim().toLowerCase();
-      return (
-        !lower ||
-        ['new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there', 'behold user'].includes(lower) ||
-        lower.startsWith('behold user') ||
-        lower.startsWith('user_')
-      );
-    };
-
-    const cleanStudentName = isGenericPlaceholder(studentName) ? '' : studentName.trim();
+    const cleanStudentName = cleanUserName(studentName);
     const greeting = cleanStudentName ? `Hi *${cleanStudentName}* 👋` : `Hi there 👋`;
     const formalGreeting = cleanStudentName ? `Hi *${cleanStudentName}*,` : `Hi there,`;
 
@@ -220,8 +209,9 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          `🔗 *Meeting Link:* ${finalMeetLink}\n\n` +
-          `Please join a few minutes before your scheduled time and ensure you have a quiet and private space for the session.\n\n` +
+          (isOnline
+            ? `🔗 *Meeting Link:* ${finalMeetLink}\n\nPlease join a few minutes before your scheduled time and ensure you have a quiet and private space for the session.\n\n`
+            : `📍 Please be ready at your scheduled time and location.\n\n`) +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `Thank you for choosing BEHOLD.. We look forward to supporting you.`;
         break;
@@ -272,7 +262,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          `🔗 *Meeting Link:* ${finalMeetLink}\n\n` +
+          (isOnline && finalMeetLink ? `🔗 *Meeting Link:* ${finalMeetLink}\n\n` : '') +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `Please make sure you are available at the new scheduled time.`;
         break;
@@ -289,7 +279,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          `🔗 *Meeting Link:* ${finalMeetLink}\n\n` +
+          (isOnline && finalMeetLink ? `🔗 *Meeting Link:* ${finalMeetLink}\n\n` : '') +
           `Please be ready a few minutes before your scheduled time.\n\n` +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `See you soon!`;
@@ -306,7 +296,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          `🔗 *Join Session:* ${finalMeetLink}\n\n` +
+          (isOnline && finalMeetLink ? `🔗 *Join Session:* ${finalMeetLink}\n\n` : '') +
           `Please join a few minutes early and make sure you have a quiet and private space for your session.\n\n` +
           `BEHOLD.`;
         break;
@@ -397,18 +387,7 @@ class WhatsAppService {
       comment        = ''
     } = details;
 
-    const isGenericPlaceholder = (name) => {
-      if (!name || typeof name !== 'string') return true;
-      const lower = name.trim().toLowerCase();
-      return (
-        !lower ||
-        ['new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there', 'behold user'].includes(lower) ||
-        lower.startsWith('behold user') ||
-        lower.startsWith('user_')
-      );
-    };
-
-    const cleanStudentName = isGenericPlaceholder(studentName) ? 'A client' : studentName.trim();
+    const cleanStudentName = cleanUserName(studentName) || 'A client';
     const stars = '⭐'.repeat(Math.max(1, Math.min(5, Number(rating))));
     const profileUrl = 'https://www.behold.co.in/counsellor';
 

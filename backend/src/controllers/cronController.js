@@ -1,6 +1,7 @@
 const StorageService = require('../services/storageService');
 const WhatsAppService = require('../services/whatsappService');
 const EmailService = require('../services/emailService');
+const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
 
 exports.sendDailyReminders = async (req, res) => {
   try {
@@ -12,7 +13,10 @@ exports.sendDailyReminders = async (req, res) => {
       isDeleted: false
     });
     
-    const appointments = allAppointments.filter(a => a.status === 'PENDING' || a.status === 'APPROVED');
+    // Include PENDING, APPROVED, and CONFIRMED (paid) appointments
+    const appointments = allAppointments.filter(
+      (a) => a.status === 'CONFIRMED' || a.status === 'APPROVED' || a.status === 'PENDING'
+    );
 
     let waSentCount = 0;
     let emailSentCount = 0;
@@ -20,19 +24,24 @@ exports.sendDailyReminders = async (req, res) => {
     for (const appt of appointments) {
       const student = await StorageService.findById('users', appt.userId);
       const counsellor = await StorageService.findById('counsellors', appt.counsellorId);
+      const studentPhone = resolveAnyPhone(appt.clientPhone, appt, student);
+      const sName = resolveStudentName(appt.clientName, student?.name, appt);
       
       const details = {
         date: appt.date,
         time: appt.time,
-        mode: appt.mode,
+        mode: appt.mode || 'ONLINE',
+        duration: appt.duration || '1 Hour (60 Mins)',
+        bookingId: appt.id || '',
         meetLink: appt.meetLink || '',
-        studentName: student ? student.name : 'Student',
-        counsellorName: counsellor ? counsellor.name : 'Counsellor'
+        studentName: sName,
+        counsellorName: counsellor ? counsellor.name : 'Psychologist',
+        recipientRole: 'user'
       };
 
       // WhatsApp reminder (Student/User ONLY)
-      if (student && student.phone) {
-        await WhatsAppService.sendDayOfReminder(student.phone, details).catch(err => console.error(err));
+      if (studentPhone) {
+        await WhatsAppService.sendDayOfReminder(studentPhone, details).catch(err => console.error('[Cron WhatsApp Reminder Error]:', err));
         waSentCount++;
       }
 
@@ -54,3 +63,4 @@ exports.sendDailyReminders = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error while sending reminders.' });
   }
 };
+

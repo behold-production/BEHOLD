@@ -4,17 +4,17 @@ const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
-const { resolveAnyPhone, normalizePhoneWithCountryCode } = require('../utils/phoneUtils');
+const { resolveAnyPhone, normalizePhoneWithCountryCode, resolveStudentName } = require('../utils/phoneUtils');
 const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
 async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackClientPhone = '') {
   try {
-    const user = await StorageService.findById('users', appointment.userId);
-    const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
+    const user = appointment?.userId ? await StorageService.findById('users', appointment.userId) : null;
+    const counsellor = appointment?.counsellorId ? await StorageService.findById('counsellors', appointment.counsellorId) : null;
 
     const targetUserPhone = resolveAnyPhone(
-      fallbackClientPhone,
       appointment?.clientPhone,
+      fallbackClientPhone,
       reqBody?.clientPhone,
       reqBody?.bookingDetails?.clientPhone,
       reqBody?.phone,
@@ -22,45 +22,48 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
       user
     );
 
-    const candidateName = appointment.clientName || reqBody?.clientName || reqBody?.bookingDetails?.clientName || user?.name || '';
-    const isGeneric = (n) => !n || ['new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there'].includes(String(n).trim().toLowerCase()) || String(n).toLowerCase().startsWith('behold user');
-    const sName = isGeneric(candidateName) ? '' : String(candidateName).trim();
+    const sName = resolveStudentName(
+      appointment?.clientName,
+      reqBody?.clientName,
+      reqBody?.bookingDetails?.clientName,
+      user?.name
+    );
     const studentDisplay = sName || 'A student';
     const cName = counsellor?.name || 'Psychologist';
-    const date = appointment.date;
-    const time = appointment.time;
-    const mode = appointment.mode;
-    const netTotal = appointment.amountPaid || 0;
-    const finalMeetLink = appointment.meetLink || '';
+    const date = appointment?.date || 'N/A';
+    const time = appointment?.time || 'N/A';
+    const mode = appointment?.mode || 'ONLINE';
+    const netTotal = appointment?.amountPaid || 0;
+    const finalMeetLink = appointment?.meetLink || '';
+    const apptDuration = appointment?.duration || reqBody?.duration || reqBody?.bookingDetails?.duration || '1 Hour (60 Mins)';
+    const apptBookingId = appointment?.id || appointment?._id || `app_${Date.now()}`;
 
-    console.log(`[Payment Booking WhatsApp Trigger] Target User Phone: "${targetUserPhone}" | Student: "${sName || 'Anonymous'}" | Counsellor: "${cName}"`);
+    console.log(`[Payment Booking WhatsApp Trigger] Target Phone: "${targetUserPhone}" | Student: "${sName || 'Anonymous'}" | Counsellor: "${cName}" | Date: ${date} ${time}`);
 
     await Promise.allSettled([
-      StorageService.create('notifications', {
+      appointment?.counsellorId ? StorageService.create('notifications', {
         recipientId: appointment.counsellorId,
         recipientRole: 'counsellor',
         title: 'New Paid Appointment Request',
         message: `${studentDisplay} booked an appointment on ${date} at ${time}. Payment confirmed.`,
         type: 'appointment_created',
         isRead: false
-      }),
-      StorageService.create('notifications', {
+      }) : Promise.resolve(),
+      appointment?.userId ? StorageService.create('notifications', {
         recipientId: appointment.userId,
         recipientRole: 'user',
         title: 'Payment Confirmed & Booking Submitted',
         message: `Your booking with ${cName} on ${date} at ${time} is confirmed.`,
         type: 'appointment_created',
         isRead: false
-      }),
+      }) : Promise.resolve(),
       user && counsellor ? EmailService.sendAppointmentApproved({ user, counsellor, appointment }) : Promise.resolve(),
-      user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment, counsellor, amount: netTotal, transactionId: appointment.razorpayPaymentId }) : Promise.resolve()
+      user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment, counsellor, amount: netTotal, transactionId: appointment?.razorpayPaymentId }) : Promise.resolve()
     ]);
 
-    // Send WhatsApp alert to Student/User ONLY
+    // Send WhatsApp alert to Student/User
     if (targetUserPhone) {
-      const apptDuration = appointment?.duration || reqBody?.duration || reqBody?.bookingDetails?.duration || '1 Hour (60 Mins)';
-      const apptBookingId = appointment.id || appointment._id || `app_${Date.now()}`;
-      await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
+      const waRes = await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
         studentName: sName,
         counsellorName: cName,
         date,
@@ -70,7 +73,13 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
         bookingId: apptBookingId,
         meetLink: finalMeetLink,
         recipientRole: 'user'
-      }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+      }).catch((err) => {
+        console.error('[WhatsApp User Alert Error]:', err);
+        return { success: false, error: err.message };
+      });
+      console.log(`[WhatsApp Booking Alert Response]:`, JSON.stringify(waRes));
+    } else {
+      console.warn(`[WhatsApp Booking Alert Skipped]: No valid phone found for appointment ${appointment?.id}`);
     }
   } catch (err) {
     console.error('[dispatchBookingNotifications Error]:', err);
@@ -410,15 +419,59 @@ const PaymentController = {
       if (existingAppt) {
         const updateFields = {};
         if (existingAppt.paymentStatus !== 'PAID') updateFields.paymentStatus = 'PAID';
+        if (existingAppt.status !== 'CONFIRMED' && existingAppt.status !== 'APPROVED') updateFields.status = 'CONFIRMED';
         if (razorpay_order_id && !existingAppt.razorpayOrderId) updateFields.razorpayOrderId = razorpay_order_id;
         if (razorpay_payment_id && !existingAppt.razorpayPaymentId) updateFields.razorpayPaymentId = razorpay_payment_id;
         if (userId && !existingAppt.userId) updateFields.userId = userId;
+        if (clientPhone && !existingAppt.clientPhone) updateFields.clientPhone = normalizePhoneWithCountryCode(clientPhone) || clientPhone;
+        if (clientName && !existingAppt.clientName) updateFields.clientName = clientName;
+        if (clientEmail && !existingAppt.clientEmail) updateFields.clientEmail = clientEmail;
+
+        if (mode === 'ONLINE' && !existingAppt.meetLink) {
+          try {
+            const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+            const genLink = await generateSessionMeetingLink({
+              counsellor: await StorageService.findById('counsellors', existingAppt.counsellorId),
+              user: userId ? await StorageService.findById('users', userId) : null,
+              date: existingAppt.date,
+              time: existingAppt.time,
+              service: existingAppt.service || 'counselling',
+              appointmentId: existingAppt.id
+            });
+            if (genLink) updateFields.meetLink = genLink;
+          } catch {}
+        }
 
         if (Object.keys(updateFields).length > 0) {
           await StorageService.update('appointments', existingAppt.id, updateFields);
           Object.assign(existingAppt, updateFields);
         }
         cleanDuplicateAppointments().catch(() => {});
+
+        // Keep matching session in sync
+        try {
+          const sess = await StorageService.findOne('sessions', { appointmentId: existingAppt.id });
+          if (sess) {
+            await StorageService.update('sessions', sess.id, { status: 'CONFIRMED', meetLink: existingAppt.meetLink || sess.meetLink });
+          } else {
+            await StorageService.create('sessions', {
+              appointmentId: existingAppt.id,
+              userId: existingAppt.userId,
+              counsellorId: existingAppt.counsellorId,
+              date: existingAppt.date,
+              time: existingAppt.time,
+              duration: existingAppt.duration || '1 Hour (60 Mins)',
+              mode: existingAppt.mode || mode || 'ONLINE',
+              meetLink: existingAppt.meetLink || '',
+              status: 'CONFIRMED',
+              notes: existingAppt.notes || '',
+              feedback: '',
+              clientLocationName: existingAppt.clientLocationName || '',
+              clientLatitude: Number(existingAppt.clientLatitude) || 0,
+              clientLongitude: Number(existingAppt.clientLongitude) || 0
+            });
+          }
+        } catch {}
 
         // Dispatch notifications & WhatsApp alert for existing pre-created appointment
         await dispatchBookingNotifications(existingAppt, req.body, clientPhone);
@@ -704,15 +757,44 @@ const PaymentController = {
         const existingAppointment = filterOr.length > 0 ? await StorageService.findOne('appointments', { $or: filterOr }) : null;
 
         if (existingAppointment) {
-          if (existingAppointment.paymentStatus !== 'PAID') {
-            await StorageService.update('appointments', existingAppointment.id, {
-              paymentStatus: 'PAID',
-              razorpayPaymentId: paymentId || existingAppointment.razorpayPaymentId,
-              razorpayOrderId: orderId || existingAppointment.razorpayOrderId
-            });
-            console.log(`[Razorpay Webhook]: Updated appointment ${existingAppointment.id} paymentStatus to PAID`);
+          const updateWhFields = {
+            paymentStatus: 'PAID',
+            status: 'CONFIRMED',
+            razorpayPaymentId: paymentId || existingAppointment.razorpayPaymentId,
+            razorpayOrderId: orderId || existingAppointment.razorpayOrderId
+          };
+
+          if (existingAppointment.mode === 'ONLINE' && !existingAppointment.meetLink) {
+            try {
+              const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+              const genLink = await generateSessionMeetingLink({
+                counsellor: await StorageService.findById('counsellors', existingAppointment.counsellorId),
+                user: existingAppointment.userId ? await StorageService.findById('users', existingAppointment.userId) : null,
+                date: existingAppointment.date,
+                time: existingAppointment.time,
+                service: existingAppointment.service || 'counselling',
+                appointmentId: existingAppointment.id
+              });
+              if (genLink) updateWhFields.meetLink = genLink;
+            } catch {}
           }
+
+          await StorageService.update('appointments', existingAppointment.id, updateWhFields);
+          Object.assign(existingAppointment, updateWhFields);
+          console.log(`[Razorpay Webhook]: Updated appointment ${existingAppointment.id} paymentStatus to PAID and status to CONFIRMED`);
+
+          // Sync matching session
+          try {
+            const sess = await StorageService.findOne('sessions', { appointmentId: existingAppointment.id });
+            if (sess) {
+              await StorageService.update('sessions', sess.id, { status: 'CONFIRMED', meetLink: existingAppointment.meetLink || sess.meetLink });
+            }
+          } catch {}
+
           cleanDuplicateAppointments().catch(() => {});
+
+          // Trigger notifications & WhatsApp alert
+          await dispatchBookingNotifications(existingAppointment, {}, existingAppointment.clientPhone);
         } else if (notes.counsellorId && notes.date && notes.time && notes.mode) {
           const validation = await validateBookingDetails(
             notes.counsellorId,
@@ -744,6 +826,8 @@ const PaymentController = {
               appointmentId: `app_wh_${Date.now()}`
             }) : '';
 
+            const normWhPhone = normalizePhoneWithCountryCode(notes.clientPhone);
+
             const newBooking = await StorageService.create('appointments', {
               userId: notes.userId || '',
               counsellorId: notes.counsellorId,
@@ -765,7 +849,7 @@ const PaymentController = {
               couponCode: notes.couponCode || '',
               clientName: notes.clientName || '',
               clientEmail: notes.clientEmail || '',
-              clientPhone: notes.clientPhone || '',
+              clientPhone: normWhPhone || notes.clientPhone || '',
               clientLocationName: notes.clientLocationName || '',
               clientLatitude: Number(notes.clientLatitude) || 0,
               clientLongitude: Number(notes.clientLongitude) || 0,
@@ -777,7 +861,7 @@ const PaymentController = {
               markIntroductoryUsed({
                 userId: notes.userId || '',
                 email: notes.clientEmail || '',
-                phone: notes.clientPhone || ''
+                phone: normWhPhone || notes.clientPhone || ''
               }).catch(() => {});
             }
 
@@ -805,16 +889,8 @@ const PaymentController = {
               console.error('[Webhook Session Create Error]:', whSessErr);
             }
 
-            if (notes.counsellorId) {
-              await StorageService.create('notifications', {
-                recipientId: notes.counsellorId,
-                recipientRole: 'counsellor',
-                title: 'New Paid Appointment Request',
-                message: `Appointment booked on ${notes.date} at ${notes.time}. Payment ₹${netTotal} confirmed via Webhook.`,
-                type: 'appointment_created',
-                isRead: false
-              });
-            }
+            // Dispatch full notifications & WhatsApp alert to user
+            await dispatchBookingNotifications(newBooking, {}, notes.clientPhone);
           }
         }
       } else if (event === 'refund.processed' || event === 'refund.created') {

@@ -490,25 +490,30 @@ If you have questions or would like to reapply with updated information, please 
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
-      const [student, counsellor] = await Promise.all([
-        StorageService.findById('users', appointment.userId),
-        StorageService.findById('counsellors', appointment.counsellorId)
-      ]);
+      const student = await StorageService.findById('users', appointment.userId);
+      const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
-      const WhatsAppService = require('../services/whatsappService');
+      const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
       let waResults = { student: false, counsellor: false };
+
+      const studentPhone = resolveAnyPhone(appointment.clientPhone, appointment, student);
+      const sName = resolveStudentName(appointment.clientName, student?.name);
 
       const reminderDetails = {
         date: appointment.date,
         time: appointment.time,
-        mode: appointment.mode,
-        studentName: student?.name || 'Student',
-        counsellorName: counsellor?.name || 'Counsellor'
+        mode: appointment.mode || 'ONLINE',
+        duration: appointment.duration || '1 Hour (60 Mins)',
+        bookingId: appointment.id || '',
+        meetLink: appointment.meetLink || '',
+        studentName: sName,
+        counsellorName: counsellor?.name || 'Psychologist',
+        recipientRole: 'user'
       };
 
-      if (student && student.phone) {
+      if (studentPhone) {
         try {
-          await WhatsAppService.sendBookingAlert(student.phone, 'approved', reminderDetails);
+          await WhatsAppService.sendBookingAlert(studentPhone, 'approved', reminderDetails);
           waResults.student = true;
         } catch (err) {
           console.warn('[WhatsApp Reminder Error - Student]:', err.message);
@@ -1712,7 +1717,23 @@ If you have questions or would like to reapply with updated information, please 
         return res.status(400).json({ success: false, message: 'UserId, advisorId, date, and time are required' });
       }
 
-      const counsellor = await StorageService.findById('users', advisorId);
+      const counsellor = (await StorageService.findById('counsellors', advisorId)) || (await StorageService.findById('users', advisorId));
+      const student = await StorageService.findById('users', userId);
+
+      let finalMeetLink = meetLink || (mode === 'ONLINE' && counsellor ? counsellor.defaultMeetLink || '' : '');
+      if (mode === 'ONLINE' && !finalMeetLink) {
+        try {
+          const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+          finalMeetLink = await generateSessionMeetingLink({
+            counsellor,
+            user: student,
+            date,
+            time,
+            service: service || 'counselling',
+            appointmentId: `admin_app_${Date.now()}`
+          }).catch(() => '');
+        } catch {}
+      }
 
       const newAppointment = await StorageService.create('appointments', {
         userId,
@@ -1721,12 +1742,35 @@ If you have questions or would like to reapply with updated information, please 
         mode: mode || 'ONLINE',
         date,
         time,
-        status: status === 'CONFIRMED' ? 'APPROVED' : status || 'PENDING',
-        meetLink: meetLink || (mode === 'ONLINE' && counsellor ? counsellor.defaultMeetLink || '' : ''),
+        duration: '1 Hour (60 Mins)',
+        status: status === 'CONFIRMED' ? 'APPROVED' : (status || 'APPROVED'),
+        meetLink: finalMeetLink,
+        clientName: student?.name || '',
+        clientEmail: student?.email || '',
+        clientPhone: student?.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
         clientLongitude: Number(clientLongitude) || 0
       });
+
+      // Send WhatsApp confirmation to user
+      const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
+      const studentPhone = resolveAnyPhone(student?.phone, student);
+      const sName = resolveStudentName(student?.name);
+      if (studentPhone) {
+        const WhatsAppService = require('../services/whatsappService');
+        WhatsAppService.sendBookingAlert(studentPhone, 'approved', {
+          studentName: sName,
+          counsellorName: counsellor?.name || 'Psychologist',
+          date,
+          time,
+          mode: mode || 'ONLINE',
+          duration: '1 Hour (60 Mins)',
+          bookingId: newAppointment.id,
+          meetLink: finalMeetLink,
+          recipientRole: 'user'
+        }).catch(err => console.error('[Admin WhatsApp Booking Alert Error]:', err));
+      }
 
       res.status(201).json({
         success: true,

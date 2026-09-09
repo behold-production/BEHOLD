@@ -1362,6 +1362,16 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
       setPaymentStepText("Initializing Razorpay checkout...");
 
+      const rawPhone = bookingForm.phone || user?.phone || '';
+      const cleanPhone = rawPhone.replace(/[^0-9]/g, '').slice(-10);
+      const resolvedClientName = (bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User'))
+        ? bookingForm.name
+        : ((user?.name && user.name !== 'New User' && !user.name.includes('Behold User')) ? user.name : '');
+      const resolvedClientEmail = (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
+        ? bookingForm.email
+        : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : '');
+      const resolvedClientPhone = cleanPhone || rawPhone;
+
       // 1. Create Razorpay order via backend
       const orderRes = await ApiService.createOrder({
         amount: netTotal,
@@ -1375,6 +1385,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         mode: bookingMode,
         service: bookingService,
         couponCode: couponInput,
+        clientName: resolvedClientName,
+        clientEmail: resolvedClientEmail,
+        clientPhone: resolvedClientPhone,
         clientLocationName: bookingForm.clientLocationName || '',
         clientLatitude: Number(bookingForm.clientLatitude) || 0,
         clientLongitude: Number(bookingForm.clientLongitude) || 0,
@@ -1394,9 +1407,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const rawKey = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '');
       const keyId = (rawKey || '').trim().replace(/^["']|["']$/g, '');
 
-      const rawPhone = bookingForm.phone || user?.phone || '';
-      const cleanPhone = rawPhone.replace(/[^0-9]/g, '').slice(-10);
-
       // 2. Open Razorpay checkout modal
       const options = {
         key: keyId,
@@ -1405,6 +1415,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         name: "BEHOLD.",
         description: `${bookingService.toUpperCase()} Consultation with ${selectedAdvisor?.name || 'Psychologist'}`,
         order_id: orderId,
+        prefill: {
+          name: resolvedClientName || user?.name || '',
+          email: resolvedClientEmail || user?.email || '',
+          contact: resolvedClientPhone || user?.phone || ''
+        },
         handler: async function (response) {
           try {
             setPaymentStepText("Verifying payment signature with server...");

@@ -2,8 +2,7 @@ const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const WhatsAppService = require('../services/whatsappService');
-const EmailService = require('../services/emailService');
-const { resolveAnyPhone } = require('../utils/phoneUtils');
+const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
 const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
 const AppointmentController = {
@@ -218,16 +217,13 @@ const AppointmentController = {
 
       // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
-        const userPhone = resolveAnyPhone(user, newAppointment, clientPhone);
+        const userPhone = resolveAnyPhone(clientPhone, newAppointment.clientPhone, newAppointment, user);
         const counsellorPhone = resolveAnyPhone(counsellor);
-
-        const sName = (clientName && clientName !== 'New User' && !String(clientName).startsWith('Behold User'))
-          ? clientName
-          : ((user?.name && user.name !== 'New User' && !String(user.name).startsWith('Behold User')) ? user.name : '');
+        const sName = resolveStudentName(clientName, newAppointment.clientName, user?.name);
         const cName = counsellor?.name || 'Psychologist';
         const studentDisplay = sName || 'A student';
 
-        console.log(`[Create Booking WhatsApp] User Phone: "${userPhone}" | Counsellor Phone: "${counsellorPhone}"`);
+        console.log(`[Create Booking WhatsApp] Target User Phone: "${userPhone}" | Counsellor Phone: "${counsellorPhone}"`);
 
         await Promise.allSettled([
           StorageService.create('notifications', {
@@ -250,7 +246,20 @@ const AppointmentController = {
         ]);
 
         if (userPhone) {
-          await WhatsAppService.sendBookingAlert(userPhone, 'created', { studentName: sName, counsellorName: cName, date, time, recipientRole: 'user' }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+          const action = isCouponFree ? 'approved' : 'created';
+          await WhatsAppService.sendBookingAlert(userPhone, action, {
+            studentName: sName,
+            counsellorName: cName,
+            date,
+            time,
+            mode: newAppointment.mode || mode || 'ONLINE',
+            duration: sessionDurationStr,
+            bookingId: newAppointment.id || '',
+            meetLink: finalMeetLink,
+            recipientRole: 'user'
+          }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+        } else {
+          console.warn(`[Create Booking WhatsApp] Skipped: No phone found for appointment ${newAppointment.id}`);
         }
       } catch (notifErr) {
         console.error('[Notification Task Error in createAppointment]:', notifErr);
@@ -331,8 +340,9 @@ const AppointmentController = {
 
       // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
-        const userPhone = resolveAnyPhone(user, appointment);
+        const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, user);
         const counsellorPhone = resolveAnyPhone(counsellor);
+        const sName = resolveStudentName(appointment.clientName, user?.name);
 
         await Promise.allSettled([
           StorageService.create('notifications', {
@@ -347,12 +357,32 @@ const AppointmentController = {
             recipientId: appointment.counsellorId,
             recipientRole: 'counsellor',
             title: 'Appointment Approved',
-            message: `You approved the appointment request from ${user ? user.name : 'Student'} on ${appointment.date}.`,
+            message: `You approved the appointment request from ${sName || 'Student'} on ${appointment.date}.`,
             type: 'appointment_approved',
             isRead: false
           }),
-          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, mode: appointment.mode, meetLink, recipientRole: 'user' }) : Promise.resolve(),
-          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'approved', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Your Counsellor', date: appointment.date, time: appointment.time, mode: appointment.mode, meetLink, recipientRole: 'counsellor' }) : Promise.resolve(),
+          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'approved', {
+            studentName: sName,
+            counsellorName: counsellor ? counsellor.name : 'Psychologist',
+            date: appointment.date,
+            time: appointment.time,
+            mode: appointment.mode || 'ONLINE',
+            duration: appointment.duration || '1 Hour (60 Mins)',
+            bookingId: appointment.id || '',
+            meetLink,
+            recipientRole: 'user'
+          }) : Promise.resolve(),
+          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'approved', {
+            studentName: sName,
+            counsellorName: counsellor ? counsellor.name : 'Psychologist',
+            date: appointment.date,
+            time: appointment.time,
+            mode: appointment.mode || 'ONLINE',
+            duration: appointment.duration || '1 Hour (60 Mins)',
+            bookingId: appointment.id || '',
+            meetLink,
+            recipientRole: 'counsellor'
+          }) : Promise.resolve(),
           user ? EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -407,7 +437,13 @@ const AppointmentController = {
             type: 'appointment_rejected',
             isRead: false
           }),
-          targetUserPhone ? WhatsAppService.sendBookingAlert(targetUserPhone, 'rejected', { studentName: user ? user.name : 'Student', counsellorName: counsellor ? counsellor.name : 'Psychologist', date: appointment.date, time: appointment.time, reason: reason || '' }) : Promise.resolve(),
+          targetUserPhone ? WhatsAppService.sendBookingAlert(targetUserPhone, 'rejected', {
+            studentName: resolveStudentName(appointment.clientName, user?.name),
+            counsellorName: counsellor ? counsellor.name : 'Psychologist',
+            date: appointment.date,
+            time: appointment.time,
+            reason: reason || ''
+          }) : Promise.resolve(),
           user ? EmailService.sendAppointmentRejected({ user, counsellor, appointment, reason }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -565,11 +601,21 @@ const AppointmentController = {
         const user = await StorageService.findById('users', appointment.userId);
         const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
+        const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, user);
+        const sName = resolveStudentName(appointment.clientName, user?.name);
+
         const details = {
-          studentName: user ? user.name : 'Student',
-          counsellorName: counsellor ? counsellor.name : 'Counsellor',
+          studentName: sName,
+          counsellorName: counsellor ? counsellor.name : 'Psychologist',
           date,
-          time
+          time,
+          oldDate: appointment.date,
+          oldTime: appointment.time,
+          mode: appointment.mode || 'ONLINE',
+          duration: appointment.duration || '1 Hour (60 Mins)',
+          bookingId: appointment.id || '',
+          meetLink: appointment.meetLink || '',
+          recipientRole: 'user'
         };
 
         await Promise.allSettled([
@@ -581,7 +627,7 @@ const AppointmentController = {
             type: 'appointment_rescheduled',
             isRead: false
           }),
-          user && user.phone ? WhatsAppService.sendBookingAlert(user.phone, 'rescheduled', details) : Promise.resolve(),
+          userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'rescheduled', details) : Promise.resolve(),
           user ? EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: { ...appointment, date, time } }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -688,15 +734,21 @@ const AppointmentController = {
         const user = await StorageService.findById('users', appointment.userId);
         const counsellor = await StorageService.findById('counsellors', appointment.counsellorId);
 
+        const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, user);
+        const sName = resolveStudentName(appointment.clientName, user?.name);
+
         const details = {
-          studentName: user ? user.name : 'Student',
-          counsellorName: counsellor ? counsellor.name : 'Counsellor',
+          studentName: sName,
+          counsellorName: counsellor ? counsellor.name : 'Psychologist',
           date: appointment.date,
           time: appointment.time,
-          reason: reason || 'Cancelled'
+          mode: appointment.mode || 'ONLINE',
+          duration: appointment.duration || '1 Hour (60 Mins)',
+          bookingId: appointment.id || '',
+          reason: reason || 'Cancelled upon request',
+          recipientRole: 'user'
         };
 
-        const userPhone = resolveAnyPhone(user, appointment);
         const isPsychologist = req.user && (req.user.role === 'PSYCHOLOGIST' || req.user.role === 'COUNSELLOR');
         const cancelAction = isPsychologist ? 'psychologist_cancelled' : 'cancelled';
 
@@ -749,17 +801,21 @@ const AppointmentController = {
       if (meetLink) {
         const meetUser = await StorageService.findById('users', appointment.userId);
         const meetCounsellor = await StorageService.findById('counsellors', appointment.counsellorId);
-        const userPhone = meetUser?.phone || appointment.clientPhone;
+        const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, meetUser);
+        const sName = resolveStudentName(appointment.clientName, meetUser?.name);
         
         if (meetUser) {
           EmailService.sendMeetLinkAdded({ user: meetUser, counsellor: meetCounsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email MeetLink Error]:', err));
         }
         if (userPhone) {
           WhatsAppService.sendBookingAlert(userPhone, 'approved', {
-            studentName: meetUser ? meetUser.name : 'Student',
+            studentName: sName,
             counsellorName: meetCounsellor ? meetCounsellor.name : 'Psychologist',
             date: appointment.date,
             time: appointment.time,
+            mode: appointment.mode || 'ONLINE',
+            duration: appointment.duration || '1 Hour (60 Mins)',
+            bookingId: appointment.id || '',
             meetLink,
             recipientRole: 'user'
           }).catch(err => console.error('[WhatsApp MeetLink Error]:', err));
@@ -860,7 +916,7 @@ const AppointmentController = {
         const userPhone = resolveAnyPhone(user, appointment);
         if (userPhone) {
           await WhatsAppService.sendSessionCompleted(userPhone, {
-            studentName: user ? user.name : 'Student',
+            studentName: resolveStudentName(appointment.clientName, user?.name),
             counsellorName: counsellor ? counsellor.name : 'Psychologist',
             date: appointment.date,
             time: appointment.time,
