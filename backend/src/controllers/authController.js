@@ -15,6 +15,13 @@ function buildEmailQuery(email) {
   return { email: { $regex: new RegExp(`^${escaped}$`, 'i') } };
 }
 
+const getTableForRole = (role) => {
+  const r = (role || '').toLowerCase();
+  if (r === 'admin' || r === 'super_admin' || r === 'sub_admin') return 'admins';
+  if (r === 'counsellor' || r === 'psychologist') return 'counsellors';
+  return 'users';
+};
+
 const generateTokens = (user, sessionToken = '') => {
   const sess = sessionToken || user.sessionToken || '';
   const payload = { id: user.id, email: user.email, role: user.role, sessionToken: sess };
@@ -484,10 +491,8 @@ const AuthController = {
         );
 
         // Find user
-        let userRecord = null;
-        if (decoded.role === 'admin') userRecord = await StorageService.findById('admins', decoded.id);
-        else if (decoded.role === 'counsellor') userRecord = await StorageService.findById('counsellors', decoded.id);
-        else userRecord = await StorageService.findById('users', decoded.id);
+        const userTable = getTableForRole(decoded.role);
+        const userRecord = await StorageService.findById(userTable, decoded.id);
 
         if (!userRecord) {
           return res.status(401).json({ success: false, message: 'User not found' });
@@ -719,9 +724,7 @@ const AuthController = {
         return res.status(400).json({ success: false, message: 'Current and new passwords are required' });
       }
 
-      let table = 'users';
-      if (role === 'admin') table = 'admins';
-      else if (role === 'counsellor') table = 'counsellors';
+      const table = getTableForRole(role);
 
       const user = await StorageService.findById(table, id);
       if (!user) {
@@ -1059,7 +1062,7 @@ const AuthController = {
   async logout(req, res, next) {
     if (req.user && req.user.id) {
       try {
-        const table = req.user.role === 'admin' ? 'admins' : (req.user.role === 'counsellor' || req.user.role === 'psychologist' ? 'counsellors' : 'users');
+        const table = getTableForRole(req.user.role);
         await StorageService.update(table, req.user.id, { sessionToken: '' });
         invalidateSessionCache(req.user.id, req.user.role);
       } catch (e) {}

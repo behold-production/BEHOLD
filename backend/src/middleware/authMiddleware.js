@@ -5,9 +5,17 @@ const StorageService = require('../services/storageService');
 const sessionCache = new Map();
 const SESSION_CACHE_TTL = 30 * 1000; // 30 seconds local cache for high throughput
 
+const normalizeRoleForSession = (role) => {
+  const r = (role || '').toLowerCase();
+  if (r === 'admin' || r === 'super_admin' || r === 'sub_admin') return 'admin';
+  if (r === 'counsellor' || r === 'psychologist') return 'counsellor';
+  return 'user';
+};
+
 const getActiveSessionToken = async (userId, role) => {
   if (!userId) return null;
-  const cacheKey = `${role || 'user'}_${userId}`;
+  const normalizedRole = normalizeRoleForSession(role);
+  const cacheKey = `${normalizedRole}_${userId}`;
   const cached = sessionCache.get(cacheKey);
   const now = Date.now();
 
@@ -16,7 +24,7 @@ const getActiveSessionToken = async (userId, role) => {
   }
 
   try {
-    const table = role === 'admin' ? 'admins' : (role === 'counsellor' || role === 'psychologist' ? 'counsellors' : 'users');
+    const table = normalizedRole === 'admin' ? 'admins' : (normalizedRole === 'counsellor' ? 'counsellors' : 'users');
     const user = await StorageService.findById(table, userId);
     if (user && user.sessionToken) {
       sessionCache.set(cacheKey, { sessionToken: user.sessionToken, timestamp: now });
@@ -28,13 +36,15 @@ const getActiveSessionToken = async (userId, role) => {
 
 const updateActiveSessionCache = (userId, role, sessionToken) => {
   if (!userId) return;
-  const cacheKey = `${role || 'user'}_${userId}`;
+  const normalizedRole = normalizeRoleForSession(role);
+  const cacheKey = `${normalizedRole}_${userId}`;
   sessionCache.set(cacheKey, { sessionToken, timestamp: Date.now() });
 };
 
 const invalidateSessionCache = (userId, role) => {
   if (!userId) return;
-  const cacheKey = `${role || 'user'}_${userId}`;
+  const normalizedRole = normalizeRoleForSession(role);
+  const cacheKey = `${normalizedRole}_${userId}`;
   sessionCache.delete(cacheKey);
 };
 

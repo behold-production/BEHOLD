@@ -17,7 +17,7 @@ const upload = multer({
 // Upload a new worksheet for a session
 router.post('/psychologist/sessions/:sessionId/upload', 
   verifyJWT, 
-  requireRole(['admin', 'psychologist', 'counsellor']), 
+  requireRole('admin', 'psychologist', 'counsellor'), 
   upload.single('file'), 
   WorksheetController.uploadWorksheet
 );
@@ -25,28 +25,28 @@ router.post('/psychologist/sessions/:sessionId/upload',
 // Get worksheets for a session
 router.get('/psychologist/sessions/:sessionId', 
   verifyJWT, 
-  requireRole(['admin', 'psychologist', 'counsellor']), 
+  requireRole('admin', 'psychologist', 'counsellor'), 
   WorksheetController.getSessionWorksheets
 );
 
 // Share a worksheet
 router.post('/psychologist/:worksheetId/share', 
   verifyJWT, 
-  requireRole(['admin', 'psychologist', 'counsellor']), 
+  requireRole('admin', 'psychologist', 'counsellor'), 
   WorksheetController.shareWorksheet
 );
 
 // Stream original file for psychologist
 router.get('/psychologist/:worksheetId/file', 
   verifyJWT, 
-  requireRole(['admin', 'psychologist', 'counsellor']), 
+  requireRole('admin', 'psychologist', 'counsellor'), 
   WorksheetController.streamOriginalFile
 );
 
 // Stream completed file for psychologist
 router.get('/psychologist/:worksheetId/submission-file', 
   verifyJWT, 
-  requireRole(['admin', 'psychologist', 'counsellor']), 
+  requireRole('admin', 'psychologist', 'counsellor'), 
   WorksheetController.streamSubmissionFile
 );
 

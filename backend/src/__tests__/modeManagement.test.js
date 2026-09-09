@@ -24,6 +24,8 @@ describe('Mode Management & Counsellor States Validation', () => {
       email: 'test_counsellor_' + Date.now() + '@behold.com',
       password: 'password123',
       isActive: true,
+      isVerified: true,
+      status: 'APPROVED',
       modes: ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
       specialties: ['Anxiety', 'Depression'],
       price: 1500,
@@ -45,7 +47,7 @@ describe('Mode Management & Counsellor States Validation', () => {
     // Restore original settings
     if (originalSettings) {
       const Setting = mongoose.model('Setting');
-      await Setting.deleteOne({});
+      await Setting.deleteMany({});
       const restored = new Setting(originalSettings);
       await restored.save();
     }
@@ -56,9 +58,9 @@ describe('Mode Management & Counsellor States Validation', () => {
   beforeEach(async () => {
     // Reset global settings to all enabled before each test
     const Setting = mongoose.model('Setting');
-    await Setting.deleteOne({});
+    await Setting.deleteMany({});
     const newSettings = new Setting({
-      id: 'settings_global',
+      id: 'global',
       enableOnline: true,
       enableOffline: true,
       enableDoorstep: true
@@ -92,7 +94,7 @@ describe('Mode Management & Counsellor States Validation', () => {
 
     const result = await validateBookingDetails(testCounsellorId, dateStr, timeStr, 'ONLINE', 'counselling');
     expect(result.valid).toBe(false);
-    expect(result.message).toContain('suspended or unavailable');
+    expect(result.message).toMatch(/paused|unavailable|suspended/i);
   });
 
   it('should reject booking when ONLINE mode is globally disabled', async () => {

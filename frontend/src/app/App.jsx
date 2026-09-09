@@ -293,7 +293,7 @@ export default function App() {
       }
 
       // STRICT USER LOCK: Regular student/user accounts cannot access admin/counsellor portals
-      if (userRole === 'USER') {
+      if (userRole === 'USER' || userRole === 'CUSTOMER' || userRole === 'STUDENT') {
         if (path === '/counsellor' || path === '/conceller' || path === '/cousellor' || path.startsWith('/admin')) {
           toast.error('Access Denied: You do not have permission to access this portal.', { id: 'user-access-denied' });
           navigate('/profile', { replace: true });

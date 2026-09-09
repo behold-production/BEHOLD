@@ -402,7 +402,7 @@ If you have questions or would like to reapply with updated information, please 
       const roleTarget = (recipientRole || 'user').toLowerCase();
       let recipientsToNotify = [];
 
-      if (roleTarget === 'all' || roleTarget === 'user') {
+      if (roleTarget === 'all' || roleTarget === 'user' || roleTarget === 'customer' || roleTarget === 'student') {
         const users = await StorageService.findAll('users', { isDeleted: { $ne: true } });
         recipientsToNotify.push(...users.map((u) => ({ ...u, role: 'user' })));
       }

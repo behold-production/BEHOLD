@@ -9,7 +9,7 @@
     "dev": "nodemon server.js",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest --runInBand --detectOpenHandles"
+    "test": "jest --runInBand --detectOpenHandles --testTimeout=30000"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

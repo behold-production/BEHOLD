@@ -14,6 +14,19 @@ async function findCounsellorRecord(counsellorId) {
   return counsellor;
 }
 
+const isUserRole = (r) => {
+  const lower = (r || '').toLowerCase();
+  return lower === 'user' || lower === 'customer' || lower === 'student';
+};
+const isCounsellorRole = (r) => {
+  const lower = (r || '').toLowerCase();
+  return lower === 'counsellor' || lower === 'psychologist';
+};
+const isAdminRole = (r) => {
+  const lower = (r || '').toLowerCase();
+  return lower === 'admin' || lower === 'super_admin' || lower === 'sub_admin';
+};
+
 const AppointmentController = {
   // Create Appointment (User / Student)
   async createAppointment(req, res, next) {
@@ -509,9 +522,9 @@ const AppointmentController = {
 
       // Check current user is authorized (either User, Counsellor or Admin)
       const userAuthorized =
-        req.user.role === 'admin' ||
-        (req.user.role === 'user' && appointment.userId === req.user.id) ||
-        (req.user.role === 'counsellor' && appointment.counsellorId === req.user.id);
+        isAdminRole(req.user.role) ||
+        (isUserRole(req.user.role) && appointment.userId === req.user.id) ||
+        (isCounsellorRole(req.user.role) && appointment.counsellorId === req.user.id);
 
       if (!userAuthorized) {
         return res.status(403).json({ success: false, message: 'Unauthorized to reschedule this appointment' });
@@ -519,7 +532,7 @@ const AppointmentController = {
 
       // Reschedule constraints for students
       let warning = '';
-      if (req.user.role === 'user') {
+      if (isUserRole(req.user.role)) {
         // 1. One hour warning check
         try {
           const appointmentDateStr = appointment.date;
@@ -619,10 +632,10 @@ const AppointmentController = {
 
       // Synchronous/Awaited Processing for Notifications & Emails
       try {
-        const isStudentRescheduling = req.user.role === 'user';
+        const isStudentRescheduling = isUserRole(req.user.role);
         const targetId = isStudentRescheduling ? appointment.counsellorId : appointment.userId;
         const targetRole = isStudentRescheduling ? 'counsellor' : 'user';
-        const actorName = req.user.role === 'user' ? 'The student' : 'The counsellor';
+        const actorName = isStudentRescheduling ? 'The student' : 'The counsellor';
         const user = await StorageService.findById('users', appointment.userId);
         const counsellor = await findCounsellorRecord(appointment.counsellorId);
 
@@ -691,16 +704,16 @@ const AppointmentController = {
 
       // Authorization check
       const userAuthorized =
-        req.user.role === 'admin' ||
-        (req.user.role === 'user' && appointment.userId === req.user.id) ||
-        (req.user.role === 'counsellor' && appointment.counsellorId === req.user.id);
+        isAdminRole(req.user.role) ||
+        (isUserRole(req.user.role) && appointment.userId === req.user.id) ||
+        (isCounsellorRole(req.user.role) && appointment.counsellorId === req.user.id);
 
       if (!userAuthorized) {
         return res.status(403).json({ success: false, message: 'Unauthorized to cancel this appointment' });
       }
 
       // Cancellation time constraint for students
-      if (req.user.role === 'user') {
+      if (isUserRole(req.user.role)) {
         try {
           const appointmentDateStr = appointment.date;
           const appointmentTimeStr = appointment.time;
@@ -752,8 +765,11 @@ const AppointmentController = {
         const isStudentCancelling = req.user.id === appointment.userId;
         const targetId = isStudentCancelling ? appointment.counsellorId : appointment.userId;
         const targetRole = isStudentCancelling ? 'counsellor' : 'user';
-        const cancellerName =
-          req.user.role === 'user' ? 'Student' : req.user.role === 'admin' ? 'Administrator' : 'Counsellor';
+        const cancellerName = isUserRole(req.user.role)
+          ? 'Student'
+          : isAdminRole(req.user.role)
+          ? 'Administrator'
+          : 'Counsellor';
         const reasonText = reason ? ` Reason: "${reason}"` : '';
 
         const user = await StorageService.findById('users', appointment.userId);
@@ -774,7 +790,7 @@ const AppointmentController = {
           recipientRole: 'user'
         };
 
-        const isPsychologist = req.user && (req.user.role === 'PSYCHOLOGIST' || req.user.role === 'COUNSELLOR');
+        const isPsychologist = isCounsellorRole(req.user?.role);
         const cancelAction = isPsychologist ? 'psychologist_cancelled' : 'cancelled';
 
         await Promise.allSettled([
@@ -1046,7 +1062,14 @@ const AppointmentController = {
   async getUserAppointments(req, res, next) {
     try {
       await autoExpireSessions();
-      const filter = req.user.role === 'counsellor' ? { counsellorId: req.user.id } : { userId: req.user.id };
+      let filter;
+      if (isCounsellorRole(req.user.role)) {
+        filter = { counsellorId: req.user.id };
+      } else if (isAdminRole(req.user.role)) {
+        filter = {}; // Admins can view all appointments
+      } else {
+        filter = { userId: req.user.id };
+      }
 
       const appointments = await StorageService.findAll('appointments', filter);
 
@@ -1061,7 +1084,7 @@ const AppointmentController = {
           const counsellor = await findCounsellorRecord(a.counsellorId);
           const session = await StorageService.findOne('sessions', { appointmentId: a.id });
           const apptData = { ...a };
-          if (req.user.role !== 'admin') {
+          if (!isAdminRole(req.user.role)) {
             delete apptData.adminNotes;
           }
           return {

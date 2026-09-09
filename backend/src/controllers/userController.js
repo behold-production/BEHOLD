@@ -374,8 +374,7 @@ const UserController = {
 
       // Get notifications
       const notifications = await StorageService.findAll('notifications', {
-        recipientId: userId,
-        recipientRole: 'user'
+        recipientId: userId
       });
 
       res.status(200).json({

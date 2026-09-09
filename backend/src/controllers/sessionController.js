@@ -2,12 +2,32 @@ const StorageService = require('../services/storageService');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const { resolveStudentName } = require('../utils/phoneUtils');
 
+const isUserRole = (r) => {
+  const lower = (r || '').toLowerCase();
+  return lower === 'user' || lower === 'customer' || lower === 'student';
+};
+const isCounsellorRole = (r) => {
+  const lower = (r || '').toLowerCase();
+  return lower === 'counsellor' || lower === 'psychologist';
+};
+const isAdminRole = (r) => {
+  const lower = (r || '').toLowerCase();
+  return lower === 'admin' || lower === 'super_admin' || lower === 'sub_admin';
+};
+
 const SessionController = {
   // Get Sessions (List for User or Counsellor)
   async getSessions(req, res, next) {
     try {
       await autoExpireSessions();
-      const filter = req.user.role === 'counsellor' ? { counsellorId: req.user.id } : { userId: req.user.id };
+      let filter;
+      if (isCounsellorRole(req.user.role)) {
+        filter = { counsellorId: req.user.id };
+      } else if (isAdminRole(req.user.role)) {
+        filter = {};
+      } else {
+        filter = { userId: req.user.id };
+      }
 
       const sessions = await StorageService.findAll('sessions', filter);
       const appointments = await StorageService.findAll('appointments', filter);
@@ -43,10 +63,10 @@ const SessionController = {
           let meetLink = s.meetLink;
           if (meetLink) {
             const isAuthorized =
-              req.user.id === s.userId || req.user.id === s.counsellorId || req.user.role === 'admin';
+              req.user.id === s.userId || req.user.id === s.counsellorId || isAdminRole(req.user.role);
             if (!isAuthorized) {
               meetLink = '';
-            } else if (req.user.role === 'user') {
+            } else if (isUserRole(req.user.role)) {
               if (s.status === 'EXPIRED' || s.status === 'COMPLETED' || s.status === 'CANCELLED') {
                 meetLink = 'LOCKED';
               } else {
@@ -154,7 +174,7 @@ const SessionController = {
 
       // Check authorization
       const isAuthorized =
-        req.user.role === 'admin' || req.user.id === session.userId || req.user.id === session.counsellorId;
+        isAdminRole(req.user.role) || req.user.id === session.userId || req.user.id === session.counsellorId;
 
       if (!isAuthorized) {
         return res.status(403).json({ success: false, message: 'Unauthorized access to this session' });
@@ -165,7 +185,7 @@ const SessionController = {
 
       // Meeting link safety check: only reveal if within 1 hour of scheduled time, or if requested by counsellor/admin
       let meetLink = session.meetLink;
-      if (meetLink && req.user.role === 'user') {
+      if (meetLink && isUserRole(req.user.role)) {
         if (session.status === 'EXPIRED' || session.status === 'COMPLETED' || session.status === 'CANCELLED') {
           meetLink = 'LOCKED';
         } else {
@@ -201,7 +221,7 @@ const SessionController = {
       }
 
       const sessionData = { ...session };
-      if (req.user.role !== 'admin') {
+      if (!isAdminRole(req.user.role)) {
         delete sessionData.adminNotes;
       }
 
@@ -270,7 +290,7 @@ const SessionController = {
         return res.status(404).json({ success: false, message: 'Session not found' });
       }
 
-      if (req.user.role !== 'admin' && session.counsellorId !== req.user.id) {
+      if (!isAdminRole(req.user.role) && session.counsellorId !== req.user.id) {
         return res.status(403).json({ success: false, message: 'Unauthorized to update this session' });
       }
 
@@ -337,7 +357,7 @@ const SessionController = {
         return res.status(404).json({ success: false, message: 'Session not found' });
       }
 
-      if (req.user.role !== 'admin' && session.counsellorId !== req.user.id) {
+      if (!isAdminRole(req.user.role) && session.counsellorId !== req.user.id) {
         return res.status(403).json({ success: false, message: 'Unauthorized' });
       }
 

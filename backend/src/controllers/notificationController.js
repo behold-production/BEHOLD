@@ -1,23 +1,31 @@
 const StorageService = require('../services/storageService');
 
+const normalizeRecipientRole = (role) => {
+  const r = (role || '').toLowerCase();
+  if (r === 'admin' || r === 'super_admin' || r === 'sub_admin') return 'admin';
+  if (r === 'counsellor' || r === 'psychologist') return 'counsellor';
+  return 'user';
+};
+
 const NotificationController = {
   // Get notifications for logged in user
   async getNotifications(req, res, next) {
     try {
       const recipientId = req.user.id;
-      const recipientRole = req.user.role; // e.g. 'user', 'counsellor', 'admin'
+      const userRole = normalizeRecipientRole(req.user.role);
 
       // Find direct notifications + global notifications
       const list = await StorageService.findAll('notifications');
 
       const filtered = list
-        .filter(
-          (n) =>
-            // Direct Notification
-            (n.recipientId === recipientId && n.recipientRole === recipientRole) ||
-            // Global Notification
-            (n.recipientId === 'ALL' && (n.recipientRole === recipientRole || n.recipientRole === 'ALL' || n.recipientRole === 'all'))
-        )
+        .filter((n) => {
+          const nRole = normalizeRecipientRole(n.recipientRole);
+          const isDirect = n.recipientId === recipientId && (nRole === userRole || !n.recipientRole);
+          const isGlobal =
+            (n.recipientId === 'ALL' || n.recipientId === 'all') &&
+            (nRole === userRole || n.recipientRole === 'ALL' || n.recipientRole === 'all');
+          return isDirect || isGlobal;
+        })
         .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
       res.status(200).json({
@@ -68,14 +76,15 @@ const NotificationController = {
   async markAllAsRead(req, res, next) {
     try {
       const recipientId = req.user.id;
-      const recipientRole = req.user.role;
+      const userRole = normalizeRecipientRole(req.user.role);
 
       const list = await StorageService.findAll('notifications');
 
       let updatedCount = 0;
       for (const n of list) {
         // We only modify direct notifications
-        const isMatch = n.recipientId === recipientId && n.recipientRole === recipientRole && !n.isRead;
+        const nRole = normalizeRecipientRole(n.recipientRole);
+        const isMatch = n.recipientId === recipientId && (nRole === userRole || !n.recipientRole) && !n.isRead;
 
         if (isMatch) {
           await StorageService.update('notifications', n.id, { isRead: true });

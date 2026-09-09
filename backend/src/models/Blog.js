@@ -29,8 +29,7 @@ const blogSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index for search queries and slug lookup
-blogSchema.index({ slug: 1 });
+// Index for search queries and text search
 blogSchema.index({ title: 'text', excerpt: 'text', content: 'text', category: 'text' });
 
 module.exports = mongoose.model('Blog', blogSchema);

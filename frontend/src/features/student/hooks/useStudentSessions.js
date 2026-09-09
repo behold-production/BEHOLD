@@ -33,7 +33,8 @@ export function useStudentSessions() {
     };
 
     const hasToken = !!localStorage.getItem('behold_token');
-    const isStudent = user && user.role?.toUpperCase() === 'USER';
+    const roleUpper = user?.role?.toUpperCase();
+    const isStudent = user && (roleUpper === 'USER' || roleUpper === 'CUSTOMER' || roleUpper === 'STUDENT');
 
     if (isStudent && hasToken && !authLoading) {
       fetchSessions();

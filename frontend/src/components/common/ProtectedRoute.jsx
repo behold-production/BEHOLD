@@ -30,8 +30,12 @@ export default function ProtectedRoute({ children, allowedRoles, fallbackPath = 
 
   // If specific roles are required, check against the user's role
   if (allowedRoles && allowedRoles.length > 0) {
-    const userRole = user.role?.toUpperCase();
-    const isAllowed = allowedRoles.map(r => r.toUpperCase()).includes(userRole);
+    let userRole = (user.role || 'USER').toUpperCase();
+    if (userRole === 'CUSTOMER' || userRole === 'STUDENT') userRole = 'USER';
+    const isAllowed = allowedRoles.map(r => {
+      const u = r.toUpperCase();
+      return (u === 'CUSTOMER' || u === 'STUDENT') ? 'USER' : u;
+    }).includes(userRole);
     
     if (!isAllowed) {
       return <UnauthorizedFallback roleRequired={allowedRoles.join(' / ')} />;

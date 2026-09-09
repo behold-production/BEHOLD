@@ -32,7 +32,7 @@ export default class ErrorBoundary extends React.Component {
         } else if (role === 'PSYCHOLOGIST' || role === 'COUNSELLOR') {
           window.location.href = '/counsellor';
           return;
-        } else if (role === 'USER') {
+        } else if (role === 'USER' || role === 'CUSTOMER' || role === 'STUDENT') {
           window.location.href = '/profile';
           return;
         }

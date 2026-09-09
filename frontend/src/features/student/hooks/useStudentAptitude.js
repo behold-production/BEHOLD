@@ -42,7 +42,7 @@ export function useStudentAptitude(updateProfile) {
     };
 
     const hasToken = !!localStorage.getItem('behold_token');
-    const isStudent = user && user.role?.toUpperCase() === 'USER';
+    const isStudent = user && ['USER', 'CUSTOMER', 'STUDENT'].includes(user.role?.toUpperCase());
 
     if (isStudent && hasToken && !authLoading) {
       fetchTestProfile();

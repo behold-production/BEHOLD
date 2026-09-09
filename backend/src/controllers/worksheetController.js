@@ -4,6 +4,11 @@ const WhatsAppService = require('../services/whatsappService');
 const crypto = require('crypto');
 const https = require('https');
 
+const isAdminRole = (r) => {
+  const lower = (r || '').toLowerCase();
+  return lower === 'admin' || lower === 'super_admin' || lower === 'sub_admin';
+};
+
 const WorksheetController = {
   // ─── PSYCHOLOGIST ENDPOINTS ──────────────────────────────────────────────────
 
@@ -23,7 +28,7 @@ const WorksheetController = {
       }
       
       // Admin bypass or strict psychologist check
-      if (req.user.role !== 'admin' && session.counsellorId !== psychologistId) {
+      if (!isAdminRole(req.user.role) && session.counsellorId !== psychologistId) {
         return res.status(403).json({ success: false, message: 'Unauthorized to upload to this session' });
       }
 
@@ -68,7 +73,7 @@ const WorksheetController = {
       }
 
       // Verify authorization
-      if (req.user.role !== 'admin' && worksheet.psychologistId !== req.user.id) {
+      if (!isAdminRole(req.user.role) && worksheet.psychologistId !== req.user.id) {
         return res.status(403).json({ success: false, message: 'Unauthorized' });
       }
 
@@ -112,7 +117,7 @@ const WorksheetController = {
         return res.status(404).json({ success: false, message: 'Session not found' });
       }
 
-      if (req.user.role !== 'admin' && session.counsellorId !== req.user.id) {
+      if (!isAdminRole(req.user.role) && session.counsellorId !== req.user.id) {
         return res.status(403).json({ success: false, message: 'Unauthorized' });
       }
 
@@ -130,7 +135,7 @@ const WorksheetController = {
       const worksheet = await StorageService.findOne('worksheets', { worksheetId });
       
       if (!worksheet) return res.status(404).send('Worksheet not found');
-      if (req.user.role !== 'admin' && worksheet.psychologistId !== req.user.id) {
+      if (!isAdminRole(req.user.role) && worksheet.psychologistId !== req.user.id) {
         return res.status(403).send('Unauthorized');
       }
 
@@ -148,7 +153,7 @@ const WorksheetController = {
       const worksheet = await StorageService.findOne('worksheets', { worksheetId });
       
       if (!worksheet || !worksheet.submissionStorageKey) return res.status(404).send('Submission not found');
-      if (req.user.role !== 'admin' && worksheet.psychologistId !== req.user.id) {
+      if (!isAdminRole(req.user.role) && worksheet.psychologistId !== req.user.id) {
         return res.status(403).send('Unauthorized');
       }
 
@@ -244,7 +249,9 @@ const WorksheetController = {
       const psychologist = await StorageService.findById('counsellors', worksheet.psychologistId);
       const client = await StorageService.findById('users', worksheet.clientId);
       if (psychologist && psychologist.phone) {
-        const text = `Hi ${psychologist.name},\n\nClient ${client.name} has submitted the completed activity sheet for session ${worksheet.sessionId}.\n\nYou can review it in your BEHOLD dashboard.`;
+        const pName = psychologist.name || 'Psychologist';
+        const cName = client ? client.name || 'Client' : 'Client';
+        const text = `Hi ${pName},\n\nClient ${cName} has submitted the completed activity sheet for session ${worksheet.sessionId}.\n\nYou can review it in your BEHOLD dashboard.`;
         WhatsAppService._dispatch(psychologist.phone, text).catch(e => console.error('[Psychologist Notification Error]', e));
       }
 
