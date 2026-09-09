@@ -93,12 +93,18 @@ const requireRole = (...allowedRoles) => {
       });
     }
 
-    const userRole = req.user.role.toLowerCase();
-    const allowed = allowedRoles.map((r) => r.toLowerCase());
+    let userRole = req.user.role.toLowerCase();
+    if (userRole === 'customer' || userRole === 'student') userRole = 'user';
+    const flatAllowed = allowedRoles.flat();
+    const allowed = flatAllowed.map((r) => {
+      const lower = String(r).toLowerCase();
+      if (lower === 'customer' || lower === 'student') return 'user';
+      return lower;
+    });
     if (!allowed.includes(userRole)) {
       return res.status(403).json({
         success: false,
-        message: `Access Denied: Requires one of these roles: ${allowedRoles.join(', ')}`
+        message: `Access Denied: Requires one of these roles: ${flatAllowed.join(', ')}`
       });
     }
 

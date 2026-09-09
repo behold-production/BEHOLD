@@ -150,20 +150,10 @@ export default function AuthModals({ isOpen, onClose }) {
       navigate('/counsellor');
     } else {
       const redirectPath = location.state?.from;
-      if (redirectPath) {
+      if (redirectPath && !redirectPath.includes('/login') && !redirectPath.includes('/register')) {
         navigate(redirectPath);
       } else {
-        const currentPath = location.pathname;
-        if (currentPath === '/login' || currentPath === '/register') {
-          navigate('/');
-        } else {
-          // If already on booking or home, keep user where they are
-          const keepPagePaths = ['/', '/booking', '/sample-test'];
-          const isAdvisorPath = currentPath.startsWith('/advisor/');
-          if (!keepPagePaths.includes(currentPath) && !isAdvisorPath) {
-            navigate('/profile');
-          }
-        }
+        navigate('/');
       }
     }
   };
@@ -339,8 +329,8 @@ export default function AuthModals({ isOpen, onClose }) {
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={onClose} aria-hidden="true" />
-      <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" onClick={onClose}>
+      <div className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
+      <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
         <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-zinc-200 m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}
@@ -377,7 +367,25 @@ export default function AuthModals({ isOpen, onClose }) {
                 </p>
               </div>
             </div>
-            <button type="button" onClick={onClose} aria-label="Close dialog" className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none">
+            <button
+              type="button"
+              onClick={() => {
+                if (authStep === 'details') {
+                  ApiService.logout();
+                  if (updateUser) updateUser(null);
+                  try {
+                    localStorage.removeItem('behold_auth_user');
+                    localStorage.removeItem('behold_token');
+                    localStorage.removeItem('behold_refresh_token');
+                    window.dispatchEvent(new Event('storage'));
+                  } catch {}
+                  showToast('Please enter your details to complete login.');
+                }
+                onClose();
+              }}
+              aria-label="Close dialog"
+              className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
+            >
               <X className="w-4 h-4 text-[#0f172a]" />
             </button>
           </div>

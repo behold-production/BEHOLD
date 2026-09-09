@@ -222,8 +222,7 @@ const UserController = {
       });
 
       // Get settings for global session modes
-      const settingsList = await StorageService.findAll('settings');
-      const settings = settingsList[0] || {};
+      const settings = await StorageService.getGlobalSettings();
       const globalOnline = settings.enableOnline !== false;
       const globalOffline = settings.enableOffline !== false;
       const globalDoorstep = settings.enableDoorstep !== false;
@@ -303,8 +302,7 @@ const UserController = {
       const { password, ...counsellorData } = counsellor;
 
       // Get settings for global session modes
-      const settingsList = await StorageService.findAll('settings');
-      const settings = settingsList[0] || {};
+      const settings = await StorageService.getGlobalSettings();
       const globalOnline = settings.enableOnline !== false;
       const globalOffline = settings.enableOffline !== false;
       const globalDoorstep = settings.enableDoorstep !== false;

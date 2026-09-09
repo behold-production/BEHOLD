@@ -451,6 +451,30 @@ const PaymentController = {
         }
         cleanDuplicateAppointments().catch(() => {});
 
+        if (existingAppt.userId) {
+          try {
+            const apptUser = await StorageService.findById('users', existingAppt.userId);
+            if (apptUser) {
+              const uUpdates = {};
+              const cName = cleanUserName(existingAppt.clientName || clientName);
+              if (cName && (!apptUser.name || apptUser.name === 'New User' || apptUser.name.includes('Behold User'))) {
+                uUpdates.name = cName;
+              }
+              const cEmail = existingAppt.clientEmail || clientEmail;
+              if (cEmail && (!apptUser.email || apptUser.email.includes('@temp.behold')) && !cEmail.includes('@temp.behold')) {
+                uUpdates.email = cEmail;
+              }
+              if (apptUser.role === 'Customer') uUpdates.role = 'user';
+              if ((uUpdates.name || cleanUserName(apptUser.name)) && (uUpdates.email || (apptUser.email && !apptUser.email.includes('@temp.behold')))) {
+                uUpdates.isProfileCompleted = true;
+              }
+              if (Object.keys(uUpdates).length > 0) {
+                await StorageService.update('users', apptUser.id || apptUser._id, uUpdates);
+              }
+            }
+          } catch {}
+        }
+
         // Keep matching session in sync
         try {
           const sess = await StorageService.findOne('sessions', { appointmentId: existingAppt.id });
@@ -635,6 +659,22 @@ const PaymentController = {
       // Update user profile with latest details
       if (user) {
         const userUpdates = {};
+        const cleanedClientName = cleanUserName(clientName);
+        if (cleanedClientName && (!user.name || user.name === 'New User' || user.name.includes('Behold User'))) {
+          userUpdates.name = cleanedClientName;
+        }
+        if (clientEmail && (!user.email || user.email.includes('@temp.behold')) && !clientEmail.includes('@temp.behold')) {
+          userUpdates.email = clientEmail;
+        }
+        if (normPhone && !user.phone) {
+          userUpdates.phone = normPhone;
+        }
+        if (user.role === 'Customer') {
+          userUpdates.role = 'user';
+        }
+        if ((userUpdates.name || cleanUserName(user.name)) && (userUpdates.email || (user.email && !user.email.includes('@temp.behold')))) {
+          userUpdates.isProfileCompleted = true;
+        }
         if (age && !user.age) userUpdates.age = age;
         if (feelingLately && !user.feelingLately) userUpdates.feelingLately = feelingLately;
         if (hadPriorTherapy && !user.hadPriorTherapy) userUpdates.hadPriorTherapy = hadPriorTherapy;

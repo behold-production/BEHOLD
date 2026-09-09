@@ -161,7 +161,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             role: loggedUser.role || 'user'
           });
 
-          // Check if user already has real name and real email (either in bookingForm or user profile)
+          // Pre-fill with existing name & email if available, and ALWAYS transition to Details step so user confirms/saves
           const validFormName = (bookingForm?.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') && !bookingForm.name.toLowerCase().includes('test student')) ? bookingForm.name.trim() : '';
           const validFormEmail = (bookingForm?.email && !bookingForm.email.includes('@temp.behold') && bookingForm.email.includes('@')) ? bookingForm.email.trim().toLowerCase() : '';
           const validUserName = (loggedUser.name && loggedUser.name !== 'New User' && !loggedUser.name.includes('Behold User') && !loggedUser.name.toLowerCase().includes('test student')) ? loggedUser.name.trim() : '';
@@ -170,35 +170,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           const resolvedName = validFormName || validUserName;
           const resolvedEmail = validFormEmail || validUserEmail;
 
-          // If BOTH real name and real email already exist:
-          if (resolvedName && resolvedEmail) {
-            // Save to backend profile to keep in sync
-            try {
-              await ApiService.updateProfile({
-                name: resolvedName,
-                email: resolvedEmail,
-                phone: cleanPhone,
-                isProfileCompleted: true
-              });
-            } catch {}
-
-            if (setBookingForm) {
-              setBookingForm(prev => ({
-                ...prev,
-                name: resolvedName,
-                email: resolvedEmail,
-                phone: cleanPhone
-              }));
-            }
-
-            const finalUser = { ...loggedUser, name: resolvedName, email: resolvedEmail, phone: cleanPhone };
-            if (updateUser) updateUser(finalUser);
-            if (onSuccess) onSuccess(finalUser);
-            onClose();
-            return;
-          }
-
-          // If name or email is missing or incomplete, NEVER navigate away — transition to Details step!
+          // Always show details popup with existing data prefilled so user can review/save it
           setDetailsForm({
             name: resolvedName || '',
             email: resolvedEmail || ''
@@ -323,8 +295,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[120] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={onClose} aria-hidden="true" />
-      <div className="fixed inset-0 z-[125] flex items-start sm:items-center justify-center min-h-screen p-4 pt-12 sm:pt-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={onClose}>
+      <div className="fixed inset-0 z-[120] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
+      <div className="fixed inset-0 z-[125] flex items-start sm:items-center justify-center min-h-screen p-4 pt-12 sm:pt-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
         <div className="relative w-full max-w-md max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-y-auto animate-modal-in border border-surface-200 text-left" onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}
@@ -357,7 +329,25 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 </p>
               </div>
             </div>
-            <button type="button" onClick={onClose} aria-label="Close dialog" className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none">
+            <button
+              type="button"
+              onClick={() => {
+                if (authStep === 'details') {
+                  ApiService.logout();
+                  if (updateUser) updateUser(null);
+                  try {
+                    localStorage.removeItem('behold_auth_user');
+                    localStorage.removeItem('behold_token');
+                    localStorage.removeItem('behold_refresh_token');
+                    window.dispatchEvent(new Event('storage'));
+                  } catch {}
+                  showToast('Booking cancelled. Please enter details to book.');
+                }
+                onClose();
+              }}
+              aria-label="Close dialog"
+              className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
+            >
               <X className="w-4 h-4 text-[#0f172a]" />
             </button>
           </div>

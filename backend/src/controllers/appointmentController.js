@@ -180,9 +180,25 @@ const AppointmentController = {
         markIntroductoryUsed({ userId, email: clientEmail || user.email, phone: clientPhone || user.phone }).catch(() => {});
       }
 
-      // Update user profile with latest intake information if provided
+      // Update user profile with latest intake information & real name/email if provided
       if (user) {
         const userUpdates = {};
+        const cleanedClientName = cleanUserName(clientName);
+        if (cleanedClientName && (!user.name || user.name === 'New User' || user.name.includes('Behold User'))) {
+          userUpdates.name = cleanedClientName;
+        }
+        if (clientEmail && (!user.email || user.email.includes('@temp.behold')) && !clientEmail.includes('@temp.behold')) {
+          userUpdates.email = clientEmail;
+        }
+        if (clientPhone && !user.phone) {
+          userUpdates.phone = normalizePhoneWithCountryCode(clientPhone);
+        }
+        if (user.role === 'Customer') {
+          userUpdates.role = 'user';
+        }
+        if ((userUpdates.name || cleanUserName(user.name)) && (userUpdates.email || (user.email && !user.email.includes('@temp.behold')))) {
+          userUpdates.isProfileCompleted = true;
+        }
         if (age && !user.age) userUpdates.age = age;
         if (feelingLately && !user.feelingLately) userUpdates.feelingLately = feelingLately;
         if (hadPriorTherapy && !user.hadPriorTherapy) userUpdates.hadPriorTherapy = hadPriorTherapy;

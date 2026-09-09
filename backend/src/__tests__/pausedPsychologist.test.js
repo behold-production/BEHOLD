@@ -9,6 +9,7 @@ jest.mock('../models/Feedback');
 describe('Paused / Inactive Psychologist Filtering & Booking Protection', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    StorageService.getGlobalSettings = jest.fn().mockResolvedValue({ enableOnline: true, enableOffline: true, enableDoorstep: true });
   });
 
   describe('UserController.searchCounsellors', () => {

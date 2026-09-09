@@ -616,10 +616,11 @@ export default function App() {
       <CompleteProfileModal 
         isOpen={Boolean(
           user &&
-          (user.role === 'user' || !user.role) &&
-          !user.isProfileCompleted &&
+          (user.role === 'user' || user.role === 'Customer' || !user.role) &&
           (
+            !user.isProfileCompleted ||
             !user.name ||
+            user.name.trim() === '' ||
             user.name === 'New User' ||
             user.name.includes('Behold User') ||
             !user.email ||

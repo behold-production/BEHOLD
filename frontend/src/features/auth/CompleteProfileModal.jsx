@@ -44,15 +44,20 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
   }, [user, isOpen]);
 
   // If user completed their profile or dismissed this session, don't show
-  const isProfileActuallyComplete = Boolean(
-    user?.isProfileCompleted ||
-    (user?.name &&
-      user.name !== 'New User' &&
-      !user.name.includes('Behold User') &&
-      user?.email &&
-      !user.email.includes('@temp.behold') &&
-      !user.email.includes('temp.behold.co.in'))
+  const hasRealName = Boolean(
+    user?.name &&
+    user.name.trim() !== '' &&
+    user.name !== 'New User' &&
+    !user.name.includes('Behold User') &&
+    !user.name.toLowerCase().includes('test student')
   );
+  const hasRealEmail = Boolean(
+    user?.email &&
+    !user.email.includes('@temp.behold') &&
+    !user.email.includes('temp.behold.co.in') &&
+    user.email.includes('@')
+  );
+  const isProfileActuallyComplete = Boolean(user?.isProfileCompleted && hasRealName && hasRealEmail);
 
   useEffect(() => {
     if (isProfileActuallyComplete && isOpen) {

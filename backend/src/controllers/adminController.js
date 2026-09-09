@@ -305,13 +305,14 @@ If you have questions or would like to reapply with updated information, please 
         StorageService.findAll('sessions')
       ]);
 
-      const userMap = new Map(users.map(u => [u.id, u]));
-      const counsellorMap = new Map(counsellors.map(c => [c.id, c]));
-      const sessionMap = new Map(sessions.map(s => [s.appointmentId, s]));
+      const userMap = new Map(users.flatMap(u => [[u.id, u], [u._id?.toString(), u]]));
+      const counsellorMap = new Map(counsellors.flatMap(c => [[c.id, c], [c._id?.toString(), c]]));
+      const sessionMap = new Map(sessions.flatMap(s => [[s.appointmentId, s], [s.id, s]]));
 
       const populated = appointments.map((a) => {
         const user = userMap.get(a.userId);
         const counsellor = counsellorMap.get(a.counsellorId);
+        const session = sessionMap.get(a.id) || sessionMap.get(a._id?.toString()) || null;
         const sName = resolveStudentName(a.clientName, user?.name) || user?.name || 'Student';
         return {
           ...a,

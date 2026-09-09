@@ -48,8 +48,7 @@ const validateBookingDetails = async (counsellorId, date, time, mode, service, a
   }
 
   // Check global mode constraints
-  const settingsList = await StorageService.findAll('settings');
-  const settings = settingsList[0] || {};
+  const settings = await StorageService.getGlobalSettings();
   if (mode === 'ONLINE' && settings.enableOnline === false) {
     return { valid: false, message: 'Online video consultation sessions are temporarily disabled by the administrator.' };
   }

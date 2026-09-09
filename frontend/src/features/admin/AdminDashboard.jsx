@@ -1249,30 +1249,31 @@ const _handleAdminDetectLocation = () => {
  ApiService.getAdminAptitudeQuestions()
  ]);
 
- if (usersRes.success && counsellorsRes.success) {
- const cleanCounsellors = (counsellorsRes.data || []).map(c => ({
- ...c,
- role: 'PSYCHOLOGIST',
- verified: c.isVerified
- }));
- const cleanUsers = (usersRes.data || []).map(u => ({
- ...u,
- role: String(u.role || 'USER').toUpperCase()
- }));
- const combinedUsers = [
- ...cleanUsers,
- ...cleanCounsellors
- ];
- setUsersDb(combinedUsers);
- const cleanBookings = bookingsRes.data.map(b => ({
- ...b,
- userName: b.studentName,
- advisorId: b.counsellorId || b.advisorId,
- advisorName: b.counsellorName || b.advisorName,
- advisorRole: b.advisorRole || 'Consultant Psychologist'
- }));
- setBookingsDb(cleanBookings);
- }
+  if (usersRes?.success && Array.isArray(usersRes.data)) {
+    const cleanCounsellors = (counsellorsRes?.success && Array.isArray(counsellorsRes.data))
+      ? counsellorsRes.data.map(c => ({
+          ...c,
+          role: 'PSYCHOLOGIST',
+          verified: c.isVerified
+        }))
+      : [];
+    const cleanUsers = usersRes.data.map(u => ({
+      ...u,
+      role: String(u.role || 'USER').toUpperCase() === 'CUSTOMER' ? 'USER' : String(u.role || 'USER').toUpperCase()
+    }));
+    setUsersDb([...cleanUsers, ...cleanCounsellors]);
+  }
+
+  if (bookingsRes?.success && Array.isArray(bookingsRes.data)) {
+    const cleanBookings = bookingsRes.data.map(b => ({
+      ...b,
+      userName: b.studentName || b.clientName || 'Student',
+      advisorId: b.counsellorId || b.advisorId,
+      advisorName: b.counsellorName || b.advisorName,
+      advisorRole: b.advisorRole || 'Consultant Psychologist'
+    }));
+    setBookingsDb(cleanBookings);
+  }
 
  if (inquiriesRes.success && inquiriesRes.data) {
  setInquiriesDb(inquiriesRes.data);

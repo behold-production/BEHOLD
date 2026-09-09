@@ -80,9 +80,8 @@ const PublicController = {
       const cached = cacheHelper.get('public_settings');
       if (cached) return res.status(200).json(cached);
 
-      let settingsList = await StorageService.findAll('settings');
-      let settings = settingsList[0];
-      if (!settings) {
+      let settings = await StorageService.getGlobalSettings();
+      if (!settings || !settings.id) {
         settings = await StorageService.create('settings', {
           heroTitle: 'Bridging You \nTo Your {True Growth.}',
           heroSub:
