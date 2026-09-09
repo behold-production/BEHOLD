@@ -1071,17 +1071,23 @@ const _handleAdminDetectLocation = () => {
 
  const [isAddBookingOpen, setIsAddBookingOpen] = useState(false);
  const [isEditBookingOpen, setIsEditBookingOpen] = useState(false);
- const [bookingForm, setBookingForm] = useState({
- id: '',
- userId: '',
- advisorId: '',
- service: 'counselling',
- mode: 'ONLINE',
- date: getLocalTodayString(),
- time: '',
- meetLink: '',
- status: 'CONFIRMED'
- });
+  const [bookingForm, setBookingForm] = useState({
+    id: '',
+    userId: '',
+    advisorId: '',
+    service: 'counselling',
+    mode: 'ONLINE',
+    date: getLocalTodayString(),
+    time: '',
+    duration: '1 Hour (60 Mins)',
+    paymentStatus: 'PAID',
+    amountPaid: 899,
+    notes: '',
+    adminNotes: '',
+    meetLink: '',
+    status: 'CONFIRMED',
+    sendWhatsApp: true
+  });
  const [bookingFormError, setBookingFormError] = useState('');
  const [bookingFormSuccess, setBookingFormSuccess] = useState('');
 
@@ -1893,8 +1899,15 @@ const _handleAdminDetectLocation = () => {
         mode: bookingForm.mode,
         date: bookingForm.date,
         time: bookingForm.time,
+        duration: bookingForm.duration || '1 Hour (60 Mins)',
+        paymentStatus: bookingForm.paymentStatus || 'PAID',
+        amountPaid: bookingForm.amountPaid !== undefined ? Number(bookingForm.amountPaid) : (bookingForm.paymentStatus === 'FREE' ? 0 : (psy.price || 899)),
+        baseFee: psy.price || 899,
+        notes: bookingForm.notes || '',
+        adminNotes: bookingForm.adminNotes || '',
         meetLink: bookingForm.meetLink.trim() || psy.defaultMeetLink || '',
-        status: bookingForm.status || 'CONFIRMED'
+        status: bookingForm.status || 'CONFIRMED',
+        sendWhatsApp: bookingForm.sendWhatsApp !== false
       });
 
       if (res.success && res.data) {
@@ -1916,8 +1929,14 @@ const _handleAdminDetectLocation = () => {
         mode: 'ONLINE',
         date: getLocalTodayString(),
         time: '',
+        duration: '1 Hour (60 Mins)',
+        paymentStatus: 'PAID',
+        amountPaid: 899,
+        notes: '',
+        adminNotes: '',
         meetLink: '',
-        status: 'CONFIRMED'
+        status: 'CONFIRMED',
+        sendWhatsApp: true
       });
       if (reloadDataRef.current) reloadDataRef.current();
       setTimeout(() => {
@@ -3407,19 +3426,28 @@ const _handleAdminDetectLocation = () => {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
  />
- <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
- <div>
- <h3 className="text-base font-bold text-white font-header">
- {isAddBookingOpen ? 'Schedule Consultation' : 'Update Appointment'}
- </h3>
- <p className="text-sm text-zinc-500 leading-none mt-1">
- {isAddBookingOpen ? 'Configure slot details and associate clients.' : 'Edit scheduled date, time slot, and meeting link.'}
- </p>
+ <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+ <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+   <div>
+     <h3 className="text-lg font-bold text-white font-header">
+       {isAddBookingOpen ? 'Schedule Consultation (Full Details)' : 'Update Appointment'}
+     </h3>
+     <p className="text-sm text-zinc-400 mt-1">
+       {isAddBookingOpen ? 'Configure comprehensive session parameters, psychologist, payment, and client details.' : 'Edit scheduled date, time slot, and meeting link.'}
+     </p>
+   </div>
+   <button
+     type="button"
+     onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
+     className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition cursor-pointer"
+   >
+     <X className="w-5 h-5" />
+   </button>
  </div>
 
  <form onSubmit={isAddBookingOpen ? handleCreateBooking : handleUpdateBooking} className="space-y-4 font-medium">
  <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Select User</label>
+ <label className="text-sm font-bold text-zinc-400">Select User / Client</label>
  <select
  required
  value={bookingForm.userId}
@@ -3427,14 +3455,14 @@ const _handleAdminDetectLocation = () => {
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
  >
  <option value="" disabled>-- Select a user --</option>
- {usersDb.filter(u => u.role === 'USER' || !u.role).map(student => (
- <option key={student.id} value={student.id}>{student.name} ({student.email})</option>
+ {usersDb.filter(u => ['USER', 'CUSTOMER', 'STUDENT'].includes(String(u.role || 'USER').toUpperCase())).map(student => (
+ <option key={student.id} value={student.id}>{student.name || 'Anonymous'} {student.phone ? `(${student.phone})` : ''} — {student.email}</option>
  ))}
  </select>
  </div>
 
  <div className="space-y-1">
- <label className="text-sm font-bold text-zinc-400">Select Psychologist</label>
+ <label className="text-sm font-bold text-zinc-400">Select Psychologist / Counsellor</label>
  <select
  required
  value={bookingForm.advisorId}
@@ -3445,18 +3473,25 @@ const _handleAdminDetectLocation = () => {
  if (nextPsy && nextPsy.availability?.availableSlots?.length > 0) {
  firstSlot = nextPsy.availability.availableSlots[0];
  }
- setBookingForm({ ...bookingForm, advisorId: nextAdvisorId, time: firstSlot });
+ const pPrice = nextPsy?.price ? Number(nextPsy.price) : 899;
+ setBookingForm({
+   ...bookingForm,
+   advisorId: nextAdvisorId,
+   time: firstSlot,
+   amountPaid: bookingForm.paymentStatus === 'FREE' ? 0 : pPrice,
+   meetLink: bookingForm.meetLink || nextPsy?.defaultMeetLink || ''
+ });
  }}
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
  >
  <option value="" disabled>-- Select psychologist --</option>
- {usersDb.filter(u => u.role === 'PSYCHOLOGIST').map(psy => (
- <option key={psy.id} value={psy.id}>{psy.name}</option>
+ {usersDb.filter(u => ['PSYCHOLOGIST', 'COUNSELLOR'].includes(String(u.role || '').toUpperCase())).map(psy => (
+ <option key={psy.id} value={psy.id}>{psy.name} ({psy.title || 'Consultant Psychologist'} — ₹{psy.price || 899})</option>
  ))}
  </select>
  </div>
 
- <div className="grid grid-cols-2 gap-3">
+ <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  <div className="space-y-1">
  <label className="text-sm font-bold text-zinc-400">Service Category</label>
  <select
@@ -3470,17 +3505,37 @@ const _handleAdminDetectLocation = () => {
  </div>
 
  <div className="space-y-1">
+ <label className="text-sm font-bold text-zinc-400">Duration</label>
+ <select
+ value={bookingForm.duration || '1 Hour (60 Mins)'}
+ onChange={(e) => {
+   const dur = e.target.value;
+   const is30 = dur.includes('30');
+   const nextAmount = is30 ? 499 : 899;
+   setBookingForm({ ...bookingForm, duration: dur, amountPaid: bookingForm.paymentStatus === 'FREE' ? 0 : nextAmount });
+ }}
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ >
+ <option value="1 Hour (60 Mins)">1 Hour (60 Mins)</option>
+ <option value="30 Minutes (Introductory Session)">30 Minutes (Introductory)</option>
+ </select>
+ </div>
+
+ <div className="space-y-1">
  <label className="text-sm font-bold text-zinc-400">Mode</label>
  <select
  value={bookingForm.mode}
  onChange={(e) => setBookingForm({ ...bookingForm, mode: e.target.value })}
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
  >
- <option value="ONLINE">ONLINE</option>
- <option value="OFFLINE">OFFLINE</option>
+ <option value="ONLINE">ONLINE (Video Call)</option>
+ <option value="OFFLINE">OFFLINE (In-Person)</option>
+ <option value="DOOR_STEP">DOOR_STEP (Home Visit)</option>
  </select>
  </div>
+ </div>
 
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
  <label className="text-sm font-bold text-zinc-400">Booking Date</label>
  <input
@@ -3507,13 +3562,43 @@ const _handleAdminDetectLocation = () => {
  </div>
  </div>
 
- <div className="grid grid-cols-1 gap-3">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ <div className="space-y-1">
+ <label className="text-sm font-bold text-zinc-400">Payment Status</label>
+ <select
+ value={bookingForm.paymentStatus || 'PAID'}
+ onChange={(e) => {
+   const ps = e.target.value;
+   const amt = ps === 'FREE' ? 0 : (bookingForm.amountPaid || 899);
+   setBookingForm({ ...bookingForm, paymentStatus: ps, amountPaid: amt });
+ }}
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ >
+ <option value="PAID">PAID (Confirmed)</option>
+ <option value="FREE">FREE / Complimentary (₹0)</option>
+ <option value="PENDING">PAYMENT PENDING</option>
+ </select>
+ </div>
+
+ <div className="space-y-1">
+ <label className="text-sm font-bold text-zinc-400">Amount Paid (₹)</label>
+ <input
+ type="number"
+ min="0"
+ value={bookingForm.amountPaid !== undefined ? bookingForm.amountPaid : 899}
+ onChange={(e) => setBookingForm({ ...bookingForm, amountPaid: Number(e.target.value) })}
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+ />
+ </div>
+ </div>
+
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
  <label className="text-sm font-bold text-zinc-400">Meeting Room URL (Optional)</label>
  <input
  type="text"
  placeholder="https://meet.google.com/abc-def-ghi"
- value={bookingForm.meetLink}
+ value={bookingForm.meetLink || ''}
  onChange={(e) => setBookingForm({ ...bookingForm, meetLink: e.target.value })}
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
  />
@@ -3526,12 +3611,37 @@ const _handleAdminDetectLocation = () => {
  onChange={(e) => setBookingForm({ ...bookingForm, status: e.target.value })}
  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
  >
- <option value="PENDING">PENDING</option>
  <option value="CONFIRMED">CONFIRMED</option>
+ <option value="APPROVED">APPROVED</option>
+ <option value="PENDING">PENDING</option>
  <option value="COMPLETED">COMPLETED</option>
  <option value="CANCELLED">CANCELLED</option>
  </select>
  </div>
+ </div>
+
+ <div className="space-y-1">
+   <label className="text-sm font-bold text-zinc-400">Session Notes & Remarks (Optional)</label>
+   <textarea
+     rows={2}
+     placeholder="e.g. Student requested focus on career guidance, intake notes..."
+     value={bookingForm.notes || ''}
+     onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
+     className="w-full px-3 py-2 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none resize-none"
+   />
+ </div>
+
+ <div className="flex items-center gap-2 pt-1">
+   <input
+     type="checkbox"
+     id="adminSendWhatsApp"
+     checked={bookingForm.sendWhatsApp !== false}
+     onChange={(e) => setBookingForm({ ...bookingForm, sendWhatsApp: e.target.checked })}
+     className="w-4 h-4 rounded border-zinc-700 bg-zinc-955 text-brand focus:ring-brand cursor-pointer"
+   />
+   <label htmlFor="adminSendWhatsApp" className="text-sm text-zinc-300 font-medium cursor-pointer">
+     Send instant WhatsApp booking confirmation alert to client
+   </label>
  </div>
 
  {bookingFormError && (
@@ -3556,7 +3666,7 @@ const _handleAdminDetectLocation = () => {
  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
- {isAddBookingOpen ? 'Confirm Slot' : 'Update Appointment'}
+ {isAddBookingOpen ? 'Confirm & Create Booking' : 'Update Appointment'}
  </button>
  </div>
  </form>

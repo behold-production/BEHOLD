@@ -1709,7 +1709,27 @@ If you have questions or would like to reapply with updated information, please 
 
   async createAppointment(req, res, next) {
     try {
-      const { userId, advisorId, service, mode, date, time, status, meetLink, clientLocationName, clientLatitude, clientLongitude } = req.body;
+      const {
+        userId,
+        advisorId,
+        service,
+        mode,
+        date,
+        time,
+        duration,
+        status,
+        paymentStatus,
+        amountPaid,
+        baseFee,
+        meetLink,
+        notes,
+        adminNotes,
+        clientLocationName,
+        clientLatitude,
+        clientLongitude,
+        sendWhatsApp
+      } = req.body;
+
       if (!userId || !advisorId || !date || !time) {
         return res.status(400).json({ success: false, message: 'UserId, advisorId, date, and time are required' });
       }
@@ -1732,6 +1752,12 @@ If you have questions or would like to reapply with updated information, please 
         } catch {}
       }
 
+      const resolvedDuration = duration || '1 Hour (60 Mins)';
+      const resolvedStatus = status || 'CONFIRMED';
+      const resolvedBaseFee = Number(baseFee) || Number(counsellor?.price) || 899;
+      const resolvedAmountPaid = amountPaid !== undefined ? Number(amountPaid) : (paymentStatus === 'FREE' ? 0 : resolvedBaseFee);
+      const resolvedPaymentStatus = paymentStatus || (resolvedAmountPaid > 0 ? 'PAID' : (resolvedAmountPaid === 0 ? 'FREE' : 'PENDING'));
+
       const newAppointment = await StorageService.create('appointments', {
         userId,
         counsellorId: advisorId,
@@ -1739,34 +1765,84 @@ If you have questions or would like to reapply with updated information, please 
         mode: mode || 'ONLINE',
         date,
         time,
-        duration: '1 Hour (60 Mins)',
-        status: status === 'CONFIRMED' ? 'APPROVED' : (status || 'APPROVED'),
+        duration: resolvedDuration,
+        status: resolvedStatus,
+        paymentStatus: resolvedPaymentStatus,
+        amountPaid: resolvedAmountPaid,
+        baseFee: resolvedBaseFee,
         meetLink: finalMeetLink,
+        notes: notes || '',
+        adminNotes: adminNotes || '',
         clientName: student?.name || '',
         clientEmail: student?.email || '',
         clientPhone: student?.phone || '',
         clientLocationName: clientLocationName || '',
         clientLatitude: Number(clientLatitude) || 0,
-        clientLongitude: Number(clientLongitude) || 0
+        clientLongitude: Number(clientLongitude) || 0,
+        isAdminCreated: true
       });
 
-      // Send WhatsApp confirmation to user
-      const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
-      const studentPhone = resolveAnyPhone(student?.phone, student);
-      const sName = resolveStudentName(student?.name);
-      if (studentPhone) {
-        const WhatsAppService = require('../services/whatsappService');
-        WhatsAppService.sendBookingAlert(studentPhone, 'approved', {
-          studentName: sName,
-          counsellorName: counsellor?.name || 'Psychologist',
+      // Create matching session record for the counsellor and student portals
+      try {
+        await StorageService.create('sessions', {
+          appointmentId: newAppointment.id,
+          userId,
+          counsellorId: advisorId,
           date,
           time,
+          duration: resolvedDuration,
           mode: mode || 'ONLINE',
-          duration: '1 Hour (60 Mins)',
-          bookingId: newAppointment.id,
           meetLink: finalMeetLink,
-          recipientRole: 'user'
-        }).catch(err => console.error('[Admin WhatsApp Booking Alert Error]:', err));
+          status: 'UPCOMING',
+          service: service || 'counselling',
+          notes: notes || '',
+          adminNotes: adminNotes || ''
+        });
+      } catch (sessErr) {
+        console.error('[Admin createAppointment session creation error]:', sessErr);
+      }
+
+      // In-app notifications
+      try {
+        await Promise.allSettled([
+          StorageService.create('notifications', {
+            recipientId: userId,
+            recipientRole: 'user',
+            title: 'New Appointment Scheduled',
+            message: `An appointment with ${counsellor?.name || 'Psychologist'} has been scheduled for you on ${date} at ${time}.`,
+            type: 'appointment_created',
+            isRead: false
+          }),
+          StorageService.create('notifications', {
+            recipientId: advisorId,
+            recipientRole: 'counsellor',
+            title: 'New Appointment Scheduled by Admin',
+            message: `Administrator scheduled an appointment with ${student?.name || 'Client'} on ${date} at ${time}.`,
+            type: 'appointment_created',
+            isRead: false
+          })
+        ]);
+      } catch {}
+
+      // Send WhatsApp confirmation to user if not explicitly disabled
+      if (sendWhatsApp !== false) {
+        const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
+        const studentPhone = resolveAnyPhone(student?.phone, student);
+        const sName = resolveStudentName(student?.name);
+        if (studentPhone) {
+          const WhatsAppService = require('../services/whatsappService');
+          WhatsAppService.sendBookingAlert(studentPhone, 'approved', {
+            studentName: sName,
+            counsellorName: counsellor?.name || 'Psychologist',
+            date,
+            time,
+            mode: mode || 'ONLINE',
+            duration: resolvedDuration,
+            bookingId: newAppointment.id,
+            meetLink: finalMeetLink,
+            recipientRole: 'user'
+          }).catch(err => console.error('[Admin WhatsApp Booking Alert Error]:', err));
+        }
       }
 
       res.status(201).json({

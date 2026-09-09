@@ -1,12 +1,18 @@
 import React, { useState, useRef } from 'react';
 import ApiService from '../../../../services/api';
-import { User, Trash, Plus, KeyRound, Search, Edit, X, Loader2, Link, Navigation } from 'lucide-react';
+import { User, Trash, Plus, KeyRound, Search, Edit, X, Loader2, Link, Navigation, Calendar } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../../../utils/validation';
 
 export default function StudentManagementTab(props) {
  
-  const { usersDb, setUsersDb, bookingsDb, testResultsDb = [], reloadData, isSuperAdmin, hasUserPermission, getInitials, showAlert, showConfirm, showPrompt, handleExportPDF, handleExportImage, handleExportAptitudeResults, canAddStudents, canEditStudents, canDeleteStudents, isDbLoading } = props;
+  const {
+    usersDb, setUsersDb, bookingsDb, testResultsDb = [], reloadData, isSuperAdmin, hasUserPermission,
+    getInitials, showAlert, showConfirm, showPrompt, handleExportPDF, handleExportImage,
+    handleExportAptitudeResults, canAddStudents, canEditStudents, canDeleteStudents, isDbLoading,
+    setIsAddBookingOpen, setBookingForm, setBookingFormError, setBookingFormSuccess, getLocalTodayString,
+    canAddBookings, hasBookingPermission
+  } = props;
 
   const [searchUser, setSearchUser] = useState('');
   const [studentPage, setStudentPage] = useState(1);
@@ -91,6 +97,44 @@ export default function StudentManagementTab(props) {
     );
   };
 
+
+  const handleOpenBookSessionForStudent = (student) => {
+    if (!student) return;
+    const psyList = usersDb.filter(u => {
+      const r = (u.role || '').toUpperCase();
+      return r === 'PSYCHOLOGIST' || r === 'COUNSELLOR';
+    });
+    const firstPsy = psyList[0];
+    let firstSlot = '';
+    if (firstPsy?.availability?.availableSlots?.length > 0) {
+      firstSlot = firstPsy.availability.availableSlots[0];
+    }
+    const today = getLocalTodayString ? getLocalTodayString() : new Date().toISOString().split('T')[0];
+    const defaultPrice = firstPsy?.price ? Number(firstPsy.price) : 899;
+
+    if (setBookingForm) {
+      setBookingForm({
+        id: '',
+        userId: student.id,
+        advisorId: firstPsy?.id || '',
+        service: 'counselling',
+        mode: 'ONLINE',
+        date: today,
+        time: firstSlot,
+        duration: '1 Hour (60 Mins)',
+        paymentStatus: 'PAID',
+        amountPaid: defaultPrice,
+        notes: '',
+        adminNotes: '',
+        meetLink: firstPsy?.defaultMeetLink || '',
+        status: 'CONFIRMED',
+        sendWhatsApp: true
+      });
+    }
+    if (setBookingFormError) setBookingFormError('');
+    if (setBookingFormSuccess) setBookingFormSuccess('');
+    if (setIsAddBookingOpen) setIsAddBookingOpen(true);
+  };
 
   // Filter students based on search query
   const studentsList = usersDb.filter(u => {
@@ -591,13 +635,20 @@ export default function StudentManagementTab(props) {
  {bookingsDb.filter(b => b.userId === student.id).length} Booked
  </td>
  <td className="p-3 whitespace-nowrap">
- <div className="flex items-center justify-center gap-2">
- <button
- onClick={() => setViewingStudent(student)}
- className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
- >
- Details
- </button>
+  <div className="flex items-center justify-center gap-2">
+  <button
+  onClick={() => handleOpenBookSessionForStudent(student)}
+  className="px-2.5 py-1 bg-brand/10 text-brand hover:bg-brand hover:text-zinc-955 rounded border border-brand/30 transition cursor-pointer text-sm font-bold flex items-center gap-1 shadow-xs"
+  title="Create Booking for this User"
+  >
+  <Calendar className="w-3.5 h-3.5" /> Book
+  </button>
+  <button
+  onClick={() => setViewingStudent(student)}
+  className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
+  >
+  Details
+  </button>
  {canEditStudents && (
  <button
  onClick={() => handleOpenEditUser(student)}
@@ -916,12 +967,24 @@ export default function StudentManagementTab(props) {
  <p className="text-sm text-zinc-500 mt-1">Registry records, booking history, and diagnostic aptitude profiles.</p>
  </div>
  </div>
- <button
- onClick={() => setViewingStudent(null)}
- className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
- >
- <X className="w-4 h-4" />
- </button>
+  <div className="flex items-center gap-2">
+  <button
+    type="button"
+    onClick={() => {
+      handleOpenBookSessionForStudent(viewingStudent);
+      setViewingStudent(null);
+    }}
+    className="px-3 py-1.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-lg transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+  >
+    <Calendar className="w-3.5 h-3.5" /> Book Session
+  </button>
+  <button
+  onClick={() => setViewingStudent(null)}
+  className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+  >
+  <X className="w-4 h-4" />
+  </button>
+  </div>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

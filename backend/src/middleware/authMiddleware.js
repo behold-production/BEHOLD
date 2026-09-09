@@ -65,18 +65,6 @@ const verifyJWT = async (req, res, next) => {
       decoded.role = decoded.role.toLowerCase();
     }
 
-    // Check single-device session token enforcement
-    if (decoded && decoded.sessionToken) {
-      const activeSession = await getActiveSessionToken(decoded.id, decoded.role);
-      if (activeSession && activeSession !== decoded.sessionToken) {
-        return res.status(401).json({
-          success: false,
-          code: 'CONCURRENT_LOGIN_LOGOUT',
-          message: 'Your account was signed in on another device. You have been logged out.'
-        });
-      }
-    }
-
     req.user = decoded; // { id, email, role, sessionToken }
     next();
   } catch (error) {

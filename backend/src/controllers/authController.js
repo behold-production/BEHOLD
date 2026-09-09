@@ -498,16 +498,7 @@ const AuthController = {
           return res.status(401).json({ success: false, message: 'User not found' });
         }
 
-        // Check if token session matches active session in DB
-        if (decoded.sessionToken && userRecord.sessionToken && decoded.sessionToken !== userRecord.sessionToken) {
-          return res.status(401).json({
-            success: false,
-            code: 'CONCURRENT_LOGIN_LOGOUT',
-            message: 'Your account was signed in on another device. You have been logged out.'
-          });
-        }
-
-        const tokens = generateTokens(userRecord, userRecord.sessionToken);
+        const tokens = generateTokens(userRecord, decoded.sessionToken || userRecord.sessionToken);
         res.status(200).json({
           success: true,
           message: 'Tokens refreshed successfully',
