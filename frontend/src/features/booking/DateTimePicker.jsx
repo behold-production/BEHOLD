@@ -1,34 +1,14 @@
 import { useMemo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, Check, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, Check, Clock, Zap } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
+import { toLocalDateString, getLocalTodayString, getSmartWeekdayDate } from '../../utils/calendarUtils';
 
 const WEEKDAY_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
-
-function toLocalDateString(date) {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-function getLocalTodayString() {
-  return toLocalDateString(new Date());
-}
-
-function getNextWeekdayDate(targetWeekday, fromDate = new Date()) {
-  const result = new Date(fromDate);
-  result.setHours(0, 0, 0, 0);
-  const current = result.getDay();
-  let diff = (targetWeekday - current + 7) % 7;
-  if (diff === 0) diff = 7;
-  result.setDate(result.getDate() + diff);
-  return result;
-}
 
 export default function DateTimePicker({
   isOpen = false,
@@ -60,7 +40,7 @@ export default function DateTimePicker({
     return new Date(today.getFullYear(), today.getMonth(), 1);
   });
 
-  // Sync current month view when selectedDate changes
+  // Sync current month view when selectedDate changes or modal opens
   useEffect(() => {
     if (selectedDate) {
       const [y, m] = selectedDate.split('-').map(Number);
@@ -74,22 +54,7 @@ export default function DateTimePicker({
         });
       }
     }
-  }, [selectedDate]);
-
-  // Quick-jump dates
-  const tomorrowStr = useMemo(() => {
-    const d = new Date(today);
-    d.setDate(d.getDate() + 1);
-    return toLocalDateString(d);
-  }, [today]);
-
-  const weekendStr = useMemo(() => toLocalDateString(getNextWeekdayDate(6, today)), [today]);
-
-  const nextWeekStr = useMemo(() => {
-    const d = new Date(today);
-    d.setDate(d.getDate() + 7);
-    return toLocalDateString(d);
-  }, [today]);
+  }, [selectedDate, isOpen]);
 
   // Helper to check availability for any given date
   const getDayMeta = (dateStr, dateObj) => {
@@ -104,6 +69,34 @@ export default function DateTimePicker({
     }
     return { isPast: isPast || isBeyondMax, isAvailable, slotCount };
   };
+
+  // Find next available date dynamically
+  const earliestAvailableDateStr = useMemo(() => {
+    if (!getAvailableSlotsForDate) return null;
+    const d = new Date(today);
+    for (let i = 0; i <= maxAdvanceDays; i++) {
+      const checkDate = new Date(d);
+      checkDate.setDate(d.getDate() + i);
+      const str = toLocalDateString(checkDate);
+      const slots = getAvailableSlotsForDate(str) || [];
+      if (slots.length > 0) {
+        return str;
+      }
+    }
+    return null;
+  }, [today, maxAdvanceDays, getAvailableSlotsForDate]);
+
+  // Quick-jump dates
+  const tomorrowStr = useMemo(() => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + 1);
+    return toLocalDateString(d);
+  }, [today]);
+
+  const weekendStr = useMemo(() => {
+    const sat = getSmartWeekdayDate(6, today);
+    return toLocalDateString(sat);
+  }, [today]);
 
   const calendarCells = useMemo(() => {
     const year = currentMonth.getFullYear();
@@ -177,6 +170,15 @@ export default function DateTimePicker({
 
   if (!isOpen) return null;
 
+  const quickJumpList = [
+    { label: 'Today', dateStr: todayStr, obj: today },
+    { label: 'Tomorrow', dateStr: tomorrowStr, obj: new Date(tomorrowStr + 'T00:00:00') },
+    ...(earliestAvailableDateStr && earliestAvailableDateStr !== todayStr && earliestAvailableDateStr !== tomorrowStr
+      ? [{ label: 'Next Free', dateStr: earliestAvailableDateStr, obj: new Date(earliestAvailableDateStr + 'T00:00:00'), isNext: true }]
+      : []),
+    { label: 'Weekend', dateStr: weekendStr, obj: new Date(weekendStr + 'T00:00:00') }
+  ];
+
   const modalNode = (
     <div
       className="fixed inset-0 z-[250] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md animate-backdrop-in overflow-y-auto"
@@ -195,7 +197,7 @@ export default function DateTimePicker({
             <div className="min-w-0">
               <h3 className="font-bold text-base sm:text-lg text-white truncate">Choose Appointment Date</h3>
               <p className="text-xs text-slate-300 truncate">
-                {selectedAdvisorName ? `Availability for ${selectedAdvisorName}` : 'Select a date with available slots'}
+                {selectedAdvisorName ? `Available Consultation Dates for ${selectedAdvisorName}` : 'Select a date with open session slots'}
               </p>
             </div>
           </div>
@@ -214,12 +216,7 @@ export default function DateTimePicker({
           <div className="space-y-1.5">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Quick Jump</span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { label: 'Today', dateStr: todayStr, obj: today },
-                { label: 'Tomorrow', dateStr: tomorrowStr, obj: new Date(tomorrowStr + 'T00:00:00') },
-                { label: 'Weekend', dateStr: weekendStr, obj: new Date(weekendStr + 'T00:00:00') },
-                { label: 'Next Week', dateStr: nextWeekStr, obj: new Date(nextWeekStr + 'T00:00:00') }
-              ].map(item => {
+              {quickJumpList.slice(0, 4).map(item => {
                 const meta = getDayMeta(item.dateStr, item.obj);
                 const isSelected = selectedDate === item.dateStr;
                 const isDisabled = meta.isPast || !meta.isAvailable;
@@ -232,15 +229,20 @@ export default function DateTimePicker({
                     onClick={() => handleSelectDate(item.dateStr, item.obj)}
                     className={`py-2 px-2.5 rounded-xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
                       isSelected
-                        ? 'bg-slate-900 text-[#00c9d6] border-slate-900 shadow-sm'
+                        ? 'bg-slate-900 text-[#00c9d6] border-slate-900 shadow-sm ring-2 ring-[#00c9d6]/50'
                         : isDisabled
                         ? 'bg-slate-50 border-slate-200 text-slate-300 cursor-not-allowed opacity-50'
+                        : item.isNext
+                        ? 'bg-teal-50 hover:bg-teal-100 border-teal-300 text-teal-900 cursor-pointer shadow-xs'
                         : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-400 cursor-pointer'
                     }`}
                   >
-                    <span className="font-bold">{item.label}</span>
-                    <span className="text-[10px] font-medium opacity-80">
-                      {isDisabled ? 'No slots' : `${meta.slotCount} ${meta.slotCount === 1 ? 'slot' : 'slots'}`}
+                    <div className="flex items-center gap-1">
+                      {item.isNext && <Zap className="w-3 h-3 text-[#008b94]" />}
+                      <span className="font-bold">{item.label}</span>
+                    </div>
+                    <span className={`text-[10px] font-medium ${isDisabled ? 'text-slate-300' : isSelected ? 'text-teal-300' : 'text-emerald-700'}`}>
+                      {isDisabled ? '0 slots' : `${meta.slotCount} ${meta.slotCount === 1 ? 'slot' : 'slots'}`}
                     </span>
                   </button>
                 );
@@ -315,14 +317,14 @@ export default function DateTimePicker({
                         ? 'bg-slate-900 text-white font-bold shadow-md ring-2 ring-[#00c9d6]'
                         : isClickable
                         ? 'bg-white hover:bg-teal-50 border border-slate-200/90 text-slate-900 font-semibold cursor-pointer hover:border-teal-500 hover:shadow-xs'
-                        : 'bg-slate-100/50 border border-slate-200/40 text-slate-400 opacity-50 cursor-not-allowed'
+                        : 'bg-slate-100/50 border border-slate-200/40 text-slate-400 opacity-40 cursor-not-allowed'
                     }`}
                   >
                     <span className={`text-xs ${isSelected ? 'text-white' : ''}`}>
                       {dayNum}
                     </span>
 
-                    {/* Today indicator dot/text */}
+                    {/* Today indicator */}
                     {isToday && isCurrentMonth && (
                       <span className={`text-[8px] font-extrabold uppercase leading-none tracking-tighter mt-0.5 ${
                         isSelected ? 'text-[#00c9d6]' : 'text-teal-600'
@@ -334,7 +336,7 @@ export default function DateTimePicker({
                     {/* Available slot count pill */}
                     {isClickable && !isToday && (
                       <span className={`text-[8px] font-medium leading-none mt-0.5 ${
-                        isSelected ? 'text-slate-300' : 'text-emerald-700'
+                        isSelected ? 'text-slate-300' : 'text-emerald-700 font-bold'
                       }`}>
                         {meta.slotCount}
                       </span>
@@ -349,7 +351,7 @@ export default function DateTimePicker({
           <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500 pt-1">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Available
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Available Slots
               </span>
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-[#00c9d6]" /> Selected

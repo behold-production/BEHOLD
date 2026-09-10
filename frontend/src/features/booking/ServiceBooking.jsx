@@ -4,8 +4,9 @@ import { useBookingViewModel } from './useBookingViewModel';
 import DateTimePicker from './DateTimePicker';
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink } from 'lucide-react';
+import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
+import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
 import SEO from '../../components/common/SEO';
@@ -111,6 +112,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         getAdvisorBookedSlotsForDate,
         getAdvisorEarliestAvailableDate,
         getAdvisorEarliestAvailableInfo,
+        selectAdvisor,
         handleDateChange,
         handleStepChange,
         handleInputChange,
@@ -666,6 +668,25 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             </button>
                                         ) : (
                                             <>
+                                                {(confirmedBooking?.mode === 'ONLINE' || bookingMode === 'ONLINE') && (
+                                                    <a
+                                                        href={createGoogleCalendarUrl({
+                                                            title: `BEHOLD Counselling Session - ${confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Psychologist'}`,
+                                                            description: `Confidential Psychological Counselling Session via BEHOLD.\nGoogle Meet Link: ${confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || ''}\nStudent: ${confirmedBooking?.clientName || bookingForm.name || 'User'}`,
+                                                            location: confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'Google Meet',
+                                                            date: confirmedBooking?.date || selectedDate,
+                                                            time: confirmedBooking?.time || selectedTime,
+                                                            durationMinutes: bookingDuration
+                                                        })}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="w-full sm:w-auto px-5 py-3 bg-[#00c9d6]/10 hover:bg-[#00c9d6]/20 border border-[#00c9d6]/40 text-teal-950 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center justify-center gap-2 shadow-xs no-underline"
+                                                    >
+                                                        <CalendarIcon className="w-4 h-4 text-teal-600" />
+                                                        <span>Add to Calendar</span>
+                                                    </a>
+                                                )}
+
                                                 <button
                                                     type="button"
                                                     disabled={downloadingPdf}
@@ -1107,10 +1128,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 key={advisor.id}
                                                                                 onClick={() => {
                                                                                     if (!isAvailable) return;
-                                                                                    setSelectedAdvisor(advisor);
-                                                                                    setAdvisorConfirmed(true);
-                                                                                    setSelectedTime('');
+                                                                                    if (selectAdvisor) {
+                                                                                        selectAdvisor(advisor);
+                                                                                    } else {
+                                                                                        setSelectedAdvisor(advisor);
+                                                                                        setAdvisorConfirmed(true);
+                                                                                        const earliest = getAdvisorEarliestAvailableDate(advisor);
+                                                                                        if (earliest) setSelectedDate(earliest);
+                                                                                        setSelectedTime('');
+                                                                                    }
                                                                                     if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
+                                                                                    setWizardStep(3);
                                                                                     scrollToTarget(step3TimeRef);
                                                                                 }}
                                                                                 className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${
@@ -1298,6 +1326,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             }}
                                                             availableSlots={getAdvisorSlotsForDate(selectedAdvisor, selectedDate)}
                                                             bookedSlots={getAdvisorBookedSlotsForDate(selectedAdvisor, selectedDate)}
+                                                            selectedAdvisor={selectedAdvisor}
+                                                            getAdvisorSlotsForDate={getAdvisorSlotsForDate}
+                                                            getAdvisorEarliestAvailableDate={getAdvisorEarliestAvailableDate}
                                                             errors={errors}
                                                             onOpenDatePicker={() => setIsDatePickerOpen(true)}
                                                         />
@@ -1307,7 +1338,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             isOpen={isDatePickerOpen}
                                                             onClose={() => setIsDatePickerOpen(false)}
                                                             selectedDate={selectedDate}
-                                                            selectedAdvisorName={selectedAdvisor.name}
+                                                            selectedAdvisorName={selectedAdvisor?.name}
                                                             onDateChange={(d) => {
                                                                 handleDateChange(d);
                                                                 setIsDatePickerOpen(false);

@@ -385,14 +385,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const match = advisors.find(a => String(a.id) === String(targetAdvisorId) || String(a._id) === String(targetAdvisorId));
       if (match) {
         setTimeout(() => {
-          setSelectedAdvisor(match);
-          setAdvisorConfirmed(true);
-          if (match.modes && match.modes.length > 0 && !match.modes.includes(bookingMode)) {
-            setBookingMode(match.modes[0]);
-          }
-          setSelectedDate(prevDate => {
-            return prevDate || getLocalTodayString();
-          });
+          selectAdvisor(match);
         }, 0);
       }
     }
@@ -628,6 +621,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAdvisorSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
+    const todayStr = getLocalTodayString();
+    if (dateStr < todayStr) return [];
     if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
       return [];
     }
@@ -687,8 +682,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAvailableSlotsForDate = (dateStr, serviceType) => {
     if (!dateStr) return [];
-
     const todayStr = getLocalTodayString();
+    if (dateStr < todayStr) return [];
+
     const isSlotInPast = (timeStr) => {
       try {
         const [time, modifier] = timeStr.split(' ');
@@ -756,6 +752,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAdvisorAllSlotsForDate = (advisor, dateStr) => {
     if (!dateStr || !advisor) return [];
+    const todayStr = getLocalTodayString();
+    if (dateStr < todayStr) return [];
     if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
       return [];
     }
@@ -817,7 +815,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const getAdvisorEarliestAvailableDate = (advisor, preferredDate = null) => {
     if (!advisor) return null;
-    if (preferredDate && getAdvisorSlotsForDate(advisor, preferredDate).length > 0) {
+    const todayStr = getLocalTodayString();
+    if (preferredDate && preferredDate >= todayStr && getAdvisorSlotsForDate(advisor, preferredDate).length > 0) {
       return preferredDate;
     }
     const today = new Date();
@@ -834,6 +833,28 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
     }
     return null;
+  };
+
+  const selectAdvisor = (advisor) => {
+    if (!advisor) {
+      setSelectedAdvisor(null);
+      setAdvisorConfirmed(false);
+      return;
+    }
+    setSelectedAdvisor(advisor);
+    setAdvisorConfirmed(true);
+    if (advisor.modes && Array.isArray(advisor.modes) && advisor.modes.length > 0 && !advisor.modes.includes(bookingMode)) {
+      setBookingMode(advisor.modes[0]);
+    }
+    const earliest = getAdvisorEarliestAvailableDate(advisor);
+    setSelectedDate(prevDate => {
+      if (prevDate && getAdvisorSlotsForDate(advisor, prevDate).length > 0) {
+        return prevDate;
+      }
+      return earliest || getLocalTodayString();
+    });
+    setSelectedTime('');
+    if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
   };
 
   const getAdvisorEarliestAvailableInfo = (advisor) => {
@@ -876,7 +897,14 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
-    setSelectedTime('');
+    if (selectedAdvisor && selectedTime) {
+      const slots = getAdvisorSlotsForDate(selectedAdvisor, newDate);
+      if (!slots.includes(selectedTime)) {
+        setSelectedTime('');
+      }
+    } else {
+      setSelectedTime('');
+    }
     if (errors.date) setErrors(prev => ({ ...prev, date: null }));
   };
 
@@ -1103,15 +1131,8 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         const found = advisors.find(a => a.id === preselectedAdvisorId);
         if (found) {
           setTimeout(() => {
-            setBookingService(found.type);
-            setSelectedAdvisor(found);
-            setAdvisorConfirmed(true);
-            if (found.modes && found.modes.length > 0 && !found.modes.includes(bookingMode)) {
-              setBookingMode(found.modes[0]);
-            }
-            setSelectedDate(prevDate => {
-              return prevDate || getLocalTodayString();
-            });
+            if (found.type) setBookingService(found.type);
+            selectAdvisor(found);
           }, 0);
 
           setTimeout(() => {
@@ -1891,6 +1912,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     getAdvisorBookedSlotsForDate,
     getAdvisorEarliestAvailableDate,
     getAdvisorEarliestAvailableInfo,
+    selectAdvisor,
     handleDateChange,
     getAdvisorAvailabilityStatus,
     handleStepChange,

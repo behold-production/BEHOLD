@@ -24,6 +24,7 @@ import {
 import ApiService from '../../services/api';
 import SEO from '../../components/common/SEO';
 import { formatDateString } from '../../utils/dateFormatter';
+import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import { trackPurchase } from '../../utils/metaPixel';
 import { generateReceiptPDFDoc } from '../student/utils/utils';
 import { toast } from 'react-hot-toast';
@@ -383,6 +384,25 @@ export default function ThankYouPage() {
 
           {/* Action buttons */}
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+            {bookingData?.mode === 'ONLINE' && (
+              <a
+                href={createGoogleCalendarUrl({
+                  title: `BEHOLD Counselling Session - ${bookingData?.advisorName || 'Psychologist'}`,
+                  description: `Confidential Psychological Counselling Session via BEHOLD.\nGoogle Meet: ${bookingData?.meetLink || ''}\nStudent: ${bookingData?.clientName || ''}`,
+                  location: bookingData?.meetLink || 'Google Meet',
+                  date: bookingData?.date,
+                  time: bookingData?.time,
+                  durationMinutes: bookingData?.duration && String(bookingData.duration).includes('30') ? 30 : 60
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:flex-1 py-3.5 px-4 bg-[#00c9d6]/10 hover:bg-[#00c9d6]/20 border border-[#00c9d6]/40 text-teal-950 font-semibold text-sm rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
+              >
+                <Calendar className="w-4 h-4 text-teal-700 shrink-0" />
+                <span>Add to Calendar</span>
+              </a>
+            )}
+
             <button
               onClick={handleDownloadReceipt}
               className="w-full sm:flex-1 py-3.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"

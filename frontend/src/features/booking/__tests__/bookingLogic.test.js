@@ -18,6 +18,7 @@ describe('Psychologist-First Booking Availability Logic', () => {
 
   const getAdvisorSlotsForDate = (advisor, dateStr, todayStr = '2026-09-11', nowMinutes = 9 * 60) => {
     if (!dateStr || !advisor) return [];
+    if (dateStr < todayStr) return [];
 
     const [year, month, day] = dateStr.split('-').map(Number);
     const dayOfWeek = new Date(year, month - 1, day).getDay();
@@ -161,6 +162,25 @@ describe('Psychologist-First Booking Availability Logic', () => {
       expect(calculateEndTime('11:30 AM', 60)).toBe('12:30 PM');
     });
 
+    it('should strictly return 0 slots for past dates', () => {
+      const advisor = {
+        id: 'adv-past',
+        name: 'Dr. Past',
+        availability: {
+          activeDays: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true },
+          availableSlots: ['10:00 AM', '11:00 AM']
+        },
+        bookedSlots: []
+      };
+
+      // 2026-09-10 is in the past relative to 2026-09-11
+      const pastSlots = getAdvisorSlotsForDate(advisor, '2026-09-10', '2026-09-11', 9 * 60);
+      expect(pastSlots.length).toBe(0);
+
+      const ancientSlots = getAdvisorSlotsForDate(advisor, '2025-01-01', '2026-09-11', 9 * 60);
+      expect(ancientSlots.length).toBe(0);
+    });
+
     it('should correctly select session price based on plan (₹499 for 30m vs ₹899 for 60m)', () => {
       const advisor = {
         id: 'adv-5',
@@ -175,6 +195,51 @@ describe('Psychologist-First Booking Availability Logic', () => {
 
       expect(getSessionPrice(advisor, 30)).toBe(499);
       expect(getSessionPrice(advisor, 60)).toBe(899);
+    });
+  });
+
+  describe('Calendar Utilities & Export Helpers', () => {
+    it('should generate a valid Google Calendar URL with correct parameters', async () => {
+      const { createGoogleCalendarUrl } = await import('../../../utils/calendarUtils');
+
+      const url = createGoogleCalendarUrl({
+        title: 'BEHOLD Counselling Session - Dr. Sarah',
+        description: 'Google Meet counselling session',
+        location: 'https://meet.google.com/abc-def-ghi',
+        date: '2026-09-15',
+        time: '10:00 AM',
+        durationMinutes: 60
+      });
+
+      expect(url).toContain('https://calendar.google.com/calendar/render');
+      expect(url).toContain('action=TEMPLATE');
+      expect(url).toContain('text=BEHOLD+Counselling+Session+-+Dr.+Sarah');
+      expect(url).toContain('location=https%3A%2F%2Fmeet.google.com%2Fabc-def-ghi');
+      expect(url).toContain('dates=');
+    });
+
+    it('should format time intervals correctly for 30m and 60m sessions', async () => {
+      const { getTimeIntervalLabel } = await import('../../../utils/calendarUtils');
+
+      expect(getTimeIntervalLabel('10:00 AM', 60)).toBe('10:00 AM - 11:00 AM');
+      expect(getTimeIntervalLabel('10:00 AM', 30)).toBe('10:00 AM - 10:30 AM');
+      expect(getTimeIntervalLabel('11:30 AM', 60)).toBe('11:30 AM - 12:30 PM');
+      expect(getTimeIntervalLabel('11:30 AM', 30)).toBe('11:30 AM - 12:00 PM');
+      expect(getTimeIntervalLabel('05:00 PM', 60)).toBe('05:00 PM - 06:00 PM');
+    });
+
+    it('should calculate smart weekend dates properly without skipping today if today is Saturday', async () => {
+      const { getSmartWeekdayDate, toLocalDateString } = await import('../../../utils/calendarUtils');
+
+      // Given a Saturday (2026-09-12)
+      const saturday = new Date(2026, 8, 12);
+      const targetSat = getSmartWeekdayDate(6, saturday);
+      expect(toLocalDateString(targetSat)).toBe('2026-09-12'); // Kept today Saturday!
+
+      // Given a Wednesday (2026-09-09)
+      const wednesday = new Date(2026, 8, 9);
+      const nextSat = getSmartWeekdayDate(6, wednesday);
+      expect(toLocalDateString(nextSat)).toBe('2026-09-12'); // Jumps 3 days to Saturday
     });
   });
 });

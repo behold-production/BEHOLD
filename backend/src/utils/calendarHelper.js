@@ -3,10 +3,10 @@ const { google } = require('googleapis');
 /**
  * Helper to generate a friction-free meeting link for online counselling sessions.
  * 
- * Fixes "Ask to Join" issue:
- * 1. Sets organizer: { email: counsellor.email, displayName: counsellor.name, self: true }
- * 2. Does NOT place counsellor inside attendees array (counsellor IS the calendar owner/organizer)
- * 3. Sets guestsCanModify: true, guestsCanInviteOthers: false, guestsCanSeeOtherGuests: true
+ * Flow:
+ * 1. Checks SYSTEM_GOOGLE_REFRESH_TOKEN / GOOGLE_REFRESH_TOKEN first.
+ * 2. If system token is not configured, gracefully falls back to counsellor.googleRefreshToken if connected.
+ * 3. Creates the Google Calendar Event with Google Meet video conference.
  * 4. Fallbacks to counsellor.defaultMeetLink or instant secure room URL (meet.jit.si) if Google API fails or is unconnected.
  */
 async function generateSessionMeetingLink({ counsellor, user, date, time, service, appointmentId, durationMinutes }) {
@@ -17,9 +17,11 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
   const keySecret = process.env.GOOGLE_CLIENT_SECRET;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'https://www.behold.co.in/api/google/callback';
 
-  // ONLY use central system OAuth refresh token so event is created exclusively by central system account (beholdoffice@gmail.com / admin@behold.co.in)
-  // NEVER fall back to psychologist's personal OAuth token to prevent emails being sent from psychologist's personal email
-  const refreshToken = (process.env.SYSTEM_GOOGLE_REFRESH_TOKEN || process.env.GOOGLE_REFRESH_TOKEN || '').trim();
+  // Primary: Central system OAuth refresh token
+  // Fallback: Counsellor's connected Google Calendar token
+  const systemRefreshToken = (process.env.SYSTEM_GOOGLE_REFRESH_TOKEN || process.env.GOOGLE_REFRESH_TOKEN || '').trim();
+  const counsellorRefreshToken = (counsellor?.googleRefreshToken || '').trim();
+  const refreshToken = systemRefreshToken || counsellorRefreshToken;
 
   if (keyId && keySecret && refreshToken) {
     try {
@@ -40,29 +42,39 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
       const durationMs = (Number(durationMinutes) || 60) * 60 * 1000;
       const endTime = new Date(startTime.getTime() + durationMs);
 
-      const rawUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').trim();
-      const baseDomain = rawUrl.replace(/\/counsellor\/?$/, '').replace(/\/profile\/?$/, '').replace(/\/$/, '');
-      const organizerEmail = (process.env.RESEND_FROM_EMAIL || process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim();
+      const isSystemAccount = Boolean(systemRefreshToken);
+      const organizerEmail = isSystemAccount
+        ? (process.env.RESEND_FROM_EMAIL || process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim()
+        : (counsellor?.googleEmail || counsellor?.email || 'beholdoffice@gmail.com').trim();
+
       const { resolveStudentName } = require('./phoneUtils');
       const studentName = resolveStudentName(user?.name) || 'Student';
       const counsellorName = counsellor?.name || 'Psychologist';
 
-      const attendees = [
-        { email: organizerEmail, displayName: 'BEHOLD.', responseStatus: 'accepted', organizer: true }
-      ];
+      const attendees = [];
+      if (organizerEmail) {
+        attendees.push({
+          email: organizerEmail,
+          displayName: isSystemAccount ? 'BEHOLD.' : counsellorName,
+          responseStatus: 'accepted',
+          organizer: true
+        });
+      }
+
       if (user && user.email && user.email.toLowerCase() !== organizerEmail.toLowerCase() && !user.email.includes('@temp.behold')) {
         attendees.push({ email: user.email, displayName: studentName, responseStatus: 'accepted' });
       }
+
       if (counsellor && counsellor.email && counsellor.email.toLowerCase() !== organizerEmail.toLowerCase() && !counsellor.email.includes('@temp.behold')) {
         attendees.push({ email: counsellor.email, displayName: counsellorName, responseStatus: 'accepted' });
       }
 
       const event = {
-        summary: `BEHOLD Counselling Session`,
-        description: `Service: ${service || 'counselling'}\nMode: ONLINE (Google Meet)`,
+        summary: `BEHOLD Counselling Session - ${counsellorName} & ${studentName}`,
+        description: `Service: ${service || 'Psychological Counselling'}\nMode: ONLINE (Google Meet)\nPsychologist: ${counsellorName}\nStudent: ${studentName}`,
         start: { dateTime: startTime.toISOString() },
         end: { dateTime: endTime.toISOString() },
-        organizer: { email: organizerEmail, displayName: 'BEHOLD.', self: true },
+        organizer: { email: organizerEmail, displayName: isSystemAccount ? 'BEHOLD.' : counsellorName, self: true },
         attendees,
         guestsCanModify: true,
         guestsCanInviteOthers: true,
@@ -95,7 +107,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         return meetingLink;
       }
     } catch (calError) {
-      console.error('[Google Calendar API Warning]: Could not create event via Google API, using default/fallback room:', calError.message);
+      console.error('[Google Calendar API Warning]: Could not create event via Google API, using fallback room:', calError.message);
     }
   }
 
