@@ -73,8 +73,12 @@ export function getSmartWeekdayDate(targetWeekday, fromDate = new Date()) {
  */
 export function createGoogleCalendarUrl({
   title = 'BEHOLD Counselling Session',
-  description = 'Private psychological counselling session via BEHOLD.',
+  description = '',
+  advisorName = '',
+  studentName = '',
   location = 'Google Meet',
+  meetLink = '',
+  service = 'Psychological Counselling',
   date, // 'YYYY-MM-DD'
   time, // '10:00 AM'
   durationMinutes = 60
@@ -102,8 +106,25 @@ export function createGoogleCalendarUrl({
     url.searchParams.set('action', 'TEMPLATE');
     url.searchParams.set('text', title);
     url.searchParams.set('dates', datesParam);
-    if (description) url.searchParams.set('details', description);
-    if (location) url.searchParams.set('location', location);
+
+    const fullDescription = description || [
+      `🧠 BEHOLD. Psychological Counselling & Consultation Session`,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      advisorName ? `• Psychologist: ${advisorName}` : '',
+      studentName ? `• Client: ${studentName}` : '',
+      `• Date: ${date}`,
+      `• Time: ${time}`,
+      `• Duration: ${durationMinutes} Minutes`,
+      `• Service: ${service}`,
+      meetLink ? `• Video Room: ${meetLink}` : '',
+      ``,
+      `📌 Note: Please join the session 5 minutes early. Ensure you have a quiet and private space.`,
+      ``,
+      `Support: support@behold.co.in | https://www.behold.co.in`
+    ].filter(Boolean).join('\n');
+
+    url.searchParams.set('details', fullDescription);
+    if (meetLink || location) url.searchParams.set('location', meetLink || location);
 
     return url.toString();
   } catch (e) {

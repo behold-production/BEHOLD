@@ -99,7 +99,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
               Session Activity Sheets
             </h2>
             <p className="text-sm text-zinc-400 mt-1">
-              Share tasks or worksheets with {booking.studentName || 'the client'}
+              Share tasks or worksheets with {booking.studentName || booking.userName || booking.clientName || 'the client'}
             </p>
           </div>
           <button

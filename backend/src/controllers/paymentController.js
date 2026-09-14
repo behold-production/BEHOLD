@@ -7,8 +7,16 @@ const WhatsAppService = require('../services/whatsappService');
 const { resolveAnyPhone, normalizePhoneWithCountryCode, resolveStudentName } = require('../utils/phoneUtils');
 const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
-async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackClientPhone = '') {
+async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackClientPhone = '', forceResend = false) {
   try {
+    if (!appointment) return;
+
+    // Prevent duplicate booking notifications if already sent (e.g. from both verifyPayment and webhook)
+    if (!forceResend && (appointment.whatsappNotificationSent === true || appointment.notificationSent === true)) {
+      console.log(`[Payment Booking Notifications] ℹ️ Notifications already dispatched for appointment ${appointment.id || appointment._id}. Skipping duplicate send.`);
+      return;
+    }
+
     const user = appointment?.userId ? await StorageService.findById('users', appointment.userId) : null;
     let counsellor = appointment?.counsellorId ? await StorageService.findById('counsellors', appointment.counsellorId) : null;
     if (!counsellor && appointment?.counsellorId) {
@@ -42,6 +50,17 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
     const apptBookingId = appointment?.id || appointment?._id || `app_${Date.now()}`;
 
     console.log(`[Payment Booking WhatsApp Trigger] Target Phone: "${targetUserPhone}" | Student: "${sName || 'Anonymous'}" | Counsellor: "${cName}" | Date: ${date} ${time}`);
+
+    // Mark as sent in storage immediately to avoid concurrent races
+    if (appointment?.id) {
+      StorageService.update('appointments', appointment.id, {
+        whatsappNotificationSent: true,
+        notificationSent: true,
+        confirmationAlertSentAt: new Date()
+      }).catch(() => {});
+      appointment.whatsappNotificationSent = true;
+      appointment.notificationSent = true;
+    }
 
     await Promise.allSettled([
       appointment?.counsellorId ? StorageService.create('notifications', {

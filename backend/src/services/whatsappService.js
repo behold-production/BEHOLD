@@ -15,12 +15,38 @@ const { normalizePhoneWithCountryCode, cleanUserName } = require('../utils/phone
 
 class WhatsAppService {
   constructor() {
+    this._recentSends = new Map();
     this._init();
   }
 
   _init() {
     this.waSenderToken = (process.env.WASENDER_TOKEN || '04dd74a889079fa8a0030b0d5758854885be408fa8486f84a962c7ffb18ecf50').trim();
     this.isWaSenderConfigured = Boolean(this.waSenderToken);
+  }
+
+  /**
+   * Check and record outgoing message to prevent duplicate sends within cooldown window
+   */
+  _isDuplicateSend(phone, text, windowMs = 60000) {
+    if (!phone || !text) return false;
+    const now = Date.now();
+    // Clean old entries (> 2 minutes)
+    for (const [k, timestamp] of this._recentSends.entries()) {
+      if (now - timestamp > 120000) {
+        this._recentSends.delete(k);
+      }
+    }
+    const cleanPhone = String(phone).replace(/\D/g, '');
+    const cleanText = String(text).trim().substring(0, 200);
+    const key = `${cleanPhone}_${cleanText}`;
+
+    const lastSent = this._recentSends.get(key);
+    if (lastSent && (now - lastSent) < windowMs) {
+      return true;
+    }
+
+    this._recentSends.set(key, now);
+    return false;
   }
 
   /**
@@ -121,11 +147,17 @@ class WhatsAppService {
   /**
    * Core dispatcher — sends via WASender or falls back to console mock
    */
-  async _dispatch(phone, text) {
+  async _dispatch(phone, text, { skipDeduplication = false } = {}) {
     this._init(); // re-read env each time so .env changes take effect without restart
     if (!phone) return { success: false, error: 'Phone number is required' };
 
     const truncated = String(text).substring(0, 4096); // WhatsApp limit
+
+    // Prevent duplicate messages sent within 60s window (unless explicitly skipped e.g. for OTP)
+    if (!skipDeduplication && this._isDuplicateSend(phone, truncated)) {
+      console.log(`[WhatsApp Deduplicator] 🛡️ Suppressed duplicate message send to ${phone}`);
+      return { success: true, deduped: true, provider: 'WASender (Deduped)' };
+    }
 
     if (this.isWaSenderConfigured) {
       return await this._sendViaWaSender(phone, truncated);
@@ -150,7 +182,7 @@ class WhatsAppService {
     const text =
       `Your BEHOLD. verification code is: ${code}\n\n` +
       `Valid for 5 minutes. Please do not share this code with anyone.`;
-    return this._dispatch(phone, text);
+    return this._dispatch(phone, text, { skipDeduplication: true });
   }
 
   /**

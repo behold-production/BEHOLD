@@ -69,9 +69,25 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         attendees.push({ email: counsellor.email, displayName: counsellorName, responseStatus: 'accepted' });
       }
 
+      const eventDescription = [
+        `🧠 BEHOLD. Psychological Counselling & Consultation Session`,
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        `• Psychologist: ${counsellorName}`,
+        `• Client/Student: ${studentName}`,
+        `• Date: ${date}`,
+        `• Time: ${time}`,
+        `• Duration: ${Number(durationMinutes) || 60} Minutes`,
+        `• Service: ${service || 'Emotional Wellbeing & Counselling'}`,
+        `• Mode: ONLINE Video Consultation (Google Meet)`,
+        ``,
+        `📌 Note: Please join the meeting 5 minutes before scheduled start time. Ensure you have a quiet and private space with a stable internet connection.`,
+        ``,
+        `For support, rescheduling, or queries, visit https://www.behold.co.in or email support@behold.co.in.`
+      ].join('\n');
+
       const event = {
-        summary: `BEHOLD Counselling Session - ${counsellorName} & ${studentName}`,
-        description: `Service: ${service || 'Psychological Counselling'}\nMode: ONLINE (Google Meet)\nPsychologist: ${counsellorName}\nStudent: ${studentName}`,
+        summary: `BEHOLD Counselling Session: ${counsellorName} & ${studentName}`,
+        description: eventDescription,
         start: { dateTime: startTime.toISOString() },
         end: { dateTime: endTime.toISOString() },
         organizer: { email: organizerEmail, displayName: isSystemAccount ? 'BEHOLD.' : counsellorName, self: true },
@@ -82,8 +98,9 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         reminders: {
           useDefault: false,
           overrides: [
-            { method: 'popup', minutes: 0 },
-            { method: 'email', minutes: 0 }
+            { method: 'popup', minutes: 30 },
+            { method: 'popup', minutes: 10 },
+            { method: 'email', minutes: 1440 }
           ]
         },
         conferenceData: {

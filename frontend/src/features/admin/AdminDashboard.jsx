@@ -1954,17 +1954,27 @@ const _handleAdminDetectLocation = () => {
     const studentUser = usersDb.find(u => (booking.userId && u.id === booking.userId) || (booking.userName && u.name === booking.userName && (u.role === 'USER' || !u.role)));
     const advisorUser = usersDb.find(u => ((booking.advisorId || booking.counsellorId) && (u.id === booking.advisorId || u.id === booking.counsellorId)) || (booking.advisorName && u.name === booking.advisorName && u.role === 'PSYCHOLOGIST'));
 
+    const bDuration = booking.duration || '1 Hour (60 Mins)';
+    const bAmount = booking.amountPaid !== undefined ? booking.amountPaid : (booking.amount !== undefined ? booking.amount : (booking.fee !== undefined ? booking.fee : (String(bDuration).includes('30') ? 499 : 899)));
+    const bPaymentStatus = booking.paymentStatus || (Number(bAmount) === 0 ? 'FREE' : 'PAID');
+    const bNotes = booking.notes || booking.adminNotes || '';
+
     setBookingForm({
       id: booking.id || booking._id,
       userId: booking.userId || studentUser?.id || '',
       advisorId: booking.advisorId || booking.counsellorId || advisorUser?.id || '',
       service: booking.service || 'counselling',
+      duration: bDuration,
       mode: booking.mode || 'ONLINE',
       date: booking.date || '',
       time: booking.time || '',
+      paymentStatus: bPaymentStatus,
+      amountPaid: bAmount,
       meetLink: booking.meetLink || '',
       status: booking.status === 'APPROVED' ? 'CONFIRMED' : (booking.status || 'CONFIRMED'),
-      adminNotes: booking.adminNotes || ''
+      notes: bNotes,
+      adminNotes: bNotes,
+      sendWhatsApp: false
     });
 
     setBookingFormError('');
@@ -1988,17 +1998,24 @@ const _handleAdminDetectLocation = () => {
 
     setIsSavingForm(true);
     try {
-      await ApiService.updateAdminAppointment(bookingForm.id, {
+      const payload = {
         userId: bookingForm.userId,
         advisorId: bookingForm.advisorId,
         service: bookingForm.service,
+        duration: bookingForm.duration || '1 Hour (60 Mins)',
         mode: bookingForm.mode,
         date: bookingForm.date,
         time: bookingForm.time,
+        paymentStatus: bookingForm.paymentStatus || 'PAID',
+        amountPaid: Number(bookingForm.amountPaid !== undefined ? bookingForm.amountPaid : 899),
         meetLink: bookingForm.meetLink ? bookingForm.meetLink.trim() : '',
         status: bookingForm.status,
-        adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
-      });
+        notes: bookingForm.notes ? bookingForm.notes.trim() : (bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''),
+        adminNotes: bookingForm.notes ? bookingForm.notes.trim() : (bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''),
+        sendWhatsApp: Boolean(bookingForm.sendWhatsApp)
+      };
+
+      await ApiService.updateAdminAppointment(bookingForm.id, payload);
 
       const psy = usersDb.find(u => u.id === bookingForm.advisorId);
       const student = usersDb.find(u => u.id === bookingForm.userId);
@@ -2017,11 +2034,15 @@ const _handleAdminDetectLocation = () => {
             advisorRole: psy?.title || b.advisorRole || 'Consultant Psychologist',
             date: bookingForm.date,
             time: bookingForm.time,
+            duration: payload.duration,
             service: bookingForm.service,
             mode: bookingForm.mode,
-            meetLink: bookingForm.meetLink ? bookingForm.meetLink.trim() : '',
+            paymentStatus: payload.paymentStatus,
+            amountPaid: payload.amountPaid,
+            meetLink: payload.meetLink,
             status: bookingForm.status,
-            adminNotes: bookingForm.adminNotes ? bookingForm.adminNotes.trim() : ''
+            notes: payload.notes,
+            adminNotes: payload.adminNotes
           };
         }
         return b;
@@ -3635,7 +3656,7 @@ const _handleAdminDetectLocation = () => {
    <input
      type="checkbox"
      id="adminSendWhatsApp"
-     checked={bookingForm.sendWhatsApp !== false}
+     checked={Boolean(bookingForm.sendWhatsApp)}
      onChange={(e) => setBookingForm({ ...bookingForm, sendWhatsApp: e.target.checked })}
      className="w-4 h-4 rounded border-zinc-700 bg-zinc-955 text-brand focus:ring-brand cursor-pointer"
    />

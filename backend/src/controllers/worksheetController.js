@@ -21,10 +21,28 @@ const WorksheetController = {
         return res.status(400).json({ success: false, message: 'No file uploaded' });
       }
 
-      // Verify the session belongs to this psychologist and client
-      const session = await StorageService.findById('sessions', sessionId);
+      // Verify the session or appointment belongs to this psychologist and client
+      let session = await StorageService.findById('sessions', sessionId);
       if (!session) {
-        return res.status(404).json({ success: false, message: 'Session not found' });
+        session = await StorageService.findOne('sessions', { appointmentId: sessionId });
+      }
+      if (!session) {
+        const appointment = await StorageService.findById('appointments', sessionId);
+        if (appointment) {
+          session = await StorageService.create('sessions', {
+            appointmentId: appointment.id,
+            userId: appointment.userId,
+            counsellorId: appointment.counsellorId,
+            date: appointment.date,
+            time: appointment.time,
+            mode: appointment.mode || 'ONLINE',
+            status: appointment.status || 'CONFIRMED'
+          });
+        }
+      }
+
+      if (!session) {
+        return res.status(404).json({ success: false, message: 'Session or appointment not found' });
       }
       
       // Admin bypass or strict psychologist check
@@ -32,9 +50,7 @@ const WorksheetController = {
         return res.status(403).json({ success: false, message: 'Unauthorized to upload to this session' });
       }
 
-      if (session.userId !== clientId) {
-        return res.status(400).json({ success: false, message: 'Session does not belong to the specified client' });
-      }
+      const effectiveClientId = clientId || session.userId;
 
       // Upload to Cloudinary (private)
       const uploadResult = await uploadPrivateToCloudinary(req.file.buffer, 'behold_worksheets');
@@ -44,9 +60,9 @@ const WorksheetController = {
 
       const worksheet = await StorageService.create('worksheets', {
         worksheetId: `ws_${Date.now()}`,
-        clientId,
+        clientId: effectiveClientId,
         psychologistId: session.counsellorId,
-        sessionId,
+        sessionId: session.id || sessionId,
         originalFileName: req.file.originalname,
         storageKey: uploadResult.public_id,
         fileType: req.file.mimetype,
@@ -112,16 +128,29 @@ const WorksheetController = {
     try {
       const { sessionId } = req.params;
       
-      const session = await StorageService.findById('sessions', sessionId);
+      let session = await StorageService.findById('sessions', sessionId);
       if (!session) {
-        return res.status(404).json({ success: false, message: 'Session not found' });
+        session = await StorageService.findOne('sessions', { appointmentId: sessionId });
+      }
+      if (!session) {
+        session = await StorageService.findById('appointments', sessionId);
+      }
+
+      if (!session) {
+        return res.status(404).json({ success: false, message: 'Session or appointment not found' });
       }
 
       if (!isAdminRole(req.user.role) && session.counsellorId !== req.user.id) {
         return res.status(403).json({ success: false, message: 'Unauthorized' });
       }
 
-      const worksheets = await StorageService.findAll('worksheets', { sessionId });
+      const searchIds = [sessionId];
+      if (session.id && !searchIds.includes(session.id)) searchIds.push(session.id);
+      if (session.appointmentId && !searchIds.includes(session.appointmentId)) searchIds.push(session.appointmentId);
+
+      const allWs = await StorageService.findAll('worksheets');
+      const worksheets = allWs.filter(w => searchIds.includes(w.sessionId));
+
       res.status(200).json({ success: true, data: worksheets });
     } catch (error) {
       console.error('[getSessionWorksheets] Error:', error);

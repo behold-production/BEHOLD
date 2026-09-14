@@ -1,6 +1,8 @@
 import React from 'react';
+import { Calendar } from 'lucide-react';
 import { formatDateString } from "../../../../utils/dateFormatter";
 import { formatCountdown } from '../../utils/utils';
+import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
 
 export default function OverviewTab({
   nextSession,
@@ -67,23 +69,44 @@ export default function OverviewTab({
             </div>
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+          <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
             {(() => {
               const cd = formatCountdown(nextSession.date, nextSession.time);
               return (
-                <div className="text-left sm:text-right">
+                <div className="text-left sm:text-right mr-2">
                   <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase">Starts in</p>
                   <p className={`text-xl font-bold tracking-tight ${cd.urgent ? 'text-rose-600 animate-pulse' : 'text-slate-900'}`}>{cd.text}</p>
                 </div>
               );
             })()}
 
+            <a
+              href={createGoogleCalendarUrl({
+                title: `BEHOLD Counselling Session - ${nextSession.advisorName || 'Psychologist'}`,
+                advisorName: nextSession.advisorName || 'Psychologist',
+                studentName: profile?.name || 'Student',
+                location: nextSession.meetLink || 'Google Meet',
+                meetLink: nextSession.meetLink || '',
+                service: nextSession.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
+                date: nextSession.date,
+                time: nextSession.time,
+                durationMinutes: nextSession.duration && String(nextSession.duration).includes('30') ? 30 : 60
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5 no-underline"
+              title="Add to Google Calendar"
+            >
+              <Calendar className="w-4 h-4 text-teal-600" />
+              <span>Calendar</span>
+            </a>
+
             {nextSession.mode === 'ONLINE' && nextSession.meetLink ? (
               <a
                 href={nextSession.meetLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#00c9d6] shadow-xs text-center"
+                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#00c9d6] shadow-xs text-center no-underline"
               >
                 Join Google Meet
               </a>

@@ -1867,10 +1867,14 @@ If you have questions or would like to reapply with updated information, please 
         userId,
         advisorId,
         service,
+        duration,
         mode,
         date,
         time,
         status,
+        paymentStatus,
+        amountPaid,
+        amount,
         meetLink,
         cancellationReason,
         notes,
@@ -1879,29 +1883,43 @@ If you have questions or would like to reapply with updated information, please 
         adminNotes,
         clientLocationName,
         clientLatitude,
-        clientLongitude
+        clientLongitude,
+        sendWhatsApp
       } = req.body;
+
+      const oldDate = appointment.date;
+      const oldTime = appointment.time;
 
       const updates = {};
       if (userId !== undefined) updates.userId = userId;
       if (advisorId !== undefined) updates.counsellorId = advisorId;
       if (service !== undefined) updates.service = service;
+      if (duration !== undefined) {
+        updates.duration = duration;
+        updates.isIntroductory = String(duration).includes('30');
+      }
       if (mode !== undefined) updates.mode = mode;
       if (date !== undefined) updates.date = date;
       if (time !== undefined) updates.time = time;
+      if (paymentStatus !== undefined) updates.paymentStatus = paymentStatus;
+      if (amountPaid !== undefined) {
+        updates.amountPaid = Number(amountPaid);
+      } else if (amount !== undefined) {
+        updates.amountPaid = Number(amount);
+      }
       if (status !== undefined) {
         updates.status = status === 'CONFIRMED' ? 'APPROVED' : status;
         if (status === 'CANCELLED') {
           updates.cancellationReason = cancellationReason || 'Cancelled by administrator.';
-          updates.cancelledBy = req.user.role || 'admin';
-          updates.refundStatus = appointment.paymentStatus === 'PAID' ? 'PENDING' : 'NONE';
+          updates.cancelledBy = req.user?.role || 'admin';
+          updates.refundStatus = (paymentStatus || appointment.paymentStatus) === 'PAID' ? 'PENDING' : 'NONE';
         }
       }
       if (meetLink !== undefined) updates.meetLink = meetLink;
       if (notes !== undefined) updates.notes = notes;
+      if (adminNotes !== undefined) updates.adminNotes = adminNotes;
       if (feedback !== undefined) updates.feedback = feedback;
       if (nextSession !== undefined) updates.nextSession = nextSession;
-      if (adminNotes !== undefined) updates.adminNotes = adminNotes;
       if (clientLocationName !== undefined) updates.clientLocationName = clientLocationName;
       if (clientLatitude !== undefined) updates.clientLatitude = Number(clientLatitude) || 0;
       if (clientLongitude !== undefined) updates.clientLongitude = Number(clientLongitude) || 0;
@@ -1919,13 +1937,14 @@ If you have questions or would like to reapply with updated information, please 
         if (updates.userId !== undefined) sessionUpdates.userId = updates.userId;
         if (updates.date !== undefined) sessionUpdates.date = updates.date;
         if (updates.time !== undefined) sessionUpdates.time = updates.time;
+        if (updates.duration !== undefined) sessionUpdates.duration = updates.duration;
         if (updates.mode !== undefined) sessionUpdates.mode = updates.mode;
         if (updates.status !== undefined) sessionUpdates.status = updates.status;
         if (updates.meetLink !== undefined) sessionUpdates.meetLink = updates.meetLink;
         if (updates.notes !== undefined) sessionUpdates.notes = updates.notes;
+        if (updates.adminNotes !== undefined) sessionUpdates.adminNotes = updates.adminNotes;
         if (updates.feedback !== undefined) sessionUpdates.feedback = updates.feedback;
         if (updates.nextSession !== undefined) sessionUpdates.nextSession = updates.nextSession;
-        if (updates.adminNotes !== undefined) sessionUpdates.adminNotes = updates.adminNotes;
         if (updates.cancellationReason !== undefined) sessionUpdates.cancellationReason = updates.cancellationReason;
         if (updates.cancelledBy !== undefined) sessionUpdates.cancelledBy = updates.cancelledBy;
         if (updates.clientLocationName !== undefined) sessionUpdates.clientLocationName = updates.clientLocationName;
@@ -1933,6 +1952,43 @@ If you have questions or would like to reapply with updated information, please 
         if (updates.clientLongitude !== undefined) sessionUpdates.clientLongitude = updates.clientLongitude;
 
         await StorageService.update('sessions', session.id, sessionUpdates);
+      }
+
+      // If sendWhatsApp is requested, trigger alert to client
+      if (sendWhatsApp) {
+        try {
+          const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
+          const student = await StorageService.findById('users', updated.userId);
+          const counsellor = await StorageService.findById('counsellors', updated.counsellorId) || await StorageService.findById('users', updated.counsellorId);
+          const targetUserPhone = resolveAnyPhone(updated.clientPhone, updated, student);
+          const sName = resolveStudentName(updated.clientName, student?.name);
+
+          if (targetUserPhone) {
+            let action = 'approved';
+            if (updated.status === 'CANCELLED') {
+              action = 'cancelled';
+            } else if ((date && date !== oldDate) || (time && time !== oldTime)) {
+              action = 'rescheduled';
+            }
+
+            await WhatsAppService.sendBookingAlert(targetUserPhone, action, {
+              studentName: sName,
+              counsellorName: counsellor?.name || 'Psychologist',
+              date: updated.date,
+              time: updated.time,
+              oldDate: oldDate !== updated.date ? oldDate : '',
+              oldTime: oldTime !== updated.time ? oldTime : '',
+              mode: updated.mode || 'ONLINE',
+              duration: updated.duration || '1 Hour (60 Mins)',
+              bookingId: updated.id,
+              reason: updated.cancellationReason || '',
+              meetLink: updated.meetLink || '',
+              recipientRole: 'user'
+            });
+          }
+        } catch (waErr) {
+          console.error('[Admin Update WhatsApp Alert Error]:', waErr);
+        }
       }
 
       res.status(200).json({

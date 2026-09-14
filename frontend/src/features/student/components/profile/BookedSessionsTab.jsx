@@ -301,9 +301,12 @@ const BookedSessionsTab = ({
                               </a>
                               <a
                                 href={createGoogleCalendarUrl({
-                                  title: `BEHOLD Counselling Session - ${session.advisorName || 'Psychologist'}`,
-                                  description: `Confidential Counselling Session via BEHOLD.\nGoogle Meet: ${session.meetLink || ''}`,
+                                  title: `BEHOLD Counselling Session - ${session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist'}`,
+                                  advisorName: session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist',
+                                  studentName: session.clientName || session.userName || 'Student',
                                   location: session.meetLink || 'Google Meet',
+                                  meetLink: session.meetLink || '',
+                                  service: session.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
                                   date: session.date,
                                   time: session.time,
                                   durationMinutes: session.duration && String(session.duration).includes('30') ? 30 : 60
@@ -318,26 +321,47 @@ const BookedSessionsTab = ({
                               </a>
                             </>
                           ) : (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (session.mode === 'DOOR_STEP') {
-                                  showAlert(
-                                    `Your doorstep visit address: \n\n${session.clientLocationName || 'No address specified'}\n\nCoordinates: ${session.clientLatitude || 0}, ${session.clientLongitude || 0}`,
-                                    'Doorstep Visit Location'
-                                  );
-                                } else {
-                                  const address = session.counsellor?.locationName || session.clientLocationName || 'No address specified';
-                                  showAlert(
-                                    `Psychologist Office / Clinic Address: \n\n${address}`,
-                                    'Center Visit Location'
-                                  );
-                                }
-                              }}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none cursor-pointer"
-                            >
-                              <MapPin className="w-3.5 h-3.5" /> View Location
-                            </button>
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (session.mode === 'DOOR_STEP') {
+                                    showAlert(
+                                      `Your doorstep visit address: \n\n${session.clientLocationName || 'No address specified'}\n\nCoordinates: ${session.clientLatitude || 0}, ${session.clientLongitude || 0}`,
+                                      'Doorstep Visit Location'
+                                    );
+                                  } else {
+                                    const address = session.counsellor?.locationName || session.clientLocationName || 'No address specified';
+                                    showAlert(
+                                      `Psychologist Office / Clinic Address: \n\n${address}`,
+                                      'Center Visit Location'
+                                    );
+                                  }
+                                }}
+                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none cursor-pointer"
+                              >
+                                <MapPin className="w-3.5 h-3.5" /> View Location
+                              </button>
+                              <a
+                                href={createGoogleCalendarUrl({
+                                  title: `BEHOLD Consultation - ${session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist'}`,
+                                  advisorName: session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist',
+                                  studentName: session.clientName || session.userName || 'Student',
+                                  location: session.counsellor?.locationName || session.clientLocationName || (session.mode === 'DOOR_STEP' ? 'Doorstep Visit' : 'Clinic Consultation'),
+                                  service: session.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
+                                  date: session.date,
+                                  time: session.time,
+                                  durationMinutes: session.duration && String(session.duration).includes('30') ? 30 : 60
+                                })}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-surface-200 cursor-pointer text-decoration-none"
+                                title="Add to Google Calendar"
+                              >
+                                <Calendar className="w-3.5 h-3.5 text-surface-500" />
+                                <span>Calendar</span>
+                              </a>
+                            </>
                           )}
                           {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
                             <button
