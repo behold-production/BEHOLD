@@ -52,6 +52,10 @@ async function cleanDuplicateAppointments() {
           if (!primary.clientName && duplicate.clientName) primary.clientName = duplicate.clientName;
           
           await StorageService.delete('appointments', duplicate.id);
+          const linkedSession = await StorageService.findOne('sessions', { appointmentId: duplicate.id });
+          if (linkedSession) {
+            await StorageService.delete('sessions', linkedSession.id);
+          }
           deletedCount++;
         }
         await StorageService.update('appointments', primary.id, {

@@ -299,6 +299,18 @@ const AppointmentController = {
         } else {
           console.warn(`[Create Booking WhatsApp] Skipped: No phone found for appointment ${newAppointment.id}`);
         }
+
+        if (counsellorPhone) {
+          const action = isCouponFree ? 'approved' : 'created';
+          await WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, action, {
+            studentName: sName,
+            counsellorName: cName,
+            date,
+            time,
+            mode: newAppointment.mode || mode || 'ONLINE',
+            duration: sessionDurationStr
+          }).catch((err) => console.error('[WhatsApp Counsellor Alert Error]:', err));
+        }
       } catch (notifErr) {
         console.error('[Notification Task Error in createAppointment]:', notifErr);
       }
@@ -410,7 +422,7 @@ const AppointmentController = {
             meetLink,
             recipientRole: 'user'
           }) : Promise.resolve(),
-          counsellorPhone ? WhatsAppService.sendBookingAlert(counsellorPhone, 'approved', {
+          counsellorPhone ? WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, 'approved', {
             studentName: sName,
             counsellorName: counsellor ? counsellor.name : 'Psychologist',
             date: appointment.date,
@@ -418,8 +430,7 @@ const AppointmentController = {
             mode: appointment.mode || 'ONLINE',
             duration: appointment.duration || '1 Hour (60 Mins)',
             bookingId: appointment.id || '',
-            meetLink,
-            recipientRole: 'counsellor'
+            meetLink
           }) : Promise.resolve(),
           user ? EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }) : Promise.resolve()
         ]);

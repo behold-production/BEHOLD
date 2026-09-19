@@ -7,9 +7,23 @@ const WhatsAppService = require('../services/whatsappService');
 const { resolveAnyPhone, normalizePhoneWithCountryCode, resolveStudentName } = require('../utils/phoneUtils');
 const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
+const activeNotificationLocks = new Set();
+
 async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackClientPhone = '', forceResend = false) {
   try {
     if (!appointment) return;
+
+    const lockKey = appointment.razorpayOrderId || appointment.id || appointment._id;
+    if (lockKey && !forceResend) {
+      if (activeNotificationLocks.has(lockKey)) {
+        console.log(`[Payment Booking Notifications] ℹ️ Notifications already processing for ${lockKey}. Skipping duplicate send.`);
+        return;
+      }
+      activeNotificationLocks.add(lockKey);
+      setTimeout(() => {
+        if (activeNotificationLocks.has(lockKey)) activeNotificationLocks.delete(lockKey);
+      }, 60000); // 1 minute lock
+    }
 
     // Prevent duplicate booking notifications if already sent (e.g. from both verifyPayment and webhook)
     if (!forceResend && (appointment.whatsappNotificationSent === true || appointment.notificationSent === true)) {
@@ -103,6 +117,24 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
     } else {
       console.warn(`[WhatsApp Booking Alert Skipped]: No valid phone found for appointment ${appointment?.id}`);
     }
+
+    // Send WhatsApp alert to Counsellor
+    const targetCounsellorPhone = resolveAnyPhone(counsellor?.phone, counsellor);
+    if (targetCounsellorPhone && counsellor) {
+      const waResCounsellor = await WhatsAppService.sendCounsellorBookingAlert(targetCounsellorPhone, 'approved', {
+        studentName: sName,
+        counsellorName: cName,
+        date,
+        time,
+        mode,
+        duration: apptDuration
+      }).catch((err) => {
+        console.error('[WhatsApp Counsellor Alert Error]:', err);
+        return { success: false, error: err.message };
+      });
+      console.log(`[WhatsApp Booking Alert Counsellor]:`, JSON.stringify(waResCounsellor));
+    }
+
   } catch (err) {
     console.error('[dispatchBookingNotifications Error]:', err);
   }

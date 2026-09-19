@@ -409,6 +409,43 @@ class WhatsAppService {
   }
 
   /**
+   * Notify a psychologist when a new booking is confirmed
+   */
+  async sendCounsellorBookingAlert(phone, action, details = {}) {
+    const {
+      studentName    = 'A client',
+      counsellorName = 'Psychologist',
+      date           = 'N/A',
+      time           = 'N/A',
+      mode           = 'ONLINE',
+      duration       = '1 Hour (60 Mins)'
+    } = details;
+
+    const modeLabel = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
+    const profileUrl = 'https://www.behold.co.in/counsellor';
+
+    let text = '';
+    
+    if (action === 'approved' || action === 'created' || action === 'confirmed') {
+      text = 
+        `*New Booking Alert — BEHOLD.*\n\n` +
+        `Hi *${counsellorName}*,\n\n` +
+        `You have a new paid booking confirmed.\n\n` +
+        `• *Client:* ${studentName}\n` +
+        `• *Date:* ${date}\n` +
+        `• *Time:* ${time}\n` +
+        `• *Duration:* ${duration}\n` +
+        `• *Mode:* ${modeLabel}\n\n` +
+        `Please log in to your dashboard to view full details and manage the session.\n\n` +
+        `📊 *Dashboard:* ${profileUrl}\n\n` +
+        `BEHOLD. Support Team`;
+    }
+
+    if (!text) return { success: false, message: 'Invalid action' };
+    return this._dispatch(phone, text);
+  }
+
+  /**
    * Notify a psychologist when a client submits a star rating / review
    */
   async sendFeedbackReceived(phone, details = {}) {

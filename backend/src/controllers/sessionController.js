@@ -32,26 +32,35 @@ const SessionController = {
       const sessions = await StorageService.findAll('sessions', filter);
       const appointments = await StorageService.findAll('appointments', filter);
 
-      const sessionAppIds = new Set(sessions.map((s) => s.appointmentId));
-      const mergedSessions = [...sessions];
+      const uniqueSessionsMap = new Map();
+
+      for (const s of sessions) {
+        if (!uniqueSessionsMap.has(s.appointmentId)) {
+          uniqueSessionsMap.set(s.appointmentId, s);
+        }
+      }
 
       for (const a of appointments) {
-        if (!sessionAppIds.has(a.id)) {
-          mergedSessions.push({
-            id: 'mock_session_' + a.id,
-            appointmentId: a.id,
+        // Use a.id or a._id as fallback, convert to string just in case
+        const appId = a.id || (a._id ? a._id.toString() : '');
+        if (appId && !uniqueSessionsMap.has(appId)) {
+          uniqueSessionsMap.set(appId, {
+            id: 'mock_session_' + appId,
+            appointmentId: appId,
             userId: a.userId,
             counsellorId: a.counsellorId,
             date: a.date,
             time: a.time,
             mode: a.mode,
-            meetLink: '',
+            meetLink: a.meetLink || '',
             status: a.status,
-            notes: '',
-            feedback: ''
+            notes: a.notes || '',
+            feedback: a.feedback || ''
           });
         }
       }
+
+      const mergedSessions = Array.from(uniqueSessionsMap.values());
 
       const populated = await Promise.all(
         mergedSessions.map(async (s) => {
