@@ -193,7 +193,7 @@ export default function FaqsPage() {
             <div className="w-8 h-8 border-3 border-[#00e5ff] border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : filteredFaqs.length === 0 ? (
-          <div className="text-center py-12 px-6 bg-white rounded-3xl border border-dashed border-slate-300 shadow-xs my-4">
+          <div className="text-center py-12 px-6 bg-white rounded-xl border border-dashed border-slate-300 shadow-xs my-4">
             <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
               <HelpCircle className="w-6 h-6 text-[#00e5ff]" />
             </div>
@@ -240,7 +240,7 @@ export default function FaqsPage() {
         )}
 
         {/* CTA Card */}
-        <div className="mt-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl border border-slate-700/50">
+        <div className="mt-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-xl p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl border border-slate-700/50">
           <div className="absolute right-0 top-0 w-48 h-48 bg-[#00e5ff]/10 rounded-full blur-2xl pointer-events-none" />
           <div className="space-y-1 z-10">
             <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">

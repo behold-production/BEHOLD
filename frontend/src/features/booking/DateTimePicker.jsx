@@ -185,7 +185,7 @@ export default function DateTimePicker({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden text-slate-900 animate-modal-in my-auto text-left"
+        className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden text-slate-900 animate-modal-in my-auto text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

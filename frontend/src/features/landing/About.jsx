@@ -178,7 +178,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {settings.aboutCards.map((card, idx) => (
-                  <div key={idx} className="bg-white/80 backdrop-blur-md border border-slate-200/90 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1">
+                  <div key={idx} className="bg-white/80 backdrop-blur-md border border-slate-200/90 p-8 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1">
                     <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-[#00e5ff]/10 transition-colors">
                       <span className="text-lg font-semibold uppercase text-slate-400 font-sans group-hover:text-[#00e5ff] tracking-wide">{String(idx + 1).padStart(2, '0')}</span>
                     </div>

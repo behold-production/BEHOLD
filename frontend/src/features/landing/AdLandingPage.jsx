@@ -488,7 +488,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
               {/* Video Container (9:16 Aspect Ratio) */}
               <div
-                className="relative w-full aspect-[9/16] rounded-[28px] overflow-hidden bg-slate-900 cursor-pointer group select-none"
+                className="relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-slate-900 cursor-pointer group select-none"
                 onClick={handleTogglePlay}
               >
                 <video

@@ -233,7 +233,7 @@ export default function ThankYouPage() {
         </div>
 
         {/* Booking Details Card */}
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6 text-left">
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6 text-left">
 
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>

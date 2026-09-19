@@ -125,7 +125,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
             {/* Form — 7 cols */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl shadow-slate-200/40">
+            <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-slate-200 shadow-xl shadow-slate-200/40">
               <div className="mb-8">
                 <span className="text-xs font-semibold text-[#00e5ff] flex items-center gap-1.5 mb-2">
                   Get In Touch

@@ -412,7 +412,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
                 canonicalUrl="https://www.behold.co.in/booking"
             />
-            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full max-w-md h-full sm:h-[85vh] bg-slate-50 sm:rounded-[2rem] shadow-2xl overflow-y-auto overflow-x-hidden text-slate-900 text-left overscroll-contain animate-modal-in transition-all duration-300 scroll-smooth flex flex-col scroll-smooth-momentum gpu-layer`}>
+            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full max-w-md h-full sm:h-[85vh] bg-slate-50 sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-slate-900 text-left overscroll-contain animate-modal-in transition-all duration-300 scroll-smooth flex flex-col scroll-smooth-momentum gpu-layer`}>
 
                 {/* Mobile App Style Header */}
                 <div className="sticky top-0 z-30 flex items-center justify-between px-5 py-4 bg-white border-b border-slate-100 shrink-0">

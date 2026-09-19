@@ -455,7 +455,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className={`flex-shrink-0 bg-white/80 rounded-3xl border border-slate-200 flex flex-col items-center p-6 gap-4 ${i === 1 ? 'w-[260px] sm:w-[290px] opacity-100 scale-100' : 'w-[220px] sm:w-[250px] opacity-50 scale-90'
+                  className={`flex-shrink-0 bg-white/80 rounded-xl border border-slate-200 flex flex-col items-center p-6 gap-4 ${i === 1 ? 'w-[260px] sm:w-[290px] opacity-100 scale-100' : 'w-[220px] sm:w-[250px] opacity-50 scale-90'
                     }`}
                 >
                   <div className="shimmer w-24 h-24 rounded-full" />
@@ -471,7 +471,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             </div>
           </div>
         ) : displayAdvisors.length === 0 ? (
-          <div className="w-full max-w-xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl border border-dashed border-slate-300 p-8 sm:p-12 text-center shadow-sm my-6">
+          <div className="w-full max-w-xl mx-auto bg-white/90 backdrop-blur-md rounded-xl border border-dashed border-slate-300 p-8 sm:p-12 text-center shadow-sm my-6">
             <div className="w-16 h-16 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
               <span className="text-[#00e5ff] text-2xl font-semibold">🎓</span>
             </div>

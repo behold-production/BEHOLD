@@ -81,7 +81,7 @@ export default function ContactInquirySection() {
         </div>
 
         {/* Card */}
-        <div className="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-9">
+        <div className="bg-white/90 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-9">
 
           {submitted ? (
             <div className="flex flex-col items-center text-center gap-4 py-8">

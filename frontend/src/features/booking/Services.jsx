@@ -131,7 +131,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
             return (
               <div
                 key={service.id}
-                className={`group relative bg-white/95 backdrop-blur-md rounded-3xl ${isSingle ? 'p-8 sm:p-10' : 'p-6 sm:p-7'} border border-slate-200/90 shadow-md hover-scale-card hover:border-[#00e5ff]/60 transition-all duration-300 flex flex-col justify-between overflow-hidden reveal-on-scroll reveal-scale-in ${delayClass}`}
+                className={`group relative bg-white/95 backdrop-blur-md rounded-xl ${isSingle ? 'p-8 sm:p-10' : 'p-6 sm:p-7'} border border-slate-200/90 shadow-md hover-scale-card hover:border-[#00e5ff]/60 transition-all duration-300 flex flex-col justify-between overflow-hidden reveal-on-scroll reveal-scale-in ${delayClass}`}
               >
                 <div>
                   {/* Top Bar: Icon */}
