@@ -652,6 +652,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         )}
                                     </div>
                                 </div>
+                            ) : (
                                 /* STEP 1-4 Wizard flow — always single column, summary below form */
                                 <div className="flex flex-col gap-6">
 
