@@ -231,7 +231,7 @@ export default function TimePicker({
   const totalSlotCount = availableSlots.length;
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
+    <div className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
       {/* Step Header */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2.5">
@@ -302,12 +302,12 @@ export default function TimePicker({
                       if (isDisabled) return;
                       if (onDateChange) onDateChange(qd.dateStr);
                     }}
-                    className={`flex-none w-20 sm:w-24 p-2.5 sm:p-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all snap-center ${
+                    className={`flex-none w-20 sm:w-24 p-2.5 sm:p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all snap-center ${
                       isSelected
-                        ? 'card-glass-active scale-[1.02]'
+                        ? 'card-app-soft-active scale-[1.02]'
                         : isDisabled
                         ? 'bg-white/20 border border-slate-200/50 text-slate-400 opacity-60 cursor-not-allowed'
-                        : 'card-glass hover:bg-white/50 cursor-pointer'
+                        : 'card-app-soft hover:bg-white/50 cursor-pointer'
                     }`}
                   >
                     <span className="font-extrabold leading-tight">{qd.label}</span>
@@ -348,7 +348,7 @@ export default function TimePicker({
           </div>
         ) : (
           /* Inline Interactive Month Calendar */
-          <div className="border border-slate-200 rounded-2xl p-3 sm:p-4 bg-slate-50/50 space-y-3 animate-in fade-in duration-200">
+          <div className="border border-slate-200 rounded-xl p-3 sm:p-4 bg-slate-50/50 space-y-3 animate-in fade-in duration-200">
             {/* Month Navigation */}
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <span className="font-bold text-sm sm:text-base text-slate-900">
@@ -586,7 +586,7 @@ export default function TimePicker({
         </div>
       ) : (
         /* Empty State with Automatic Next-Date Action */
-        <div className="p-8 sm:p-10 border border-dashed border-slate-200 rounded-2xl bg-slate-50/80 text-center space-y-4">
+        <div className="p-8 sm:p-10 border border-dashed border-slate-200 rounded-xl bg-slate-50/80 text-center space-y-4">
           <div className="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center mx-auto text-slate-400">
             <Clock className="w-6 h-6" />
           </div>

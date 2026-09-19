@@ -529,16 +529,16 @@ body.no-scroll {
 @utility card-app-soft {
   background: #ffffff;
   border: 1px solid var(--color-line);
-  box-shadow: 0 4px 20px rgba(67, 97, 238, 0.05);
-  border-radius: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
   transition: all 0.3s ease;
 }
 
 @utility card-app-soft-active {
-  background: var(--color-brand-light);
+  background: #f0fbff; /* very light neon blue hint */
   border: 2px solid var(--color-brand);
-  box-shadow: 0 4px 20px rgba(67, 97, 238, 0.15);
-  border-radius: 24px;
+  box-shadow: 0 4px 15px rgba(0, 229, 255, 0.1);
+  border-radius: 16px;
 }
 
 @utility card-glass {

@@ -350,7 +350,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         return (
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
                 <div
-                    className="relative w-full max-w-md max-h-screen sm:max-h-[90vh] bg-white sm:rounded-2xl shadow-2xl overflow-y-auto flex flex-col items-center justify-center text-center px-4 py-16 font-sans select-none"
+                    className="relative w-full max-w-md max-h-screen sm:max-h-[90vh] bg-white sm:rounded-xl shadow-2xl overflow-y-auto flex flex-col items-center justify-center text-center px-4 py-16 font-sans select-none"
                 >
                     <button
                         onClick={onClose}
@@ -457,7 +457,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                             {bookingStep === 'success' ? (
                                 /* STEP 5: Success & Confirmation View - Centered & Perfectly Balanced */
-                                <div className="p-6 sm:p-10 bg-white border border-slate-200/90 rounded-3xl max-w-xl mx-auto shadow-xl shadow-slate-200/40 space-y-6 text-center animate-in fade-in duration-300 relative overflow-hidden">
+                                <div className="p-6 sm:p-10 bg-white border border-slate-200/90 rounded-xl max-w-xl mx-auto shadow-xl shadow-slate-200/40 space-y-6 text-center animate-in fade-in duration-300 relative overflow-hidden">
 
                                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#00e5ff]/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -518,7 +518,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                     </div>
 
                                     {/* Invoice & Meeting Card */}
-                                    <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-5 sm:p-6 text-left space-y-4 shadow-xs animate-card-fade relative z-10">
+                                    <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-5 sm:p-6 text-left space-y-4 shadow-xs animate-card-fade relative z-10">
                                         <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-2">
                                             <span className="text-xs font-semibold text-slate-500">
                                                 {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation Summary'}
@@ -686,12 +686,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 {/* WIZARD PROGRESS BAR */}
                                                 {!rescheduleSession && (
-                                                    <div className="flex items-center justify-between px-2 mb-2">
+                                                    <div className="flex items-center justify-between px-2 mb-6 gap-1">
                                                         {[1, 2, 3, 4].map((step) => (
-                                                            <div key={step} className="flex flex-col items-center flex-1 relative">
-                                                                <div className={`w-full h-1.5 rounded-full ${wizardStep >= step ? 'bg-[var(--color-brand)]' : 'bg-slate-200'} transition-all duration-300 relative z-10`}></div>
-                                                                {step < 4 && <div className={`absolute top-0.5 left-[50%] w-full h-0.5 -z-0 ${wizardStep > step ? 'bg-[var(--color-brand)]' : 'bg-slate-200'}`}></div>}
-                                                                <span className={`text-[9px] sm:text-[10px] font-bold mt-2 uppercase tracking-wide text-center transition-colors ${wizardStep === step ? 'text-[var(--color-brand)]' : wizardStep > step ? 'text-slate-600' : 'text-slate-400'}`}>
+                                                            <div key={step} className="flex flex-col items-center flex-1">
+                                                                <div className={`w-full h-1 rounded-full ${wizardStep >= step ? 'bg-[#00e5ff]' : 'bg-slate-200'} transition-all duration-300`}></div>
+                                                                <span className={`text-[9px] sm:text-[10px] font-bold mt-2 uppercase tracking-widest text-center transition-colors ${wizardStep === step ? 'text-[#00e5ff]' : wizardStep > step ? 'text-slate-600' : 'text-slate-400'}`}>
                                                                     {step === 1 ? 'Service' : step === 2 ? 'Expert' : step === 3 ? 'Time' : 'Summary'}
                                                                 </span>
                                                             </div>
@@ -701,7 +700,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 {/* STEP 1 — SELECT SERVICE & SESSION PLAN */}
                                                 {wizardStep === 1 && (
-                                                    <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-in slide-in-from-right-4 duration-300">
+                                                    <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-in slide-in-from-right-4 duration-300">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
                                                                 <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -841,7 +840,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             setBookingDuration(30);
                                                                             scrollToTarget(step2AdvisorRef);
                                                                         }}
-                                                                        className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${bookingDuration === 30
+                                                                        className={`p-4 sm:p-5 rounded-xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${bookingDuration === 30
                                                                                 ? 'border-[#00e5ff] bg-teal-50/30 ring-2 ring-[#00e5ff]/30 shadow-xs'
                                                                                 : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
                                                                             }`}
@@ -872,7 +871,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             setBookingDuration(60);
                                                                             scrollToTarget(step2AdvisorRef);
                                                                         }}
-                                                                        className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${bookingDuration === 60
+                                                                        className={`p-4 sm:p-5 rounded-xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${bookingDuration === 60
                                                                                 ? 'border-[#00e5ff] bg-teal-50/30 ring-2 ring-[#00e5ff]/30 shadow-xs'
                                                                                 : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
                                                                             }`}
@@ -897,7 +896,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     </button>
                                                                 </div>
                                                             ) : (
-                                                                <div className="p-4 bg-teal-50/40 rounded-2xl border-2 border-[#00e5ff] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                                                <div className="p-4 bg-teal-50/40 rounded-xl border-2 border-[#00e5ff] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                                                     <div>
                                                                         <div className="flex items-center gap-2 mb-1">
                                                                             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-teal-100 text-teal-800 border border-teal-200">
@@ -982,21 +981,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </div>
                                                         )}
 
-                                                        <div className="pt-6 border-t border-slate-100 flex justify-end">
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => setWizardStep(2)}
-                                                                className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-sm transition cursor-pointer border-none"
-                                                            >
-                                                                Continue to Next Step ➔
-                                                            </button>
+                                                        <div className="pt-6 border-t border-slate-100 flex justify-center">
+                                                            <button type="button" onClick={() => setWizardStep(2)} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border-none">Continue to Next Step <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 2 — SELECT PSYCHOLOGIST */}
                                                 {wizardStep === 2 && (
-                                                    <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
+                                                    <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
                                                                 <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -1039,7 +1032,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                                 if (filtered.length === 0) {
                                                                     return (
-                                                                        <div className="p-6 border border-dashed border-slate-200 rounded-2xl bg-slate-50 text-slate-600 text-center font-medium text-xs">
+                                                                        <div className="p-6 border border-dashed border-slate-200 rounded-xl bg-slate-50 text-slate-600 text-center font-medium text-xs">
                                                                             No psychologists found matching your selection.
                                                                         </div>
                                                                     );
@@ -1086,7 +1079,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         setWizardStep(3);
                                                                                         scrollToTarget(step3TimeRef);
                                                                                     }}
-                                                                                    className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${isSelected
+                                                                                    className={`group p-4 sm:p-5 border-2 bg-white rounded-xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${isSelected
                                                                                             ? 'border-[#00e5ff] ring-2 ring-[#00e5ff]/50 bg-teal-50/30 shadow-md'
                                                                                             : isAvailable
                                                                                                 ? 'border-slate-200 hover:border-teal-500 hover:shadow-md'
@@ -1095,7 +1088,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 >
                                                                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                                                                         <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
-                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center border-2 bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#00e5ff]' : 'border-slate-200 group-hover:border-[#00e5ff]'}`}>
+                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl shrink-0 flex items-center justify-center border-2 bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#00e5ff]' : 'border-slate-200 group-hover:border-[#00e5ff]'}`}>
                                                                                                 {(advisor.isHighlighted || advisor.isTopFive) && (
                                                                                                     <div className="absolute top-0 left-0 right-0 bg-[#3a0ca3] text-white text-[8px] font-bold text-center py-0.5 z-10 tracking-widest uppercase">
                                                                                                         Top Rated
@@ -1245,14 +1238,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             >
                                                                 Back
                                                             </button>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => setWizardStep(3)}
-                                                                disabled={!selectedAdvisor}
-                                                                className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-sm transition disabled:opacity-50 cursor-pointer border-none"
-                                                            >
-                                                                Continue to Date & Time ➔
-                                                            </button>
+                                                            <button type="button" onClick={() => setWizardStep(3)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border-none disabled:opacity-50">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
@@ -1299,21 +1285,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             >
                                                                 Back
                                                             </button>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => setWizardStep(4)}
-                                                                disabled={!selectedTime}
-                                                                className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-sm transition disabled:opacity-50 cursor-pointer border-none"
-                                                            >
-                                                                Continue to Summary ➔
-                                                            </button>
+                                                            <button type="button" onClick={() => setWizardStep(4)} disabled={!selectedTime} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border-none disabled:opacity-50">Continue to Summary <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 4 — COMPACT BOOKING SUMMARY & PROCEED TO PAYMENT */}
                                                 {wizardStep === 4 && (
-                                                    <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
+                                                    <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2">
                                                                 <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-pulse" />
@@ -1453,7 +1432,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 </div>
 
                                                 <div className="card-app-soft p-5 sm:p-6 space-y-5 text-left">
-                                                    <div className="bg-[#0f172a] text-white rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+                                                    <div className="bg-[#0f172a] text-white rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
                                                         <div>
                                                             <span className="text-[10px] uppercase font-bold tracking-widest text-[#00e5ff] block mb-1">
                                                                 {bookingDuration === 30 ? '✨ Introductory Session (30 Mins)' : 'Standard Session (1 Hour)'}
@@ -1533,7 +1512,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
                                                     </div>
 
-                                                    <div className="p-4 sm:p-5 bg-gradient-to-br from-slate-50 via-white to-slate-50/80 border border-slate-200/90 rounded-2xl text-left space-y-4 shadow-xs">
+                                                    <div className="p-4 sm:p-5 bg-gradient-to-br from-slate-50 via-white to-slate-50/80 border border-slate-200/90 rounded-xl text-left space-y-4 shadow-xs">
                                                         <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-200/80">
                                                             <div className="flex items-center gap-2.5">
                                                                 <div className="w-7 h-7 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-600">
@@ -1698,7 +1677,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             </svg>
                                         </button>
 
-                                        <div className={`space-y-5 ${showSummary ? 'block' : 'hidden'} lg:block bg-white/80 backdrop-blur-md border border-surface-200 shadow-xs rounded-2xl p-5 sm:p-6 mb-6`}>
+                                        <div className={`space-y-5 ${showSummary ? 'block' : 'hidden'} lg:block bg-white/80 backdrop-blur-md border border-surface-200 shadow-xs rounded-xl p-5 sm:p-6 mb-6`}>
                                             <div>
                                                 <h3 className="text-base font-semibold text-surface-900 border-b border-surface-200 pb-3 hidden lg:block">
                                                     Booking Summary
@@ -1879,7 +1858,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                 {showConsentModal && typeof document !== 'undefined' && createPortal(
                     <div className="fixed inset-0 z-[220] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
-                        <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
+                        <div className="bg-white border border-slate-200 rounded-xl w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
                             <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
                                 <div className="flex items-center gap-2.5">
                                     <div className="w-8 h-8 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-600">
