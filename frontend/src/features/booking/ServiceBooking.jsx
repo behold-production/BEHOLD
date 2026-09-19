@@ -406,51 +406,46 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-md overflow-hidden animate-backdrop-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-slate-900/40 backdrop-blur-sm overflow-hidden animate-backdrop-in">
             <SEO
                 title="Book a Session | Psychological Counselling & Career Mentoring"
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
                 canonicalUrl="https://www.behold.co.in/booking"
             />
-            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full ${bookingStep === 'success' ? 'max-w-3xl' : 'max-w-7xl'} h-full sm:h-auto sm:max-h-[90vh] glass-panel shadow-2xl overflow-y-auto overflow-x-hidden text-[#0f172a] text-left overscroll-contain animate-modal-in transition-all duration-300 scroll-smooth`}>
+            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full max-w-md h-full sm:h-[85vh] bg-slate-50 sm:rounded-[2rem] shadow-2xl overflow-y-auto overflow-x-hidden text-slate-900 text-left overscroll-contain animate-modal-in transition-all duration-300 scroll-smooth flex flex-col`}>
 
-                {/* Top Action Bar (Back & Close) */}
-                <div className="sticky top-0 z-30 flex items-center justify-between p-4 bg-white/90 backdrop-blur-md border-b border-slate-200">
-                    <div className="flex items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={handleModalBack}
-                            className="min-h-[38px] px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-xs"
-                            aria-label="Go Back"
-                        >
-                            <ArrowLeft className="w-4 h-4 text-slate-700" />
-                            <span>Back</span>
-                        </button>
-                        
-                        {bookingStep !== 'success' && (
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    if(window.confirm('Are you sure you want to start over? All entered details will be cleared.')) {
-                                        resetBookingState();
-                                        setWizardStep(1);
-                                    }
-                                }}
-                                className="min-h-[38px] px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-xs"
-                                aria-label="Start Over"
-                            >
-                                <span>Start Over</span>
-                            </button>
-                        )}
-                    </div>
+                {/* Mobile App Style Header */}
+                <div className="sticky top-0 z-30 flex items-center justify-between px-5 py-4 bg-white border-b border-slate-100 shrink-0">
+                    <button
+                        type="button"
+                        onClick={handleModalBack}
+                        className="w-10 h-10 -ml-2 flex items-center justify-center text-slate-900 transition-colors cursor-pointer border-none bg-transparent"
+                        aria-label="Go Back"
+                    >
+                        <ArrowLeft className="w-6 h-6" />
+                    </button>
+                    
+                    {/* Dotted Progress Indicator */}
+                    {bookingStep !== 'success' && (
+                        <div className="flex items-center gap-2">
+                            {[1, 2, 3, 4, 5].map((step) => (
+                                <div key={step} className="flex items-center">
+                                    <div className={`w-2 h-2 rounded-full transition-colors ${wizardStep === step || (bookingStep === 'payment' && step === 5) ? 'bg-[#00e5ff]' : wizardStep > step ? 'bg-slate-300' : 'bg-slate-200'}`} />
+                                    {step < 5 && (
+                                        <div className={`w-4 h-[2px] transition-colors ${wizardStep > step ? 'bg-slate-300' : 'bg-slate-200'}`} />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                     <button
                         type="button"
                         onClick={onClose}
                         aria-label="Close Booking"
-                        className="w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl flex items-center justify-center transition-colors cursor-pointer border-none"
+                        className="w-10 h-10 -mr-2 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors cursor-pointer border-none bg-transparent"
                     >
-                        <X className="w-5 h-5" />
+                        <X className="w-6 h-6" />
                     </button>
                 </div>
 
@@ -458,79 +453,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                     <div className="space-y-8 sm:space-y-10">
 
                         {/* BOOKING FORM */}
-                        <div id="booking-console" className="space-y-6 sm:space-y-8 w-full">
-                            <div className="flex flex-col items-center justify-center text-center gap-2 border-b border-slate-200 pb-4">
-                                <h2 className="text-xl sm:text-2xl font-sans font-semibold uppercase text-[#0f172a] flex items-center justify-center gap-1">
-                                    <span>Your Booking</span>
-                                    <ScrollDot nextId="booking-console" label="Scroll down ↓" size="md" inlineText={true} />
-                                </h2>
-                            </div>
-
-                            {/* Step Progress Banner */}
-                            {bookingStep !== 'success' && (() => {
-                                const stepMapping = { config: 0, payment: 1, success: 2 };
-                                const currentStepIdx = stepMapping[bookingStep] || 0;
-                                const stepLabels = ['Schedule & Advisor', 'Account & Payment', 'Session Confirmed'];
-                                return (
-                                    <div className="bg-white border border-slate-200 p-5 sm:p-6 space-y-5 rounded-xl shadow-xs animate-in fade-in duration-300">
-
-                                        {/* Mobile: compact progress bar */}
-                                        <div className="flex sm:hidden items-center gap-2">
-                                            <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                                <span className="text-xs font-semibold text-[#0f172a] shrink-0">
-                                                    Step {currentStepIdx + 1} of 3
-                                                </span>
-                                                <div className="h-2 flex-1 bg-slate-100 rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-[#06b6d4] shadow-[0_0_8px_#06b6d4] rounded-full transition-all duration-500"
-                                                        style={{ width: `${((currentStepIdx + 1) / 3) * 100}%` }}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <span className="text-xs font-semibold text-[#0f172a] truncate">
-                                                {stepLabels[currentStepIdx]}
-                                            </span>
-                                        </div>
-
-                                        {/* Desktop/tablet: full stepper */}
-                                        <div className="hidden sm:block">
-                                            <div className="grid grid-cols-3 gap-6 w-full">
-                                                {activeSteps.map((step, idx) => {
-                                                    const isCompleted = idx < currentStepIdx;
-                                                    const isActive = idx === currentStepIdx;
-
-                                                    return (
-                                                        <div key={idx} className="flex flex-col items-start gap-2 relative">
-                                                            <div className="flex items-center w-full">
-                                                                <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-semibold text-xs border transition-all duration-300 shrink-0 ${isCompleted
-                                                                    ? 'bg-[#0f172a] border-[#06b6d4] text-[#06b6d4] shadow-xs'
-                                                                    : isActive
-                                                                        ? 'bg-[#0f172a] border-[#06b6d4] text-[#06b6d4] shadow-sm ring-4 ring-[#06b6d4]/20'
-                                                                        : 'bg-slate-100 border-slate-200 text-slate-400'
-                                                                    }`}>
-                                                                    {isCompleted ? '✓' : idx + 1}
-                                                                </div>
-                                                                {idx < activeSteps.length - 1 && (
-                                                                    <div className={`h-[2px] w-full ml-3 transition-all duration-300 rounded-full ${isCompleted || isActive ? 'bg-[#0f172a]' : 'bg-slate-200'
-                                                                        }`} />
-                                                                )}
-                                                            </div>
-                                                            <div className="flex flex-col text-left min-w-0 mt-1">
-                                                                <span className={`text-xs sm:text-sm font-semibold ${isActive ? 'text-[#0f172a]' : isCompleted ? 'text-[#0f172a]' : 'text-slate-400'}`}>
-                                                                    {stepLabels[idx]}
-                                                                </span>
-                                                                <span className={`text-[11px] transition-colors duration-300 mt-0.5 leading-relaxed ${isActive ? 'text-slate-600 font-medium' : 'text-slate-400'}`}>
-                                                                    {step}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })()}
+                        <div id="booking-console" className="w-full">
 
                             {bookingStep === 'success' ? (
                                 /* STEP 5: Success & Confirmation View - Centered & Perfectly Balanced */
@@ -812,8 +735,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             scrollToTarget(step2AdvisorRef);
                                                                         }}
                                                                         className={`p-4 flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${bookingService === 'counselling'
-                                                                                ? 'card-glass-active'
-                                                                                : 'card-glass hover:bg-white/50'
+                                                                                ? 'card-app-soft-active'
+                                                                                : 'card-app-soft hover:bg-white/50'
                                                                             }`}
                                                                     >
                                                                         <span className="text-2xl">🧠</span>
@@ -828,8 +751,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 scrollToTarget(step2AdvisorRef);
                                                                             }}
                                                                             className={`p-4 flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${bookingService === 'career'
-                                                                                    ? 'card-glass-active'
-                                                                                    : 'card-glass hover:bg-white/50'
+                                                                                    ? 'card-app-soft-active'
+                                                                                    : 'card-app-soft hover:bg-white/50'
                                                                                 }`}
                                                                         >
                                                                             <span className="text-2xl">🧭</span>
@@ -851,8 +774,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             scrollToTarget(step2AdvisorRef);
                                                                         }}
                                                                         className={`p-3 flex items-center justify-center gap-2 transition-all cursor-pointer ${bookingMode === 'ONLINE'
-                                                                                ? 'card-glass-active'
-                                                                                : 'card-glass hover:bg-white/50'
+                                                                                ? 'card-app-soft-active'
+                                                                                : 'card-app-soft hover:bg-white/50'
                                                                             }`}
                                                                     >
                                                                         <span>🎥</span>
@@ -867,8 +790,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 scrollToTarget(step2AdvisorRef);
                                                                             }}
                                                                             className={`p-3 flex items-center justify-center gap-2 transition-all cursor-pointer ${bookingMode === 'DOOR_STEP'
-                                                                                    ? 'card-glass-active'
-                                                                                    : 'card-glass hover:bg-white/50'
+                                                                                    ? 'card-app-soft-active'
+                                                                                    : 'card-app-soft hover:bg-white/50'
                                                                                 }`}
                                                                         >
                                                                             <span>🏠</span>
@@ -884,8 +807,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 scrollToTarget(step2AdvisorRef);
                                                                             }}
                                                                             className={`p-3 flex items-center justify-center gap-2 transition-all cursor-pointer ${bookingMode === 'OFFLINE'
-                                                                                    ? 'card-glass-active'
-                                                                                    : 'card-glass hover:bg-white/50'
+                                                                                    ? 'card-app-soft-active'
+                                                                                    : 'card-app-soft hover:bg-white/50'
                                                                                 }`}
                                                                         >
                                                                             <span>🏢</span>
@@ -1529,7 +1452,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     </div>
                                                 </div>
 
-                                                <div className="card-glass p-5 sm:p-6 space-y-5 text-left">
+                                                <div className="card-app-soft p-5 sm:p-6 space-y-5 text-left">
                                                     <div className="bg-[#0f172a] text-white rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
                                                         <div>
                                                             <span className="text-[10px] uppercase font-bold tracking-widest text-[#00e5ff] block mb-1">
