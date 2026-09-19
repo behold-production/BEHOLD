@@ -302,7 +302,7 @@ export default function TimePicker({
                       if (isDisabled) return;
                       if (onDateChange) onDateChange(qd.dateStr);
                     }}
-                    className={`flex-none w-24 sm:w-28 p-2.5 sm:p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all snap-center ${
+                    className={`flex-none w-24 sm:w-28 p-2.5 sm:p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 snap-center booking-card ${
                       isSelected
                         ? 'card-app-soft-active scale-[1.02]'
                         : isDisabled
@@ -348,7 +348,7 @@ export default function TimePicker({
           </div>
         ) : (
           /* Inline Interactive Month Calendar */
-          <div className="border border-slate-200 rounded-xl p-3 sm:p-4 bg-slate-50/50 space-y-3 animate-in fade-in duration-200">
+          <div className="border border-slate-200 rounded-xl p-3 sm:p-4 bg-slate-50/50 space-y-3 animate-step-in">
             {/* Month Navigation */}
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <span className="font-bold text-sm sm:text-base text-slate-900">
@@ -630,7 +630,7 @@ export default function TimePicker({
 
       {/* Selected Slot Summary Badge */}
       {selectedTime && totalSlotCount > 0 && (
-        <div className="p-3 bg-teal-50/70 border border-teal-200/90 rounded-xl flex items-center justify-between text-xs animate-in fade-in duration-200">
+        <div className="p-3 bg-teal-50/70 border border-teal-200/90 rounded-xl flex items-center justify-between text-xs animate-step-in">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-6 h-6 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0">
               <Check className="w-3.5 h-3.5 stroke-[3]" />

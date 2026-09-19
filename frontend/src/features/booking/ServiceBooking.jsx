@@ -428,14 +428,22 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                     {/* Dotted Progress Indicator */}
                     {bookingStep !== 'success' && (
                         <div className="flex items-center gap-2">
-                            {[1, 2, 3, 4, 5].map((step) => (
-                                <div key={step} className="flex items-center">
-                                    <div className={`w-2 h-2 rounded-full transition-colors ${wizardStep === step || (bookingStep === 'payment' && step === 5) ? 'bg-[#00e5ff]' : wizardStep > step ? 'bg-slate-300' : 'bg-slate-200'}`} />
-                                    {step < 5 && (
-                                        <div className={`w-4 h-[2px] transition-colors ${wizardStep > step ? 'bg-slate-300' : 'bg-slate-200'}`} />
-                                    )}
-                                </div>
-                            ))}
+                            {[1, 2, 3, 4, 5].map((step) => {
+                                const isActive = wizardStep === step || (bookingStep === 'payment' && step === 5);
+                                const isDone = wizardStep > step;
+                                return (
+                                    <div key={step} className="flex items-center">
+                                        <div className={`rounded-full transition-all duration-300 ${
+                                            isActive ? 'w-3 h-3 bg-[#00e5ff] dot-active' :
+                                            isDone   ? 'w-2 h-2 bg-[#00e5ff]/60' :
+                                                       'w-2 h-2 bg-slate-200'
+                                        }`} />
+                                        {step < 5 && (
+                                            <div className={`h-[2px] transition-all duration-500 ${isDone ? 'w-4 bg-[#00e5ff]/40' : 'w-4 bg-slate-200'}`} />
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
 
@@ -457,47 +465,18 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                             {bookingStep === 'success' ? (
                                 /* STEP 5: Success & Confirmation View - Centered & Perfectly Balanced */
-                                <div className="p-6 sm:p-10 bg-white border border-slate-200/90 rounded-xl max-w-xl mx-auto shadow-xl shadow-slate-200/40 space-y-6 text-center animate-in fade-in duration-300 relative overflow-hidden">
+                                <div className="p-6 sm:p-10 bg-white border border-slate-200/90 rounded-xl max-w-xl mx-auto shadow-xl shadow-slate-200/40 space-y-6 text-center animate-step-in relative overflow-hidden">
 
                                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#00e5ff]/10 rounded-full blur-3xl pointer-events-none" />
 
-                                    <style>{`
-                                        @keyframes checkmark-circle {
-                                            0% { transform: scale(0); opacity: 0; }
-                                            100% { transform: scale(1); opacity: 1; }
-                                        }
-                                        @keyframes checkmark-draw {
-                                            100% { stroke-dashoffset: 0; }
-                                        }
-                                        @keyframes scale-pop {
-                                            0% { transform: translateY(12px); opacity: 0; }
-                                            100% { transform: translateY(0); opacity: 1; }
-                                        }
-                                        .animate-checkmark-circle {
-                                            animation: checkmark-circle 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-                                        }
-                                        .animate-checkmark-path {
-                                            stroke-dasharray: 48;
-                                            stroke-dashoffset: 48;
-                                            animation: checkmark-draw 0.5s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
-                                        }
-                                        .animate-scale-pop {
-                                            opacity: 0;
-                                            animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.4s forwards;
-                                        }
-                                        .animate-card-fade {
-                                            opacity: 0;
-                                            animation: scale-pop 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.6s forwards;
-                                        }
-                                    `}</style>
 
-                                    <div className="relative w-20 h-20 bg-[#00e5ff]/10 border border-[#00e5ff]/30 rounded-full flex items-center justify-center mx-auto text-[#00e5ff] shadow-sm animate-checkmark-circle z-10">
+                                    <div className="relative w-20 h-20 bg-[#00e5ff]/10 border border-[#00e5ff]/30 rounded-full flex items-center justify-center mx-auto text-[#00e5ff] shadow-sm animate-checkmark-circle-pop z-10">
                                         <svg className="w-10 h-10 text-[#00e5ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                             <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
 
-                                    <div className="space-y-2 animate-scale-pop relative z-10 text-center flex flex-col items-center justify-center">
+                                    <div className="space-y-2 animate-success-content relative z-10 text-center flex flex-col items-center justify-center">
                                         <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1 rounded-md font-semibold w-fit mx-auto block shadow-xs">
                                             {rescheduleSession ? 'Reschedule Requested' : 'Session Confirmed & Paid'}
                                         </span>
@@ -518,7 +497,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                     </div>
 
                                     {/* Invoice & Meeting Card */}
-                                    <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-5 sm:p-6 text-left space-y-4 shadow-xs animate-card-fade relative z-10">
+                                    <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-5 sm:p-6 text-left space-y-4 shadow-xs animate-success-content relative z-10" style={{animationDelay: '0.75s'}}>
                                         <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 mb-2">
                                             <span className="text-xs font-semibold text-slate-500">
                                                 {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation Summary'}
@@ -700,7 +679,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 {/* STEP 1 — SELECT SERVICE & SESSION PLAN */}
                                                 {wizardStep === 1 && (
-                                                    <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-in slide-in-from-right-4 duration-300">
+                                                    <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
                                                                 <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -982,14 +961,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         )}
 
                                                         <div className="pt-6 border-t border-slate-100 flex justify-center">
-                                                            <button type="button" onClick={() => setWizardStep(2)} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border-none">Continue to Next Step <ArrowRight className="w-4 h-4" /></button>
+                                                            <button type="button" onClick={() => setWizardStep(2)} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary">Continue to Next Step <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 2 — SELECT PSYCHOLOGIST */}
                                                 {wizardStep === 2 && (
-                                                    <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
+                                                    <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-4 text-left animate-step-in">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
                                                                 <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -1079,7 +1058,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         setWizardStep(3);
                                                                                         scrollToTarget(step3TimeRef);
                                                                                     }}
-                                                                                    className={`group p-4 sm:p-5 border-2 bg-white rounded-xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${isSelected
+                                                                                    className={`group p-4 sm:p-5 border-2 bg-white rounded-xl relative overflow-hidden shadow-xs cursor-pointer booking-card animate-fade-up ${isSelected
                                                                                             ? 'border-[#00e5ff] ring-2 ring-[#00e5ff]/50 bg-teal-50/30 shadow-md'
                                                                                             : isAvailable
                                                                                                 ? 'border-slate-200 hover:border-teal-500 hover:shadow-md'
@@ -1238,14 +1217,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             >
                                                                 Back
                                                             </button>
-                                                            <button type="button" onClick={() => setWizardStep(3)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border-none disabled:opacity-50">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
+                                                            <button type="button" onClick={() => setWizardStep(3)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary disabled:opacity-50">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 3 & 4 — SCHEDULE THE SESSION & TIME SLOT */}
                                                 {wizardStep === 3 && (
-                                                    <div ref={step3TimeRef} className="space-y-4 animate-in slide-in-from-right-4 duration-300">
+                                                    <div ref={step3TimeRef} className="space-y-4 animate-step-in">
                                                         <TimePicker
                                                             selectedDate={selectedDate}
                                                             selectedTime={selectedTime}
@@ -1285,14 +1264,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             >
                                                                 Back
                                                             </button>
-                                                            <button type="button" onClick={() => setWizardStep(4)} disabled={!selectedTime} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border-none disabled:opacity-50">Continue to Summary <ArrowRight className="w-4 h-4" /></button>
+                                                            <button type="button" onClick={() => setWizardStep(4)} disabled={!selectedTime} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary disabled:opacity-50">Continue to Summary <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 4 — COMPACT BOOKING SUMMARY & PROCEED TO PAYMENT */}
                                                 {wizardStep === 4 && (
-                                                    <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
+                                                    <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-step-in">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2">
                                                                 <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-pulse" />
@@ -1383,7 +1362,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         type="button"
                                                                         disabled={!selectedAdvisor || !selectedDate || !selectedTime}
                                                                         onClick={() => handleStepChange('payment')}
-                                                                        className="w-full sm:w-auto flex-1 px-8 py-4 bg-slate-900 hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                        className="w-full sm:w-auto flex-1 px-8 py-4 bg-slate-900 hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                                                     >
                                                                         <span>Proceed to Payment (₹{netTotal})</span>
                                                                         <ArrowRight className="w-4 h-4 stroke-[3] text-[#00e5ff]" />
