@@ -255,12 +255,12 @@ export default function TimePicker({
       </div>
 
       {/* Date Header + Toggle for Calendar View */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
             Choose Appointment Date
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setShowInlineCalendar(prev => !prev)}
@@ -302,7 +302,7 @@ export default function TimePicker({
                       if (isDisabled) return;
                       if (onDateChange) onDateChange(qd.dateStr);
                     }}
-                    className={`flex-none w-20 sm:w-24 p-2.5 sm:p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all snap-center ${
+                    className={`flex-none w-24 sm:w-28 p-2.5 sm:p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all snap-center ${
                       isSelected
                         ? 'card-app-soft-active scale-[1.02]'
                         : isDisabled
@@ -310,8 +310,8 @@ export default function TimePicker({
                         : 'card-app-soft hover:bg-white/50 cursor-pointer'
                     }`}
                   >
-                    <span className="font-extrabold leading-tight">{qd.label}</span>
-                    <span className={`text-[10px] font-medium ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
+                    <span className={`font-extrabold leading-tight truncate w-full text-center ${isSelected ? 'text-teal-900' : 'text-slate-900'}`}>{qd.label}</span>
+                    <span className={`text-[10px] font-medium ${isSelected ? 'text-teal-700' : 'text-slate-500'}`}>
                       {qd.shortDate}
                     </span>
                     <span
