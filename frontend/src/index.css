@@ -222,13 +222,13 @@ body {
   font-family: 'Poppins', 'Noto Sans Malayalam', sans-serif;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: default;
-  -webkit-overflow-scrolling: touch;
+  /* Modern momentum scroll — replaces deprecated -webkit-overflow-scrolling: touch */
+  overscroll-behavior-y: none;
 }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
-  /* keep sections clear of the sticky navbar */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -569,6 +569,44 @@ body.no-scroll {
   box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.07);
   border-radius: 32px;
 }
+
+/* ─── Scroll Utilities ───────────────────────────────────────────────────── */
+
+/* Hide scrollbar cross-browser (still scrollable) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* Thin scrollbar for expanded bio text */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,229,255,0.3) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar { width: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0,229,255,0.35);
+  border-radius: 99px;
+}
+
+/* Smooth momentum scroll for all scroll containers */
+.scroll-smooth-momentum {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+/* Prevent layout shift during GPU-promoted transitions */
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+
 
 @utility bg-mesh-gradient {
   background-color: #f0f4ff;

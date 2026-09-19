@@ -202,18 +202,18 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       case 0:
         return 'translate-x-0 scale-100 opacity-100 z-30 shadow-[0_22px_50px_rgba(0,201,214,0.22)] cursor-default brightness-100 pointer-events-auto';
       case -1:
-        return '-translate-x-[32%] xs:-translate-x-[38%] sm:-translate-x-[180px] md:-translate-x-[220px] lg:-translate-x-[260px] scale-[0.84] sm:scale-[0.86] opacity-90 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-90 pointer-events-auto';
+        return '-translate-x-[32%] xs:-translate-x-[38%] sm:-translate-x-[180px] md:-translate-x-[220px] lg:-translate-x-[260px] scale-[0.84] sm:scale-[0.86] opacity-90 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-95 pointer-events-auto';
       case 1:
-        return 'translate-x-[32%] xs:translate-x-[38%] sm:translate-x-[180px] md:translate-x-[220px] lg:translate-x-[260px] scale-[0.84] sm:scale-[0.86] opacity-90 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-90 pointer-events-auto';
+        return 'translate-x-[32%] xs:translate-x-[38%] sm:translate-x-[180px] md:translate-x-[220px] lg:translate-x-[260px] scale-[0.84] sm:scale-[0.86] opacity-90 z-20 shadow-xl cursor-pointer hover:opacity-100 hover:scale-[0.87] brightness-95 pointer-events-auto';
       case -2:
-        return '-translate-x-[60%] xs:-translate-x-[68%] sm:-translate-x-[320px] md:-translate-x-[390px] lg:-translate-x-[460px] scale-[0.70] sm:scale-[0.73] opacity-75 z-10 shadow-lg cursor-pointer hover:opacity-90 hover:scale-[0.74] brightness-75 pointer-events-auto';
+        return '-translate-x-[60%] xs:-translate-x-[68%] sm:-translate-x-[320px] md:-translate-x-[390px] lg:-translate-x-[460px] scale-[0.70] sm:scale-[0.73] opacity-55 z-10 shadow-lg cursor-pointer hover:opacity-75 hover:scale-[0.74] brightness-90 pointer-events-auto';
       case 2:
-        return 'translate-x-[60%] xs:translate-x-[68%] sm:translate-x-[320px] md:translate-x-[390px] lg:translate-x-[460px] scale-[0.70] sm:scale-[0.73] opacity-75 z-10 shadow-lg cursor-pointer hover:opacity-90 hover:scale-[0.74] brightness-75 pointer-events-auto';
+        return 'translate-x-[60%] xs:translate-x-[68%] sm:translate-x-[320px] md:translate-x-[390px] lg:translate-x-[460px] scale-[0.70] sm:scale-[0.73] opacity-55 z-10 shadow-lg cursor-pointer hover:opacity-75 hover:scale-[0.74] brightness-90 pointer-events-auto';
       default:
         if (diff < 0) {
-          return '-translate-x-[120%] scale-[0.50] opacity-0 z-0 pointer-events-none';
+          return '-translate-x-[130%] scale-[0.50] opacity-0 z-0 pointer-events-none';
         } else {
-          return 'translate-x-[120%] scale-[0.50] opacity-0 z-0 pointer-events-none';
+          return 'translate-x-[130%] scale-[0.50] opacity-0 z-0 pointer-events-none';
         }
     }
   };
@@ -509,9 +509,10 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
-              {/* Card Perspective Area */}
+              {/* Card Perspective Area — touch-action:none prevents scroll fighting */}
               <div
-                className="relative w-full max-w-6xl mx-auto h-[410px] sm:h-[470px] flex items-center justify-center overflow-visible touch-pan-y"
+                className="relative w-full max-w-6xl mx-auto h-[410px] sm:h-[470px] flex items-center justify-center overflow-visible"
+                style={{ touchAction: 'none', userSelect: 'none' }}
                 onMouseDown={(e) => handleTouchStart(e.clientX)}
                 onMouseMove={(e) => handleTouchMove(e.clientX)}
                 onMouseUp={handleTouchEnd}
@@ -529,11 +530,12 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                       onClick={() => {
                         if (diff !== 0) setCurrentIndex(index);
                       }}
-                      className={`absolute w-[82vw] xs:w-[325px] sm:w-[365px] md:w-[400px] h-[390px] sm:h-[450px] rounded-[24px] sm:rounded-[26px] overflow-hidden transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${styleClass}`}
+                      className={`absolute w-[82vw] xs:w-[325px] sm:w-[365px] md:w-[400px] h-[390px] sm:h-[450px] rounded-[24px] sm:rounded-[26px] overflow-hidden transform transition-all duration-[420ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${styleClass}`}
+                      style={{ willChange: 'transform, opacity' }}
                     >
                       {renderCard(advisor, diff === 0)}
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
