@@ -286,12 +286,18 @@ export const downloadDiagnosticPDF = async (booking) => {
       doc.text(`Page ${i} of ${totalPages}`, 105, 288, { align: 'center' });
     }
 
-    const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      if (_isIOS) {
-        window.open(doc.output('bloburl'), '_blank');
-      } else {
-        doc.save(`Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`);
-      }
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Clinical_Report_${sName.replace(/\s+/g, '_')}_${displayId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
+    return true;
   } catch (e) {
     console.error(e);
     toast.error("Failed to generate Clinical Diagnostic PDF: " + e.message);

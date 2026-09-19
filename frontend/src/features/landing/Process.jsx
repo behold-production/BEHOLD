@@ -30,13 +30,13 @@ export default function Process() {
 
         {/* Header */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
-            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-3">
+            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
             How It Works
-            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
           </span>
           <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-semibold text-[#0f172a] mb-4 tracking-tight leading-none">
-            Four Steps To Clarity<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-semibold">.</span>
+            Four Steps To Clarity<span className="text-[#4361ee] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-semibold">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 font-medium leading-relaxed">
             Zero cognitive friction. A clear, stress-free pathway from initial selection to ongoing mentorship.
@@ -50,14 +50,14 @@ export default function Process() {
             return (
               <div
                 key={idx}
-                className={`flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#00c9d6] transition-all duration-300 min-h-[220px] shadow-xs group reveal-on-scroll reveal-scale-in ${delayClass}`}
+                className={`flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#4361ee] transition-all duration-300 min-h-[220px] shadow-xs group reveal-on-scroll reveal-scale-in ${delayClass}`}
               >
               <div>
                 <div className="flex items-center justify-between w-full mb-6">
-                  <span className="text-4xl font-semibold text-[#0f172a] font-sans group-hover:text-[#00c9d6] transition-colors">
+                  <span className="text-4xl font-semibold text-[#0f172a] font-sans group-hover:text-[#4361ee] transition-colors">
                     {step.num}
                   </span>
-                  <span className="w-2 h-2 rounded-full bg-[#00c9d6] shadow-[0_0_6px_#00c9d6]" />
+                  <span className="w-2 h-2 rounded-full bg-[#4361ee] shadow-[0_0_6px_#4361ee]" />
                 </div>
 
                 <h3 className="text-base font-semibold text-[#0f172a] mb-2 font-sans">{step.title}</h3>
@@ -78,10 +78,10 @@ export default function Process() {
         <div className="mt-14 text-center">
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
+            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#4361ee] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
           >
             <span>Start Your Session Today</span>
-            <span className="text-xs text-[#00c9d6]">›</span>
+            <span className="text-xs text-[#4361ee]">›</span>
           </button>
         </div>
       </div>

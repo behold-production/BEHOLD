@@ -265,12 +265,17 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp.', 20, tableY + 5);
 
     // Save document
-    const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      if (_isIOS) {
-        window.open(doc.output('bloburl'), '_blank');
-      } else {
-        doc.save(`Behold_Session_Receipt_${bookingDetails.id}.pdf`);
-      }
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Behold_Session_Receipt_${bookingDetails.id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
   } catch (e) {
     console.error(e);
     if (showAlert) await showAlert("Failed to generate PDF receipt. Please contact platform support.", "Export Error");
@@ -430,12 +435,17 @@ export const downloadCertificatePDF = async (session, profile = {}, user = {}) =
     doc.setTextColor(113, 113, 122);
     doc.text('BEHOLD Academic Board', 229.5, 171, { align: 'center' });
 
-    const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      if (_isIOS) {
-        window.open(doc.output('bloburl'), '_blank');
-      } else {
-        doc.save(`Behold_Certificate_${certId}.pdf`);
-      }
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Behold_Certificate_${certId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
     toast.success('Certificate downloaded successfully!', { id: toastId });
   } catch (err) {
     console.error(err);
@@ -545,12 +555,17 @@ export const downloadConsultationReportPDF = async (session, profile = {}, user 
       doc.text('Verified & Issued by BEHOLD Psychological Guidance Board', 105, 266, { align: 'center' });
     }
 
-    const _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      if (_isIOS) {
-        window.open(doc.output('bloburl'), '_blank');
-      } else {
-        doc.save(`Consultation_Report_${clientName.replace(/\s+/g, '_')}_${displayId}.pdf`);
-      }
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Consultation_Report_${clientName.replace(/\s+/g, '_')}_${displayId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
     toast.success('Consultation Report downloaded successfully!', { id: toastId });
   } catch (err) {
     console.error(err);

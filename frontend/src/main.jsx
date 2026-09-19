@@ -81,6 +81,20 @@ if (typeof window !== 'undefined') {
   mutationObserver.observe(document.body, { childList: true, subtree: true });
 }
 
+// Global Error Catcher for Blank Screen Debugging
+window.addEventListener('error', (event) => {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:white; color:red; padding:20px; z-index:999999; font-family:monospace; overflow:auto;';
+  errorDiv.innerHTML = '<h2>🔴 Frontend Crash Detected</h2><p><b>Message:</b> ' + event.message + '</p><pre>' + (event.error && event.error.stack) + '</pre>';
+  document.body.appendChild(errorDiv);
+});
+window.addEventListener('unhandledrejection', (event) => {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:white; color:red; padding:20px; z-index:999999; font-family:monospace; overflow:auto;';
+  errorDiv.innerHTML = '<h2>🔴 Frontend Crash Detected (Promise Rejection)</h2><p><b>Message:</b> ' + event.reason + '</p><pre>' + (event.reason && event.reason.stack) + '</pre>';
+  document.body.appendChild(errorDiv);
+});
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Providers>

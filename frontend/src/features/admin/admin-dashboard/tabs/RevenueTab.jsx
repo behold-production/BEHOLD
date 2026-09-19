@@ -24,6 +24,7 @@ export default function RevenueTab(props) {
  const [counsellorFilter, setCounsellorFilter] = useState('ALL');
  const [serviceFilter, setServiceFilter] = useState('ALL');
  const [paymentStatusFilter, setPaymentStatusFilter] = useState('ALL');
+ const [dateFilter, setDateFilter] = useState('');
  const [page, setPage] = useState(1);
  const [limit, setLimit] = useState(10);
 
@@ -168,9 +169,13 @@ export default function RevenueTab(props) {
  b.paymentStatus === paymentStatusFilter ||
  (paymentStatusFilter === 'REFUNDED' && b.refundStatus === 'REFUNDED');
 
- return matchesSearch && matchesCounsellor && matchesService && matchesPaymentStatus;
+ const matchesDate = 
+ dateFilter === '' ||
+ (b.date && b.date.startsWith(dateFilter));
+
+ return matchesSearch && matchesCounsellor && matchesService && matchesPaymentStatus && matchesDate;
  });
- }, [bookingsDb, searchQuery, counsellorFilter, serviceFilter, paymentStatusFilter]);
+ }, [bookingsDb, searchQuery, counsellorFilter, serviceFilter, paymentStatusFilter, dateFilter]);
 
  // Pagination
  const pagedBookings = useMemo(() => {
@@ -411,13 +416,34 @@ export default function RevenueTab(props) {
  onChange={(e) => setPaymentStatusFilter(e.target.value)}
  className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-white outline-none cursor-pointer"
  >
- <option value="ALL">All Payment Statuses</option>
- <option value="PAID">PAID</option>
- <option value="PENDING">PENDING</option>
- <option value="REFUNDED">REFUNDED</option>
- </select>
- </div>
- </div>
+  <option value="ALL">All Payment Statuses</option>
+  <option value="PAID">PAID</option>
+  <option value="PENDING">PENDING</option>
+  <option value="REFUNDED">REFUNDED</option>
+  </select>
+
+  <div className="flex items-center gap-2 border-l border-zinc-800 pl-2">
+      <input
+        type="month"
+        value={dateFilter.length === 7 ? dateFilter : ''}
+        onChange={(e) => setDateFilter(e.target.value)}
+        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-white outline-none cursor-pointer"
+        title="Filter by Month"
+      />
+      <span className="text-zinc-600 text-xs font-bold">OR</span>
+      <input
+        type="date"
+        value={dateFilter.length === 10 ? dateFilter : ''}
+        onChange={(e) => setDateFilter(e.target.value)}
+        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-white outline-none cursor-pointer"
+        title="Filter by Exact Date"
+      />
+      {dateFilter && (
+        <button onClick={() => setDateFilter('')} className="text-xs text-rose-400 font-bold px-2 py-1 border border-rose-900 rounded-lg bg-rose-950/50 hover:bg-rose-900/50 transition">Clear</button>
+      )}
+  </div>
+  </div>
+  </div>
 
  {/* Ledger Table */}
  <div className="border border-zinc-800 rounded-lg overflow-hidden bg-zinc-950">

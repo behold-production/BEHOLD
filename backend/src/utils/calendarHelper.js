@@ -98,7 +98,7 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
         reminders: {
           useDefault: false,
           overrides: [
-            { method: 'popup', minutes: 30 },
+            { method: 'popup', minutes: 0 },
             { method: 'popup', minutes: 10 },
             { method: 'email', minutes: 1440 }
           ]

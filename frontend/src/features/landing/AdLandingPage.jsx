@@ -309,9 +309,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               photo: hasValidPhoto ? rawPhoto : null,
               languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam, English'))),
               availability: c.availability || c.availabilitySlots || null,
-              bookedSlots: c.bookedSlots || []
+              bookedSlots: c.bookedSlots || [],
+              rank: Number(c.rank || 0),
+              isHighlighted: Boolean(c.isHighlighted || c.isTopFive)
             };
           });
+          
+          list.sort((a, b) => b.rank - a.rank);
           setAdvisors(list);
         } else {
           setAdvisors([
@@ -437,7 +441,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-[#0f172a] font-sans antialiased overflow-x-hidden flex flex-col justify-between">
+    <div className="min-h-screen bg-mesh-gradient text-[#0f172a] font-sans antialiased overflow-x-hidden flex flex-col justify-between">
       <SEO
         title={`BEHOLD | ${heroTitleLine1} - Confidential Online Counselling`}
         description={heroSub}
@@ -449,14 +453,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight flex items-baseline">
-              {(settings.siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00c9d6] font-semibold text-2xl leading-none">.</span>
+              {(settings.siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#4361ee] font-semibold text-2xl leading-none">.</span>
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleBook()}
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs font-semibold bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-[0.97] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs font-semibold bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white transition-all shadow-xs hover:shadow-md cursor-pointer active:scale-[0.97] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2"
             >
               <span>{heroBtnText}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -468,17 +472,17 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── SECTION 1: HERO SECTION (VIDEO LEFT, TEXT RIGHT) ── */}
       <section className="relative pt-8 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
         {/* Subtle ambient light glow */}
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#00c9d6]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#4361ee]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
 
           {/* LEFT: Smartphone Mockup Video Player */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center order-2 lg:order-1">
-            <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#00c9d6]/40 transition-transform duration-300 hover:scale-[1.01]">
+            <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#4361ee]/40 transition-transform duration-300 hover:scale-[1.01]">
 
               {/* Phone Top Island Bar */}
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#00c9d6] animate-ping"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#4361ee] animate-ping"></div>
                 <span>Behold Quick Guide</span>
               </div>
 
@@ -511,14 +515,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                   className="absolute top-12 right-3 z-30 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-sm"
                 >
-                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#00c9d6]" />}
+                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#4361ee]" />}
                 </button>
 
                 {/* Center Play/Pause Overlay */}
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
                   {!isPlaying ? (
                     <div className="flex flex-col items-center gap-2 pointer-events-auto transform transition-transform group-hover:scale-110">
-                      <div className="w-16 h-16 rounded-full bg-[#00c9d6] text-slate-950 flex items-center justify-center shadow-[0_0_30px_rgba(0,201,214,0.6)] ring-4 ring-[#00c9d6]/30">
+                      <div className="w-16 h-16 rounded-full bg-[#4361ee] text-slate-950 flex items-center justify-center shadow-[0_0_30px_rgba(0,201,214,0.6)] ring-4 ring-[#4361ee]/30">
                         {isEnded ? (
                           <RotateCcw className="w-7 h-7" />
                         ) : (
@@ -549,7 +553,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                     onClick={handleSeek}
                   >
                     <div
-                      className="h-full bg-gradient-to-r from-[#008b94] to-[#00c9d6] rounded-full transition-all duration-100"
+                      className="h-full bg-gradient-to-r from-[#3a0ca3] to-[#4361ee] rounded-full transition-all duration-100"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -559,7 +563,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       <button
                         type="button"
                         onClick={handleTogglePlay}
-                        className="hover:text-[#00c9d6] transition cursor-pointer"
+                        className="hover:text-[#4361ee] transition cursor-pointer"
                       >
                         {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
                       </button>
@@ -570,14 +574,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       <button
                         type="button"
                         onClick={handleToggleMute}
-                        className="hover:text-[#00c9d6] transition cursor-pointer"
+                        className="hover:text-[#4361ee] transition cursor-pointer"
                       >
                         {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
                       </button>
                       <button
                         type="button"
                         onClick={handleFullscreen}
-                        className="hover:text-[#00c9d6] transition cursor-pointer"
+                        className="hover:text-[#4361ee] transition cursor-pointer"
                       >
                         <Maximize2 className="w-3.5 h-3.5" />
                       </button>
@@ -596,7 +600,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
-                <Languages className="w-3.5 h-3.5 text-[#008b94]" />
+                <Languages className="w-3.5 h-3.5 text-[#3a0ca3]" />
                 മലയാളം & English
               </span>
             </div>
@@ -605,8 +609,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           {/* RIGHT: High-Converting Headline, Subtitle, & Primary CTA Button */}
           <div className="lg:col-span-7 space-y-6 text-left order-1 lg:order-2">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3.5 py-1 rounded-md border border-[#00c9d6]/25 shadow-2xs">
-                <span className="w-2 h-2 rounded-full bg-[#00c9d6] animate-pulse"></span>
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#3a0ca3] bg-[#4361ee]/10 px-3.5 py-1 rounded-md border border-[#4361ee]/25 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-[#4361ee] animate-pulse"></span>
                 <span>Special Introductory Session • ₹499</span>
               </div>
 
@@ -614,7 +618,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <span className="block text-slate-900 font-extrabold">
                   {heroTitleLine1}
                 </span>
-                <span className="block text-[#008b94] font-extrabold">
+                <span className="block text-[#3a0ca3] font-extrabold">
                   {heroTitleLine2}
                 </span>
               </h1>
@@ -629,7 +633,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <button
                 type="button"
                 onClick={() => handleBook()}
-                className="px-9 py-4 rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-bold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+                className="px-9 py-4 rounded-2xl bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2"
               >
                 <span>{heroBtnText}</span>
                 <ArrowRight className="w-5 h-5" />
@@ -659,7 +663,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 1 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#4361ee]">
                 <GraduationCap className="w-5 h-5" />
               </div>
               <div>
@@ -672,7 +676,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 2 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#4361ee]">
                 <Lock className="w-5 h-5" />
               </div>
               <div>
@@ -685,7 +689,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 3 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#4361ee]">
                 <Languages className="w-5 h-5" />
               </div>
               <div>
@@ -698,7 +702,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 4 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00c9d6]">
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#4361ee]">
                 <CreditCard className="w-5 h-5" />
               </div>
               <div>
@@ -717,7 +721,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
 
         <div className="mb-10 text-center space-y-2">
-          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3 py-1 rounded-md border border-[#00c9d6]/25">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#3a0ca3] bg-[#4361ee]/10 px-3 py-1 rounded-md border border-[#4361ee]/25">
             {reflectionSub}
           </span>
           <h2 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
@@ -727,9 +731,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left mb-8">
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
-              <AlertCircle className="w-4.5 h-4.5" />
+          <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+              <AlertCircle className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
@@ -738,9 +742,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
-              <Clock className="w-4.5 h-4.5" />
+          <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+              <Clock className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
@@ -749,9 +753,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
-              <HeartHandshake className="w-4.5 h-4.5" />
+          <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+              <HeartHandshake className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
@@ -760,9 +764,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
           </div>
 
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#00c9d6]/50 transition-all duration-200 flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#008b94] shrink-0 mt-0.5">
-              <Sparkles className="w-4.5 h-4.5" />
+          <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
@@ -774,8 +778,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         </div>
 
         {/* Reassuring Closing Line */}
-        <div className="bg-[#00c9d6]/5 border border-[#00c9d6]/20 rounded-2xl p-5 sm:p-6 flex items-center justify-center gap-3">
-          <Sparkles className="w-5 h-5 text-[#008b94] shrink-0" />
+        <div className="bg-[#4361ee]/5 border border-[#4361ee]/20 rounded-2xl p-5 sm:p-6 flex items-center justify-center gap-3">
+          <Sparkles className="w-5 h-5 text-[#3a0ca3] shrink-0" />
           <p className="text-sm sm:text-base md:text-lg font-bold text-slate-950 tracking-tight">
             {reflectionClosing}
           </p>
@@ -784,7 +788,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       </section>
 
       {/* ── SECTION 4: MEET THE PSYCHOLOGISTS ── */}
-      <section className="py-14 sm:py-20 bg-white border-y border-slate-200/80 relative">
+      <section className="py-14 sm:py-20 bg-transparent border-t border-slate-200/40 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Header container */}
@@ -832,21 +836,26 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 return (
                   <div
                     key={advisor.id}
-                    className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start bg-white rounded-[24px] border border-slate-200/90 shadow-md hover:shadow-xl hover:border-[#00c9d6] transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group shrink-0"
+                    className="min-w-[300px] xs:min-w-[320px] sm:min-w-[350px] max-w-[350px] snap-start card-glass hover:card-glass-active transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group shrink-0"
                   >
-                    <div className="relative w-full h-[120px] sm:h-[135px] p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px]">
+                    <div className={`relative w-full h-[120px] sm:h-[135px] p-4 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px] ${advisor.isHighlighted ? 'border-b-[3px] border-[#3a0ca3]' : ''}`}>
+                      {advisor.isHighlighted && (
+                        <div className="absolute top-0 right-0 bg-[#3a0ca3] text-white text-[9px] font-bold px-3 py-1 rounded-bl-xl shadow-md z-20 uppercase tracking-widest flex items-center gap-1">
+                          <span>★</span> Top Rated
+                        </div>
+                      )}
                       <div className="pr-2 space-y-1 z-10 max-w-[65%]">
                         <div className="flex items-center gap-1.5">
                           <h3 className="font-sans text-base sm:text-lg font-semibold text-slate-900 leading-tight line-clamp-1">
                             {advisor.name}
                           </h3>
-                          <ShieldCheck className="w-4 h-4 text-[#008b94] shrink-0" title="Verified Professional" />
+                          <ShieldCheck className="w-4 h-4 text-[#3a0ca3] shrink-0" title="Verified Professional" />
                         </div>
                         <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
                           {cardTitle}
                         </p>
                         <div className="flex items-center gap-1.5 pt-1">
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/80 text-[#008b94] shadow-2xs">
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/80 text-[#3a0ca3] shadow-2xs">
                             ★ 4.9 Rating
                           </span>
                         </div>
@@ -866,13 +875,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                           />
                         ) : (
                           <div className="w-14 h-14 rounded-2xl bg-white/95 shadow-md flex items-center justify-center mb-2 border border-white">
-                            <span className="font-semibold text-xl text-[#00c9d6]">
+                            <span className="font-semibold text-xl text-[#4361ee]">
                               {getInitial(advisor.name)}
                             </span>
                           </div>
                         )}
                         <div style={{ display: 'none' }} className="w-14 h-14 rounded-2xl bg-white/95 shadow-md items-center justify-center mb-2 border border-white">
-                          <span className="font-semibold text-xl text-[#00c9d6]">
+                          <span className="font-semibold text-xl text-[#4361ee]">
                             {getInitial(advisor.name)}
                           </span>
                         </div>
@@ -902,7 +911,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                           <button
                             type="button"
                             onClick={() => setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }))}
-                            className="text-[10px] font-semibold text-[#00c9d6] hover:text-[#008b94] cursor-pointer mt-1 inline-block bg-transparent border-none p-0"
+                            className="text-[10px] font-semibold text-[#4361ee] hover:text-[#3a0ca3] cursor-pointer mt-1 inline-block bg-transparent border-none p-0"
                           >
                             {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
                           </button>
@@ -931,7 +940,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                         <div className="text-left">
                           <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Next Available</span>
-                          <span className={`text-[11px] font-semibold block mt-0.5 whitespace-nowrap ${isUnavailable ? 'text-zinc-400' : isAvailToday ? 'text-emerald-600' : 'text-[#008b94]'}`}>
+                          <span className={`text-[11px] font-semibold block mt-0.5 whitespace-nowrap ${isUnavailable ? 'text-zinc-400' : isAvailToday ? 'text-emerald-600' : 'text-[#3a0ca3]'}`}>
                             {nextAvail}
                           </span>
                         </div>
@@ -939,7 +948,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                         <button
                           type="button"
                           onClick={() => handleBook(advisor.id)}
-                          className="bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-1"
+                          className="bg-[#4361ee] hover:bg-[#3b82f6] active:bg-[#009baa] text-slate-950 font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361ee] focus-visible:ring-offset-1"
                         >
                           Select Advisor
                         </button>
@@ -959,7 +968,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="space-y-6 text-left">
 
           <div className="space-y-2">
-            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3 py-1 rounded-md border border-[#00c9d6]/25">
+            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#3a0ca3] bg-[#4361ee]/10 px-3 py-1 rounded-md border border-[#4361ee]/25">
               Simple 3-Step Booking
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
@@ -976,11 +985,11 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 key={idx}
                 onClick={() => seekToStep(idx)}
                 className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${activeStep === idx
-                    ? 'bg-white border-[#00c9d6] shadow-md ring-2 ring-[#00c9d6]/25'
+                    ? 'bg-white border-[#4361ee] shadow-md ring-2 ring-[#4361ee]/25'
                     : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
                   }`}
               >
-                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00c9d6] text-slate-950 shadow-xs' : 'bg-slate-100 text-slate-700'
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#4361ee] text-slate-950 shadow-xs' : 'bg-slate-100 text-slate-700'
                   }`}>
                   {step.badge}
                 </span>
@@ -988,7 +997,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs sm:text-sm font-bold text-slate-950">{step.title}</h4>
                     {activeStep === idx && (
-                      <span className="text-[10px] font-bold text-[#008b94] uppercase tracking-wider bg-[#00c9d6]/10 px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] font-bold text-[#3a0ca3] uppercase tracking-wider bg-[#4361ee]/10 px-2 py-0.5 rounded-md">
                         Active Step
                       </span>
                     )}
@@ -1003,7 +1012,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 text-white shadow-xl border border-slate-800 space-y-4 mt-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-[#00c9d6] block">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#4361ee] block">
                   Special Introductory Offer
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
@@ -1015,7 +1024,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               </div>
 
               <div className="text-left sm:text-right shrink-0">
-                <span className="text-2xl font-extrabold text-[#00c9d6]">₹499</span>
+                <span className="text-2xl font-extrabold text-[#4361ee]">₹499</span>
                 <span className="text-[10px] text-slate-400 block uppercase tracking-wider">Introductory Session</span>
               </div>
             </div>
@@ -1029,7 +1038,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <button
                 type="button"
                 onClick={() => handleBook()}
-                className="w-full sm:w-auto bg-[#00c9d6] hover:bg-[#00b5c2] active:bg-[#009baa] text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(0,201,214,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
+                className="w-full sm:w-auto bg-[#4361ee] hover:bg-[#3b82f6] active:bg-[#009baa] text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(0,201,214,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
               >
                 <span>{heroBtnText}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -1043,7 +1052,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── SECTION 6: FAQ SECTION ── */}
       <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
         <div className="text-center mb-10 space-y-2">
-          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#008b94] bg-[#00c9d6]/10 px-3 py-1 rounded-md border border-[#00c9d6]/25">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#3a0ca3] bg-[#4361ee]/10 px-3 py-1 rounded-md border border-[#4361ee]/25">
             Got Questions?
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
@@ -1061,7 +1070,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <div
                 key={index}
                 className={`rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen
-                    ? 'bg-white border-[#00c9d6]/80 shadow-md ring-1 ring-[#00c9d6]/20'
+                    ? 'bg-white border-[#4361ee]/80 shadow-md ring-1 ring-[#4361ee]/20'
                     : 'bg-white border-slate-200/90 hover:border-slate-300'
                   }`}
               >
@@ -1093,7 +1102,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="pt-10 text-center space-y-3">
           <button
             onClick={() => handleBook()}
-            className="inline-flex items-center gap-2 px-8 py-4 min-h-[44px] rounded-2xl bg-[#00c9d6] hover:bg-[#00b5c2] text-slate-950 font-semibold text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 px-8 py-4 min-h-[44px] rounded-2xl bg-[#4361ee] hover:bg-[#3b82f6] text-slate-950 font-semibold text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361ee] focus-visible:ring-offset-2"
           >
             <span>{heroBtnText}</span>
             <ArrowRight className="w-5 h-5" />
@@ -1109,7 +1118,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
             <span className="text-white font-semibold text-sm tracking-tight flex items-baseline">
-              BEHOLD<span className="text-[#00c9d6] font-bold text-base leading-none">.</span>
+              BEHOLD<span className="text-[#4361ee] font-bold text-base leading-none">.</span>
             </span>
             <span className="hidden sm:inline text-slate-600">•</span>
             <span className="text-slate-400">
@@ -1149,12 +1158,12 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               }`}
           >
             <div className="bg-white rounded-2xl p-4 shadow-2xl border border-slate-200/80 ring-1 ring-slate-900/5 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#00c9d6]/10 border border-[#00c9d6]/25 flex items-center justify-center shrink-0 mt-0.5">
-                {Icon && <Icon className="w-4.5 h-4.5 text-[#008b94]" />}
+              <div className="w-9 h-9 rounded-xl bg-[#4361ee]/10 border border-[#4361ee]/25 flex items-center justify-center shrink-0 mt-0.5">
+                {Icon && <Icon className="w-4.5 h-4.5 text-[#3a0ca3]" />}
               </div>
 
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#008b94] block">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#3a0ca3] block">
                   {popup?.label}
                 </span>
                 <p className="text-sm font-semibold text-slate-900 leading-snug mt-0.5">
@@ -1185,7 +1194,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       >
         <button
           onClick={() => handleBook()}
-          className="w-full py-3.5 px-5 rounded-2xl bg-[#00c9d6] active:bg-[#00b5c2] text-slate-950 font-semibold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c9d6] focus-visible:ring-offset-2"
+          className="w-full py-3.5 px-5 rounded-2xl bg-[#4361ee] active:bg-[#3b82f6] text-slate-950 font-semibold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361ee] focus-visible:ring-offset-2"
         >
           <span>{heroBtnText}</span>
           <ArrowRight className="w-4 h-4" />

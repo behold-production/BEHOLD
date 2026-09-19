@@ -439,6 +439,25 @@ class WhatsAppService {
         `Please log in to your dashboard to view full details and manage the session.\n\n` +
         `📊 *Dashboard:* ${profileUrl}\n\n` +
         `BEHOLD. Support Team`;
+    } else if (action === 'cancelled' || action === 'booking_cancelled') {
+      text =
+        `*Booking Cancelled — BEHOLD.*\n\n` +
+        `Hi *${counsellorName}*,\n\n` +
+        `A booking with your client *${studentName}* has been cancelled.\n\n` +
+        `• *Date:* ${date}\n` +
+        `• *Time:* ${time}\n\n` +
+        `Please check your dashboard for any updates.\n\n` +
+        `BEHOLD. Support Team`;
+    } else if (action === 'rescheduled' || action === 'session_rescheduled') {
+      text =
+        `*Session Rescheduled — BEHOLD.*\n\n` +
+        `Hi *${counsellorName}*,\n\n` +
+        `A session with your client *${studentName}* has been rescheduled to a new time.\n\n` +
+        `• *New Date:* ${date}\n` +
+        `• *New Time:* ${time}\n\n` +
+        `Please log in to your dashboard to review the updated schedule.\n\n` +
+        `📊 *Dashboard:* ${profileUrl}\n\n` +
+        `BEHOLD. Support Team`;
     }
 
     if (!text) return { success: false, message: 'Invalid action' };

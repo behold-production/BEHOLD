@@ -52,8 +52,8 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
             <div className="lg:col-span-7 bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-10 border border-slate-200/80 shadow-md flex flex-col justify-between relative overflow-hidden reveal-on-scroll reveal-scale-in">
               <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
               <div className="relative z-10">
-                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
-                  <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-3">
+                  <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
                   Our Purpose
                 </span>
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-slate-900 tracking-tight leading-tight font-serif">
@@ -75,10 +75,10 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
             {/* Cell 2: Primary Stat (lg:col-span-5) */}
             <div className="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-6 sm:p-10 border border-slate-800 shadow-xl flex flex-col justify-between text-white relative overflow-hidden reveal-on-scroll reveal-scale-in reveal-delay-1">
-              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#00c9d6]/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#4361ee]/10 rounded-full blur-2xl pointer-events-none" />
               <div className="relative z-10">
                 <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center mb-6">
-                  <BrainCircuit className="w-6 h-6 text-[#00c9d6]" />
+                  <BrainCircuit className="w-6 h-6 text-[#4361ee]" />
                 </div>
                 <div className="text-4xl sm:text-5xl font-black tracking-tight text-white font-sans">
                   {stats[0].value}
@@ -126,9 +126,9 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
 
             {/* Cell 5: Stat 3 (lg:col-span-4) */}
             <div className="md:col-span-1 lg:col-span-4 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col justify-between group hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-              <Heart className="w-6 h-6 text-[#00c9d6] mb-4" />
+              <Heart className="w-6 h-6 text-[#4361ee] mb-4" />
               <div>
-                <span className="block text-4xl sm:text-5xl font-semibold text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#00c9d6] transition-colors">
+                <span className="block text-4xl sm:text-5xl font-semibold text-slate-900 font-sans tracking-tight mb-2 group-hover:text-[#4361ee] transition-colors">
                   {stats[2].value}
                 </span>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
@@ -161,10 +161,10 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
           {settings.aboutCards && settings.aboutCards.length > 0 && (
             <div className="mt-20 sm:mt-32">
               <div className="text-center mb-12">
-                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-2">
-                  <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+                <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-2">
+                  <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
                   OUR SERVICES
-                  <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+                  <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
                 </span>
                 <h3 className="text-2xl sm:text-4xl font-sans font-semibold uppercase text-slate-900 tracking-tight leading-none">
                   {settings.aboutTitle || 'WHAT WE OFFER'}<span className="text-[#00e5ff]">.</span>
@@ -180,7 +180,7 @@ export default function About({ enablePsychology = true, enableCareerMentoring =
                 {settings.aboutCards.map((card, idx) => (
                   <div key={idx} className="bg-white/80 backdrop-blur-md border border-slate-200/90 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1">
                     <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-[#00e5ff]/10 transition-colors">
-                      <span className="text-lg font-semibold uppercase text-slate-400 font-sans group-hover:text-[#00c9d6] tracking-wide">{String(idx + 1).padStart(2, '0')}</span>
+                      <span className="text-lg font-semibold uppercase text-slate-400 font-sans group-hover:text-[#4361ee] tracking-wide">{String(idx + 1).padStart(2, '0')}</span>
                     </div>
                     <h4 className="text-lg font-semibold text-slate-900 uppercase tracking-wide mb-3">{card.title}</h4>
                     <p className="text-sm text-slate-600 leading-relaxed">{card.desc}</p>

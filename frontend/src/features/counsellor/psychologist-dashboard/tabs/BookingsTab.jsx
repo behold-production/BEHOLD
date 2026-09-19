@@ -148,10 +148,18 @@ const BookingsTab = ({
                   {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
                 </span>
                 <span className="text-xs text-zinc-400 font-bold bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800">{booking.mode}</span>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded border ${booking.paymentStatus === 'PAID' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' : booking.paymentStatus === 'FAILED' ? 'bg-rose-950 text-rose-400 border-rose-900' : 'bg-amber-950 text-amber-400 border-amber-900'}`}>{booking.paymentStatus || 'PENDING'}</span>
               </div>
 
               <div className="space-y-0.5 text-left">
                 <h4 className="font-header font-bold text-base text-white">{booking.userName}</h4>
+                {(booking.age || booking.feelingLately) && (
+                  <p className="text-xs text-zinc-400 mt-0.5 mb-1.5 leading-relaxed bg-zinc-900/50 p-2 rounded-md border border-zinc-800/50">
+                    {booking.age && <><span className="font-semibold text-zinc-300">Age:</span> {booking.age}</>}
+                    {booking.age && booking.feelingLately && <span className="mx-2 text-zinc-600">|</span>}
+                    {booking.feelingLately && <><span className="font-semibold text-zinc-300">Issue:</span> {booking.feelingLately}</>}
+                  </p>
+                )}
                 <div className="flex items-center gap-1.5 text-sm text-zinc-450 font-semibold">
                   <Clock className="w-3.5 h-3.5 text-zinc-550" />
                   <span>{formatDateString(booking.date)} at {booking.time}</span>

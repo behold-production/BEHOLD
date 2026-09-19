@@ -170,7 +170,23 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           const resolvedName = validFormName || validUserName;
           const resolvedEmail = validFormEmail || validUserEmail;
 
-          // Always show details popup with existing data prefilled so user can review/save it
+          if (resolvedName && resolvedEmail) {
+            if (setBookingForm) {
+              setBookingForm(prev => ({
+                ...prev,
+                name: resolvedName,
+                email: resolvedEmail,
+                phone: cleanPhone
+              }));
+            }
+            showToast(`Welcome back, ${resolvedName}!`, 'success');
+            setIsLoading(false);
+            if (onSuccess) onSuccess(loggedUser);
+            onClose();
+            return;
+          }
+
+          // Otherwise show details popup with missing info
           setDetailsForm({
             name: resolvedName || '',
             email: resolvedEmail || ''
@@ -297,7 +313,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     <>
       <div className="fixed inset-0 z-[120] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
       <div className="fixed inset-0 z-[125] flex items-start sm:items-center justify-center min-h-screen p-4 pt-12 sm:pt-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="relative w-full max-w-md max-h-[calc(100vh-4rem)] bg-white rounded-xl shadow-2xl overflow-y-auto animate-modal-in border border-surface-200 text-left" onClick={(e) => e.stopPropagation()}>
+        <div className="relative w-full max-w-md max-h-[calc(100vh-4rem)] glass-panel overflow-y-auto animate-modal-in text-left" onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">

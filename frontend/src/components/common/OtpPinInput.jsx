@@ -125,10 +125,10 @@ export default function OtpPinInput({ value = '', onChange, hasError, disabled =
                 : isFilled
                 ? isDark
                   ? 'bg-[#050811] border-[#00E5FF] text-white shadow-sm ring-2 ring-[#00E5FF]/25'
-                  : 'bg-white border-[#00c9d6] text-zinc-900 shadow-sm ring-2 ring-[#00c9d6]/15'
+                  : 'bg-white border-[#4361ee] text-zinc-900 shadow-sm ring-2 ring-[#4361ee]/15'
                 : isDark
                 ? 'bg-[#050811] border-slate-800 text-white focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20'
-                : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:bg-white focus:border-[#00c9d6] focus:ring-2 focus:ring-[#00c9d6]/20'
+                : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:bg-white focus:border-[#4361ee] focus:ring-2 focus:ring-[#4361ee]/20'
             }`}
           />
         );

@@ -146,6 +146,15 @@ app.use('/uploads', express.static(uploadsDir));
 const mongoose = require('mongoose');
 
 // ─── Health Check ─────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.send(`
+    <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+      <h1>BEHOLD. Backend API is Running</h1>
+      <p>Please open the frontend URL (e.g. <b>http://localhost:5173</b>) to view the website.</p>
+    </div>
+  `);
+});
+
 app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   res.status(200).json({

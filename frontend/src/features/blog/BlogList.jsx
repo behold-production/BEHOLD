@@ -125,14 +125,14 @@ const BlogList = () => {
         <section className="relative z-10 pt-6 pb-6 sm:pt-10 sm:pb-8 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
           <div className="max-w-4xl mx-auto text-center">
 
-            <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-4">
-              <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+            <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-4">
+              <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
               Behold Insights &amp; Research
-              <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+              <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
             </span>
 
             <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold tracking-tight text-slate-900 leading-[1.15] mb-4">
-              Understanding What Matters<span className="text-[#00c9d6] drop-shadow-[0_0_10px_rgba(0,201,214,0.5)]">.</span>
+              Understanding What Matters<span className="text-[#4361ee] drop-shadow-[0_0_10px_rgba(0,201,214,0.5)]">.</span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-500 max-w-2xl mx-auto leading-relaxed font-medium mb-7">
@@ -141,7 +141,7 @@ const BlogList = () => {
 
             {/* Search Bar */}
             <form onSubmit={handleSearchSubmit} className="max-w-xl mx-auto">
-              <div className="relative flex items-center bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl shadow-sm focus-within:border-[#00c9d6] focus-within:ring-2 focus-within:ring-[#00c9d6]/20 transition-all overflow-hidden">
+              <div className="relative flex items-center bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl shadow-sm focus-within:border-[#4361ee] focus-within:ring-2 focus-within:ring-[#4361ee]/20 transition-all overflow-hidden">
                 <Search className="w-4 h-4 text-slate-400 absolute left-4 pointer-events-none shrink-0" />
                 <input
                   type="text"
@@ -152,7 +152,7 @@ const BlogList = () => {
                 />
                 <button
                   type="submit"
-                  className="shrink-0 m-1.5 px-5 py-2 rounded-xl bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 hover-scale-btn"
+                  className="shrink-0 m-1.5 px-5 py-2 rounded-xl bg-[#0f172a] hover:bg-[#4361ee] hover:text-slate-950 text-white font-semibold text-xs tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 hover-scale-btn"
                 >
                   Search
                 </button>
@@ -210,7 +210,7 @@ const BlogList = () => {
             </div>
           ) : blogs.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-2xl border border-slate-200 shadow-sm max-w-lg mx-auto p-10 reveal-on-scroll">
-              <div className="w-14 h-14 bg-[#00c9d6]/10 text-[#007078] rounded-2xl flex items-center justify-center mx-auto mb-5 border border-[#00c9d6]/20">
+              <div className="w-14 h-14 bg-[#4361ee]/10 text-[#007078] rounded-2xl flex items-center justify-center mx-auto mb-5 border border-[#4361ee]/20">
                 <BookOpen className="w-7 h-7" />
               </div>
               <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight">No Articles Found</h3>
@@ -230,7 +230,7 @@ const BlogList = () => {
                     <article
                       key={post._id || post.slug}
                       onClick={() => handleOpenBlog(post.slug)}
-                      className={`group bg-white border border-slate-200/80 hover:border-[#00c9d6]/60 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-sm hover:shadow-md h-full reveal-on-scroll reveal-scale-in ${delayClass}`}
+                      className={`group bg-white border border-slate-200/80 hover:border-[#4361ee]/60 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-sm hover:shadow-md h-full reveal-on-scroll reveal-scale-in ${delayClass}`}
                     >
                       {/* Cover Image */}
                       <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 shrink-0">
@@ -266,7 +266,7 @@ const BlogList = () => {
                         {/* Author & CTA */}
                         <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00c9d6] flex items-center justify-center font-semibold text-xs overflow-hidden shrink-0">
+                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#4361ee] flex items-center justify-center font-semibold text-xs overflow-hidden shrink-0">
                               {post.author?.avatar ? (
                                 <img src={getImageUrl(post.author.avatar)} alt={post.author.name} className="w-full h-full object-cover" />
                               ) : (
@@ -283,7 +283,7 @@ const BlogList = () => {
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1 text-[11px] font-semibold text-[#007078] group-hover:text-[#00c9d6] group-hover:translate-x-0.5 transition-all shrink-0">
+                          <div className="flex items-center gap-1 text-[11px] font-semibold text-[#007078] group-hover:text-[#4361ee] group-hover:translate-x-0.5 transition-all shrink-0">
                             <span>Read</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </div>

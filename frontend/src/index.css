@@ -66,10 +66,10 @@
   --color-zinc-900: var(--color-slate-900);
   --color-zinc-800: var(--color-slate-800);
   --color-zinc-700: var(--color-slate-700);
-  --color-brand: #06b6d4;
-  --color-brand-dark: #0891b2;
-  --color-brand-light: #e6fbfb;
-  --color-brand-accent: #0ea5e9;
+  --color-brand: #4361ee;
+  --color-brand-dark: #3a0ca3;
+  --color-brand-light: #f0f4ff;
+  --color-brand-accent: #4cc9f0;
 
   --color-surface-50: #F8FAFC;
   --color-surface-100: #F1F5F9;
@@ -524,6 +524,61 @@ body.no-scroll {
     0 4px 12px -2px rgba(10, 20, 60, 0.1);
   border-radius: 8px;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility card-app-soft {
+  background: #ffffff;
+  border: 1px solid var(--color-line);
+  box-shadow: 0 4px 20px rgba(67, 97, 238, 0.05);
+  border-radius: 24px;
+  transition: all 0.3s ease;
+}
+
+@utility card-app-soft-active {
+  background: var(--color-brand-light);
+  border: 2px solid var(--color-brand);
+  box-shadow: 0 4px 20px rgba(67, 97, 238, 0.15);
+  border-radius: 24px;
+}
+
+@utility card-glass {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+  border-radius: 24px;
+  transition: all 0.3s ease;
+}
+
+@utility card-glass-active {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid var(--color-brand);
+  box-shadow: 0 8px 32px 0 rgba(67, 97, 238, 0.15);
+  border-radius: 24px;
+  transition: all 0.3s ease;
+}
+
+@utility glass-panel {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.07);
+  border-radius: 32px;
+}
+
+@utility bg-mesh-gradient {
+  background-color: #f0f4ff;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253,16%,7%,0.05) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,0.05) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,0.05) 0, transparent 50%), 
+    radial-gradient(at 0% 100%, hsla(225,80%,60%,0.1) 0, transparent 50%), 
+    radial-gradient(at 50% 100%, hsla(253,80%,60%,0.1) 0, transparent 50%), 
+    radial-gradient(at 100% 100%, hsla(339,80%,60%,0.05) 0, transparent 50%);
 }
 
 @utility card-luxury-dark {

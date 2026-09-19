@@ -8,7 +8,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  mode: 'development',
   server: {
     host: true, // Expose to LAN so other devices can connect
     port: 5173,
@@ -35,3 +34,4 @@ export default defineConfig({
     setupFiles: './src/test/setup.js'
   }
 })
+

@@ -30,10 +30,10 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
 
               {/* Content Overlay Layer */}
               <div className="relative z-10 space-y-4">
-                <span className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#00c9d6] tracking-widest uppercase">
-                  <span className="w-4 h-px bg-[#00c9d6]/60 inline-block" />
+                <span className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#4361ee] tracking-widest uppercase">
+                  <span className="w-4 h-px bg-[#4361ee]/60 inline-block" />
                   {siteSettings?.servicesSectionSub || 'Unfold With Behold'}
-                  <span className="w-4 h-px bg-[#00c9d6]/60 inline-block" />
+                  <span className="w-4 h-px bg-[#4361ee]/60 inline-block" />
                 </span>
 
                 <h2 className="text-2xl sm:text-4xl lg:text-5xl font-sans font-semibold text-white tracking-tight leading-[1.02]">
@@ -81,7 +81,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
               </div>
               <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
                 <span className="text-2xl sm:text-4xl font-semibold text-[#0f172a] font-sans">01</span>
-                <span className="w-2 h-2 rounded-full bg-[#00c9d6] shadow-[0_0_6px_#00c9d6]" />
+                <span className="w-2 h-2 rounded-full bg-[#4361ee] shadow-[0_0_6px_#4361ee]" />
               </div>
             </div>
 
@@ -95,7 +95,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
               </div>
               <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
                 <span className="text-2xl sm:text-4xl font-semibold text-[#0f172a] font-sans">100%</span>
-                <span className="w-2 h-2 rounded-full bg-[#00c9d6] shadow-[0_0_6px_#00c9d6]" />
+                <span className="w-2 h-2 rounded-full bg-[#4361ee] shadow-[0_0_6px_#4361ee]" />
               </div>
             </div>
 
@@ -110,7 +110,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
                 </div>
                 <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
                   <span className="text-base sm:text-2xl font-semibold text-[#0f172a] font-sans uppercase">C-DAT</span>
-                  <span className="w-2 h-2 rounded-full bg-[#00c9d6] shadow-[0_0_6px_#00c9d6]" />
+                  <span className="w-2 h-2 rounded-full bg-[#4361ee] shadow-[0_0_6px_#4361ee]" />
                 </div>
               </div>
             ) : (
@@ -123,7 +123,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
                 </div>
                 <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
                   <span className="text-base sm:text-2xl font-semibold text-[#0f172a] font-sans uppercase">CIGI</span>
-                  <span className="w-2 h-2 rounded-full bg-[#00c9d6] shadow-[0_0_6px_#00c9d6]" />
+                  <span className="w-2 h-2 rounded-full bg-[#4361ee] shadow-[0_0_6px_#4361ee]" />
                 </div>
               </div>
             )}

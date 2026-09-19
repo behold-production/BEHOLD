@@ -90,10 +90,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
       {/* Ready CTA Banner */}
       <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#00e5ff]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
-            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-3">
+            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
-            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-5xl font-sans font-semibold uppercase text-white mb-4 tracking-tight leading-none">
             {settings.inquirySectionTitle || 'Ready to Build Your Future'}
@@ -197,7 +197,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-[#00c9d6] font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-[#4361ee] font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
                   >
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>

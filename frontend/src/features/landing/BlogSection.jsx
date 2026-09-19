@@ -79,20 +79,20 @@ const BlogSection = () => {  const navigate = useNavigate();
 
         {/* Header */}
         <div className="text-center mb-10 reveal-on-scroll">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00c9d6] tracking-widest uppercase mb-3">
-            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-3">
+            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
             Latest Insights
-            <span className="w-5 h-px bg-[#00c9d6]/60 inline-block" />
+            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
           </span>
           <h2 id="blog-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-[#0f172a] mb-4 tracking-tight leading-tight">
-            Guidance for Your Journey<span className="text-[#00c9d6] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-semibold">.</span>
+            Guidance for Your Journey<span className="text-[#4361ee] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-semibold">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 max-w-xl mx-auto leading-relaxed font-medium mb-6">
             Research-backed articles, student guides, and mental health resources from our clinical team.
           </p>
           <button
             onClick={handleOpenAllBlogs}
-            className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#00c9d6] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all border-none cursor-pointer shadow-sm hover-scale-btn"
+            className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#4361ee] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all border-none cursor-pointer shadow-sm hover-scale-btn"
           >
             Explore All Articles
           </button>

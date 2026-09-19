@@ -893,7 +893,7 @@ const AuthController = {
               const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
 
               const newUser = await StorageService.create('users', {
-                name: cleanInputName || 'New User',
+                name: cleanInputName || '',
                 email: tempEmail,
                 password: hashedPassword,
                 phone: formattedPhone,
@@ -930,7 +930,7 @@ const AuthController = {
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(Math.random().toString(36), salt);
                 const retryUser = await StorageService.create('users', {
-                  name: cleanInputName || 'New User',
+                  name: cleanInputName || '',
                   email: uniqueTempEmail,
                   password: hashedPassword,
                   phone: formattedPhone,

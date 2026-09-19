@@ -41,8 +41,17 @@ exports.sendDailyReminders = async (req, res) => {
 
       // WhatsApp reminder (Student/User ONLY)
       if (studentPhone) {
-        await WhatsAppService.sendDayOfReminder(studentPhone, details).catch(err => console.error('[Cron WhatsApp Reminder Error]:', err));
-        waSentCount++;
+        // Prevent repeating reminders on the same day
+        const reminderSentStr = appt.reminderSentAt ? new Date(appt.reminderSentAt).toISOString().split('T')[0] : null;
+        
+        if (reminderSentStr !== todayStr) {
+          await WhatsAppService.sendDayOfReminder(studentPhone, details).catch(err => console.error('[Cron WhatsApp Reminder Error]:', err));
+          
+          // Update DB to mark reminder sent
+          await StorageService.updateById('appointments', appt._id, { reminderSentAt: new Date() });
+          
+          waSentCount++;
+        }
       }
 
       // Email reminders

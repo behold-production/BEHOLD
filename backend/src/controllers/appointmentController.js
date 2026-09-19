@@ -213,15 +213,15 @@ const AppointmentController = {
         if ((userUpdates.name || cleanUserName(user.name)) && (userUpdates.email || (user.email && !user.email.includes('@temp.behold')))) {
           userUpdates.isProfileCompleted = true;
         }
-        if (age && !user.age) userUpdates.age = age;
-        if (feelingLately && !user.feelingLately) userUpdates.feelingLately = feelingLately;
-        if (hadPriorTherapy && !user.hadPriorTherapy) userUpdates.hadPriorTherapy = hadPriorTherapy;
-        if (priorTherapyDetails && !user.priorTherapyDetails) userUpdates.priorTherapyDetails = priorTherapyDetails;
-        if (schoolName && !user.schoolName) userUpdates.schoolName = schoolName;
-        if (grade && !user.grade) userUpdates.grade = grade;
-        if (guardianName && !user.guardianName) userUpdates.guardianName = guardianName;
-        if (guardianPhone && !user.guardianPhone) userUpdates.guardianPhone = guardianPhone;
-        if (clientLocationName && !user.locationName) userUpdates.locationName = clientLocationName;
+        if (age && age !== user.age) userUpdates.age = age;
+        if (feelingLately && feelingLately !== user.feelingLately) userUpdates.feelingLately = feelingLately;
+        if (hadPriorTherapy && hadPriorTherapy !== user.hadPriorTherapy) userUpdates.hadPriorTherapy = hadPriorTherapy;
+        if (priorTherapyDetails && priorTherapyDetails !== user.priorTherapyDetails) userUpdates.priorTherapyDetails = priorTherapyDetails;
+        if (schoolName && schoolName !== user.schoolName) userUpdates.schoolName = schoolName;
+        if (grade && grade !== user.grade) userUpdates.grade = grade;
+        if (guardianName && guardianName !== user.guardianName) userUpdates.guardianName = guardianName;
+        if (guardianPhone && guardianPhone !== user.guardianPhone) userUpdates.guardianPhone = guardianPhone;
+        if (clientLocationName && clientLocationName !== user.locationName) userUpdates.locationName = clientLocationName;
         if (!user.utmSource && (req.body.utmSource || req.body.fbclid)) {
           userUpdates.utmSource = req.body.utmSource || '';
           userUpdates.utmMedium = req.body.utmMedium || '';
@@ -280,37 +280,38 @@ const AppointmentController = {
             message: `Your booking request with ${cName} on ${date} at ${time} has been submitted.`,
             type: 'appointment_created',
             isRead: false
-          }),
-          EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment })
+          })
         ]);
 
-        if (userPhone) {
-          const action = isCouponFree ? 'approved' : 'created';
-          await WhatsAppService.sendBookingAlert(userPhone, action, {
-            studentName: sName,
-            counsellorName: cName,
-            date,
-            time,
-            mode: newAppointment.mode || mode || 'ONLINE',
-            duration: sessionDurationStr,
-            bookingId: newAppointment.id || '',
-            meetLink: finalMeetLink,
-            recipientRole: 'user'
-          }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
-        } else {
-          console.warn(`[Create Booking WhatsApp] Skipped: No phone found for appointment ${newAppointment.id}`);
-        }
+        if (isCouponFree) {
+          await EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error(err));
 
-        if (counsellorPhone) {
-          const action = isCouponFree ? 'approved' : 'created';
-          await WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, action, {
-            studentName: sName,
-            counsellorName: cName,
-            date,
-            time,
-            mode: newAppointment.mode || mode || 'ONLINE',
-            duration: sessionDurationStr
-          }).catch((err) => console.error('[WhatsApp Counsellor Alert Error]:', err));
+          if (userPhone) {
+            await WhatsAppService.sendBookingAlert(userPhone, 'approved', {
+              studentName: sName,
+              counsellorName: cName,
+              date,
+              time,
+              mode: newAppointment.mode || mode || 'ONLINE',
+              duration: sessionDurationStr,
+              bookingId: newAppointment.id || '',
+              meetLink: finalMeetLink,
+              recipientRole: 'user'
+            }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+          } else {
+            console.warn(`[Create Booking WhatsApp] Skipped: No phone found for appointment ${newAppointment.id}`);
+          }
+
+          if (counsellorPhone) {
+            await WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, 'approved', {
+              studentName: sName,
+              counsellorName: cName,
+              date,
+              time,
+              mode: newAppointment.mode || mode || 'ONLINE',
+              duration: sessionDurationStr
+            }).catch((err) => console.error('[WhatsApp Counsellor Alert Error]:', err));
+          }
         }
       } catch (notifErr) {
         console.error('[Notification Task Error in createAppointment]:', notifErr);
@@ -678,6 +679,7 @@ const AppointmentController = {
             isRead: false
           }),
           userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'rescheduled', details) : Promise.resolve(),
+          counsellor && counsellor.phone ? WhatsAppService.sendCounsellorBookingAlert(counsellor.phone, 'rescheduled', details) : Promise.resolve(),
           user ? EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: { ...appointment, date, time } }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -815,6 +817,7 @@ const AppointmentController = {
             isRead: false
           }),
           userPhone ? WhatsAppService.sendBookingAlert(userPhone, cancelAction, details) : Promise.resolve(),
+          counsellor && counsellor.phone ? WhatsAppService.sendCounsellorBookingAlert(counsellor.phone, cancelAction, details) : Promise.resolve(),
           user ? EmailService.sendAppointmentCancelled({ user, counsellor, appointment, cancelledBy: cancellerName, reason }) : Promise.resolve()
         ]);
       } catch (notifErr) {
@@ -1099,6 +1102,12 @@ const AppointmentController = {
           if (!isAdminRole(req.user.role)) {
             delete apptData.adminNotes;
           }
+          if (isCounsellorRole(req.user.role)) {
+            delete apptData.clientPhone;
+            delete apptData.clientEmail;
+            delete apptData.guardianPhone;
+            delete apptData.guardianName;
+          }
           return {
             ...apptData,
             studentName: resolveStudentName(a.clientName, user?.name) || user?.name || 'Student',
@@ -1109,12 +1118,15 @@ const AppointmentController = {
             student: user
               ? {
                   name: user.name,
-                  email: user.email,
-                  phone: user.phone,
+                  email: isCounsellorRole(req.user.role) ? undefined : user.email,
+                  phone: isCounsellorRole(req.user.role) ? undefined : user.phone,
                   schoolName: user.schoolName,
                   grade: user.grade,
-                  guardianName: user.guardianName,
-                  guardianPhone: user.guardianPhone
+                  guardianName: isCounsellorRole(req.user.role) ? undefined : user.guardianName,
+                  guardianPhone: isCounsellorRole(req.user.role) ? undefined : user.guardianPhone,
+                  age: user.age,
+                  feelingLately: user.feelingLately,
+                  priorTherapyDetails: user.priorTherapyDetails
                 }
               : null,
             counsellor: counsellor
