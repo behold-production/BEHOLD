@@ -169,7 +169,7 @@ const BlogPostDetail = () => {
         author={post.author?.name || post.authorName || 'BEHOLD Editorial Team'}
         schema={schema}
       />
-      <div className="min-h-screen flex flex-col text-slate-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#4361ee] relative overflow-hidden select-none">
+      <div className="min-h-screen flex flex-col text-slate-900 pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff] relative overflow-hidden select-none">
       {bgLayer}
       <main className="flex-1 relative z-10">
         <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
@@ -180,8 +180,8 @@ const BlogPostDetail = () => {
             onClick={handleBack}
             className="group inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest text-slate-500 hover:text-slate-900 mb-10 transition-all cursor-pointer bg-transparent border-none p-0 uppercase"
           >
-            <span className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-[#4361ee]/15 flex items-center justify-center transition-colors">
-              <ArrowLeft className="w-3.5 h-3.5 text-slate-600 group-hover:text-[#4361ee] transition-colors" />
+            <span className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-[#00e5ff]/15 flex items-center justify-center transition-colors">
+              <ArrowLeft className="w-3.5 h-3.5 text-slate-600 group-hover:text-[#00e5ff] transition-colors" />
             </span>
             Back to All Articles
           </button>
@@ -215,7 +215,7 @@ const BlogPostDetail = () => {
                   className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0 shadow-sm"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#4361ee] flex items-center justify-center font-semibold text-sm shrink-0 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00e5ff] flex items-center justify-center font-semibold text-sm shrink-0 shadow-sm">
                   {(post.author?.name || 'B').charAt(0)}
                 </div>
               )}
@@ -285,7 +285,7 @@ const BlogPostDetail = () => {
 
           {/* Article Excerpt Banner */}
           {post.excerpt && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-white/90 backdrop-blur-md border-l-4 border-[#4361ee] border border-slate-200/80 mb-12 shadow-sm">
+            <div className="p-6 sm:p-8 rounded-2xl bg-white/90 backdrop-blur-md border-l-4 border-[#00e5ff] border border-slate-200/80 mb-12 shadow-sm">
               <p className="text-base sm:text-lg text-slate-800 font-medium leading-relaxed italic">
                 "{post.excerpt}"
               </p>
@@ -317,7 +317,7 @@ const BlogPostDetail = () => {
           {(post.primaryKeyword || (post.secondaryKeywords && post.secondaryKeywords.length > 0)) && (
             <div className="mt-8 p-5 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
-                <Sparkles className="w-4 h-4 text-[#4361ee]" />
+                <Sparkles className="w-4 h-4 text-[#00e5ff]" />
                 <span>Focus Keywords & Key Topics</span>
               </div>
               <div className="flex flex-wrap items-center gap-2">
@@ -341,7 +341,7 @@ const BlogPostDetail = () => {
         {relatedBlogs.length > 0 && (
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-16 border-t border-slate-200 reveal-on-scroll">
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mb-8">
-              More Insights From BEHOLD<span className="text-[#4361ee] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-semibold">.</span>
+              More Insights From BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-semibold">.</span>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -349,7 +349,7 @@ const BlogPostDetail = () => {
                 <div
                   key={item.slug}
                   onClick={() => navigate(`/blog/${item.slug}`)}
-                  className={`bg-white/95 backdrop-blur-md hover:bg-white border border-slate-200/90 hover:border-[#4361ee]/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-md hover-scale-card group reveal-on-scroll reveal-scale-in reveal-delay-${idx + 1}`}
+                  className={`bg-white/95 backdrop-blur-md hover:bg-white border border-slate-200/90 hover:border-[#00e5ff]/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-md hover-scale-card group reveal-on-scroll reveal-scale-in reveal-delay-${idx + 1}`}
                 >
                   <span className="text-[10px] font-semibold text-[#007078] tracking-wider block">
                     {item.category}

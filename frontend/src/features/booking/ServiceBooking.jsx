@@ -536,7 +536,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                 /* STEP 5: Success & Confirmation View - Centered & Perfectly Balanced */
                                 <div className="p-6 sm:p-10 bg-white border border-slate-200/90 rounded-3xl max-w-xl mx-auto shadow-xl shadow-slate-200/40 space-y-6 text-center animate-in fade-in duration-300 relative overflow-hidden">
 
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#4361ee]/10 rounded-full blur-3xl pointer-events-none" />
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#00e5ff]/10 rounded-full blur-3xl pointer-events-none" />
 
                                     <style>{`
                                         @keyframes checkmark-circle {
@@ -568,8 +568,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         }
                                     `}</style>
 
-                                    <div className="relative w-20 h-20 bg-[#4361ee]/10 border border-[#4361ee]/30 rounded-full flex items-center justify-center mx-auto text-[#4361ee] shadow-sm animate-checkmark-circle z-10">
-                                        <svg className="w-10 h-10 text-[#4361ee]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <div className="relative w-20 h-20 bg-[#00e5ff]/10 border border-[#00e5ff]/30 rounded-full flex items-center justify-center mx-auto text-[#00e5ff] shadow-sm animate-checkmark-circle z-10">
+                                        <svg className="w-10 h-10 text-[#00e5ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                             <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
@@ -689,7 +689,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         })}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="w-full sm:w-auto px-5 py-3 bg-[#4361ee]/10 hover:bg-[#4361ee]/20 border border-[#4361ee]/40 text-teal-950 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center justify-center gap-2 shadow-xs no-underline"
+                                                        className="w-full sm:w-auto px-5 py-3 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 border border-[#00e5ff]/40 text-teal-950 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center justify-center gap-2 shadow-xs no-underline"
                                                     >
                                                         <CalendarIcon className="w-4 h-4 text-teal-600" />
                                                         <span>Add to Calendar</span>
@@ -781,7 +781,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-in slide-in-from-right-4 duration-300">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
-                                                                <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#4361ee] text-xs flex items-center justify-center font-extrabold shadow-xs">
+                                                                <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
                                                                     1
                                                                 </span>
                                                                 <div>
@@ -919,7 +919,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             scrollToTarget(step2AdvisorRef);
                                                                         }}
                                                                         className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${bookingDuration === 30
-                                                                                ? 'border-[#4361ee] bg-teal-50/30 ring-2 ring-[#4361ee]/30 shadow-xs'
+                                                                                ? 'border-[#00e5ff] bg-teal-50/30 ring-2 ring-[#00e5ff]/30 shadow-xs'
                                                                                 : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
                                                                             }`}
                                                                     >
@@ -950,7 +950,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             scrollToTarget(step2AdvisorRef);
                                                                         }}
                                                                         className={`p-4 sm:p-5 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border-2 relative ${bookingDuration === 60
-                                                                                ? 'border-[#4361ee] bg-teal-50/30 ring-2 ring-[#4361ee]/30 shadow-xs'
+                                                                                ? 'border-[#00e5ff] bg-teal-50/30 ring-2 ring-[#00e5ff]/30 shadow-xs'
                                                                                 : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
                                                                             }`}
                                                                     >
@@ -974,7 +974,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     </button>
                                                                 </div>
                                                             ) : (
-                                                                <div className="p-4 bg-teal-50/40 rounded-2xl border-2 border-[#4361ee] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                                                <div className="p-4 bg-teal-50/40 rounded-2xl border-2 border-[#00e5ff] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                                                     <div>
                                                                         <div className="flex items-center gap-2 mb-1">
                                                                             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-teal-100 text-teal-800 border border-teal-200">
@@ -1014,7 +1014,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             placeholder="Type your address to search... (e.g. Kozhikode, Kerala)"
                                                                             value={clientSearchQuery}
                                                                             onChange={(e) => setClientSearchQuery(e.target.value)}
-                                                                            className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-slate-200 text-xs font-medium text-slate-900 outline-none focus:border-[#4361ee] rounded-xl transition"
+                                                                            className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-slate-200 text-xs font-medium text-slate-900 outline-none focus:border-[#00e5ff] rounded-xl transition"
                                                                             onKeyDown={(e) => {
                                                                                 if (e.key === 'Enter') {
                                                                                     e.preventDefault();
@@ -1076,7 +1076,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
-                                                                <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#4361ee] text-xs flex items-center justify-center font-extrabold shadow-xs">
+                                                                <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
                                                                     2
                                                                 </span>
                                                                 <div>
@@ -1094,9 +1094,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
 
                                                         {selectedAdvisor && (
-                                                            <div className="p-3 bg-gradient-to-r from-teal-50/80 via-cyan-50/40 to-white border border-[#4361ee]/40 rounded-xl flex items-center justify-between gap-3 text-xs">
+                                                            <div className="p-3 bg-gradient-to-r from-teal-50/80 via-cyan-50/40 to-white border border-[#00e5ff]/40 rounded-xl flex items-center justify-between gap-3 text-xs">
                                                                 <div className="flex items-center gap-2 min-w-0">
-                                                                    <span className="w-2.5 h-2.5 rounded-full bg-[#4361ee] animate-pulse shrink-0" />
+                                                                    <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-pulse shrink-0" />
                                                                     <span className="font-bold text-slate-900 truncate">
                                                                         Selected: <strong className="text-teal-800">{selectedAdvisor.name}</strong> • ₹{bookingDuration === 30 ? (selectedAdvisor.halfSessionPrice || 499) : (selectedAdvisor.price || 899)} ({bookingDuration === 30 ? '30m Plan' : '1h Plan'})
                                                                     </span>
@@ -1164,7 +1164,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         scrollToTarget(step3TimeRef);
                                                                                     }}
                                                                                     className={`group p-4 sm:p-5 border-2 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow-xs cursor-pointer hover:-translate-y-0.5 ${isSelected
-                                                                                            ? 'border-[#4361ee] ring-2 ring-[#4361ee]/50 bg-teal-50/30 shadow-md'
+                                                                                            ? 'border-[#00e5ff] ring-2 ring-[#00e5ff]/50 bg-teal-50/30 shadow-md'
                                                                                             : isAvailable
                                                                                                 ? 'border-slate-200 hover:border-teal-500 hover:shadow-md'
                                                                                                 : 'border-slate-100 opacity-70 hover:opacity-100'
@@ -1172,7 +1172,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 >
                                                                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                                                                         <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
-                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center border-2 bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#4361ee]' : 'border-slate-200 group-hover:border-[#4361ee]'}`}>
+                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center border-2 bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#00e5ff]' : 'border-slate-200 group-hover:border-[#00e5ff]'}`}>
                                                                                                 {(advisor.isHighlighted || advisor.isTopFive) && (
                                                                                                     <div className="absolute top-0 left-0 right-0 bg-[#3a0ca3] text-white text-[8px] font-bold text-center py-0.5 z-10 tracking-widest uppercase">
                                                                                                         Top Rated
@@ -1246,11 +1246,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                             </div>
 
                                                                                             {isSelected ? (
-                                                                                                <div className="px-4 py-2 bg-[#4361ee] text-slate-950 text-xs font-extrabold rounded-xl transition-all flex items-center gap-1 shadow-xs">
+                                                                                                <div className="px-4 py-2 bg-[#00e5ff] text-slate-950 text-xs font-extrabold rounded-xl transition-all flex items-center gap-1 shadow-xs">
                                                                                                     <span>✓ Selected</span>
                                                                                                 </div>
                                                                                             ) : isAvailable ? (
-                                                                                                <div className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl group-hover:bg-[#4361ee] group-hover:text-slate-950 transition-all flex items-center gap-1 shadow-xs">
+                                                                                                <div className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl group-hover:bg-[#00e5ff] group-hover:text-slate-950 transition-all flex items-center gap-1 shadow-xs">
                                                                                                     <span>Select</span>
                                                                                                     <ArrowRight className="w-3.5 h-3.5" />
                                                                                                 </div>
@@ -1287,7 +1287,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                             setAdvisorPage(num);
                                                                                         }}
                                                                                         className={`w-8 h-8 rounded-lg text-xs font-bold border flex items-center justify-center cursor-pointer ${advisorPage === num
-                                                                                                ? 'bg-slate-900 text-[#4361ee] border-slate-900 shadow-xs'
+                                                                                                ? 'bg-slate-900 text-[#00e5ff] border-slate-900 shadow-xs'
                                                                                                 : 'bg-white text-slate-800 border-slate-200 hover:border-slate-400'
                                                                                             }`}
                                                                                     >
@@ -1393,7 +1393,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border-2 border-slate-200 space-y-4 text-left animate-in slide-in-from-right-4 duration-300">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="w-2.5 h-2.5 rounded-full bg-[#4361ee] animate-pulse" />
+                                                                <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-pulse" />
                                                                 <h4 className="font-extrabold text-sm uppercase tracking-wider text-slate-900">
                                                                     Booking Summary Review
                                                                 </h4>
@@ -1484,7 +1484,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         className="w-full sm:w-auto flex-1 px-8 py-4 bg-slate-900 hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                                                                     >
                                                                         <span>Proceed to Payment (₹{netTotal})</span>
-                                                                        <ArrowRight className="w-4 h-4 stroke-[3] text-[#4361ee]" />
+                                                                        <ArrowRight className="w-4 h-4 stroke-[3] text-[#00e5ff]" />
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -1532,7 +1532,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 <div className="card-glass p-5 sm:p-6 space-y-5 text-left">
                                                     <div className="bg-[#0f172a] text-white rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
                                                         <div>
-                                                            <span className="text-[10px] uppercase font-bold tracking-widest text-[#4361ee] block mb-1">
+                                                            <span className="text-[10px] uppercase font-bold tracking-widest text-[#00e5ff] block mb-1">
                                                                 {bookingDuration === 30 ? '✨ Introductory Session (30 Mins)' : 'Standard Session (1 Hour)'}
                                                             </span>
                                                             <span className="text-sm font-semibold text-slate-100">
@@ -1540,7 +1540,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </span>
                                                         </div>
                                                         <div className="sm:text-right">
-                                                            <span className="text-xl font-black text-[#4361ee]">₹{netTotal}</span>
+                                                            <span className="text-xl font-black text-[#00e5ff]">₹{netTotal}</span>
                                                             <span className="text-[11px] text-slate-400 block font-medium">Total Payable</span>
                                                         </div>
                                                     </div>
@@ -1570,7 +1570,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     if (errors.name) setErrors(prev => ({ ...prev, name: null }));
                                                                 }}
                                                                 placeholder="e.g. Rahul Sharma"
-                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#4361ee] bg-zinc-50 focus:bg-white'}`}
+                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00e5ff] bg-zinc-50 focus:bg-white'}`}
                                                             />
                                                             {errors.name && <p className="text-[11px] text-rose-500 font-medium">{errors.name}</p>}
                                                         </div>
@@ -1588,7 +1588,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     if (errors.email) setErrors(prev => ({ ...prev, email: null }));
                                                                 }}
                                                                 placeholder="you@example.com"
-                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#4361ee] bg-zinc-50 focus:bg-white'}`}
+                                                                className={`w-full px-3.5 py-2.5 border rounded-xl text-sm font-medium text-zinc-900 outline-none transition ${errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-zinc-200 focus:border-[#00e5ff] bg-zinc-50 focus:bg-white'}`}
                                                             />
                                                             {errors.email && <p className="text-[11px] text-rose-500 font-medium">{errors.email}</p>}
                                                         </div>
@@ -1683,7 +1683,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 id="booking-consent-checkbox"
                                                                 checked={termsAgreed}
                                                                 onChange={(e) => setTermsAgreed(e.target.checked)}
-                                                                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500 accent-[#4361ee] cursor-pointer shrink-0"
+                                                                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500 accent-[#00e5ff] cursor-pointer shrink-0"
                                                             />
                                                             <label htmlFor="booking-consent-checkbox" className="text-xs text-slate-700 font-medium leading-relaxed cursor-pointer select-none">
                                                                 I confirm that I have read, understood, and voluntarily agree to the{' '}
@@ -1729,9 +1729,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             type="submit"
                                                             disabled={isProcessingPayment || !termsAgreed}
                                                             title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
-                                                            className={`px-8 py-4 min-h-[48px] font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 border-none w-full sm:w-auto order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361ee] focus-visible:ring-offset-2 ${!termsAgreed || isProcessingPayment
+                                                            className={`px-8 py-4 min-h-[48px] font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 border-none w-full sm:w-auto order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2 ${!termsAgreed || isProcessingPayment
                                                                 ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60 shadow-none'
-                                                                : 'bg-[#0f172a] hover:bg-black text-[#4361ee] hover:text-white cursor-pointer active:scale-[0.98] shadow-lg'
+                                                                : 'bg-[#0f172a] hover:bg-black text-[#00e5ff] hover:text-white cursor-pointer active:scale-[0.98] shadow-lg'
                                                                 }`}
                                                         >
                                                             {isProcessingPayment ? (
@@ -2053,7 +2053,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         setShowConsentModal(false);
                                         toast.success('Informed Consent acknowledged and agreed.');
                                     }}
-                                    className="px-5 py-2.5 bg-[#0f172a] hover:bg-black text-[#4361ee] hover:text-white font-bold text-xs rounded-xl cursor-pointer transition border-none shadow-sm flex items-center gap-1.5"
+                                    className="px-5 py-2.5 bg-[#0f172a] hover:bg-black text-[#00e5ff] hover:text-white font-bold text-xs rounded-xl cursor-pointer transition border-none shadow-sm flex items-center gap-1.5"
                                 >
                                     <CheckCircle2 className="w-4 h-4" />
                                     <span>I Agree & Accept</span>

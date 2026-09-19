@@ -65,11 +65,11 @@ export default function FaqBlogSection() {
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12 border-b border-slate-200/80 pb-3">
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900">
-              FAQs<span className="text-[#4361ee]">.</span>
+              FAQs<span className="text-[#00e5ff]">.</span>
             </h2>
             <button
               onClick={() => navigate('/faqs')}
-              className="text-xs text-slate-700 hover:text-[#4361ee] font-semibold flex items-center gap-1 transition cursor-pointer"
+              className="text-xs text-slate-700 hover:text-[#00e5ff] font-semibold flex items-center gap-1 transition cursor-pointer"
             >
               <span>View All FAQs</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -88,7 +88,7 @@ export default function FaqBlogSection() {
               ))
             ) : faqs.length === 0 ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-2xl p-8 bg-white/60 backdrop-blur-xs flex flex-col items-center justify-center text-center space-y-3 shadow-xs">
-                <div className="w-12 h-12 rounded-full bg-[#4361ee]/10 text-[#4361ee] flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-[#00e5ff]/10 text-[#00e5ff] flex items-center justify-center">
                   <HelpCircle className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 font-sans">No FAQs Listed</h3>
@@ -103,15 +103,15 @@ export default function FaqBlogSection() {
                   <div
                     key={idx}
                     onClick={() => setExpandedIndex(isExpanded ? null : idx)}
-                    className={`w-full border border-slate-200/90 hover:border-[#4361ee] rounded-2xl p-5 sm:p-6 bg-white/80 backdrop-blur-md transition-all duration-200 cursor-pointer flex flex-col justify-center group shadow-xs flex-1 ${
-                      isExpanded ? 'bg-white border-[#4361ee]/80 ring-2 ring-[#4361ee]/10' : ''
+                    className={`w-full border border-slate-200/90 hover:border-[#00e5ff] rounded-2xl p-5 sm:p-6 bg-white/80 backdrop-blur-md transition-all duration-200 cursor-pointer flex flex-col justify-center group shadow-xs flex-1 ${
+                      isExpanded ? 'bg-white border-[#00e5ff]/80 ring-2 ring-[#00e5ff]/10' : ''
                     }`}
                   >
                     <div className="flex items-center justify-between gap-4">
-                      <h3 className="text-base sm:text-lg font-semibold font-sans text-slate-900 group-hover:text-[#4361ee] transition-colors leading-snug">
+                      <h3 className="text-base sm:text-lg font-semibold font-sans text-slate-900 group-hover:text-[#00e5ff] transition-colors leading-snug">
                         {faq.question}
                       </h3>
-                      <div className={`w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-[#4361ee]/10 text-[#4361ee]' : ''}`}>
+                      <div className={`w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-[#00e5ff]/10 text-[#00e5ff]' : ''}`}>
                         <ChevronDown className="w-4 h-4" />
                       </div>
                     </div>
@@ -131,11 +131,11 @@ export default function FaqBlogSection() {
           {/* Section Header */}
           <div className="flex items-center justify-between mb-6 h-12 border-b border-slate-200/80 pb-3">
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900">
-              Blogs<span className="text-[#4361ee]">.</span>
+              Blogs<span className="text-[#00e5ff]">.</span>
             </h2>
             <button
               onClick={() => navigate('/blog')}
-              className="text-xs text-slate-700 hover:text-[#4361ee] font-semibold flex items-center gap-1 transition cursor-pointer"
+              className="text-xs text-slate-700 hover:text-[#00e5ff] font-semibold flex items-center gap-1 transition cursor-pointer"
             >
               <span>Explore Blogs</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -156,7 +156,7 @@ export default function FaqBlogSection() {
               ))
             ) : blogs.length === 0 ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-2xl p-8 bg-white/60 backdrop-blur-xs flex flex-col items-center justify-center text-center space-y-3 shadow-xs">
-                <div className="w-12 h-12 rounded-full bg-[#4361ee]/10 text-[#4361ee] flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-[#00e5ff]/10 text-[#00e5ff] flex items-center justify-center">
                   <FileText className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 font-sans">No Articles Published</h3>
@@ -169,20 +169,20 @@ export default function FaqBlogSection() {
                 <div
                   key={idx}
                   onClick={() => navigate(post.slug ? `/blog/${post.slug}` : '/blog')}
-                  className="border border-slate-200/90 hover:border-[#4361ee] rounded-2xl p-5 sm:p-6 bg-white/80 backdrop-blur-md transition-all duration-200 cursor-pointer flex flex-col justify-between flex-1 group shadow-xs"
+                  className="border border-slate-200/90 hover:border-[#00e5ff] rounded-2xl p-5 sm:p-6 bg-white/80 backdrop-blur-md transition-all duration-200 cursor-pointer flex flex-col justify-between flex-1 group shadow-xs"
                 >
                   <div className="space-y-2">
-                    <span className="text-xs font-semibold text-[#4361ee] block">
+                    <span className="text-xs font-semibold text-[#00e5ff] block">
                       {(post.readTime || '6 min read').toLowerCase()} &middot; {(post.category || 'Career Guidance')}
                     </span>
-                    <h3 className="text-lg sm:text-xl font-semibold font-sans text-slate-900 group-hover:text-[#4361ee] transition-colors leading-snug">
+                    <h3 className="text-lg sm:text-xl font-semibold font-sans text-slate-900 group-hover:text-[#00e5ff] transition-colors leading-snug">
                       {post.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed font-normal">
                       {post.excerpt || post.snippet || post.summary || 'Explore expert insights and guidance from the Behold team.'}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 group-hover:text-[#4361ee] transition-colors pt-3">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 group-hover:text-[#00e5ff] transition-colors pt-3">
                     <span>Read Article</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </div>

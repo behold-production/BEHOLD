@@ -185,7 +185,7 @@ export default function ThankYouPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1.5 no-underline text-inherit">
             <span className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight flex items-baseline">
-              BEHOLD<span className="text-[#4361ee] font-semibold text-2xl leading-none">.</span>
+              BEHOLD<span className="text-[#00e5ff] font-semibold text-2xl leading-none">.</span>
             </span>
           </Link>
 
@@ -205,7 +205,7 @@ export default function ThankYouPage() {
       </header>
 
       {/* Ambient background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[35rem] h-[35rem] bg-[#4361ee]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[35rem] h-[35rem] bg-[#00e5ff]/10 rounded-full blur-[140px] pointer-events-none" />
 
       {/* ── MAIN CONTENT CONTAINER ── */}
       <main className="relative z-10 w-full max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-6 flex-1">
@@ -250,7 +250,7 @@ export default function ThankYouPage() {
 
           {isLoading ? (
             <div className="py-12 text-center text-slate-400 space-y-2">
-              <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#4361ee]" />
+              <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#00e5ff]" />
               <p className="text-xs font-semibold">Loading booking details...</p>
             </div>
           ) : (
@@ -264,7 +264,7 @@ export default function ThankYouPage() {
                     className="w-12 h-12 rounded-2xl object-cover object-top shadow-sm border-2 border-white shrink-0"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-2xl bg-[#4361ee] text-slate-950 flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
+                  <div className="w-12 h-12 rounded-2xl bg-[#00e5ff] text-slate-950 flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
                     {getInitials(bookingData?.advisorName)}
                   </div>
                 )}
@@ -396,7 +396,7 @@ export default function ThankYouPage() {
                 })}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:flex-1 py-3.5 px-4 bg-[#4361ee]/10 hover:bg-[#4361ee]/20 border border-[#4361ee]/40 text-teal-950 font-semibold text-sm rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
+                className="w-full sm:flex-1 py-3.5 px-4 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 border border-[#00e5ff]/40 text-teal-950 font-semibold text-sm rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
               >
                 <Calendar className="w-4 h-4 text-teal-700 shrink-0" />
                 <span>Add to Calendar</span>
@@ -407,7 +407,7 @@ export default function ThankYouPage() {
               onClick={handleDownloadReceipt}
               className="w-full sm:flex-1 py-3.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
             >
-              <Download className="w-4 h-4 text-[#4361ee] shrink-0" />
+              <Download className="w-4 h-4 text-[#00e5ff] shrink-0" />
               <span>Download Receipt</span>
             </button>
 
@@ -425,7 +425,7 @@ export default function ThankYouPage() {
         {/* Support note */}
         <p className="text-[13px] text-slate-500 text-center leading-relaxed">
           Questions or need help?{' '}
-          <a href="mailto:support@behold.co.in" className="text-[#3a0ca3] font-semibold underline underline-offset-2 hover:text-[#4361ee] transition-colors">
+          <a href="mailto:support@behold.co.in" className="text-[#3a0ca3] font-semibold underline underline-offset-2 hover:text-[#00e5ff] transition-colors">
             support@behold.co.in
           </a>
         </p>

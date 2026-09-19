@@ -191,7 +191,7 @@ export default function DateTimePicker({
         {/* Header */}
         <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-between border-b border-slate-700">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-[#4361ee] shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-[#00e5ff] shrink-0">
               <CalendarIcon className="w-5 h-5" />
             </div>
             <div className="min-w-0">
@@ -229,7 +229,7 @@ export default function DateTimePicker({
                     onClick={() => handleSelectDate(item.dateStr, item.obj)}
                     className={`py-2 px-2.5 rounded-xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
                       isSelected
-                        ? 'bg-slate-900 text-[#4361ee] border-slate-900 shadow-sm ring-2 ring-[#4361ee]/50'
+                        ? 'bg-slate-900 text-[#00e5ff] border-slate-900 shadow-sm ring-2 ring-[#00e5ff]/50'
                         : isDisabled
                         ? 'bg-slate-50 border-slate-200 text-slate-300 cursor-not-allowed opacity-50'
                         : item.isNext
@@ -314,7 +314,7 @@ export default function DateTimePicker({
                       !isCurrentMonth
                         ? 'text-slate-300 opacity-20 pointer-events-none'
                         : isSelected
-                        ? 'bg-slate-900 text-white font-bold shadow-md ring-2 ring-[#4361ee]'
+                        ? 'bg-slate-900 text-white font-bold shadow-md ring-2 ring-[#00e5ff]'
                         : isClickable
                         ? 'bg-white hover:bg-teal-50 border border-slate-200/90 text-slate-900 font-semibold cursor-pointer hover:border-teal-500 hover:shadow-xs'
                         : 'bg-slate-100/50 border border-slate-200/40 text-slate-400 opacity-40 cursor-not-allowed'
@@ -327,7 +327,7 @@ export default function DateTimePicker({
                     {/* Today indicator */}
                     {isToday && isCurrentMonth && (
                       <span className={`text-[8px] font-extrabold uppercase leading-none tracking-tighter mt-0.5 ${
-                        isSelected ? 'text-[#4361ee]' : 'text-teal-600'
+                        isSelected ? 'text-[#00e5ff]' : 'text-teal-600'
                       }`}>
                         Today
                       </span>
@@ -354,7 +354,7 @@ export default function DateTimePicker({
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Available Slots
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-[#4361ee]" /> Selected
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-[#00e5ff]" /> Selected
               </span>
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-300" /> Unavailable

@@ -53,7 +53,7 @@ export default function HomePage() {
   const bgImageSrc = globalBgTexture?.src || globalBgTexture;
 
   return (
-    <div className="relative min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between selection:bg-[#4361ee] selection:text-slate-950 font-sans">
+    <div className="relative min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between selection:bg-[#00e5ff] selection:text-slate-950 font-sans">
       {/* Background Texture */}
       <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none">
         <div

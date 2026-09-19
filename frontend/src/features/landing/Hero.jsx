@@ -70,7 +70,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
       {/* Hero Background SVG/Image with Floating & Ambient Pulse Animations */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
         {/* Soft Ambient Radial Glow behind Hero */}
-        <div className="absolute w-[45rem] h-[45rem] bg-[#4361ee]/20 rounded-full blur-[140px] animate-hero-pulse pointer-events-none" />
+        <div className="absolute w-[45rem] h-[45rem] bg-[#00e5ff]/20 rounded-full blur-[140px] animate-hero-pulse pointer-events-none" />
 
         <img
           src={settings.heroBgImage || headerBg?.src || headerBg}
@@ -95,13 +95,13 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
             {/* Accent Line 2 - Custom Cursive Font */}
             <div className="relative inline-block mt-2 sm:mt-4">
-              <span className="font-rough text-[#4361ee] text-[80px] xs:text-[86px] sm:text-[92px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.92] drop-shadow-sm select-none animate-hero-pulse">
+              <span className="font-rough text-[#00e5ff] text-[80px] xs:text-[86px] sm:text-[92px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.92] drop-shadow-sm select-none animate-hero-pulse">
                 {displayTitle.toLowerCase()}
               </span>
 
               {/* Turquoise Brush Underline Graphic */}
               <svg
-                className="absolute -bottom-2 left-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 w-3/5 h-4 sm:h-5 text-[#4361ee]/80 pointer-events-none animate-pulse transition-all duration-500"
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 w-3/5 h-4 sm:h-5 text-[#00e5ff]/80 pointer-events-none animate-pulse transition-all duration-500"
                 viewBox="0 0 200 20"
                 fill="currentColor"
                 preserveAspectRatio="none"
@@ -120,7 +120,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           <div className="flex justify-center lg:justify-start w-full animate-fade-scale delay-300">
             <button
               onClick={handleConnectClick}
-              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base font-semibold px-8 py-3 min-h-[44px] rounded-2xl shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361ee] focus-visible:ring-offset-2"
+              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base font-semibold px-8 py-3 min-h-[44px] rounded-2xl shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
             >
               {btnText}
             </button>

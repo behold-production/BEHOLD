@@ -22,7 +22,7 @@ const HeroHeader = ({
 
   return (
     <div className="bg-white text-[#0f172a] border border-slate-200 rounded-2xl shadow-xs overflow-hidden relative">
-      <div className="h-1.5 bg-gradient-to-r from-[#4361ee] via-cyan-400 to-emerald-400 w-full" />
+      <div className="h-1.5 bg-gradient-to-r from-[#00e5ff] via-cyan-400 to-emerald-400 w-full" />
 
       <div className="p-5 sm:p-7 relative z-10">
         <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6 sm:gap-8">
@@ -38,11 +38,11 @@ const HeroHeader = ({
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white shadow-md bg-slate-100 ring-2 ring-slate-200/80"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-900 border-2 border-white shadow-md ring-2 ring-slate-200/80 flex items-center justify-center text-[#4361ee] font-bold text-2xl sm:text-3xl uppercase">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-900 border-2 border-white shadow-md ring-2 ring-slate-200/80 flex items-center justify-center text-[#00e5ff] font-bold text-2xl sm:text-3xl uppercase">
                   {getInitials(profile.name, user?.name)}
                 </div>
               )}
-              <label className="absolute inset-0 rounded-full bg-slate-950/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#4361ee] gap-0.5 shadow-sm">
+              <label className="absolute inset-0 rounded-full bg-slate-950/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#00e5ff] gap-0.5 shadow-sm">
                 <span className="text-[10px] font-bold uppercase tracking-widest">Update</span>
                 <input
                   type="file"
@@ -55,7 +55,7 @@ const HeroHeader = ({
 
             {/* Profile Info */}
             <div className="flex-1 text-center sm:text-left min-w-0 w-full">
-              <p className="text-xs text-[#4361ee] font-bold mb-1 tracking-widest uppercase flex items-center justify-center sm:justify-start gap-1.5">
+              <p className="text-xs text-[#00e5ff] font-bold mb-1 tracking-widest uppercase flex items-center justify-center sm:justify-start gap-1.5">
                 {greeting}
               </p>
               <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight truncate">

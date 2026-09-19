@@ -231,7 +231,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     const isUnavailable = nextAvail === 'Unavailable';
 
     return (
-      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[24px] sm:rounded-[26px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#4361ee] shadow-[0_16px_40px_rgba(0,201,214,0.20)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
+      <div className={`w-full h-full flex flex-col overflow-hidden bg-white rounded-[24px] sm:rounded-[26px] [transform:translateZ(0)] [isolation:isolate] transition-all duration-500 text-left ${isCenter ? 'pointer-events-auto border-[2px] border-[#00e5ff] shadow-[0_16px_40px_rgba(0,201,214,0.20)]' : 'pointer-events-none border border-slate-200/80 shadow-md'}`}>
         
         {/* Top Header Section (Light Primary Teal Background with Full Height Right Image) */}
         <div className="relative w-full h-[110px] sm:h-[130px] p-3 sm:p-4.5 bg-gradient-to-r from-[#bcf4f8] via-[#d7f9fb] to-[#a8eff4] flex items-start justify-between overflow-hidden shrink-0 rounded-t-[24px] sm:rounded-t-[26px]">
@@ -259,13 +259,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               />
             ) : (
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md flex items-center justify-center mb-2 border border-white">
-                <span className="font-semibold text-lg sm:text-xl text-[#4361ee]">
+                <span className="font-semibold text-lg sm:text-xl text-[#00e5ff]">
                   {getInitial(advisor.name)}
                 </span>
               </div>
             )}
             <div style={{ display: 'none' }} className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/90 shadow-md items-center justify-center mb-2 border border-white">
-              <span className="font-semibold text-lg sm:text-xl text-[#4361ee]">
+              <span className="font-semibold text-lg sm:text-xl text-[#00e5ff]">
                 {getInitial(advisor.name)}
               </span>
             </div>
@@ -299,7 +299,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   e.stopPropagation();
                   setExpandedBios(prev => ({ ...prev, [advisor.id]: !prev[advisor.id] }));
                 }}
-                className="text-[9.5px] sm:text-[11px] font-semibold text-[#4361ee] hover:text-[#3a0ca3] hover:underline cursor-pointer mt-1 inline-block tracking-wider"
+                className="text-[9.5px] sm:text-[11px] font-semibold text-[#00e5ff] hover:text-[#3a0ca3] hover:underline cursor-pointer mt-1 inline-block tracking-wider"
               >
                 {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
               </button>
@@ -351,7 +351,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                   if (onBookTherapist) onBookTherapist(advisor.id);
                   else window.spaNavigate?.('/book-session');
                 }}
-                className="bg-[#4361ee] hover:bg-[#00b2be] text-slate-950 font-extrabold text-[9.5px] sm:text-xs tracking-wider px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
+                className="bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 font-extrabold text-[9.5px] sm:text-xs tracking-wider px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer whitespace-nowrap hover-scale-btn"
               >
                 Book Session
               </button>
@@ -379,13 +379,13 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
       {/* SECTION TOPPER TITLE */}
       <div className="w-full max-w-7xl mx-auto mb-6 sm:mb-8 text-center px-4">
-        <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#4361ee] tracking-widest uppercase mb-3">
-          <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
+        <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#00e5ff] tracking-widest uppercase mb-3">
+          <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
           Our Expert Team
-          <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
+          <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
         </span>
         <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-none">
-          Meet Our <span className="text-[#4361ee]">Experts</span><span className="text-[#4361ee]">.</span>
+          Meet Our <span className="text-[#00e5ff]">Experts</span><span className="text-[#00e5ff]">.</span>
         </h2>
       </div>
 
@@ -393,7 +393,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
       <div className="w-full max-w-4xl mx-auto mb-8 sm:mb-10 bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-slate-200/80 p-3 sm:p-4 flex flex-col gap-3 transition-all duration-300 px-4 sm:px-4">
 
         {/* Row 1: Search Input */}
-        <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 w-full focus-within:border-[#4361ee] focus-within:ring-2 focus-within:ring-[#4361ee]/20 transition-all">
+        <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 w-full focus-within:border-[#00e5ff] focus-within:ring-2 focus-within:ring-[#00e5ff]/20 transition-all">
           <Search className="w-4 h-4 text-slate-400 shrink-0" />
           <input
             type="text"
@@ -419,7 +419,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 key={role.id}
                 onClick={() => { setSelectedRole(role.id); setCurrentIndex(0); }}
                 className={`px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-300 cursor-pointer ${selectedRole === role.id
-                  ? 'bg-[#4361ee] text-slate-950 shadow-md border border-[#4361ee]'
+                  ? 'bg-[#00e5ff] text-slate-950 shadow-md border border-[#00e5ff]'
                   : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/90'
                   }`}
               >
@@ -481,7 +481,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             </p>
             <button
               onClick={handleConnectClick}
-              className="px-8 py-3 bg-[#0f172a] hover:bg-[#4361ee] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-xl transition shadow-md border-none cursor-pointer hover-scale-btn"
+              className="px-8 py-3 bg-[#0f172a] hover:bg-[#00e5ff] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-xl transition shadow-md border-none cursor-pointer hover-scale-btn"
             >
               Contact Support Desk
             </button>
@@ -495,7 +495,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
                 aria-label="Previous Psychologist"
-                className="absolute left-1 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#4361ee] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute left-1 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
                 <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
@@ -504,7 +504,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
                 aria-label="Next Psychologist"
-                className="absolute right-1 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#4361ee] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className="absolute right-1 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
               >
                 <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
@@ -546,7 +546,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
               <button
                 onClick={handleConnectClick}
-                className="bg-[#0f172a] hover:bg-[#4361ee] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
+                className="bg-[#0f172a] hover:bg-[#00e5ff] hover:text-slate-950 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex items-center justify-center border-none hover-scale-btn mt-1"
               >
                 Let's Connect
               </button>

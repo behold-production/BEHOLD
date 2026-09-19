@@ -127,7 +127,7 @@ const SidebarNav = ({
  if (window.spaNavigate) window.spaNavigate('/');
  else window.location.pathname = '/';
  }}
- className="w-full py-2 border border-brand/40 hover:border-brand text-[#4361ee] bg-[#4361ee]/10 hover:bg-[#4361ee]/20 font-semibold text-xs rounded-[10px] flex items-center justify-center gap-2 transition-colors cursor-pointer"
+ className="w-full py-2 border border-brand/40 hover:border-brand text-[#00e5ff] bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 font-semibold text-xs rounded-[10px] flex items-center justify-center gap-2 transition-colors cursor-pointer"
  >
  <Globe className="w-3.5 h-3.5" /> Go to Website / Student View
  </button>

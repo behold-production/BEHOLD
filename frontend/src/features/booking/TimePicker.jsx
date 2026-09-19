@@ -235,7 +235,7 @@ export default function TimePicker({
       {/* Step Header */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#4361ee] text-xs flex items-center justify-center font-extrabold shadow-xs">
+          <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
             3
           </span>
           <div>
@@ -317,7 +317,7 @@ export default function TimePicker({
                     <span
                       className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full mt-0.5 leading-tight ${
                         isSelected
-                          ? 'bg-teal-500/20 text-[#4361ee]'
+                          ? 'bg-teal-500/20 text-[#00e5ff]'
                           : isDisabled
                           ? 'bg-slate-200/70 text-slate-400'
                           : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
@@ -411,7 +411,7 @@ export default function TimePicker({
                       !isCurrentMonth
                         ? 'text-slate-300 opacity-20 pointer-events-none'
                         : isSelected
-                        ? 'bg-slate-900 text-white font-bold shadow-md ring-2 ring-[#4361ee]'
+                        ? 'bg-slate-900 text-white font-bold shadow-md ring-2 ring-[#00e5ff]'
                         : isClickable
                         ? 'bg-white hover:bg-teal-50 border border-slate-200/90 text-slate-900 font-semibold cursor-pointer hover:border-teal-500 hover:shadow-xs'
                         : 'bg-slate-100/50 border border-slate-200/40 text-slate-300 opacity-40 cursor-not-allowed'
@@ -423,7 +423,7 @@ export default function TimePicker({
 
                     {isTodayCell && isCurrentMonth && (
                       <span className={`text-[8px] font-extrabold uppercase leading-none tracking-tighter mt-0.5 ${
-                        isSelected ? 'text-[#4361ee]' : 'text-teal-600'
+                        isSelected ? 'text-[#00e5ff]' : 'text-teal-600'
                       }`}>
                         Today
                       </span>
@@ -448,7 +448,7 @@ export default function TimePicker({
                   <span className="w-2 h-2 rounded-full bg-emerald-500" /> Open Slots
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-slate-900 border border-[#4361ee]" /> Selected
+                  <span className="w-2 h-2 rounded-full bg-slate-900 border border-[#00e5ff]" /> Selected
                 </span>
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-slate-300" /> Fully Booked / Off
@@ -502,7 +502,7 @@ export default function TimePicker({
             <button
               type="button"
               onClick={() => onDateChange && onDateChange(earliestAvailableDateStr)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#4361ee]/10 hover:bg-[#4361ee]/20 text-teal-900 border border-teal-300 rounded-lg text-xs font-bold transition cursor-pointer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-teal-900 border border-teal-300 rounded-lg text-xs font-bold transition cursor-pointer"
             >
               <Zap className="w-3 h-3 text-[#3a0ca3]" />
               <span>Next Free: {formatDateString(earliestAvailableDateStr)}</span>
@@ -554,15 +554,15 @@ export default function TimePicker({
                         }}
                         className={`p-3 rounded-xl font-semibold transition-all duration-200 text-center flex flex-col items-center justify-center gap-0.5 border min-h-[58px] relative overflow-hidden active:scale-95 ${
                           isSelected
-                            ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-[#4361ee]'
+                            ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-[#00e5ff]'
                             : isBooked
                             ? 'bg-slate-100/70 border-slate-200 text-slate-400 opacity-50 cursor-not-allowed'
                             : 'bg-white hover:bg-teal-50/60 border-slate-200 text-slate-800 hover:border-teal-500 hover:shadow-xs cursor-pointer'
                         }`}
                       >
                         <div className="flex items-center justify-center gap-1">
-                          {isSelected && <Check className="w-3.5 h-3.5 text-[#4361ee] stroke-[3]" />}
-                          <span className={`text-xs sm:text-sm font-extrabold ${isSelected ? 'text-[#4361ee]' : 'text-slate-900'}`}>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-[#00e5ff] stroke-[3]" />}
+                          <span className={`text-xs sm:text-sm font-extrabold ${isSelected ? 'text-[#00e5ff]' : 'text-slate-900'}`}>
                             {time}
                           </span>
                         </div>
@@ -611,7 +611,7 @@ export default function TimePicker({
                 onClick={() => onDateChange && onDateChange(earliestAvailableDateStr)}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm hover:scale-105"
               >
-                <Zap className="w-4 h-4 text-[#4361ee]" />
+                <Zap className="w-4 h-4 text-[#00e5ff]" />
                 <span>Jump to {formatDateString(earliestAvailableDateStr)}</span>
               </button>
             )}

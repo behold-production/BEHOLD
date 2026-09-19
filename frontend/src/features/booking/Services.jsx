@@ -106,14 +106,14 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
         {/* Section Header - Centered & Balanced */}
         <div className="max-w-3xl mx-auto mb-10 text-center flex flex-col items-center reveal-on-scroll">
-          <span className="inline-flex items-center justify-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-3 text-center">
-            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
+          <span className="inline-flex items-center justify-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00e5ff] tracking-widest uppercase mb-3 text-center">
+            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
             Our Services
-            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
+            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-slate-900 tracking-tight leading-tight mb-3">
             {settings.servicesSectionTitle && settings.servicesSectionTitle !== 'BOOK YOUR SESSION' ? settings.servicesSectionTitle : 'Book Your Session'}
-            <span className="text-[#4361ee] font-semibold">.</span>
+            <span className="text-[#00e5ff] font-semibold">.</span>
           </h2>
 
           <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-xl mx-auto">
@@ -131,16 +131,16 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
             return (
               <div
                 key={service.id}
-                className={`group relative bg-white/95 backdrop-blur-md rounded-3xl ${isSingle ? 'p-8 sm:p-10' : 'p-6 sm:p-7'} border border-slate-200/90 shadow-md hover-scale-card hover:border-[#4361ee]/60 transition-all duration-300 flex flex-col justify-between overflow-hidden reveal-on-scroll reveal-scale-in ${delayClass}`}
+                className={`group relative bg-white/95 backdrop-blur-md rounded-3xl ${isSingle ? 'p-8 sm:p-10' : 'p-6 sm:p-7'} border border-slate-200/90 shadow-md hover-scale-card hover:border-[#00e5ff]/60 transition-all duration-300 flex flex-col justify-between overflow-hidden reveal-on-scroll reveal-scale-in ${delayClass}`}
               >
                 <div>
                   {/* Top Bar: Icon */}
-                  <div className={`${isSingle ? 'w-14 h-14' : 'w-11 h-11'} rounded-2xl bg-[#4361ee]/10 text-[#007078] flex items-center justify-center mb-5 group-hover:bg-[#4361ee] group-hover:text-slate-950 group-hover:scale-110 transition-all duration-300 shadow-xs`}>
+                  <div className={`${isSingle ? 'w-14 h-14' : 'w-11 h-11'} rounded-2xl bg-[#00e5ff]/10 text-[#007078] flex items-center justify-center mb-5 group-hover:bg-[#00e5ff] group-hover:text-slate-950 group-hover:scale-110 transition-all duration-300 shadow-xs`}>
                     <Icon className={isSingle ? 'w-7 h-7' : 'w-5 h-5'} />
                   </div>
 
                   {/* Service Title */}
-                  <h3 className={`${isSingle ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'} font-semibold text-slate-900 tracking-tight mb-2.5 group-hover:text-[#4361ee] transition-colors leading-snug font-sans`}>
+                  <h3 className={`${isSingle ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'} font-semibold text-slate-900 tracking-tight mb-2.5 group-hover:text-[#00e5ff] transition-colors leading-snug font-sans`}>
                     {service.title}
                   </h3>
 
@@ -159,7 +159,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   <button
                     type="button"
                     onClick={service.onAction}
-                    className={`${isSingle ? 'px-6 py-3 text-xs' : 'px-4.5 py-2.5 text-xs'} rounded-xl bg-[#0f172a] hover:bg-[#4361ee] hover:text-slate-950 text-white font-semibold hover-scale-btn transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 group/btn shrink-0 border-none`}
+                    className={`${isSingle ? 'px-6 py-3 text-xs' : 'px-4.5 py-2.5 text-xs'} rounded-xl bg-[#0f172a] hover:bg-[#00e5ff] hover:text-slate-950 text-white font-semibold hover-scale-btn transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 group/btn shrink-0 border-none`}
                   >
                     <span>{service.actionText}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />

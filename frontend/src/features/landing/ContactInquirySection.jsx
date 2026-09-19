@@ -67,13 +67,13 @@ export default function ContactInquirySection() {
 
         {/* Section Header */}
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#4361ee] tracking-widest uppercase mb-2">
-            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00e5ff] tracking-widest uppercase mb-2">
+            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
             Get In Touch
-            <span className="w-5 h-px bg-[#4361ee]/60 inline-block" />
+            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 font-sans">
-            Want to Know More<span className="text-[#4361ee]">.</span>
+            Want to Know More<span className="text-[#00e5ff]">.</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-md mx-auto leading-relaxed">
             Have questions about psychological care or career mentoring? Send us a message and we'll reach out within 24 hours.
@@ -96,7 +96,7 @@ export default function ContactInquirySection() {
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                className="mt-3 bg-[#4361ee] hover:bg-[#00b2be] text-slate-900 font-semibold text-xs px-6 py-3 rounded-full transition-all cursor-pointer shadow-xs border-none"
+                className="mt-3 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-900 font-semibold text-xs px-6 py-3 rounded-full transition-all cursor-pointer shadow-xs border-none"
               >
                 Send Another Message
               </button>
@@ -114,7 +114,7 @@ export default function ContactInquirySection() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Your full name"
-                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#4361ee] focus:bg-white focus:ring-4 focus:ring-[#4361ee]/10 transition-all font-medium"
+                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-white focus:ring-4 focus:ring-[#00e5ff]/10 transition-all font-medium"
                   disabled={loading}
                   required
                 />
@@ -130,7 +130,7 @@ export default function ContactInquirySection() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="your@email.com"
-                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#4361ee] focus:bg-white focus:ring-4 focus:ring-[#4361ee]/10 transition-all font-medium"
+                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-white focus:ring-4 focus:ring-[#00e5ff]/10 transition-all font-medium"
                   disabled={loading}
                   required
                 />
@@ -146,7 +146,7 @@ export default function ContactInquirySection() {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="How can we help you?"
-                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#4361ee] focus:bg-white focus:ring-4 focus:ring-[#4361ee]/10 transition-all resize-none font-medium"
+                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-white focus:ring-4 focus:ring-[#00e5ff]/10 transition-all resize-none font-medium"
                   disabled={loading}
                   required
                 />
@@ -156,7 +156,7 @@ export default function ContactInquirySection() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#4361ee] hover:bg-[#00b2be] text-slate-950 font-semibold text-sm py-3.5 rounded-full shadow-md hover-scale-btn transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 border-none mt-1"
+                className="w-full bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 font-semibold text-sm py-3.5 rounded-full shadow-md hover-scale-btn transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 border-none mt-1"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />

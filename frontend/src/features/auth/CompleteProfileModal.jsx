@@ -358,7 +358,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                       onClick={() => handleSelectFeeling(selected ? '' : opt)}
                       className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all cursor-pointer ${
                         selected
-                          ? 'bg-[#0f172a] text-[#4361ee] border-[#4361ee]'
+                          ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff]'
                           : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                       }`}
                     >
@@ -406,7 +406,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                         onClick={() => handleSelectPriorTherapy(opt)}
                         className={`flex-1 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                           selected
-                            ? 'bg-[#0f172a] text-[#4361ee] border-[#4361ee] shadow-sm'
+                            ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff] shadow-sm'
                             : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                         }`}
                       >

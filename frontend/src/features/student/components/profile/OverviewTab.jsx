@@ -36,7 +36,7 @@ export default function OverviewTab({
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-block px-5 py-2.5 bg-[#4361ee] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
+            className="inline-block px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
           >
             Book Consultation
           </button>
@@ -106,7 +106,7 @@ export default function OverviewTab({
                 href={nextSession.meetLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#4361ee] shadow-xs text-center no-underline"
+                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#00e5ff] shadow-xs text-center no-underline"
               >
                 Join Google Meet
               </a>
@@ -134,7 +134,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="mt-5 inline-block px-6 py-2.5 bg-[#4361ee] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
+              className="mt-5 inline-block px-6 py-2.5 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
             >
               Schedule Consultation Now
             </button>
@@ -211,7 +211,7 @@ export default function OverviewTab({
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs sm:text-sm text-surface-500 hover:text-[#4361ee] font-semibold cursor-pointer border-0 bg-transparent tracking-wide"
+              className="text-xs sm:text-sm text-surface-500 hover:text-[#00e5ff] font-semibold cursor-pointer border-0 bg-transparent tracking-wide"
             >
               View All
             </button>
@@ -262,7 +262,7 @@ export default function OverviewTab({
                   {a.label}
                 </span>
                 {a.done ? (
-                  <span className="text-[10px] sm:text-xs font-bold text-[#4361ee] bg-slate-900 px-2.5 py-0.5 rounded-md shadow-2xs border border-[#4361ee]/30">Done</span>
+                  <span className="text-[10px] sm:text-xs font-bold text-[#00e5ff] bg-slate-900 px-2.5 py-0.5 rounded-md shadow-2xs border border-[#00e5ff]/30">Done</span>
                 ) : (
                   <span className="text-[10px] sm:text-xs font-bold text-surface-500 bg-surface-100 px-2.5 py-0.5 rounded-md border border-surface-200">Pending</span>
                 )}
