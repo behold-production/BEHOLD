@@ -2,7 +2,8 @@ const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const { autoExpireSessions } = require('../utils/sessionHelper');
 const WhatsAppService = require('../services/whatsappService');
-const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
+const EmailService = require('../services/emailService');
+const { resolveAnyPhone, resolveStudentName, normalizePhoneWithCountryCode, cleanUserName } = require('../utils/phoneUtils');
 const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
 async function findCounsellorRecord(counsellorId) {

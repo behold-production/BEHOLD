@@ -835,7 +835,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     return null;
   };
 
-  const selectAdvisor = (advisor) => {
+  function selectAdvisor(advisor) {
     if (!advisor) {
       setSelectedAdvisor(null);
       setAdvisorConfirmed(false);
@@ -1437,9 +1437,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         description: `${bookingService.toUpperCase()} Consultation with ${selectedAdvisor?.name || 'Psychologist'}`,
         order_id: orderId,
         prefill: {
-          name: resolvedClientName || user?.name || '',
-          email: resolvedClientEmail || user?.email || '',
-          contact: resolvedClientPhone || user?.phone || ''
+          name: (bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User'))
+            ? bookingForm.name
+            : ((user?.name && user.name !== 'New User' && !user.name.includes('Behold User')) ? user.name : ''),
+          email: (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
+            ? bookingForm.email
+            : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : ''),
+          contact: cleanPhone
         },
         handler: async function (response) {
           try {
@@ -1540,15 +1544,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             toast.error(verifyErr.message || "Failed to verify payment and complete booking.");
             setIsProcessingPayment(false);
           }
-        },
-        prefill: {
-          name: (bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User'))
-            ? bookingForm.name
-            : ((user?.name && user.name !== 'New User' && !user.name.includes('Behold User')) ? user.name : ''),
-          email: (bookingForm.email && !bookingForm.email.includes('@temp.behold'))
-            ? bookingForm.email
-            : ((user?.email && !user.email.includes('@temp.behold')) ? user.email : ''),
-          contact: cleanPhone
         },
         theme: {
           color: "#00E5FF"

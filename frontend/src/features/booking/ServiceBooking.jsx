@@ -1134,7 +1134,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         setSelectedAdvisor(advisor);
                                                                                         setAdvisorConfirmed(true);
                                                                                         const earliest = getAdvisorEarliestAvailableDate(advisor);
-                                                                                        if (earliest) setSelectedDate(earliest);
+                                                                                        if (earliest) handleDateChange(earliest);
                                                                                         setSelectedTime('');
                                                                                     }
                                                                                     if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));

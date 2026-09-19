@@ -4,7 +4,7 @@ const StorageService = require('../services/storageService');
 const { validateBookingDetails } = require('../utils/bookingValidator');
 const EmailService = require('../services/emailService');
 const WhatsAppService = require('../services/whatsappService');
-const { resolveAnyPhone, normalizePhoneWithCountryCode, resolveStudentName } = require('../utils/phoneUtils');
+const { resolveAnyPhone, normalizePhoneWithCountryCode, resolveStudentName, cleanUserName } = require('../utils/phoneUtils');
 const { checkIntroductoryUsed, markIntroductoryUsed } = require('../utils/introductoryHelper');
 
 const activeNotificationLocks = new Set();

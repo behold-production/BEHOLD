@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const https = require('https');
+const { URL } = require('url');
 
 const PIXEL_ID = process.env.META_PIXEL_ID || '2080399902866260';
 
