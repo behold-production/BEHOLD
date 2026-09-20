@@ -254,6 +254,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         }
     }, [bookingStep, wizardStep]);
 
+    const [hasAutoAdvanced, setHasAutoAdvanced] = useState(false);
+    useEffect(() => {
+        if (selectedAdvisor && !hasAutoAdvanced && wizardStep === 1 && !isAdvisorLocked) {
+            setWizardStep(2);
+            setHasAutoAdvanced(true);
+        }
+    }, [selectedAdvisor, hasAutoAdvanced, wizardStep, isAdvisorLocked]);
+
     const effectiveAdvisorPage = Math.max(1, advisorPage);
 
     const [clientSearchResults, setClientSearchResults] = useState([]);
@@ -1057,9 +1065,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         Selected: <strong className="text-teal-800">{selectedAdvisor.name}</strong> • ₹{bookingDuration === 30 ? (selectedAdvisor.halfSessionPrice || 499) : (selectedAdvisor.price || 899)} ({bookingDuration === 30 ? '30m Plan' : '1h Plan'})
                                                                     </span>
                                                                 </div>
-                                                                <span className="text-[11px] font-bold text-teal-700 shrink-0 hidden sm:inline-block">
-                                                                    Continue to Service Plan below ↓
-                                                                </span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setWizardStep(2)}
+                                                                    className="px-4 py-2 bg-[#0f172a] hover:bg-black text-white font-bold rounded-lg transition-all cursor-pointer whitespace-nowrap shadow-sm border-none flex items-center justify-center gap-1.5"
+                                                                >
+                                                                    Continue <ArrowRight className="w-3 h-3" />
+                                                                </button>
                                                             </div>
                                                         )}
 
