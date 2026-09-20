@@ -695,19 +695,22 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 {/* WIZARD PROGRESS BAR */}
                                                 {!rescheduleSession && (
                                                     <div className="flex items-center justify-between px-2 mb-6 gap-1">
-                                                        {[1, 2, 3, 4].map((step) => (
-                                                            <div key={step} className="flex flex-col items-center flex-1">
-                                                                <div className={`w-full h-1 rounded-full ${wizardStep >= step ? 'bg-[#00e5ff]' : 'bg-slate-200'} transition-all duration-300`}></div>
-                                                                <span className={`text-[9px] sm:text-[10px] font-bold mt-2 uppercase tracking-widest text-center transition-colors ${wizardStep === step ? 'text-[#00e5ff]' : wizardStep > step ? 'text-slate-600' : 'text-slate-400'}`}>
-                                                                    {step === 1 ? 'Expert' : step === 2 ? 'Service' : step === 3 ? 'Time' : 'Summary'}
-                                                                </span>
-                                                            </div>
-                                                        ))}
+                                                        {[1, 2, 3, 4].map((step) => {
+                                                            const effectiveStep = (wizardStep === 1 && isAdvisorLocked) ? 2 : wizardStep;
+                                                            return (
+                                                                <div key={step} className="flex flex-col items-center flex-1">
+                                                                    <div className={`w-full h-1 rounded-full ${effectiveStep >= step ? 'bg-[#00e5ff]' : 'bg-slate-200'} transition-all duration-300`}></div>
+                                                                    <span className={`text-[9px] sm:text-[10px] font-bold mt-2 uppercase tracking-widest text-center transition-colors ${effectiveStep === step ? 'text-[#00e5ff]' : effectiveStep > step ? 'text-slate-600' : 'text-slate-400'}`}>
+                                                                        {step === 1 ? 'Expert' : step === 2 ? 'Service' : step === 3 ? 'Time' : 'Summary'}
+                                                                    </span>
+                                                                </div>
+                                                            );
+                                                        })}
                                                     </div>
                                                 )}
 
                                                 {/* STEP 2 — SELECT SERVICE & SESSION PLAN */}
-                                                {wizardStep === 2 && (
+                                                {(wizardStep === 2 || (wizardStep === 1 && isAdvisorLocked)) && (
                                                     <div ref={step1Ref} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
@@ -1014,7 +1017,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 )}
 
                                                 {/* STEP 1 — SELECT PSYCHOLOGIST */}
-                                                {wizardStep === 1 && (
+                                                {wizardStep === 1 && !isAdvisorLocked && (
                                                     <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-4 text-left animate-step-in">
                                                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                                                             <div className="flex items-center gap-2.5">
@@ -1044,7 +1047,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     </span>
                                                                 </div>
                                                                 <span className="text-[11px] font-bold text-teal-700 shrink-0 hidden sm:inline-block">
-                                                                    Choose Date & Time below ↓
+                                                                    Continue to Service Plan below ↓
                                                                 </span>
                                                             </div>
                                                         )}
@@ -1286,7 +1289,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <div className="pt-6 border-t border-slate-100 flex justify-between">
                                                             <button
                                                                 type="button"
-                                                                onClick={() => setWizardStep(isAdvisorLocked ? 1 : 2)}
+                                                                onClick={() => setWizardStep(2)}
                                                                 className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer border-none"
                                                             >
                                                                 Back
