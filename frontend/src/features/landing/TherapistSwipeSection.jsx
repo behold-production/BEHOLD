@@ -129,16 +129,17 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
 
   const displayAdvisors = filteredAdvisors;
 
-  const handleNextCard = () => {
-    setCurrentIndex((prev) => (prev + 1) % displayAdvisors.length);
-  };
+  const handleNextCard = useCallback(() => {
+    setCurrentIndex((prev) => Math.min(prev + 1, displayAdvisors.length - 1));
+  }, [displayAdvisors.length]);
 
-  const handlePrevCard = () => {
-    setCurrentIndex((prev) => (prev - 1 + displayAdvisors.length) % displayAdvisors.length);
-  };
+  const handlePrevCard = useCallback(() => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  }, []);
 
   // Improved Touch & Drag Gesture Handlers
   const touchDeltaRef = useRef(0);
+  const isSwipingRef = useRef(false);
 
   const handleTouchStart = (clientX) => {
     setIsDragging(true);
@@ -150,6 +151,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     if (!isDragging) return;
     const deltaX = clientX - startXRef.current;
     touchDeltaRef.current = deltaX;
+    if (Math.abs(deltaX) > 10) {
+      isSwipingRef.current = true;
+    }
   };
 
   const handleTouchEnd = () => {
@@ -161,6 +165,11 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
     } else if (deltaX > 30) {
       handlePrevCard();
     }
+    
+    // Reset swiping state after click events would have fired
+    setTimeout(() => {
+      isSwipingRef.current = false;
+    }, 50);
   };
 
   // Keyboard Navigation Support
@@ -189,12 +198,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
   };
 
   const getRelativePosition = (index) => {
-    const total = displayAdvisors.length;
-    if (total === 0) return 0;
-    let diff = (index - currentIndex) % total;
-    if (diff > Math.floor(total / 2)) diff -= total;
-    if (diff < -Math.floor(total / 2)) diff += total;
-    return diff;
+    return index - currentIndex;
   };
 
   const getCardStyles = (diff) => {
@@ -494,8 +498,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               {/* Left Floating Navigation Arrow */}
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrevCard(); }}
+                disabled={currentIndex === 0}
                 aria-label="Previous Psychologist"
-                className="absolute left-1 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className={`absolute left-1 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 shadow-xl border border-slate-200/80 transition-all duration-300 flex items-center justify-center group ${currentIndex === 0 ? 'opacity-0 pointer-events-none' : 'hover:text-slate-950 hover:bg-[#00e5ff] cursor-pointer hover-scale-btn'}`}
               >
                 <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
@@ -503,8 +508,9 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
               {/* Right Floating Navigation Arrow */}
               <button
                 onClick={(e) => { e.stopPropagation(); handleNextCard(); }}
+                disabled={currentIndex === displayAdvisors.length - 1}
                 aria-label="Next Psychologist"
-                className="absolute right-1 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 hover:text-slate-950 hover:bg-[#00e5ff] shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex items-center justify-center group hover-scale-btn"
+                className={`absolute right-1 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/95 text-slate-800 shadow-xl border border-slate-200/80 transition-all duration-300 flex items-center justify-center group ${currentIndex === displayAdvisors.length - 1 ? 'opacity-0 pointer-events-none' : 'hover:text-slate-950 hover:bg-[#00e5ff] cursor-pointer hover-scale-btn'}`}
               >
                 <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
@@ -528,6 +534,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                     <div
                       key={advisor.id}
                       onClick={() => {
+                        if (isSwipingRef.current) return;
                         if (diff !== 0) setCurrentIndex(index);
                       }}
                       className={`absolute w-[82vw] xs:w-[325px] sm:w-[365px] md:w-[400px] h-[390px] sm:h-[450px] rounded-[24px] sm:rounded-[26px] overflow-hidden transform transition-all duration-[420ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${styleClass}`}
