@@ -695,7 +695,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 {/* WIZARD PROGRESS BAR */}
                                                 {!rescheduleSession && (
                                                     <div className="flex items-center justify-between px-2 mb-6 gap-1">
-                                                        {(isAdvisorLocked ? [2, 3, 4] : [1, 2, 3, 4]).map((step) => {
+                                                        {[1, 2, 3, 4].map((step) => {
                                                             const effectiveStep = (wizardStep === 1 && isAdvisorLocked) ? 2 : wizardStep;
                                                             return (
                                                                 <div key={step} className="flex flex-col items-center flex-1">
