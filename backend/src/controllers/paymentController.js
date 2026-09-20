@@ -471,6 +471,7 @@ const PaymentController = {
       let existingAppt = await StorageService.findOne('appointments', { $or: filterOr });
 
       if (existingAppt) {
+        const wasAlreadyPaid = existingAppt.paymentStatus === 'PAID';
         const updateFields = {};
         if (existingAppt.paymentStatus !== 'PAID') updateFields.paymentStatus = 'PAID';
         if (existingAppt.status !== 'CONFIRMED' && existingAppt.status !== 'APPROVED') updateFields.status = 'CONFIRMED';
@@ -552,7 +553,9 @@ const PaymentController = {
         } catch {}
 
         // Dispatch notifications & WhatsApp alert for existing pre-created appointment
-        await dispatchBookingNotifications(existingAppt, req.body, clientPhone);
+        if (!wasAlreadyPaid) {
+          dispatchBookingNotifications(existingAppt, req.body, clientPhone).catch(err => console.error('[Notification Error]:', err));
+        }
 
         return res.status(200).json({
           success: true,
@@ -775,7 +778,7 @@ const PaymentController = {
       }
 
       // Dispatch notifications & WhatsApp alert for new appointment
-      await dispatchBookingNotifications(newAppointment, req.body, clientPhone);
+      dispatchBookingNotifications(newAppointment, req.body, clientPhone).catch(err => console.error('[Notification Error]:', err));
 
       // JSON response for frontend
       res.status(200).json({
@@ -851,6 +854,7 @@ const PaymentController = {
         const existingAppointment = filterOr.length > 0 ? await StorageService.findOne('appointments', { $or: filterOr }) : null;
 
         if (existingAppointment) {
+          const wasAlreadyPaid = existingAppointment.paymentStatus === 'PAID';
           const updateWhFields = {
             paymentStatus: 'PAID',
             status: 'CONFIRMED',
@@ -888,7 +892,9 @@ const PaymentController = {
           cleanDuplicateAppointments().catch(() => {});
 
           // Trigger notifications & WhatsApp alert
-          await dispatchBookingNotifications(existingAppointment, {}, existingAppointment.clientPhone);
+          if (!wasAlreadyPaid) {
+            dispatchBookingNotifications(existingAppointment, {}, existingAppointment.clientPhone).catch(err => console.error('[Notification Error]:', err));
+          }
         } else if (notes.counsellorId && notes.date && notes.time && notes.mode) {
           const validation = await validateBookingDetails(
             notes.counsellorId,
@@ -984,7 +990,7 @@ const PaymentController = {
             }
 
             // Dispatch full notifications & WhatsApp alert to user
-            await dispatchBookingNotifications(newBooking, {}, notes.clientPhone);
+            dispatchBookingNotifications(newBooking, {}, notes.clientPhone).catch(err => console.error('[Notification Error]:', err));
           }
         }
       } else if (event === 'refund.processed' || event === 'refund.created') {
