@@ -196,7 +196,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const [termsAgreed, setTermsAgreed] = useState(false);
     const [showConsentModal, setShowConsentModal] = useState(false);
 
-    const [wizardStep, setWizardStep] = useState(1);
+    const [wizardStep, setWizardStep] = useState(() => preselectedAdvisorId ? 3 : 1);
+
+    // Reset or jump to the correct step when the modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setWizardStep(preselectedAdvisorId ? 3 : 1);
+        }
+    }, [isOpen, preselectedAdvisorId]);
 
     const isAdvisorLocked = !!preselectedAdvisorId;
     const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
@@ -211,7 +218,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             return;
         }
         if (wizardStep > 1) {
-            setWizardStep(prev => prev - 1);
+            setWizardStep(prev => (prev === 3 && isAdvisorLocked) ? 1 : prev - 1);
             return;
         }
         onClose();
@@ -979,7 +986,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         )}
 
                                                         <div className="pt-6 border-t border-slate-100 flex justify-center">
-                                                            <button type="button" onClick={() => setWizardStep(2)} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary">Continue to Next Step <ArrowRight className="w-4 h-4" /></button>
+                                                            <button type="button" onClick={() => setWizardStep(isAdvisorLocked ? 3 : 2)} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary">Continue to Next Step <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
@@ -1264,7 +1271,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         <div className="pt-6 border-t border-slate-100 flex justify-between">
                                                             <button
                                                                 type="button"
-                                                                onClick={() => setWizardStep(2)}
+                                                                onClick={() => setWizardStep(isAdvisorLocked ? 1 : 2)}
                                                                 className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer border-none"
                                                             >
                                                                 Back
@@ -1293,7 +1300,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             <div className="space-y-1">
                                                                 <span className="text-[10px] uppercase font-bold text-slate-400 block">Psychologist</span>
                                                                 <div className="flex items-center justify-between">
-                                                                    <span className="font-bold text-slate-900 text-sm truncate">{selectedAdvisor.name}</span>
+                                                                    <span className="font-bold text-slate-900 text-sm truncate">{selectedAdvisor?.name}</span>
                                                                     {!isAdvisorLocked && (
                                                                         <button
                                                                             type="button"
