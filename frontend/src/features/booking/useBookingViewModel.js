@@ -379,7 +379,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (!advisors || advisors.length === 0) return;
 
     const queryParams = new URLSearchParams(window.location.search);
-    const targetAdvisorId = preselectedAdvisorId || queryParams.get('advisor') || queryParams.get('counsellor') || queryParams.get('psychologist');
+    const targetAdvisorId = preselectedAdvisorId || queryParams.get('advisor') || queryParams.get('counsellor') || queryParams.get('psychologist') || queryParams.get('counsellorId');
 
     if (targetAdvisorId) {
       const match = advisors.find(a => String(a.id) === String(targetAdvisorId) || String(a._id) === String(targetAdvisorId));
