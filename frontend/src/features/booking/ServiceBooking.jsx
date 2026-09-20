@@ -695,7 +695,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 {/* WIZARD PROGRESS BAR */}
                                                 {!rescheduleSession && (
                                                     <div className="flex items-center justify-between px-2 mb-6 gap-1">
-                                                        {[1, 2, 3, 4].map((step) => {
+                                                        {(isAdvisorLocked ? [2, 3, 4] : [1, 2, 3, 4]).map((step) => {
                                                             const effectiveStep = (wizardStep === 1 && isAdvisorLocked) ? 2 : wizardStep;
                                                             return (
                                                                 <div key={step} className="flex flex-col items-center flex-1">
@@ -730,6 +730,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 Step 2
                                                             </span>
                                                         </div>
+
+                                                        {isAdvisorLocked && !selectedAdvisor && (
+                                                            <div className="p-3 bg-gradient-to-r from-teal-50/80 via-cyan-50/40 to-white border border-[#00e5ff]/40 rounded-xl flex items-center justify-between gap-3 text-xs mb-2">
+                                                                <div className="flex items-center gap-2 min-w-0">
+                                                                    <span className="w-2.5 h-2.5 rounded-full bg-slate-300 animate-pulse shrink-0" />
+                                                                    <span className="font-bold text-slate-500 truncate">
+                                                                        Loading Selected Expert...
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        )}
 
                                                         {selectedAdvisor && isAdvisorLocked && (
                                                             <div className="p-3 bg-gradient-to-r from-teal-50/80 via-cyan-50/40 to-white border border-[#00e5ff]/40 rounded-xl flex items-center justify-between gap-3 text-xs mb-2">
