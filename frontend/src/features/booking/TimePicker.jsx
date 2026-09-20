@@ -76,9 +76,6 @@ export default function TimePicker({
   const todayStr = useMemo(() => getLocalTodayString(), []);
   const isToday = selectedDate === todayStr;
 
-  // Inline month calendar expand/collapse toggle
-  const [showInlineCalendar, setShowInlineCalendar] = useState(false);
-
   // Month navigation state for the calendar view
   const [currentMonth, setCurrentMonth] = useState(() => {
     if (selectedDate) {
@@ -111,38 +108,6 @@ export default function TimePicker({
     }
     return null;
   }, [selectedAdvisor, getAdvisorEarliestAvailableDate]);
-
-  // Next 5 days for quick 1-tap strip with live slot counts
-  const quickDays = useMemo(() => {
-    const days = [];
-    for (let i = 0; i < 5; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() + i);
-      const str = toLocalDateString(d);
-      let label = 'Today';
-      if (i === 1) label = 'Tomorrow';
-      else {
-        label = d.toLocaleDateString('en-US', { weekday: 'short' });
-      }
-
-      let slotCount = 0;
-      if (selectedAdvisor && getAdvisorSlotsForDate) {
-        const slots = getAdvisorSlotsForDate(selectedAdvisor, str) || [];
-        slotCount = slots.length;
-      } else if (str === selectedDate) {
-        slotCount = availableSlots.length;
-      }
-
-      days.push({
-        label,
-        dateStr: str,
-        shortDate: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        slotCount,
-        hasSlots: slotCount > 0
-      });
-    }
-    return days;
-  }, [today, selectedAdvisor, getAdvisorSlotsForDate, selectedDate, availableSlots]);
 
   // Calendar cells for inline month view
   const calendarCells = useMemo(() => {
@@ -260,95 +225,10 @@ export default function TimePicker({
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
             Choose Appointment Date
           </span>
-          <div className="flex items-center flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setShowInlineCalendar(prev => !prev)}
-              className="text-xs font-bold text-teal-600 hover:text-teal-700 hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
-            >
-              <CalendarDays className="w-3.5 h-3.5" />
-              <span>{showInlineCalendar ? 'Show Quick Days' : 'Interactive Calendar'}</span>
-            </button>
-            {onOpenDatePicker && (
-              <>
-                <span className="text-slate-300 text-xs">|</span>
-                <button
-                  type="button"
-                  onClick={onOpenDatePicker}
-                  className="text-xs font-semibold text-slate-500 hover:text-slate-800 hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
-                >
-                  <CalendarIcon className="w-3.5 h-3.5" />
-                  <span>Full Modal</span>
-                </button>
-              </>
-            )}
-          </div>
         </div>
 
-        {/* Quick Date Selector Bar */}
-        {!showInlineCalendar ? (
-          <div className="space-y-2">
-            <div className="flex overflow-x-auto gap-3 pb-2 snap-x scrollbar-hide">
-              {quickDays.map((qd) => {
-                const isSelected = selectedDate === qd.dateStr;
-                const isDisabled = !qd.hasSlots;
-
-                return (
-                  <button
-                    key={qd.dateStr}
-                    type="button"
-                    disabled={isDisabled}
-                    onClick={() => {
-                      if (isDisabled) return;
-                      if (onDateChange) onDateChange(qd.dateStr);
-                    }}
-                    className={`flex-none w-24 sm:w-28 p-2.5 sm:p-3 rounded-xl flex flex-col items-center justify-center gap-1.5 snap-center booking-card ${
-                      isSelected
-                        ? 'card-app-soft-active scale-[1.02]'
-                        : isDisabled
-                        ? 'bg-white/20 border border-slate-200/50 text-slate-400 opacity-60 cursor-not-allowed'
-                        : 'card-app-soft hover:bg-white/50 cursor-pointer'
-                    }`}
-                  >
-                    <span className={`font-extrabold leading-tight truncate w-full text-center ${isSelected ? 'text-teal-900' : 'text-slate-900'}`}>{qd.label}</span>
-                    <span className={`text-[10px] font-medium ${isSelected ? 'text-teal-700' : 'text-slate-500'}`}>
-                      {qd.shortDate}
-                    </span>
-                    <span
-                      className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full mt-0.5 leading-tight ${
-                        isSelected
-                          ? 'bg-teal-500/20 text-[#00e5ff]'
-                          : isDisabled
-                          ? 'bg-slate-200/70 text-slate-400'
-                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
-                      }`}
-                    >
-                      {isDisabled ? 'No slots' : `${qd.slotCount} slots`}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* If selected date is beyond the 5 days, show indicator */}
-            {!quickDays.some(qd => qd.dateStr === selectedDate) && selectedDate && (
-              <div className="flex items-center justify-between p-2.5 bg-teal-50/60 border border-teal-200/80 rounded-xl text-xs text-teal-900">
-                <span className="font-medium">
-                  Viewing selected date from calendar: <strong className="font-bold">{formatDateString(selectedDate)}</strong>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setShowInlineCalendar(true)}
-                  className="font-bold text-teal-700 hover:underline cursor-pointer bg-transparent border-none p-0 text-xs"
-                >
-                  Change Date
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          /* Inline Interactive Month Calendar */
-          <div className="border border-slate-200 rounded-xl p-3 sm:p-4 bg-slate-50/50 space-y-3 animate-step-in">
+        {/* Interactive Month Calendar */}
+        <div className="border border-slate-200 rounded-xl p-3 sm:p-4 bg-slate-50/50 space-y-3 animate-step-in">
             {/* Month Navigation */}
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <span className="font-bold text-sm sm:text-base text-slate-900">
@@ -454,16 +334,8 @@ export default function TimePicker({
                   <span className="w-2 h-2 rounded-full bg-slate-300" /> Fully Booked / Off
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowInlineCalendar(false)}
-                className="font-bold text-teal-600 hover:underline cursor-pointer bg-transparent border-none p-0"
-              >
-                Done
-              </button>
             </div>
           </div>
-        )}
       </div>
 
       {/* Selected Date Indicator & Earliest Jump Pill */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useBookingViewModel } from './useBookingViewModel';
-import DateTimePicker from './DateTimePicker';
+
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
 import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon } from 'lucide-react';
@@ -195,7 +195,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const [expandedSpecialties, setExpandedSpecialties] = useState({});
     const [termsAgreed, setTermsAgreed] = useState(false);
     const [showConsentModal, setShowConsentModal] = useState(false);
-    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
     const [wizardStep, setWizardStep] = useState(1);
 
     const isAdvisorLocked = !!preselectedAdvisorId;
@@ -1241,19 +1241,6 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             getAdvisorSlotsForDate={getAdvisorSlotsForDate}
                                                             getAdvisorEarliestAvailableDate={getAdvisorEarliestAvailableDate}
                                                             errors={errors}
-                                                            onOpenDatePicker={() => setIsDatePickerOpen(true)}
-                                                        />
-
-                                                        <DateTimePicker
-                                                            isOpen={isDatePickerOpen}
-                                                            onClose={() => setIsDatePickerOpen(false)}
-                                                            selectedDate={selectedDate}
-                                                            selectedAdvisorName={selectedAdvisor?.name}
-                                                            onDateChange={(d) => {
-                                                                handleDateChange(d);
-                                                                setIsDatePickerOpen(false);
-                                                            }}
-                                                            getAvailableSlotsForDate={(date) => getAdvisorSlotsForDate(selectedAdvisor, date)}
                                                         />
 
                                                         <div className="pt-6 border-t border-slate-100 flex justify-between">
