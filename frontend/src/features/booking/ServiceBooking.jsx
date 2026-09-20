@@ -996,8 +996,19 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </div>
                                                         )}
 
-                                                        <div className="pt-6 border-t border-slate-100 flex justify-center">
-                                                            <button type="button" onClick={() => setWizardStep(3)} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary">Continue to Next Step <ArrowRight className="w-4 h-4" /></button>
+                                                        <div className="pt-6 border-t border-slate-100 flex justify-between">
+                                                            {!isAdvisorLocked ? (
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setWizardStep(1)}
+                                                                    className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer border-none"
+                                                                >
+                                                                    Back
+                                                                </button>
+                                                            ) : (
+                                                                <div />
+                                                            )}
+                                                            <button type="button" onClick={() => setWizardStep(3)} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
@@ -1245,15 +1256,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                         {errors.advisor && <p className="text-xs text-rose-500 font-medium">{errors.advisor}</p>}
 
-                                                        <div className="pt-6 border-t border-slate-100 flex justify-between">
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => setWizardStep(1)}
-                                                                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer border-none"
-                                                            >
-                                                                Back
-                                                            </button>
-                                                            <button type="button" onClick={() => setWizardStep(3)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary disabled:opacity-50">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
+                                                        <div className="pt-6 border-t border-slate-100 flex justify-end">
+                                                            <button type="button" onClick={() => setWizardStep(2)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary disabled:opacity-50">Continue to Service Plan <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
