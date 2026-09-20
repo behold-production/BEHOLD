@@ -4,7 +4,7 @@ import { useBookingViewModel } from './useBookingViewModel';
 
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon } from 'lucide-react';
+import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon, Trash2 } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import toast from 'react-hot-toast';
@@ -447,14 +447,32 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                         </div>
                     )}
 
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        aria-label="Close Booking"
-                        className="w-10 h-10 -mr-2 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors cursor-pointer border-none bg-transparent"
-                    >
-                        <X className="w-6 h-6" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {bookingStep !== 'success' && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (window.confirm('Are you sure you want to clear all booking data and start over?')) {
+                                        resetBookingState();
+                                        setWizardStep(1);
+                                    }
+                                }}
+                                aria-label="Clear Booking Data"
+                                title="Clear Booking Data"
+                                className="w-9 h-9 flex items-center justify-center text-rose-500 hover:text-rose-600 transition-colors cursor-pointer border-none bg-transparent hover:bg-rose-50 rounded-full"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            aria-label="Close Booking"
+                            className="w-10 h-10 -mr-2 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors cursor-pointer border-none bg-transparent"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="min-h-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]">
