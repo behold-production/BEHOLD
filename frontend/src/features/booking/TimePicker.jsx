@@ -82,7 +82,9 @@ export default function TimePicker({
   useEffect(() => {
     if (selectedDate && slotsContainerRef.current) {
       setTimeout(() => {
-        slotsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (slotsContainerRef.current) {
+          slotsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }, 150);
     }
   }, [selectedDate]);
