@@ -241,7 +241,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         if (scrollContainerRef.current) {
             scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    }, [bookingStep]);
+    }, [bookingStep, wizardStep]);
 
     const effectiveAdvisorPage = Math.max(1, advisorPage);
 

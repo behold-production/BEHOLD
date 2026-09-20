@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -75,6 +75,17 @@ export default function TimePicker({
 
   const todayStr = useMemo(() => getLocalTodayString(), []);
   const isToday = selectedDate === todayStr;
+
+  const slotsContainerRef = useRef(null);
+
+  // Auto-scroll to slots when a date is selected
+  useEffect(() => {
+    if (selectedDate && slotsContainerRef.current) {
+      setTimeout(() => {
+        slotsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 150);
+    }
+  }, [selectedDate]);
 
   // Month navigation state for the calendar view
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -384,7 +395,8 @@ export default function TimePicker({
       </div>
 
       {/* Available Slots Section */}
-      {totalSlotCount > 0 ? (
+      <div ref={slotsContainerRef}>
+        {totalSlotCount > 0 ? (
         <div className="space-y-4 pt-1">
           {['morning', 'afternoon', 'evening'].map(bucket => {
             const items = groupedSlots[bucket];
@@ -499,6 +511,7 @@ export default function TimePicker({
           </div>
         </div>
       )}
+      </div>
 
       {/* Selected Slot Summary Badge */}
       {selectedTime && totalSlotCount > 0 && (
