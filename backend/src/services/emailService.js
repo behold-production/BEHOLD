@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const ics = require('ics');
 const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
+const { buildGoogleCalendarWebUrl, buildDirectRoomUrl } = require('../utils/calendarHelper');
 
 /**
  * BEHOLD. — Email Service
@@ -260,13 +261,20 @@ function _createIcsAttachment(appointment, recipientName, recipientEmail, otherP
     if (timeParts[1] === 'PM' && hours < 12) hours += 12;
     if (timeParts[1] === 'AM' && hours === 12) hours = 0;
 
+    // Convert IST (UTC+05:30) to exact UTC timestamps so ICS is 100% accurate on all servers & devices
+    const istOffsetMs = (5 * 60 + 30) * 60 * 1000;
+    const utcMs = Date.UTC(year, month - 1, day, hours, minutes) - istOffsetMs;
+    const d = new Date(utcMs);
+    const startUtc = [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()];
+
     const replyToEmail = (process.env.DEFAULT_ADMIN_EMAIL || 'beholdoffice@gmail.com').trim();
     const isOnline = !appointment?.mode || appointment.mode === 'ONLINE';
-    const meetLink = appointment?.meetLink || '';
-    const isHalf = appointment?.isIntroductory || (appointment?.duration && appointment.duration.includes('30 Min'));
+    const meetLink = appointment?.meetLink || (isOnline ? buildDirectRoomUrl(appointment?.id) : '');
+    const isHalf = appointment?.isIntroductory || (appointment?.duration && String(appointment.duration).includes('30'));
 
     const event = {
-      start: [year, month, day, hours, minutes],
+      start: startUtc,
+      startInputType: 'utc',
       duration: isHalf ? { minutes: 30 } : { hours: 1 },
       title: `BEHOLD Counselling Session: ${recipientName || 'Consultation'} & ${otherPartyName || 'Psychologist'}`,
       description: `🧠 BEHOLD. Psychological Counselling Session\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n• Service: ${appointment?.service || 'Emotional Wellbeing & Counselling'}\n• Mode: ${appointment?.mode || 'ONLINE'}${meetLink ? '\n• Direct Room Link: ' + meetLink : ''}\n\nSupport: ${replyToEmail}`,
@@ -326,7 +334,7 @@ function _buildBookingPayload(user, counsellor, appointment) {
   const mode = appt.mode || 'ONLINE';
   const duration = appt.duration || appt.sessionDuration || '1 Hour (60 Mins)';
   const service = appt.service || 'Individual Counselling';
-  const meetLink = appt.meetLink || '';
+  const meetLink = appt.meetLink || (mode === 'ONLINE' ? buildDirectRoomUrl(bookingId) : '');
   const amountPaid = appt.amountPaid !== undefined ? appt.amountPaid : 0;
   const paymentStatus = appt.paymentStatus || (amountPaid > 0 ? 'PAID' : 'FREE');
   const isIntroductory = appt.isIntroductory || false;
@@ -335,6 +343,32 @@ function _buildBookingPayload(user, counsellor, appointment) {
   const hadPriorTherapy = appt.hadPriorTherapy || usr.hadPriorTherapy || bookingDetails.hadPriorTherapy || 'No';
   const priorTherapyDetails = appt.priorTherapyDetails || usr.priorTherapyDetails || bookingDetails.priorTherapyDetails || '';
   const additionalInfo = appt.notes || clientLocationName || bookingDetails.notes || '';
+
+  const durationMinutes = isIntroductory || (duration && String(duration).includes('30')) ? 30 : 60;
+
+  const userCalendarUrl = buildGoogleCalendarWebUrl({
+    title: `BEHOLD Counselling: Dr. ${counsellorName.replace(/^Dr\.\s*/i, '')}`,
+    advisorName: counsellorName,
+    studentName: userName,
+    location: meetLink || 'Online Video Consultation',
+    meetLink,
+    service,
+    date,
+    time,
+    durationMinutes
+  });
+
+  const counsellorCalendarUrl = buildGoogleCalendarWebUrl({
+    title: `BEHOLD Consultation: ${userName} (Client)`,
+    advisorName: counsellorName,
+    studentName: userName,
+    location: meetLink || 'Online Video Consultation',
+    meetLink,
+    service,
+    date,
+    time,
+    durationMinutes
+  });
 
   return {
     userName,
@@ -360,6 +394,8 @@ function _buildBookingPayload(user, counsellor, appointment) {
     duration,
     bookingId,
     meetLink,
+    userCalendarUrl,
+    counsellorCalendarUrl,
     reason,
     hadPriorTherapy,
     priorTherapyDetails,
@@ -406,7 +442,7 @@ const EmailService = {
       await sendEmail(
         payload.realUserEmail,
         'Session Confirmed — BEHOLD.',
-        Templates.appointmentApproved(payload),
+        Templates.appointmentApproved({ ...payload, calendarUrl: payload.userCalendarUrl }),
         userAttachments
       );
     }
@@ -423,7 +459,7 @@ const EmailService = {
       await sendEmail(
         payload.counsellorEmail,
         `New Session Booked — ${payload.userName} (BEHOLD.)`,
-        Templates.appointmentApprovedCounsellor(payload),
+        Templates.appointmentApprovedCounsellor({ ...payload, calendarUrl: payload.counsellorCalendarUrl }),
         counsellorAttachments
       );
     }

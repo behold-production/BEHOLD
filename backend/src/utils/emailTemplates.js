@@ -62,8 +62,14 @@ const baseLayout = (content) => `
 // ─── UI Components ───────────────────────────────────────────────────────────
 const btn = (text, url) =>
   `<div style="text-align:center;margin-top:28px;">
-    <a href="${url}" style="display:inline-block;padding:14px 36px;background:${BLUE};color:#ffffff;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:0.2px;box-shadow:0 4px 16px rgba(14,165,233,0.30);">${text}</a>
+    <a href="${url}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 36px;background:${BLUE};color:#ffffff;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:0.2px;box-shadow:0 4px 16px rgba(14,165,233,0.30);">${text}</a>
   </div>`;
+
+const joinBtn = (text, url) =>
+  `<a href="${url}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#0284c7 0%,#0ea5e9 100%);color:#ffffff;border-radius:10px;font-size:15px;font-weight:800;text-decoration:none;letter-spacing:0.3px;margin:6px 4px;box-shadow:0 4px 16px rgba(14,165,233,0.35);">${text}</a>`;
+
+const calendarBtn = (text, url) =>
+  `<a href="${url}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:12px 24px;background:#ffffff;color:#0284c7;border:2px solid #0ea5e9;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;letter-spacing:0.2px;margin:6px 4px;box-shadow:0 2px 8px rgba(14,165,233,0.15);">${text}</a>`;
 
 const divider = () =>
   `<hr style="border:none;border-top:1px solid #e2e8f0;margin:28px 0;" />`;
@@ -178,10 +184,11 @@ const appointmentApproved = ({
   bookingId,
   meetLink,
   amountPaid,
-  paymentStatus
+  paymentStatus,
+  calendarUrl
 }) => {
   const clientDisplayName = sanitizeDisplayName(userName, 'Client');
-  const modeDisplay = mode === 'ONLINE' ? 'Online (Google Meet)' : mode === 'OFFLINE' ? 'In-person (BEHOLD. Clinic)' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online');
+  const modeDisplay = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-person (BEHOLD. Clinic)' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online');
   const drName = counsellorName ? `Dr. ${counsellorName.replace(/^Dr\.\s*/i, '')}` : 'Consultant Psychologist';
 
   return baseLayout(`
@@ -199,7 +206,7 @@ const appointmentApproved = ({
         ${infoRow('Service', service || 'Individual Counselling')}
         ${infoRow('Psychologist', `<strong>${drName}</strong>`)}
         ${infoRow('Session Date', `<strong>${date || '—'}</strong>`)}
-        ${infoRow('Session Time', `<strong>${time || '—'}</strong>`)}
+        ${infoRow('Session Time', `<strong>${time || '—'} (IST)</strong>`)}
         ${infoRow('Time Zone', timeZone || 'IST (Asia/Kolkata)')}
         ${infoRow('Session Format', `<strong>${modeDisplay}</strong>`)}
         ${infoRow('Duration', duration || '1 Hour (60 Mins)')}
@@ -208,18 +215,33 @@ const appointmentApproved = ({
       `)}
     </div>
 
-    ${mode === 'ONLINE' ? `
-    <div style="margin:24px 0;text-align:center;">
-      <p style="margin:0 0 12px;color:#475569;font-size:14px;line-height:1.7;">
-        For your online session, please ensure you are in a quiet and comfortable space. You can join your consultation room directly:
+    <!-- Direct Join & Calendar Action Buttons -->
+    <div style="background:#ffffff;border:1px solid #bae6fd;border-radius:14px;padding:22px 24px;margin:24px 0;text-align:center;box-shadow:0 4px 14px rgba(14,165,233,0.08);">
+      <h3 style="margin:0 0 10px;color:#0369a1;font-size:16px;font-weight:800;">🚀 Direct Join &amp; Calendar Actions</h3>
+      <p style="margin:0 0 18px;color:#475569;font-size:14px;line-height:1.6;">
+        ${mode === 'ONLINE' ? 'Join your 1-click video room directly (no login or admission needed) or add to your Google Calendar:' : 'Add this confirmed appointment to your Google Calendar:'}
       </p>
-      ${meetLink ? btn('Direct Join Session Now →', meetLink) : `<p style="margin:12px 0;color:#0369a1;font-size:13px;font-weight:600;">Direct meeting room link is available in your dashboard.</p>`}
+      
+      <div style="text-align:center;margin:10px 0;">
+        ${mode === 'ONLINE' && meetLink ? `
+          <div style="margin-bottom:12px;">
+            ${joinBtn('Direct Join Video Session Now →', meetLink)}
+          </div>
+        ` : ''}
+        ${calendarUrl ? `
+          <div style="margin-top:6px;">
+            ${calendarBtn('Add to Google Calendar', calendarUrl)}
+          </div>
+        ` : ''}
+      </div>
+      <p style="margin:12px 0 0;font-size:12px;color:#64748b;">A standard <code>.ics</code> calendar invite is also attached to this email.</p>
     </div>
-    ` : `
+
+    ${mode !== 'ONLINE' ? `
     <p style="margin:0 0 16px;color:#475569;font-size:14px;line-height:1.7;">
       Please arrive 5–10 minutes before your scheduled appointment time.
     </p>
-    `}
+    ` : ''}
 
     <p style="margin:20px 0 12px;color:#475569;font-size:14px;line-height:1.7;">
       If you need to reschedule or have questions, please reach out to us at <a href="mailto:support@behold.co.in" style="color:${BLUE};font-weight:600;text-decoration:none;">support@behold.co.in</a> or WhatsApp support.
@@ -264,7 +286,8 @@ const appointmentApprovedCounsellor = ({
   hadPriorTherapy,
   priorTherapyDetails,
   additionalInfo,
-  meetLink
+  meetLink,
+  calendarUrl
 }) => {
   const isYes = hadPriorTherapy === 'Yes' || hadPriorTherapy === true || hadPriorTherapy === 'yes';
   const priorTherapyDisplay = isYes ? 'Yes' : 'No';
@@ -275,7 +298,7 @@ const appointmentApprovedCounsellor = ({
   
   const displayEmail = realUserEmail || (userEmail && !userEmail.includes('@temp.behold') ? userEmail : (userPhone ? `Registered via WhatsApp (${userPhone})` : '—'));
   const ageDisplay = userAge ? `${userAge} years` : '—';
-  const modeDisplay = mode === 'ONLINE' ? 'Online (Google Meet)' : mode === 'OFFLINE' ? 'In-person (BEHOLD. Clinic)' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online');
+  const modeDisplay = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-person (BEHOLD. Clinic)' : mode === 'DOOR_STEP' ? 'Doorstep Visit' : (mode || 'Online');
   const paymentBadge = paymentStatus === 'PAID' ? '<span style="color:#16a34a;font-weight:700;">Paid Online ✓</span>' : isIntroductory ? '<span style="color:#0284c7;font-weight:700;">Introductory Session</span>' : '<span style="color:#64748b;font-weight:600;">Confirmed</span>';
 
   return baseLayout(`
@@ -309,7 +332,7 @@ const appointmentApprovedCounsellor = ({
       ${infoTable(`
         ${infoRow('Service', service || 'Individual Counselling')}
         ${infoRow('Session Date', `<strong>${date || '—'}</strong>`)}
-        ${infoRow('Session Time', `<strong>${time || '—'}</strong>`)}
+        ${infoRow('Session Time', `<strong>${time || '—'} (IST)</strong>`)}
         ${infoRow('Time Zone', timeZone || 'IST (Asia/Kolkata)')}
         ${infoRow('Duration', duration || '1 Hour (60 Mins)')}
         ${infoRow('Session Format', `<strong>${modeDisplay}</strong>`)}
@@ -357,10 +380,26 @@ const appointmentApprovedCounsellor = ({
       ` : ''}
     </div>
 
-    <!-- ── 4. SESSION ACCESS ── -->
-    <div style="margin:24px 0;text-align:center;">
-      <h3 style="margin:0 0 10px;color:#0f172a;font-size:16px;font-weight:800;">Session Access</h3>
-      ${meetLink ? btn('Join Session (Google Meet) →', meetLink) : `<p style="margin:0;color:#64748b;font-size:14px;font-style:italic;">Meeting link is accessible in your psychologist dashboard prior to session time.</p>`}
+    <!-- ── 4. QUICK ACTIONS & CALENDAR SYNC ── -->
+    <div style="background:#ffffff;border:1px solid #bae6fd;border-radius:14px;padding:22px 24px;margin:24px 0;text-align:center;box-shadow:0 4px 14px rgba(14,165,233,0.08);">
+      <h3 style="margin:0 0 10px;color:#0369a1;font-size:16px;font-weight:800;">🚀 Session Access &amp; Calendar Actions</h3>
+      <p style="margin:0 0 18px;color:#475569;font-size:14px;line-height:1.6;">
+        Join directly at session time with 1-click or add this consultation to your Google Calendar:
+      </p>
+
+      <div style="text-align:center;margin:10px 0;">
+        ${meetLink ? `
+          <div style="margin-bottom:12px;">
+            ${joinBtn('Join Consultation Room Now →', meetLink)}
+          </div>
+        ` : ''}
+        ${calendarUrl ? `
+          <div style="margin-top:6px;">
+            ${calendarBtn('Add to Google Calendar', calendarUrl)}
+          </div>
+        ` : ''}
+      </div>
+      <p style="margin:12px 0 0;font-size:12px;color:#64748b;">A standard <code>.ics</code> calendar invite is also attached to this email.</p>
     </div>
 
     <p style="margin:24px 0 14px;color:#475569;font-size:13px;line-height:1.7;">
@@ -378,7 +417,6 @@ const appointmentApprovedCounsellor = ({
       Warm regards,<br/>
       <strong>BEHOLD. Team</strong><br/>
       <a href="mailto:support@behold.co.in" style="color:${BLUE};text-decoration:none;">support@behold.co.in</a> | +91 94000 90106
-    </p>
   `);
 };
 

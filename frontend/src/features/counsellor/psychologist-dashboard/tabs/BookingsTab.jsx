@@ -1,6 +1,7 @@
 import React from 'react';
-import { Clock, AlertCircle, Link, Video, FileText, Send, Edit, ShieldCheck, Lock } from 'lucide-react';
+import { Clock, AlertCircle, Link, Video, FileText, Send, Edit, ShieldCheck, Lock, Calendar } from 'lucide-react';
 import { formatDateString } from '../../../../utils/dateFormatter';
+import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
 import ApiService from '../../../../services/api';
 import { toast } from 'react-hot-toast';
 
@@ -211,6 +212,26 @@ const BookingsTab = ({
                         >
                           Copy Link
                         </button>
+                        <a
+                          href={createGoogleCalendarUrl({
+                            title: `BEHOLD Consultation: ${booking.userName || 'Student'}`,
+                            advisorName: booking.counsellor?.name || 'Psychologist',
+                            studentName: booking.userName || 'Student',
+                            location: booking.meetLink || 'Online Video Consultation',
+                            meetLink: booking.meetLink,
+                            service: booking.service === 'career' ? 'Career Guidance' : 'Psychological Counselling',
+                            date: booking.date,
+                            time: booking.time,
+                            durationMinutes: booking.duration && String(booking.duration).includes('30') ? 30 : 60
+                          })}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-semibold text-cyan-300 hover:text-white bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer no-underline"
+                          title="Add to Google Calendar"
+                        >
+                          <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>Calendar</span>
+                        </a>
                         <button
                           type="button"
                           onClick={() => startEditMeetLink(booking)}

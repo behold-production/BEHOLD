@@ -70,6 +70,7 @@ export function getSmartWeekdayDate(targetWeekday, fromDate = new Date()) {
 
 /**
  * Creates an instant Google Calendar event template URL.
+ * Converts IST (UTC+05:30) date & time to ISO UTC string for Google Calendar render URL.
  */
 export function createGoogleCalendarUrl({
   title = 'BEHOLD Counselling Session',
@@ -91,17 +92,19 @@ export function createGoogleCalendarUrl({
     if (period === 'PM' && hours < 12) hours += 12;
     if (period === 'AM' && hours === 12) hours = 0;
 
-    // Construct local Date and convert to UTC for Google Calendar render URL
-    const startDate = new Date(year, month - 1, day, hours, minutes);
+    // Fixed IST offset (UTC+5:30)
+    const istOffsetMs = (5 * 60 + 30) * 60 * 1000;
+    const startUtcMs = Date.UTC(year, month - 1, day, hours, minutes) - istOffsetMs;
     const durationMs = (Number(durationMinutes) || 60) * 60 * 1000;
-    const endDate = new Date(startDate.getTime() + durationMs);
+    const endUtcMs = startUtcMs + durationMs;
 
     const pad = (n) => String(n).padStart(2, '0');
-    const toUtcStr = (d) => {
+    const toUtcStr = (ms) => {
+      const d = new Date(ms);
       return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
     };
 
-    const datesParam = `${toUtcStr(startDate)}/${toUtcStr(endDate)}`;
+    const datesParam = `${toUtcStr(startUtcMs)}/${toUtcStr(endUtcMs)}`;
     const url = new URL('https://calendar.google.com/calendar/render');
     url.searchParams.set('action', 'TEMPLATE');
     url.searchParams.set('text', title);
@@ -113,7 +116,7 @@ export function createGoogleCalendarUrl({
       advisorName ? `• Psychologist: ${advisorName}` : '',
       studentName ? `• Client: ${studentName}` : '',
       `• Date: ${date}`,
-      `• Time: ${time}`,
+      `• Time: ${time} (IST)`,
       `• Duration: ${durationMinutes} Minutes`,
       `• Service: ${service}`,
       meetLink ? `• Video Room: ${meetLink}` : '',
@@ -153,12 +156,15 @@ export function downloadIcsFile({
     if (period === 'PM' && hours < 12) hours += 12;
     if (period === 'AM' && hours === 12) hours = 0;
 
-    const startDate = new Date(year, month - 1, day, hours, minutes);
+    // Fixed IST offset (UTC+5:30)
+    const istOffsetMs = (5 * 60 + 30) * 60 * 1000;
+    const startUtcMs = Date.UTC(year, month - 1, day, hours, minutes) - istOffsetMs;
     const durationMs = (Number(durationMinutes) || 60) * 60 * 1000;
-    const endDate = new Date(startDate.getTime() + durationMs);
+    const endUtcMs = startUtcMs + durationMs;
 
     const pad = (n) => String(n).padStart(2, '0');
-    const toIcsDate = (d) => {
+    const toIcsDate = (ms) => {
+      const d = new Date(ms);
       return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
     };
 
@@ -170,9 +176,9 @@ export function downloadIcsFile({
       'METHOD:PUBLISH',
       'BEGIN:VEVENT',
       `UID:behold-${Date.now()}@behold.co.in`,
-      `DTSTAMP:${toIcsDate(new Date())}`,
-      `DTSTART:${toIcsDate(startDate)}`,
-      `DTEND:${toIcsDate(endDate)}`,
+      `DTSTAMP:${toIcsDate(Date.now())}`,
+      `DTSTART:${toIcsDate(startUtcMs)}`,
+      `DTEND:${toIcsDate(endUtcMs)}`,
       `SUMMARY:${title.replace(/,/g, '\\,')}`,
       `DESCRIPTION:${description.replace(/\n/g, '\\n').replace(/,/g, '\\,')}`,
       `LOCATION:${location.replace(/,/g, '\\,')}`,

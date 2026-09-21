@@ -160,4 +160,78 @@ async function generateSessionMeetingLink({ counsellor, user, date, time, servic
   return meetingLink;
 }
 
-module.exports = { generateSessionMeetingLink, buildDirectRoomUrl, isValidCustomMeetLink };
+/**
+ * Builds a direct web URL to add the session event to Google Calendar (1-click calendar sync).
+ * Accurately converts IST (UTC+05:30) date and time to ISO UTC format for Google Calendar template.
+ */
+function buildGoogleCalendarWebUrl({
+  title = 'BEHOLD Counselling Session',
+  description = '',
+  advisorName = '',
+  studentName = '',
+  location = 'Google Meet',
+  meetLink = '',
+  service = 'Psychological Counselling',
+  date,
+  time,
+  durationMinutes = 60
+}) {
+  if (!date || !time) return '';
+  try {
+    const [year, month, day] = date.split('-').map(Number);
+    let [timePart, period] = (time || '10:00 AM').split(' ');
+    let [hours, minutes] = (timePart || '10:00').split(':').map(Number);
+    if (period === 'PM' && hours < 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+
+    // Fixed IST offset (UTC+5:30)
+    const istOffsetMs = (5 * 60 + 30) * 60 * 1000;
+    const startUtcMs = Date.UTC(year, month - 1, day, hours, minutes) - istOffsetMs;
+    const endUtcMs = startUtcMs + (Number(durationMinutes) || 60) * 60 * 1000;
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const toUtcStr = (ms) => {
+      const d = new Date(ms);
+      return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+    };
+
+    const datesParam = `${toUtcStr(startUtcMs)}/${toUtcStr(endUtcMs)}`;
+    const url = new URL('https://calendar.google.com/calendar/render');
+    url.searchParams.set('action', 'TEMPLATE');
+    url.searchParams.set('text', title);
+    url.searchParams.set('dates', datesParam);
+
+    const fullDescription = description || [
+      `🧠 BEHOLD. Psychological Counselling & Consultation Session`,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      advisorName ? `• Psychologist: ${advisorName}` : '',
+      studentName ? `• Client/Student: ${studentName}` : '',
+      `• Date: ${date}`,
+      `• Time: ${time} (IST)`,
+      `• Duration: ${durationMinutes} Minutes`,
+      `• Service: ${service}`,
+      meetLink ? `• Direct Video Room: ${meetLink}` : '',
+      ``,
+      `📌 Note: Please join 5 minutes early in a quiet, private space.`,
+      ``,
+      `Support: support@behold.co.in | https://www.behold.co.in`
+    ].filter(Boolean).join('\n');
+
+    url.searchParams.set('details', fullDescription);
+    if (meetLink || location) {
+      url.searchParams.set('location', meetLink || location);
+    }
+
+    return url.toString();
+  } catch (err) {
+    console.error('[buildGoogleCalendarWebUrl Error]:', err);
+    return '';
+  }
+}
+
+module.exports = {
+  generateSessionMeetingLink,
+  buildDirectRoomUrl,
+  isValidCustomMeetLink,
+  buildGoogleCalendarWebUrl
+};
