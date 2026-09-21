@@ -90,7 +90,7 @@ function cleanUserName(name) {
   const lower = trimmed.toLowerCase();
   if (
     !lower ||
-    ['null', 'undefined', 'n/a', 'na', 'none', 'nil', 'new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there', 'behold user', 'test user', 'test student', 'test', 'tester', 'test client', 'demo user', 'sample user', 'test account', 'teststudent', 'testuser', 'guest', 'guest user', 'updated name', 'demo name', 'dummy name', 'demo', 'dummy', 'sample', 'zayd ibn haritha', 'zayd ibn harithasss', 'zayd'].includes(lower) ||
+    ['null', 'undefined', 'n/a', 'na', 'none', 'nil', 'new user', 'student', 'unknown student', 'user', 'client', 'a client', 'anonymous student', 'patient', 'there', 'behold user', 'test user', 'test student', 'test', 'tester', 'test client', 'demo user', 'sample user', 'test account', 'teststudent', 'testuser', 'guest', 'guest user', 'updated name', 'demo name', 'dummy name', 'demo', 'dummy', 'sample'].includes(lower) ||
     lower.startsWith('behold user') ||
     lower.startsWith('test ') ||
     lower.startsWith('test_') ||
@@ -106,9 +106,6 @@ function cleanUserName(name) {
     lower.startsWith('user-') ||
     lower.startsWith('user ') ||
     lower.startsWith('updated ') ||
-    lower.startsWith('zayd ') ||
-    lower.includes('zayd ibn') ||
-    lower.includes('haritha') ||
     /^user\d+$/i.test(lower) ||
     /^test\d+$/i.test(lower) ||
     /^student\d+$/i.test(lower) ||

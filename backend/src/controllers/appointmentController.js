@@ -237,82 +237,102 @@ const AppointmentController = {
         }
       }
 
-      // Also ensure session record exists if confirmed free booking
-      if (isCouponFree) {
+      const isConfirmedBooking = isCouponFree || baseFee === 0 || newAppointment.status === 'CONFIRMED';
+
+      // Also ensure session record exists if confirmed free/coupon booking
+      if (isConfirmedBooking) {
         try {
-          await StorageService.create('sessions', {
-            appointmentId: newAppointment.id,
-            userId,
-            counsellorId,
-            date,
-            time,
-            duration: sessionDurationStr,
-            mode,
-            meetLink: finalMeetLink,
-            status: 'UPCOMING',
-            service: service || 'counselling'
-          });
-        } catch {}
+          const existingSess = await StorageService.findOne('sessions', { appointmentId: newAppointment.id });
+          if (!existingSess) {
+            await StorageService.create('sessions', {
+              appointmentId: newAppointment.id,
+              userId,
+              counsellorId,
+              date,
+              time,
+              duration: sessionDurationStr,
+              mode,
+              meetLink: finalMeetLink,
+              status: 'CONFIRMED',
+              service: service || 'counselling'
+            });
+          }
+        } catch (sessErr) {
+          console.error('[Session Create Sync Error]:', sessErr);
+        }
       }
 
       // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {
         const userPhone = resolveAnyPhone(clientPhone, newAppointment.clientPhone, newAppointment, user);
-        const counsellorPhone = resolveAnyPhone(counsellor);
+        const counsellorPhone = resolveAnyPhone(counsellor?.phone, counsellor?.whatsappNumber, counsellor?.mobile, counsellor);
         const sName = resolveStudentName(clientName, newAppointment.clientName, user?.name);
         const cName = counsellor?.name || 'Psychologist';
         const studentDisplay = sName || 'A student';
+        const actionType = isConfirmedBooking ? 'approved' : 'created';
 
-        console.log(`[Create Booking WhatsApp] Target User Phone: "${userPhone}" | Counsellor Phone: "${counsellorPhone}"`);
+        console.log(`[Create Booking Notifications] Target User Phone: "${userPhone}" | Counsellor Phone: "${counsellorPhone}" | Action: ${actionType}`);
 
+        // In-app alerts
         await Promise.allSettled([
-          StorageService.create('notifications', {
+          counsellor?.id ? StorageService.create('notifications', {
             recipientId: counsellor.id,
             recipientRole: 'counsellor',
-            title: 'New Appointment Request',
-            message: `${studentDisplay} has requested an appointment on ${date} at ${time}.`,
+            title: isConfirmedBooking ? 'New Confirmed Appointment' : 'New Appointment Request',
+            message: isConfirmedBooking
+              ? `${studentDisplay} has booked an appointment with you on ${date} at ${time}.`
+              : `${studentDisplay} has requested an appointment on ${date} at ${time}.`,
             type: 'appointment_created',
             isRead: false
-          }),
-          StorageService.create('notifications', {
+          }) : Promise.resolve(),
+          userId ? StorageService.create('notifications', {
             recipientId: userId,
             recipientRole: 'user',
-            title: 'Appointment Request Submitted',
-            message: `Your booking request with ${cName} on ${date} at ${time} has been submitted.`,
+            title: isConfirmedBooking ? 'Booking Confirmed' : 'Appointment Request Submitted',
+            message: isConfirmedBooking
+              ? `Your booking with ${cName} on ${date} at ${time} is confirmed.`
+              : `Your booking request with ${cName} on ${date} at ${time} has been submitted.`,
             type: 'appointment_created',
             isRead: false
-          })
+          }) : Promise.resolve()
         ]);
 
-        if (isCouponFree) {
-          await EmailService.sendAppointmentBooked({ user, counsellor, appointment: newAppointment }).catch(err => console.error(err));
+        // Send confirmation/booking emails with .ics calendar invites to BOTH User and Psychologist
+        await EmailService.sendAppointmentBooked({
+          user: user || { id: userId, name: sName, email: clientEmail, phone: userPhone },
+          counsellor,
+          appointment: newAppointment
+        }).catch(err => console.error('[Email Booking Send Error]:', err));
 
-          if (userPhone) {
-            await WhatsAppService.sendBookingAlert(userPhone, 'approved', {
-              studentName: sName,
-              counsellorName: cName,
-              date,
-              time,
-              mode: newAppointment.mode || mode || 'ONLINE',
-              duration: sessionDurationStr,
-              bookingId: newAppointment.id || '',
-              meetLink: finalMeetLink,
-              recipientRole: 'user'
-            }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
-          } else {
-            console.warn(`[Create Booking WhatsApp] Skipped: No phone found for appointment ${newAppointment.id}`);
-          }
+        // WhatsApp to Student
+        if (userPhone) {
+          await WhatsAppService.sendBookingAlert(userPhone, actionType, {
+            studentName: sName,
+            counsellorName: cName,
+            date,
+            time,
+            mode: newAppointment.mode || mode || 'ONLINE',
+            duration: sessionDurationStr,
+            bookingId: newAppointment.id || '',
+            meetLink: finalMeetLink,
+            recipientRole: 'user'
+          }).catch((err) => console.error('[WhatsApp User Alert Error]:', err));
+        } else {
+          console.warn(`[Create Booking WhatsApp] Skipped: No phone found for appointment ${newAppointment.id}`);
+        }
 
-          if (counsellorPhone) {
-            await WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, 'approved', {
-              studentName: sName,
-              counsellorName: cName,
-              date,
-              time,
-              mode: newAppointment.mode || mode || 'ONLINE',
-              duration: sessionDurationStr
-            }).catch((err) => console.error('[WhatsApp Counsellor Alert Error]:', err));
-          }
+        // WhatsApp to Psychologist
+        if (counsellorPhone) {
+          await WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, actionType, {
+            studentName: sName,
+            counsellorName: cName,
+            date,
+            time,
+            mode: newAppointment.mode || mode || 'ONLINE',
+            duration: sessionDurationStr,
+            bookingId: newAppointment.id || '',
+            meetLink: finalMeetLink
+          }).catch((err) => console.error('[WhatsApp Counsellor Alert Error]:', err));
         }
       } catch (notifErr) {
         console.error('[Notification Task Error in createAppointment]:', notifErr);

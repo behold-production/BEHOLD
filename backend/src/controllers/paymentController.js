@@ -31,7 +31,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
       return;
     }
 
-    const user = appointment?.userId ? await StorageService.findById('users', appointment.userId) : null;
+    let user = appointment?.userId ? await StorageService.findById('users', appointment.userId) : null;
     let counsellor = appointment?.counsellorId ? await StorageService.findById('counsellors', appointment.counsellorId) : null;
     if (!counsellor && appointment?.counsellorId) {
       counsellor = await StorageService.findById('users', appointment.counsellorId);
@@ -63,7 +63,16 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
     const apptDuration = appointment?.duration || reqBody?.duration || reqBody?.bookingDetails?.duration || '1 Hour (60 Mins)';
     const apptBookingId = appointment?.id || appointment?._id || `app_${Date.now()}`;
 
-    console.log(`[Payment Booking WhatsApp Trigger] Target Phone: "${targetUserPhone}" | Student: "${sName || 'Anonymous'}" | Counsellor: "${cName}" | Date: ${date} ${time}`);
+    if (!user) {
+      user = {
+        id: appointment?.userId || `user_${Date.now()}`,
+        name: sName || appointment?.clientName || 'Student',
+        email: appointment?.clientEmail || reqBody?.clientEmail || reqBody?.bookingDetails?.clientEmail || '',
+        phone: targetUserPhone
+      };
+    }
+
+    console.log(`[Payment Booking Notifications] Target User Phone: "${targetUserPhone}" | Counsellor Phone: "${counsellor?.phone}" | Student: "${studentDisplay}" | Counsellor: "${cName}" | Date: ${date} ${time}`);
 
     // Mark as sent in storage immediately to avoid concurrent races
     if (appointment?.id) {
@@ -93,8 +102,8 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
         type: 'appointment_created',
         isRead: false
       }) : Promise.resolve(),
-      user && counsellor ? EmailService.sendAppointmentApproved({ user, counsellor, appointment }) : Promise.resolve(),
-      user && counsellor ? EmailService.sendPaymentReceipt({ user, appointment, counsellor, amount: netTotal, transactionId: appointment?.razorpayPaymentId }) : Promise.resolve()
+      EmailService.sendAppointmentApproved({ user, counsellor, appointment }).catch(err => console.error('[Email Booking Send Error]:', err)),
+      EmailService.sendPaymentReceipt({ user, appointment, counsellor, amount: netTotal, transactionId: appointment?.razorpayPaymentId }).catch(err => console.error('[Receipt Send Error]:', err))
     ]);
 
     // Send WhatsApp alert to Student/User
@@ -119,7 +128,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
     }
 
     // Send WhatsApp alert to Counsellor
-    const targetCounsellorPhone = resolveAnyPhone(counsellor?.phone, counsellor);
+    const targetCounsellorPhone = resolveAnyPhone(counsellor?.phone, counsellor?.whatsappNumber, counsellor?.mobile, counsellor);
     if (targetCounsellorPhone && counsellor) {
       const waResCounsellor = await WhatsAppService.sendCounsellorBookingAlert(targetCounsellorPhone, 'approved', {
         studentName: sName,
@@ -127,12 +136,16 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
         date,
         time,
         mode,
-        duration: apptDuration
+        duration: apptDuration,
+        bookingId: apptBookingId,
+        meetLink: finalMeetLink
       }).catch((err) => {
         console.error('[WhatsApp Counsellor Alert Error]:', err);
         return { success: false, error: err.message };
       });
       console.log(`[WhatsApp Booking Alert Counsellor]:`, JSON.stringify(waResCounsellor));
+    } else {
+      console.warn(`[WhatsApp Counsellor Alert Skipped]: No valid counsellor phone found for ${cName}`);
     }
 
   } catch (err) {

@@ -16,6 +16,8 @@ const { normalizePhoneWithCountryCode, cleanUserName } = require('../utils/phone
 class WhatsAppService {
   constructor() {
     this._recentSends = new Map();
+    this._sendQueue = Promise.resolve();
+    this._lastSendTime = 0;
     this._init();
   }
 
@@ -27,7 +29,7 @@ class WhatsAppService {
   /**
    * Check and record outgoing message to prevent duplicate sends within cooldown window
    */
-  _isDuplicateSend(phone, text, windowMs = 60000) {
+  _isDuplicateSend(phone, text, windowMs = 30000) {
     if (!phone || !text) return false;
     const now = Date.now();
     // Clean old entries (> 2 minutes)
@@ -37,7 +39,7 @@ class WhatsAppService {
       }
     }
     const cleanPhone = String(phone).replace(/\D/g, '');
-    const cleanText = String(text).trim().substring(0, 200);
+    const cleanText = String(text).trim().substring(0, 150);
     const key = `${cleanPhone}_${cleanText}`;
 
     const lastSent = this._recentSends.get(key);
@@ -146,6 +148,7 @@ class WhatsAppService {
 
   /**
    * Core dispatcher — sends via WASender or falls back to console mock
+   * Uses sequential queue throttling to prevent Account Protection rate limits
    */
   async _dispatch(phone, text, { skipDeduplication = false } = {}) {
     this._init(); // re-read env each time so .env changes take effect without restart
@@ -153,14 +156,36 @@ class WhatsAppService {
 
     const truncated = String(text).substring(0, 4096); // WhatsApp limit
 
-    // Prevent duplicate messages sent within 60s window (unless explicitly skipped e.g. for OTP)
+    // Prevent duplicate messages sent within window
     if (!skipDeduplication && this._isDuplicateSend(phone, truncated)) {
       console.log(`[WhatsApp Deduplicator] 🛡️ Suppressed duplicate message send to ${phone}`);
       return { success: true, deduped: true, provider: 'WASender (Deduped)' };
     }
 
     if (this.isWaSenderConfigured) {
-      return await this._sendViaWaSender(phone, truncated);
+      // Chain message dispatch onto sequential queue ensuring a minimum 5.2s gap between consecutive sends
+      const sendTask = this._sendQueue.then(async () => {
+        const now = Date.now();
+        const timeSinceLastSend = now - this._lastSendTime;
+        const minGap = 5200; // WASender requires >5s between messages
+        if (this._lastSendTime > 0 && timeSinceLastSend < minGap) {
+          const waitMs = minGap - timeSinceLastSend;
+          console.log(`[WhatsApp Throttle] ⏳ Spacing message to ${phone} by ${waitMs}ms to respect provider rate limit...`);
+          await new Promise((resolve) => setTimeout(resolve, waitMs));
+        }
+        try {
+          const result = await this._sendViaWaSender(phone, truncated);
+          this._lastSendTime = Date.now();
+          return result;
+        } catch (e) {
+          this._lastSendTime = Date.now();
+          throw e;
+        }
+      });
+
+      // Keep chain advancing even if this specific send errors
+      this._sendQueue = sendTask.catch(() => {});
+      return sendTask;
     }
 
     // Dev/Mock mode — print to console so devs can see messages without real sends
@@ -418,32 +443,37 @@ class WhatsAppService {
       date           = 'N/A',
       time           = 'N/A',
       mode           = 'ONLINE',
-      duration       = '1 Hour (60 Mins)'
+      duration       = '1 Hour (60 Mins)',
+      bookingId      = '',
+      meetLink       = ''
     } = details;
 
+    const isOnline = !mode || mode === 'ONLINE';
     const modeLabel = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
     const profileUrl = 'https://www.behold.co.in/counsellor';
+    const cleanStudentName = cleanUserName(studentName) || 'A student';
 
     let text = '';
     
     if (action === 'approved' || action === 'created' || action === 'confirmed') {
       text = 
-        `*New Booking Alert — BEHOLD.*\n\n` +
+        `*New Session Booking Alert — BEHOLD.*\n\n` +
         `Hi *${counsellorName}*,\n\n` +
-        `You have a new paid booking confirmed.\n\n` +
-        `• *Client:* ${studentName}\n` +
+        `You have a new session booking confirmed.\n\n` +
+        `• *Client/Student:* ${cleanStudentName}\n` +
         `• *Date:* ${date}\n` +
         `• *Time:* ${time}\n` +
         `• *Duration:* ${duration}\n` +
         `• *Mode:* ${modeLabel}\n\n` +
-        `Please log in to your dashboard to view full details and manage the session.\n\n` +
+        (isOnline && meetLink ? `🔗 *Direct Consultation Link:* ${meetLink}\n\nTap the link above to join your direct video consultation with the student.\n\n` : '') +
+        `Please log in to your dashboard to view full client intake details and manage your sessions.\n\n` +
         `📊 *Dashboard:* ${profileUrl}\n\n` +
         `BEHOLD. Support Team`;
     } else if (action === 'cancelled' || action === 'booking_cancelled') {
       text =
         `*Booking Cancelled — BEHOLD.*\n\n` +
         `Hi *${counsellorName}*,\n\n` +
-        `A booking with your client *${studentName}* has been cancelled.\n\n` +
+        `A booking with your client *${cleanStudentName}* has been cancelled.\n\n` +
         `• *Date:* ${date}\n` +
         `• *Time:* ${time}\n\n` +
         `Please check your dashboard for any updates.\n\n` +
@@ -452,9 +482,10 @@ class WhatsAppService {
       text =
         `*Session Rescheduled — BEHOLD.*\n\n` +
         `Hi *${counsellorName}*,\n\n` +
-        `A session with your client *${studentName}* has been rescheduled to a new time.\n\n` +
+        `A session with your client *${cleanStudentName}* has been rescheduled to a new time.\n\n` +
         `• *New Date:* ${date}\n` +
         `• *New Time:* ${time}\n\n` +
+        (isOnline && meetLink ? `🔗 *Direct Consultation Link:* ${meetLink}\n\n` : '') +
         `Please log in to your dashboard to review the updated schedule.\n\n` +
         `📊 *Dashboard:* ${profileUrl}\n\n` +
         `BEHOLD. Support Team`;

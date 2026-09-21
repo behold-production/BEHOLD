@@ -17,13 +17,25 @@ let _resendClient = null;
 let _nodemailerTransporter = null;
 let _etherealTransporter = null;
 
-function _getFromEmail() {
+function _getResendSenderAddress() {
   const resendFrom = (process.env.RESEND_FROM_EMAIL || '').trim();
-  if (resendFrom && !resendFrom.endsWith('@gmail.com') && !resendFrom.includes('resend.dev')) {
+  // Resend API allows sending from onboarding@resend.dev or custom verified domains only.
+  // Any @gmail.com or @yahoo.com or unverified domain fails with 403.
+  if (
+    resendFrom &&
+    !resendFrom.endsWith('@gmail.com') &&
+    !resendFrom.endsWith('@yahoo.com') &&
+    !resendFrom.endsWith('@outlook.com') &&
+    !resendFrom.endsWith('@hotmail.com') &&
+    !resendFrom.includes('resend.dev')
+  ) {
     return resendFrom;
   }
-  const rawFrom = (process.env.GMAIL_USER || process.env.SMTP_USER || 'beholdoffice@gmail.com').trim();
-  return (rawFrom.includes('flutterclt') || !rawFrom.includes('@')) ? 'beholdoffice@gmail.com' : rawFrom;
+  return 'onboarding@resend.dev';
+}
+
+function _getFromEmail() {
+  return _getResendSenderAddress();
 }
 
 function _getResendClient() {
@@ -32,7 +44,7 @@ function _getResendClient() {
   if (_resendClient) return _resendClient;
   const { Resend } = require('resend');
   _resendClient = new Resend(apiKey);
-  console.log('[EmailService] ✅ Using Resend SDK (from: ' + _getFromEmail() + ')');
+  console.log('[EmailService] ✅ Using Resend SDK (from: ' + _getResendSenderAddress() + ')');
   return _resendClient;
 }
 
@@ -89,7 +101,6 @@ function _getNodemailerTransporter() {
     return _nodemailerTransporter;
   }
 
-  console.warn('[EmailService] ⚠️  No email credentials configured — emails will not be sent');
   return null;
 }
 
@@ -134,36 +145,35 @@ const sendEmail = async (to, subject, html, attachments = []) => {
     return { success: false, error: 'No recipient address provided' };
   }
 
-  if (!to || typeof to !== 'string' || to.includes('@temp.behold')) {
+  if (!to || typeof to !== 'string' || to.includes('@temp.behold') || to.includes('@localhost') || to.startsWith('whatsapp_')) {
     console.log(`[Email] ℹ️ Skipped sending email to synthetic placeholder address: ${to}`);
     return { success: true, skipped: true };
   }
 
   const fromName = (process.env.EMAIL_FROM_NAME || 'BEHOLD.').trim();
-  const fromEmail = _getFromEmail();
-  const from = `${fromName} <${fromEmail}>`;
+  const resendFromAddress = _getResendSenderAddress();
+  const replyToAddress = (process.env.GMAIL_USER || process.env.DEFAULT_ADMIN_EMAIL || 'beholdoffice@gmail.com').trim();
+  const isResendConfigured = Boolean(process.env.RESEND_API_KEY);
 
   console.log(`[Email] 📤 Sending to: ${to} | Subject: "${subject}"`);
 
-  // ── 1. Resend SDK (primary if verified custom domain is set) ───────────────
-  const resendFromEmail = (process.env.RESEND_FROM_EMAIL || '').trim();
-  const isResendConfigured = Boolean(process.env.RESEND_API_KEY);
-  const isCustomResendDomain = isResendConfigured && resendFromEmail && !resendFromEmail.endsWith('@gmail.com') && !resendFromEmail.includes('resend.dev');
-
-  if (isCustomResendDomain) {
+  // ── 1. Resend SDK (Primary Provider) ───────────────────────────────────────
+  if (isResendConfigured) {
     const resend = _getResendClient();
     if (resend) {
       try {
-        const fromStr = `${fromName} <${resendFromEmail}>`;
-        const resendAttachments = attachments.map(a => ({
-          filename: a.filename,
-          content: typeof a.content === 'string' ? Buffer.from(a.content) : a.content
-        })).filter(a => a.content);
+        const fromStr = `${fromName} <${resendFromAddress}>`;
+        const resendAttachments = attachments
+          .map(a => ({
+            filename: a.filename,
+            content: typeof a.content === 'string' ? Buffer.from(a.content) : a.content
+          }))
+          .filter(a => a.content);
 
         const { data, error } = await resend.emails.send({
           from: fromStr,
           to: Array.isArray(to) ? to : [to],
-          replyTo: (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim(),
+          replyTo: replyToAddress,
           subject,
           html,
           text: htmlToText(html),
@@ -174,9 +184,9 @@ const sendEmail = async (to, subject, html, attachments = []) => {
           console.log(`[Email] ✅ Delivered via Resend SDK → ${to} | Subject: "${subject}" | id: ${data.id}`);
           return { success: true, messageId: data.id };
         }
-        console.warn(`[Email] ⚠️ Resend API error for ${to}: ${error?.message || 'Unknown'}. Trying Nodemailer...`);
+        console.warn(`[Email] ⚠️ Resend API returned error for ${to}: ${error?.message || JSON.stringify(error)}. Trying fallback...`);
       } catch (err) {
-        console.warn(`[Email] ⚠️ Resend SDK exception for ${to}: ${err.message}. Trying Nodemailer...`);
+        console.warn(`[Email] ⚠️ Resend SDK exception for ${to}: ${err.message}. Trying fallback...`);
       }
     }
   }
@@ -184,8 +194,8 @@ const sendEmail = async (to, subject, html, attachments = []) => {
   // ── 2. Nodemailer (Gmail / Brevo / Custom SMTP) ───────────────────────────
   const transporter = _getNodemailerTransporter();
   const mailOptions = {
-    from: `"${fromName}" <${fromEmail}>`,
-    replyTo: `"${fromName} Support" <${fromEmail}>`,
+    from: `"${fromName}" <${replyToAddress}>`,
+    replyTo: `"${fromName} Support" <${replyToAddress}>`,
     to,
     subject,
     text: htmlToText(html),
@@ -209,46 +219,13 @@ const sendEmail = async (to, subject, html, attachments = []) => {
     }
   }
 
-  // ── 3. Resend SDK Fallback (if custom domain was not explicitly flagged above) ──
-  if (isResendConfigured && !isCustomResendDomain) {
-    const resend = _getResendClient();
-    if (resend) {
-      try {
-        const fromAddress = resendFromEmail || 'onboarding@resend.dev';
-        const fromStr = `${fromName} <${fromAddress}>`;
-        const resendAttachments = attachments.map(a => ({
-          filename: a.filename,
-          content: typeof a.content === 'string' ? Buffer.from(a.content) : a.content
-        })).filter(a => a.content);
-
-        const { data, error } = await resend.emails.send({
-          from: fromStr,
-          to: Array.isArray(to) ? to : [to],
-          replyTo: (process.env.GMAIL_USER || 'beholdoffice@gmail.com').trim(),
-          subject,
-          html,
-          text: htmlToText(html),
-          attachments: resendAttachments.length > 0 ? resendAttachments : undefined
-        });
-
-        if (!error && data && data.id) {
-          console.log(`[Email] ✅ Delivered via Resend SDK Fallback → ${to} | Subject: "${subject}" | id: ${data.id}`);
-          return { success: true, messageId: data.id };
-        }
-      } catch (err) {
-        console.warn(`[Email] ⚠️ Resend SDK fallback failed for ${to}:`, err.message);
-      }
-    }
-  }
-
   // ── 3. Ethereal test fallback ──────────────────────────────────────────────
   try {
     const ethereal = await _getEtherealTransporter();
     if (ethereal) {
       const info = await ethereal.sendMail(mailOptions);
       const previewUrl = nodemailer.getTestMessageUrl(info);
-      console.log(`[Email] 📧 Ethereal fallback to ${to}!`);
-      console.log(`[Email] 🔗 Preview: ${previewUrl}`);
+      console.log(`[Email] 📧 Ethereal fallback to ${to}! Preview: ${previewUrl}`);
       return { success: true, fallback: true, previewUrl, messageId: info.messageId };
     }
   } catch (e) {
@@ -274,29 +251,34 @@ const Templates = require('../utils/emailTemplates');
  */
 function _createIcsAttachment(appointment, recipientName, recipientEmail, otherPartyName, otherPartyEmail) {
   try {
-    const [year, month, day] = appointment.date.split('-').map(Number);
-    const timeParts = appointment.time.split(' ');
-    let [hours, minutes] = timeParts[0].split(':').map(Number);
+    const apptDate = appointment?.date || '';
+    if (!apptDate || !apptDate.includes('-')) return [];
+
+    const [year, month, day] = apptDate.split('-').map(Number);
+    const timeParts = (appointment?.time || '10:00 AM').split(' ');
+    let [hours, minutes] = (timeParts[0] || '10:00').split(':').map(Number);
     if (timeParts[1] === 'PM' && hours < 12) hours += 12;
     if (timeParts[1] === 'AM' && hours === 12) hours = 0;
 
-    const fromEmail = _getFromEmail();
-    const rawUrl = (process.env.FRONTEND_URL || 'https://www.behold.co.in').trim();
-    const baseDomain = rawUrl.replace(/\/counsellor\/?$/, '').replace(/\/profile\/?$/, '').replace(/\/$/, '');
+    const replyToEmail = (process.env.DEFAULT_ADMIN_EMAIL || 'beholdoffice@gmail.com').trim();
+    const isOnline = !appointment?.mode || appointment.mode === 'ONLINE';
+    const meetLink = appointment?.meetLink || '';
+    const isHalf = appointment?.isIntroductory || (appointment?.duration && appointment.duration.includes('30 Min'));
 
     const event = {
       start: [year, month, day, hours, minutes],
-      duration: { hours: 1 },
-      title: `BEHOLD Counselling Session`,
-      description: `Service: ${appointment.service || 'counselling'}\nMode: ${appointment.mode}${appointment.meetLink ? '\n\nJoin Link: ' + appointment.meetLink : ''}`,
-      location: appointment.mode === 'ONLINE' ? (appointment.meetLink || 'Online (Google Meet)') : 'BEHOLD. Center',
+      duration: isHalf ? { minutes: 30 } : { hours: 1 },
+      title: `BEHOLD Counselling Session: ${recipientName || 'Consultation'} & ${otherPartyName || 'Psychologist'}`,
+      description: `🧠 BEHOLD. Psychological Counselling Session\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n• Service: ${appointment?.service || 'Emotional Wellbeing & Counselling'}\n• Mode: ${appointment?.mode || 'ONLINE'}${meetLink ? '\n• Direct Room Link: ' + meetLink : ''}\n\nSupport: ${replyToEmail}`,
+      location: isOnline ? (meetLink || 'Online Video Consultation') : (appointment?.clientLocationName || 'BEHOLD. Center'),
+      url: meetLink || 'https://www.behold.co.in',
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
-      organizer: { name: 'BEHOLD.', email: fromEmail },
+      organizer: { name: 'BEHOLD.', email: replyToEmail },
       attendees: [
-        { name: 'BEHOLD.', email: fromEmail, rsvp: false, partstat: 'ACCEPTED', role: 'CHAIR' },
-        ...(recipientEmail ? [{ name: recipientName, email: recipientEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : []),
-        ...(otherPartyEmail ? [{ name: otherPartyName || 'Psychologist', email: otherPartyEmail, rsvp: true, role: 'REQ-PARTICIPANT' }] : [])
+        { name: 'BEHOLD.', email: replyToEmail, rsvp: false, partstat: 'ACCEPTED', role: 'CHAIR' },
+        ...(recipientEmail && !recipientEmail.includes('@temp.behold') ? [{ name: recipientName || 'Participant', email: recipientEmail, rsvp: true, partstat: 'ACCEPTED', role: 'REQ-PARTICIPANT' }] : []),
+        ...(otherPartyEmail && !otherPartyEmail.includes('@temp.behold') ? [{ name: otherPartyName || 'Psychologist', email: otherPartyEmail, rsvp: true, partstat: 'ACCEPTED', role: 'REQ-PARTICIPANT' }] : [])
       ]
     };
 
