@@ -577,28 +577,44 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                         {bookingMode === 'ONLINE' && !rescheduleSession && (
                                             <div className="pt-4 border-t border-slate-200/80 mt-3">
-                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-xs">
-                                                    <div className="min-w-0 flex-1">
-                                                        <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">
-                                                            Google Meet Link
-                                                        </span>
-                                                        <span className="text-xs text-slate-900 font-semibold truncate block">
-                                                            {confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij'}
-                                                        </span>
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            const linkToCopy = confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'https://meet.google.com/abc-defg-hij';
-                                                            navigator.clipboard.writeText(linkToCopy);
-                                                            setCopiedMeet(true);
-                                                            setTimeout(() => setCopiedMeet(false), 2000);
-                                                        }}
-                                                        className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition cursor-pointer flex items-center justify-center border-none shadow-xs whitespace-nowrap shrink-0"
-                                                    >
-                                                        {copiedMeet ? 'Copied!' : 'Copy Link'}
-                                                    </button>
-                                                </div>
+                                                {(() => {
+                                                    const resolvedMeetLink = confirmedBooking?.meetLink || confirmedMeetLink || (selectedAdvisor?.defaultMeetLink && !selectedAdvisor.defaultMeetLink.includes('abc-defg-hij') && !selectedAdvisor.defaultMeetLink.includes('meet.google.com/new') ? selectedAdvisor.defaultMeetLink : null) || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`;
+                                                    return (
+                                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-xs">
+                                                            <div className="min-w-0 flex-1">
+                                                                <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">
+                                                                    Video Consultation Room (Direct Join)
+                                                                </span>
+                                                                <span className="text-xs text-slate-900 font-semibold truncate block">
+                                                                    {resolvedMeetLink}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex items-center gap-2 shrink-0">
+                                                                <a
+                                                                    href={resolvedMeetLink}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="px-3.5 py-2 bg-brand hover:bg-brand-dark text-slate-950 text-xs font-bold rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs no-underline"
+                                                                    title="Direct 1-Click Consultation Room"
+                                                                >
+                                                                    <VideoIcon className="w-3.5 h-3.5" />
+                                                                    <span>Direct Join</span>
+                                                                </a>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        navigator.clipboard.writeText(resolvedMeetLink);
+                                                                        setCopiedMeet(true);
+                                                                        setTimeout(() => setCopiedMeet(false), 2000);
+                                                                    }}
+                                                                    className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition cursor-pointer flex items-center justify-center border border-slate-200 shadow-xs whitespace-nowrap"
+                                                                >
+                                                                    {copiedMeet ? 'Copied!' : 'Copy'}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })()}
                                             </div>
                                         )}
                                     </div>
@@ -619,12 +635,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 {(confirmedBooking?.mode === 'ONLINE' || bookingMode === 'ONLINE') && (
                                                     <a
                                                         href={createGoogleCalendarUrl({
-                                                            title: `BEHOLD Counselling Session - ${confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Psychologist'}`,
-                                                            description: `Confidential Psychological Counselling Session via BEHOLD.\nGoogle Meet Link: ${confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || ''}\nStudent: ${confirmedBooking?.clientName || bookingForm.name || 'User'}`,
-                                                            location: confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || 'Google Meet',
-                                                            date: confirmedBooking?.date || selectedDate,
-                                                            time: confirmedBooking?.time || selectedTime,
-                                                            durationMinutes: bookingDuration
+                                                          title: `BEHOLD Counselling Session - ${confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Psychologist'}`,
+                                                          description: `Confidential Psychological Counselling Session via BEHOLD.\nDirect Consultation Room: ${confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`}\nStudent: ${confirmedBooking?.clientName || bookingForm.name || 'User'}`,
+                                                          location: confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`,
+                                                          meetLink: confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`,
+                                                          date: confirmedBooking?.date || selectedDate,
+                                                          time: confirmedBooking?.time || selectedTime,
+                                                          durationMinutes: bookingDuration
                                                         })}
                                                         target="_blank"
                                                         rel="noopener noreferrer"

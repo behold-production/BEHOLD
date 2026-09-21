@@ -62,43 +62,27 @@ const SessionController = {
 
       const mergedSessions = Array.from(uniqueSessionsMap.values());
 
+      const { buildDirectRoomUrl, isValidCustomMeetLink } = require('../utils/calendarHelper');
+
       const populated = await Promise.all(
         mergedSessions.map(async (s) => {
           const user = await StorageService.findById('users', s.userId);
           const counsellor = await StorageService.findById('counsellors', s.counsellorId);
           const appt = appointments.find((a) => a.id === s.appointmentId);
 
-          // Filter meeting link based on session access rules (only return link if session is today/upcoming)
-          let meetLink = s.meetLink;
-          if (meetLink) {
-            const isAuthorized =
-              req.user.id === s.userId || req.user.id === s.counsellorId || isAdminRole(req.user.role);
-            if (!isAuthorized) {
+          // Authorized meeting link resolution
+          let meetLink = s.meetLink || appt?.meetLink || '';
+          const isAuthorized =
+            req.user.id === s.userId || req.user.id === s.counsellorId || isAdminRole(req.user.role);
+
+          if (!isAuthorized) {
+            meetLink = '';
+          } else if (s.mode === 'ONLINE') {
+            if (s.status === 'CANCELLED') {
               meetLink = '';
-            } else if (isUserRole(req.user.role)) {
-              if (s.status === 'EXPIRED' || s.status === 'COMPLETED' || s.status === 'CANCELLED') {
-                meetLink = 'LOCKED';
-              } else {
-                try {
-                  let [hours, minutes] = s.time.split(' ')[0].split(':').map(Number);
-                  const modifier = s.time.split(' ')[1];
-                  if (modifier === 'PM' && hours < 12) hours += 12;
-                  if (modifier === 'AM' && hours === 12) hours = 0;
-
-                  const [year, month, day] = s.date.split('-').map(Number);
-                  const sessionTime = new Date(year, month - 1, day, hours, minutes);
-                  const now = new Date();
-
-                  const diffMinutes = (sessionTime - now) / 60000;
-
-                  // Hide link if more than 10 mins before, or more than 60 mins after
-                  if (diffMinutes > 10 || diffMinutes < -60) {
-                    meetLink = 'LOCKED';
-                  }
-                } catch (e) {
-                  meetLink = 'LOCKED';
-                }
-              }
+            } else if (!meetLink || meetLink === 'LOCKED' || !isValidCustomMeetLink(meetLink)) {
+              // Ensure every online session has a guaranteed direct-join consultation room link
+              meetLink = buildDirectRoomUrl(s.appointmentId || s.id);
             }
           }
 
@@ -192,35 +176,18 @@ const SessionController = {
       const user = await StorageService.findById('users', session.userId);
       const counsellor = await StorageService.findById('counsellors', session.counsellorId);
 
-      // Meeting link safety check: only reveal if within 1 hour of scheduled time, or if requested by counsellor/admin
-      let meetLink = session.meetLink;
-      if (meetLink && isUserRole(req.user.role)) {
-        if (session.status === 'EXPIRED' || session.status === 'COMPLETED' || session.status === 'CANCELLED') {
-          meetLink = 'LOCKED';
-        } else {
-          try {
-            let [hours, minutes] = session.time.split(' ')[0].split(':').map(Number);
-            const modifier = session.time.split(' ')[1];
-            if (modifier === 'PM' && hours < 12) hours += 12;
-            if (modifier === 'AM' && hours === 12) hours = 0;
+      const { buildDirectRoomUrl, isValidCustomMeetLink } = require('../utils/calendarHelper');
+      const appt = await StorageService.findById('appointments', session.appointmentId);
 
-            const [year, month, day] = session.date.split('-').map(Number);
-            const sessionTime = new Date(year, month - 1, day, hours, minutes);
-            const now = new Date();
-
-            const diffMinutes = (sessionTime - now) / 60000;
-
-            // Hide link if more than 10 mins before, or more than 60 mins after
-            if (diffMinutes > 10 || diffMinutes < -60) {
-              meetLink = 'LOCKED';
-            }
-          } catch {
-            meetLink = 'LOCKED';
-          }
+      // Direct meeting link resolution
+      let meetLink = session.meetLink || appt?.meetLink || '';
+      if (session.mode === 'ONLINE') {
+        if (session.status === 'CANCELLED') {
+          meetLink = '';
+        } else if (!meetLink || meetLink === 'LOCKED' || !isValidCustomMeetLink(meetLink)) {
+          meetLink = buildDirectRoomUrl(session.appointmentId || session.id);
         }
       }
-
-      const appt = await StorageService.findById('appointments', session.appointmentId);
 
       let frontendStatus = session.status;
       if (session.status === 'PENDING' && appt && appt.status === 'APPROVED') {
@@ -357,8 +324,20 @@ const SessionController = {
       const { id } = req.params;
       const { meetLink } = req.body;
 
-      if (!meetLink) {
+      if (!meetLink || typeof meetLink !== 'string') {
         return res.status(400).json({ success: false, message: 'Meeting link is required' });
+      }
+
+      const trimmed = meetLink.trim();
+      if (!trimmed.startsWith('https://')) {
+        return res.status(400).json({ success: false, message: 'Meeting link must be a valid URL starting with https://' });
+      }
+
+      if (trimmed.toLowerCase().includes('meet.google.com/new')) {
+        return res.status(400).json({
+          success: false,
+          message: 'Cannot save "meet.google.com/new". Please open Google Meet, create your meeting room, and copy the room link (e.g. meet.google.com/abc-defg-hij), or generate a Direct Join Room.'
+        });
       }
 
       const session = await StorageService.findById('sessions', id);
@@ -370,14 +349,18 @@ const SessionController = {
         return res.status(403).json({ success: false, message: 'Unauthorized' });
       }
 
-      const updated = await StorageService.update('sessions', id, { meetLink });
+      const updated = await StorageService.update('sessions', id, { meetLink: trimmed });
+
+      if (session.appointmentId) {
+        await StorageService.update('appointments', session.appointmentId, { meetLink: trimmed });
+      }
 
       // Notify student
       await StorageService.create('notifications', {
         recipientId: session.userId,
         recipientRole: 'user',
         title: 'Meeting Link Added',
-        message: 'Your counsellor has added a video meeting link to your upcoming session.',
+        message: 'Your counsellor has added a video consultation link to your upcoming session.',
         type: 'session_link_added',
         isRead: false
       });

@@ -211,9 +211,9 @@ const appointmentApproved = ({
     ${mode === 'ONLINE' ? `
     <div style="margin:24px 0;text-align:center;">
       <p style="margin:0 0 12px;color:#475569;font-size:14px;line-height:1.7;">
-        For your online session, please ensure you are in a quiet and comfortable space. You can join directly using Google Meet:
+        For your online session, please ensure you are in a quiet and comfortable space. You can join your consultation room directly:
       </p>
-      ${meetLink ? btn('Join Session (Google Meet) →', meetLink) : `<p style="margin:12px 0;color:#0369a1;font-size:13px;font-weight:600;">Meeting link will be made available prior to your session in your dashboard.</p>`}
+      ${meetLink ? btn('Direct Join Session Now →', meetLink) : `<p style="margin:12px 0;color:#0369a1;font-size:13px;font-weight:600;">Direct meeting room link is available in your dashboard.</p>`}
     </div>
     ` : `
     <p style="margin:0 0 16px;color:#475569;font-size:14px;line-height:1.7;">
@@ -482,7 +482,7 @@ const appointmentReminder = ({ recipientName, otherPartyName, date, time, mode, 
       ${infoRow('Mode', mode || 'Online')}
       ${meetLink ? infoRow('Join Link', `<a href="${meetLink}" style="color:${BLUE};font-weight:700;">Click to Join</a>`) : ''}
     `)}
-    ${meetLink ? btn('Join Meeting Now →', meetLink) : btn('View My Dashboard →', 'https://www.behold.co.in/profile?tab=booked')}
+    ${meetLink ? btn('Direct Join Meeting Now →', meetLink) : btn('View My Dashboard →', 'https://www.behold.co.in/profile?tab=booked')}
   `);
 };
 
@@ -499,7 +499,7 @@ const appointmentReminderCounsellor = ({ recipientName, otherPartyName, date, ti
       ${infoRow('Mode', mode || 'Online')}
       ${meetLink ? infoRow('Meeting Link', `<a href="${meetLink}" style="color:${BLUE};font-weight:700;">Open Link</a>`) : ''}
     `)}
-    ${meetLink ? btn('Start Meeting →', meetLink) : btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}
+    ${meetLink ? btn('Direct Join Meeting →', meetLink) : btn('View Dashboard →', 'https://www.behold.co.in/counsellor')}
   `);
 };
 
@@ -567,7 +567,7 @@ const meetLinkAdded = ({ userName, counsellorName, date, time, meetLink }) => {
       ${infoRow('Time', time)}
       ${infoRow('Join Link', `<a href="${meetLink}" style="color:${BLUE};font-weight:700;">Click to Join Session</a>`)}
     `)}
-    ${btn('Join Meeting →', meetLink)}
+    ${btn('Direct Join Session Now →', meetLink)}
   `);
 };
 

@@ -290,35 +290,56 @@ const BookedSessionsTab = ({
                         <>
                           {session.mode === 'ONLINE' ? (
                             <>
-                              <a
-                                href={session.meetLink || 'https://meet.google.com/behold-aspire-session'}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
-                              >
-                                <Video className="w-3.5 h-3.5" /> Join Session
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
-                              <a
-                                href={createGoogleCalendarUrl({
-                                  title: `BEHOLD Counselling Session - ${session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist'}`,
-                                  advisorName: session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist',
-                                  studentName: session.clientName || session.userName || 'Student',
-                                  location: session.meetLink || 'Google Meet',
-                                  meetLink: session.meetLink || '',
-                                  service: session.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
-                                  date: session.date,
-                                  time: session.time,
-                                  durationMinutes: session.duration && String(session.duration).includes('30') ? 30 : 60
-                                })}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-surface-200 cursor-pointer text-decoration-none"
-                                title="Add to Google Calendar"
-                              >
-                                <Calendar className="w-3.5 h-3.5 text-surface-500" />
-                                <span>Calendar</span>
-                              </a>
+                              {(() => {
+                                const validMeetLink = session.meetLink && session.meetLink !== 'LOCKED' && !session.meetLink.includes('behold-aspire-session') && !session.meetLink.includes('meet.google.com/new')
+                                  ? session.meetLink
+                                  : `https://meet.jit.si/BEHOLD-Consultation-${session.id || session.appointmentId || 'Session'}`;
+                                return (
+                                  <>
+                                    <a
+                                      href={validMeetLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-[10px] text-[10px] font-bold tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
+                                      title="Direct 1-Click Consultation Room (No Google login or admission required)"
+                                    >
+                                      <Video className="w-3.5 h-3.5" /> Direct Join Now
+                                      <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(validMeetLink);
+                                        showAlert('Direct consultation link copied to clipboard! You can share it or paste it into your browser to join.', 'Link Copied');
+                                      }}
+                                      className="min-h-[36px] inline-flex items-center justify-center gap-1 px-3 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-surface-200 cursor-pointer"
+                                      title="Copy Direct Meeting Link"
+                                    >
+                                      Copy Link
+                                    </button>
+                                    <a
+                                      href={createGoogleCalendarUrl({
+                                        title: `BEHOLD Counselling Session - ${session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist'}`,
+                                        advisorName: session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist',
+                                        studentName: session.clientName || session.userName || 'Student',
+                                        location: validMeetLink,
+                                        meetLink: validMeetLink,
+                                        service: session.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
+                                        date: session.date,
+                                        time: session.time,
+                                        durationMinutes: session.duration && String(session.duration).includes('30') ? 30 : 60
+                                      })}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-surface-200 cursor-pointer text-decoration-none"
+                                      title="Add to Google Calendar"
+                                    >
+                                      <Calendar className="w-3.5 h-3.5 text-surface-500" />
+                                      <span>Calendar</span>
+                                    </a>
+                                  </>
+                                );
+                              })()}
                             </>
                           ) : (
                             <>

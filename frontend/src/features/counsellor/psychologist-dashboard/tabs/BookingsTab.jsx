@@ -180,75 +180,120 @@ const BookingsTab = ({
 
               {/* Room link status block */}
               {booking.mode === 'ONLINE' && (
-                <div className="pt-1.5 flex items-center gap-2 flex-wrap text-left">
-                  <span className="text-sm font-semibold text-zinc-500">Meeting Room:</span>
-                  {editingBookingId === booking.id ? (
-                    <div className="flex items-center gap-2 flex-wrap w-full mt-1">
-                      <input
-                        type="text"
-                        value={meetLinkInput}
-                        onChange={(e) => setMeetLinkInput(e.target.value)}
-                        placeholder="https://meet.google.com/abc-defg-hij"
-                        className="px-3 py-1.5 bg-zinc-950 border border-zinc-800 text-xs text-white rounded-lg outline-none focus:border-brand flex-1 min-w-[220px]"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setMeetLinkInput(`https://meet.google.com/new`)}
-                        className="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-brand text-xs font-bold rounded-lg cursor-pointer border border-zinc-700"
-                        title="Create new Google Meet room"
-                      >
-                        🎥 Create Google Meet
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => saveMeetLink(booking.id)}
-                        className="px-3 py-1.5 bg-brand hover:bg-brand-dark text-zinc-955 text-xs font-bold rounded-lg cursor-pointer border-none shadow-sm"
-                      >
-                        Save Link
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setEditingBookingId(null)}
-                        className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-850 text-zinc-400 text-xs font-semibold rounded-lg cursor-pointer border border-zinc-800"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : booking.status === 'EXPIRED' ? (
-                    <span className="text-xs font-semibold text-rose-400 italic flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 text-rose-500" /> Access Expired
-                    </span>
-                  ) : booking.meetLink ? (
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => window.open(booking.meetLink, '_blank')}
-                        className="text-xs font-bold bg-brand/10 hover:bg-brand/20 text-brand border border-brand/20 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                        title="Join session as host"
-                      >
-                        <Video className="w-3.5 h-3.5 text-brand shrink-0" />
-                        <span>Join Room as Host</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => startEditMeetLink(booking)}
-                        className="text-xs font-semibold text-zinc-400 hover:text-white underline cursor-pointer bg-transparent border-none p-0"
-                      >
-                        Edit Link
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-amber-500 italic flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 text-amber-500" /> Missing Link
+                <div className="pt-2 flex flex-col gap-2 text-left">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-bold text-zinc-400">Meeting Room:</span>
+                    {editingBookingId === booking.id ? (
+                      <span className="text-xs text-brand font-semibold">Editing link below</span>
+                    ) : booking.status === 'EXPIRED' ? (
+                      <span className="text-xs font-semibold text-rose-400 italic flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 text-rose-500" /> Access Expired
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => startEditMeetLink(booking)}
-                        className="text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 px-2.5 py-1 rounded-lg cursor-pointer transition shadow-sm"
-                      >
-                        + Set / Auto-Generate Room
-                      </button>
+                    ) : booking.meetLink ? (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => window.open(booking.meetLink, '_blank')}
+                          className="text-xs font-bold bg-brand/15 hover:bg-brand/25 text-brand border border-brand/30 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                          title="Direct 1-Click Consultation Room (No knocking or admission needed)"
+                        >
+                          <Video className="w-3.5 h-3.5 text-brand shrink-0" />
+                          <span>Direct Join Now</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(booking.meetLink);
+                            toast.success('Meeting link copied to clipboard!');
+                          }}
+                          className="text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 px-2.5 py-1.5 rounded-lg transition cursor-pointer"
+                          title="Copy Link to Clipboard"
+                        >
+                          Copy Link
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => startEditMeetLink(booking)}
+                          className="text-xs font-semibold text-zinc-400 hover:text-white underline cursor-pointer bg-transparent border-none p-0 ml-1"
+                        >
+                          Edit Link
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-semibold text-amber-500 italic flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5 text-amber-500" /> Missing Link
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => saveMeetLink(booking.id, `https://meet.jit.si/BEHOLD-Consultation-${booking.id}`)}
+                          className="text-xs font-bold bg-brand hover:bg-brand-dark text-zinc-955 px-3 py-1.5 rounded-lg cursor-pointer transition shadow-sm border-none"
+                          title="Generate instant 1-click zero-knocking room"
+                        >
+                          ⚡ Generate Direct Room
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => startEditMeetLink(booking)}
+                          className="text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 px-2.5 py-1.5 rounded-lg cursor-pointer transition shadow-sm"
+                        >
+                          Custom Link
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Inline Editor when editing */}
+                  {editingBookingId === booking.id && (
+                    <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2.5 mt-1 max-w-xl">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <input
+                          type="text"
+                          value={meetLinkInput}
+                          onChange={(e) => {
+                            setMeetLinkInput(e.target.value);
+                            setMeetLinkError('');
+                          }}
+                          placeholder="https://meet.jit.si/BEHOLD-... or https://meet.google.com/abc-defg-hij"
+                          className="px-3 py-2 bg-zinc-900 border border-zinc-700 text-xs text-white rounded-lg outline-none focus:border-brand flex-1 min-w-[240px]"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => saveMeetLink(booking.id)}
+                          className="px-3.5 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-xs font-bold rounded-lg cursor-pointer border-none shadow-sm"
+                        >
+                          Save Link
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingBookingId(null)}
+                          className="px-3 py-2 bg-zinc-850 hover:bg-zinc-750 text-zinc-300 text-xs font-semibold rounded-lg cursor-pointer border border-zinc-700"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+
+                      <div className="flex items-center gap-2 flex-wrap pt-1">
+                        <button
+                          type="button"
+                          onClick={() => setMeetLinkInput(`https://meet.jit.si/BEHOLD-Consultation-${booking.id}`)}
+                          className="px-2.5 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand border border-brand/20 text-[11px] font-bold rounded-lg cursor-pointer flex items-center gap-1"
+                          title="Generate instant 1-click room URL"
+                        >
+                          ⚡ Auto Direct Room (Recommended)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => window.open('https://meet.google.com/new', '_blank')}
+                          className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700 text-[11px] font-semibold rounded-lg cursor-pointer flex items-center gap-1"
+                          title="Open Google Meet to create room, then paste the URL above"
+                        >
+                          🎥 Open Google Meet ↗
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 leading-tight">
+                        Tip: Direct rooms allow both user & psychologist to join with 1 click without knocking or Google login. If using Google Meet, start the call, copy the room URL (e.g. meet.google.com/abc-defg-hij), and paste it above.
+                      </p>
                     </div>
                   )}
                 </div>
@@ -439,58 +484,29 @@ const BookingsTab = ({
               )}
             </div>
 
-            {/* Google Meet Input logic */}
+            {/* Action buttons */}
             <div className="shrink-0 flex items-center gap-2">
-              {editingBookingId === booking.id ? (
-                <div className="flex flex-col gap-1.5 w-full sm:w-auto">
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto bg-zinc-950 p-2 rounded-[10px] border border-zinc-800">
-                    <input
-                      type="text"
-                      placeholder="https://meet.google.com/..."
-                      value={meetLinkInput}
-                      onChange={(e) => {
-                        setMeetLinkInput(e.target.value);
-                        setMeetLinkError('');
-                      }}
-                      className="px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none w-full sm:w-[240px] focus:border-brand shadow-sm"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => saveMeetLink(booking.id)}
-                        className="px-3 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-[10px] text-sm font-bold cursor-pointer shadow-sm border-none"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingBookingId(null)}
-                        className="px-3 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[10px] text-sm font-bold cursor-pointer border-none"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  {booking.meetLink && booking.mode === 'ONLINE' && (
-                    <a
-                      href={booking.meetLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2.5 bg-brand text-zinc-955 hover:bg-brand-dark rounded-[10px] text-sm font-black tracking-widest transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none animate-pulse"
-                    >
-                      <Video className="w-4 h-4 text-zinc-955" />
-                      <span>Join Meet</span>
-                    </a>
-                  )}
-                  <button
-                    onClick={() => startEditMeetLink(booking)}
-                    className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 rounded-[10px] text-sm font-bold transition cursor-pointer flex items-center gap-1.5 shadow-sm"
-                  >
-                    <Edit className="w-3.5 h-3.5" />
-                    <span>{booking.meetLink ? 'Edit Link' : 'Set Meet Link'}</span>
-                  </button>
-                </div>
+              {booking.meetLink && booking.mode === 'ONLINE' && (
+                <a
+                  href={booking.meetLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 bg-brand text-zinc-955 hover:bg-brand-dark rounded-[10px] text-xs font-black tracking-wider transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none"
+                  title="Direct 1-Click Consultation Room"
+                >
+                  <Video className="w-4 h-4 text-zinc-955" />
+                  <span>Direct Join</span>
+                </a>
+              )}
+              {booking.mode === 'ONLINE' && editingBookingId !== booking.id && (
+                <button
+                  type="button"
+                  onClick={() => startEditMeetLink(booking)}
+                  className="px-3.5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 rounded-[10px] text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+                >
+                  <Edit className="w-3.5 h-3.5" />
+                  <span>{booking.meetLink ? 'Edit Link' : 'Set Room'}</span>
+                </button>
               )}
             </div>
           </div>

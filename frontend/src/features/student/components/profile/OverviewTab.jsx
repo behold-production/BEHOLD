@@ -101,14 +101,20 @@ export default function OverviewTab({
               <span>Calendar</span>
             </a>
 
-            {nextSession.mode === 'ONLINE' && nextSession.meetLink ? (
+            {nextSession.mode === 'ONLINE' ? (
               <a
-                href={nextSession.meetLink}
+                href={
+                  nextSession.meetLink && nextSession.meetLink !== 'LOCKED' && !nextSession.meetLink.includes('behold-aspire-session') && !nextSession.meetLink.includes('meet.google.com/new')
+                    ? nextSession.meetLink
+                    : `https://meet.jit.si/BEHOLD-Consultation-${nextSession.id || nextSession.appointmentId || 'Session'}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-slate-900 hover:bg-black text-[#00e5ff] shadow-xs text-center no-underline"
+                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-brand hover:bg-brand-dark text-slate-950 shadow-xs text-center no-underline flex items-center gap-1.5"
+                title="Direct 1-Click Consultation Room"
               >
-                Join Google Meet
+                <Video className="w-4 h-4" />
+                <span>Direct Join Now</span>
               </a>
             ) : (
               <button

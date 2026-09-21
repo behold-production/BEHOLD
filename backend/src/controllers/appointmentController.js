@@ -127,15 +127,16 @@ const AppointmentController = {
 
       let finalMeetLink = '';
       if (mode === 'ONLINE') {
-        const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+        const { generateSessionMeetingLink, buildDirectRoomUrl } = require('../utils/calendarHelper');
+        const tempAppId = `app_${Date.now()}`;
         finalMeetLink = await generateSessionMeetingLink({
           counsellor,
           user,
           date,
           time,
           service,
-          appointmentId: `app_${Date.now()}`
-        }).catch(() => counsellor.defaultMeetLink || '');
+          appointmentId: tempAppId
+        }).catch(() => buildDirectRoomUrl(tempAppId));
       }
 
       // Extract client intake & profile fields from request body
@@ -845,23 +846,36 @@ const AppointmentController = {
         return res.status(404).json({ success: false, message: 'Appointment not found' });
       }
 
-      const updated = await StorageService.update('appointments', id, { meetLink });
+      let cleanMeetLink = (meetLink || '').trim();
+      if (cleanMeetLink) {
+        if (!cleanMeetLink.startsWith('https://')) {
+          return res.status(400).json({ success: false, message: 'Meeting link must be a valid URL starting with https://' });
+        }
+        if (cleanMeetLink.toLowerCase().includes('meet.google.com/new')) {
+          return res.status(400).json({
+            success: false,
+            message: 'Cannot save "meet.google.com/new". Please open Google Meet, create the meeting room, and paste the specific room URL (e.g. meet.google.com/abc-defg-hij), or generate a Direct Join Room.'
+          });
+        }
+      }
+
+      const updated = await StorageService.update('appointments', id, { meetLink: cleanMeetLink });
 
       // Update matching session if exists
       const session = await StorageService.findOne('sessions', { appointmentId: id });
       if (session) {
-        await StorageService.update('sessions', session.id, { meetLink });
+        await StorageService.update('sessions', session.id, { meetLink: cleanMeetLink });
       }
 
       // Notify user via email & WhatsApp that meet link is ready
-      if (meetLink) {
+      if (cleanMeetLink) {
         const meetUser = await StorageService.findById('users', appointment.userId);
         const meetCounsellor = await findCounsellorRecord(appointment.counsellorId);
         const userPhone = resolveAnyPhone(appointment.clientPhone, appointment, meetUser);
         const sName = resolveStudentName(appointment.clientName, meetUser?.name);
         
         if (meetUser) {
-          EmailService.sendMeetLinkAdded({ user: meetUser, counsellor: meetCounsellor, appointment: { ...appointment, meetLink } }).catch(err => console.error('[Email MeetLink Error]:', err));
+          EmailService.sendMeetLinkAdded({ user: meetUser, counsellor: meetCounsellor, appointment: { ...appointment, meetLink: cleanMeetLink } }).catch(err => console.error('[Email MeetLink Error]:', err));
         }
         if (userPhone) {
           WhatsAppService.sendBookingAlert(userPhone, 'approved', {
@@ -872,7 +886,7 @@ const AppointmentController = {
             mode: appointment.mode || 'ONLINE',
             duration: appointment.duration || '1 Hour (60 Mins)',
             bookingId: appointment.id || '',
-            meetLink,
+            meetLink: cleanMeetLink,
             recipientRole: 'user'
           }).catch(err => console.error('[WhatsApp MeetLink Error]:', err));
         }

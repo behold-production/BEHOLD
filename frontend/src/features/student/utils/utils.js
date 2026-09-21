@@ -68,26 +68,18 @@ export const isSessionCompleted = (booking) => {
 };
 
 export const getMeetLinkStatus = (session) => {
-  if (!session.meetLink) return { status: 'NO_LINK', label: 'Awaiting Link', color: 'amber' };
+  if (!session) return { status: 'NO_LINK', label: 'Awaiting Link', color: 'amber' };
   if (session.mode !== 'ONLINE') return { status: 'OFFLINE', label: 'In-Person', color: 'zinc' };
-  try {
-    const [time, modifier] = session.time.split(' ');
-    let [hours, minutes] = time.split(':').map(Number);
-    if (modifier === 'PM' && hours < 12) hours += 12;
-    if (modifier === 'AM' && hours === 12) hours = 0;
-    const [year, month, day] = session.date.split('-').map(Number);
-    const sessionTime = new Date(year, month - 1, day, hours, minutes);
-    const diffMinutes = (sessionTime - new Date()) / 60000;
-    if (diffMinutes <= 10 && diffMinutes >= -60) {
-      return { status: 'AVAILABLE', label: 'Join Now', link: session.meetLink, color: 'emerald' };
-    } else if (diffMinutes > 10) {
-      const mins = Math.round(diffMinutes);
-      return { status: 'LOCKED', label: mins > 60 ? `Opens in ${Math.round(mins / 60)}h` : `Opens in ${mins}m`, color: 'zinc' };
-    }
-    return { status: 'EXPIRED', label: 'Session Ended', color: 'zinc' };
-  } catch {
-    return { status: 'AVAILABLE', label: 'Join Now', link: session.meetLink, color: 'emerald' };
+  if (session.status === 'EXPIRED') return { status: 'EXPIRED', label: 'Session Expired', color: 'rose' };
+  if (session.status === 'COMPLETED') return { status: 'COMPLETED', label: 'Completed', color: 'indigo' };
+  if (session.status === 'CANCELLED') return { status: 'CANCELLED', label: 'Cancelled', color: 'zinc' };
+
+  let link = session.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : '';
+  if (!link || link.includes('meet.google.com/new') || link.includes('behold-aspire-session') || link.includes('abc-defg-hij')) {
+    link = `https://meet.jit.si/BEHOLD-Consultation-${session.id || session.appointmentId || 'Session'}`;
   }
+
+  return { status: 'AVAILABLE', label: 'Direct Join Now', link, color: 'emerald' };
 };
 
 export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {

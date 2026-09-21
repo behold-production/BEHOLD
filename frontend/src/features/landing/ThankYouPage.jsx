@@ -87,10 +87,12 @@ export default function ThankYouPage() {
         const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
         const time = searchParams.get('time') || '10:00 AM';
         const amount = Number(searchParams.get('amount')) || 899;
-        const meetLink = searchParams.get('meet') || 'https://meet.google.com/beh-olds-ess';
+        const tempId = paramId || `BEH-${Date.now().toString().slice(-6)}`;
+        const meetParam = searchParams.get('meet');
+        const meetLink = (meetParam && !meetParam.includes('beh-olds-ess')) ? meetParam : `https://meet.jit.si/BEHOLD-Consultation-${tempId}`;
 
         details = {
-          id: paramId || `BEH-${Date.now().toString().slice(-6)}`,
+          id: tempId,
           advisorName,
           advisorRole: 'Senior Clinical Psychologist',
           date,
@@ -314,26 +316,27 @@ export default function ThankYouPage() {
                 </div>
               </div>
 
-              {/* Google Meet Box */}
+              {/* Consultation Room Box */}
               {bookingData?.meetLink && (
-                <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200/80 space-y-2.5">
+                <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200/80 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Video className="w-4 h-4 text-indigo-600" />
-                      <span className="text-xs font-semibold text-indigo-950">Google Meet Session Room</span>
+                      <Video className="w-4 h-4 text-teal-600" />
+                      <span className="text-xs font-semibold text-slate-950">Private Video Consultation Room</span>
                     </div>
-                    <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                      Private & Encrypted
+                    <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      Direct Join · Encrypted
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100">
+                  <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-teal-100">
                     <span className="text-xs text-slate-600 font-mono truncate flex-1 pl-1">
                       {bookingData.meetLink}
                     </span>
                     <button
+                      type="button"
                       onClick={handleCopyLink}
-                      className="px-2.5 py-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 rounded-lg flex items-center gap-1 cursor-pointer transition border-none"
+                      className="px-2.5 py-1 text-xs font-semibold text-teal-800 hover:text-teal-950 bg-teal-50 hover:bg-teal-100 rounded-lg flex items-center gap-1 cursor-pointer transition border-none"
                     >
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copied ? 'Copied' : 'Copy Link'}</span>
@@ -344,9 +347,11 @@ export default function ThankYouPage() {
                     href={bookingData.meetLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shadow-sm no-underline"
+                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-slate-900 hover:bg-black text-[#00e5ff] text-xs font-bold rounded-xl transition shadow-sm no-underline"
+                    title="Direct 1-Click Consultation Room (No Google account login or admission required)"
                   >
-                    <span>Join Google Meet Now</span>
+                    <Video className="w-3.5 h-3.5" />
+                    <span>Direct Join Consultation Room Now</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>

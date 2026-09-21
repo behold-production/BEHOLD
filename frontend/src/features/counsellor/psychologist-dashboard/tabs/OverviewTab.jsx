@@ -84,14 +84,18 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                         )}
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4">
-                        {pendingBookings.length > 0 && pendingBookings[0].meetLink && pendingBookings[0].mode === 'ONLINE' && (
+                        {pendingBookings.length > 0 && pendingBookings[0].mode === 'ONLINE' && (
                             <button
                                 type="button"
-                                onClick={() => window.open(pendingBookings[0].meetLink, '_blank')}
+                                onClick={() => {
+                                    const link = pendingBookings[0].meetLink || `https://meet.jit.si/BEHOLD-Consultation-${pendingBookings[0].id}`;
+                                    window.open(link, '_blank');
+                                }}
                                 className="text-sm font-bold bg-brand text-zinc-955 hover:bg-brand-dark px-3.5 py-2 rounded-[10px] cursor-pointer flex items-center gap-1.5 transition-colors border-none"
+                                title="Direct 1-Click Consultation Room"
                             >
                                 <Video className="w-3.5 h-3.5" />
-                                <span>Join Meet</span>
+                                <span>Direct Join Now</span>
                             </button>
                         )}
                         <button

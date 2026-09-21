@@ -242,7 +242,7 @@ class WhatsAppService {
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
           (isOnline
-            ? `🔗 *Meeting Link:* ${finalMeetLink}\n\nPlease join a few minutes before your scheduled time and ensure you have a quiet and private space for the session.\n\n`
+            ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\nTap the link above to join your direct video consultation directly from your phone or PC (no account or admission required).\n\n`
             : `📍 Please be ready at your scheduled time and location.\n\n`) +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `Thank you for choosing BEHOLD.. We look forward to supporting you.`;
@@ -294,7 +294,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          (isOnline && finalMeetLink ? `🔗 *Meeting Link:* ${finalMeetLink}\n\n` : '') +
+          (isOnline && finalMeetLink ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\n` : '') +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `Please make sure you are available at the new scheduled time.`;
         break;
@@ -311,7 +311,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          (isOnline && finalMeetLink ? `🔗 *Meeting Link:* ${finalMeetLink}\n\n` : '') +
+          (isOnline && finalMeetLink ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\n` : '') +
           `Please be ready a few minutes before your scheduled time.\n\n` +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `See you soon!`;
@@ -328,7 +328,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          (isOnline && finalMeetLink ? `🔗 *Join Session:* ${finalMeetLink}\n\n` : '') +
+          (isOnline && finalMeetLink ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\n` : '') +
           `Please join a few minutes early and make sure you have a quiet and private space for your session.\n\n` +
           `BEHOLD.`;
         break;

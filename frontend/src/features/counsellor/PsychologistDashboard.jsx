@@ -1155,33 +1155,41 @@ reportRegError("Please enter a valid email address.");
  };
 
  // Google Meet Link editing
- const startEditMeetLink = (booking) => {
- setEditingBookingId(booking.id);
- setMeetLinkInput(booking.meetLink || profile.defaultMeetLink || '');
- setMeetLinkError('');
- };
+  const startEditMeetLink = (booking) => {
+    setEditingBookingId(booking.id);
+    setMeetLinkInput(booking.meetLink || profile.defaultMeetLink || '');
+    setMeetLinkError('');
+  };
 
- const saveMeetLink = async (bookingId) => {
- const trimmed = meetLinkInput.trim();
- if (trimmed && !trimmed.startsWith('https://')) {
- setMeetLinkError('Please enter a valid URL beginning with https://');
- return;
- }
- setMeetLinkError('');
+  const saveMeetLink = async (bookingId, explicitLink = null) => {
+    const raw = explicitLink !== null ? explicitLink : meetLinkInput;
+    const trimmed = (raw || '').trim();
+    if (trimmed) {
+      if (!trimmed.startsWith('https://')) {
+        setMeetLinkError('Please enter a valid URL beginning with https://');
+        return;
+      }
+      if (trimmed.toLowerCase().includes('meet.google.com/new')) {
+        setMeetLinkError('Cannot save "meet.google.com/new". Please open Google Meet, start the meeting, and copy the room code (e.g. meet.google.com/abc-defg-hij), or click "⚡ Auto Direct Room".');
+        return;
+      }
+    }
+    setMeetLinkError('');
 
- try {
- const res = await ApiService.updateAppointmentMeetLink(bookingId, trimmed);
- if (res.success) {
- await loadBookingsData();
- setEditingBookingId(null);
- } else {
- setMeetLinkError(res.message || 'Failed to update meeting link');
- }
- } catch (err) {
- console.error("Failed to save Meet link", err);
- setMeetLinkError(err.message || 'Failed to update meeting link');
- }
- };
+    try {
+      const res = await ApiService.updateAppointmentMeetLink(bookingId, trimmed);
+      if (res.success) {
+        toast.success('Meeting room link saved!');
+        await loadBookingsData();
+        setEditingBookingId(null);
+      } else {
+        setMeetLinkError(res.message || 'Failed to update meeting link');
+      }
+    } catch (err) {
+      console.error("Failed to save Meet link", err);
+      setMeetLinkError(err.message || 'Failed to update meeting link');
+    }
+  };
 
  const updateBookingStatus = async (bookingId, newStatus, currentStatus) => {
  try {
