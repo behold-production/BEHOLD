@@ -2,25 +2,62 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const StorageService = require('../services/storageService');
+const PaymentController = require('../controllers/paymentController');
 
+// ─── Health & Ping Check ────────────────────────────────────────────────────
+router.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 'active',
+    message: 'BEHOLD. Webhook Hub is operational',
+    endpoints: {
+      resend: '/api/webhooks/resend',
+      razorpay: '/api/webhooks/razorpay',
+      whatsapp: '/api/webhooks/whatsapp',
+      wasender: '/api/webhooks/wasender'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+router.get('/health', (req, res) => {
+  res.status(200).json({ success: true, status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+// Handshake verification for webhook setups (GET requests from monitoring/registration tools)
+router.get('/resend', (req, res) => {
+  res.status(200).json({ success: true, service: 'resend', status: 'ready' });
+});
+
+router.get('/razorpay', (req, res) => {
+  res.status(200).json({ success: true, service: 'razorpay', status: 'ready' });
+});
+
+router.get('/payment', (req, res) => {
+  res.status(200).json({ success: true, service: 'razorpay-payment', status: 'ready' });
+});
+
+router.get('/whatsapp', (req, res) => {
+  const challenge = req.query['hub.challenge'] || req.query.challenge || 'ok';
+  res.status(200).send(challenge);
+});
+
+router.get('/wasender', (req, res) => {
+  const challenge = req.query['hub.challenge'] || req.query.challenge || 'ok';
+  res.status(200).send(challenge);
+});
+
+// ─── 1. Resend Email Webhook ────────────────────────────────────────────────
 /**
  * POST /api/webhooks/resend
  * Receives real-time email delivery events from Resend.
- * Verifies the Svix signature before processing.
- *
- * Events handled:
- *  - email.sent       → log only
- *  - email.delivered  → log + mark email delivered in DB (future)
- *  - email.bounced    → log + flag user/counsellor email as invalid
- *  - email.complained → log spam complaint
+ * Verifies Svix signature if configured.
  */
 router.post('/resend', express.raw({ type: 'application/json' }), async (req, res) => {
   try {
     const signingSecret = (process.env.RESEND_WEBHOOK_SECRET || '').trim();
 
     // ── Signature Verification ──────────────────────────────────────────────
-    // Resend uses Svix to sign webhooks. Three headers are always present:
-    //   svix-id, svix-timestamp, svix-signature
     if (signingSecret && !signingSecret.includes('your_signing_secret')) {
       const svixId        = req.headers['svix-id'];
       const svixTimestamp = req.headers['svix-timestamp'];
@@ -32,7 +69,7 @@ router.post('/resend', express.raw({ type: 'application/json' }), async (req, re
       }
 
       // Build the signed content: "<svix-id>.<svix-timestamp>.<raw-body>"
-      const rawBody   = req.body.toString('utf8');
+      const rawBody   = Buffer.isBuffer(req.body) ? req.body.toString('utf8') : (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
       const toSign    = `${svixId}.${svixTimestamp}.${rawBody}`;
       const secretKey = Buffer.from(signingSecret.replace(/^whsec_/, ''), 'base64');
       const computed  = crypto.createHmac('sha256', secretKey).update(toSign).digest('base64');
@@ -45,38 +82,30 @@ router.post('/resend', express.raw({ type: 'application/json' }), async (req, re
         console.warn('[Resend Webhook] ❌ Invalid signature — request rejected');
         return res.status(401).json({ success: false, message: 'Invalid signature' });
       }
-    } else {
-      console.warn('[Resend Webhook] ⚠️  RESEND_WEBHOOK_SECRET not configured — skipping signature check');
     }
 
     // ── Parse Payload ───────────────────────────────────────────────────────
-    const payload = JSON.parse(req.body.toString('utf8'));
-    const { type, data } = payload;
+    const rawStr = Buffer.isBuffer(req.body) ? req.body.toString('utf8') : (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
+    const payload = typeof req.body === 'object' && !Buffer.isBuffer(req.body) ? req.body : JSON.parse(rawStr);
+    const { type, data } = payload || {};
 
-    const emailId   = data?.email_id   || data?.id || 'unknown';
+    const emailId   = data?.email_id || data?.id || 'unknown';
     const toAddress = (data?.to && data.to[0]) || data?.to || 'unknown';
     const subject   = data?.subject || '';
 
     console.log(`[Resend Webhook] Event: ${type} | To: ${toAddress} | Subject: "${subject}" | ID: ${emailId}`);
 
-    // ── Handle Events ───────────────────────────────────────────────────────
     switch (type) {
-
       case 'email.sent':
-        // Email accepted by Resend — waiting for ISP delivery
-        console.log(`[Resend Webhook] ✉️  Email queued for delivery to ${toAddress}`);
+        console.log(`[Resend Webhook] ✉️ Email queued for delivery to ${toAddress}`);
         break;
 
       case 'email.delivered':
-        // ISP confirmed delivery — email is in the inbox
         console.log(`[Resend Webhook] ✅ Email delivered to ${toAddress}`);
         break;
 
       case 'email.bounced': {
-        // Hard bounce — the email address doesn't exist or ISP rejected it
         console.warn(`[Resend Webhook] ❌ Email bounced: ${toAddress} — ${data?.bounce?.message || 'unknown reason'}`);
-
-        // Try to flag the user or counsellor with an invalid email so admin knows
         try {
           const userRecord = await StorageService.findOne('users', { email: toAddress });
           if (userRecord) {
@@ -95,30 +124,35 @@ router.post('/resend', express.raw({ type: 'application/json' }), async (req, re
       }
 
       case 'email.complained':
-        // Recipient marked the email as spam — important to monitor
         console.warn(`[Resend Webhook] 🚩 Spam complaint from: ${toAddress}`);
         break;
 
       case 'email.opened':
-        console.log(`[Resend Webhook] 👁️  Email opened by ${toAddress}`);
+        console.log(`[Resend Webhook] 👁️ Email opened by ${toAddress}`);
         break;
 
       case 'email.clicked':
-        console.log(`[Resend Webhook] 🖱️  Link clicked by ${toAddress}`);
+        console.log(`[Resend Webhook] 🖱️ Link clicked by ${toAddress}`);
         break;
 
       default:
         console.log(`[Resend Webhook] Unhandled event type: ${type}`);
     }
 
-    // Always respond 200 quickly so Resend doesn't retry
     res.status(200).json({ success: true, received: true });
-
   } catch (err) {
     console.error('[Resend Webhook] Error processing event:', err.message);
-    // Still return 200 to prevent Resend from retrying on our own parse errors
     res.status(200).json({ success: true, received: true });
   }
 });
+
+// ─── 2. Razorpay Payment Webhook Aliases ────────────────────────────────────
+router.post('/razorpay', PaymentController.handleWebhook);
+router.post('/payment', PaymentController.handleWebhook);
+
+// ─── 3. WhatsApp / WaSender Webhook Aliases ─────────────────────────────────
+const whatsappRoutes = require('./whatsappRoutes');
+router.use('/whatsapp', whatsappRoutes);
+router.use('/wasender', whatsappRoutes);
 
 module.exports = router;

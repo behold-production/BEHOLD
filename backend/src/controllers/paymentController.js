@@ -812,38 +812,43 @@ const PaymentController = {
   // Handle Razorpay Webhook
   async handleWebhook(req, res, next) {
     try {
-      const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
-      if (!webhookSecret) {
-        console.error('[Razorpay Webhook Error]: RAZORPAY_WEBHOOK_SECRET is not configured.');
-        return res.status(500).json({ success: false, message: 'Server webhook configuration error' });
-      }
-
+      const webhookSecret = (process.env.RAZORPAY_WEBHOOK_SECRET || '').trim().replace(/^["']|["']$/g, '');
       const signature = req.headers['x-razorpay-signature'];
-      if (!signature) {
-        return res.status(400).json({ success: false, message: 'Missing razorpay signature' });
-      }
-      const shasum = crypto.createHmac('sha256', webhookSecret);
-      const rawBody = req.rawBody || JSON.stringify(req.body);
-      shasum.update(rawBody);
-      const digest = shasum.digest('hex');
 
-      if (digest !== signature) {
-        console.warn('[Razorpay Webhook Signature Mismatch]');
-        return res.status(400).json({ success: false, message: 'Invalid webhook signature' });
+      if (webhookSecret) {
+        if (!signature) {
+          console.warn('[Razorpay Webhook Warning]: Missing x-razorpay-signature header');
+          return res.status(400).json({ success: false, message: 'Missing razorpay signature' });
+        }
+        const shasum = crypto.createHmac('sha256', webhookSecret);
+        const rawBody = req.rawBody || (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
+        shasum.update(rawBody);
+        const digest = shasum.digest('hex');
+
+        if (digest !== signature) {
+          console.warn('[Razorpay Webhook Signature Mismatch]');
+          return res.status(400).json({ success: false, message: 'Invalid webhook signature' });
+        }
+      } else {
+        console.warn('[Razorpay Webhook Warning]: RAZORPAY_WEBHOOK_SECRET is not configured in .env. Signature check bypassed.');
       }
 
       const eventPayload = req.body || {};
       const event = eventPayload.event;
       console.log(`[Razorpay Webhook Received]: Event "${event}"`);
 
-      const payloadEntity = eventPayload.payload?.payment?.entity || eventPayload.payload?.order?.entity || {};
-      const orderId = payloadEntity.order_id || payloadEntity.id;
-      const paymentId = payloadEntity.id;
+      const paymentEntity = eventPayload.payload?.payment?.entity || {};
+      const orderEntity = eventPayload.payload?.order?.entity || {};
+      const payloadEntity = paymentEntity.id ? paymentEntity : (orderEntity.id ? orderEntity : (eventPayload.payload?.payment?.entity || eventPayload.payload?.order?.entity || {}));
 
-      if (event === 'payment.captured' || event === 'order.paid') {
+      const orderId = paymentEntity.order_id || orderEntity.id || payloadEntity.order_id || payloadEntity.id || '';
+      const paymentId = paymentEntity.id || payloadEntity.id || '';
+
+      if (event === 'payment.captured' || event === 'order.paid' || event === 'payment.authorized') {
         const { cleanDuplicateAppointments } = require('../utils/appointmentDeduplicator');
-        let notes = {};
-        let netTotal = 0;
+        const { buildDirectRoomUrl, generateSessionMeetingLink } = require('../utils/calendarHelper');
+        let notes = { ...(orderEntity.notes || {}), ...(paymentEntity.notes || {}) };
+        let netTotal = Number((paymentEntity.amount || orderEntity.amount || 0) / 100) || 0;
 
         if (orderId) {
           try {
@@ -852,8 +857,10 @@ const PaymentController = {
             if (keyId && keySecret) {
               const razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
               const orderObj = await razorpay.orders.fetch(orderId);
-              notes = orderObj.notes || {};
-              netTotal = (orderObj.amount || 0) / 100;
+              notes = { ...notes, ...(orderObj.notes || {}) };
+              if (!netTotal && orderObj.amount) {
+                netTotal = (orderObj.amount || 0) / 100;
+              }
             }
           } catch (e) {
             console.error('[Webhook Order Fetch Error]:', e.message);
@@ -878,9 +885,8 @@ const PaymentController = {
             razorpayOrderId: orderId || existingAppointment.razorpayOrderId
           };
 
-          if (existingAppointment.mode === 'ONLINE' && !existingAppointment.meetLink) {
+          if (existingAppointment.mode === 'ONLINE' && (!existingAppointment.meetLink || existingAppointment.meetLink.includes('meet.jit.si') || existingAppointment.meetLink === 'LOCKED')) {
             try {
-              const { generateSessionMeetingLink } = require('../utils/calendarHelper');
               const genLink = await generateSessionMeetingLink({
                 counsellor: await StorageService.findById('counsellors', existingAppointment.counsellorId),
                 user: existingAppointment.userId ? await StorageService.findById('users', existingAppointment.userId) : null,
@@ -889,8 +895,10 @@ const PaymentController = {
                 service: existingAppointment.service || 'counselling',
                 appointmentId: existingAppointment.id
               });
-              if (genLink) updateWhFields.meetLink = genLink;
-            } catch {}
+              updateWhFields.meetLink = genLink || buildDirectRoomUrl(existingAppointment.id);
+            } catch {
+              updateWhFields.meetLink = buildDirectRoomUrl(existingAppointment.id);
+            }
           }
 
           await StorageService.update('appointments', existingAppointment.id, updateWhFields);
@@ -932,15 +940,22 @@ const PaymentController = {
             const isHalfSession = durationVal === 30 || notes.isIntroductory === 'true';
             const sessionDurationStr = isHalfSession ? '30 Minutes (Introductory Session)' : '1 Hour (60 Mins)';
 
-            const { generateSessionMeetingLink } = require('../utils/calendarHelper');
-            const autoMeetLink = notes.mode === 'ONLINE' ? await generateSessionMeetingLink({
-              counsellor,
-              user: notes.userId ? await StorageService.findById('users', notes.userId) : null,
-              date: notes.date,
-              time: notes.time,
-              service: notes.service || 'counselling',
-              appointmentId: `app_wh_${Date.now()}`
-            }) : '';
+            const tempApptId = orderId ? `app_${orderId}` : `app_${Date.now()}`;
+            let autoMeetLink = '';
+            if (notes.mode === 'ONLINE') {
+              try {
+                autoMeetLink = await generateSessionMeetingLink({
+                  counsellor,
+                  user: notes.userId ? await StorageService.findById('users', notes.userId) : null,
+                  date: notes.date,
+                  time: notes.time,
+                  service: notes.service || 'counselling',
+                  appointmentId: tempApptId
+                });
+              } catch {
+                autoMeetLink = buildDirectRoomUrl(tempApptId);
+              }
+            }
 
             const normWhPhone = normalizePhoneWithCountryCode(notes.clientPhone);
 
@@ -952,7 +967,7 @@ const PaymentController = {
               duration: sessionDurationStr,
               isIntroductory: isHalfSession,
               mode: notes.mode,
-              meetLink: autoMeetLink,
+              meetLink: autoMeetLink || (notes.mode === 'ONLINE' ? buildDirectRoomUrl(tempApptId) : ''),
               status: 'CONFIRMED',
               service: notes.service || 'counselling',
               paymentStatus: 'PAID',

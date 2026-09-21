@@ -44,13 +44,18 @@ app.use(
 
 // ─── Database Connection Middleware for Serverless / Cold Starts ───────────
 app.use(async (req, res, next) => {
-  if (req.path === '/api/health' || req.path === '/health') {
+  const p = req.path || req.originalUrl || '';
+  if (p.includes('/health') || p === '/' || p === '/api') {
     return next();
   }
   try {
     await connectDB();
     next();
   } catch (err) {
+    if (process.env.NODE_ENV !== 'production' || p.includes('/health')) {
+      console.warn('[Database Middleware] DB connection pending or unreachable:', err.message);
+      return next();
+    }
     next(err);
   }
 });
@@ -88,9 +93,13 @@ app.use(
 // ─── Rate Limiters ────────────────────────────────────────────────────────
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 200,
+  max: 300,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    const p = req.originalUrl || req.path || req.url || '';
+    return p.includes('webhook') || p.includes('callback') || p.includes('/api/health');
+  },
   message: {
     success: false,
     message: 'Too many requests from this IP, please try again after 15 minutes.'
@@ -111,10 +120,11 @@ const authLimiter = rateLimit({
 app.use('/api/', generalLimiter);
 app.use('/api/auth', authLimiter);
 
-// ─── Webhook Routes (raw body needed BEFORE JSON parser) ────────────────────
-// Resend webhooks need the raw Buffer body for Svix signature verification.
-// This must be mounted BEFORE express.json() to get the raw request body.
+// ─── Webhook Routes (raw body needed BEFORE JSON parser for Svix/Resend) ──
 app.use('/api/webhooks', webhookRoutes);
+app.use('/api/webhook', webhookRoutes);
+app.use('/webhooks', webhookRoutes);
+app.use('/webhook', webhookRoutes);
 
 // ─── Body Parsers ─────────────────────────────────────────────────────────
 app.use(
@@ -182,12 +192,15 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/feedbacks', feedbackRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/payment', paymentRoutes);
 app.use('/payments', paymentRoutes);
+app.use('/payment', paymentRoutes);
 app.use('/api', paymentRoutes);
 app.use('/api/google', googleAuthRoutes);
 app.use('/api/cron', cronRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
+app.use('/whatsapp', whatsappRoutes);
 app.use('/api/worksheets', worksheetRoutes);
 app.use('/api', publicRoutes);
 app.use('/', publicRoutes);

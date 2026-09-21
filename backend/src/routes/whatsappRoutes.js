@@ -7,7 +7,6 @@ const WhatsAppMessage = require('../models/WhatsAppMessage');
 function verifyWaSenderSignature(req) {
   const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
   if (!secret) {
-    console.warn('[WaSender Webhook Warning]: WASENDER_WEBHOOK_SECRET is not configured in .env.');
     return true; // Bypass signature check if secret is omitted
   }
 
@@ -17,22 +16,34 @@ function verifyWaSenderSignature(req) {
     req.headers['x-signature'] ||
     req.headers['x-hub-signature-256'] ||
     req.headers['x-hub-signature'] ||
+    req.headers['x-api-key'] ||
+    req.query.secret ||
+    req.query.token ||
+    req.query.key ||
+    req.body?.secret ||
+    req.body?.token ||
     '';
 
+  const authHeader = req.headers['authorization'] || '';
+  if (authHeader.startsWith('Bearer ')) {
+    const bearerToken = authHeader.replace(/^Bearer\s+/i, '').trim();
+    if (bearerToken === secret) return true;
+  }
+
   if (!incomingSig) {
-    console.warn('[WaSender Webhook] No x-webhook-signature header found');
+    console.warn('[WaSender Webhook] No signature or secret token found in request headers/query');
     return false;
   }
 
   // 1. Direct Secret Token Match (standard WASender header token validation)
-  const cleanSig = incomingSig.trim();
+  const cleanSig = String(incomingSig).trim();
   if (cleanSig === secret || cleanSig.replace(/^sha256=/, '') === secret) {
     return true;
   }
 
   // 2. HMAC SHA-256 Verification (cryptographic payload signature)
   try {
-    const rawBody = req.rawBody || JSON.stringify(req.body);
+    const rawBody = req.rawBody || (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
     const computedHmac = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
     const computedPrefixed = 'sha256=' + computedHmac;
 
@@ -47,16 +58,27 @@ function verifyWaSenderSignature(req) {
 }
 
 /**
+ * GET handshake challenge for webhook registration
+ */
+const handleHandshake = (req, res) => {
+  const challenge = req.query['hub.challenge'] || req.query.challenge || 'ok';
+  res.status(200).send(challenge);
+};
+
+router.get('/wasender/webhook', handleHandshake);
+router.get('/webhook', handleHandshake);
+router.get('/', handleHandshake);
+
+/**
  * POST /api/whatsapp/wasender/webhook
  * WaSender Event Receiver — handles all incoming webhook events
  */
-router.post('/wasender/webhook', async (req, res) => {
+const handleWaSenderWebhook = async (req, res) => {
   const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
-  const incomingSig = req.headers['x-webhook-signature'] || req.headers['x-wasender-signature'];
 
-  // Reject invalid webhooks with 403 Forbidden if signature check fails
-  if (secret && incomingSig && !verifyWaSenderSignature(req)) {
-    console.error('[WaSender Webhook] ❌ Invalid x-webhook-signature — 403 Forbidden');
+  // Reject invalid webhooks with 403 Forbidden if secret is configured and verification fails
+  if (secret && !verifyWaSenderSignature(req)) {
+    console.error('[WaSender Webhook] ❌ Invalid x-webhook-signature / secret — 403 Forbidden');
     return res.status(403).json({ error: 'Forbidden: Invalid Webhook Signature' });
   }
 
@@ -64,14 +86,7 @@ router.post('/wasender/webhook', async (req, res) => {
   res.status(200).json({ received: true, status: 'success' });
 
   try {
-    // Signature verification (non-blocking — already responded 200)
-    const secret = (process.env.WASENDER_WEBHOOK_SECRET || '').trim();
-    if (!verifyWaSenderSignature(req)) {
-      console.error('[WaSender Webhook] ❌ Invalid signature — payload rejected');
-      return;
-    }
-
-    const { event, data, timestamp } = req.body;
+    const { event, data, timestamp } = req.body || {};
 
     if (!event) {
       console.warn('[WaSender Webhook] Received payload with no event field:', JSON.stringify(req.body).substring(0, 200));
@@ -201,7 +216,11 @@ router.post('/wasender/webhook', async (req, res) => {
   } catch (err) {
     console.error('[WaSender Webhook Handler Error]:', err.message, err.stack);
   }
-});
+};
+
+router.post('/wasender/webhook', handleWaSenderWebhook);
+router.post('/webhook', handleWaSenderWebhook);
+router.post('/', handleWaSenderWebhook);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ███  Event Handler Functions
