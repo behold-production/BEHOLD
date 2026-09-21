@@ -125,18 +125,18 @@ const AppointmentController = {
         });
       }
 
+      const canonicalApptId = `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
       let finalMeetLink = '';
       if (mode === 'ONLINE') {
         const { generateSessionMeetingLink, buildDirectRoomUrl } = require('../utils/calendarHelper');
-        const tempAppId = `app_${Date.now()}`;
         finalMeetLink = await generateSessionMeetingLink({
           counsellor,
           user,
           date,
           time,
           service,
-          appointmentId: tempAppId
-        }).catch(() => buildDirectRoomUrl(tempAppId));
+          appointmentId: canonicalApptId
+        }).catch(() => buildDirectRoomUrl(canonicalApptId));
       }
 
       // Extract client intake & profile fields from request body
@@ -152,6 +152,7 @@ const AppointmentController = {
 
       // Create appointment
       const newAppointment = await StorageService.create('appointments', {
+        id: canonicalApptId,
         userId,
         counsellorId,
         date,
@@ -367,49 +368,49 @@ const AppointmentController = {
       const user = await StorageService.findById('users', appointment.userId);
       const counsellor = await findCounsellorRecord(appointment.counsellorId);
 
-      let meetLink =
-        appointment.mode === 'ONLINE'
-          ? appointment.meetLink || (counsellor ? counsellor.defaultMeetLink : '') || ''
-          : '';
+      const { generateSessionMeetingLink, buildDirectRoomUrl } = require('../utils/calendarHelper');
+      let meetLink = appointment.meetLink || '';
 
-      if (appointment.mode === 'ONLINE') {
+      if (appointment.mode === 'ONLINE' && (!meetLink || meetLink === 'LOCKED')) {
         try {
-          const { generateSessionMeetingLink } = require('../utils/calendarHelper');
-          const generatedLink = await generateSessionMeetingLink({
+          meetLink = await generateSessionMeetingLink({
             counsellor,
             user,
             date: appointment.date,
             time: appointment.time,
             service: appointment.service,
             appointmentId: appointment.id
-          });
-          if (generatedLink) {
-            meetLink = generatedLink;
-          }
+          }).catch(() => buildDirectRoomUrl(appointment.id));
         } catch (calErr) {
           console.error('[Calendar Link Generation Error in approveAppointment]:', calErr.message);
+          meetLink = buildDirectRoomUrl(appointment.id);
         }
       }
 
       // Update appointment status to APPROVED and store meetLink
       const updated = await StorageService.update('appointments', id, { status: 'APPROVED', meetLink });
 
-      await StorageService.create('sessions', {
-        appointmentId: id,
-        userId: appointment.userId,
-        counsellorId: appointment.counsellorId,
-        date: appointment.date,
-        time: appointment.time,
-        duration: appointment.duration || '1 Hour (60 Mins)',
-        mode: appointment.mode,
-        meetLink,
-        status: 'PENDING',
-        notes: '',
-        feedback: '',
-        clientLocationName: appointment.clientLocationName || '',
-        clientLatitude: Number(appointment.clientLatitude) || 0,
-        clientLongitude: Number(appointment.clientLongitude) || 0
-      });
+      const existingSession = await StorageService.findOne('sessions', { appointmentId: id });
+      if (existingSession) {
+        await StorageService.update('sessions', existingSession.id, { status: 'CONFIRMED', meetLink });
+      } else {
+        await StorageService.create('sessions', {
+          appointmentId: id,
+          userId: appointment.userId,
+          counsellorId: appointment.counsellorId,
+          date: appointment.date,
+          time: appointment.time,
+          duration: appointment.duration || '1 Hour (60 Mins)',
+          mode: appointment.mode,
+          meetLink,
+          status: 'CONFIRMED',
+          notes: '',
+          feedback: '',
+          clientLocationName: appointment.clientLocationName || '',
+          clientLatitude: Number(appointment.clientLatitude) || 0,
+          clientLongitude: Number(appointment.clientLongitude) || 0
+        });
+      }
 
       // Synchronous/Awaited Processing for Notifications, WhatsApp & Emails
       try {

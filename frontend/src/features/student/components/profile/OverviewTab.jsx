@@ -119,7 +119,7 @@ export default function OverviewTab({
                 href={
                   nextSession.meetLink && nextSession.meetLink !== 'LOCKED' && !nextSession.meetLink.includes('behold-aspire-session') && !nextSession.meetLink.includes('meet.google.com/new')
                     ? nextSession.meetLink
-                    : `https://meet.jit.si/BEHOLD-Consultation-${nextSession.id || nextSession.appointmentId || 'Session'}`
+                    : `https://meet.jit.si/BEHOLD-Consultation-${nextSession.appointmentId || nextSession.id || 'Session'}`
                 }
                 target="_blank"
                 rel="noopener noreferrer"

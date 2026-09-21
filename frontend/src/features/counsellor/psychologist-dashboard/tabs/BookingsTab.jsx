@@ -247,7 +247,10 @@ const BookingsTab = ({
                         </span>
                         <button
                           type="button"
-                          onClick={() => saveMeetLink(booking.id, `https://meet.jit.si/BEHOLD-Consultation-${booking.id}`)}
+                          onClick={() => {
+                            const canonicalId = booking.appointmentId || booking.id;
+                            saveMeetLink(booking.id, `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`);
+                          }}
                           className="text-xs font-bold bg-brand hover:bg-brand-dark text-zinc-955 px-3 py-1.5 rounded-lg cursor-pointer transition shadow-sm border-none"
                           title="Generate instant 1-click zero-knocking room"
                         >
@@ -297,7 +300,10 @@ const BookingsTab = ({
                       <div className="flex items-center gap-2 flex-wrap pt-1">
                         <button
                           type="button"
-                          onClick={() => setMeetLinkInput(`https://meet.jit.si/BEHOLD-Consultation-${booking.id}`)}
+                          onClick={() => {
+                            const canonicalId = booking.appointmentId || booking.id;
+                            setMeetLinkInput(`https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`);
+                          }}
                           className="px-2.5 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand border border-brand/20 text-[11px] font-bold rounded-lg cursor-pointer flex items-center gap-1"
                           title="Generate instant 1-click room URL"
                         >

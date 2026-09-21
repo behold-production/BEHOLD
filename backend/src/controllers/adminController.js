@@ -1647,7 +1647,7 @@ If you have questions or would like to reapply with updated information, please 
 
       let finalMeetLink = appointment.meetLink;
       if (!finalMeetLink || finalMeetLink === '') {
-        const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+        const { generateSessionMeetingLink, buildDirectRoomUrl } = require('../utils/calendarHelper');
         finalMeetLink = await generateSessionMeetingLink({
           counsellor,
           user,
@@ -1655,7 +1655,7 @@ If you have questions or would like to reapply with updated information, please 
           time: appointment.time,
           service: appointment.service || 'counselling',
           appointmentId: appointment.id
-        }).catch(() => '');
+        }).catch(() => buildDirectRoomUrl(appointment.id));
       }
 
       const updateFields = {
@@ -1737,18 +1737,19 @@ If you have questions or would like to reapply with updated information, please 
       const counsellor = (await StorageService.findById('counsellors', advisorId)) || (await StorageService.findById('users', advisorId));
       const student = await StorageService.findById('users', userId);
 
-      let finalMeetLink = meetLink || (mode === 'ONLINE' && counsellor ? counsellor.defaultMeetLink || '' : '');
+      const canonicalApptId = `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+      let finalMeetLink = meetLink || '';
       if (mode === 'ONLINE' && !finalMeetLink) {
         try {
-          const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+          const { generateSessionMeetingLink, buildDirectRoomUrl } = require('../utils/calendarHelper');
           finalMeetLink = await generateSessionMeetingLink({
             counsellor,
             user: student,
             date,
             time,
             service: service || 'counselling',
-            appointmentId: `admin_app_${Date.now()}`
-          }).catch(() => '');
+            appointmentId: canonicalApptId
+          }).catch(() => buildDirectRoomUrl(canonicalApptId));
         } catch {}
       }
 
@@ -1759,6 +1760,7 @@ If you have questions or would like to reapply with updated information, please 
       const resolvedPaymentStatus = paymentStatus || (resolvedAmountPaid > 0 ? 'PAID' : (resolvedAmountPaid === 0 ? 'FREE' : 'PENDING'));
 
       const newAppointment = await StorageService.create('appointments', {
+        id: canonicalApptId,
         userId,
         counsellorId: advisorId,
         service: service || 'counselling',
@@ -1828,9 +1830,10 @@ If you have questions or would like to reapply with updated information, please 
       if (sendWhatsApp !== false) {
         const { resolveAnyPhone, resolveStudentName } = require('../utils/phoneUtils');
         const studentPhone = resolveAnyPhone(student?.phone, student);
+        const counsellorPhone = resolveAnyPhone(counsellor?.phone, counsellor?.whatsappNumber, counsellor?.mobile, counsellor);
         const sName = resolveStudentName(student?.name);
+        const WhatsAppService = require('../services/whatsappService');
         if (studentPhone) {
-          const WhatsAppService = require('../services/whatsappService');
           WhatsAppService.sendBookingAlert(studentPhone, 'approved', {
             studentName: sName,
             counsellorName: counsellor?.name || 'Psychologist',
@@ -1842,6 +1845,18 @@ If you have questions or would like to reapply with updated information, please 
             meetLink: finalMeetLink,
             recipientRole: 'user'
           }).catch(err => console.error('[Admin WhatsApp Booking Alert Error]:', err));
+        }
+        if (counsellorPhone) {
+          WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, 'approved', {
+            studentName: sName,
+            counsellorName: counsellor?.name || 'Psychologist',
+            date,
+            time,
+            mode: mode || 'ONLINE',
+            duration: resolvedDuration,
+            bookingId: newAppointment.id,
+            meetLink: finalMeetLink
+          }).catch(err => console.error('[Admin WhatsApp Counsellor Alert Error]:', err));
         }
       }
 

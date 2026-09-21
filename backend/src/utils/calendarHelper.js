@@ -5,7 +5,7 @@ const { google } = require('googleapis');
  * Works instantly on all devices with zero account login, zero waiting rooms, and zero knocking/admissions.
  */
 function buildDirectRoomUrl(appointmentId) {
-  const cleanId = String(appointmentId || Date.now()).replace(/[^a-zA-Z0-9_-]/g, '-');
+  const cleanId = String(appointmentId || 'Session').replace(/[^a-zA-Z0-9_-]/g, '-');
   return `https://meet.jit.si/BEHOLD-Consultation-${cleanId}`;
 }
 
@@ -30,11 +30,11 @@ function isValidCustomMeetLink(link) {
  * 1. Checks SYSTEM_GOOGLE_REFRESH_TOKEN / GOOGLE_REFRESH_TOKEN first.
  * 2. If system token is not configured, gracefully falls back to counsellor.googleRefreshToken if connected.
  * 3. Creates the Google Calendar Event with Google Meet video conference.
- * 4. Fallbacks to valid counsellor.defaultMeetLink or instant direct room URL (meet.jit.si) if Google API fails or is unconnected.
+ * 4. Fallbacks to instant canonical direct room URL (meet.jit.si) if Google API is not configured or fails.
  */
 async function generateSessionMeetingLink({ counsellor, user, date, time, service, appointmentId, durationMinutes }) {
   const directRoomLink = buildDirectRoomUrl(appointmentId);
-  let meetingLink = isValidCustomMeetLink(counsellor?.defaultMeetLink) ? counsellor.defaultMeetLink.trim() : '';
+  let meetingLink = '';
 
   const keyId = process.env.GOOGLE_CLIENT_ID;
   const keySecret = process.env.GOOGLE_CLIENT_SECRET;

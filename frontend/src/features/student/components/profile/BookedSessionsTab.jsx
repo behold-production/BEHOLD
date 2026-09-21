@@ -291,9 +291,10 @@ const BookedSessionsTab = ({
                           {session.mode === 'ONLINE' ? (
                             <>
                               {(() => {
+                                const canonicalId = session.appointmentId || session.id || 'Session';
                                 const validMeetLink = session.meetLink && session.meetLink !== 'LOCKED' && !session.meetLink.includes('behold-aspire-session') && !session.meetLink.includes('meet.google.com/new')
                                   ? session.meetLink
-                                  : `https://meet.jit.si/BEHOLD-Consultation-${session.id || session.appointmentId || 'Session'}`;
+                                  : `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`;
                                 return (
                                   <>
                                     <a

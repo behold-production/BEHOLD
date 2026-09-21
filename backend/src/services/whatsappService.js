@@ -242,7 +242,8 @@ class WhatsAppService {
     const modeLabel = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
     const bookingUrl = 'https://www.behold.co.in/profile?tab=booked';
     const catalogUrl = 'https://www.behold.co.in/advisors';
-    const finalMeetLink = (isOnline && meetLink) ? meetLink : (isOnline ? bookingUrl : '');
+    const canonicalRoomUrl = bookingId ? `https://meet.jit.si/BEHOLD-Consultation-${String(bookingId).replace(/[^a-zA-Z0-9_-]/g, '-')}` : '';
+    const finalMeetLink = (isOnline && meetLink && meetLink.startsWith('https://')) ? meetLink : (isOnline ? (canonicalRoomUrl || bookingUrl) : '');
 
     const cleanStudentName = cleanUserName(studentName);
     const greeting = cleanStudentName ? `Hi *${cleanStudentName}* 👋` : `Hi there 👋`;
@@ -452,6 +453,8 @@ class WhatsAppService {
     const modeLabel = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
     const profileUrl = 'https://www.behold.co.in/counsellor';
     const cleanStudentName = cleanUserName(studentName) || 'A student';
+    const canonicalRoomUrl = bookingId ? `https://meet.jit.si/BEHOLD-Consultation-${String(bookingId).replace(/[^a-zA-Z0-9_-]/g, '-')}` : '';
+    const finalMeetLink = (isOnline && meetLink && meetLink.startsWith('https://')) ? meetLink : (isOnline ? canonicalRoomUrl : '');
 
     let text = '';
     
@@ -465,7 +468,7 @@ class WhatsAppService {
         `• *Time:* ${time}\n` +
         `• *Duration:* ${duration}\n` +
         `• *Mode:* ${modeLabel}\n\n` +
-        (isOnline && meetLink ? `🔗 *Direct Consultation Link:* ${meetLink}\n\nTap the link above to join your direct video consultation with the student.\n\n` : '') +
+        (isOnline && finalMeetLink ? `🔗 *Direct Consultation Link:* ${finalMeetLink}\n\nTap the link above to join your direct video consultation with the student (1-click, zero knocking).\n\n` : '') +
         `Please log in to your dashboard to view full client intake details and manage your sessions.\n\n` +
         `📊 *Dashboard:* ${profileUrl}\n\n` +
         `BEHOLD. Support Team`;
@@ -485,7 +488,7 @@ class WhatsAppService {
         `A session with your client *${cleanStudentName}* has been rescheduled to a new time.\n\n` +
         `• *New Date:* ${date}\n` +
         `• *New Time:* ${time}\n\n` +
-        (isOnline && meetLink ? `🔗 *Direct Consultation Link:* ${meetLink}\n\n` : '') +
+        (isOnline && finalMeetLink ? `🔗 *Direct Consultation Link:* ${finalMeetLink}\n\n` : '') +
         `Please log in to your dashboard to review the updated schedule.\n\n` +
         `📊 *Dashboard:* ${profileUrl}\n\n` +
         `BEHOLD. Support Team`;

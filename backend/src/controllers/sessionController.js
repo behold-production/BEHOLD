@@ -45,7 +45,7 @@ const SessionController = {
         const appId = a.id || (a._id ? a._id.toString() : '');
         if (appId && !uniqueSessionsMap.has(appId)) {
           uniqueSessionsMap.set(appId, {
-            id: 'mock_session_' + appId,
+            id: appId,
             appointmentId: appId,
             userId: a.userId,
             counsellorId: a.counsellorId,
@@ -68,7 +68,8 @@ const SessionController = {
         mergedSessions.map(async (s) => {
           const user = await StorageService.findById('users', s.userId);
           const counsellor = await StorageService.findById('counsellors', s.counsellorId);
-          const appt = appointments.find((a) => a.id === s.appointmentId);
+          const appt = appointments.find((a) => (a.id && a.id === s.appointmentId) || (a._id && a._id.toString() === s.appointmentId));
+          const canonicalId = s.appointmentId || appt?.id || s.id;
 
           // Authorized meeting link resolution
           let meetLink = s.meetLink || appt?.meetLink || '';
@@ -82,7 +83,7 @@ const SessionController = {
               meetLink = '';
             } else if (!meetLink || meetLink === 'LOCKED' || !isValidCustomMeetLink(meetLink)) {
               // Ensure every online session has a guaranteed direct-join consultation room link
-              meetLink = buildDirectRoomUrl(s.appointmentId || s.id);
+              meetLink = buildDirectRoomUrl(canonicalId);
             }
           }
 
@@ -180,12 +181,13 @@ const SessionController = {
       const appt = await StorageService.findById('appointments', session.appointmentId);
 
       // Direct meeting link resolution
+      const canonicalId = session.appointmentId || appt?.id || session.id;
       let meetLink = session.meetLink || appt?.meetLink || '';
       if (session.mode === 'ONLINE') {
         if (session.status === 'CANCELLED') {
           meetLink = '';
         } else if (!meetLink || meetLink === 'LOCKED' || !isValidCustomMeetLink(meetLink)) {
-          meetLink = buildDirectRoomUrl(session.appointmentId || session.id);
+          meetLink = buildDirectRoomUrl(canonicalId);
         }
       }
 

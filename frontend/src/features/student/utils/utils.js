@@ -76,7 +76,7 @@ export const getMeetLinkStatus = (session) => {
 
   let link = session.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : '';
   if (!link || link.includes('meet.google.com/new') || link.includes('behold-aspire-session') || link.includes('abc-defg-hij')) {
-    link = `https://meet.jit.si/BEHOLD-Consultation-${session.id || session.appointmentId || 'Session'}`;
+    link = `https://meet.jit.si/BEHOLD-Consultation-${session.appointmentId || session.id || 'Session'}`;
   }
 
   return { status: 'AVAILABLE', label: 'Direct Join Now', link, color: 'emerald' };

@@ -593,7 +593,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         {bookingMode === 'ONLINE' && !rescheduleSession && (
                                             <div className="pt-4 border-t border-slate-200/80 mt-3">
                                                 {(() => {
-                                                    const resolvedMeetLink = confirmedBooking?.meetLink || confirmedMeetLink || (selectedAdvisor?.defaultMeetLink && !selectedAdvisor.defaultMeetLink.includes('abc-defg-hij') && !selectedAdvisor.defaultMeetLink.includes('meet.google.com/new') ? selectedAdvisor.defaultMeetLink : null) || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`;
+                                                    const canonicalId = confirmedBooking?.appointmentId || confirmedBooking?.id || 'Session';
+                                                    const resolvedMeetLink = confirmedBooking?.meetLink || confirmedMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`;
                                                     return (
                                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-xs">
                                                             <div className="min-w-0 flex-1">
@@ -647,25 +648,29 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             </button>
                                         ) : (
                                             <>
-                                                {(confirmedBooking?.mode === 'ONLINE' || bookingMode === 'ONLINE') && (
-                                                    <a
-                                                        href={createGoogleCalendarUrl({
-                                                          title: `BEHOLD Counselling Session - ${confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Psychologist'}`,
-                                                          description: `Confidential Psychological Counselling Session via BEHOLD.\nDirect Consultation Room: ${confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`}\nStudent: ${confirmedBooking?.clientName || bookingForm.name || 'User'}`,
-                                                          location: confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`,
-                                                          meetLink: confirmedBooking?.meetLink || confirmedMeetLink || selectedAdvisor?.defaultMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${confirmedBooking?.id || Date.now()}`,
-                                                          date: confirmedBooking?.date || selectedDate,
-                                                          time: confirmedBooking?.time || selectedTime,
-                                                          durationMinutes: bookingDuration
-                                                        })}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="w-full sm:w-auto px-5 py-3 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 border border-[#00e5ff]/40 text-teal-950 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center justify-center gap-2 shadow-xs no-underline"
-                                                    >
-                                                        <CalendarIcon className="w-4 h-4 text-teal-600" />
-                                                        <span>Add to Calendar</span>
-                                                    </a>
-                                                )}
+                                                {(confirmedBooking?.mode === 'ONLINE' || bookingMode === 'ONLINE') && (() => {
+                                                    const canonicalId = confirmedBooking?.appointmentId || confirmedBooking?.id || 'Session';
+                                                    const calendarMeetLink = confirmedBooking?.meetLink || confirmedMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`;
+                                                    return (
+                                                        <a
+                                                            href={createGoogleCalendarUrl({
+                                                              title: `BEHOLD Counselling Session - ${confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Psychologist'}`,
+                                                              description: `Confidential Psychological Counselling Session via BEHOLD.\nDirect Consultation Room: ${calendarMeetLink}\nStudent: ${confirmedBooking?.clientName || bookingForm.name || 'User'}`,
+                                                              location: calendarMeetLink,
+                                                              meetLink: calendarMeetLink,
+                                                              date: confirmedBooking?.date || selectedDate,
+                                                              time: confirmedBooking?.time || selectedTime,
+                                                              durationMinutes: bookingDuration
+                                                            })}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="w-full sm:w-auto px-5 py-3 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 border border-[#00e5ff]/40 text-teal-950 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center justify-center gap-2 shadow-xs no-underline"
+                                                        >
+                                                            <CalendarIcon className="w-4 h-4 text-teal-600" />
+                                                            <span>Add to Calendar</span>
+                                                        </a>
+                                                    );
+                                                })()}
 
                                                 <button
                                                     type="button"

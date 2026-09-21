@@ -59,9 +59,10 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
     const time = appointment?.time || 'N/A';
     const mode = appointment?.mode || 'ONLINE';
     const netTotal = appointment?.amountPaid || 0;
-    const finalMeetLink = appointment?.meetLink || '';
-    const apptDuration = appointment?.duration || reqBody?.duration || reqBody?.bookingDetails?.duration || '1 Hour (60 Mins)';
+    const { buildDirectRoomUrl } = require('../utils/calendarHelper');
     const apptBookingId = appointment?.id || appointment?._id || `app_${Date.now()}`;
+    const finalMeetLink = appointment?.meetLink || (mode === 'ONLINE' ? buildDirectRoomUrl(apptBookingId) : '');
+    const apptDuration = appointment?.duration || reqBody?.duration || reqBody?.bookingDetails?.duration || '1 Hour (60 Mins)';
 
     if (!user) {
       user = {
@@ -72,7 +73,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
       };
     }
 
-    console.log(`[Payment Booking Notifications] Target User Phone: "${targetUserPhone}" | Counsellor Phone: "${counsellor?.phone}" | Student: "${studentDisplay}" | Counsellor: "${cName}" | Date: ${date} ${time}`);
+    console.log(`[Payment Booking Notifications] Target User Phone: "${targetUserPhone}" | Counsellor Phone: "${counsellor?.phone}" | Student: "${studentDisplay}" | Counsellor: "${cName}" | Date: ${date} ${time} | MeetLink: "${finalMeetLink}"`);
 
     // Mark as sent in storage immediately to avoid concurrent races
     if (appointment?.id) {
@@ -102,8 +103,8 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
         type: 'appointment_created',
         isRead: false
       }) : Promise.resolve(),
-      EmailService.sendAppointmentApproved({ user, counsellor, appointment }).catch(err => console.error('[Email Booking Send Error]:', err)),
-      EmailService.sendPaymentReceipt({ user, appointment, counsellor, amount: netTotal, transactionId: appointment?.razorpayPaymentId }).catch(err => console.error('[Receipt Send Error]:', err))
+      EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink: finalMeetLink } }).catch(err => console.error('[Email Booking Send Error]:', err)),
+      EmailService.sendPaymentReceipt({ user, appointment: { ...appointment, meetLink: finalMeetLink }, counsellor, amount: netTotal, transactionId: appointment?.razorpayPaymentId }).catch(err => console.error('[Receipt Send Error]:', err))
     ]);
 
     // Send WhatsApp alert to Student/User
@@ -127,7 +128,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
       console.warn(`[WhatsApp Booking Alert Skipped]: No valid phone found for appointment ${appointment?.id}`);
     }
 
-    // Send WhatsApp alert to Counsellor
+    // Send WhatsApp alert to Counsellor (Psychologist)
     const targetCounsellorPhone = resolveAnyPhone(counsellor?.phone, counsellor?.whatsappNumber, counsellor?.mobile, counsellor);
     if (targetCounsellorPhone && counsellor) {
       const waResCounsellor = await WhatsAppService.sendCounsellorBookingAlert(targetCounsellorPhone, 'approved', {
@@ -637,18 +638,19 @@ const PaymentController = {
       const gstPercent = gstEnabled ? Number(settings.gstPercent) || 0 : 0;
       const gstAmount = gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
       const netTotal = Math.max(1, baseFee + gstAmount - appliedDiscount);
+      const canonicalApptId = `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
       let finalMeetLink = '';
       if (mode === 'ONLINE') {
-        const { generateSessionMeetingLink } = require('../utils/calendarHelper');
+        const { generateSessionMeetingLink, buildDirectRoomUrl } = require('../utils/calendarHelper');
         finalMeetLink = await generateSessionMeetingLink({
           counsellor,
           user,
           date,
           time,
           service,
-          appointmentId: `app_${Date.now()}`
-        }).catch(() => '');
+          appointmentId: canonicalApptId
+        }).catch(() => buildDirectRoomUrl(canonicalApptId));
       }
 
       const commissionPercent = counsellor.commissionPercent !== undefined ? Number(counsellor.commissionPercent) : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);
@@ -672,6 +674,7 @@ const PaymentController = {
 
       // 5. Create appointment with CONFIRMED status
       const newAppointment = await StorageService.create('appointments', {
+        id: canonicalApptId,
         userId: resolvedUserId,
         counsellorId,
         date,

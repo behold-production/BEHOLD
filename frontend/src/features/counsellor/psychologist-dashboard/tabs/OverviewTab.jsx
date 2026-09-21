@@ -88,7 +88,8 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                             <button
                                 type="button"
                                 onClick={() => {
-                                    const link = pendingBookings[0].meetLink || `https://meet.jit.si/BEHOLD-Consultation-${pendingBookings[0].id}`;
+                                    const canonicalId = pendingBookings[0].appointmentId || pendingBookings[0].id;
+                                    const link = pendingBookings[0].meetLink || `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`;
                                     window.open(link, '_blank');
                                 }}
                                 className="text-sm font-bold bg-brand text-zinc-955 hover:bg-brand-dark px-3.5 py-2 rounded-[10px] cursor-pointer flex items-center gap-1.5 transition-colors border-none"
