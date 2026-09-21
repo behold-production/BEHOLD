@@ -1371,10 +1371,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               paymentStatus: 'FREE'
             }));
           } catch (e) {}
-          setIsProcessingPayment(false);
-          setIsSuccess(true);
-          setBookingStep('success');
-          window.location.href = '/confirmed';
+          setIsProcessingPayment(true);
+          setPaymentStepText("Booking confirmed! Loading confirmation...");
+          window.location.replace('/confirmed');
           return;
         } else {
           throw new Error(bookRes.message || "Failed to confirm free booking.");
@@ -1532,10 +1531,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
                   paymentStatus: 'PAID'
                 }));
               } catch (e) {}
-              setIsProcessingPayment(false);
-              setIsSuccess(true);
-              setBookingStep('success');
-              window.location.href = '/confirmed';
+              setIsProcessingPayment(true);
+              setPaymentStepText("Payment verified! Loading your session confirmation...");
+              window.location.replace('/confirmed');
+              return;
             } else {
               throw new Error(verifyRes.message || "Verification failed");
             }
@@ -1618,9 +1617,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             paymentStatus: 'PAID'
           }));
         } catch (e) {}
-        setIsSuccess(true);
-        setBookingStep('success');
-        window.location.href = '/confirmed?type=rescheduled';
+        setIsProcessingPayment(true);
+        setPaymentStepText("Reschedule submitted! Loading confirmation...");
+        window.location.replace('/confirmed?type=rescheduled');
+        return;
       } else {
         toast.error(res.message || "Rescheduling failed.");
       }

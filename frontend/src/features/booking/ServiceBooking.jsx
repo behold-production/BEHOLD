@@ -89,6 +89,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         appliedDiscount,
         couponMsg,
         isProcessingPayment,
+        paymentStepText,
         copiedMeet,
         setCopiedMeet,
         showSummary,
@@ -432,6 +433,20 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 canonicalUrl="https://www.behold.co.in/booking"
             />
             <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full max-w-lg md:max-w-xl lg:max-w-2xl h-full sm:h-[90vh] bg-slate-50 sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-slate-900 text-left overscroll-contain animate-modal-in transition-all duration-300 scroll-smooth flex flex-col scroll-smooth-momentum gpu-layer`}>
+
+                {/* Secure Payment & Booking Verification Overlay */}
+                {isProcessingPayment && (
+                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/85 backdrop-blur-md text-white px-6 text-center animate-in fade-in duration-200">
+                        <div className="relative w-16 h-16 mb-4 flex items-center justify-center">
+                            <div className="absolute inset-0 rounded-full border-4 border-[#00e5ff]/20 border-t-[#00e5ff] animate-spin" />
+                            <Lock className="w-6 h-6 text-[#00e5ff]" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-1 font-sans">Verifying &amp; Confirming Session</h3>
+                        <p className="text-xs text-slate-300 max-w-xs text-center font-medium leading-relaxed">
+                            {paymentStepText || 'Securing your appointment and reserving your session room...'}
+                        </p>
+                    </div>
+                )}
 
                 {/* Mobile App Style Header */}
                 <div className="sticky top-0 z-30 flex items-center justify-between px-5 py-4 bg-white border-b border-slate-100 shrink-0">
