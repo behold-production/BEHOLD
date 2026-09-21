@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calendar, Video, Download, MapPin } from 'lucide-react';
 import { formatDateString } from "../../../../utils/dateFormatter";
-import { formatCountdown } from '../../utils/utils';
+import { formatCountdown, buildGoogleMeetUrl } from '../../utils/utils';
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
 
 export default function OverviewTab({
@@ -117,17 +117,17 @@ export default function OverviewTab({
             {nextSession.mode === 'ONLINE' ? (
               <a
                 href={
-                  nextSession.meetLink && nextSession.meetLink !== 'LOCKED' && !nextSession.meetLink.includes('behold-aspire-session') && !nextSession.meetLink.includes('meet.google.com/new')
+                  nextSession.meetLink && nextSession.meetLink !== 'LOCKED' && !nextSession.meetLink.includes('behold-aspire-session') && !nextSession.meetLink.includes('meet.google.com/new') && !nextSession.meetLink.includes('meet.jit.si')
                     ? nextSession.meetLink
-                    : `https://meet.jit.si/BEHOLD-Consultation-${nextSession.appointmentId || nextSession.id || 'Session'}`
+                    : buildGoogleMeetUrl(nextSession.appointmentId || nextSession.id || 'Session')
                 }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-brand hover:bg-brand-dark text-slate-950 shadow-xs text-center no-underline flex items-center gap-1.5"
-                title="Direct 1-Click Consultation Room"
+                title="Join Google Meet Video Consultation"
               >
                 <Video className="w-4 h-4" />
-                <span>Direct Join Now</span>
+                <span>Join Google Meet</span>
               </a>
             ) : (
               <button

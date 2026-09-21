@@ -246,15 +246,15 @@ const ProfileTab = ({
  </div>
 
   <div className="sm:col-span-2 space-y-1.5">
-  <label className="text-zinc-400 font-bold text-xs tracking-wide">Default Meeting Room Link (Google Meet / Direct Room)</label>
+  <label className="text-zinc-400 font-bold text-xs tracking-wide">Default Meeting Room Link (Google Meet)</label>
   <input
   type="url"
-  placeholder="https://meet.jit.si/BEHOLD-DrName or https://meet.google.com/abc-defg-hij"
+  placeholder="https://meet.google.com/abc-defg-hij"
   value={ep.defaultMeetLink || ''}
   onChange={(e) => setEp({ defaultMeetLink: e.target.value })}
   className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
   />
-  <p className="text-[11px] text-zinc-500">Optional. Enter your personal persistent room link, or leave blank to automatically generate direct zero-knocking rooms for each booking.</p>
+  <p className="text-[11px] text-zinc-500">Optional. Enter your personal persistent Google Meet link, or leave blank to automatically generate dedicated Google Meet links for each booking.</p>
   </div>
 
  <div className="sm:col-span-2 space-y-4 p-5 bg-zinc-900 border border-zinc-800 rounded-[10px]">

@@ -239,10 +239,11 @@ class WhatsAppService {
     } = details;
 
     const isOnline = !mode || mode === 'ONLINE';
-    const modeLabel = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
+    const modeLabel = mode === 'ONLINE' ? 'Online Google Meet Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
     const bookingUrl = 'https://www.behold.co.in/profile?tab=booked';
     const catalogUrl = 'https://www.behold.co.in/advisors';
-    const canonicalRoomUrl = bookingId ? `https://meet.jit.si/BEHOLD-Consultation-${String(bookingId).replace(/[^a-zA-Z0-9_-]/g, '-')}` : '';
+    const { buildDirectRoomUrl } = require('../utils/calendarHelper');
+    const canonicalRoomUrl = bookingId ? buildDirectRoomUrl(bookingId) : '';
     const finalMeetLink = (isOnline && meetLink && meetLink.startsWith('https://')) ? meetLink : (isOnline ? (canonicalRoomUrl || bookingUrl) : '');
 
     const cleanStudentName = cleanUserName(studentName);
@@ -268,7 +269,7 @@ class WhatsAppService {
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
           (isOnline
-            ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\nTap the link above to join your direct video consultation directly from your phone or PC (no account or admission required).\n\n`
+            ? `🔗 *Google Meet Link:* ${finalMeetLink}\n\nTap the link above to join your Google Meet video consultation directly from your phone or PC.\n\n`
             : `📍 Please be ready at your scheduled time and location.\n\n`) +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `Thank you for choosing BEHOLD.. We look forward to supporting you.`;
@@ -320,7 +321,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          (isOnline && finalMeetLink ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\n` : '') +
+          (isOnline && finalMeetLink ? `🔗 *Google Meet Link:* ${finalMeetLink}\n\n` : '') +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `Please make sure you are available at the new scheduled time.`;
         break;
@@ -337,7 +338,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          (isOnline && finalMeetLink ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\n` : '') +
+          (isOnline && finalMeetLink ? `🔗 *Google Meet Link:* ${finalMeetLink}\n\n` : '') +
           `Please be ready a few minutes before your scheduled time.\n\n` +
           `📋 *View Booking:* ${bookingUrl}\n\n` +
           `See you soon!`;
@@ -354,7 +355,7 @@ class WhatsAppService {
           `• *Time:* ${time}\n` +
           `• *Duration:* ${duration}\n` +
           `• *Mode:* ${modeLabel}\n\n` +
-          (isOnline && finalMeetLink ? `🔗 *Direct Join Link:* ${finalMeetLink}\n\n` : '') +
+          (isOnline && finalMeetLink ? `🔗 *Google Meet Link:* ${finalMeetLink}\n\n` : '') +
           `Please join a few minutes early and make sure you have a quiet and private space for your session.\n\n` +
           `BEHOLD.`;
         break;
@@ -450,10 +451,11 @@ class WhatsAppService {
     } = details;
 
     const isOnline = !mode || mode === 'ONLINE';
-    const modeLabel = mode === 'ONLINE' ? 'Online Video Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
+    const modeLabel = mode === 'ONLINE' ? 'Online Google Meet Consultation' : mode === 'OFFLINE' ? 'In-Person Consultation' : mode === 'DOOR_STEP' ? 'Doorstep Visit Consultation' : (mode || 'Online');
     const profileUrl = 'https://www.behold.co.in/counsellor';
     const cleanStudentName = cleanUserName(studentName) || 'A student';
-    const canonicalRoomUrl = bookingId ? `https://meet.jit.si/BEHOLD-Consultation-${String(bookingId).replace(/[^a-zA-Z0-9_-]/g, '-')}` : '';
+    const { buildDirectRoomUrl } = require('../utils/calendarHelper');
+    const canonicalRoomUrl = bookingId ? buildDirectRoomUrl(bookingId) : '';
     const finalMeetLink = (isOnline && meetLink && meetLink.startsWith('https://')) ? meetLink : (isOnline ? canonicalRoomUrl : '');
 
     let text = '';
@@ -468,7 +470,7 @@ class WhatsAppService {
         `• *Time:* ${time}\n` +
         `• *Duration:* ${duration}\n` +
         `• *Mode:* ${modeLabel}\n\n` +
-        (isOnline && finalMeetLink ? `🔗 *Direct Consultation Link:* ${finalMeetLink}\n\nTap the link above to join your direct video consultation with the student (1-click, zero knocking).\n\n` : '') +
+        (isOnline && finalMeetLink ? `🔗 *Google Meet Link:* ${finalMeetLink}\n\nTap the link above to join the Google Meet video consultation with the student.\n\n` : '') +
         `Please log in to your dashboard to view full client intake details and manage your sessions.\n\n` +
         `📊 *Dashboard:* ${profileUrl}\n\n` +
         `BEHOLD. Support Team`;
@@ -488,7 +490,7 @@ class WhatsAppService {
         `A session with your client *${cleanStudentName}* has been rescheduled to a new time.\n\n` +
         `• *New Date:* ${date}\n` +
         `• *New Time:* ${time}\n\n` +
-        (isOnline && finalMeetLink ? `🔗 *Direct Consultation Link:* ${finalMeetLink}\n\n` : '') +
+        (isOnline && finalMeetLink ? `🔗 *Google Meet Link:* ${finalMeetLink}\n\n` : '') +
         `Please log in to your dashboard to review the updated schedule.\n\n` +
         `📊 *Dashboard:* ${profileUrl}\n\n` +
         `BEHOLD. Support Team`;

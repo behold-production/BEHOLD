@@ -26,7 +26,7 @@ import SEO from '../../components/common/SEO';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import { trackPurchase } from '../../utils/metaPixel';
-import { generateReceiptPDFDoc } from '../student/utils/utils';
+import { generateReceiptPDFDoc, buildGoogleMeetUrl } from '../student/utils/utils';
 import { toast } from 'react-hot-toast';
 
 export default function ThankYouPage() {
@@ -89,7 +89,7 @@ export default function ThankYouPage() {
         const amount = Number(searchParams.get('amount')) || 899;
         const tempId = paramId || `BEH-${Date.now().toString().slice(-6)}`;
         const meetParam = searchParams.get('meet');
-        const meetLink = (meetParam && !meetParam.includes('beh-olds-ess')) ? meetParam : `https://meet.jit.si/BEHOLD-Consultation-${tempId}`;
+        const meetLink = (meetParam && !meetParam.includes('beh-olds-ess') && !meetParam.includes('meet.jit.si')) ? meetParam : buildGoogleMeetUrl(tempId);
 
         details = {
           id: tempId,
@@ -348,10 +348,10 @@ export default function ThankYouPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-slate-900 hover:bg-black text-[#00e5ff] text-xs font-bold rounded-xl transition shadow-sm no-underline"
-                    title="Direct 1-Click Consultation Room (No Google account login or admission required)"
+                    title="Join Google Meet Video Consultation Room"
                   >
                     <Video className="w-3.5 h-3.5" />
-                    <span>Direct Join Consultation Room Now</span>
+                    <span>Join Google Meet Consultation</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>

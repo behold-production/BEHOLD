@@ -7,6 +7,7 @@ import BookingAuthModal from './BookingAuthModal';
 import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon, Trash2 } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
+import { buildGoogleMeetUrl } from '../student/utils/utils';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
 import SEO from '../../components/common/SEO';
@@ -594,14 +595,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <div className="pt-4 border-t border-slate-200/80 mt-3">
                                                 {(() => {
                                                     const canonicalId = confirmedBooking?.appointmentId || confirmedBooking?.id || 'Session';
-                                                    const resolvedMeetLink = confirmedBooking?.meetLink || confirmedMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`;
+                                                    const resolvedMeetLink = (confirmedBooking?.meetLink && !confirmedBooking.meetLink.includes('meet.jit.si'))
+                                                        || (confirmedMeetLink && !confirmedMeetLink.includes('meet.jit.si'))
+                                                        || buildGoogleMeetUrl(canonicalId);
                                                     return (
                                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 shadow-xs">
                                                             <div className="min-w-0 flex-1">
                                                                 <span className="text-[11px] font-semibold text-slate-500 block mb-0.5">
-                                                                    Video Consultation Room (Direct Join)
+                                                                    Google Meet Video Consultation Room
                                                                 </span>
-                                                                <span className="text-xs text-slate-900 font-semibold truncate block">
+                                                                <span className="text-xs text-slate-900 font-semibold truncate block font-mono">
                                                                     {resolvedMeetLink}
                                                                 </span>
                                                             </div>
@@ -611,10 +614,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className="px-3.5 py-2 bg-brand hover:bg-brand-dark text-slate-950 text-xs font-bold rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs no-underline"
-                                                                    title="Direct 1-Click Consultation Room"
+                                                                    title="Join Google Meet Consultation"
                                                                 >
                                                                     <VideoIcon className="w-3.5 h-3.5" />
-                                                                    <span>Direct Join</span>
+                                                                    <span>Join Google Meet</span>
                                                                 </a>
                                                                 <button
                                                                     type="button"
@@ -650,12 +653,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                             <>
                                                 {(confirmedBooking?.mode === 'ONLINE' || bookingMode === 'ONLINE') && (() => {
                                                     const canonicalId = confirmedBooking?.appointmentId || confirmedBooking?.id || 'Session';
-                                                    const calendarMeetLink = confirmedBooking?.meetLink || confirmedMeetLink || `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`;
+                                                    const calendarMeetLink = (confirmedBooking?.meetLink && !confirmedBooking.meetLink.includes('meet.jit.si'))
+                                                        || (confirmedMeetLink && !confirmedMeetLink.includes('meet.jit.si'))
+                                                        || buildGoogleMeetUrl(canonicalId);
                                                     return (
                                                         <a
                                                             href={createGoogleCalendarUrl({
                                                               title: `BEHOLD Counselling Session - ${confirmedBooking?.counsellorName || selectedAdvisor?.name || 'Psychologist'}`,
-                                                              description: `Confidential Psychological Counselling Session via BEHOLD.\nDirect Consultation Room: ${calendarMeetLink}\nStudent: ${confirmedBooking?.clientName || bookingForm.name || 'User'}`,
+                                                              description: `Confidential Psychological Counselling Session via BEHOLD.\nGoogle Meet: ${calendarMeetLink}\nStudent: ${confirmedBooking?.clientName || bookingForm.name || 'User'}`,
                                                               location: calendarMeetLink,
                                                               meetLink: calendarMeetLink,
                                                               date: confirmedBooking?.date || selectedDate,

@@ -67,6 +67,37 @@ export const isSessionCompleted = (booking) => {
   return false;
 };
 
+export function formatToGoogleMeetCode(appointmentId) {
+  if (!appointmentId) return 'beh-olds-ess';
+  const clean = String(appointmentId).trim();
+  if (clean.startsWith('https://meet.google.com/')) {
+    return clean.replace('https://meet.google.com/', '').split('?')[0].trim();
+  }
+  let hash = 0;
+  for (let i = 0; i < clean.length; i++) {
+    hash = (hash << 5) - hash + clean.charCodeAt(i);
+    hash |= 0;
+  }
+  const positive = Math.abs(hash).toString(36) + 'beholdsession';
+  let letters = '';
+  for (let i = 0; i < positive.length && letters.length < 10; i++) {
+    const code = positive.charCodeAt(i);
+    const charCode = code >= 48 && code <= 57 ? 97 + (code - 48) : code;
+    letters += String.fromCharCode(charCode);
+  }
+  while (letters.length < 10) letters += 'a';
+  return `${letters.slice(0, 3)}-${letters.slice(3, 7)}-${letters.slice(7, 10)}`;
+}
+
+export function buildGoogleMeetUrl(appointmentId) {
+  if (!appointmentId) return 'https://meet.google.com/beh-olds-ess';
+  const clean = String(appointmentId).trim();
+  if (clean.startsWith('https://meet.google.com/')) {
+    return clean;
+  }
+  return `https://meet.google.com/${formatToGoogleMeetCode(clean)}`;
+}
+
 export const getMeetLinkStatus = (session) => {
   if (!session) return { status: 'NO_LINK', label: 'Awaiting Link', color: 'amber' };
   if (session.mode !== 'ONLINE') return { status: 'OFFLINE', label: 'In-Person', color: 'zinc' };
@@ -75,11 +106,11 @@ export const getMeetLinkStatus = (session) => {
   if (session.status === 'CANCELLED') return { status: 'CANCELLED', label: 'Cancelled', color: 'zinc' };
 
   let link = session.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : '';
-  if (!link || link.includes('meet.google.com/new') || link.includes('behold-aspire-session') || link.includes('abc-defg-hij')) {
-    link = `https://meet.jit.si/BEHOLD-Consultation-${session.appointmentId || session.id || 'Session'}`;
+  if (!link || link.includes('meet.google.com/new') || link.includes('behold-aspire-session') || !link.startsWith('https://meet.google.com/')) {
+    link = buildGoogleMeetUrl(session.appointmentId || session.id);
   }
 
-  return { status: 'AVAILABLE', label: 'Direct Join Now', link, color: 'emerald' };
+  return { status: 'AVAILABLE', label: 'Join Google Meet', link, color: 'emerald' };
 };
 
 export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
@@ -235,7 +266,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     tableY += 16;
 
     // Session Video Room Link if Online
-    const activeMeetLink = bookingDetails.meetLink || `https://meet.jit.si/BEHOLD-Consultation-${rawId}`;
+    const activeMeetLink = bookingDetails.meetLink || buildGoogleMeetUrl(rawId);
     if (bookingDetails.mode === 'ONLINE' || activeMeetLink) {
       doc.setFillColor(240, 253, 250); // Light teal bg
       doc.roundedRect(20, tableY, 170, 18, 2, 2, 'F');
@@ -243,7 +274,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(8.5);
       doc.setTextColor(13, 148, 136);
-      doc.text('Direct Consultation Room Link (Online Video Session):', 25, tableY + 6);
+      doc.text('Google Meet Consultation Room Link (Online Video Session):', 25, tableY + 6);
       
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(8);
@@ -333,7 +364,7 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
       clientName,
       clientEmail,
       clientPhone,
-      meetLink: session?.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : `https://meet.jit.si/BEHOLD-Consultation-${session?.appointmentId || session?.id || 'Session'}`,
+      meetLink: session?.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : buildGoogleMeetUrl(session?.appointmentId || session?.id),
       amount: amountPaid,
       baseFee: baseFeeVal,
       gstPercent: gstEnabled ? gstPercent : 0,

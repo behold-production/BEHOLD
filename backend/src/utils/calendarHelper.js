@@ -1,40 +1,64 @@
 const { google } = require('googleapis');
+const crypto = require('crypto');
 
 /**
- * Builds a direct, frictionless video consultation room URL.
- * Works instantly on all devices with zero account login, zero waiting rooms, and zero knocking/admissions.
+ * Converts any seed / appointment ID into a deterministic 10-character Google Meet room code (xxx-yyyy-zzz).
  */
-function buildDirectRoomUrl(appointmentId) {
-  const cleanId = String(appointmentId || 'Session').replace(/[^a-zA-Z0-9_-]/g, '-');
-  return `https://meet.jit.si/BEHOLD-Consultation-${cleanId}`;
+function formatToGoogleMeetCode(appointmentId) {
+  if (!appointmentId) return 'beh-olds-ess';
+  const clean = String(appointmentId).trim();
+  if (clean.startsWith('https://meet.google.com/')) {
+    return clean.replace('https://meet.google.com/', '').split('?')[0].trim();
+  }
+  const hash = crypto.createHash('md5').update(clean).digest('hex');
+  let letters = '';
+  for (let i = 0; i < hash.length && letters.length < 10; i++) {
+    const code = hash.charCodeAt(i);
+    const charCode = code <= 57 ? 97 + (code - 48) : 107 + (code - 97);
+    letters += String.fromCharCode(charCode);
+  }
+  while (letters.length < 10) letters += 'a';
+  return `${letters.slice(0, 3)}-${letters.slice(3, 7)}-${letters.slice(7, 10)}`;
 }
 
 /**
- * Validates whether a provided meeting link is legitimate and not a placeholder or 'meet.google.com/new'.
+ * Builds a deterministic canonical Google Meet room URL for an appointment.
+ */
+function buildDirectRoomUrl(appointmentId) {
+  if (!appointmentId) return 'https://meet.google.com/beh-olds-ess';
+  const clean = String(appointmentId).trim();
+  if (clean.startsWith('https://meet.google.com/')) {
+    return clean;
+  }
+  const code = formatToGoogleMeetCode(clean);
+  return `https://meet.google.com/${code}`;
+}
+
+const buildGoogleMeetUrl = buildDirectRoomUrl;
+
+/**
+ * Validates whether a provided meeting link is legitimate Google Meet link and not 'meet.google.com/new'.
  */
 function isValidCustomMeetLink(link) {
   if (!link || typeof link !== 'string') return false;
   const trimmed = link.trim().toLowerCase();
-  if (!trimmed.startsWith('https://')) return false;
-  if (trimmed.includes('meet.google.com/new')) return false;
-  if (trimmed.includes('meet.google.com/abc-defg-hij')) return false;
-  if (trimmed.includes('meet.google.com/behold-aspire-session')) return false;
-  if (trimmed.includes('meet.google.com/beh-olds-ess')) return false;
+  if (!trimmed.startsWith('https://meet.google.com/')) return false;
+  if (trimmed === 'https://meet.google.com/new' || trimmed.endsWith('/new')) return false;
   return true;
 }
 
 /**
- * Helper to generate a friction-free meeting link for online counselling sessions.
+ * Helper to generate a Google Meet link for online counselling sessions.
  * 
  * Flow:
  * 1. Checks SYSTEM_GOOGLE_REFRESH_TOKEN / GOOGLE_REFRESH_TOKEN first.
  * 2. If system token is not configured, gracefully falls back to counsellor.googleRefreshToken if connected.
  * 3. Creates the Google Calendar Event with Google Meet video conference.
- * 4. Fallbacks to instant canonical direct room URL (meet.jit.si) if Google API is not configured or fails.
+ * 4. Fallbacks to instant canonical Google Meet room URL (meet.google.com/xxx-yyyy-zzz) if Google API is not configured or fails.
  */
 async function generateSessionMeetingLink({ counsellor, user, date, time, service, appointmentId, durationMinutes }) {
   const directRoomLink = buildDirectRoomUrl(appointmentId);
-  let meetingLink = '';
+  let meetingLink = isValidCustomMeetLink(counsellor?.defaultMeetLink) ? counsellor.defaultMeetLink.trim() : '';
 
   const keyId = process.env.GOOGLE_CLIENT_ID;
   const keySecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -232,6 +256,8 @@ function buildGoogleCalendarWebUrl({
 module.exports = {
   generateSessionMeetingLink,
   buildDirectRoomUrl,
+  buildGoogleMeetUrl,
+  formatToGoogleMeetCode,
   isValidCustomMeetLink,
   buildGoogleCalendarWebUrl
 };

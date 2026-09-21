@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Clock, AlertCircle, Video, Link2, Copy, CheckCheck, ExternalLink, Share2 } from 'lucide-react';
 import { formatDateString } from '../../../../utils/dateFormatter';
+import { buildGoogleMeetUrl } from '../../../student/utils/utils';
 
 const formatAmount = (num) => {
     const val = Number(num) || 0;
@@ -89,14 +90,14 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                                 type="button"
                                 onClick={() => {
                                     const canonicalId = pendingBookings[0].appointmentId || pendingBookings[0].id;
-                                    const link = pendingBookings[0].meetLink || `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`;
+                                    const link = pendingBookings[0].meetLink || buildGoogleMeetUrl(canonicalId);
                                     window.open(link, '_blank');
                                 }}
                                 className="text-sm font-bold bg-brand text-zinc-955 hover:bg-brand-dark px-3.5 py-2 rounded-[10px] cursor-pointer flex items-center gap-1.5 transition-colors border-none"
-                                title="Direct 1-Click Consultation Room"
+                                title="Join Google Meet Consultation"
                             >
                                 <Video className="w-3.5 h-3.5" />
-                                <span>Direct Join Now</span>
+                                <span>Join Google Meet</span>
                             </button>
                         )}
                         <button

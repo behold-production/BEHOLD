@@ -2,6 +2,7 @@ import React from 'react';
 import { Clock, AlertCircle, Link, Video, FileText, Send, Edit, ShieldCheck, Lock, Calendar } from 'lucide-react';
 import { formatDateString } from '../../../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
+import { buildGoogleMeetUrl } from '../../../student/utils/utils';
 import ApiService from '../../../../services/api';
 import { toast } from 'react-hot-toast';
 
@@ -196,10 +197,10 @@ const BookingsTab = ({
                           type="button"
                           onClick={() => window.open(booking.meetLink, '_blank')}
                           className="text-xs font-bold bg-brand/15 hover:bg-brand/25 text-brand border border-brand/30 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                          title="Direct 1-Click Consultation Room (No knocking or admission needed)"
+                          title="Join Google Meet Consultation Room"
                         >
                           <Video className="w-3.5 h-3.5 text-brand shrink-0" />
-                          <span>Direct Join Now</span>
+                          <span>Join Google Meet</span>
                         </button>
                         <button
                           type="button"
@@ -249,12 +250,12 @@ const BookingsTab = ({
                           type="button"
                           onClick={() => {
                             const canonicalId = booking.appointmentId || booking.id;
-                            saveMeetLink(booking.id, `https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`);
+                            saveMeetLink(booking.id, buildGoogleMeetUrl(canonicalId));
                           }}
                           className="text-xs font-bold bg-brand hover:bg-brand-dark text-zinc-955 px-3 py-1.5 rounded-lg cursor-pointer transition shadow-sm border-none"
-                          title="Generate instant 1-click zero-knocking room"
+                          title="Generate instant Google Meet room"
                         >
-                          ⚡ Generate Direct Room
+                          ⚡ Generate Google Meet
                         </button>
                         <button
                           type="button"
@@ -278,7 +279,7 @@ const BookingsTab = ({
                             setMeetLinkInput(e.target.value);
                             setMeetLinkError('');
                           }}
-                          placeholder="https://meet.jit.si/BEHOLD-... or https://meet.google.com/abc-defg-hij"
+                          placeholder="https://meet.google.com/abc-defg-hij"
                           className="px-3 py-2 bg-zinc-900 border border-zinc-700 text-xs text-white rounded-lg outline-none focus:border-brand flex-1 min-w-[240px]"
                         />
                         <button
@@ -302,12 +303,12 @@ const BookingsTab = ({
                           type="button"
                           onClick={() => {
                             const canonicalId = booking.appointmentId || booking.id;
-                            setMeetLinkInput(`https://meet.jit.si/BEHOLD-Consultation-${canonicalId}`);
+                            setMeetLinkInput(buildGoogleMeetUrl(canonicalId));
                           }}
                           className="px-2.5 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand border border-brand/20 text-[11px] font-bold rounded-lg cursor-pointer flex items-center gap-1"
-                          title="Generate instant 1-click room URL"
+                          title="Generate dedicated Google Meet URL"
                         >
-                          ⚡ Auto Direct Room (Recommended)
+                          ⚡ Auto Google Meet (Recommended)
                         </button>
                         <button
                           type="button"
@@ -319,7 +320,7 @@ const BookingsTab = ({
                         </button>
                       </div>
                       <p className="text-[10px] text-zinc-500 leading-tight">
-                        Tip: Direct rooms allow both user & psychologist to join with 1 click without knocking or Google login. If using Google Meet, start the call, copy the room URL (e.g. meet.google.com/abc-defg-hij), and paste it above.
+                        Tip: Dedicated Google Meet rooms connect both client and psychologist to the same meeting ID. Paste your custom meeting URL (e.g. https://meet.google.com/abc-defg-hij) or click Auto Google Meet.
                       </p>
                     </div>
                   )}
