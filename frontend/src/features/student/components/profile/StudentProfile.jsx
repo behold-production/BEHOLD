@@ -212,6 +212,7 @@ export default function StudentProfile({ onOpenBooking }) {
  profile={profile}
  enableAptitude={enableAptitude}
  onOpenBooking={onOpenBooking}
+ downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
  />
  )}
  {currentSection === 'details' && (

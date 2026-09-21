@@ -384,12 +384,12 @@ const BookedSessionsTab = ({
                               </a>
                             </>
                           )}
-                          {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
+                          {Boolean(session && downloadPDFReceiptForSession) && (
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
                               className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none text-surface-600 hover:text-surface-900 transition-colors bg-white cursor-pointer"
-                              title="Download Receipt PDF"
+                              title="Download Official Receipt PDF"
                             >
                               <Download className="w-3.5 h-3.5 text-surface-500" /> Receipt
                             </button>
@@ -548,12 +548,12 @@ const BookedSessionsTab = ({
                       <div className="mt-3 flex items-center justify-between">
                         <span className="text-[10px] text-surface-400 font-semibold tracking-widest">Session #{completedSessions.length - sIdx}</span>
                         <div className="flex items-center gap-3">
-                          {(session.paymentStatus === 'PAID' || session.amountPaid > 0) && (
+                          {Boolean(session && downloadPDFReceiptForSession) && (
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
                               className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
-                              title="Download Receipt PDF"
+                              title="Download Official Receipt PDF"
                             >
                               <Download className="w-3.5 h-3.5" /> Receipt
                             </button>

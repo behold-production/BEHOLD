@@ -90,6 +90,9 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
       format: 'a4'
     });
 
+    const rawId = String(bookingDetails?.id || bookingDetails?.appointmentId || bookingDetails?._id || Date.now());
+    const displayId = rawId.length > 6 ? rawId.substring(rawId.length - 6).toUpperCase() : rawId.toUpperCase();
+
     // Top Banner Accent Bar (Teal brand color #06b6d4)
     doc.setFillColor(6, 182, 212);
     doc.rect(0, 0, 210, 8, 'F');
@@ -105,13 +108,16 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setTextColor(113, 113, 122); // zinc-500
     doc.text('Premium Career Guidance & Mental Health Platform', 20, 30);
 
+    const netAmount = Number(bookingDetails.amount || 0);
+    const isFree = netAmount === 0;
+
     // Status Badge
     doc.setFillColor(240, 253, 250); // light teal background
-    doc.roundedRect(142, 18, 48, 10, 2, 2, 'F');
+    doc.roundedRect(132, 18, 58, 10, 2, 2, 'F');
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(13, 148, 136); // Teal text
-    doc.text('CONFIRMED & PAID', 147, 24.5);
+    doc.text(isFree ? 'CONFIRMED & ISSUED' : 'CONFIRMED & PAID', 135, 24.5);
 
     // Divider Line
     doc.setDrawColor(228, 228, 231); // zinc-200
@@ -138,9 +144,8 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.text(`Phone: ${cPhone}`, 20, 64);
 
     // Receipt Metadata info
-    const displayId = bookingDetails.id ? bookingDetails.id.toString().substring(Math.max(0, bookingDetails.id.toString().length - 6)) : 'N/A';
     doc.text(`Receipt ID: REC-${displayId}`, 120, 52);
-    doc.text(`Booking ID: SB-${bookingDetails.id || 'N/A'}`, 120, 58);
+    doc.text(`Booking ID: SB-${rawId}`, 120, 58);
     doc.text(`Date of Issue: ${formatDateString(new Date())}`, 120, 64);
 
     // Divider Line
@@ -155,10 +160,10 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setFont('Helvetica', 'normal');
     doc.setFontSize(8.5);
     doc.setTextColor(82, 82, 91);
-    doc.text(`Service Type: ${bookingDetails.service}`, 20, 86);
-    doc.text(`Consultant Assigned: ${bookingDetails.advisorName} (${bookingDetails.advisorRole})`, 20, 92);
-    doc.text(`Session Schedule: ${formatDateString(bookingDetails.date)} at ${bookingDetails.time}`, 20, 98);
-    doc.text(`Session Mode: ${bookingDetails.mode}`, 20, 104);
+    doc.text(`Service Type: ${bookingDetails.service || 'Psychological Counselling'}`, 20, 86);
+    doc.text(`Consultant Assigned: ${bookingDetails.advisorName || 'Consultant Psychologist'} (${bookingDetails.advisorRole || 'Psychologist'})`, 20, 92);
+    doc.text(`Session Schedule: ${formatDateString(bookingDetails.date)} at ${bookingDetails.time || 'Scheduled Slot'}`, 20, 98);
+    doc.text(`Session Mode: ${bookingDetails.mode || 'ONLINE'}`, 20, 104);
     if (bookingDetails.duration) {
       doc.text(`Duration: ${bookingDetails.duration}`, 120, 104);
     }
@@ -187,14 +192,14 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setTextColor(82, 82, 91);
 
     // Resolve breakdown metrics dynamically
-    const detailsBaseFee = bookingDetails.baseFee || 0;
-    const detailsGstPercent = bookingDetails.gstPercent || 0;
-    const detailsGstAmount = bookingDetails.gstAmount || 0;
-    const detailsDiscount = bookingDetails.appliedDiscount || 0;
-    const detailsNetTotal = bookingDetails.amount || 0;
+    const detailsBaseFee = Number(bookingDetails.baseFee || 0);
+    const detailsGstPercent = Number(bookingDetails.gstPercent || 0);
+    const detailsGstAmount = Number(bookingDetails.gstAmount || 0);
+    const detailsDiscount = Number(bookingDetails.appliedDiscount || 0);
+    const detailsNetTotal = Number(bookingDetails.amount || 0);
 
     // 1. Base fee
-    const feeDesc = bookingDetails.duration ? `${bookingDetails.service} Session Fee (${bookingDetails.duration})` : `${bookingDetails.service} Session Booking Fee`;
+    const feeDesc = bookingDetails.duration ? `${bookingDetails.service || 'Counselling'} Session Fee (${bookingDetails.duration})` : `${bookingDetails.service || 'Counselling'} Session Booking Fee`;
     doc.text(feeDesc, 24, tableY);
     doc.text(`Rs. ${detailsBaseFee.toFixed(2)}`, 160, tableY);
     tableY += 8;
@@ -209,7 +214,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     // 3. Discount (if applied)
     if (detailsDiscount > 0) {
       doc.setTextColor(0, 229, 255); // neon blue
-      doc.text(`Promo Discount Code`, 24, tableY);
+      doc.text(`Promo / Coupon Discount`, 24, tableY);
       doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
       tableY += 8;
       doc.setTextColor(82, 82, 91); // reset to zinc-600
@@ -229,20 +234,21 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     
     tableY += 16;
 
-    // Google Meet Session Link if Online
-    if (bookingDetails.meetLink) {
+    // Session Video Room Link if Online
+    const activeMeetLink = bookingDetails.meetLink || `https://meet.jit.si/BEHOLD-Consultation-${rawId}`;
+    if (bookingDetails.mode === 'ONLINE' || activeMeetLink) {
       doc.setFillColor(240, 253, 250); // Light teal bg
       doc.roundedRect(20, tableY, 170, 18, 2, 2, 'F');
       
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(8.5);
       doc.setTextColor(13, 148, 136);
-      doc.text('Google Meet Session Link (Online Video Call):', 25, tableY + 6);
+      doc.text('Direct Consultation Room Link (Online Video Session):', 25, tableY + 6);
       
       doc.setFont('Helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(6, 182, 212); // blue-link
-      doc.text(bookingDetails.meetLink, 25, tableY + 12);
+      doc.text(activeMeetLink, 25, tableY + 12);
       
       tableY += 28;
     } else {
@@ -254,23 +260,29 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setFontSize(8);
     doc.setTextColor(161, 161, 170); // zinc-400
     doc.text('This is a secure computer-generated booking receipt. No physical signature is required.', 20, tableY);
-    doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp.', 20, tableY + 5);
+    doc.text('For rescheduling queries, cancellations, or support, please reply to your coordinator on WhatsApp or email beholdoffice@gmail.com.', 20, tableY + 5);
 
-    // Save document
-    const blob = doc.output('blob');
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Behold_Session_Receipt_${bookingDetails.id}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
+    // Save document with robust fallback
+    const fileName = `Behold_Session_Receipt_${displayId}.pdf`;
+    try {
+      doc.save(fileName);
+    } catch (saveErr) {
+      const blob = doc.output('blob');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    }, 100);
+      }, 200);
+    }
   } catch (e) {
-    console.error(e);
+    console.error('[Receipt PDF Error]:', e);
     if (showAlert) await showAlert("Failed to generate PDF receipt. Please contact platform support.", "Export Error");
+    throw e;
   }
 };
 
@@ -288,39 +300,40 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
       }
     } catch (e) {}
 
-    const amountPaid = session.amountPaid || 1200;
-    const appliedDiscount = session.appliedDiscount || 0;
-    const totalBeforeDiscount = amountPaid + appliedDiscount;
+    const amountPaid = session?.amountPaid !== undefined ? Number(session.amountPaid) : 0;
+    const appliedDiscount = Number(session?.appliedDiscount || 0);
+    const totalBeforeDiscount = (amountPaid > 0 || appliedDiscount > 0)
+      ? amountPaid + appliedDiscount
+      : Number(session?.baseFee || 0);
 
     let baseFeeVal = totalBeforeDiscount;
     let gstAmountVal = 0;
-    if (gstEnabled && gstPercent > 0) {
+    if (gstEnabled && gstPercent > 0 && totalBeforeDiscount > 0) {
       baseFeeVal = Math.round(totalBeforeDiscount / (1 + gstPercent / 100));
       gstAmountVal = totalBeforeDiscount - baseFeeVal;
     }
 
-    const clientName = profile.name || user?.name || 'Student';
-    const clientEmail = profile.email || user?.email || '';
-    const clientPhone = profile.phone || user?.phone || '';
+    const clientName = profile?.name || user?.name || session?.clientName || 'Student';
+    const clientEmail = profile?.email || user?.email || session?.clientEmail || '';
+    const clientPhone = profile?.phone || user?.phone || session?.clientPhone || '';
 
-    const service = session.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
-    const mode = session.mode === 'ONLINE' ? 'Video Call' : session.mode === 'DOOR_STEP' ? 'Home Visit' : 'At Center';
-
-    const duration = session.duration || '1 Hour (60 Mins)';
+    const service = session?.service === 'career' ? 'Career Mentoring & Guidance' : 'Psychological Counselling';
+    const mode = session?.mode === 'ONLINE' ? 'ONLINE' : session?.mode === 'DOOR_STEP' ? 'DOOR_STEP' : (session?.mode || 'ONLINE');
+    const duration = session?.duration || '1 Hour (60 Mins)';
 
     const details = {
-      id: session.appointmentId || session.id,
+      id: session?.appointmentId || session?.id || `app_${Date.now()}`,
       service,
       mode,
       duration,
-      advisorName: session.advisorName || 'Advisor',
-      advisorRole: session.advisorRole || (session.service === 'counselling' ? 'Consultant Psychologist' : 'Career Advisor'),
-      date: session.date,
-      time: session.time,
+      advisorName: session?.advisorName || 'Consultant Psychologist',
+      advisorRole: session?.advisorRole || (session?.service === 'career' ? 'Career Advisor' : 'Consultant Psychologist'),
+      date: session?.date || new Date().toISOString().split('T')[0],
+      time: session?.time || 'Scheduled Time',
       clientName,
       clientEmail,
       clientPhone,
-      meetLink: session.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : null,
+      meetLink: session?.meetLink && session.meetLink !== 'LOCKED' ? session.meetLink : `https://meet.jit.si/BEHOLD-Consultation-${session?.appointmentId || session?.id || 'Session'}`,
       amount: amountPaid,
       baseFee: baseFeeVal,
       gstPercent: gstEnabled ? gstPercent : 0,
@@ -331,7 +344,7 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
     await generateReceiptPDFDoc(details, showAlert);
     toast.success('Receipt downloaded successfully!', { id: toastId });
   } catch (err) {
-    console.error(err);
+    console.error('[Download Receipt Error]:', err);
     toast.error('Failed to generate PDF receipt', { id: toastId });
   }
 };
