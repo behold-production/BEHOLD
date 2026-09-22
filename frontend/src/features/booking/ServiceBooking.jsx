@@ -1098,398 +1098,253 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 {/* STEP 1 — SELECT PSYCHOLOGIST */}
                                                 {wizardStep === 1 && !isAdvisorLocked && (
-                                                    <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-sm space-y-6 text-left animate-step-in">
-                                                        
-                                                        {/* Top Mode Selector Capsule Switcher (matching reference design) */}
-                                                        <div className="flex items-center justify-between bg-slate-100 p-1.5 rounded-full max-w-md mx-auto shadow-inner">
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => setBookingMode('ONLINE')}
-                                                                className={`flex-1 py-2.5 px-4 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer border-none ${
-                                                                    bookingMode === 'ONLINE'
-                                                                        ? 'bg-slate-900 text-white shadow-md scale-[1.02]'
-                                                                        : 'text-slate-600 hover:text-slate-900 bg-transparent'
-                                                                }`}
-                                                            >
-                                                                Online Video
-                                                            </button>
-                                                            {enableDoorstep && (
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setBookingMode('DOOR_STEP')}
-                                                                    className={`flex-1 py-2.5 px-4 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer border-none ${
-                                                                        bookingMode === 'DOOR_STEP'
-                                                                            ? 'bg-slate-900 text-white shadow-md scale-[1.02]'
-                                                                            : 'text-slate-600 hover:text-slate-900 bg-transparent'
-                                                                    }`}
-                                                                >
-                                                                    Doorstep Visit
-                                                                </button>
-                                                            )}
-                                                            {enableOffline && (
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setBookingMode('OFFLINE')}
-                                                                    className={`flex-1 py-2.5 px-4 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer border-none ${
-                                                                        bookingMode === 'OFFLINE'
-                                                                            ? 'bg-slate-900 text-white shadow-md scale-[1.02]'
-                                                                            : 'text-slate-600 hover:text-slate-900 bg-transparent'
-                                                                    }`}
-                                                                >
-                                                                    In-Center
-                                                                </button>
-                                                            )}
-                                                        </div>
-
-                                                        {/* Specialties Cards Section (matching reference design) */}
-                                                        <div className="space-y-3">
-                                                            <div className="flex items-center justify-between">
-                                                                <h3 className="font-bold text-base sm:text-lg text-slate-900 tracking-tight font-serif-hero">
-                                                                    Specialties
-                                                                </h3>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setSelectedSpecialty('all')}
-                                                                    className="text-xs font-bold text-slate-500 hover:text-slate-900 cursor-pointer border-none bg-transparent"
-                                                                >
-                                                                    View all
-                                                                </button>
-                                                            </div>
-
-                                                            <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none snap-x">
-                                                                {[
-                                                                    { id: 'all', label: 'All Specialists', count: `${advisors.length} available`, icon: '✨', bg: 'bg-[#fff0f3]', iconBg: 'bg-[#fecdd3]' },
-                                                                    { id: 'anxiety', label: 'Anxiety & Stress', count: '8 experts available', icon: '🧠', bg: 'bg-[#ffe4e6]', iconBg: 'bg-[#fda4af]' },
-                                                                    { id: 'depression', label: 'Depression & Mood', count: '6 experts available', icon: '🌱', bg: 'bg-[#e0f2fe]', iconBg: 'bg-[#bae6fd]' },
-                                                                    { id: 'relationship', label: 'Relationships', count: '5 experts available', icon: '💖', bg: 'bg-[#fef3c7]', iconBg: 'bg-[#fde68a]' },
-                                                                    { id: 'career', label: 'Career Mentoring', count: '7 mentors available', icon: '🧭', bg: 'bg-[#dcfce7]', iconBg: 'bg-[#bbf7d0]' },
-                                                                    { id: 'trauma', label: 'Trauma & PTSD', count: '4 experts available', icon: '🛡️', bg: 'bg-[#f3e8ff]', iconBg: 'bg-[#e9d5ff]' },
-                                                                ].map((spec) => {
-                                                                    const isActive = selectedSpecialty === spec.id;
-                                                                    return (
-                                                                        <button
-                                                                            key={spec.id}
-                                                                            type="button"
-                                                                            onClick={() => setSelectedSpecialty(spec.id)}
-                                                                            className={`min-w-[150px] p-4 rounded-2xl flex flex-col justify-between text-left transition-all cursor-pointer snap-start border ${
-                                                                                isActive
-                                                                                    ? 'ring-2 ring-slate-900 shadow-md scale-105 ' + spec.bg
-                                                                                    : 'hover:shadow-sm opacity-90 hover:opacity-100 ' + spec.bg
-                                                                            }`}
-                                                                        >
-                                                                            <div className={`w-10 h-10 rounded-full ${spec.iconBg} flex items-center justify-center text-lg mb-3 shadow-xs`}>
-                                                                                {spec.icon}
-                                                                            </div>
-                                                                            <div>
-                                                                                <h4 className="font-bold text-xs sm:text-sm text-slate-900 leading-tight">
-                                                                                    {spec.label}
-                                                                                </h4>
-                                                                                <span className="text-[10px] text-slate-600 font-medium block mt-0.5">
-                                                                                    {spec.count}
-                                                                                </span>
-                                                                            </div>
-                                                                        </button>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Horizontal Interactive Calendar Strip (M T W T F S S) */}
-                                                        <div className="space-y-2 pt-2 border-t border-slate-100">
-                                                            <div className="flex items-center justify-between">
-                                                                <span className="text-xs font-bold text-slate-700 tracking-tight">
-                                                                    Select Preferred Date
+                                                    <div ref={step2AdvisorRef} className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
+                                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                                                            <div className="flex items-center gap-2.5">
+                                                                <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
+                                                                    1
                                                                 </span>
-                                                                <span className="text-xs text-slate-500 font-semibold">
-                                                                    {selectedDate ? formatDateString(selectedDate) : 'Today'}
-                                                                </span>
-                                                            </div>
-
-                                                            <div className="flex items-center justify-between gap-1 overflow-x-auto pb-1 scrollbar-none">
-                                                                {dateStrip.map((item) => {
-                                                                    const isSelected = selectedDate === item.dateStr;
-                                                                    return (
-                                                                        <button
-                                                                            key={item.dateStr}
-                                                                            type="button"
-                                                                            onClick={() => handleDateChange(item.dateStr)}
-                                                                            className="flex flex-col items-center gap-1.5 flex-1 min-w-[42px] cursor-pointer group border-none bg-transparent"
-                                                                        >
-                                                                            <span className="text-[10px] font-bold text-slate-400 group-hover:text-slate-700 uppercase">
-                                                                                {item.dayLetter}
-                                                                            </span>
-                                                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                                                                                isSelected
-                                                                                    ? 'bg-slate-900 text-white shadow-md scale-110 ring-2 ring-[#00e5ff]'
-                                                                                    : 'bg-rose-50/60 hover:bg-rose-100 text-slate-800 border border-rose-100'
-                                                                            }`}>
-                                                                                {item.dayNum}
-                                                                            </div>
-                                                                        </button>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Promotional Offer Banner (matching reference design 2) */}
-                                                        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-100/70 via-pink-100/50 to-orange-100/60 border border-rose-200/80 flex items-center justify-between gap-4 shadow-xs">
-                                                            <div className="space-y-1">
-                                                                <span className="text-[9px] font-extrabold uppercase tracking-widest text-rose-700 bg-white/90 px-2.5 py-0.5 rounded-full border border-rose-200 shadow-xs">
-                                                                    25% Off Check-Up
-                                                                </span>
-                                                                <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-tight font-serif-hero">
-                                                                    Take care of your health today
-                                                                </h4>
-                                                                <p className="text-[11px] text-slate-600 font-medium">
-                                                                    Use promo code <strong className="text-slate-900">WELCOME25</strong> at checkout
-                                                                </p>
-                                                            </div>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    setCouponInput('WELCOME25');
-                                                                    handleApplyCoupon('WELCOME25');
-                                                                    toast.success('Applied 25% Off Coupon!');
-                                                                }}
-                                                                className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-900 text-xs font-bold rounded-xl shrink-0 transition shadow-xs border border-slate-200 cursor-pointer"
-                                                            >
-                                                                Apply Offer
-                                                            </button>
-                                                        </div>
-
-                                                        {/* Doctors List with Inline Time Slots */}
-                                                        <div className="space-y-4 pt-2">
-                                                            <div className="flex items-center justify-between">
-                                                                <h3 className="font-bold text-base sm:text-lg text-slate-900 tracking-tight font-serif-hero">
-                                                                    Psychologists
-                                                                </h3>
-                                                                <span className="text-xs text-slate-500 font-medium">
-                                                                    Showing available doctors
-                                                                </span>
-                                                            </div>
-
-                                                            {selectedAdvisor && (
-                                                                <div className="p-3.5 bg-teal-50/80 border border-[#00e5ff]/50 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-xs">
-                                                                    <div className="flex items-center gap-2 min-w-0">
-                                                                        <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-pulse shrink-0" />
-                                                                        <span className="font-bold text-slate-900 truncate">
-                                                                            Selected: <strong className="text-teal-900">{selectedAdvisor.name}</strong> {selectedTime ? `at ${selectedTime}` : ''}
-                                                                        </span>
-                                                                    </div>
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => setWizardStep(2)}
-                                                                        className="px-4 py-2 bg-slate-900 hover:bg-black text-white font-bold rounded-xl transition cursor-pointer whitespace-nowrap border-none shadow-xs flex items-center gap-1"
-                                                                    >
-                                                                        Continue <ArrowRight className="w-3.5 h-3.5" />
-                                                                    </button>
+                                                                <div>
+                                                                    <h3 className="font-bold text-base sm:text-lg text-slate-900 leading-tight">
+                                                                        Select Psychologist
+                                                                    </h3>
+                                                                    <p className="text-xs text-slate-500 font-medium">
+                                                                        Certified licensed clinical psychologists & therapeutic advisors
+                                                                    </p>
                                                                 </div>
-                                                            )}
+                                                            </div>
+                                                            <span className="text-[10px] font-extrabold text-teal-700 bg-teal-50 border border-teal-200/60 px-2.5 py-1 rounded-lg uppercase tracking-wider hidden sm:inline-block">
+                                                                Step 1
+                                                            </span>
+                                                        </div>
 
-                                                            <div className="space-y-3">
-                                                                {(() => {
-                                                                    const filtered = advisors.filter(adv => {
-                                                                        const serviceMatch = !bookingService || adv.type === bookingService || (bookingService === 'counselling' && adv.type !== 'career');
-                                                                        const specMatch = selectedSpecialty === 'all' || (adv.specialties && adv.specialties.some(s => s.toLowerCase().includes(selectedSpecialty)));
-                                                                        return serviceMatch && specMatch;
-                                                                    });
+                                                        {selectedAdvisor && (
+                                                            <div className="p-3 bg-gradient-to-r from-teal-50/80 via-cyan-50/40 to-white border border-[#00e5ff]/40 rounded-xl flex items-center justify-between gap-3 text-xs">
+                                                                <div className="flex items-center gap-2 min-w-0">
+                                                                    <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-pulse shrink-0" />
+                                                                    <span className="font-bold text-slate-900 truncate">
+                                                                        Selected: <strong className="text-teal-800">{selectedAdvisor.name}</strong> • ₹{bookingDuration === 30 ? (selectedAdvisor.halfSessionPrice || 499) : (selectedAdvisor.price || 899)} ({bookingDuration === 30 ? '30m Plan' : '1h Plan'})
+                                                                    </span>
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setWizardStep(2)}
+                                                                    className="px-4 py-2 bg-[#0f172a] hover:bg-black text-white font-bold rounded-lg transition-all cursor-pointer whitespace-nowrap shadow-sm border-none flex items-center justify-center gap-1.5"
+                                                                >
+                                                                    Continue <ArrowRight className="w-3 h-3" />
+                                                                </button>
+                                                            </div>
+                                                        )}
 
-                                                                    if (filtered.length === 0) {
-                                                                        return (
-                                                                            <div className="p-6 border border-dashed border-slate-200 rounded-2xl bg-slate-50 text-slate-600 text-center font-medium text-xs">
-                                                                                No psychologists found matching your selection.
-                                                                            </div>
-                                                                        );
-                                                                    }
+                                                        <div className="space-y-3">
+                                                            {(() => {
+                                                                const filtered = advisors.filter(adv => {
+                                                                    const match = !bookingService || adv.type === bookingService || (bookingService === 'counselling' && adv.type !== 'career');
+                                                                    return match;
+                                                                });
 
-                                                                    const sortedAdvisors = [...filtered].sort((a, b) => {
-                                                                        const aRank = Number(a.rank || 0);
-                                                                        const bRank = Number(b.rank || 0);
-                                                                        if (aRank !== bRank) return bRank - aRank;
-                                                                        
-                                                                        const aInfo = getAdvisorEarliestAvailableInfo(a);
-                                                                        const bInfo = getAdvisorEarliestAvailableInfo(b);
-                                                                        if (aInfo.available && !bInfo.available) return -1;
-                                                                        if (bInfo.available && !aInfo.available) return 1;
-                                                                        return bInfo.slotCount - aInfo.slotCount;
-                                                                    });
+                                                                const sortedAdvisors = [...filtered].sort((a, b) => {
+                                                                    const aRank = Number(a.rank || 0);
+                                                                    const bRank = Number(b.rank || 0);
+                                                                    if (aRank !== bRank) return bRank - aRank;
+                                                                    
+                                                                    const aInfo = getAdvisorEarliestAvailableInfo(a);
+                                                                    const bInfo = getAdvisorEarliestAvailableInfo(b);
+                                                                    if (aInfo.available && !bInfo.available) return -1;
+                                                                    if (bInfo.available && !aInfo.available) return 1;
+                                                                    return bInfo.slotCount - aInfo.slotCount;
+                                                                });
 
-                                                                    const totalPages = Math.max(1, Math.ceil(sortedAdvisors.length / 4));
-                                                                    const currentPage = Math.min(effectiveAdvisorPage, totalPages);
-                                                                    const advisorsToRender = sortedAdvisors.slice((currentPage - 1) * 4, currentPage * 4);
-
+                                                                if (sortedAdvisors.length === 0) {
                                                                     return (
-                                                                        <>
-                                                                            {advisorsToRender.map((advisor) => {
-                                                                                const info = getAdvisorEarliestAvailableInfo(advisor);
-                                                                                const isAvailable = info.available;
-                                                                                const isSelected = selectedAdvisor?.id === advisor.id;
-                                                                                const doctorSlots = getAdvisorSlotsForDate ? getAdvisorSlotsForDate(advisor, selectedDate) : [];
+                                                                        <div className="p-6 border border-dashed border-slate-200 rounded-xl bg-slate-50 text-slate-600 text-center font-medium text-xs">
+                                                                            No psychologists found. Please try refreshing or clearing filter settings.
+                                                                        </div>
+                                                                    );
+                                                                }
 
-                                                                                return (
-                                                                                    <div
-                                                                                        key={advisor.id}
-                                                                                        onClick={() => {
-                                                                                            if (!isAvailable) return;
-                                                                                            if (selectAdvisor) {
-                                                                                                selectAdvisor(advisor);
-                                                                                            } else {
-                                                                                                setSelectedAdvisor(advisor);
-                                                                                                setAdvisorConfirmed(true);
-                                                                                                const earliest = getAdvisorEarliestAvailableDate(advisor);
-                                                                                                if (earliest) handleDateChange(earliest);
-                                                                                                setSelectedTime('');
-                                                                                            }
-                                                                                            if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-                                                                                            setWizardStep(2);
-                                                                                            scrollToTarget(step1Ref);
-                                                                                        }}
-                                                                                        className={`p-4 sm:p-5 border bg-white rounded-2xl relative overflow-hidden shadow-xs cursor-pointer transition-all duration-200 ${
-                                                                                            isSelected
-                                                                                                ? 'border-[#00e5ff] ring-2 ring-[#00e5ff]/50 bg-teal-50/30 shadow-md'
-                                                                                                : isAvailable
-                                                                                                    ? 'border-slate-200 hover:border-slate-400 hover:shadow-md'
-                                                                                                    : 'border-slate-100 opacity-60'
+                                                                const totalPages = Math.max(1, Math.ceil(sortedAdvisors.length / 5));
+                                                                const currentPage = Math.min(effectiveAdvisorPage, totalPages);
+                                                                const advisorsToRender = sortedAdvisors.slice((currentPage - 1) * 5, currentPage * 5);
+
+                                                                return (
+                                                                    <React.Fragment>
+                                                                        {advisorsToRender.map((advisor) => {
+                                                                            const info = getAdvisorEarliestAvailableInfo(advisor);
+                                                                            const isAvailable = info.available;
+                                                                            const isSelected = selectedAdvisor?.id === advisor.id;
+
+                                                                            return (
+                                                                                <div
+                                                                                    key={advisor.id}
+                                                                                    onClick={() => {
+                                                                                        if (!isAvailable) return;
+                                                                                        if (selectAdvisor) {
+                                                                                            selectAdvisor(advisor);
+                                                                                        } else {
+                                                                                            setSelectedAdvisor(advisor);
+                                                                                            setAdvisorConfirmed(true);
+                                                                                            const earliest = getAdvisorEarliestAvailableDate(advisor);
+                                                                                            if (earliest) handleDateChange(earliest);
+                                                                                            setSelectedTime('');
+                                                                                        }
+                                                                                        if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
+                                                                                        setWizardStep(2);
+                                                                                        scrollToTarget(step1Ref);
+                                                                                    }}
+                                                                                    className={`group p-4 sm:p-5 border-2 bg-white rounded-xl relative overflow-hidden shadow-xs cursor-pointer booking-card transition-all ${isSelected
+                                                                                            ? 'border-[#00e5ff] ring-2 ring-[#00e5ff]/50 bg-teal-50/30 shadow-md'
+                                                                                            : isAvailable
+                                                                                                ? 'border-slate-200 hover:border-teal-500 hover:shadow-md'
+                                                                                                : 'border-slate-100 opacity-70 hover:opacity-100'
                                                                                         }`}
-                                                                                    >
-                                                                                        <div className="space-y-3">
-                                                                                            {/* Doctor Header Info */}
-                                                                                            <div className="flex items-center justify-between gap-3">
-                                                                                                <div className="flex items-center gap-3 min-w-0 flex-1">
-                                                                                                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full shrink-0 border-2 border-slate-200 overflow-hidden relative shadow-xs">
-                                                                                                        {advisor.profilePic || advisor.image ? (
-                                                                                                            <img
-                                                                                                                src={advisor.profilePic || advisor.image}
-                                                                                                                alt={advisor.name}
-                                                                                                                className="w-full h-full object-cover"
-                                                                                                            />
-                                                                                                        ) : (
-                                                                                                            <div className="w-full h-full bg-teal-50 flex items-center justify-center font-bold text-lg text-teal-700">
-                                                                                                                {getInitials(advisor.name)}
-                                                                                                            </div>
-                                                                                                        )}
+                                                                                >
+                                                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                                                                        <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
+                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl shrink-0 flex items-center justify-center border-2 bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#00e5ff]' : 'border-slate-200 group-hover:border-[#00e5ff]'}`}>
+                                                                                                {(advisor.isHighlighted || advisor.isTopFive) && (
+                                                                                                    <div className="absolute top-0 left-0 right-0 bg-[#3a0ca3] text-white text-[8px] font-bold text-center py-0.5 z-10 tracking-widest uppercase">
+                                                                                                        Top Rated
                                                                                                     </div>
-
-                                                                                                    <div className="min-w-0 flex-1">
-                                                                                                        <h4 className="font-bold text-base text-slate-900 truncate">
-                                                                                                            {advisor.name}
-                                                                                                        </h4>
-                                                                                                        <p className="text-xs text-slate-500 font-medium truncate">
-                                                                                                            {advisor.role || 'Psychologist'}
-                                                                                                        </p>
-                                                                                                        <span className="text-[11px] font-bold text-slate-700 block mt-0.5">
-                                                                                                            ₹{bookingDuration === 30 ? (advisor.halfSessionPrice || 499) : (advisor.price || 899)} • {bookingDuration === 30 ? '30m' : '60m'}
-                                                                                                        </span>
-                                                                                                    </div>
-                                                                                                </div>
-
-                                                                                                <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full text-amber-700 font-bold text-xs shrink-0">
-                                                                                                    <span>★</span>
-                                                                                                    <span>4.9</span>
-                                                                                                </div>
+                                                                                                )}
+                                                                                                {advisor.profilePic || advisor.image ? (
+                                                                                                    <img
+                                                                                                        src={advisor.profilePic || advisor.image}
+                                                                                                        alt={advisor.name}
+                                                                                                        className="w-full h-full object-cover"
+                                                                                                    />
+                                                                                                ) : (
+                                                                                                    <span className="font-bold text-xl text-teal-600">
+                                                                                                        {getInitials(advisor.name)}
+                                                                                                    </span>
+                                                                                                )}
                                                                                             </div>
 
-                                                                                            {/* Inline Slot Pills (matching reference design 1) */}
-                                                                                            <div className="pt-2 border-t border-slate-100">
-                                                                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-                                                                                                    Select Time Slot:
-                                                                                                </span>
-                                                                                                {doctorSlots.length > 0 ? (
-                                                                                                    <div className="flex flex-wrap gap-2">
-                                                                                                        {doctorSlots.slice(0, 4).map((slot, sIdx) => {
-                                                                                                            const isSlotActive = isSelected && selectedTime === slot;
-                                                                                                            return (
-                                                                                                                <button
-                                                                                                                    key={sIdx}
-                                                                                                                    type="button"
-                                                                                                                    onClick={(e) => {
-                                                                                                                        e.stopPropagation();
-                                                                                                                        setSelectedAdvisor(advisor);
-                                                                                                                        setAdvisorConfirmed(true);
-                                                                                                                        setSelectedTime(slot);
-                                                                                                                        setWizardStep(4);
-                                                                                                                    }}
-                                                                                                                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border ${
-                                                                                                                        isSlotActive
-                                                                                                                            ? 'bg-rose-400 text-white border-rose-500 shadow-sm scale-105'
-                                                                                                                            : 'bg-rose-50/60 hover:bg-rose-100 text-slate-800 border-rose-100 hover:border-rose-300'
-                                                                                                                    }`}
-                                                                                                                >
-                                                                                                                    {slot}
-                                                                                                                </button>
-                                                                                                            );
-                                                                                                        })}
+                                                                                            <div className="space-y-1 min-w-0 flex-1">
+                                                                                                <div className="flex items-center gap-2 flex-wrap">
+                                                                                                    <h4 className={`font-bold text-base sm:text-lg transition-colors truncate ${isSelected ? 'text-teal-950 font-extrabold' : 'text-slate-900 group-hover:text-teal-700'}`}>
+                                                                                                        {advisor.name}
+                                                                                                    </h4>
+                                                                                                    <span className="text-xs text-slate-500 font-semibold">
+                                                                                                        • {advisor.role || 'Consultant Psychologist'}
+                                                                                                    </span>
+                                                                                                </div>
+
+                                                                                                {advisor.bio && (
+                                                                                                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                                                                                        {advisor.bio}
+                                                                                                    </p>
+                                                                                                )}
+
+                                                                                                {advisor.specialties?.length > 0 && (
+                                                                                                    <div className="flex flex-wrap gap-1 pt-1">
+                                                                                                        {advisor.specialties.slice(0, 3).map((spec, i) => (
+                                                                                                            <span key={i} className="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-semibold rounded-md">
+                                                                                                                {spec}
+                                                                                                            </span>
+                                                                                                        ))}
+                                                                                                        {advisor.specialties.length > 3 && (
+                                                                                                            <span className="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-500 text-[10px] font-semibold rounded-md">
+                                                                                                                +{advisor.specialties.length - 3}
+                                                                                                            </span>
+                                                                                                        )}
                                                                                                     </div>
+                                                                                                )}
+
+                                                                                                {isAvailable ? (
+                                                                                                    <span className="text-xs text-emerald-700 font-bold mt-1 inline-flex items-center gap-1.5">
+                                                                                                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                                                                        {info.label}
+                                                                                                    </span>
                                                                                                 ) : (
-                                                                                                    <span className="text-[11px] text-slate-400 italic">
-                                                                                                        {info.label || 'No slots on this date'}
+                                                                                                    <span className="text-xs text-rose-500 font-medium mt-1 inline-block">
+                                                                                                        No upcoming slots
                                                                                                     </span>
                                                                                                 )}
                                                                                             </div>
                                                                                         </div>
+
+                                                                                        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 shrink-0 border-t sm:border-t-0 border-slate-100 pt-3 sm:pt-0">
+                                                                                            <div className="text-left sm:text-right">
+                                                                                                <span className="font-extrabold text-xl sm:text-2xl text-slate-900 block leading-none">
+                                                                                                    ₹{bookingDuration === 30 ? (advisor.halfSessionPrice || 499) : (advisor.price || 899)}
+                                                                                                </span>
+                                                                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 block">
+                                                                                                    {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
+                                                                                                </span>
+                                                                                            </div>
+
+                                                                                            {isSelected ? (
+                                                                                                <div className="px-4 py-2 bg-[#00e5ff] text-slate-950 text-xs font-extrabold rounded-xl transition-all flex items-center gap-1 shadow-xs">
+                                                                                                    <span>✓ Selected</span>
+                                                                                                </div>
+                                                                                            ) : isAvailable ? (
+                                                                                                <div className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl group-hover:bg-[#00e5ff] group-hover:text-slate-950 transition-all flex items-center gap-1 shadow-xs">
+                                                                                                    <span>Select</span>
+                                                                                                    <ArrowRight className="w-3.5 h-3.5" />
+                                                                                                </div>
+                                                                                            ) : (
+                                                                                                <span className="text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg">
+                                                                                                    Unavailable
+                                                                                                </span>
+                                                                                            )}
+                                                                                        </div>
                                                                                     </div>
-                                                                                );
-                                                                            })}
-
-                                                                            {totalPages > 1 && (
-                                                                                <div className="flex items-center justify-center gap-2 pt-3">
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        onClick={(e) => {
-                                                                                            e.stopPropagation();
-                                                                                            setAdvisorPage(p => Math.max(1, p - 1));
-                                                                                        }}
-                                                                                        disabled={advisorPage === 1}
-                                                                                        className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
-                                                                                    >
-                                                                                        ‹
-                                                                                    </button>
-                                                                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                                                                                        <button
-                                                                                            key={num}
-                                                                                            type="button"
-                                                                                            onClick={(e) => {
-                                                                                                e.stopPropagation();
-                                                                                                setAdvisorPage(num);
-                                                                                            }}
-                                                                                            className={`w-8 h-8 rounded-lg text-xs font-bold border flex items-center justify-center cursor-pointer ${advisorPage === num
-                                                                                                    ? 'bg-slate-900 text-[#00e5ff] border-slate-900 shadow-xs'
-                                                                                                    : 'bg-white text-slate-800 border-slate-200 hover:border-slate-400'
-                                                                                                }`}
-                                                                                        >
-                                                                                            {num}
-                                                                                        </button>
-                                                                                    ))}
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        onClick={(e) => {
-                                                                                            e.stopPropagation();
-                                                                                            setAdvisorPage(p => Math.min(totalPages, p + 1));
-                                                                                        }}
-                                                                                        disabled={advisorPage === totalPages}
-                                                                                        className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
-                                                                                    >
-                                                                                        ›
-                                                                                    </button>
                                                                                 </div>
-                                                                            )}
-                                                                        </>
-                                                                    );
-                                                                })()}
-                                                            </div>
+                                                                            );
+                                                                        })}
 
-                                                            {errors.advisor && <p className="text-xs text-rose-500 font-medium">{errors.advisor}</p>}
+                                                                        {totalPages > 1 && (
+                                                                            <div className="flex items-center justify-center gap-2 pt-3">
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        setAdvisorPage(p => Math.max(1, p - 1));
+                                                                                    }}
+                                                                                    disabled={advisorPage === 1}
+                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                                >
+                                                                                    ‹
+                                                                                </button>
+                                                                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                                                                                    <button
+                                                                                        key={num}
+                                                                                        type="button"
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            setAdvisorPage(num);
+                                                                                        }}
+                                                                                        className={`w-8 h-8 rounded-lg text-xs font-bold border flex items-center justify-center cursor-pointer ${advisorPage === num
+                                                                                                ? 'bg-slate-900 text-[#00e5ff] border-slate-900 shadow-xs'
+                                                                                                : 'bg-white text-slate-800 border-slate-200 hover:border-slate-400'
+                                                                                            }`}
+                                                                                    >
+                                                                                        {num}
+                                                                                    </button>
+                                                                                ))}
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        setAdvisorPage(p => Math.min(totalPages, p + 1));
+                                                                                    }}
+                                                                                    disabled={advisorPage === totalPages}
+                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                                >
+                                                                                    ›
+                                                                                </button>
+                                                                            </div>
+                                                                        )}
+                                                                    </React.Fragment>
+                                                                );
+                                                            })()}
+                                                        </div>
 
-                                                            <div className="pt-4 border-t border-slate-100 flex justify-end">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setWizardStep(2)}
-                                                                    disabled={!selectedAdvisor}
-                                                                    className="w-full sm:w-auto px-8 py-3.5 bg-slate-900 hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none disabled:opacity-50"
-                                                                >
-                                                                    Continue to Service Plan <ArrowRight className="w-4 h-4" />
-                                                                </button>
-                                                            </div>
+                                                        {errors.advisor && <p className="text-xs text-rose-500 font-medium">{errors.advisor}</p>}
+
+                                                        <div className="pt-6 border-t border-slate-100 flex justify-end">
+                                                            <button type="button" onClick={() => setWizardStep(2)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-8 py-3.5 bg-[#0f172a] hover:bg-black text-white font-bold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer border-none btn-booking-primary disabled:opacity-50">Continue to Service Plan <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
