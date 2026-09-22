@@ -1505,10 +1505,22 @@ If you have questions or would like to reapply with updated information, please 
   // Appointments management
   async createAdminBooking(req, res, next) {
     try {
-      const { clientName, whatsappNumber, email, psychologistId, date, time, sessionDetails } = req.body;
+      const { 
+        clientName, 
+        whatsappNumber, 
+        email, 
+        psychologistId, 
+        service, 
+        mode, 
+        fee, 
+        date, 
+        time, 
+        sessionDetails,
+        markAsPaid 
+      } = req.body;
       
       if (!clientName || !whatsappNumber || !email || !psychologistId || !date || !time) {
-        return res.status(400).json({ success: false, message: 'Missing required booking fields' });
+        return res.status(400).json({ success: false, message: 'Missing required booking fields (Client Name, Phone, Email, Psychologist, Date, Time)' });
       }
 
       const counsellor = await StorageService.findById('counsellors', psychologistId);
@@ -1522,17 +1534,94 @@ If you have questions or would like to reapply with updated information, please 
       
       let user = await StorageService.findOne('users', { $or: [{ email: normEmail }, { phone: normPhone }] });
       if (!user) {
+        const bcrypt = require('bcryptjs');
+        const tempPassword = Math.random().toString(36).slice(-8) + 'A1!';
+        const hashedPassword = await bcrypt.hash(tempPassword, 10);
         user = await StorageService.create('users', {
           name: clientName,
           email: normEmail,
           phone: normPhone,
+          password: hashedPassword,
           role: 'user',
           isVerified: true
         });
       }
 
-      // 899 Amount
-      const amountInPaise = 899 * 100; 
+      const bookingFee = Number(fee) > 0 ? Number(fee) : (counsellor.fee ? Number(counsellor.fee) : 899);
+      const bookingService = service || 'Individual Counselling';
+      const bookingMode = mode || 'ONLINE';
+
+      // If Admin marks session as PAID directly
+      if (markAsPaid) {
+        const { generateSessionMeetingLink, buildDirectRoomUrl } = require('../utils/calendarHelper');
+        let finalMeetLink = await generateSessionMeetingLink({
+          counsellor,
+          user,
+          date,
+          time,
+          service: bookingService
+        }).catch(() => buildDirectRoomUrl(`admin_direct_${Date.now()}`));
+
+        const settings = await StorageService.getGlobalSettings();
+        const commissionPercent = counsellor.commissionPercent !== undefined 
+          ? Number(counsellor.commissionPercent) 
+          : (settings.counsellorSplitPercent !== undefined ? Number(settings.counsellorSplitPercent) : 50);
+        const counsellorShareAmount = Number((bookingFee * (commissionPercent / 100)).toFixed(2));
+
+        const newAppointment = await StorageService.create('appointments', {
+          userId: user.id || user._id,
+          counsellorId: psychologistId,
+          service: bookingService,
+          mode: bookingMode,
+          date,
+          time,
+          status: 'CONFIRMED',
+          paymentStatus: 'PAID',
+          amountPaid: bookingFee,
+          baseFee: bookingFee,
+          clientName,
+          clientEmail: normEmail,
+          clientPhone: normPhone,
+          notes: sessionDetails || '',
+          meetLink: finalMeetLink,
+          commissionPercent,
+          counsellorShareAmount,
+          markedPaidBy: req.user ? req.user.id : 'Admin',
+          paidAt: new Date().toISOString(),
+          isAdminCreated: true
+        });
+
+        // Create active session
+        await StorageService.create('sessions', {
+          appointmentId: newAppointment.id || newAppointment._id,
+          userId: newAppointment.userId,
+          counsellorId: newAppointment.counsellorId,
+          date: newAppointment.date,
+          time: newAppointment.time,
+          duration: '1 Hour (60 Mins)',
+          mode: newAppointment.mode,
+          meetLink: finalMeetLink,
+          status: 'CONFIRMED',
+          notes: newAppointment.notes || ''
+        });
+
+        // Dispatch notifications (WhatsApp + Email)
+        await PaymentController.dispatchBookingNotifications(newAppointment, {}, normPhone).catch(err => {
+          console.error('[Admin Direct Booking Notification Error]:', err);
+        });
+
+        return res.status(201).json({
+          success: true,
+          isPaid: true,
+          message: 'Admin booking created and confirmed successfully! WhatsApp & Email alerts sent.',
+          data: {
+            appointment: newAppointment
+          }
+        });
+      }
+
+      // Online payment via Razorpay QR Code
+      const amountInPaise = bookingFee * 100; 
 
       const keyId = (process.env.RAZORPAY_KEY_ID || '').trim().replace(/^["']|["']$/g, '');
       const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim().replace(/^["']|["']$/g, '');
@@ -1548,8 +1637,8 @@ If you have questions or would like to reapply with updated information, please 
         counsellorId: psychologistId,
         date,
         time,
-        mode: 'ONLINE', 
-        service: 'counselling',
+        mode: bookingMode, 
+        service: bookingService,
         clientName: clientName,
         clientPhone: normPhone,
         clientEmail: normEmail,
@@ -1568,15 +1657,15 @@ If you have questions or would like to reapply with updated information, please 
       const newAppointment = await StorageService.create('appointments', {
         userId: user.id || user._id,
         counsellorId: psychologistId,
-        service: 'counselling',
-        mode: 'ONLINE',
+        service: bookingService,
+        mode: bookingMode,
         date,
         time,
         status: 'PENDING',
         paymentStatus: 'PENDING',
         razorpayOrderId: order.id,
-        amountPaid: 899,
-        baseFee: 899,
+        amountPaid: bookingFee,
+        baseFee: bookingFee,
         clientName,
         clientEmail: normEmail,
         clientPhone: normPhone,
@@ -1586,6 +1675,7 @@ If you have questions or would like to reapply with updated information, please 
 
       res.status(201).json({
         success: true,
+        isPaid: false,
         message: 'Admin booking initialized successfully',
         data: {
           appointment: newAppointment,
