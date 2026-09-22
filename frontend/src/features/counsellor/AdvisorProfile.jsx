@@ -191,84 +191,36 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     }
   }, [advisorId]);
 
-  // Construct Default & Combined Reviews List
-  const allReviewsList = useMemo(() => {
-    const defaults = [
-      {
-        id: 'rev-1',
-        author: 'Azunyan U. Wu',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-        date: 'Jun 3, 2025',
-        title: 'Amazingly Talented!',
-        content: 'Dr. Lector is incredibly insightful and compassionate. He helped me identify key behavioral patterns and gave me clear, practical coping strategies.',
-        rating: 5,
-        isVerified: true,
-        tags: ['Skill', 'Conversation', 'Bedside Manner'],
-        likes: 24,
-        dislikes: 1,
-        sentiment: 'Positive'
-      },
-      {
-        id: 'rev-2',
-        author: 'Rude and Selfish',
-        isNegativeSample: true,
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-        date: 'Jun 3, 2025',
-        title: 'Rude and Selfish',
-        content: 'Please do not consult with Dr lector again, he is very bad person.',
-        rating: 2,
-        isVerified: false,
-        tags: ['Rude', 'Arrogant'],
-        likes: 2,
-        dislikes: 15,
-        sentiment: 'Negative'
-      },
-      {
-        id: 'rev-3',
-        author: 'Azunyan U. Wu',
-        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
-        date: 'Jun 3, 2025',
-        title: 'NICE!',
-        content: 'VERY NICE!!!!!!!! 👍 High level of empathy and professional advice.',
-        rating: 4,
-        isVerified: true,
-        tags: ['Skill', 'Conversation'],
-        likes: 18,
-        dislikes: 0,
-        sentiment: 'Positive'
-      },
-      {
-        id: 'rev-4',
-        author: 'Kiran Kumar',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-        date: 'May 18, 2025',
-        title: 'Great Experience & Punctual',
-        content: 'Very polite, helpful, and on time. Helped me manage work pressure and exam anxiety effectively.',
-        rating: 5,
-        isVerified: true,
-        tags: ['Punctuality', 'Bedside Manner'],
-        likes: 14,
-        dislikes: 0,
-        sentiment: 'Positive'
+  const handleBack = () => {
+    if (typeof onBack === 'function') {
+      onBack();
+    } else if (typeof window !== 'undefined') {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else if (window.spaNavigate) {
+        window.spaNavigate('/');
+      } else {
+        window.location.href = '/';
       }
-    ];
+    }
+  };
 
-    const dbReviews = rawFeedbacks.map((f, i) => ({
+  // Construct Real Database Reviews List (No Dummy Data)
+  const allReviewsList = useMemo(() => {
+    return rawFeedbacks.map((f, i) => ({
       id: f._id || f.id || `db-rev-${i}`,
       author: f.userName || f.clientName || 'Verified Client',
-      avatar: '',
+      avatar: f.userAvatar || f.clientAvatar || '',
       date: f.createdAt ? new Date(f.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent',
-      title: f.rating >= 4 ? 'Highly Recommended!' : 'Consultation Review',
-      content: f.comment || f.notes || 'Provided compassionate counselling and structured guidance during our session.',
+      title: f.title || (Number(f.rating) >= 4 ? 'Verified Session Review' : 'Client Feedback'),
+      content: f.comment || f.notes || f.feedback || 'Provided compassionate counselling and structured guidance.',
       rating: Number(f.rating) || 5,
       isVerified: true,
-      tags: f.rating >= 4 ? ['Skill', 'Conversation'] : ['Conversation'],
-      likes: 5 + i,
-      dislikes: 0,
-      sentiment: f.rating >= 4 ? 'Positive' : 'Negative'
+      tags: Array.isArray(f.tags) && f.tags.length > 0 ? f.tags : (Number(f.rating) >= 4 ? ['Skill', 'Conversation'] : ['Conversation']),
+      likes: Number(f.likes) || 0,
+      dislikes: Number(f.dislikes) || 0,
+      sentiment: Number(f.rating) >= 4 ? 'Positive' : 'Negative'
     }));
-
-    return [...dbReviews, ...defaults];
   }, [rawFeedbacks]);
 
   // Filtered Reviews
@@ -292,9 +244,40 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     });
   }, [allReviewsList, searchQuery, selectedFilter]);
 
-  // Compute rating metrics
-  const totalReviewsCount = Math.max(advisor?.reviewCount || 0, allReviewsList.length, 243);
-  const avgRatingDisplay = advisor?.rating ? advisor.rating.toFixed(1) : '4.9';
+  // Compute rating metrics dynamically from real data
+  const totalReviewsCount = rawFeedbacks.length > 0 ? rawFeedbacks.length : (advisor?.reviewCount || 0);
+  const avgRatingDisplay = useMemo(() => {
+    if (rawFeedbacks.length === 0) return (advisor?.rating ? advisor.rating.toFixed(1) : '5.0');
+    const sum = rawFeedbacks.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
+    return (sum / rawFeedbacks.length).toFixed(1);
+  }, [rawFeedbacks, advisor?.rating]);
+
+  // Dynamic Rating Distribution (5-star, 4-star, 3-star, 2-star, 1-star)
+  const ratingDistribution = useMemo(() => {
+    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    if (rawFeedbacks.length === 0) {
+      // Default baseline distribution if no reviews in DB
+      return [
+        { stars: 5, percent: '100%', count: advisor?.reviewCount || 0 },
+        { stars: 4, percent: '0%', count: 0 },
+        { stars: 3, percent: '0%', count: 0 },
+        { stars: 2, percent: '0%', count: 0 },
+        { stars: 1, percent: '0%', count: 0 }
+      ];
+    }
+
+    rawFeedbacks.forEach(f => {
+      const r = Math.min(5, Math.max(1, Math.round(Number(f.rating) || 5)));
+      counts[r] = (counts[r] || 0) + 1;
+    });
+
+    const total = rawFeedbacks.length;
+    return [5, 4, 3, 2, 1].map(stars => {
+      const count = counts[stars] || 0;
+      const pct = Math.round((count / total) * 100);
+      return { stars, count, percent: `${pct}%` };
+    });
+  }, [rawFeedbacks, advisor?.reviewCount]);
 
   // Handles Like / Dislike / Report
   const handleLike = (id) => {
@@ -361,7 +344,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <p className="text-sm text-slate-500 max-w-sm mb-6">We could not retrieve the details for this counselor. Please check back or choose another expert from our directory.</p>
         <button
           type="button"
-          onClick={onBack}
+          onClick={handleBack}
           className="min-h-[44px] px-6 py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm cursor-pointer"
         >
           Go Back to Directory
@@ -399,7 +382,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-4 sm:pt-6 max-w-5xl mx-auto flex items-center justify-between">
           <button
             type="button"
-            onClick={onBack}
+            onClick={handleBack}
             className="w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
             title="Go Back"
           >
