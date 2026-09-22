@@ -409,10 +409,10 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
         </div>
 
         {/* Row 2: Role Filter Pills + Sort Dropdown */}
-        <div className="flex items-center justify-between gap-2 w-full">
+        <div className="flex items-center justify-between gap-3 w-full min-w-0">
 
-          {/* Category Role Filter Pills — smooth horizontal scroll on mobile */}
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 shrink max-w-[calc(100%-125px)] sm:max-w-none">
+          {/* Category Role Filter Pills — smooth horizontal scroll with min-w-0 */}
+          <div className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 pr-1">
             {[
               { id: 'ALL', label: 'All Roles' },
               { id: 'CONSULTANT', label: 'Consultant Psychologist' },
@@ -424,7 +424,7 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
                 onClick={() => { setSelectedRole(role.id); setCurrentIndex(0); }}
                 className={`px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-300 cursor-pointer ${selectedRole === role.id
                   ? 'bg-[#00e5ff] text-slate-950 shadow-md border border-[#00e5ff]'
-                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/90'
+                  : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/90'
                   }`}
               >
                 {role.label}
@@ -432,18 +432,18 @@ export default function TherapistSwipeSection({ onBookTherapist, navigateToSecti
             ))}
           </div>
 
-          {/* Sort Dropdown — right-aligned, compact */}
-          <div className="relative shrink-0">
+          {/* Sort Dropdown — right-aligned, shrink-0 */}
+          <div className="relative shrink-0 z-10">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] sm:text-xs font-semibold px-3 py-1.5 pr-7 rounded-xl border border-slate-200 outline-none cursor-pointer transition-all"
+              className="appearance-none bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] sm:text-xs font-semibold px-3 py-1.5 pr-7 rounded-xl border border-slate-200 outline-none cursor-pointer transition-all shadow-2xs"
             >
               <option value="RECOMMENDED">Recommended</option>
               <option value="FEE_LOW">Price: Low → High</option>
               <option value="FEE_HIGH">Price: High → Low</option>
             </select>
-            <ChevronDown className="w-3 h-3 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
       </div>

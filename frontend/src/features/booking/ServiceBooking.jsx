@@ -446,13 +446,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 bg-slate-900/40 backdrop-blur-sm overflow-hidden animate-backdrop-in">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/50 backdrop-blur-sm overflow-hidden animate-backdrop-in">
             <SEO
                 title="Book a Session | Psychological Counselling & Career Mentoring"
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
                 canonicalUrl="https://www.behold.co.in/booking"
             />
-            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full max-w-lg md:max-w-xl lg:max-w-2xl h-full sm:h-[90vh] bg-slate-50 sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-slate-900 text-left overscroll-contain animate-modal-in transition-all duration-300 scroll-smooth flex flex-col scroll-smooth-momentum gpu-layer`}>
+            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`relative w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[92vh] sm:h-[90vh] bg-slate-50 rounded-t-[28px] sm:rounded-2xl shadow-2xl overflow-y-auto overflow-x-hidden text-slate-900 text-left overscroll-contain animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 transition-all duration-300 scroll-smooth flex flex-col scroll-smooth-momentum gpu-layer pb-[env(safe-area-inset-bottom,16px)]`}>
+
+                {/* Mobile Drag Handle */}
+                <div className="w-12 h-1.5 bg-slate-300/80 rounded-full mx-auto mt-2.5 sm:hidden shrink-0" />
 
                 {/* Secure Payment & Booking Verification Overlay */}
                 {isProcessingPayment && (
