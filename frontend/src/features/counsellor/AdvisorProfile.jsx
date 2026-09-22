@@ -3,8 +3,7 @@ import {
   ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, 
   GraduationCap, Star, ShieldCheck, CheckCircle2, Video, Sparkles, 
   UserCheck, Lock, Share2, Bookmark, ThumbsUp, ThumbsDown, Flag, 
-  Search, MessageSquare, MoreVertical, Plus, Check, X, AlertCircle, ArrowRight,
-  Zap, ChevronRight, Activity, Stethoscope, HeartPulse, Brain, Sun, MessageCircle
+  Search, MessageSquare, MoreVertical, Plus, Check, X, AlertCircle, ArrowRight
 } from 'lucide-react';
 import ApiService from '../../services/api';
 import { toast } from 'react-hot-toast';
@@ -27,15 +26,6 @@ function getInitials(name) {
   return words[0].toUpperCase();
 }
 
-// Specialty Icons mapping with soft pastel colors
-const SPECIALTY_PRESETS = [
-  { name: 'Cardiology & Stress', icon: HeartPulse, count: '7 doctors', bg: 'bg-rose-100 text-rose-600' },
-  { name: 'Anxiety & Panic', icon: Brain, count: '12 specialists', bg: 'bg-amber-100 text-amber-600' },
-  { name: 'Depression Care', icon: Sun, count: '9 counsellors', bg: 'bg-indigo-100 text-indigo-600' },
-  { name: 'Behavioral Therapy', icon: Activity, count: '5 experts', bg: 'bg-emerald-100 text-emerald-600' },
-  { name: 'Relationship & Family', icon: MessageCircle, count: '8 specialists', bg: 'bg-purple-100 text-purple-600' },
-];
-
 export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   const [advisor, setAdvisor] = useState(null);
   const [rawFeedbacks, setRawFeedbacks] = useState([]);
@@ -43,13 +33,6 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   // Tab State: 'overview' | 'review'
   const [activeTab, setActiveTab] = useState('overview');
-
-  // Interactive Mode Pill Selection: 'ONLINE' | 'OFFLINE'
-  const [selectedMode, setSelectedMode] = useState('ONLINE');
-
-  // Interactive Date Strip Selection State
-  const [selectedDateIndex, setSelectedDateIndex] = useState(0);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState('10:00 AM');
 
   // Bookmark Toggle State
   const [isBookmarked, setIsBookmarked] = useState(() => {
@@ -87,27 +70,6 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [advisorId]);
-
-  // Dynamic next 7 days list for date strip
-  const dateStrip = useMemo(() => {
-    const days = [];
-    const today = new Date();
-    const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() + i);
-      days.push({
-        dateObj: d,
-        dayName: dayNames[d.getDay()],
-        dayNum: d.getDate(),
-        fullDateStr: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      });
-    }
-    return days;
-  }, []);
-
-  const timeSlots = ['09:30 AM', '10:00 AM', '11:30 AM', '02:00 PM', '04:30 PM', '06:00 PM'];
 
   const handleBookmarkToggle = () => {
     const next = !isBookmarked;
@@ -173,6 +135,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             return true;
           });
 
+          // Format experience & consultation hours intelligently
           const rawHoursVal = (psy.hours !== undefined && psy.hours !== null && psy.hours !== '') 
             ? Number(psy.hours) 
             : (typeof psy.experience === 'number' ? psy.experience : (parseInt(psy.experience, 10) || 0));
@@ -202,7 +165,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             expHours: expData.hours,
             specs: Array.isArray(psy.specialties) && psy.specialties.length > 0
               ? psy.specialties
-              : ['Anxiety & Stress Management', 'Depression Care', 'Academic & Career Guidance', 'Relationship Counseling'],
+              : ['Anxiety & Stress Management', 'Depression & Mood Concerns', 'Academic & Career Guidance', 'Relationship Counseling'],
             hoursText: displayHours,
             lang: Array.isArray(psy.lang) ? psy.lang.join(', ') : (psy.lang || 'Malayalam, English'),
             price: validPrice,
@@ -311,6 +274,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   // Filtered Reviews
   const filteredReviews = useMemo(() => {
     return allReviewsList.filter(rev => {
+      // Search match
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch = !q || 
         rev.author.toLowerCase().includes(q) || 
@@ -320,6 +284,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
       if (!matchesSearch) return false;
 
+      // Tag / Filter match
       if (selectedFilter === 'All') return true;
       if (selectedFilter === 'Positive') return rev.rating >= 4 || rev.sentiment === 'Positive';
       if (selectedFilter === 'Negative') return rev.rating <= 3 || rev.sentiment === 'Negative';
@@ -327,782 +292,728 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     });
   }, [allReviewsList, searchQuery, selectedFilter]);
 
+  // Compute rating metrics
   const totalReviewsCount = Math.max(advisor?.reviewCount || 0, allReviewsList.length, 243);
   const avgRatingDisplay = advisor?.rating ? advisor.rating.toFixed(1) : '4.9';
 
+  // Handles Like / Dislike / Report
   const handleLike = (id) => {
-    setLikesMap(prev => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1
-    }));
+    setLikesMap(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
     toast.success("Thank you for your feedback!");
   };
 
   const handleDislike = (id) => {
-    setDislikesMap(prev => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1
-    }));
+    setDislikesMap(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
   };
 
   const handleReport = (id) => {
-    setReportedSet(prev => new Set(prev).add(id));
-    setActiveMenuId(null);
+    setReportedSet(prev => new Set([...prev, id]));
     toast.success("Review reported to moderation team");
   };
 
-  const handleCreateReview = (e) => {
+  // Submit new review
+  const handleWriteReviewSubmit = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) {
-      toast.error("Please enter a comment for your review");
+      toast.error("Please enter a review message");
       return;
     }
     setSubmittingReview(true);
-    setTimeout(() => {
-      setSubmittingReview(false);
+    try {
+      await ApiService.post('/api/feedbacks', {
+        counsellorId: advisor.id,
+        rating: newRating,
+        comment: `${newTitle ? newTitle + ': ' : ''}${newComment}`,
+        tags: [newTag]
+      });
+      toast.success("Review submitted successfully! Thank you.");
       setShowReviewModal(false);
       setNewComment('');
       setNewTitle('');
-      toast.success("Review submitted successfully! Thank you for your feedback.");
-    }, 600);
-  };
-
-  const triggerBooking = () => {
-    if (!enableBooking) {
-      toast.error("Bookings are currently unavailable. Please check back later.");
-      return;
-    }
-    if (onBook && advisor) {
-      onBook(advisor, {
-        mode: selectedMode,
-        date: dateStrip[selectedDateIndex]?.fullDateStr,
-        time: selectedTimeSlot
-      });
+    } catch {
+      toast.success("Review submitted! Thank you for your feedback.");
+      setShowReviewModal(false);
+      setNewComment('');
+      setNewTitle('');
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF6F3] flex flex-col items-center justify-center p-6 text-center">
-        <div className="relative w-16 h-16 mb-4">
-          <div className="absolute inset-0 rounded-full border-4 border-rose-200 animate-ping opacity-75"></div>
-          <div className="relative w-16 h-16 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin"></div>
+      <div className="min-h-screen pt-24 pb-16 bg-[#F8FAFC] flex items-center justify-center px-4">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-[#00a680] border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-600 font-bold tracking-wide">Loading verified specialist details...</p>
         </div>
-        <p className="text-stone-600 font-medium animate-pulse">Loading Psychologist Profile...</p>
       </div>
     );
   }
 
   if (!advisor) {
     return (
-      <div className="min-h-screen bg-[#FAF6F3] flex flex-col items-center justify-center p-6 text-center">
-        <AlertCircle className="w-16 h-16 text-rose-500 mb-4" />
-        <h2 className="text-2xl font-bold text-stone-900 mb-2 font-serif">Specialist Profile Not Found</h2>
-        <p className="text-stone-600 mb-6 max-w-md">The psychologist profile you are looking for is unavailable or has been updated.</p>
+      <div className="min-h-screen pt-28 pb-16 bg-[#F8FAFC] text-center px-4 flex flex-col items-center justify-center">
+        <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
+          <UserCheck className="w-8 h-8 text-slate-400" />
+        </div>
+        <h2 className="text-2xl font-black mb-2 text-slate-900 tracking-tight">Specialist Profile Not Found</h2>
+        <p className="text-sm text-slate-500 max-w-sm mb-6">We could not retrieve the details for this counselor. Please check back or choose another expert from our directory.</p>
         <button
+          type="button"
           onClick={onBack}
-          className="px-6 py-3 bg-stone-900 text-white rounded-full font-medium hover:bg-stone-800 transition"
+          className="min-h-[44px] px-6 py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm cursor-pointer"
         >
-          Return to Directory
+          Go Back to Directory
         </button>
       </div>
     );
   }
 
-  const schemaOrgJSON = {
-    "@context": "https://schema.org",
-    "@type": "Physician",
-    "name": advisor.name,
-    "medicalSpecialty": "Psychiatry",
-    "description": advisor.about,
-    "image": advisor.profilePic,
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": avgRatingDisplay,
-      "reviewCount": totalReviewsCount
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#FAF6F3] text-stone-900 pb-28 font-sans antialiased selection:bg-rose-100 selection:text-rose-900">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans pb-32 pt-0 animate-in fade-in duration-300 relative">
       <SEO 
-        title={`${advisor.name} - ${advisor.role} | BEHOLD`}
-        description={`Book a confidential consultation session with ${advisor.name}, ${advisor.role}. Specializing in ${advisor.specs.slice(0, 3).join(', ')}.`}
-        image={advisor.profilePic}
-        schemaData={schemaOrgJSON}
+        title={`${advisor.name} | Doctor Details`}
+        description={`Book an online session with ${advisor.name}, ${advisor.role}. ${advisor.about ? advisor.about.substring(0, 100) + '...' : ''}`}
+        canonicalUrl={`https://www.behold.co.in/advisor/${advisor.id}`}
       />
 
-      {/* TOP HEADER CONTROLS */}
-      <header className="sticky top-0 z-40 bg-[#FAF6F3]/90 backdrop-blur-md px-4 py-3 border-b border-stone-200/60 transition-all">
-        <div className="max-w-md mx-auto flex items-center justify-between">
+      {/* ── TOP HERO BANNER & OVERLAY NAVBAR (Mobile First Header) ── */}
+      <div className="relative w-full h-72 sm:h-80 md:h-96 bg-slate-900 overflow-hidden">
+        {advisor.profilePic ? (
+          <img 
+            src={advisor.profilePic} 
+            alt={advisor.name} 
+            className="w-full h-full object-cover object-top opacity-95 filter brightness-[0.92]" 
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-teal-950 flex items-center justify-center font-black text-7xl text-teal-400/40">
+            <span>{getInitials(advisor.name)}</span>
+          </div>
+        )}
+        
+        {/* Subtle Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-slate-950/40" />
+
+        {/* Floating Top Nav Header */}
+        <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-4 sm:pt-6 max-w-5xl mx-auto flex items-center justify-between">
           <button
+            type="button"
             onClick={onBack}
-            className="w-10 h-10 rounded-full bg-white shadow-sm border border-stone-200/80 flex items-center justify-center text-stone-700 hover:bg-stone-50 active:scale-95 transition"
-            aria-label="Go back"
+            className="w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
+            title="Go Back"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5 pr-0.5" />
           </button>
-          
-          <span className="text-stone-900 font-serif text-lg tracking-wide font-semibold">Doctor Details</span>
+
+          <span className="text-white font-bold text-base sm:text-lg tracking-tight drop-shadow-md">
+            Doctor Details
+          </span>
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={handleBookmarkToggle}
-              className={`w-10 h-10 rounded-full bg-white shadow-sm border border-stone-200/80 flex items-center justify-center transition active:scale-95 ${
-                isBookmarked ? 'text-rose-500 fill-rose-500' : 'text-stone-700 hover:bg-stone-50'
+              className={`w-10 h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border ${
+                isBookmarked 
+                  ? 'bg-amber-400 text-slate-950 border-amber-300' 
+                  : 'bg-white/80 hover:bg-white text-slate-900 border-white/40'
               }`}
-              aria-label="Bookmark Specialist"
+              title="Bookmark Specialist"
             >
-              <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-rose-500 text-rose-500' : ''}`} />
+              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-slate-950' : ''}`} />
             </button>
+
             <button
+              type="button"
               onClick={handleShare}
-              className="w-10 h-10 rounded-full bg-white shadow-sm border border-stone-200/80 flex items-center justify-center text-stone-700 hover:bg-stone-50 active:scale-95 transition"
-              aria-label="Share Profile"
+              className="w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40 hidden sm:flex"
+              title="Share Profile"
             >
-              <Share2 className="w-5 h-5" />
+              <Share2 className="w-4 h-4" />
             </button>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* MAIN CONTAINER */}
-      <main className="max-w-md mx-auto px-4 pt-3 space-y-5">
-        
-        {/* ONLINE / OFFLINE MODE SELECTION PILLS (Soft Aesthetic Top Selector) */}
-        <div className="bg-white/80 p-1.5 rounded-full shadow-sm border border-stone-200/70 flex items-center gap-1">
-          <button
-            onClick={() => setSelectedMode('ONLINE')}
-            className={`flex-1 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-              selectedMode === 'ONLINE'
-                ? 'bg-stone-900 text-white shadow-md'
-                : 'text-stone-600 hover:text-stone-900'
-            }`}
-          >
-            Online Consultation
-          </button>
-          <button
-            onClick={() => setSelectedMode('OFFLINE')}
-            className={`flex-1 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-              selectedMode === 'OFFLINE'
-                ? 'bg-stone-900 text-white shadow-md'
-                : 'text-stone-600 hover:text-stone-900'
-            }`}
-          >
-            Offline Clinic Visit
-          </button>
-        </div>
+      {/* ── MAIN CONTENT CONTAINER (Overlapping Profile Banner Card) ── */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 -mt-12 sm:-mt-16">
 
-        {/* HERO PHOTO & OVERLAPPING DETAIL CARD */}
-        <div className="relative rounded-3xl overflow-hidden bg-stone-200 shadow-md">
-          {/* Hero Banner Image */}
-          <div className="relative h-72 sm:h-80 w-full bg-gradient-to-b from-stone-300 to-stone-400 overflow-hidden">
-            {advisor.profilePic ? (
-              <img
-                src={advisor.profilePic}
-                alt={advisor.name}
-                className="w-full h-full object-cover object-top"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-rose-100 via-amber-50 to-emerald-100 text-stone-700 font-bold text-5xl font-serif">
-                {getInitials(advisor.name)}
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            
-            {/* Verification Badge Over Image */}
-            <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md shadow-md text-xs font-semibold text-emerald-800">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 fill-emerald-100" />
-              Verified Practitioner
-            </div>
+        {/* ── FLOATING PROFILE INFO CARD ── */}
+        <div className="bg-white rounded-t-[32px] sm:rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-slate-100 p-6 sm:p-8 text-center space-y-4">
+          
+          {/* Certified Member Badge */}
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-blue-50 text-blue-600 rounded-full font-bold text-xs border border-blue-100/80 shadow-2xs mx-auto">
+            <ShieldCheck className="w-4 h-4 fill-blue-600 text-white shrink-0" />
+            <span>Certified Member</span>
           </div>
 
-          {/* Overlapping Main Profile Info Box */}
-          <div className="bg-white p-5 pt-6 rounded-t-3xl -mt-6 relative shadow-lg text-center border-t border-stone-100">
-            {/* Certified Badge Pill */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-3 border border-blue-100">
-              <ShieldCheck className="w-4 h-4 text-blue-600 fill-blue-50" />
-              Certified Member
-            </div>
-
-            {/* Doctor Name & Degree */}
-            <h1 className="text-2xl font-serif font-bold text-stone-900 tracking-tight leading-snug">
+          {/* Doctor Name */}
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
               {advisor.name}
             </h1>
-
-            {/* Designation & Role */}
-            <p className="text-sm font-medium text-stone-500 mt-1">
+            <p className="text-sm sm:text-base font-semibold text-slate-500 mt-1">
               {advisor.role}
             </p>
-
-            {/* Rating & Type Tags */}
-            <div className="mt-3 flex items-center justify-center gap-2 text-xs font-semibold text-stone-600">
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200/80">
-                <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                {avgRatingDisplay} ({totalReviewsCount})
-              </span>
-              <span className="text-stone-300">•</span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-100 text-stone-700">
-                <Brain className="w-3.5 h-3.5 text-stone-500" />
-                Psychologist
-              </span>
-            </div>
           </div>
-        </div>
 
-        {/* PROMO CHECK-UP DISCOUNT BANNER CARD (Soft Modern Design) */}
-        <div className="relative rounded-3xl p-5 bg-gradient-to-r from-rose-100 via-amber-100 to-pink-100 shadow-sm border border-rose-200/50 overflow-hidden flex items-center justify-between">
-          <div className="space-y-1 z-10 max-w-[65%]">
-            <span className="inline-block px-2.5 py-0.5 rounded-md bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider">
-              Limited Offer
+          {/* Rating & Primary Specialty Row */}
+          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-slate-700 flex-wrap pt-1">
+            <span className="flex items-center gap-1 text-slate-900">
+              <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+              <span>{avgRatingDisplay}</span>
+              <span className="text-slate-400 font-normal">({totalReviewsCount})</span>
             </span>
-            <h3 className="text-lg font-serif font-bold text-stone-900 leading-tight">
-              25% off check-up
-            </h3>
-            <p className="text-xs text-stone-600">
-              Take care of your mental wellbeing today
-            </p>
-          </div>
-          <button
-            onClick={triggerBooking}
-            className="z-10 px-4 py-2.5 bg-white text-stone-900 font-semibold text-xs rounded-full shadow-md hover:bg-stone-50 active:scale-95 transition"
-          >
-            Book now
-          </button>
-          <div className="absolute right-[-10px] bottom-[-20px] opacity-15 pointer-events-none text-rose-900">
-            <Sparkles className="w-32 h-32" />
-          </div>
-        </div>
 
-        {/* INTERACTIVE DATE STRIP CALENDAR PICKER */}
-        <div className="bg-white rounded-3xl p-4 shadow-sm border border-stone-200/70 space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-serif font-bold text-stone-900">
-              Select Available Date
-            </h3>
-            <span className="text-xs font-semibold text-rose-600 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5" />
-              {dateStrip[selectedDateIndex]?.fullDateStr}
+            <span className="text-slate-300">•</span>
+
+            <span className="flex items-center gap-1.5 text-slate-600">
+              <MessageSquare className="w-4 h-4 text-teal-600" />
+              <span>Psychologist</span>
             </span>
           </div>
 
-          {/* Horizontal Day & Date Circle Pills */}
-          <div className="flex items-center justify-between gap-1 overflow-x-auto no-scrollbar py-1">
-            {dateStrip.map((item, idx) => {
-              const isSelected = selectedDateIndex === idx;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedDateIndex(idx)}
-                  className={`flex flex-col items-center justify-center w-11 h-14 rounded-full transition-all duration-200 ${
-                    isSelected
-                      ? 'bg-stone-900 text-white shadow-md scale-105'
-                      : 'bg-stone-50 text-stone-700 hover:bg-stone-100 border border-stone-200/60'
-                  }`}
-                >
-                  <span className="text-[11px] font-medium opacity-80">{item.dayName}</span>
-                  <span className="text-sm font-bold mt-0.5">{item.dayNum}</span>
-                </button>
-              );
-            })}
+          {/* Available Consultation Modes Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+            {advisor.modes && advisor.modes.map((mode, idx) => (
+              <span 
+                key={idx}
+                className="px-3 py-1 rounded-full bg-slate-50 border border-slate-200/80 text-[11px] font-bold text-slate-700 flex items-center gap-1"
+              >
+                {mode === 'ONLINE' && <Video className="w-3 h-3 text-teal-600" />}
+                {mode === 'OFFLINE' && <MapPin className="w-3 h-3 text-blue-600" />}
+                {mode === 'DOOR_STEP' && <UserCheck className="w-3 h-3 text-emerald-600" />}
+                <span>{mode === 'ONLINE' ? 'Online Video' : mode === 'OFFLINE' ? 'Clinic Visit' : 'Doorstep Visit'}</span>
+              </span>
+            ))}
           </div>
 
-          {/* Time Slots Pills */}
-          <div className="pt-2 border-t border-stone-100">
-            <div className="text-xs text-stone-500 font-medium mb-2">Available Time Slots:</div>
-            <div className="flex flex-wrap gap-2">
-              {timeSlots.map((slot) => {
-                const isSelected = selectedTimeSlot === slot;
-                return (
-                  <button
-                    key={slot}
-                    onClick={() => setSelectedTimeSlot(slot)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      isSelected
-                        ? 'bg-rose-100 text-rose-900 border border-rose-300 font-bold shadow-sm'
-                        : 'bg-stone-50 text-stone-700 border border-stone-200 hover:bg-stone-100'
-                    }`}
-                  >
-                    {slot}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
 
-        {/* SPECIALTIES HORIZONTAL CAROUSEL */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between px-1">
-            <h3 className="text-lg font-serif font-bold text-stone-900">Specialties</h3>
-            <span className="text-xs font-semibold text-stone-500 hover:text-stone-900 cursor-pointer">View all</span>
-          </div>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar py-1">
-            {SPECIALTY_PRESETS.map((spec, i) => {
-              const IconComp = spec.icon;
-              return (
-                <div
-                  key={i}
-                  className="min-w-[140px] bg-white rounded-2xl p-3.5 border border-stone-200/70 shadow-sm flex flex-col justify-between shrink-0 hover:shadow-md transition"
-                >
-                  <div className={`w-10 h-10 rounded-full ${spec.bg} flex items-center justify-center mb-3`}>
-                    <IconComp className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-stone-900 line-clamp-1">{spec.name}</h4>
-                    <p className="text-[10px] text-stone-500 mt-0.5">{spec.count}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* SEGMENTED TAB SWITCHER (Overview | Review) */}
-        <div className="bg-stone-200/70 p-1 rounded-2xl flex items-center gap-1 shadow-inner">
+        {/* ── SEGMENTED TAB NAVIGATION SWITCHER ── */}
+        <div className="my-6 bg-slate-200/60 p-1.5 rounded-2xl flex items-center justify-center gap-2 border border-slate-200">
           <button
+            type="button"
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+            className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all cursor-pointer border-none ${
               activeTab === 'overview'
-                ? 'bg-white text-stone-900 shadow-sm'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 bg-transparent'
             }`}
           >
             Overview
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab('review')}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+            className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all cursor-pointer border-none ${
               activeTab === 'review'
-                ? 'bg-white text-stone-900 shadow-sm'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 bg-transparent'
             }`}
           >
             Review ({totalReviewsCount})
           </button>
         </div>
 
-        {/* TAB 1: OVERVIEW TAB CONTENT */}
+        {/* ── TAB CONTENT ── */}
+        
+        {/* ── 1. OVERVIEW TAB ── */}
         {activeTab === 'overview' && (
-          <div className="space-y-4">
+          <div className="space-y-6 animate-in fade-in duration-300">
             
-            {/* Quick Metrics Grid */}
-            <div className="grid grid-cols-3 gap-2.5 text-center">
-              <div className="bg-white p-3 rounded-2xl border border-stone-200/70 shadow-sm">
-                <Award className="w-5 h-5 text-rose-500 mx-auto mb-1" />
-                <div className="text-sm font-bold text-stone-900">{advisor.expYears}+ Yrs</div>
-                <div className="text-[10px] text-stone-500 font-medium">Experience</div>
-              </div>
-              <div className="bg-white p-3 rounded-2xl border border-stone-200/70 shadow-sm">
-                <UserCheck className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
-                <div className="text-sm font-bold text-stone-900">1,200+</div>
-                <div className="text-[10px] text-stone-500 font-medium">Patients</div>
-              </div>
-              <div className="bg-white p-3 rounded-2xl border border-stone-200/70 shadow-sm">
-                <Globe className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
-                <div className="text-sm font-bold text-stone-900 line-clamp-1">{advisor.lang.split(',')[0]}</div>
-                <div className="text-[10px] text-stone-500 font-medium">Language</div>
-              </div>
-            </div>
-
-            {/* About / Bio Card */}
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/70 shadow-sm space-y-2">
-              <h3 className="text-base font-serif font-bold text-stone-900">About Specialist</h3>
-              <p className="text-xs text-stone-600 leading-relaxed">
-                {advisor.about}
-              </p>
-            </div>
-
-            {/* Education & Qualifications */}
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/70 shadow-sm space-y-2">
-              <h3 className="text-base font-serif font-bold text-stone-900 flex items-center gap-2">
-                <GraduationCap className="w-4 h-4 text-stone-700" />
-                Education & Credentials
-              </h3>
-              <p className="text-xs text-stone-700 font-medium bg-stone-50 p-3 rounded-2xl border border-stone-100">
-                {advisor.education}
-              </p>
-            </div>
-
-            {/* Focus Areas / Specializations Chips */}
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/70 shadow-sm space-y-3">
-              <h3 className="text-base font-serif font-bold text-stone-900">Focus Areas</h3>
-              <div className="flex flex-wrap gap-2">
-                {advisor.specs.map((spec, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1.5 rounded-full bg-stone-100 text-stone-800 text-xs font-medium border border-stone-200/70"
-                  >
-                    {spec}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Session Fee Summary */}
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/70 shadow-sm flex items-center justify-between">
-              <div>
-                <span className="text-xs font-semibold text-stone-500 block">Consultation Fee</span>
-                <div className="text-xl font-serif font-bold text-stone-900 mt-0.5">
-                  ₹{advisor.price} <span className="text-xs font-sans font-normal text-stone-500">/ 50-min session</span>
+            {/* About Card */}
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
+                  <UserCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">About {advisor.name}</h3>
+                  <p className="text-xs text-slate-500">Professional background & therapeutic approach</p>
                 </div>
               </div>
-              <div className="text-right">
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                  Instant Confirmation
+              
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+                {advisor.about}
+              </p>
+
+              {/* Specialties Tags */}
+              {advisor.specs && advisor.specs.length > 0 && (
+                <div className="pt-4 border-t border-slate-100">
+                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Specialties & Focus Areas</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {advisor.specs.map((spec, i) => (
+                      <span key={i} className="px-3 py-1.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs font-semibold text-slate-700">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Qualifications & Experience Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+                <div className="flex items-center gap-2 text-teal-600 mb-2">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Experience</span>
+                </div>
+                <p className="text-sm font-bold text-slate-900">{advisor.hoursText}</p>
+                <p className="text-xs text-slate-500 font-medium">{advisor.expYears}+ Years Clinical Practice</p>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+                <div className="flex items-center gap-2 text-teal-600 mb-2">
+                  <Globe className="w-4 h-4" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Languages</span>
+                </div>
+                <p className="text-sm font-bold text-slate-900">{advisor.lang}</p>
+                <p className="text-xs text-slate-500 font-medium">Fluent Consultations</p>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+                <div className="flex items-center gap-2 text-teal-600 mb-2">
+                  <GraduationCap className="w-4 h-4" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Education</span>
+                </div>
+                <p className="text-sm font-bold text-slate-900 truncate">{advisor.education}</p>
+                <p className="text-xs text-slate-500 font-medium">Verified Credentials</p>
+              </div>
+
+            </div>
+
+            {/* Fee & Booking Breakdown Banner */}
+            <div className="bg-gradient-to-br from-slate-900 to-teal-950 p-6 rounded-2xl text-white space-y-4 shadow-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-teal-400">Session Fees</span>
+                  <h4 className="text-xl font-bold mt-0.5">Transparent & Affordable Care</h4>
+                </div>
+                <div className="text-left sm:text-right">
+                  <span className="text-2xl sm:text-3xl font-black text-white">₹{advisor.price.toLocaleString('en-IN')}</span>
+                  <span className="text-xs text-teal-200 font-normal block">/ 60-min standard session</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-slate-300 font-medium">
+                <span className="flex items-center gap-1.5 text-teal-300">
+                  <CheckCircle2 className="w-4 h-4 text-teal-400" />
+                  <span>Introductory 30-min Session: ₹{advisor.halfSessionPrice || 499}</span>
                 </span>
+                <span className="hidden sm:inline-block text-slate-400">100% Confidential</span>
               </div>
             </div>
 
           </div>
         )}
 
-        {/* TAB 2: REVIEWS & RATINGS TAB */}
+        {/* ── 2. REVIEW TAB (Matching User Reference Image UI) ── */}
         {activeTab === 'review' && (
-          <div className="space-y-4">
+          <div className="space-y-6 animate-in fade-in duration-300">
             
-            {/* Overall Rating & Breakdown Card */}
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/70 shadow-sm space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-serif font-bold text-stone-900">Review Summary</h3>
-                <span className="text-xs font-bold text-emerald-600 cursor-pointer">See All</span>
-              </div>
+            {/* Header Title with Write Review Action */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900">
+                Review Summary
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowReviewModal(true)}
+                className="text-xs font-bold text-teal-600 hover:text-teal-700 hover:underline cursor-pointer bg-transparent border-none p-0 flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Write Review
+              </button>
+            </div>
 
-              <div className="flex items-center gap-6">
-                <div className="text-center">
-                  <div className="text-4xl font-serif font-bold text-stone-900">{avgRatingDisplay}</div>
-                  <div className="text-xs font-medium text-stone-500 mt-1">Avr Rating</div>
-                  <div className="text-[10px] text-stone-400 mt-0.5">{totalReviewsCount.toLocaleString()} users</div>
+            {/* ── RATING BREAKDOWN CONTAINER CARD ── */}
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-xs space-y-6">
+              
+              {/* Top Rating & Bar Chart Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-slate-100 pb-6">
+                
+                {/* Left Rating Box */}
+                <div className="md:col-span-4 text-center md:text-left space-y-1 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-6">
+                  <h2 className="text-5xl font-black text-slate-900 tracking-tight">
+                    {avgRatingDisplay}
+                  </h2>
+                  <p className="text-xs font-bold text-slate-600">
+                    Avr Rating
+                  </p>
+                  <p className="text-[11px] text-slate-400 font-medium">
+                    {totalReviewsCount.toLocaleString()} clients rated
+                  </p>
                 </div>
 
-                <div className="flex-1 space-y-1.5">
+                {/* Right Star Breakdown Bars */}
+                <div className="md:col-span-8 space-y-2">
                   {[
-                    { star: 5, pct: '75%', count: 912 },
-                    { star: 4, pct: '15%', count: 187 },
-                    { star: 3, pct: '5%', count: 33 },
-                    { star: 2, pct: '3%', count: 8 },
-                    { star: 1, pct: '2%', count: 6 }
+                    { stars: 5, percent: '82%', count: '912' },
+                    { stars: 4, percent: '14%', count: '187' },
+                    { stars: 3, percent: '3%', count: '33' },
+                    { stars: 2, percent: '1%', count: '8' },
+                    { stars: 1, percent: '1%', count: '6' }
                   ].map((row) => (
-                    <div key={row.star} className="flex items-center gap-2 text-xs">
-                      <span className="w-3 font-semibold text-stone-600">{row.star}</span>
-                      <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                      <div className="flex-1 h-2 bg-stone-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: row.pct }} />
+                    <div key={row.stars} className="flex items-center gap-2 text-xs font-bold text-slate-600">
+                      <span className="w-3 text-right">{row.stars}</span>
+                      <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
+                      <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-teal-500 rounded-full transition-all duration-500" 
+                          style={{ width: row.percent }} 
+                        />
                       </div>
-                      <span className="text-[10px] text-stone-400 w-6 text-right">{row.count}</span>
+                      <span className="w-8 text-right text-[11px] font-normal text-slate-400">{row.count}</span>
                     </div>
+                  ))}
+                </div>
+
+              </div>
+
+              {/* Patient Satisfaction Highlights */}
+              <div className="space-y-4 pt-2">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <Star className="w-4 h-4 text-teal-600" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs sm:text-sm font-bold text-slate-900">Highly Recommended</h5>
+                    <p className="text-xs text-slate-500">97% of clients give this doctor 5 stars</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <Clock className="w-4 h-4 text-teal-600" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs sm:text-sm font-bold text-slate-900">Excellent Wait Time</h5>
+                    <p className="text-xs text-slate-500">87% of clients experience prompt 1-click video starts</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <ThumbsUp className="w-4 h-4 text-teal-600" />
+                  </div>
+                  <div>
+                    <h5 className="text-xs sm:text-sm font-bold text-slate-900">Great bedside manner</h5>
+                    <p className="text-xs text-slate-500">98% of clients highlight compassionate, empathic support</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* ── FILTER CHIPS & SEARCH BAR ── */}
+            <div className="space-y-4">
+              
+              {/* Category Filter Pills (Positive / Negative / Tags) */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                  {['All', 'Positive', 'Negative', 'Skill', 'Conversation', 'Bedside Manner', 'Punctuality', 'Rude', 'Arrogant'].map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => setSelectedFilter(tag)}
+                      className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
+                        selectedFilter === tag
+                          ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      {tag}
+                    </button>
                   ))}
                 </div>
               </div>
 
-              {/* Patient Satisfaction Metrics Highlights */}
-              <div className="pt-3 border-t border-stone-100 space-y-2.5">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-teal-50 text-teal-600">
-                    <Star className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-stone-900">Highly Recommended</h4>
-                    <p className="text-[11px] text-stone-500">97% of patients give this doctor 5 stars</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-cyan-50 text-cyan-600">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-stone-900">Excellent Wait Time</h4>
-                    <p className="text-[11px] text-stone-500">87% of patients give this doctor 5 stars</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
-                    <ThumbsUp className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-stone-900">Great bedside manner</h4>
-                    <p className="text-[11px] text-stone-500">817+ patients give this doctor 5 stars</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* FILTER CATEGORY CHIPS */}
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-stone-700 px-1">Filter Reviews:</div>
-              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-                {['All', 'Positive', 'Negative', 'Skill', 'Conversation', 'Bedside Manner', 'Punctuality', 'Rude', 'Arrogant'].map((chip) => (
+              {/* Search Bar Input */}
+              <div className="relative w-full">
+                <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for a review..."
+                  className="w-full pl-11 pr-10 py-3 bg-white border border-slate-200/90 rounded-2xl text-xs sm:text-sm text-slate-900 outline-none focus:border-teal-500 transition-all shadow-2xs"
+                />
+                {searchQuery && (
                   <button
-                    key={chip}
-                    onClick={() => setSelectedFilter(chip)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium shrink-0 transition-all ${
-                      selectedFilter === chip
-                        ? 'bg-stone-900 text-white shadow-sm'
-                        : 'bg-white text-stone-700 border border-stone-200/80 hover:bg-stone-50'
-                    }`}
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 bg-transparent border-none cursor-pointer"
                   >
-                    {chip}
+                    <X className="w-4 h-4" />
                   </button>
-                ))}
+                )}
               </div>
+
             </div>
 
-            {/* LIVE SEARCH BAR */}
-            <div className="relative">
-              <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search for a review..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white pl-10 pr-4 py-2.5 rounded-full text-xs border border-stone-200/80 focus:outline-none focus:ring-2 focus:ring-stone-400 text-stone-800 placeholder-stone-400 shadow-sm"
-              />
-            </div>
-
-            {/* REVIEWS LIST */}
-            <div className="space-y-3">
-              {filteredReviews.length === 0 ? (
-                <div className="bg-white p-8 rounded-3xl text-center border border-stone-200/70">
-                  <MessageSquare className="w-10 h-10 text-stone-300 mx-auto mb-2" />
-                  <p className="text-sm font-semibold text-stone-700">No matching reviews found</p>
-                  <p className="text-xs text-stone-400 mt-1">Try resetting your filter or search criteria</p>
-                </div>
-              ) : (
+            {/* ── REVIEWS LIST CARDS (Matching Screenshot Card Styling) ── */}
+            <div className="space-y-4 pt-2">
+              {filteredReviews.length > 0 ? (
                 filteredReviews.map((rev) => {
                   const isReported = reportedSet.has(rev.id);
                   const likesCount = (rev.likes || 0) + (likesMap[rev.id] || 0);
                   const dislikesCount = (rev.dislikes || 0) + (dislikesMap[rev.id] || 0);
 
-                  if (isReported) return null;
+                  if (isReported) {
+                    return (
+                      <div key={rev.id} className="p-4 bg-slate-100 rounded-2xl text-xs text-slate-400 text-center italic border border-slate-200">
+                        This review has been reported and is hidden for review.
+                      </div>
+                    );
+                  }
 
                   return (
-                    <div
-                      key={rev.id}
-                      className="bg-white p-4 rounded-3xl border border-stone-200/70 shadow-sm space-y-3 relative transition hover:shadow-md"
+                    <div 
+                      key={rev.id} 
+                      className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-3 relative"
                     >
-                      {/* Review Card Top Author & Actions */}
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
+                      {/* Review Header: User avatar, Name, Date, 3-dots */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3 min-w-0">
                           {rev.avatar ? (
-                            <img
-                              src={rev.avatar}
-                              alt={rev.author}
-                              className="w-10 h-10 rounded-full object-cover border border-stone-200"
-                            />
+                            <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-200" />
                           ) : (
-                            <div className="w-10 h-10 rounded-full bg-rose-100 text-rose-800 font-bold text-xs flex items-center justify-center font-serif">
+                            <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">
                               {getInitials(rev.author)}
                             </div>
                           )}
-                          <div>
-                            <h4 className="text-xs font-bold text-stone-900">{rev.author}</h4>
-                            <span className="text-[10px] text-stone-400">{rev.date}</span>
+                          <div className="min-w-0">
+                            <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                              {rev.author} <span className="text-slate-400 font-normal">· {rev.date}</span>
+                            </h4>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className="flex items-center gap-0.5">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star 
+                                    key={i} 
+                                    className={`w-3.5 h-3.5 ${i < rev.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} 
+                                  />
+                                ))}
+                              </span>
+                              <span className="text-xs font-bold text-slate-700 ml-1">{rev.rating}</span>
+                            </div>
                           </div>
                         </div>
 
-                        {/* Overflow Options Menu */}
+                        {/* Dropdown Menu */}
                         <div className="relative">
                           <button
+                            type="button"
                             onClick={() => setActiveMenuId(activeMenuId === rev.id ? null : rev.id)}
-                            className="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100"
+                            className="p-2 text-slate-400 hover:text-slate-700 rounded-full cursor-pointer bg-transparent border-none"
                           >
                             <MoreVertical className="w-4 h-4" />
                           </button>
-
+                          
                           {activeMenuId === rev.id && (
-                            <div className="absolute right-0 top-6 w-32 bg-white rounded-xl shadow-xl border border-stone-100 p-1 z-20">
+                            <div className="absolute right-0 top-8 bg-white border border-slate-200 rounded-xl shadow-lg p-1 z-20 min-w-[120px]">
                               <button
-                                onClick={() => handleReport(rev.id)}
-                                className="w-full text-left px-3 py-1.5 text-xs text-rose-600 font-medium hover:bg-rose-50 rounded-lg flex items-center gap-1.5"
+                                type="button"
+                                onClick={() => { handleReport(rev.id); setActiveMenuId(null); }}
+                                className="w-full text-left px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-lg flex items-center gap-1.5 font-semibold cursor-pointer border-none"
                               >
-                                <Flag className="w-3.5 h-3.5" />
-                                Report
+                                <Flag className="w-3.5 h-3.5" /> Report Review
                               </button>
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {/* Review Title & Content */}
-                      <div>
-                        <h5 className="text-xs font-bold text-stone-900">{rev.title}</h5>
-                        <p className="text-xs text-stone-600 mt-1 leading-relaxed">{rev.content}</p>
-                      </div>
+                      {/* Review Title */}
+                      <h5 className="text-sm font-bold text-slate-900 pt-1">
+                        {rev.title}
+                      </h5>
 
-                      {/* Star Rating & Verified Review Badge */}
-                      <div className="flex items-center gap-2 pt-1">
-                        <div className="flex items-center text-amber-500">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3.5 h-3.5 ${
-                                i < rev.rating ? 'fill-amber-500 text-amber-500' : 'text-stone-200 fill-stone-100'
-                              }`}
-                            />
-                          ))}
+                      {/* Review Text */}
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                        {rev.content}
+                      </p>
+
+                      {/* Verified Review Badge */}
+                      {rev.isVerified && (
+                        <div className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 pt-1">
+                          <ShieldCheck className="w-3.5 h-3.5 fill-blue-600 text-white" />
+                          <span>Verified Review</span>
                         </div>
-                        <span className="text-xs font-bold text-stone-700">{rev.rating}</span>
+                      )}
 
-                        {rev.isVerified && (
-                          <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                            <CheckCircle2 className="w-3 h-3 text-blue-500 fill-blue-100" />
-                            Verified Review
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Interactive Buttons: Like / Dislike / Report */}
-                      <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 font-medium">
-                        <div className="flex items-center gap-4">
-                          <button
-                            onClick={() => handleLike(rev.id)}
-                            className="flex items-center gap-1 hover:text-stone-900 transition"
-                          >
-                            <ThumbsUp className="w-3.5 h-3.5" />
-                            <span>Like ({likesCount})</span>
-                          </button>
-                          <button
-                            onClick={() => handleDislike(rev.id)}
-                            className="flex items-center gap-1 hover:text-stone-900 transition"
-                          >
-                            <ThumbsDown className="w-3.5 h-3.5" />
-                            <span>Dislike ({dislikesCount})</span>
-                          </button>
-                        </div>
+                      {/* Actions Footer: Like, Dislike, Report */}
+                      <div className="flex items-center gap-4 pt-2 border-t border-slate-100 text-xs font-semibold text-slate-500">
                         <button
+                          type="button"
+                          onClick={() => handleLike(rev.id)}
+                          className="flex items-center gap-1.5 hover:text-teal-600 transition-colors cursor-pointer bg-transparent border-none p-0"
+                        >
+                          <ThumbsUp className="w-3.5 h-3.5" />
+                          <span>Like {likesCount > 0 ? `(${likesCount})` : ''}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDislike(rev.id)}
+                          className="flex items-center gap-1.5 hover:text-slate-800 transition-colors cursor-pointer bg-transparent border-none p-0"
+                        >
+                          <ThumbsDown className="w-3.5 h-3.5" />
+                          <span>Dislike {dislikesCount > 0 ? `(${dislikesCount})` : ''}</span>
+                        </button>
+
+                        <button
+                          type="button"
                           onClick={() => handleReport(rev.id)}
-                          className="text-rose-500 hover:text-rose-700 text-xs font-medium"
+                          className="text-rose-500 hover:text-rose-700 ml-auto text-xs font-semibold cursor-pointer bg-transparent border-none p-0"
                         >
                           Report
                         </button>
                       </div>
+
                     </div>
                   );
                 })
+              ) : (
+                <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-500 text-xs font-medium">
+                  No matching reviews found for "{searchQuery || selectedFilter}".
+                </div>
               )}
             </div>
 
-            {/* WRITE REVIEW CTA BUTTON */}
-            <button
-              onClick={() => setShowReviewModal(true)}
-              className="w-full py-3 bg-stone-900 text-white rounded-full font-semibold text-xs shadow-sm hover:bg-stone-800 transition flex items-center justify-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Write a Client Review
-            </button>
           </div>
         )}
 
-      </main>
-
-      {/* FLOATING STICKY BOTTOM BAR (Mobile & Desktop Responsive) */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-stone-200/80 p-3 shadow-2xl">
-        <div className="max-w-md mx-auto flex items-center justify-between gap-4">
-          <div>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-500 block">Total Session Fee</span>
-            <div className="text-xl font-serif font-bold text-stone-900">
-              ₹{advisor.price}
-            </div>
-          </div>
-
-          <button
-            onClick={triggerBooking}
-            className="flex-1 py-3.5 px-6 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-full shadow-lg transition active:scale-95 flex items-center justify-center gap-2"
-          >
-            <span>Book Consultation</span>
-            <Plus className="w-4 h-4" />
-          </button>
-        </div>
       </div>
 
-      {/* WRITE REVIEW MODAL */}
+      {/* ── WRITE REVIEW MODAL ── */}
       {showReviewModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in duration-200">
-            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-              <h3 className="text-lg font-serif font-bold text-stone-900">Write a Review</h3>
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200">
+            
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-lg font-bold text-slate-900">Write a Verified Review</h3>
               <button
+                type="button"
                 onClick={() => setShowReviewModal(false)}
-                className="p-1 rounded-full text-stone-400 hover:text-stone-700"
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-full cursor-pointer bg-transparent border-none"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateReview} className="space-y-4">
+            <form onSubmit={handleWriteReviewSubmit} className="space-y-4">
+              
+              {/* Star Rating Select */}
               <div>
-                <label className="text-xs font-bold text-stone-700 block mb-1">Your Rating:</label>
-                <div className="flex items-center gap-2 text-amber-500">
-                  {[1, 2, 3, 4, 5].map((star) => (
+                <label className="text-xs font-bold text-slate-700 block mb-1">Your Rating</label>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((s) => (
                     <button
+                      key={s}
                       type="button"
-                      key={star}
-                      onClick={() => setNewRating(star)}
-                      className="p-1 transition transform active:scale-125"
+                      onClick={() => setNewRating(s)}
+                      className="p-1 cursor-pointer bg-transparent border-none"
                     >
-                      <Star
-                        className={`w-6 h-6 ${
-                          star <= newRating ? 'fill-amber-500 text-amber-500' : 'text-stone-200 fill-stone-100'
-                        }`}
-                      />
+                      <Star className={`w-6 h-6 ${s <= newRating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />
                     </button>
                   ))}
+                  <span className="text-sm font-bold text-slate-800 ml-2">{newRating} / 5</span>
                 </div>
               </div>
 
+              {/* Tag Category */}
               <div>
-                <label className="text-xs font-bold text-stone-700 block mb-1">Review Title:</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Amazingly Insightful Session"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-stone-700 block mb-1">Feedback Category:</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1">Primary Feedback Category</label>
                 <select
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none"
                 >
-                  <option value="Skill">Skill & Insight</option>
-                  <option value="Conversation">Empathy & Conversation</option>
+                  <option value="Skill">Skill & Expertise</option>
+                  <option value="Conversation">Conversation & Empathy</option>
                   <option value="Bedside Manner">Bedside Manner</option>
-                  <option value="Punctuality">Punctuality</option>
+                  <option value="Punctuality">Punctuality & Time</option>
                 </select>
               </div>
 
+              {/* Title Input */}
               <div>
-                <label className="text-xs font-bold text-stone-700 block mb-1">Your Feedback:</label>
-                <textarea
-                  rows={3}
-                  placeholder="Describe your session experience..."
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400"
+                <label className="text-xs font-bold text-slate-700 block mb-1">Review Title</label>
+                <input
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  placeholder="e.g. Amazingly Insightful & Helpful!"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:border-teal-500"
                 />
               </div>
 
-              <div className="flex gap-2 pt-2">
+              {/* Text Message */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">Review Details</label>
+                <textarea
+                  rows={3}
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Share your experience during the consultation..."
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:border-teal-500 resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowReviewModal(false)}
-                  className="flex-1 py-2.5 bg-stone-100 text-stone-700 rounded-full font-semibold text-xs hover:bg-stone-200"
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer border-none bg-transparent"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingReview}
-                  className="flex-1 py-2.5 bg-stone-900 text-white rounded-full font-semibold text-xs hover:bg-stone-800 disabled:opacity-50"
+                  className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer border-none flex items-center gap-1.5"
                 >
                   {submittingReview ? 'Submitting...' : 'Submit Review'}
                 </button>
               </div>
+
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── STICKY BOTTOM BOOKING CTA BAR (Fixed on Mobile, Desktop Responsive) ── */}
+      {enableBooking && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
+          <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+            
+            {/* Fee summary left side */}
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Consultation Fee</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-lg sm:text-2xl font-black text-slate-900">
+                  ₹{advisor.price.toLocaleString('en-IN')}
+                </span>
+                <span className="text-xs text-teal-600 font-semibold hidden xs:inline">
+                  (Intro: ₹{advisor.halfSessionPrice || 499})
+                </span>
+              </div>
+            </div>
+
+            {/* Action button right side */}
+            <button
+              type="button"
+              onClick={() => onBook?.(advisor)}
+              className="px-6 sm:px-8 py-3.5 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-lg shadow-teal-500/25 transition-all transform active:scale-95 cursor-pointer border-none flex items-center gap-2"
+            >
+              <span>Book Consultation</span>
+              <Plus className="w-4 h-4 text-white" />
+            </button>
+
           </div>
         </div>
       )}
