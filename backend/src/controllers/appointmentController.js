@@ -307,7 +307,7 @@ const AppointmentController = {
 
         // WhatsApp to Student
         if (userPhone) {
-          await WhatsAppService.sendBookingAlert(userPhone, actionType, {
+          WhatsAppService.sendBookingAlert(userPhone, actionType, {
             studentName: sName,
             counsellorName: cName,
             date,
@@ -324,7 +324,7 @@ const AppointmentController = {
 
         // WhatsApp to Psychologist
         if (counsellorPhone) {
-          await WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, actionType, {
+          WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, actionType, {
             studentName: sName,
             counsellorName: cName,
             date,

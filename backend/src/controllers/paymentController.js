@@ -109,7 +109,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
 
     // Send WhatsApp alert to Student/User
     if (targetUserPhone) {
-      const waRes = await WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
+      WhatsAppService.sendBookingAlert(targetUserPhone, 'approved', {
         studentName: sName,
         counsellorName: cName,
         date,
@@ -119,11 +119,11 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
         bookingId: apptBookingId,
         meetLink: finalMeetLink,
         recipientRole: 'user'
+      }).then(waRes => {
+        console.log(`[WhatsApp Booking Alert User Success]:`, JSON.stringify(waRes));
       }).catch((err) => {
         console.error('[WhatsApp User Alert Error]:', err);
-        return { success: false, error: err.message };
       });
-      console.log(`[WhatsApp Booking Alert Response]:`, JSON.stringify(waRes));
     } else {
       console.warn(`[WhatsApp Booking Alert Skipped]: No valid phone found for appointment ${appointment?.id}`);
     }
@@ -131,7 +131,7 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
     // Send WhatsApp alert to Counsellor (Psychologist)
     const targetCounsellorPhone = resolveAnyPhone(counsellor?.phone, counsellor?.whatsappNumber, counsellor?.mobile, counsellor);
     if (targetCounsellorPhone && counsellor) {
-      const waResCounsellor = await WhatsAppService.sendCounsellorBookingAlert(targetCounsellorPhone, 'approved', {
+      WhatsAppService.sendCounsellorBookingAlert(targetCounsellorPhone, 'approved', {
         studentName: sName,
         counsellorName: cName,
         date,
@@ -140,11 +140,11 @@ async function dispatchBookingNotifications(appointment, reqBody = {}, fallbackC
         duration: apptDuration,
         bookingId: apptBookingId,
         meetLink: finalMeetLink
+      }).then(waResCounsellor => {
+        console.log(`[WhatsApp Booking Alert Counsellor Success]:`, JSON.stringify(waResCounsellor));
       }).catch((err) => {
         console.error('[WhatsApp Counsellor Alert Error]:', err);
-        return { success: false, error: err.message };
       });
-      console.log(`[WhatsApp Booking Alert Counsellor]:`, JSON.stringify(waResCounsellor));
     } else {
       console.warn(`[WhatsApp Counsellor Alert Skipped]: No valid counsellor phone found for ${cName}`);
     }

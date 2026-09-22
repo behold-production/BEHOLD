@@ -29,6 +29,9 @@ class WhatsAppService {
   /**
    * Check and record outgoing message to prevent duplicate sends within cooldown window
    */
+  /**
+   * Check and record outgoing message to prevent duplicate sends within cooldown window
+   */
   _isDuplicateSend(phone, text, windowMs = 30000) {
     if (!phone || !text) return false;
     const now = Date.now();
@@ -39,8 +42,8 @@ class WhatsAppService {
       }
     }
     const cleanPhone = String(phone).replace(/\D/g, '');
-    const cleanText = String(text).trim().substring(0, 150);
-    const key = `${cleanPhone}_${cleanText}`;
+    const textSnippet = String(text).trim().substring(0, 100);
+    const key = `${cleanPhone}_${textSnippet}`;
 
     const lastSent = this._recentSends.get(key);
     if (lastSent && (now - lastSent) < windowMs) {
@@ -86,20 +89,24 @@ class WhatsAppService {
             Authorization: `Bearer ${this.waSenderToken}`,
             'Content-Type': 'application/json'
           },
-          timeout: 20000
+          timeout: 25000
         }
       );
       console.log(`[WhatsApp] ✅ Sent to ${formattedPhoneWithPlus}:`, response.data?.data || response.data?.message || 'OK');
       return { success: true, provider: 'WASender', data: response.data };
     } catch (error) {
       const errData = error.response?.data || {};
-      const errMsg = String(errData.message || error.message || '');
+      const errMsg = String(errData.message || error.message || errData.error || '').toLowerCase();
+      const status = error.response?.status;
       const retryAfter = Number(errData.retry_after) || 0;
 
-      // Handle WASender "Account Protection" 5-second rate limit automatically
-      if ((retryAfter > 0 || errMsg.includes('5 seconds') || errMsg.includes('account protection')) && attempt <= 3) {
-        const waitSeconds = retryAfter > 0 ? retryAfter + 1 : 5.5;
-        console.warn(`[WhatsApp] ⏳ WASender Account Protection active. Auto-waiting ${waitSeconds}s before retry (Attempt ${attempt}/3)...`);
+      const isAccountProtection = status === 400 || status === 429 || retryAfter > 0 ||
+        errMsg.includes('5 second') || errMsg.includes('account protection') ||
+        errMsg.includes('rate limit') || errMsg.includes('too many');
+
+      if (isAccountProtection && attempt <= 3) {
+        const waitSeconds = Math.max(retryAfter + 1, 6.5);
+        console.warn(`[WhatsApp Rate Protection] ⏳ WASender Account Protection active. Auto-waiting ${waitSeconds}s before retry (Attempt ${attempt}/3)...`);
         await new Promise((resolve) => setTimeout(resolve, waitSeconds * 1000));
         return this._sendViaWaSender(phone, text, attempt + 1);
       }
@@ -116,19 +123,24 @@ class WhatsAppService {
               Authorization: `Bearer ${this.waSenderToken}`,
               'Content-Type': 'application/json'
             },
-            timeout: 15000
+            timeout: 20000
           }
         );
         console.log(`[WhatsApp] ✅ Fallback sent to ${cleanedPhoneWithoutPlus}:`, response2.data?.data || response2.data?.message || 'OK');
         return { success: true, provider: 'WASender', data: response2.data };
       } catch (retryErr) {
         const retryErrData = retryErr.response?.data || {};
-        const retryErrMsg = String(retryErrData.message || retryErr.message || '');
+        const retryErrMsg = String(retryErrData.message || retryErr.message || '').toLowerCase();
         const retryWaitSec = Number(retryErrData.retry_after) || 0;
+        const retryStatus = retryErr.response?.status;
 
-        if ((retryWaitSec > 0 || retryErrMsg.includes('5 seconds') || retryErrMsg.includes('account protection')) && attempt <= 3) {
-          const waitSec = retryWaitSec > 0 ? retryWaitSec + 1 : 5.5;
-          console.warn(`[WhatsApp] ⏳ WASender fallback Account Protection active. Auto-waiting ${waitSec}s...`);
+        const isRetryAccountProtection = retryStatus === 400 || retryStatus === 429 || retryWaitSec > 0 ||
+          retryErrMsg.includes('5 second') || retryErrMsg.includes('account protection') ||
+          retryErrMsg.includes('rate limit');
+
+        if (isRetryAccountProtection && attempt <= 3) {
+          const waitSec = Math.max(retryWaitSec + 1, 6.5);
+          console.warn(`[WhatsApp Rate Protection] ⏳ Secondary attempt triggered Account Protection. Auto-waiting ${waitSec}s...`);
           await new Promise((resolve) => setTimeout(resolve, waitSec * 1000));
           return this._sendViaWaSender(phone, text, attempt + 1);
         }
@@ -148,7 +160,7 @@ class WhatsAppService {
 
   /**
    * Core dispatcher — sends via WASender or falls back to console mock
-   * Uses sequential queue throttling to prevent Account Protection rate limits
+   * Uses sequential queue throttling (6s gap) to prevent Account Protection rate limits
    */
   async _dispatch(phone, text, { skipDeduplication = false } = {}) {
     this._init(); // re-read env each time so .env changes take effect without restart
@@ -163,11 +175,11 @@ class WhatsAppService {
     }
 
     if (this.isWaSenderConfigured) {
-      // Chain message dispatch onto sequential queue ensuring a minimum 5.2s gap between consecutive sends
+      // Chain message dispatch onto sequential queue ensuring a minimum 6.0s gap between consecutive sends
       const sendTask = this._sendQueue.then(async () => {
         const now = Date.now();
+        const minGap = 6000; // WASender requires >5s between messages
         const timeSinceLastSend = now - this._lastSendTime;
-        const minGap = 5200; // WASender requires >5s between messages
         if (this._lastSendTime > 0 && timeSinceLastSend < minGap) {
           const waitMs = minGap - timeSinceLastSend;
           console.log(`[WhatsApp Throttle] ⏳ Spacing message to ${phone} by ${waitMs}ms to respect provider rate limit...`);
