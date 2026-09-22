@@ -83,9 +83,15 @@ export default function TimePicker({
     if (selectedDate && slotsContainerRef.current) {
       setTimeout(() => {
         if (slotsContainerRef.current) {
-          slotsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const modalScroll = document.getElementById('booking-modal-scroll');
+          if (modalScroll) {
+            const containerRect = modalScroll.getBoundingClientRect();
+            const targetRect = slotsContainerRef.current.getBoundingClientRect();
+            const targetOffset = targetRect.top - containerRect.top + modalScroll.scrollTop - 24;
+            modalScroll.scrollTo({ top: Math.max(0, targetOffset), behavior: 'smooth' });
+          }
         }
-      }, 150);
+      }, 100);
     }
   }, [selectedDate]);
 

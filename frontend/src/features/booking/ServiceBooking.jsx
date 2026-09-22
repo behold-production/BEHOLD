@@ -133,6 +133,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const step1Ref = useRef(null);
     const step2AdvisorRef = useRef(null);
     const step3TimeRef = useRef(null);
+    const step3NextBtnRef = useRef(null);
     const stepSummaryRef = useRef(null);
     const scrollContainerRef = useRef(null);
     const scrollAnimationIdRef = useRef(null);
@@ -1363,7 +1364,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             onTimeChange={(t) => {
                                                                 setSelectedTime(t);
                                                                 if (errors.time) setErrors(prev => ({ ...prev, time: null }));
-                                                                scrollToTarget(stepSummaryRef);
+                                                                scrollToTarget(step3NextBtnRef, 40);
                                                             }}
                                                             availableSlots={getAdvisorSlotsForDate(selectedAdvisor, selectedDate)}
                                                             bookedSlots={getAdvisorBookedSlotsForDate(selectedAdvisor, selectedDate)}
@@ -1373,7 +1374,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             errors={errors}
                                                         />
 
-                                                        <div className="pt-6 border-t border-slate-100 flex justify-between">
+                                                        <div ref={step3NextBtnRef} className="pt-6 border-t border-slate-100 flex justify-between">
                                                             <button
                                                                 type="button"
                                                                 onClick={() => setWizardStep(2)}
