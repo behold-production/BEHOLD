@@ -161,16 +161,43 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             role: loggedUser.role || 'user'
           });
 
-          // Pre-fill with existing name & email if available, and ALWAYS transition to Details step so user confirms/saves
-          const validFormName = (bookingForm?.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') && !bookingForm.name.toLowerCase().includes('test student')) ? bookingForm.name.trim() : '';
-          const validFormEmail = (bookingForm?.email && !bookingForm.email.includes('@temp.behold') && bookingForm.email.includes('@')) ? bookingForm.email.trim().toLowerCase() : '';
-          const validUserName = (loggedUser.name && loggedUser.name !== 'New User' && !loggedUser.name.includes('Behold User') && !loggedUser.name.toLowerCase().includes('test student')) ? loggedUser.name.trim() : '';
-          const validUserEmail = (loggedUser.email && !loggedUser.email.includes('@temp.behold') && loggedUser.email.includes('@')) ? loggedUser.email.trim().toLowerCase() : '';
+          let savedLocalUser = null;
+          try {
+            const raw = localStorage.getItem('behold_auth_user');
+            if (raw) savedLocalUser = JSON.parse(raw);
+          } catch (e) {}
 
-          const resolvedName = validFormName || validUserName;
-          const resolvedEmail = validFormEmail || validUserEmail;
+          const isCleanName = (name) => {
+            if (!name || typeof name !== 'string') return false;
+            const trimmed = name.trim();
+            const lower = trimmed.toLowerCase();
+            if (trimmed.length < 2) return false;
+            if (['new user', 'student', 'test student', 'user', 'patient', 'client', 'anonymous'].includes(lower)) return false;
+            if (lower.startsWith('behold user') || lower.startsWith('test ') || lower.startsWith('user_')) return false;
+            return true;
+          };
+
+          const isCleanEmail = (email) => {
+            if (!email || typeof email !== 'string') return false;
+            const trimmed = email.trim().toLowerCase();
+            if (!trimmed.includes('@')) return false;
+            if (trimmed.includes('@temp.behold') || trimmed.includes('temp.behold.co.in') || trimmed.includes('@example.com')) return false;
+            return validateEmail(trimmed);
+          };
+
+          const resolvedName = [loggedUser?.name, savedLocalUser?.name, bookingForm?.name].find(isCleanName) || '';
+          const resolvedEmail = [loggedUser?.email, savedLocalUser?.email, bookingForm?.email].find(isCleanEmail) || '';
 
           if (resolvedName && resolvedEmail) {
+            const finalUser = {
+              ...loggedUser,
+              name: resolvedName,
+              email: resolvedEmail,
+              isProfileCompleted: true
+            };
+            if (loggedUser.name !== resolvedName || loggedUser.email !== resolvedEmail) {
+              ApiService.updateProfile({ name: resolvedName, email: resolvedEmail, isProfileCompleted: true }).catch(() => {});
+            }
             if (setBookingForm) {
               setBookingForm(prev => ({
                 ...prev,
@@ -181,7 +208,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
             }
             showToast(`Welcome back, ${resolvedName}!`, 'success');
             setIsLoading(false);
-            if (onSuccess) onSuccess(loggedUser);
+            if (onSuccess) onSuccess(finalUser);
             onClose();
             return;
           }
@@ -321,7 +348,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
             <div className="flex items-center gap-3 min-w-0">
-              {authStep !== 'phone' && (
+              {authStep === 'otp' && (
                 <button
                   type="button"
                   onClick={handleModalBack}

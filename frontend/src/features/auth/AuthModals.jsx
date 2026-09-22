@@ -195,34 +195,56 @@ export default function AuthModals({ isOpen, onClose }) {
             role: loggedUser.role || 'user'
           });
 
-          // Check if user already has completed real details
-          const hasRealName = Boolean(
-            loggedUser.name &&
-            loggedUser.name !== 'New User' &&
-            !loggedUser.name.includes('Behold User') &&
-            !loggedUser.name.toLowerCase().includes('test student')
-          );
-          const hasRealEmail = Boolean(
-            loggedUser.email &&
-            !loggedUser.email.includes('@temp.behold') &&
-            !loggedUser.email.includes('temp.behold.co.in') &&
-            loggedUser.email.includes('@')
-          );
+          let savedLocalUser = null;
+          try {
+            const raw = localStorage.getItem('behold_auth_user');
+            if (raw) savedLocalUser = JSON.parse(raw);
+          } catch (e) {}
 
-          // If details are missing or incomplete, NEVER navigate away yet — transition to Details Step!
-          if (res.data.isDetailsNeeded || !hasRealName || !hasRealEmail) {
-            setDetailsForm({
-              name: hasRealName ? loggedUser.name : '',
-              email: hasRealEmail ? loggedUser.email : ''
-            });
-            setAuthStep('details');
-            setIsLoading(false);
+          const isCleanName = (name) => {
+            if (!name || typeof name !== 'string') return false;
+            const trimmed = name.trim();
+            const lower = trimmed.toLowerCase();
+            if (trimmed.length < 2) return false;
+            if (['new user', 'student', 'test student', 'user', 'patient', 'client', 'anonymous'].includes(lower)) return false;
+            if (lower.startsWith('behold user') || lower.startsWith('test ') || lower.startsWith('user_')) return false;
+            return true;
+          };
+
+          const isCleanEmail = (email) => {
+            if (!email || typeof email !== 'string') return false;
+            const trimmed = email.trim().toLowerCase();
+            if (!trimmed.includes('@')) return false;
+            if (trimmed.includes('@temp.behold') || trimmed.includes('temp.behold.co.in') || trimmed.includes('@example.com')) return false;
+            return validateEmail(trimmed);
+          };
+
+          const validName = [loggedUser?.name, savedLocalUser?.name].find(isCleanName) || '';
+          const validEmail = [loggedUser?.email, savedLocalUser?.email].find(isCleanEmail) || '';
+
+          if (validName && validEmail) {
+            const finalUser = {
+              ...loggedUser,
+              name: validName,
+              email: validEmail,
+              isProfileCompleted: true
+            };
+            if (loggedUser.name !== validName || loggedUser.email !== validEmail) {
+              ApiService.updateProfile({ name: validName, email: validEmail, isProfileCompleted: true }).catch(() => {});
+            }
+            showToast(`Welcome back, ${validName}!`, 'success');
+            finishAuthAndNavigate(finalUser);
             return;
           }
 
-          // Returning user with complete details -> Finish authentication & navigate
-          showToast(`Welcome back, ${loggedUser.name}!`, 'success');
-          finishAuthAndNavigate(loggedUser);
+          // Details needed (new user with no saved details) -> Transition to Details Step
+          setDetailsForm({
+            name: validName,
+            email: validEmail
+          });
+          setAuthStep('details');
+          setIsLoading(false);
+          return;
         } else {
           throw new Error(res.message || 'Invalid OTP');
         }
@@ -336,7 +358,7 @@ export default function AuthModals({ isOpen, onClose }) {
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
             <div className="flex items-center gap-3 min-w-0">
-              {authStep !== 'phone' && (
+              {authStep === 'otp' && (
                 <button
                   type="button"
                   onClick={handleModalBack}
