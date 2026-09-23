@@ -48,7 +48,7 @@ function SessionFeedbackForm({ session, onSubmit, alreadySubmitted }) {
         </button>
       ) : (
         <div className="border border-amber-200 bg-amber-50/60 rounded-[10px] p-3.5 space-y-3 animate-fade-scale">
-          <p className="text-[10px] font-semibold tracking-widest text-surface-600">Rate your session with <span className="text-surface-900">{session.advisorName}</span></p>
+          <p className="text-[10px] font-semibold tracking-widest text-slate-500">Rate your session with <span className="text-white">{session.advisorName}</span></p>
 
           {/* Star picker */}
           <div className="flex items-center gap-1">
@@ -71,7 +71,7 @@ function SessionFeedbackForm({ session, onSubmit, alreadySubmitted }) {
               </button>
             ))}
             {rating > 0 && (
-              <span className="ml-2 text-[10px] font-semibold text-surface-600 tracking-widest">
+              <span className="ml-2 text-[10px] font-semibold text-slate-500 tracking-widest">
                 {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent!'][rating]}
               </span>
             )}
@@ -83,7 +83,7 @@ function SessionFeedbackForm({ session, onSubmit, alreadySubmitted }) {
             onChange={e => setComment(e.target.value)}
             placeholder="Share your experience (optional)…"
             rows={3}
-            className="w-full text-xs font-medium text-surface-900 placeholder-surface-400 bg-white border border-surface-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 rounded-[8px] px-3 py-2 resize-none outline-none transition-all"
+            className="w-full text-xs font-medium text-white placeholder-surface-400 bg-[#0f172a] border border-slate-800 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 rounded-[8px] px-3 py-2 resize-none outline-none transition-all"
           />
 
           <div className="flex items-center gap-2">
@@ -103,7 +103,7 @@ function SessionFeedbackForm({ session, onSubmit, alreadySubmitted }) {
             <button
               type="button"
               onClick={() => { setOpen(false); setRating(0); setComment(''); }}
-              className="text-[10px] font-semibold tracking-widest text-surface-500 hover:text-surface-700 cursor-pointer transition-colors"
+              className="text-[10px] font-semibold tracking-widest text-slate-500 hover:text-surface-700 cursor-pointer transition-colors"
             >
               Cancel
             </button>
@@ -139,19 +139,19 @@ const BookedSessionsTab = ({
   return (
     <div className="space-y-5">
       {/* Sub-tab Navigation Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-200 pb-1.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-1.5">
         <div className="flex gap-4">
           <button
             type="button"
             onClick={() => setSessionSubTab('upcoming')}
             className={`pb-2 text-[10px] tracking-widest border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center ${sessionSubTab === 'upcoming'
-              ? 'border-surface-900 text-surface-900 font-semibold'
-              : 'border-transparent text-surface-400 hover:text-surface-600 font-semibold'
+              ? 'border-surface-900 text-white font-semibold'
+              : 'border-transparent text-slate-500 hover:text-slate-500 font-semibold'
               }`}
           >
             Upcoming Sessions
             {bookedSessions.length > 0 && (
-              <span className={`ml-1.5 text-xs font-semibold px-2 py-0.5 rounded-xl ${sessionSubTab === 'upcoming' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500'
+              <span className={`ml-1.5 text-xs font-semibold px-2 py-0.5 rounded-xl ${sessionSubTab === 'upcoming' ? 'bg-slate-900 text-white' : 'bg-[#1e293b] text-slate-500'
                 }`}>
                 {bookedSessions.length}
               </span>
@@ -161,13 +161,13 @@ const BookedSessionsTab = ({
             type="button"
             onClick={() => setSessionSubTab('history')}
             className={`pb-2.5 text-xs sm:text-sm font-bold border-b-2 transition-all relative cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${sessionSubTab === 'history'
-              ? 'border-slate-900 text-slate-900'
-              : 'border-transparent text-slate-400 hover:text-slate-600'
+              ? 'border-slate-900 text-white'
+              : 'border-transparent text-slate-500 hover:text-slate-500'
               }`}
           >
             History & Timeline
             {completedSessions.length > 0 && (
-              <span className={`ml-1.5 text-xs font-semibold px-2 py-0.5 rounded-xl ${sessionSubTab === 'history' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500'
+              <span className={`ml-1.5 text-xs font-semibold px-2 py-0.5 rounded-xl ${sessionSubTab === 'history' ? 'bg-slate-900 text-white' : 'bg-[#1e293b] text-slate-500'
                 }`}>
                 {completedSessions.length}
               </span>
@@ -182,7 +182,7 @@ const BookedSessionsTab = ({
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all border-none sm:self-center cursor-pointer hover-scale-btn shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 primary-cyan-gradient text-slate-950 font-black filter-glow text-xs font-bold rounded-xl transition-all border-none sm:self-center cursor-pointer hover-scale-btn shadow-xs"
           >
             <Plus className="w-4 h-4" /> New Booking
           </button>
@@ -201,12 +201,12 @@ const BookedSessionsTab = ({
                   onClick={() => setSessionFilter(chip.id)}
                   className={`shrink-0 inline-flex items-center gap-1.5 px-3 min-h-[32px] rounded-[10px] tracking-widest text-[10px] font-semibold transition-all border ${sessionFilter === chip.id
                     ? 'bg-surface-900 text-white border-surface-900'
-                    : 'bg-white text-surface-600 border-surface-200 hover:border-surface-300'
+                    : 'bg-[#0f172a] text-slate-500 border-slate-800 hover:border-surface-300'
                     }`}
                 >
                   {chip.label}
                   {chip.count > 0 && (
-                    <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-[10px] flex items-center justify-center ${sessionFilter === chip.id ? 'bg-white/20' : 'bg-surface-100 text-surface-600'
+                    <span className={`text-[10px] font-semibold px-1.5 min-w-[18px] h-4 rounded-[10px] flex items-center justify-center ${sessionFilter === chip.id ? 'bg-[#0f172a]/20' : 'bg-[#1e293b] text-slate-500'
                       }`}>
                       {chip.count}
                     </span>
@@ -225,13 +225,13 @@ const BookedSessionsTab = ({
                 return (
                   <div
                     key={session.id || idx}
-                    className="bg-white border border-surface-200 rounded-[10px] shadow-square-light p-5 text-left"
+                    className="bg-[#0f172a] border border-slate-800 rounded-[10px] shadow-square-light p-5 text-left"
                   >
                     {/* Status indicator */}
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-[10px] bg-surface-100 flex items-center justify-center shrink-0">
-                          {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-surface-600" /> : <MapPin className="w-5 h-5 text-surface-600" />}
+                        <div className="w-10 h-10 rounded-[10px] bg-[#1e293b] flex items-center justify-center shrink-0">
+                          {session.mode === 'ONLINE' ? <Video className="w-5 h-5 text-slate-500" /> : <MapPin className="w-5 h-5 text-slate-500" />}
                         </div>
                         <div>
                           <span className={`inline-flex items-center gap-1 tracking-widest text-[10px] px-2 py-0.5 rounded-[10px] font-semibold ${session.status === 'EXPIRED'
@@ -248,39 +248,39 @@ const BookedSessionsTab = ({
                               }`} />
                             {session.status}
                           </span>
-                          <p className="text-[10px] tracking-widest text-surface-500 font-semibold mt-1">
+                          <p className="text-[10px] tracking-widest text-slate-500 font-semibold mt-1">
                             {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
                           </p>
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-[10px] tracking-widest text-surface-500 font-semibold">In</p>
-                        <p className={`text-sm font-semibold ${cd.urgent ? 'text-amber-600' : 'text-surface-900'}`}>{cd.text}</p>
+                        <p className="text-[10px] tracking-widest text-slate-500 font-semibold">In</p>
+                        <p className={`text-sm font-semibold ${cd.urgent ? 'text-amber-600' : 'text-white'}`}>{cd.text}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3">
                       {session.advisorProfilePic && (
-                        <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-surface-200 shrink-0" />
+                        <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-slate-800 shrink-0" />
                       )}
                       <div>
-                        <p className="font-semibold tracking-widest text-surface-900 text-lg">{session.advisorName}</p>
-                        <p className="text-[10px] tracking-widest text-surface-500 font-semibold mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                        <p className="font-semibold tracking-widest text-white text-lg">{session.advisorName}</p>
+                        <p className="text-[10px] tracking-widest text-slate-500 font-semibold mt-0.5">{session.advisorRole || 'Consultation'}</p>
                       </div>
                     </div>
 
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] tracking-widest text-surface-600 font-semibold">
-                        <Calendar className="w-3.5 h-3.5 text-surface-400 shrink-0" />
+                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-[#1e293b] border border-slate-800 text-[10px] tracking-widest text-slate-500 font-semibold">
+                        <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                         <span className="font-semibold truncate">{formatDateString(session.date)}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] tracking-widest text-surface-600 font-semibold">
-                        <Clock className="w-3.5 h-3.5 text-surface-400 shrink-0" />
+                      <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-[#1e293b] border border-slate-800 text-[10px] tracking-widest text-slate-500 font-semibold">
+                        <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                         <span className="font-semibold truncate">{session.time}</span>
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-surface-100 flex flex-wrap gap-2">
+                    <div className="mt-4 pt-3 border-t border-slate-700 flex flex-wrap gap-2">
                       {session.status === 'EXPIRED' ? (
                         <div className="w-full text-center text-[10px] tracking-widest font-semibold text-rose-650 bg-rose-50 border border-rose-100 py-3 rounded-[10px] flex items-center justify-center gap-1.5 px-4">
                           <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
@@ -301,7 +301,7 @@ const BookedSessionsTab = ({
                                       href={validMeetLink}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-[10px] text-[10px] font-bold tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
+                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-white hover:bg-brand-dark rounded-[10px] text-[10px] font-bold tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
                                       title="Join Google Meet Video Consultation Room"
                                     >
                                       <Video className="w-3.5 h-3.5" /> Join Google Meet
@@ -313,7 +313,7 @@ const BookedSessionsTab = ({
                                         navigator.clipboard.writeText(validMeetLink);
                                         showAlert('Google Meet link copied to clipboard! You can share it or paste it into your browser to join.', 'Link Copied');
                                       }}
-                                      className="min-h-[36px] inline-flex items-center justify-center gap-1 px-3 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-surface-200 cursor-pointer"
+                                      className="min-h-[36px] inline-flex items-center justify-center gap-1 px-3 py-2 bg-[#1e293b] hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-slate-800 cursor-pointer"
                                       title="Copy Google Meet Link"
                                     >
                                       Copy Link
@@ -332,10 +332,10 @@ const BookedSessionsTab = ({
                                       })}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-surface-200 cursor-pointer text-decoration-none"
+                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#1e293b] hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-slate-800 cursor-pointer text-decoration-none"
                                       title="Add to Google Calendar"
                                     >
-                                      <Calendar className="w-3.5 h-3.5 text-surface-500" />
+                                      <Calendar className="w-3.5 h-3.5 text-slate-500" />
                                       <span>Calendar</span>
                                     </a>
                                   </>
@@ -360,7 +360,7 @@ const BookedSessionsTab = ({
                                     );
                                   }
                                 }}
-                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-surface-100 text-surface-700 border border-surface-200 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none cursor-pointer"
+                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1e293b] text-surface-700 border border-slate-800 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none cursor-pointer"
                               >
                                 <MapPin className="w-3.5 h-3.5" /> View Location
                               </button>
@@ -377,10 +377,10 @@ const BookedSessionsTab = ({
                                 })}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-surface-200 cursor-pointer text-decoration-none"
+                                className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#1e293b] hover:bg-surface-200 text-surface-700 rounded-[10px] text-[10px] font-semibold tracking-widest transition-all duration-300 border border-slate-800 cursor-pointer text-decoration-none"
                                 title="Add to Google Calendar"
                               >
-                                <Calendar className="w-3.5 h-3.5 text-surface-500" />
+                                <Calendar className="w-3.5 h-3.5 text-slate-500" />
                                 <span>Calendar</span>
                               </a>
                             </>
@@ -389,10 +389,10 @@ const BookedSessionsTab = ({
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
-                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none text-surface-600 hover:text-surface-900 transition-colors bg-white cursor-pointer"
+                              className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-slate-800 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-semibold shadow-none text-slate-500 hover:text-white transition-colors bg-[#0f172a] cursor-pointer"
                               title="Download Official Receipt PDF"
                             >
-                              <Download className="w-3.5 h-3.5 text-surface-500" /> Receipt
+                              <Download className="w-3.5 h-3.5 text-slate-500" /> Receipt
                             </button>
                           )}
                           <button
@@ -426,14 +426,14 @@ const BookedSessionsTab = ({
 
                               navigate(`/booking?reschedule=${session.id}`);
                             }}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-surface-200 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-semibold text-surface-650 hover:text-surface-900 shadow-none transition-colors bg-white cursor-pointer"
+                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 border border-slate-800 hover:border-surface-300 rounded-[10px] text-[10px] tracking-widest font-semibold text-surface-650 hover:text-white shadow-none transition-colors bg-[#0f172a] cursor-pointer"
                           >
                             <RefreshCw className="w-3.5 h-3.5" /> Reschedule
                           </button>
                           <button
                             type="button"
                             onClick={() => handleCancelSession(session.id)}
-                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-surface-200 hover:border-rose-200 hover:bg-rose-50 text-surface-500 hover:text-rose-600 rounded-[10px] text-[10px] tracking-widest font-semibold transition-colors cursor-pointer"
+                            className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#0f172a] border border-slate-800 hover:border-rose-200 hover:bg-rose-50 text-slate-500 hover:text-rose-600 rounded-[10px] text-[10px] tracking-widest font-semibold transition-colors cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Cancel
                           </button>
@@ -445,12 +445,12 @@ const BookedSessionsTab = ({
               })}
             </div>
           ) : (
-            <div className="bg-surface-50 border border-dashed border-surface-300 rounded-[10px] p-8 text-center">
+            <div className="bg-[#1e293b] border border-dashed border-surface-300 rounded-[10px] p-8 text-center">
               <div className="w-12 h-12 mx-auto rounded-[10px] bg-surface-200 flex items-center justify-center mb-3">
-                <CalendarDays className="w-6 h-6 text-surface-500" />
+                <CalendarDays className="w-6 h-6 text-slate-500" />
               </div>
-              <p className="text-sm font-semibold text-surface-900 tracking-widest">No sessions found</p>
-              <p className="text-xs text-surface-500 mt-1">
+              <p className="text-sm font-semibold text-white tracking-widest">No sessions found</p>
+              <p className="text-xs text-slate-500 mt-1">
                 {sessionFilter === 'all'
                   ? 'Book a session with one of our experts.'
                   : `No ${sessionFilter} sessions scheduled.`}
@@ -478,14 +478,14 @@ const BookedSessionsTab = ({
             ].map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={i} className="bg-white border border-surface-200 rounded-[10px] shadow-square-light p-4 text-left">
-                  <div className="w-8 h-8 rounded-[10px] bg-surface-100 flex items-center justify-center mb-2">
-                    <Icon className="w-4 h-4 text-surface-600" />
+                <div key={i} className="bg-[#0f172a] border border-slate-800 rounded-[10px] shadow-square-light p-4 text-left">
+                  <div className="w-8 h-8 rounded-[10px] bg-[#1e293b] flex items-center justify-center mb-2">
+                    <Icon className="w-4 h-4 text-slate-500" />
                   </div>
-                  <p className="text-lg font-semibold text-surface-900">
-                    {s.value}{s.suffix && <span className="text-sm text-surface-400 font-semibold">{s.suffix}</span>}
+                  <p className="text-lg font-semibold text-white">
+                    {s.value}{s.suffix && <span className="text-sm text-slate-500 font-semibold">{s.suffix}</span>}
                   </p>
-                  <p className="text-[10px] text-surface-500 font-semibold tracking-widest mt-0.5">{s.label}</p>
+                  <p className="text-[10px] text-slate-500 font-semibold tracking-widest mt-0.5">{s.label}</p>
                 </div>
               );
             })}
@@ -497,22 +497,22 @@ const BookedSessionsTab = ({
               <div className="space-y-4">
                 {completedSessions.map((session, sIdx) => (
                   <div key={session.id || sIdx} className="relative pl-12 text-left">
-                    <div className="absolute left-0 top-3 w-8 h-8 rounded-[10px] border border-surface-200 bg-white flex items-center justify-center shadow-square-light">
-                      <Award className="w-4 h-4 text-surface-500" />
+                    <div className="absolute left-0 top-3 w-8 h-8 rounded-[10px] border border-slate-800 bg-[#0f172a] flex items-center justify-center shadow-square-light">
+                      <Award className="w-4 h-4 text-slate-500" />
                     </div>
-                    <div className="bg-white border border-surface-200 rounded-[10px] shadow-square-light p-4">
+                    <div className="bg-[#0f172a] border border-slate-800 rounded-[10px] shadow-square-light p-4">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
                         <div>
                           <div className="flex flex-wrap items-center gap-2 mb-1.5">
                             <span className={`text-[10px] px-2 py-0.5 rounded-[10px] font-semibold tracking-widest border ${session.status === 'COMPLETED'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                               : session.status === 'EXPIRED' || session.status === 'CANCELLED' || session.status === 'REJECTED'
                                 ? 'bg-rose-50 text-rose-700 border-rose-200'
                                 : 'bg-amber-50 text-amber-700 border-amber-200'
                               }`}>
                               {session.status}
                             </span>
-                            <span className="text-[10px] text-surface-500 font-semibold tracking-widest">{session.mode}</span>
+                            <span className="text-[10px] text-slate-500 font-semibold tracking-widest">{session.mode}</span>
                             {session.status === 'COMPLETED' && (
                               <div className="flex items-center gap-0.5">
                                 {[1, 2, 3, 4, 5].map(n => (
@@ -523,16 +523,16 @@ const BookedSessionsTab = ({
                           </div>
                           <div className="flex items-center gap-3 mt-1.5 mb-1.5">
                             {session.advisorProfilePic && (
-                              <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-surface-200 shrink-0" />
+                              <img src={session.advisorProfilePic} alt={session.advisorName} className="w-10 h-10 rounded-[10px] object-cover border border-slate-800 shrink-0" />
                             )}
                             <div>
-                              <p className="font-semibold text-surface-900 tracking-widest text-lg leading-tight">{session.advisorName}</p>
-                              <p className="text-[10px] text-surface-500 font-semibold tracking-widest mt-0.5">{session.advisorRole || 'Consultation'}</p>
+                              <p className="font-semibold text-white tracking-widest text-lg leading-tight">{session.advisorName}</p>
+                              <p className="text-[10px] text-slate-500 font-semibold tracking-widest mt-0.5">{session.advisorRole || 'Consultation'}</p>
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1.5 text-[10px] tracking-widest text-surface-600 bg-surface-50 border border-surface-200 px-2.5 py-1.5 rounded-[10px] shrink-0 w-fit font-semibold">
-                          <Clock className="w-3.5 h-3.5 text-surface-400" />
+                        <div className="flex items-center gap-1.5 text-[10px] tracking-widest text-slate-500 bg-[#1e293b] border border-slate-800 px-2.5 py-1.5 rounded-[10px] shrink-0 w-fit font-semibold">
+                          <Clock className="w-3.5 h-3.5 text-slate-500" />
                           <span className="font-semibold">{formatDateString(session.date)}</span>
                           <span className="text-surface-300">·</span>
                           <span>{session.time}</span>
@@ -540,20 +540,20 @@ const BookedSessionsTab = ({
                       </div>
 
                       {session.feedback && (
-                        <div className="mt-3 p-3 bg-surface-50 border border-surface-200 rounded-[10px]">
-                          <p className="text-[10px] font-semibold text-surface-500 tracking-widest mb-1.5">Psychologist Feedback</p>
-                          <p className="text-xs text-surface-900 font-medium leading-relaxed">"{session.feedback}"</p>
+                        <div className="mt-3 p-3 bg-[#1e293b] border border-slate-800 rounded-[10px]">
+                          <p className="text-[10px] font-semibold text-slate-500 tracking-widest mb-1.5">Psychologist Feedback</p>
+                          <p className="text-xs text-white font-medium leading-relaxed">"{session.feedback}"</p>
                         </div>
                       )}
 
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="text-[10px] text-surface-400 font-semibold tracking-widest">Session #{completedSessions.length - sIdx}</span>
+                        <span className="text-[10px] text-slate-500 font-semibold tracking-widest">Session #{completedSessions.length - sIdx}</span>
                         <div className="flex items-center gap-3">
                           {Boolean(session && downloadPDFReceiptForSession) && (
                             <button
                               type="button"
                               onClick={() => downloadPDFReceiptForSession(session)}
-                              className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
+                              className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-slate-500 hover:text-white transition-colors cursor-pointer"
                               title="Download Official Receipt PDF"
                             >
                               <Download className="w-3.5 h-3.5" /> Receipt
@@ -574,7 +574,7 @@ const BookedSessionsTab = ({
                               <button
                                 type="button"
                                 onClick={() => downloadCertificatePDF(session)}
-                                className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-surface-500 hover:text-surface-900 transition-colors cursor-pointer"
+                                className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-widest text-slate-500 hover:text-white transition-colors cursor-pointer"
                                 title="Download certificate"
                               >
                                 <Download className="w-3.5 h-3.5" /> Certificate
@@ -598,12 +598,12 @@ const BookedSessionsTab = ({
               </div>
             </div>
           ) : (
-            <div className="bg-surface-50 border border-dashed border-surface-300 rounded-[10px] p-8 text-center">
+            <div className="bg-[#1e293b] border border-dashed border-surface-300 rounded-[10px] p-8 text-center">
               <div className="w-12 h-12 mx-auto rounded-[10px] bg-surface-200 flex items-center justify-center mb-3">
-                <Trophy className="w-6 h-6 text-surface-500" />
+                <Trophy className="w-6 h-6 text-slate-500" />
               </div>
-              <p className="text-sm font-semibold text-surface-900 tracking-widest">No completed sessions yet</p>
-              <p className="text-xs text-surface-500 mt-1">Finished sessions will appear here with psychologist feedback.</p>
+              <p className="text-sm font-semibold text-white tracking-widest">No completed sessions yet</p>
+              <p className="text-xs text-slate-500 mt-1">Finished sessions will appear here with psychologist feedback.</p>
               {(enablePsychology || enableCareerMentoring) && (
                 <button
                   type="button"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Video, Download, MapPin } from 'lucide-react';
+import { Calendar, Video, Download, MapPin, Activity } from 'lucide-react';
 import { formatDateString } from "../../../../utils/dateFormatter";
 import { formatCountdown, buildGoogleMeetUrl } from '../../utils/utils';
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
@@ -12,282 +12,201 @@ export default function OverviewTab({
   handleSectionChange,
   setSessionSubTab,
   stats,
-  testProfile,
   bookedSessions,
   completedSessions,
   profile,
-  enableAptitude,
   onOpenBooking,
   downloadPDFReceiptForSession
 }) {
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Overview & Guidance Dashboard</h2>
-          <p className="text-sm text-slate-500 font-medium mt-1">
-            {nextSession ? 'Your scheduled consultations and progress metrics.' : 'Track your counseling sessions and personal guidance path here.'}
+    <div className="space-y-10 animate-fade-scale">
+      {/* STATS OVERVIEW CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="card-grad-gradient border border-slate-700 rounded-[24px] p-6 relative overflow-hidden group">
+          <div className="w-12 h-12 bg-[#00e5ff]/15 rounded-2xl flex items-center justify-center mb-4 border border-[#00e5ff]/20">
+            <div className="w-3 h-3 bg-[#00e5ff] rounded-full shadow-[0_0_10px_#00e5ff]" />
+          </div>
+          <p className="text-slate-400 font-bold text-sm tracking-wide uppercase mb-1">Upcoming Sessions</p>
+          <h2 className="text-white font-black text-4xl tracking-tighter mb-4">{stats.upcoming || 0} <span className="text-xl font-bold text-slate-500">Active</span></h2>
+          <p className="text-[#00e5ff] font-bold text-xs">
+            {nextSession ? `Next: ${formatDateString(nextSession.date)} at ${nextSession.time}` : 'No upcoming sessions'}
           </p>
         </div>
-        {(enablePsychology || enableCareerMentoring) && (
-          <button
-            type="button"
-            onClick={() => {
-              if (onOpenBooking) onOpenBooking();
-              else navigate('/booking');
-            }}
-            className="inline-block px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
-          >
-            Book Consultation
-          </button>
-        )}
+
+        <div className="card-grad-gradient border border-slate-700 rounded-[24px] p-6 relative overflow-hidden group">
+          <div className="w-12 h-12 bg-[#00e5ff]/15 rounded-2xl flex items-center justify-center mb-4 border border-[#00e5ff]/20">
+            <div className="w-4 h-4 bg-[#00e5ff] rounded-md shadow-[0_0_10px_#00e5ff]" />
+          </div>
+          <p className="text-slate-400 font-bold text-sm tracking-wide uppercase mb-1">Completed Sessions</p>
+          <h2 className="text-white font-black text-4xl tracking-tighter mb-4">{stats.completed || 0} <span className="text-xl font-bold text-slate-500">Total</span></h2>
+          <p className="text-slate-400 font-bold text-xs">
+            {stats.hours || 0} hrs total consultation time
+          </p>
+        </div>
+
+        <div className="card-grad-gradient border border-slate-700 rounded-[24px] p-6 relative overflow-hidden group">
+          <div className="w-12 h-12 bg-[#00e5ff]/15 rounded-2xl flex items-center justify-center mb-4 border border-[#00e5ff]/20">
+            <Activity className="w-6 h-6 text-[#00e5ff] filter-glow" />
+          </div>
+          <p className="text-slate-400 font-bold text-sm tracking-wide uppercase mb-1">Wellness Tracker</p>
+          <h2 className="text-white font-black text-4xl tracking-tighter mb-4">88% <span className="text-xl font-bold text-slate-500">Score</span></h2>
+          <p className="text-[#00e5ff] font-bold text-xs">
+            ↑ 5% Improvement this month
+          </p>
+        </div>
       </div>
 
-      {/* Next Session Card */}
-      {nextSession ? (
-        <div className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-5 transition-shadow hover:shadow-sm">
-          <div className="flex items-center gap-4 min-w-0">
-            {nextSession.advisorProfilePic && (
-              <img src={nextSession.advisorProfilePic} alt={nextSession.advisorName} className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0" />
-            )}
-            <div className="min-w-0">
-              <p className="text-xs sm:text-sm font-semibold text-slate-500 mb-0.5">
-                Next Scheduled Session &middot; {nextSession.mode === 'ONLINE' ? 'Online Video Call' : 'Clinic Visit'}
-              </p>
-              <h3 className="font-bold text-slate-900 text-lg sm:text-xl tracking-tight truncate">{nextSession.advisorName}</h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-0.5 font-medium truncate">
-                {nextSession.advisorRole || 'Consultant Psychologist'}
-              </p>
-              <div className="flex flex-wrap items-center gap-2 mt-2.5 text-xs sm:text-sm font-semibold text-slate-700">
-                <span className="bg-slate-50 px-3 py-1 rounded-lg border border-slate-200">
-                  {formatDateString(nextSession.date)}
-                </span>
-                <span className="bg-slate-50 px-3 py-1 rounded-lg border border-slate-200">
-                  {nextSession.time}
-                </span>
+      {/* SECTION 1: UPCOMING APPOINTMENTS */}
+      <div>
+        <h3 className="text-white font-black text-2xl tracking-tight mb-6">Upcoming Appointments</h3>
+        
+        {nextSession ? (
+          <div className="card-grad-gradient border-2 border-[#00e5ff] rounded-[24px] p-6 filter-card-shadow flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <div className="flex items-center gap-6 z-10 w-full md:w-auto">
+              <div className="w-20 h-20 rounded-full bg-[#0f172a] border-2 border-[#00e5ff] shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center justify-center shrink-0">
+                 {nextSession.advisorProfilePic ? (
+                    <img src={nextSession.advisorProfilePic} alt="Doctor" className="w-full h-full rounded-full object-cover" />
+                 ) : (
+                    <div className="w-4 h-4 bg-[#00e5ff] rounded-full" />
+                 )}
+              </div>
+              <div>
+                <h4 className="text-white font-bold text-xl mb-1">{nextSession.advisorName}</h4>
+                <p className="text-[#00e5ff] font-bold text-sm mb-2">{nextSession.advisorRole || 'Consultant Psychologist'}</p>
+                <p className="text-slate-400 text-sm font-medium">
+                  {formatDateString(nextSession.date)} • {nextSession.time}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 z-10 w-full md:w-auto">
+              <div className="px-4 py-1.5 bg-[#00e5ff]/15 border border-[#00e5ff] rounded-xl text-[#00e5ff] text-xs font-bold mr-0 sm:mr-4">
+                Confirmed
+              </div>
+              
+              <div className="flex flex-col gap-2 w-full sm:w-auto">
+                <a
+                  href={nextSession.meetLink || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-[200px] text-center px-6 py-3 primary-cyan-gradient text-[#030712] font-black text-sm rounded-xl filter-glow no-underline hover:scale-105 transition-transform"
+                >
+                  Join Video Link
+                </a>
+                <div className="flex gap-2">
+                  <button className="flex-1 px-4 py-2 bg-[#1e293b] border border-slate-700 text-white font-bold text-xs rounded-xl hover:bg-slate-800 transition-colors">
+                    Reschedule
+                  </button>
+                  <button className="flex-1 px-4 py-2 bg-[#1e293b] border border-slate-700 text-rose-500 font-bold text-xs rounded-xl hover:bg-rose-950 transition-colors">
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-
-          <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-            {(() => {
-              const cd = formatCountdown(nextSession.date, nextSession.time);
-              return (
-                <div className="text-left sm:text-right mr-2">
-                  <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase">Starts in</p>
-                  <p className={`text-xl font-bold tracking-tight ${cd.urgent ? 'text-rose-600 animate-pulse' : 'text-slate-900'}`}>{cd.text}</p>
-                </div>
-              );
-            })()}
-
-            {Boolean(downloadPDFReceiptForSession) && (
-              <button
-                type="button"
-                onClick={() => downloadPDFReceiptForSession(nextSession)}
-                className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5"
-                title="Download Booking Receipt PDF"
-              >
-                <Download className="w-4 h-4 text-slate-600" />
-                <span>Receipt</span>
-              </button>
-            )}
-
-            <a
-              href={createGoogleCalendarUrl({
-                title: `BEHOLD Counselling Session - ${nextSession.advisorName || 'Psychologist'}`,
-                advisorName: nextSession.advisorName || 'Psychologist',
-                studentName: profile?.name || 'Student',
-                location: nextSession.meetLink || 'Google Meet',
-                meetLink: nextSession.meetLink || '',
-                service: nextSession.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
-                date: nextSession.date,
-                time: nextSession.time,
-                durationMinutes: nextSession.duration && String(nextSession.duration).includes('30') ? 30 : 60
-              })}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5 no-underline"
-              title="Add to Google Calendar"
-            >
-              <Calendar className="w-4 h-4 text-teal-600" />
-              <span>Calendar</span>
-            </a>
-
-            {nextSession.mode === 'ONLINE' ? (
-              <a
-                href={
-                  nextSession.meetLink && nextSession.meetLink !== 'LOCKED' && !nextSession.meetLink.includes('behold-aspire-session') && !nextSession.meetLink.includes('meet.google.com/new') && !nextSession.meetLink.includes('meet.jit.si')
-                    ? nextSession.meetLink
-                    : buildGoogleMeetUrl(nextSession.appointmentId || nextSession.id || 'Session')
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-brand hover:bg-brand-dark text-slate-950 shadow-xs text-center no-underline flex items-center gap-1.5"
-                title="Join Google Meet Video Consultation"
-              >
-                <Video className="w-4 h-4" />
-                <span>Join Google Meet</span>
-              </a>
-            ) : (
-              <button
-                type="button"
-                onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
-              >
-                View Details
-              </button>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="rounded-xl p-8 text-center border border-dashed border-slate-200 bg-slate-50/50">
-          <p className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">No upcoming sessions booked</p>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto leading-relaxed font-medium">
-            Schedule a 1-on-1 session with a certified clinical psychologist or career mentor for personal guidance.
-          </p>
-          {(enablePsychology || enableCareerMentoring) && (
-            <button
-              type="button"
-              onClick={() => {
-                if (onOpenBooking) onOpenBooking();
-                else navigate('/booking');
-              }}
-              className="mt-5 inline-block px-6 py-2.5 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
-            >
-              Schedule Consultation Now
+        ) : (
+          <div className="border border-dashed border-slate-700 rounded-[24px] p-10 flex flex-col items-center justify-center text-center bg-[#090d16]/50">
+            <p className="text-white font-bold text-xl mb-2">No upcoming sessions</p>
+            <p className="text-slate-400 text-sm mb-6 max-w-md">Schedule a consultation with a certified professional to continue your wellness journey.</p>
+            <button onClick={() => window.location.href = '/booking'} className="px-8 py-3 primary-cyan-gradient text-slate-950 font-bold text-sm rounded-xl filter-glow hover:scale-105 transition-transform">
+              Book a Session
             </button>
-          )}
-        </div>
-      )}
-
-      {/* Action Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        {/* Expert Consultation */}
-        <div className="bg-white rounded-xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
-          <div>
-            <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-semibold text-xs sm:text-sm rounded-lg border border-surface-200 inline-block">
-              Verified Specialists
-            </span>
-            <h3 className="text-lg sm:text-xl font-bold text-[#0f172a] mt-3 tracking-tight">1-on-1 Psychological Care</h3>
-            <p className="text-xs sm:text-sm text-surface-600 font-normal mt-1.5 leading-relaxed">
-              Connect with certified clinical psychologists for emotional support, stress relief, and mental wellness.
-            </p>
-          </div>
-          <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
-            <span className="text-xs sm:text-sm font-semibold text-surface-500">60-min personalized session</span>
-            <button
-              type="button"
-              onClick={() => {
-                if (onOpenBooking) onOpenBooking();
-                else navigate('/booking');
-              }}
-              className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs sm:text-sm transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
-            >
-              Book Now
-            </button>
-          </div>
-        </div>
-
-        {/* C-DAT Aptitude Card */}
-        {enableAptitude && (
-          <div className="bg-white rounded-xl p-6 border border-surface-200 shadow-xs flex flex-col justify-between space-y-4">
-            <div>
-              <span className="px-3.5 py-1 bg-surface-100 text-[#0f172a] font-semibold text-xs sm:text-sm rounded-lg border border-surface-200 inline-block">
-                {testProfile ? 'Report Ready' : 'C-DAT Evaluation'}
-              </span>
-              <h3 className="text-lg sm:text-xl font-bold text-[#0f172a] mt-3 tracking-tight">C-DAT Aptitude Assessment</h3>
-              <p className="text-xs sm:text-sm text-surface-600 font-normal mt-1.5 leading-relaxed">
-                Comprehensive psychometric assessment uncovering natural aptitudes, learning styles, and suitable career tracks.
-              </p>
-            </div>
-            <div className="pt-4 border-t border-surface-100 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-semibold text-surface-500">{testProfile ? 'Verified Results' : '45-min scientific evaluation'}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  if (testProfile) {
-                    handleSectionChange('results');
-                  } else {
-                    navigate('/sample-test');
-                  }
-                }}
-                className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs sm:text-sm transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
-              >
-                {testProfile ? 'View Report' : 'Take Assessment'}
-              </button>
-            </div>
           </div>
         )}
       </div>
 
-      {/* History & Achievements Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Recent Session History */}
-        <div className="lg:col-span-2 rounded-xl p-6 bg-white border border-surface-200 shadow-xs">
-          <div className="flex items-center justify-between mb-4 border-b border-surface-100 pb-3">
-            <h4 className="text-base sm:text-lg font-bold tracking-tight text-[#0f172a]">Recent Session History</h4>
-            <button
-              type="button"
-              onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs sm:text-sm text-surface-500 hover:text-[#00e5ff] font-semibold cursor-pointer border-0 bg-transparent tracking-wide"
-            >
-              View All
-            </button>
-          </div>
-          {completedSessions.length > 0 ? (
-            <div className="space-y-2.5">
-              {completedSessions.slice(0, 3).map((s, i) => (
-                <div key={i} className="flex items-center justify-between p-3.5 rounded-xl hover:bg-surface-50 border border-surface-100 transition-colors">
-                  <div>
-                    <p className="text-xs sm:text-sm font-bold text-[#0f172a]">{s.advisorName}</p>
-                    <p className="text-xs text-surface-600 font-medium">{s.advisorRole || 'Consultation'} &middot; {formatDateString(s.date)}</p>
+      {/* SECTION 2: MY CARE TEAM */}
+      <div>
+        <h3 className="text-white font-black text-2xl tracking-tight mb-6">My Care Team</h3>
+        
+        {completedSessions.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {completedSessions.slice(0, 2).map((session, i) => (
+              <div key={i} className="card-grad-gradient border border-slate-700 rounded-[24px] p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                <div className={`w-16 h-16 rounded-full bg-[#0f172a] border-2 flex items-center justify-center shrink-0 ${i === 0 ? 'border-[#00e5ff] shadow-[0_0_15px_rgba(0,229,255,0.4)]' : 'border-slate-500'}`}>
+                  {session.advisorProfilePic ? (
+                     <img src={session.advisorProfilePic} alt="Doctor" className="w-full h-full rounded-full object-cover" />
+                  ) : (
+                     <div className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-[#00e5ff]' : 'bg-slate-500'}`} />
+                  )}
+                </div>
+                <div className="flex-1 text-center sm:text-left w-full">
+                  <h4 className="text-white font-bold text-lg mb-1">{session.advisorName}</h4>
+                  <p className={`${i === 0 ? 'text-[#00e5ff]' : 'text-slate-400'} font-bold text-xs mb-3`}>{session.advisorRole || 'Primary Psychologist'}</p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3 w-full">
+                    <button onClick={() => window.location.href = `/booking?advisorId=${session.advisorId}`} className={`flex-1 py-2.5 px-4 font-bold text-xs rounded-xl transition-colors cursor-pointer ${i === 0 ? 'primary-cyan-gradient text-[#030712] border-none' : 'bg-[#1e293b] border border-slate-700 text-white hover:bg-slate-800'}`}>
+                      Book Next Session
+                    </button>
+                    <button className="flex-1 py-2.5 px-4 bg-[#1e293b] border border-slate-700 text-white font-bold text-xs rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+                      Send Message
+                    </button>
                   </div>
-                  <span className="text-xs font-bold text-[#0f172a] bg-surface-100 border border-surface-200 px-3 py-1 rounded-md">Completed</span>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-surface-500 border border-dashed border-surface-200 rounded-xl bg-surface-50/50">
-              <p className="text-sm font-bold text-[#0f172a] tracking-wide">No completed sessions yet</p>
-              <p className="text-xs text-surface-600 font-normal mt-1">Finished session records and doctor notes will appear here.</p>
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="border border-slate-800 rounded-[24px] p-8 bg-[#090d16] text-slate-400 text-sm font-bold">
+            You don't have a regular care team assigned yet. Once you complete your first sessions, your specialists will appear here.
+          </div>
+        )}
+      </div>
+
+      {/* SECTION 3: RECENT HISTORY & RECEIPTS TABLE */}
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-white font-black text-2xl tracking-tight">Past Sessions & Receipts</h3>
+          <button onClick={() => handleSectionChange('booked')} className="text-[#00e5ff] font-bold text-sm hover:underline cursor-pointer bg-transparent border-none">
+            View All
+          </button>
         </div>
 
-        {/* Milestones */}
-        <div className="rounded-xl p-6 bg-white border border-surface-200 shadow-xs">
-          <div className="mb-4 border-b border-surface-100 pb-3">
-            <h4 className="text-base sm:text-lg font-bold tracking-tight text-[#0f172a]">Milestones</h4>
-          </div>
-          <div className="space-y-2.5">
-            {(() => {
-              const isSet = (val) => val && String(val).trim() !== '' && String(val).trim().toLowerCase() !== 'undefined' && String(val).trim().toLowerCase() !== 'null';
-              return [
-                { label: 'Profile Created', done: isSet(profile.name) },
-                { label: 'Email Verified', done: isSet(profile.email) },
-                { label: 'Phone Linked', done: isSet(profile.phone) },
-                { label: 'First Booking', done: stats.total > 0 },
-                { label: 'C-DAT Assessment', done: !!testProfile, condition: enableAptitude },
-              ].filter(a => a.condition !== false).map((a, i) => (
-              <div
-                key={i}
-                className={`flex items-center justify-between text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border transition-colors ${a.done
-                    ? 'bg-surface-50 border-surface-200 text-[#0f172a]'
-                    : 'bg-surface-50/40 border-surface-100 text-surface-400'
-                  }`}
-              >
-                <span className={`truncate ${a.done ? 'font-semibold text-[#0f172a]' : 'font-medium text-surface-500'}`}>
-                  {a.label}
-                </span>
-                {a.done ? (
-                  <span className="text-[10px] sm:text-xs font-bold text-[#00e5ff] bg-slate-900 px-2.5 py-0.5 rounded-md shadow-2xs border border-[#00e5ff]/30">Done</span>
-                ) : (
-                  <span className="text-[10px] sm:text-xs font-bold text-surface-500 bg-surface-100 px-2.5 py-0.5 rounded-md border border-surface-200">Pending</span>
+        <div className="bg-[#0f172a] border border-slate-700 rounded-[24px] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[700px]">
+              <thead>
+                <tr className="border-b border-slate-700">
+                  <th className="px-6 py-4 text-slate-400 font-bold text-xs uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-4 text-slate-400 font-bold text-xs uppercase tracking-wider">Service / Specialist</th>
+                  <th className="px-6 py-4 text-slate-400 font-bold text-xs uppercase tracking-wider">Amount</th>
+                  <th className="px-6 py-4 text-slate-400 font-bold text-xs uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-slate-400 font-bold text-xs uppercase tracking-wider">Invoice</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700/50">
+                {completedSessions.length > 0 ? completedSessions.slice(0, 3).map((session, i) => (
+                  <tr key={i} className="hover:bg-[#1e293b]/50 transition-colors">
+                    <td className="px-6 py-5 text-slate-300 font-medium text-sm whitespace-nowrap">
+                      {formatDateString(session.date)}
+                    </td>
+                    <td className="px-6 py-5 text-slate-300 font-medium text-sm">
+                      {session.service === 'career' ? 'Career Mentoring' : 'CBT Therapy'} • {session.advisorName}
+                    </td>
+                    <td className="px-6 py-5 text-slate-300 font-medium text-sm">
+                      $120.00
+                    </td>
+                    <td className="px-6 py-5">
+                      <span className="text-[#00e5ff] font-bold text-sm">Completed</span>
+                    </td>
+                    <td className="px-6 py-5">
+                      <button 
+                        onClick={() => downloadPDFReceiptForSession && downloadPDFReceiptForSession(session)}
+                        className="px-4 py-1.5 bg-[#1e293b] border border-slate-700 text-[#00e5ff] font-bold text-xs rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                      >
+                        Download
+                      </button>
+                    </td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan="5" className="px-6 py-10 text-center text-slate-500 font-bold text-sm">
+                      No past sessions available
+                    </td>
+                  </tr>
                 )}
-              </div>
-            ))
-            })()}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

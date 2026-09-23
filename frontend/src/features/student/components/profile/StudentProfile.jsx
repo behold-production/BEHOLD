@@ -134,10 +134,15 @@ export default function StudentProfile({ onOpenBooking }) {
 
   const nextSession = bookedSessions[0];
 
- return (
- <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-transparent text-surface-900 font-sans text-left relative overflow-hidden">
- <SEO title="Student Profile | BEHOLD." noindex={true} />
- <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
+  return (
+    <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-glow-gradient grid-bg text-white font-sans text-left relative overflow-hidden -mt-[90px] pt-[120px]">
+      <SEO title="Dashboard | BEHOLD." noindex={true} />
+      
+      {/* Background Glows matching SVG */}
+      <div className="absolute top-[10%] left-[10%] w-[400px] h-[400px] bg-[#00e5ff] rounded-full opacity-[0.08] filter blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[10%] w-[350px] h-[350px] bg-[#00e5ff] rounded-full opacity-[0.05] filter blur-[100px] pointer-events-none" />
+
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 space-y-8">
  {(isLoading || authLoading) ? (
  <div className="animate-pulse space-y-5 sm:space-y-6">
  <div className="bg-white rounded-[10px] p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-surface-200">

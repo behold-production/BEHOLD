@@ -1,125 +1,143 @@
 import React, { useState } from 'react';
-import { Bell, LayoutDashboard, User, Calendar, BarChart3, LogOut } from 'lucide-react';
+import { Bell, LayoutDashboard, User, Calendar, BarChart3, LogOut, Phone } from 'lucide-react';
 import { TABS } from '../../utils/studentProfileConstants';
 import { useAuth } from '../../../../context/AuthContext';
 import LogoutConfirmModal from '../../../../components/common/LogoutConfirmModal';
 
 const ICON_MAP = {
- LayoutDashboard,
- User,
- Calendar,
- BarChart3
+  LayoutDashboard,
+  User,
+  Calendar,
+  BarChart3
 };
 
 const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testProfile, enableAptitude }) => {
- const { logout } = useAuth();
- const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const { logout } = useAuth();
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
- const visibleTabs = TABS.filter(tab => {
- if (tab.id === 'results' && enableAptitude === false) return false;
- return true;
- });
+  const visibleTabs = TABS.filter(tab => {
+    if (tab.id === 'results' && enableAptitude === false) return false;
+    return true;
+  });
 
- return (
- <>
- {/* Desktop sidebar */}
- <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-surface-200 rounded-xl shadow-xs sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
- {visibleTabs.map(tab => {
- const Icon = ICON_MAP[tab.iconName];
- const isActive = currentSection === tab.id;
- const badge =
- tab.id === 'booked' ? bookedSessions.length :
- tab.id === 'results' && !testProfile ? '!' : null;
- return (
- <button
- key={tab.id}
- type="button"
- onClick={() => handleSectionChange(tab.id)}
- className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
- isActive
- ? 'bg-[#0f172a] text-white border-[#00e5ff]/40 shadow-xs scale-[1.01]'
- : 'text-surface-600 hover:bg-surface-100 hover:text-[#0f172a] border-transparent'
- }`}
- >
- {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#00e5ff]' : 'text-surface-500 group-hover:text-[#0f172a]'}`} />}
- <span className="flex-1 text-left">{tab.label}</span>
- {badge !== null && badge !== 0 && (
- <span className={`text-[10px] font-semibold px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
- isActive
- ? 'bg-[#00e5ff] text-[#0f172a] shadow-2xs'
- : tab.id === 'results' && !testProfile
- ? 'bg-amber-100 text-amber-800 animate-pulse'
- : 'bg-surface-100 text-[#0f172a]'
- }`}>
- {badge}
- </span>
- )}
- </button>
- );
- })}
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <nav className="hidden lg:flex flex-col p-5 bg-[#090d16] border border-slate-700 rounded-[20px] filter-card-shadow sticky top-32 max-h-[calc(100vh-130px)] overflow-y-auto overscroll-contain scrollbar-hide">
+        <div className="space-y-2 flex-1">
+          {visibleTabs.map(tab => {
+            const Icon = ICON_MAP[tab.iconName];
+            const isActive = currentSection === tab.id;
+            const badge =
+              tab.id === 'booked' ? bookedSessions.length :
+              tab.id === 'results' && !testProfile ? '!' : null;
 
- <button
- onClick={() => setIsLogoutOpen(true)}
- className="mt-3 flex items-center gap-3 px-4 min-h-[44px] rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 group"
- >
- <LogOut className="w-4 h-4 shrink-0 text-rose-500 group-hover:scale-110 transition-transform" />
- <span className="flex-1 text-left">Sign Out</span>
- </button>
- </nav>
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => handleSectionChange(tab.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all duration-300 group cursor-pointer ${
+                  isActive
+                    ? 'primary-cyan-gradient text-slate-950 scale-[1.02]'
+                    : 'text-slate-400 hover:text-white bg-transparent hover:bg-slate-800'
+                }`}
+              >
+                <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-[#030712]' : 'bg-slate-500 group-hover:bg-[#00e5ff]'} transition-colors`} />
+                <span className="flex-1 text-left text-[15px]">{tab.label}</span>
+                {badge !== null && badge !== 0 && (
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center justify-center ${
+                    isActive
+                      ? 'bg-[#030712] text-[#00e5ff]'
+                      : tab.id === 'results' && !testProfile
+                      ? 'bg-amber-500/20 text-amber-400 animate-pulse'
+                      : 'bg-slate-800 text-white'
+                  }`}>
+                    {badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
 
- {/* Mobile bottom tab bar */}
- <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white border-t border-surface-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] pb-[calc(env(safe-area-inset-bottom,0px)+2px)]">
- <div className="grid max-w-2xl mx-auto" style={{ gridTemplateColumns: `repeat(${visibleTabs.length + 1}, minmax(0, 1fr))` }}>
- {visibleTabs.map(tab => {
- const Icon = ICON_MAP[tab.iconName];
- const isActive = currentSection === tab.id;
- const badge = tab.id === 'booked' ? bookedSessions.length : null;
- return (
- <button
- key={tab.id}
- type="button"
- onClick={() => handleSectionChange(tab.id)}
- className={`relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors ${isActive ? 'text-surface-900' : 'text-surface-400'
+        <hr className="border-slate-800 my-6" />
 
- }`}
- >
- <div className="relative">
- {Icon && <Icon className="w-5 h-5" />}
- {badge !== null && badge > 0 && (
- <span className="absolute -top-1.5 -right-2 text-[10px] font-semibold px-1 min-w-[14px] h-3.5 rounded-[10px] bg-surface-900 text-white flex items-center justify-center">
- {badge}
- </span>
- )}
- </div>
- <span className="text-[10px] font-semibold tracking-widest truncate max-w-full">{tab.short}</span>
- {isActive && (
- <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-surface-900 rounded-[10px]" />
- )}
- </button>
- );
- })}
- 
- <button
- type="button"
- onClick={() => setIsLogoutOpen(true)}
- className="relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors text-red-500 hover:text-red-600 cursor-pointer border-none bg-transparent"
- >
- <LogOut className="w-5 h-5" />
- <span className="text-[10px] font-semibold tracking-widest truncate max-w-full">Logout</span>
- </button>
- </div>
- </nav>
+        {/* Emergency Support Box */}
+        <div className="bg-[#0f172a] border border-slate-700 rounded-2xl p-5 mb-6 text-left">
+          <h4 className="text-rose-500 font-bold text-[14px] flex items-center gap-2 mb-2">
+            <span className="animate-pulse">🚨</span> 24/7 Crisis Support
+          </h4>
+          <p className="text-slate-400 text-xs mb-4 leading-relaxed">
+            If you need immediate help, our emergency hotline is open.
+          </p>
+          <a href="tel:911" className="block w-full text-center px-4 py-2.5 bg-[#1e293b] border border-rose-500/50 text-rose-500 text-sm font-bold rounded-xl hover:bg-rose-500/10 transition-colors">
+            Call Helpline Now
+          </a>
+        </div>
 
- <LogoutConfirmModal
- isOpen={isLogoutOpen}
- onClose={() => setIsLogoutOpen(false)}
- onConfirm={() => {
- logout();
- setIsLogoutOpen(false);
- }}
- />
- </>
- );
+        {/* Logout */}
+        <button
+          onClick={() => setIsLogoutOpen(true)}
+          className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all cursor-pointer text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 group"
+        >
+          <span className="flex-1 text-left text-[15px]">Sign Out</span>
+        </button>
+      </nav>
+
+      {/* Mobile bottom tab bar */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-[#090d16] border-t border-slate-800 pb-[calc(env(safe-area-inset-bottom,0px)+4px)]">
+        <div className="grid max-w-2xl mx-auto" style={{ gridTemplateColumns: `repeat(${visibleTabs.length + 1}, minmax(0, 1fr))` }}>
+          {visibleTabs.map(tab => {
+            const Icon = ICON_MAP[tab.iconName];
+            const isActive = currentSection === tab.id;
+            const badge = tab.id === 'booked' ? bookedSessions.length : null;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => handleSectionChange(tab.id)}
+                className={`relative flex flex-col items-center justify-center gap-1.5 min-h-[64px] py-2 px-1 transition-colors ${
+                  isActive ? 'text-[#00e5ff]' : 'text-slate-500'
+                }`}
+              >
+                <div className="relative">
+                  {Icon && <Icon className="w-5 h-5" />}
+                  {badge !== null && badge > 0 && (
+                    <span className="absolute -top-1.5 -right-2 text-[9px] font-bold px-1.5 min-w-[16px] h-4 rounded-full bg-[#00e5ff] text-[#030712] flex items-center justify-center filter-glow">
+                      {badge}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[10px] font-bold tracking-widest truncate max-w-full">{tab.short}</span>
+                {isActive && (
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-[#00e5ff] rounded-b-md filter-glow" />
+                )}
+              </button>
+            );
+          })}
+          
+          <button
+            type="button"
+            onClick={() => setIsLogoutOpen(true)}
+            className="relative flex flex-col items-center justify-center gap-1.5 min-h-[64px] py-2 px-1 transition-colors text-rose-500 hover:text-rose-400 cursor-pointer border-none bg-transparent"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="text-[10px] font-bold tracking-widest truncate max-w-full">Logout</span>
+          </button>
+        </div>
+      </nav>
+
+      <LogoutConfirmModal
+        isOpen={isLogoutOpen}
+        onClose={() => setIsLogoutOpen(false)}
+        onConfirm={() => {
+          logout();
+          setIsLogoutOpen(false);
+        }}
+      />
+    </>
+  );
 };
 
 export default SidebarNav;
