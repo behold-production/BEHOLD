@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiService from '../../services/api';
-import './mindcare.css'; // The scoped CSS for this layout (now containing V2 styles)
+import './behold.css'; // The scoped CSS for this layout (now containing V2 styles)
 import BrandIcon from '../../components/common/BrandIcon';
 import FaqBlogSection from './FaqBlogSection';
 import ContactInquirySection from './ContactInquirySection';
 
-export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, navigateToSection }) {
+export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings, navigateToSection }) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [counsellors, setCounsellors] = useState([]);

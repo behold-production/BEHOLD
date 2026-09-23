@@ -21,7 +21,7 @@ import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import FaqBlogSection from '../features/landing/FaqBlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
 import ActivitySheetView from '../features/student/ActivitySheetView';
-import MindCareHome from '../features/landing/MindCareHome';
+import BeholdHome from '../features/landing/BeholdHome';
 import globalBg from '../assets/greygreen.png';
 import globalBgTexture from '../assets/greygreen.png';
 
@@ -677,10 +677,10 @@ export default function App() {
         </div>
       }>
         <Routes>
-          {/* Landing Page - MindCare Design */}
+          {/* Landing Page - Behold Design */}
           <Route path="/" element={
             <main className="fade-in-up">
-              <MindCareHome 
+              <BeholdHome 
                 onOpenAuth={() => setIsAuthModalOpen(true)} 
                 onOpenBooking={handleOpenGeneralBooking} 
                 siteSettings={siteSettings}
