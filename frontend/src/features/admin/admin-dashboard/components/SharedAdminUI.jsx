@@ -59,7 +59,7 @@ export function PaginationBar({ total, page, limit, onPageChange, onLimitChange 
  <button
  onClick={() => onPageChange(safeCurrentPage - 1)}
  disabled={safeCurrentPage === 1}
- className="px-2 py-1.5 rounded border border-zinc-200 bg-white text-xs font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+ className="px-2 py-1.5 rounded border border-zinc-200 bg-[#0f172a] text-xs font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
  >
  Prev
  </button>
@@ -68,8 +68,8 @@ export function PaginationBar({ total, page, limit, onPageChange, onLimitChange 
  key={n}
  onClick={() => onPageChange(n)}
  className={`w-7 h-7 rounded border text-sm font-bold transition cursor-pointer ${n === safeCurrentPage
- ? 'bg-brand border-brand text-zinc-950 shadow-sm'
- : 'bg-white border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50'
+ ? 'bg-[#00e5ff] border-brand text-zinc-950 shadow-sm'
+ : 'bg-[#0f172a] border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50'
  }`}
  >
  {n}
@@ -78,7 +78,7 @@ export function PaginationBar({ total, page, limit, onPageChange, onLimitChange 
  <button
  onClick={() => onPageChange(safeCurrentPage + 1)}
  disabled={safeCurrentPage >= totalPages}
- className="px-2 py-1.5 rounded border border-zinc-200 bg-white text-xs font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+ className="px-2 py-1.5 rounded border border-zinc-200 bg-[#0f172a] text-xs font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
  >
  Next
  </button>

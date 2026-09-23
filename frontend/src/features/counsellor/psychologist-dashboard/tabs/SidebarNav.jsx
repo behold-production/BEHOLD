@@ -31,7 +31,7 @@ const SidebarNav = ({
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
  <span className="font-header font-bold text-lg tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
+ BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  </div>
  {/* Close Button inside Drawer (Mobile Only) */}
@@ -51,7 +51,7 @@ const SidebarNav = ({
  onClick={() => setIsProfileDrawerOpen(true)}
  className="w-full flex items-center gap-3 bg-zinc-955/60 hover:bg-zinc-950 p-3 rounded-[10px] border border-zinc-850 hover:border-brand/30 transition-all cursor-pointer text-left"
  >
- <div className="w-12 h-12 rounded-[10px] bg-brand text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
+ <div className="w-12 h-12 rounded-[10px] bg-[#00e5ff] text-zinc-955 flex items-center justify-center font-header font-bold text-sm shrink-0 overflow-hidden">
  {(profile.profilePic || user?.profilePic || profile.image || user?.image) ? (
  <img src={profile.profilePic || user?.profilePic || profile.image || user?.image} alt={profile.name} className="w-full h-full object-cover" />
  ) : (
@@ -104,7 +104,7 @@ const SidebarNav = ({
  onClick={() => handleNavClick(item.id)}
  className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] text-[13px] transition-all text-left cursor-pointer border-none ${
  isActive
- ? 'bg-brand text-zinc-955 font-semibold shadow-sm'
+ ? 'bg-[#00e5ff] text-zinc-955 font-semibold shadow-sm'
  : 'bg-transparent text-zinc-450 hover:text-white hover:bg-zinc-850/60 font-medium'
  }`}
  >

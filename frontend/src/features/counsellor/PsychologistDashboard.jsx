@@ -1338,7 +1338,7 @@ reportRegError("Please enter a valid email address.");
               type='button'
               onClick={() => { setGateMode('login'); setForgotError(''); setLoginError(''); }}
               className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
-                gateMode === 'login' || gateMode === 'forgot-password' ? 'text-white' : 'text-slate-500 hover:text-slate-350'
+                gateMode === 'login' || gateMode === 'forgot-password' ? 'text-white' : 'text-slate-400 hover:text-slate-350'
               }`}
             >
               Sign In
@@ -1350,7 +1350,7 @@ reportRegError("Please enter a valid email address.");
               type='button'
               onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); setForgotError(''); setLoginError(''); }}
               className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
-                gateMode === 'register' ? 'text-white' : 'text-slate-500 hover:text-slate-350'
+                gateMode === 'register' ? 'text-white' : 'text-slate-400 hover:text-slate-350'
               }`}
             >
               Register Consultant
@@ -1383,11 +1383,11 @@ reportRegError("Please enter a valid email address.");
                   </button>
 
                   <div className='flex items-center gap-1.5 text-[11px] font-semibold'>
-                    <span className={forgotStep === 1 ? 'text-[#00E5FF]' : 'text-slate-500'}>1. Email</span>
-                    <span className='text-slate-700'>&gt;</span>
-                    <span className={forgotStep === 2 ? 'text-[#00E5FF]' : 'text-slate-500'}>2. Verify OTP</span>
-                    <span className='text-slate-700'>&gt;</span>
-                    <span className={forgotStep === 3 ? 'text-[#00E5FF]' : 'text-slate-500'}>3. Password</span>
+                    <span className={forgotStep === 1 ? 'text-[#00E5FF]' : 'text-slate-400'}>1. Email</span>
+                    <span className='text-slate-300'>&gt;</span>
+                    <span className={forgotStep === 2 ? 'text-[#00E5FF]' : 'text-slate-400'}>2. Verify OTP</span>
+                    <span className='text-slate-300'>&gt;</span>
+                    <span className={forgotStep === 3 ? 'text-[#00E5FF]' : 'text-slate-400'}>3. Password</span>
                   </div>
                 </div>
 
@@ -1446,7 +1446,7 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='button'
                           onClick={() => { setGateMode('login'); setForgotError(''); }}
-                          className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-4 cursor-pointer block bg-transparent border-none'
+                          className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-4 cursor-pointer block bg-transparent border-none'
                         >
                           Cancel and return to Sign In
                         </button>
@@ -1484,7 +1484,7 @@ reportRegError("Please enter a valid email address.");
 
                       {/* Resend Row */}
                       <div className='flex items-center justify-between text-xs pt-1'>
-                        <span className='text-slate-500'>Didn't receive code?</span>
+                        <span className='text-slate-400'>Didn't receive code?</span>
                         {forgotResendTimer === 0 ? (
                           <button
                             type='button'
@@ -1518,7 +1518,7 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='button'
                           onClick={() => { setForgotStep(1); setForgotError(''); }}
-                          className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none p-0'
+                          className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none p-0'
                         >
                           ← Change email address
                         </button>
@@ -1559,7 +1559,7 @@ reportRegError("Please enter a valid email address.");
                           <button
                             type='button'
                             onClick={() => setShowForgotNewPassword(v => !v)}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showForgotNewPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                           </button>
@@ -1583,7 +1583,7 @@ reportRegError("Please enter a valid email address.");
                           <button
                             type='button'
                             onClick={() => setShowForgotConfirmPassword(v => !v)}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showForgotConfirmPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                           </button>
@@ -1610,7 +1610,7 @@ reportRegError("Please enter a valid email address.");
             ) : gateMode === 'login' ? (
               <div>
                 <h2 className='text-lg font-bold text-white text-left font-header'>Psychologist Sign In</h2>
-                <p className='text-xs text-slate-500 text-left mt-1.5 mb-6 leading-relaxed'>
+                <p className='text-xs text-slate-400 text-left mt-1.5 mb-6 leading-relaxed'>
                   Access schedules, update clinic slots, and edit video rooms.
                 </p>
 
@@ -1678,7 +1678,7 @@ reportRegError("Please enter a valid email address.");
                       <button
                         type='button'
                         onClick={() => setShowPassword(v => !v)}
-                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                       >
                         {showPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                       </button>
@@ -1698,7 +1698,7 @@ reportRegError("Please enter a valid email address.");
                       )}
                     </button>
                     
-                    <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-4 cursor-pointer block'>
+                    <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-4 cursor-pointer block'>
                       Back to Homepage
                     </a>
                   </div>
@@ -1708,15 +1708,15 @@ reportRegError("Please enter a valid email address.");
               <div>
                 {/* Steps tracker */}
                 <div className='flex items-center justify-start gap-2 mb-6 text-xs font-semibold'>
-                  <span className={onboardingStep === 1 ? 'text-[#818CF8]' : 'text-slate-500'}>
+                  <span className={onboardingStep === 1 ? 'text-[#818CF8]' : 'text-slate-400'}>
                     1. Account Details
                   </span>
-                  <span className='text-slate-600'>&gt;</span>
-                  <span className={onboardingStep === 2 ? 'text-[#818CF8]' : 'text-slate-500'}>
+                  <span className='text-slate-400'>&gt;</span>
+                  <span className={onboardingStep === 2 ? 'text-[#818CF8]' : 'text-slate-400'}>
                     2. Qualifications
                   </span>
-                  <span className='text-slate-600'>&gt;</span>
-                  <span className={onboardingStep === 3 ? 'text-[#818CF8]' : 'text-slate-500'}>
+                  <span className='text-slate-400'>&gt;</span>
+                  <span className={onboardingStep === 3 ? 'text-[#818CF8]' : 'text-slate-400'}>
                     3. Schedule
                   </span>
                 </div>
@@ -1775,7 +1775,7 @@ reportRegError("Please enter a valid email address.");
                           <button
                             type='button'
                             onClick={() => setShowRegPassword(v => !v)}
-                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showRegPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
                           </button>
@@ -1798,7 +1798,7 @@ reportRegError("Please enter a valid email address.");
                           <button
                             type='button'
                             onClick={() => setShowRegConfirmPassword(v => !v)}
-                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showRegConfirmPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
                           </button>
@@ -1814,7 +1814,7 @@ reportRegError("Please enter a valid email address.");
                         Next: Clinical Details
                       </button>
                       
-                      <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-4 cursor-pointer block'>
+                      <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-4 cursor-pointer block'>
                         Back to Homepage
                       </a>
                     </div>
@@ -2059,7 +2059,7 @@ reportRegError("Please enter a valid email address.");
                       </button>
                     </div>
                     
-                    <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-2 cursor-pointer block'>
+                    <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-2 cursor-pointer block'>
                       Back to Homepage
                     </a>
                   </form>
@@ -2114,7 +2114,7 @@ reportRegError("Please enter a valid email address.");
                                 className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${
                                   exists
                                     ? 'bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40'
-                                    : 'bg-[#050811] border-slate-800 text-slate-500 hover:text-slate-350'
+                                    : 'bg-[#050811] border-slate-800 text-slate-400 hover:text-slate-350'
                                 }`}
                               >
                                 {slot}
@@ -2122,7 +2122,7 @@ reportRegError("Please enter a valid email address.");
                               <button
                                 type='button'
                                 onClick={() => handleRemoveRegSlot(slot)}
-                                className='px-2.5 py-2 bg-transparent border border-slate-800 hover:bg-rose-955/40 hover:border-rose-900 text-slate-500 hover:text-rose-450 rounded-lg text-xs font-bold transition cursor-pointer shrink-0'
+                                className='px-2.5 py-2 bg-transparent border border-slate-800 hover:bg-rose-955/40 hover:border-rose-900 text-slate-400 hover:text-rose-450 rounded-lg text-xs font-bold transition cursor-pointer shrink-0'
                                 title='Remove Slot'
                               >
                                 Remove
@@ -2131,7 +2131,7 @@ reportRegError("Please enter a valid email address.");
                           );
                         })}
                         {regAllSlots.length === 0 && (
-                          <div className='col-span-2 py-4 bg-[#050811] border border-dashed border-slate-800 rounded-lg text-slate-500 italic text-xs text-center w-full'>
+                          <div className='col-span-2 py-4 bg-[#050811] border border-dashed border-slate-800 rounded-lg text-slate-400 italic text-xs text-center w-full'>
                             No timing slots configured. Use the controls below to add custom slots or generate from a time range.
                           </div>
                         )}
@@ -2142,7 +2142,7 @@ reportRegError("Please enter a valid email address.");
                       <label className='block text-xs font-medium text-slate-400'>Add Custom Timing Slot</label>
                       <div className='flex gap-2 items-end'>
                         <div className='flex-1 space-y-1.5'>
-                          <label className='text-[10px] text-slate-500 font-bold block'>Hour</label>
+                          <label className='text-[10px] text-slate-400 font-bold block'>Hour</label>
                           <select
                             value={regCustomHour}
                             onChange={(e) => setRegCustomHour(e.target.value)}
@@ -2154,7 +2154,7 @@ reportRegError("Please enter a valid email address.");
                           </select>
                         </div>
                         <div className='flex-1 space-y-1.5'>
-                          <label className='text-[10px] text-slate-500 font-bold block'>Minute</label>
+                          <label className='text-[10px] text-slate-400 font-bold block'>Minute</label>
                           <select
                             value={regCustomMinute}
                             onChange={(e) => setRegCustomMinute(e.target.value)}
@@ -2166,7 +2166,7 @@ reportRegError("Please enter a valid email address.");
                           </select>
                         </div>
                         <div className='flex-1 space-y-1.5'>
-                          <label className='text-[10px] text-slate-500 font-bold block'>AM/PM</label>
+                          <label className='text-[10px] text-slate-400 font-bold block'>AM/PM</label>
                           <select
                             value={regCustomPeriod}
                             onChange={(e) => setRegCustomPeriod(e.target.value)}
@@ -2190,7 +2190,7 @@ reportRegError("Please enter a valid email address.");
                       <label className='block text-xs font-medium text-slate-400'>Add Custom Time Range (From / To)</label>
                       <div className='flex flex-col gap-3'>
                         <div className='flex gap-2 items-center'>
-                          <span className='text-xs text-slate-500 font-bold tracking-wide w-10 text-left'>From:</span>
+                          <span className='text-xs text-slate-400 font-bold tracking-wide w-10 text-left'>From:</span>
                           <div className='flex-1'>
                             <select
                               value={regFromHour}
@@ -2226,7 +2226,7 @@ reportRegError("Please enter a valid email address.");
                         </div>
 
                         <div className='flex gap-2 items-center'>
-                          <span className='text-xs text-slate-500 font-bold tracking-wide w-10 text-left'>To:</span>
+                          <span className='text-xs text-slate-400 font-bold tracking-wide w-10 text-left'>To:</span>
                           <div className='flex-1'>
                             <select
                               value={regToHour}
@@ -2262,7 +2262,7 @@ reportRegError("Please enter a valid email address.");
                         </div>
 
                         <div className='flex gap-2 items-center mt-3'>
-                          <span className='text-xs text-slate-500 font-bold w-20'>Interval:</span>
+                          <span className='text-xs text-slate-400 font-bold w-20'>Interval:</span>
                           <div className='flex-1'>
                             <select
                               value={regSlotInterval}
@@ -2311,7 +2311,7 @@ reportRegError("Please enter a valid email address.");
                       </button>
                     </div>
                     
-                    <a href='/' className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-2 cursor-pointer block'>
+                    <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-2 cursor-pointer block'>
                       Back to Homepage
                     </a>
                   </form>
@@ -2349,7 +2349,7 @@ reportRegError("Please enter a valid email address.");
 
  <div className="space-y-4">
  <p className="text-xs text-zinc-500 text-center leading-relaxed">
- If you believe this was in error or would like to submit additional credentials, please contact our support team at <a href="mailto:support@behold.com" className="text-brand hover:underline">support@behold.com</a>.
+ If you believe this was in error or would like to submit additional credentials, please contact our support team at <a href="mailto:support@behold.com" className="text-[#00e5ff] hover:underline">support@behold.com</a>.
  </p>
 
  <button
@@ -2370,8 +2370,8 @@ reportRegError("Please enter a valid email address.");
  <SEO title="Counsellor Dashboard | BEHOLD." noindex={true} />
 
  {/* Background Soft Glows */}
- <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />
- <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-[#00e5ff]/5 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-[#00e5ff]-accent/5 rounded-full blur-3xl pointer-events-none" />
 
  {/* Mobile Top Navbar (Visible only on lg:hidden) */}
  <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between bg-zinc-900 border-b border-zinc-805 px-5 py-4 w-full shadow-sm">
@@ -2388,7 +2388,7 @@ reportRegError("Please enter a valid email address.");
 
  <div className="flex items-center gap-1.5">
  <span className="font-header font-bold text-base tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
+ BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  </div>
  </div>
@@ -2400,7 +2400,7 @@ reportRegError("Please enter a valid email address.");
  className="w-8 h-8 rounded-[10px] bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white hover:border-brand/30 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
  title="Open Profile Menu"
  >
- <User className="w-4 h-4 text-brand" />
+ <User className="w-4 h-4 text-[#00e5ff]" />
  </button>
  </div>
 
@@ -2427,7 +2427,7 @@ reportRegError("Please enter a valid email address.");
  <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide text-white flex items-center gap-2">
  {profile.name}
  {counsellorStatus === 'PENDING' && (
- <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-955/20 border border-amber-900/30 text-amber-500 tracking-wider">
+ <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#090d16]mber-955/20 border border-amber-900/30 text-amber-500 tracking-wider">
  Pending
  </span>
  )}
@@ -2460,11 +2460,11 @@ reportRegError("Please enter a valid email address.");
  </div>
  <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-[10px]">
  <span className="text-sm text-zinc-500 font-bold block">Upcoming Slots</span>
- <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(b => (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && !isSessionCompleted(b)).length} Bookings</p>
+ <p className="text-sm font-bold text-[#00e5ff] mt-0.5">{bookings.filter(b => (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'PENDING') && !isSessionCompleted(b)).length} Bookings</p>
  </div>
  <div className="bg-zinc-950 border border-zinc-850 px-5 py-2.5 rounded-[10px]">
  <span className="text-sm text-zinc-500 font-bold block">Hours Completed</span>
- <p className="text-sm font-bold text-brand mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
+ <p className="text-sm font-bold text-[#00e5ff] mt-0.5">{bookings.filter(isSessionCompleted).length + Number(profile.hours || 0)}+ Hrs</p>
  </div>
  </div>
  </div>
@@ -2484,7 +2484,7 @@ reportRegError("Please enter a valid email address.");
  </div>
  </div>
  ) : !isCounsellorVerified() ? (
- <div className="bg-amber-955/20 border border-amber-900/60 p-4 rounded-[10px] flex items-center gap-3 text-amber-300 text-sm animate-in slide-in-from-top duration-300">
+ <div className="bg-[#090d16]mber-955/20 border border-amber-900/60 p-4 rounded-[10px] flex items-center gap-3 text-amber-300 text-sm animate-in slide-in-from-top duration-300">
  <ShieldAlert className="w-5 h-5 text-amber-450 shrink-0" />
  <div className="text-left">
  <span className="font-bold block mb-0.5">Account Pending Verification</span>
@@ -2650,12 +2650,12 @@ reportRegError("Please enter a valid email address.");
 
  {/* Avatar + Name */}
  <div className="px-6 py-6 flex flex-col items-center text-center space-y-3 border-b border-zinc-800">
- <div className="w-20 h-20 rounded-[10px] bg-brand text-zinc-955 flex items-center justify-center font-header font-bold text-2xl shadow-xl">
+ <div className="w-20 h-20 rounded-[10px] bg-[#00e5ff] text-zinc-955 flex items-center justify-center font-header font-bold text-2xl shadow-xl">
  {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div>
  <h2 className="text-base font-bold text-white tracking-wide font-header font-bold">{profile.name}</h2>
- <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-brand/10 border border-brand/20 text-brand">
+ <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff]">
  Consultant Psychologist
  </span>
  </div>
@@ -2725,7 +2725,7 @@ reportRegError("Please enter a valid email address.");
  onClick={() => { handleNavClick('profile'); setIsProfileDrawerOpen(false); }}
  className="w-full py-2.5 border border-zinc-700 hover:border-indigo-500 text-zinc-300 hover:text-white font-bold text-sm rounded-[10px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer bg-zinc-900"
  >
- <Edit className="w-3.5 h-3.5 text-brand" /> Edit Profile
+ <Edit className="w-3.5 h-3.5 text-[#00e5ff]" /> Edit Profile
  </button>
  <button
  onClick={() => { setIsProfileDrawerOpen(false); setIsLogoutConfirmOpen(true); }}

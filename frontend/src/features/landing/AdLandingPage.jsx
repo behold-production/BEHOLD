@@ -449,10 +449,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       />
 
       {/* ── TOP FOCUSED BRAND BAR (Clean, Distraction-Free) ── */}
-      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
+      <header className="sticky top-0 z-40 w-full bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-700/80 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight flex items-baseline">
+            <span className="text-xl sm:text-2xl font-semibold text-white tracking-tight flex items-baseline">
               {(settings.siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] font-semibold text-2xl leading-none">.</span>
             </span>
           </div>
@@ -549,7 +549,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 >
                   {/* Scrubbable Progress Bar */}
                   <div
-                    className="w-full h-1.5 bg-white/30 hover:h-2.5 rounded-full cursor-pointer transition-all relative overflow-hidden"
+                    className="w-full h-1.5 bg-[#0f172a]/30 hover:h-2.5 rounded-full cursor-pointer transition-all relative overflow-hidden"
                     onClick={handleSeek}
                   >
                     <div
@@ -593,9 +593,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
 
             {/* Trust Indicators below video */}
-            <div className="mt-3.5 flex items-center justify-center gap-4 text-xs font-semibold text-slate-500">
+            <div className="mt-3.5 flex items-center justify-center gap-4 text-xs font-semibold text-slate-400">
               <span className="flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                <Lock className="w-3.5 h-3.5 text-[#00e5ff]" />
                 100% സ്വകാര്യം
               </span>
               <span>•</span>
@@ -615,7 +615,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               </div>
 
               <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-slate-950 tracking-tight leading-[1.3] space-y-2">
-                <span className="block text-slate-900 font-extrabold">
+                <span className="block text-white font-extrabold">
                   {heroTitleLine1}
                 </span>
                 <span className="block text-[#3a0ca3] font-extrabold">
@@ -623,7 +623,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 </span>
               </h1>
 
-              <p className="text-sm sm:text-base lg:text-lg text-slate-700 leading-relaxed font-medium pt-1 max-w-xl">
+              <p className="text-sm sm:text-base lg:text-lg text-slate-300 leading-relaxed font-medium pt-1 max-w-xl">
                 {heroSub}
               </p>
             </div>
@@ -641,13 +641,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             </div>
 
             {/* Quick Guarantees under CTA */}
-            <div className="pt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-semibold text-slate-600">
+            <div className="pt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-semibold text-slate-400">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" />
                 <span>Instant Google Meet link on WhatsApp & Email</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0" />
                 <span>No app download needed • 100% Private</span>
               </span>
             </div>
@@ -663,7 +663,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 1 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
+              <div className="w-10 h-10 rounded-xl bg-[#0f172a]/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
                 <GraduationCap className="w-5 h-5" />
               </div>
               <div>
@@ -676,7 +676,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 2 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
+              <div className="w-10 h-10 rounded-xl bg-[#0f172a]/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
                 <Lock className="w-5 h-5" />
               </div>
               <div>
@@ -689,7 +689,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 3 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
+              <div className="w-10 h-10 rounded-xl bg-[#0f172a]/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
                 <Languages className="w-5 h-5" />
               </div>
               <div>
@@ -702,7 +702,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
             {/* Trust Item 4 */}
             <div className="flex items-center gap-3 p-2 text-left">
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
+              <div className="w-10 h-10 rounded-xl bg-[#0f172a]/5 border border-white/10 flex items-center justify-center shrink-0 text-[#00e5ff]">
                 <CreditCard className="w-5 h-5" />
               </div>
               <div>
@@ -732,44 +732,44 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left mb-8">
 
           <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#1e293b] border border-slate-700/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
               <AlertCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-white leading-snug">
                 rest എടുത്തിട്ടും, എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
           <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#1e293b] border border-slate-700/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
               <Clock className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-white leading-snug">
                 ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതിരിക്കാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
           <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#1e293b] border border-slate-700/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
               <HeartHandshake className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-white leading-snug">
                 Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?
               </h3>
             </div>
           </div>
 
           <div className="card-glass hover:-translate-y-1 p-5 sm:p-6 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#1e293b] border border-slate-700/80 flex items-center justify-center text-[var(--color-brand)] shrink-0 shadow-sm">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">
+              <h3 className="text-sm sm:text-base font-semibold text-white leading-snug">
                 എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?
               </h3>
             </div>
@@ -788,7 +788,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       </section>
 
       {/* ── SECTION 4: MEET THE PSYCHOLOGISTS ── */}
-      <section className="py-14 sm:py-20 bg-transparent border-t border-slate-200/40 relative">
+      <section className="py-14 sm:py-20 bg-transparent border-t border-slate-700/40 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Header container */}
@@ -797,7 +797,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 tracking-tight">
                 {psychologistHeading}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-800 mt-1.5 max-w-2xl font-bold leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-200 mt-1.5 max-w-2xl font-bold leading-relaxed">
                 {psychologistIntro}
               </p>
             </div>
@@ -805,14 +805,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <div className="flex items-center gap-2 self-end">
               <button
                 onClick={() => handleScrollCarousel('left')}
-                className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 shadow-2xs hover:shadow-sm transition-all cursor-pointer active:scale-95"
+                className="w-10 h-10 rounded-full border border-slate-700 bg-[#0f172a] hover:bg-[#1e293b] flex items-center justify-center text-slate-300 shadow-2xs hover:shadow-sm transition-all cursor-pointer active:scale-95"
                 aria-label="Previous psychologist"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={() => handleScrollCarousel('right')}
-                className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 shadow-2xs hover:shadow-sm transition-all cursor-pointer active:scale-95"
+                className="w-10 h-10 rounded-full border border-slate-700 bg-[#0f172a] hover:bg-[#1e293b] flex items-center justify-center text-slate-300 shadow-2xs hover:shadow-sm transition-all cursor-pointer active:scale-95"
                 aria-label="Next psychologist"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -846,16 +846,16 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       )}
                       <div className="pr-2 space-y-1 z-10 max-w-[65%]">
                         <div className="flex items-center gap-1.5">
-                          <h3 className="font-sans text-base sm:text-lg font-semibold text-slate-900 leading-tight line-clamp-1">
+                          <h3 className="font-sans text-base sm:text-lg font-semibold text-white leading-tight line-clamp-1">
                             {advisor.name}
                           </h3>
                           <ShieldCheck className="w-4 h-4 text-[#3a0ca3] shrink-0" title="Verified Professional" />
                         </div>
-                        <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
+                        <p className="text-[11px] sm:text-xs font-semibold text-slate-300 tracking-wide line-clamp-1">
                           {cardTitle}
                         </p>
                         <div className="flex items-center gap-1.5 pt-1">
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/80 text-[#3a0ca3] shadow-2xs">
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-[#0f172a]/80 text-[#3a0ca3] shadow-2xs">
                             ★ 4.9 Rating
                           </span>
                         </div>
@@ -874,13 +874,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                             }}
                           />
                         ) : (
-                          <div className="w-14 h-14 rounded-2xl bg-white/95 shadow-md flex items-center justify-center mb-2 border border-white">
+                          <div className="w-14 h-14 rounded-2xl bg-[#0f172a]/95 shadow-md flex items-center justify-center mb-2 border border-white">
                             <span className="font-semibold text-xl text-[#00e5ff]">
                               {getInitial(advisor.name)}
                             </span>
                           </div>
                         )}
-                        <div style={{ display: 'none' }} className="w-14 h-14 rounded-2xl bg-white/95 shadow-md items-center justify-center mb-2 border border-white">
+                        <div style={{ display: 'none' }} className="w-14 h-14 rounded-2xl bg-[#0f172a]/95 shadow-md items-center justify-center mb-2 border border-white">
                           <span className="font-semibold text-xl text-[#00e5ff]">
                             {getInitial(advisor.name)}
                           </span>
@@ -888,14 +888,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       </div>
                     </div>
 
-                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-white">
+                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 bg-[#0f172a]">
                       <div className="space-y-1">
                         <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Specialties:</span>
                         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
                           {Array.isArray(advisor.specialties) && advisor.specialties.slice(0, 3).map((spec, i) => (
                             <span
                               key={i}
-                              className="px-2.5 py-1 bg-slate-50 border border-slate-200 text-slate-800 text-[10.5px] font-semibold rounded-lg whitespace-nowrap shrink-0"
+                              className="px-2.5 py-1 bg-[#1e293b] border border-slate-700 text-slate-200 text-[10.5px] font-semibold rounded-lg whitespace-nowrap shrink-0"
                             >
                               {typeof spec === 'string' ? spec : (spec?.name || String(spec))}
                             </span>
@@ -903,8 +903,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                         </div>
                       </div>
 
-                      <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
-                        <p className={`text-xs text-slate-700 font-normal leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
+                      <div className="bg-[#1e293b]/90 border border-slate-700/80 rounded-xl p-3 shadow-2xs">
+                        <p className={`text-xs text-slate-300 font-normal leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
                           "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
                         </p>
                         {advisor.bio && advisor.bio.length > 50 && (
@@ -919,28 +919,28 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       </div>
 
                       <div className="grid grid-cols-3 gap-1.5 shrink-0">
-                        <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
-                          <span className="text-xs font-semibold text-slate-900 block leading-none">
+                        <div className="bg-[#1e293b]/80 border border-slate-700/80 rounded-xl p-2 text-left">
+                          <span className="text-xs font-semibold text-white block leading-none">
                             {advisor.hours ? `${advisor.hours.toLocaleString()}+` : '500+'}
                           </span>
-                          <span className="text-[9px] font-medium text-slate-500 block mt-1">Consult Hours</span>
+                          <span className="text-[9px] font-medium text-slate-400 block mt-1">Consult Hours</span>
                         </div>
-                        <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left min-w-0" title={advisor.languages}>
-                          <span className="text-xs font-semibold text-slate-900 block leading-tight truncate">
+                        <div className="bg-[#1e293b]/80 border border-slate-700/80 rounded-xl p-2 text-left min-w-0" title={advisor.languages}>
+                          <span className="text-xs font-semibold text-white block leading-tight truncate">
                             {advisor.languages}
                           </span>
-                          <span className="text-[9px] font-medium text-slate-500 block mt-1">Languages</span>
+                          <span className="text-[9px] font-medium text-slate-400 block mt-1">Languages</span>
                         </div>
-                        <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
-                          <span className="text-xs font-semibold text-slate-900 block leading-none">₹{minFee}</span>
-                          <span className="text-[9px] font-medium text-slate-500 block mt-1">Fee per session</span>
+                        <div className="bg-[#1e293b]/80 border border-slate-700/80 rounded-xl p-2 text-left">
+                          <span className="text-xs font-semibold text-white block leading-none">₹{minFee}</span>
+                          <span className="text-[9px] font-medium text-slate-400 block mt-1">Fee per session</span>
                         </div>
                       </div>
 
-                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <div className="pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
                         <div className="text-left">
                           <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Next Available</span>
-                          <span className={`text-[11px] font-semibold block mt-0.5 whitespace-nowrap ${isUnavailable ? 'text-zinc-400' : isAvailToday ? 'text-emerald-600' : 'text-[#3a0ca3]'}`}>
+                          <span className={`text-[11px] font-semibold block mt-0.5 whitespace-nowrap ${isUnavailable ? 'text-zinc-400' : isAvailToday ? 'text-[#00e5ff]' : 'text-[#3a0ca3]'}`}>
                             {nextAvail}
                           </span>
                         </div>
@@ -964,7 +964,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       </section>
 
       {/* ── SECTION 5: HOW IT WORKS ── */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
+      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-700/80">
         <div className="space-y-6 text-left">
 
           <div className="space-y-2">
@@ -974,7 +974,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
               How It Works
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-400 font-medium leading-relaxed">
               ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം.
             </p>
           </div>
@@ -985,11 +985,11 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 key={idx}
                 onClick={() => seekToStep(idx)}
                 className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${activeStep === idx
-                    ? 'bg-white border-[#00e5ff] shadow-md ring-2 ring-[#00e5ff]/25'
-                    : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
+                    ? 'bg-[#0f172a] border-[#00e5ff] shadow-md ring-2 ring-[#00e5ff]/25'
+                    : 'bg-[#0f172a]/80 border-slate-700/90 hover:border-slate-600 hover:shadow-xs'
                   }`}
               >
-                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00e5ff] text-slate-950 shadow-xs' : 'bg-slate-100 text-slate-700'
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#00e5ff] text-slate-950 shadow-xs' : 'bg-[#1e293b] text-slate-300'
                   }`}>
                   {step.badge}
                 </span>
@@ -1002,7 +1002,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-600 mt-1 font-medium leading-relaxed">{step.desc}</p>
+                  <p className="text-xs text-slate-400 mt-1 font-medium leading-relaxed">{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -1050,7 +1050,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       </section>
 
       {/* ── SECTION 6: FAQ SECTION ── */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80">
+      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-700/80">
         <div className="text-center mb-10 space-y-2">
           <span className="inline-block text-xs font-semibold uppercase tracking-wider text-[#3a0ca3] bg-[#00e5ff]/10 px-3 py-1 rounded-md border border-[#00e5ff]/25">
             Got Questions?
@@ -1058,7 +1058,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-950 tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-medium leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto font-medium leading-relaxed">
             സെഷനെക്കുറിച്ചും ബുക്കിംഗിനെക്കുറിച്ചുമുള്ള പ്രധാന വിവരങ്ങൾ താഴെ കാണാം.
           </p>
         </div>
@@ -1070,8 +1070,8 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <div
                 key={index}
                 className={`rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen
-                    ? 'bg-white border-[#00e5ff]/80 shadow-md ring-1 ring-[#00e5ff]/20'
-                    : 'bg-white border-slate-200/90 hover:border-slate-300'
+                    ? 'bg-[#0f172a] border-[#00e5ff]/80 shadow-md ring-1 ring-[#00e5ff]/20'
+                    : 'bg-[#0f172a] border-slate-700/90 hover:border-slate-600'
                   }`}
               >
                 <button
@@ -1080,16 +1080,16 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left cursor-pointer bg-transparent border-none"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-sm sm:text-base font-semibold text-slate-900">
+                  <span className="text-sm sm:text-base font-semibold text-white">
                     {faq.q}
                   </span>
-                  <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center shrink-0 text-slate-500">
+                  <div className="w-7 h-7 rounded-full bg-[#1e293b] flex items-center justify-center shrink-0 text-slate-400">
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100 mt-1">
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-400 text-xs sm:text-sm leading-relaxed border-t border-slate-800 mt-1">
                     <p className="pt-3 font-normal leading-relaxed">{faq.a}</p>
                   </div>
                 )}
@@ -1107,7 +1107,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <span>{heroBtnText}</span>
             <ArrowRight className="w-5 h-5" />
           </button>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-400">
             100% Confidential • Professional Support • Secure Online Booking
           </p>
         </div>
@@ -1120,7 +1120,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             <span className="text-white font-semibold text-sm tracking-tight flex items-baseline">
               BEHOLD<span className="text-[#00e5ff] font-bold text-base leading-none">.</span>
             </span>
-            <span className="hidden sm:inline text-slate-600">•</span>
+            <span className="hidden sm:inline text-slate-400">•</span>
             <span className="text-slate-400">
               © {new Date().getFullYear()} BEHOLD. All rights reserved. Confidential Online Psychological Counselling.
             </span>
@@ -1133,7 +1133,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             >
               Privacy Policy
             </button>
-            <span className="text-slate-700">•</span>
+            <span className="text-slate-300">•</span>
             <button
               onClick={() => onOpenDocs ? onOpenDocs('terms') : window.open('/terms', '_blank')}
               className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-transparent border-none text-xs p-0 underline-offset-4 hover:underline"
@@ -1157,7 +1157,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 : 'opacity-0 translate-y-4 pointer-events-none'
               }`}
           >
-            <div className="bg-white rounded-2xl p-4 shadow-2xl border border-slate-200/80 ring-1 ring-slate-900/5 flex items-start gap-3">
+            <div className="bg-[#0f172a] rounded-2xl p-4 shadow-2xl border border-slate-700/80 ring-1 ring-slate-900/5 flex items-start gap-3">
               <div className="w-9 h-9 rounded-xl bg-[#00e5ff]/10 border border-[#00e5ff]/25 flex items-center justify-center shrink-0 mt-0.5">
                 {Icon && <Icon className="w-4.5 h-4.5 text-[#3a0ca3]" />}
               </div>
@@ -1166,14 +1166,14 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#3a0ca3] block">
                   {popup?.label}
                 </span>
-                <p className="text-sm font-semibold text-slate-900 leading-snug mt-0.5">
+                <p className="text-sm font-semibold text-white leading-snug mt-0.5">
                   {popup?.message}
                 </p>
               </div>
 
               <button
                 onClick={handleDismissPopup}
-                className="text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer border-none bg-transparent shrink-0 transition-colors"
+                className="text-slate-400 hover:text-slate-400 p-0.5 cursor-pointer border-none bg-transparent shrink-0 transition-colors"
                 aria-label="Dismiss"
               >
                 <X className="w-3.5 h-3.5" />
@@ -1186,7 +1186,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       {/* ── STICKY BOTTOM MOBILE CTA BAR (appears only after scrolling past hero) ── */}
       <nav
         aria-label="Sticky booking action bar"
-        className={`fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:hidden transition-all duration-300 ease-out ${
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur-lg border-t border-slate-700/90 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),14px)] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:hidden transition-all duration-300 ease-out ${
           showMobileBottomBar
             ? 'translate-y-0 opacity-100 pointer-events-auto'
             : 'translate-y-full opacity-0 pointer-events-none'

@@ -60,7 +60,7 @@ export default function UnauthorizedFallback({ roleRequired }) {
             <h2 className='text-lg font-semibold text-white text-left font-header'>
               Sign In To Dashboard
             </h2>
-            <p className='text-xs text-slate-500 text-left mt-1.5 mb-6 leading-relaxed'>
+            <p className='text-xs text-slate-400 text-left mt-1.5 mb-6 leading-relaxed'>
               Security clearance required for system administration.
             </p>
 
@@ -101,7 +101,7 @@ export default function UnauthorizedFallback({ roleRequired }) {
                   <button
                     type='button'
                     onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                    className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                   >
                     {showPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                   </button>
@@ -124,7 +124,7 @@ export default function UnauthorizedFallback({ roleRequired }) {
                 <button
                   type='button'
                   onClick={() => navigate('/')}
-                  className='w-full text-center text-xs text-slate-500 hover:text-slate-350 transition pt-2 cursor-pointer active:scale-[0.98] bg-transparent border-none outline-none'
+                  className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-2 cursor-pointer active:scale-[0.98] bg-transparent border-none outline-none'
                 >
                   Back to Homepage
                 </button>

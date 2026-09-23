@@ -103,7 +103,7 @@ const AvailabilityTab = ({
    }
  }}
  className={`px-4 py-2 border rounded-[10px] text-sm font-bold transition-all duration-300 cursor-pointer ${isSelected
- ? 'bg-brand border-brand text-zinc-955 shadow-sm'
+ ? 'bg-[#00e5ff] border-brand text-zinc-955 shadow-sm'
  : 'bg-zinc-950 border-zinc-800 text-zinc-450 hover:border-zinc-700 hover:bg-zinc-900'
  }`}
  >
@@ -134,7 +134,7 @@ const AvailabilityTab = ({
  return (
  <div key={slot} className="flex items-center gap-1.5 w-full group">
  <div
- className="flex-1 py-2 px-1 border rounded-[10px] text-center font-bold bg-brand/10 border-brand/40 text-brand text-sm shadow-sm transition-all group-hover:border-brand/70"
+ className="flex-1 py-2 px-1 border rounded-[10px] text-center font-bold bg-[#00e5ff]/10 border-brand/40 text-[#00e5ff] text-sm shadow-sm transition-all group-hover:border-brand/70"
  >
  {slot}
  </div>
@@ -200,7 +200,7 @@ const AvailabilityTab = ({
  <button
  type="button"
  onClick={handleAddCustomSlot}
- className="w-full bg-brand hover:bg-brand-dark text-zinc-955 px-4 py-2 text-sm font-bold rounded-full transition-colors cursor-pointer h-[38px] flex items-center justify-center shadow-sm border-none"
+ className="w-full bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 px-4 py-2 text-sm font-bold rounded-full transition-colors cursor-pointer h-[38px] flex items-center justify-center shadow-sm border-none"
  >
  Add Slot
  </button>
@@ -315,7 +315,7 @@ const AvailabilityTab = ({
  ) : <span />}
  <button
  type="submit"
- className="w-full sm:w-auto bg-brand hover:bg-brand-dark text-zinc-955 px-8 py-2.5 text-sm font-bold rounded-full shadow-sm border-none cursor-pointer flex items-center justify-center gap-2 transition-colors"
+ className="w-full sm:w-auto bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 px-8 py-2.5 text-sm font-bold rounded-full shadow-sm border-none cursor-pointer flex items-center justify-center gap-2 transition-colors"
  >
  <Save className="w-4 h-4" /> Save Slots Matrix
  </button>

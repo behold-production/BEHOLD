@@ -157,8 +157,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
         return (
           <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHomeTop
-              ? 'bg-transparent border-none shadow-none text-slate-900'
-              : 'bg-white/90 backdrop-blur-md border-b border-slate-200/60 shadow-sm text-slate-900'
+              ? 'bg-transparent border-none shadow-none text-white'
+              : 'bg-[#030712]/90 backdrop-blur-lg border-b border-slate-800/80 shadow-none text-white'
               }`}
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
@@ -167,17 +167,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
                 <button
                   onClick={() => setMobileMenuOpen(true)}
-                  className="p-1.5 rounded-xl transition-colors cursor-pointer border-none bg-slate-100/80 hover:bg-slate-200/80 text-slate-900 flex items-center justify-center"
+                  className="p-1.5 rounded-xl transition-colors cursor-pointer border-none bg-[#0f172a] hover:bg-[#1e293b] text-white border border-slate-700 flex items-center justify-center"
                   aria-label="Open Navigation Drawer"
                 >
-                  <Menu className="w-5.5 h-5.5 text-slate-900" />
+                  <Menu className="w-5.5 h-5.5 text-white" />
                 </button>
 
                 <button
                   onClick={handleLogoClick}
                   className="flex items-center gap-1.5 text-left bg-transparent border-none cursor-pointer p-0"
                 >
-                  <span className="text-xl sm:text-2xl font-black font-sans text-slate-900 uppercase tracking-tight">
+                  <span className="text-xl sm:text-2xl font-black font-sans text-white uppercase tracking-tight">
                     {(siteName || 'BEHOLD').replace(/\.$/, '')}
                     <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
                   </span>
@@ -189,7 +189,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 onClick={handleLogoClick}
                 className="hidden lg:flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
               >
-                <span className="text-2xl sm:text-3xl font-black font-sans text-slate-900 uppercase tracking-tight">
+                <span className="text-2xl sm:text-3xl font-black font-sans text-white uppercase tracking-tight">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
                   <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
                 </span>
@@ -216,7 +216,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       onClick={action}
                       className={`text-sm font-semibold transition-colors duration-200 bg-transparent cursor-pointer py-1 px-1 rounded-md border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] ${isActive
                         ? 'text-[#00e5ff]'
-                        : 'text-slate-700 hover:text-[#00e5ff]'
+                        : 'text-slate-400 hover:text-[#00e5ff] hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]'
                         }`}
                     >
                       {label}
@@ -229,7 +229,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="hidden lg:flex items-center gap-3">
                 <button
                   onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all shadow-sm cursor-pointer border bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 border-transparent hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
+                  className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all shadow-sm cursor-pointer border-none primary-cyan-gradient text-slate-950 filter-glow hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
                 >
                   Book Session
                 </button>
@@ -239,7 +239,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                     onClick={handleProfileClick}
                     title={`Logged in as ${user.name || user.email}`}
                     aria-label="User Profile"
-                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer border shrink-0 bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
+                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer border shrink-0 bg-slate-100/90 hover:bg-slate-200/90 text-white border-slate-200/80 shadow-xs hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
                   >
                     <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 bg-[#00e5ff]/10 flex items-center justify-center border border-[#00e5ff]/30">
                       {user.profilePic ? (
@@ -249,14 +249,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       )}
                     </div>
                     <div className="flex flex-col text-left leading-tight pr-1 hidden sm:flex">
-                      <span className="text-xs font-semibold text-slate-900 truncate max-w-[120px]">{user.name || 'Account'}</span>
+                      <span className="text-xs font-semibold text-white truncate max-w-[120px]">{user.name || 'Account'}</span>
                       {user.email && <span className="text-[10px] text-slate-500 font-medium truncate max-w-[130px]">{user.email}</span>}
                     </div>
                   </button>
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
+                    className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-white border-slate-200 hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
                   >
                     Sign In
                   </button>
@@ -270,7 +270,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                     onClick={handleProfileClick}
                     title={`Logged in as ${user.name || user.email}`}
                     aria-label="User Profile"
-                    className="flex items-center gap-1.5 p-0.5 rounded-xl transition-all cursor-pointer border bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs active:scale-95"
+                    className="flex items-center gap-1.5 p-0.5 rounded-xl transition-all cursor-pointer border bg-slate-100/90 hover:bg-slate-200/90 text-white border-slate-200/80 shadow-xs active:scale-95"
                   >
                     <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#00e5ff] flex items-center justify-center text-slate-950 font-extrabold text-sm shadow-xs border-2 border-white">
                       {user.profilePic ? (
@@ -283,7 +283,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-3.5 py-1.5 font-bold text-xs rounded-xl transition-all cursor-pointer border bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 border-transparent shadow-xs"
+                    className="px-3.5 py-1.5 font-bold text-xs rounded-xl transition-all cursor-pointer border-none primary-cyan-gradient text-slate-950 filter-glow shadow-xs"
                   >
                     Sign In
                   </button>
@@ -318,13 +318,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
           >
             <div>
               <div className="flex items-center justify-between pb-6 border-b border-slate-200">
-                <span className="text-xl font-black font-sans text-slate-900 tracking-tight">
+                <span className="text-xl font-black font-sans text-white tracking-tight">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
                   <span className="text-[#00e5ff] font-black">.</span>
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-slate-500 hover:text-slate-900 transition rounded-full hover:bg-slate-100 border-none bg-transparent cursor-pointer"
+                  className="p-2 text-slate-500 hover:text-white transition rounded-full hover:bg-slate-100 border-none bg-transparent cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -335,7 +335,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                   <button
                     key={label}
                     onClick={action}
-                    className="text-left py-3 px-4 rounded-xl text-sm font-semibold text-slate-700 hover:text-[#00e5ff] hover:bg-slate-50 transition border-none bg-transparent cursor-pointer"
+                    className="text-left py-3 px-4 rounded-xl text-sm font-semibold text-slate-300 hover:text-[#00e5ff] hover:bg-slate-50 transition border-none bg-transparent cursor-pointer"
                   >
                     {label}
                   </button>
@@ -356,8 +356,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <button
                 onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
                 className={`w-full py-3 font-semibold text-sm rounded-xl transition-all cursor-pointer text-center ${user
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200'
-                  : 'bg-[#00e5ff] hover:bg-[#00b2be] text-slate-900 border border-transparent shadow-xs'
+                  ? 'bg-slate-100 hover:bg-slate-200 text-white border border-slate-200'
+                  : 'bg-[#00e5ff] hover:bg-[#00b2be] text-white border border-transparent shadow-xs'
                   }`}
               >
                 Book Session
@@ -372,7 +372,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               ) : (
                 <button
                   onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                  className="w-full py-2.5 border border-slate-200 text-slate-900 font-semibold text-sm rounded-xl transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
+                  className="w-full py-2.5 border border-slate-200 text-white font-semibold text-sm rounded-xl transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
                 >
                   Sign In
                 </button>

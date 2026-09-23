@@ -566,7 +566,7 @@ export default function StudentManagementTab(props) {
  {canAddStudents && (
  <button
  onClick={handleOpenAddUser}
- className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-full transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+ className="px-4 py-2 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-950 text-sm font-bold rounded-full transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
  >
  <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add User
  </button>
@@ -598,7 +598,7 @@ export default function StudentManagementTab(props) {
  <tr key={student.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
  <td className="p-3 whitespace-nowrap">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+ <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-[#00e5ff] flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
  {student.profilePic || student.image ? (
  <img src={student.profilePic || student.image} alt={student.name} className="w-full h-full object-cover" />
  ) : (
@@ -610,7 +610,7 @@ export default function StudentManagementTab(props) {
  <div className="flex items-center gap-1.5 mt-0.5">
    <span className="text-sm text-zinc-500 break-all">ID: {student.id}</span>
    {(student.utmCampaign || student.utmSource || student.fbclid) && (
-     <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-1 py-0.2 rounded shadow-xs">
+     <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-cyan-400 bg-[#090d16]yan-950/60 border border-cyan-800/60 px-1 py-0.2 rounded shadow-xs">
        🎯 {student.utmCampaign ? String(student.utmCampaign).substring(0, 14) : (student.utmSource ? `Ad (${student.utmSource})` : 'Meta Ad')}
      </span>
    )}
@@ -638,14 +638,14 @@ export default function StudentManagementTab(props) {
   <div className="flex items-center justify-center gap-2">
   <button
   onClick={() => handleOpenBookSessionForStudent(student)}
-  className="px-2.5 py-1 bg-brand/10 text-brand hover:bg-brand hover:text-zinc-955 rounded border border-brand/30 transition cursor-pointer text-sm font-bold flex items-center gap-1 shadow-xs"
+  className="px-2.5 py-1 bg-[#00e5ff]/10 text-[#00e5ff] hover:bg-[#00e5ff] hover:text-zinc-955 rounded border border-brand/30 transition cursor-pointer text-sm font-bold flex items-center gap-1 shadow-xs"
   title="Create Booking for this User"
   >
   <Calendar className="w-3.5 h-3.5" /> Book
   </button>
   <button
   onClick={() => setViewingStudent(student)}
-  className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
+  className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
   >
   Details
   </button>
@@ -661,7 +661,7 @@ export default function StudentManagementTab(props) {
  {canEditStudents && (
  <button
  onClick={() => handleGenerateResetToken(student.email)}
- className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
+ className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-[#090d16]mber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
  title="Generate Password Reset Link"
  >
  <KeyRound className="w-3.5 h-3.5" />
@@ -714,7 +714,7 @@ export default function StudentManagementTab(props) {
  <div className="space-y-2">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Profile Picture</label>
  <div className="flex items-center gap-3">
- <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+ <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-[#00e5ff] font-bold text-lg">
  {userProfilePicFile ? (
  <img src={URL.createObjectURL(userProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
  ) : userForm.profilePic ? (
@@ -850,7 +850,7 @@ export default function StudentManagementTab(props) {
  type="button"
  onClick={handleAdminUserAddressSearch}
  disabled={isAdminUserSearching}
- className="w-full sm:w-auto px-3 py-2 bg-brand text-zinc-950 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer border-none shrink-0 flex items-center justify-center"
+ className="w-full sm:w-auto px-3 py-2 bg-[#00e5ff] text-zinc-950 text-xs font-bold rounded-full hover:bg-[#00e5ff]-dark transition cursor-pointer border-none shrink-0 flex items-center justify-center"
  >
  {isAdminUserSearching ? 'Searching...' : 'Search'}
  </button>
@@ -927,13 +927,13 @@ export default function StudentManagementTab(props) {
  )}
  {userFormError && (<p className="text-sm text-rose-500 font-bold tracking-wide">{userFormError}</p>)}
  {userFormSuccess && (<p className="text-sm text-emerald-500 font-bold tracking-wide">{userFormSuccess}</p>)}
- {isUserPicUploading && (<p className="text-xs text-brand font-bold animate-pulse">Uploading profile picture...</p>)}
+ {isUserPicUploading && (<p className="text-xs text-[#00e5ff] font-bold animate-pulse">Uploading profile picture...</p>)}
  <div className="flex gap-3 pt-2">
  <button type="button" onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }} className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent">Cancel</button>
  <button
  type="submit"
  disabled={isSavingForm}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
  {isAddUserOpen ? 'Create Account' : 'Save Changes'}
@@ -953,7 +953,7 @@ export default function StudentManagementTab(props) {
  <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
  <div className="flex justify-between items-start">
  <div className="flex items-center gap-3">
- <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+ <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
  {viewingStudent.profilePic || viewingStudent.image ? (
  <img src={viewingStudent.profilePic || viewingStudent.image} alt={viewingStudent.name} className="w-full h-full object-cover" />
  ) : (
@@ -962,7 +962,7 @@ export default function StudentManagementTab(props) {
  </div>
  <div>
  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
- <User className="w-5 h-5 text-brand" /> Student Profile Details
+ <User className="w-5 h-5 text-[#00e5ff]" /> Student Profile Details
  </h3>
  <p className="text-sm text-zinc-500 mt-1">Registry records, booking history, and diagnostic aptitude profiles.</p>
  </div>
@@ -974,7 +974,7 @@ export default function StudentManagementTab(props) {
       handleOpenBookSessionForStudent(viewingStudent);
       setViewingStudent(null);
     }}
-    className="px-3 py-1.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-lg transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+    className="px-3 py-1.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-lg transition cursor-pointer flex items-center gap-1.5 shadow-sm"
   >
     <Calendar className="w-3.5 h-3.5" /> Book Session
   </button>
@@ -1016,7 +1016,7 @@ export default function StudentManagementTab(props) {
  {viewingStudent.hadPriorTherapy && (
  <div className="pt-2 border-t border-zinc-900">
  <span className="text-zinc-500 block text-sm font-semibold">Prior Therapy Experience</span>
- <span className="font-bold text-brand">{viewingStudent.hadPriorTherapy}</span>
+ <span className="font-bold text-[#00e5ff]">{viewingStudent.hadPriorTherapy}</span>
  {viewingStudent.hadPriorTherapy === 'Yes' && viewingStudent.priorTherapyDetails && (
  <p className="text-xs text-zinc-300 mt-1 italic font-normal">"{viewingStudent.priorTherapyDetails}"</p>
  )}
@@ -1031,7 +1031,7 @@ export default function StudentManagementTab(props) {
  <span className="text-sm font-bold text-zinc-500 block mb-3">Consultation Summary</span>
  <div className="grid grid-cols-2 gap-2 text-center">
  <div className="bg-zinc-900 rounded-lg p-3 border border-zinc-850">
- <p className="text-xl font-bold text-brand">
+ <p className="text-xl font-bold text-[#00e5ff]">
  {bookingsDb.filter(b => b.userId === viewingStudent.id).length}
  </p>
  <p className="text-sm text-zinc-500 font-bold mt-0.5">Total Bookings</p>
@@ -1129,14 +1129,14 @@ export default function StudentManagementTab(props) {
  <div key={res.id} className="bg-zinc-955 border border-zinc-850 rounded-lg p-4 space-y-3">
  <div className="flex justify-between items-center pb-2 border-b border-zinc-900">
  <div>
- <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold ">
+ <span className="text-sm bg-[#00e5ff] text-zinc-955 px-2 py-0.5 rounded font-bold ">
  Dominant: {res.dominantDomain}
  </span>
  <span className="text-zinc-500 text-sm font-bold block mt-1 ">Date Completed: {res.date}</span>
  </div>
  <button
  onClick={() => handleExportAptitudeResults(res)}
- className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-brand rounded font-bold text-sm cursor-pointer border-none bg-transparent"
+ className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:text-[#00e5ff] rounded font-bold text-sm cursor-pointer border-none bg-transparent"
  >
  Copy Report
  </button>
@@ -1146,11 +1146,11 @@ export default function StudentManagementTab(props) {
  <div key={key} className="space-y-1">
  <div className="flex justify-between items-center font-bold">
  <span className="text-zinc-400 ">{key}</span>
- <span className="text-brand">{val}%</span>
+ <span className="text-[#00e5ff]">{val}%</span>
  </div>
  <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
  <div
- className="bg-brand h-full rounded-full transition-all duration-500"
+ className="bg-[#00e5ff] h-full rounded-full transition-all duration-500"
  style={{ width: `${val}%` }}
  />
  </div>
@@ -1211,7 +1211,7 @@ export default function StudentManagementTab(props) {
  <button
  type="button"
  onClick={() => handleAdminStartEditCigi(res)}
- className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-brand hover:text-brand-light transition cursor-pointer border-none"
+ className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-[#00e5ff] hover:text-[#00e5ff]-light transition cursor-pointer border-none"
  title="Edit Result Info"
  >
  <Edit className="w-3.5 h-3.5" />
@@ -1299,7 +1299,7 @@ export default function StudentManagementTab(props) {
  <button
  type="submit"
  disabled={isAdminCigiUploading}
- className="px-4 py-1.5 bg-brand hover:bg-brand-dark disabled:bg-zinc-700 text-zinc-950 font-bold rounded text-xs cursor-pointer border-none flex items-center gap-1 shadow"
+ className="px-4 py-1.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark disabled:bg-zinc-700 text-zinc-950 font-bold rounded text-xs cursor-pointer border-none flex items-center gap-1 shadow"
  >
  {isAdminCigiUploading ? (
  <><span className="w-3 h-3 border-2 border-zinc-955/30 border-t-zinc-955 rounded-full animate-spin" /> Saving...</>

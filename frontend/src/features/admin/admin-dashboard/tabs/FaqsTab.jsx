@@ -351,7 +351,7 @@ export default function FaqsTab(props) {
  setFaqFormSuccess('');
  setIsAddFaqOpen(true);
  }}
- className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+ className="px-4 py-2 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
  >
  <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add FAQ Item
  </button>
@@ -377,7 +377,7 @@ export default function FaqsTab(props) {
  >
  <div className="space-y-2 flex-1 min-w-0">
  <h4 className="font-header font-bold text-sm text-white flex items-center gap-2">
- <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-sm text-brand flex items-center justify-center font-bold shrink-0">{index + 1}</span>
+ <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-sm text-[#00e5ff] flex items-center justify-center font-bold shrink-0">{index + 1}</span>
  <span>{faq.question}</span>
  </h4>
  <p className="text-[12.5px] text-zinc-400 font-medium leading-relaxed pl-7 ">

@@ -251,14 +251,14 @@ export default function RevenueTab(props) {
  
   {/* Admin Payment Collection Notice */}
   <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 flex items-start gap-3 text-xs leading-relaxed shadow-sm">
-    <div className="p-2 bg-brand/10 border border-brand/20 rounded-lg text-brand shrink-0">
+    <div className="p-2 bg-[#00e5ff]/10 border border-brand/20 rounded-lg text-[#00e5ff] shrink-0">
       <Building className="w-4 h-4" />
     </div>
     <div className="space-y-1">
       <h4 className="font-bold text-white text-xs">Platform Payment Collection & Allocation</h4>
       <p className="text-zinc-400">
         All client payments are collected centrally into the Admin Razorpay Account. Your allocated commission share of 
-        <strong className="text-brand font-semibold"> {effectiveSplitPercent}%</strong> is automatically calculated on every paid session and displayed below.
+        <strong className="text-[#00e5ff] font-semibold"> {effectiveSplitPercent}%</strong> is automatically calculated on every paid session and displayed below.
       </p>
     </div>
   </div>
@@ -269,9 +269,9 @@ export default function RevenueTab(props) {
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-[10px] space-y-2 shadow-lg">
  <div className="flex justify-between items-center text-zinc-500">
  <span className="text-xs font-bold tracking-wider">Net Payout Earned</span>
- <DollarSign className="w-4 h-4 text-brand" />
+ <DollarSign className="w-4 h-4 text-[#00e5ff]" />
  </div>
- <div className="text-2xl font-bold text-brand font-header">
+ <div className="text-2xl font-bold text-[#00e5ff] font-header">
  ₹{formatAmount(metrics.netPayoutEarned)}
  </div>
  <p className="text-[11px] text-zinc-500 font-medium">Your absolute net share from completed bookings</p>
@@ -346,11 +346,11 @@ export default function RevenueTab(props) {
  {/* Tooltip */}
  <div className="absolute bottom-full mb-2 bg-zinc-955 border border-zinc-800 rounded px-2.5 py-1 text-[10px] text-zinc-300 opacity-0 group-hover:opacity-100 transition duration-150 pointer-events-none z-20 whitespace-nowrap shadow-md">
  <div>Gross Bookings: ₹{formatAmount(d.gross)}</div>
- <div className="text-brand font-bold">Your Share: ₹{formatAmount(d.payout)}</div>
+ <div className="text-[#00e5ff] font-bold">Your Share: ₹{formatAmount(d.payout)}</div>
  </div>
  {/* Visual Bar representation */}
  <div className="w-6 bg-zinc-850 border border-zinc-800 rounded-t relative overflow-hidden transition-all duration-300 hover:bg-zinc-800" style={{ height: `${Math.max(grossHeight, 2)}%` }}>
- <div className="absolute bottom-0 inset-x-0 bg-brand rounded-t transition-all duration-300" style={{ height: `${payoutHeight}%` }} />
+ <div className="absolute bottom-0 inset-x-0 bg-[#00e5ff] rounded-t transition-all duration-300" style={{ height: `${payoutHeight}%` }} />
  </div>
  <span className="text-[10px] text-zinc-550 font-bold mt-2">{d.month}</span>
  </div>
@@ -383,7 +383,7 @@ export default function RevenueTab(props) {
   <div className="space-y-3 pt-1">
   <div className="space-y-1">
   <span className="text-[10px] font-bold text-zinc-500 block">Payout Transfer Mode</span>
-  <span className="text-xs font-semibold text-brand">
+  <span className="text-xs font-semibold text-[#00e5ff]">
   Platform Internal Settlement (Direct Bank Transfer)
   </span>
   </div>
@@ -487,7 +487,7 @@ export default function RevenueTab(props) {
  <th className="p-3">Session Date</th>
  <th className="p-3">Session Mode</th>
  <th className="p-3 text-right">Gross Paid</th>
- <th className="p-3 text-right font-bold text-brand">My Share (Payout)</th>
+ <th className="p-3 text-right font-bold text-[#00e5ff]">My Share (Payout)</th>
  <th className="p-3 text-center">Payment Status</th>
  <th className="p-3 text-center">Clinical Record</th>
  <th className="p-3 text-center">Receipt</th>
@@ -553,7 +553,7 @@ export default function RevenueTab(props) {
  className="p-1 text-zinc-450 hover:text-white rounded hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
  title="Download Diagnostic Report"
  >
- <FileText className="w-3.5 h-3.5 text-zinc-400 hover:text-brand" />
+ <FileText className="w-3.5 h-3.5 text-zinc-400 hover:text-[#00e5ff]" />
  </button>
  ) : (
  <span className="text-zinc-600 italic text-[11px]">-</span>
@@ -614,7 +614,7 @@ export default function RevenueTab(props) {
  onClick={() => setPage(n)}
  className={`w-7 h-7 rounded-[10px] border text-xs font-bold transition cursor-pointer ${
  n === safeCurrentPage
- ? 'bg-brand border-brand text-zinc-955'
+ ? 'bg-[#00e5ff] border-brand text-zinc-955'
  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
  }`}
  >

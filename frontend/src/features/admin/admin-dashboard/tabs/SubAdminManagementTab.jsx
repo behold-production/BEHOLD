@@ -495,7 +495,7 @@ const handleOpenEditSubAdmin = (admin) => {
  setNewRolePermissions({});
  }}
  className={`px-4 py-2 border-b-2 text-sm font-bold transition-all cursor-pointer border-none bg-transparent ${activeRoleTab === 'roles'
- ? 'border-brand text-brand font-bold'
+ ? 'border-brand text-[#00e5ff] font-bold'
  : 'border-transparent text-zinc-400 hover:text-white'
  }`}
  >
@@ -507,7 +507,7 @@ const handleOpenEditSubAdmin = (admin) => {
  setActiveRoleTab('new_role');
  }}
  className={`px-4 py-2 border-b-2 text-sm font-bold transition-all cursor-pointer border-none bg-transparent ${activeRoleTab === 'new_role'
- ? 'border-brand text-brand font-bold'
+ ? 'border-brand text-[#00e5ff] font-bold'
  : 'border-transparent text-zinc-400 hover:text-white'
  }`}
  >
@@ -521,7 +521,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <div className="border border-zinc-850 p-5 rounded-lg bg-zinc-955/40 space-y-4 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-855 flex items-center justify-between">
  <div className="flex items-center gap-1.5">
- <Settings className="w-4 h-4 text-brand" /> Active Custom Roles Registry
+ <Settings className="w-4 h-4 text-[#00e5ff]" /> Active Custom Roles Registry
  </div>
  <button
  type="button"
@@ -532,7 +532,7 @@ const handleOpenEditSubAdmin = (admin) => {
  setNewRolePermissions({});
  setActiveRoleTab('new_role');
  }}
- className="text-xs bg-brand/10 hover:bg-brand text-brand hover:text-zinc-955 px-2.5 py-1 rounded border border-brand/20 hover:border-brand font-bold transition-all cursor-pointer"
+ className="text-xs bg-[#00e5ff]/10 hover:bg-[#00e5ff] text-[#00e5ff] hover:text-zinc-955 px-2.5 py-1 rounded border border-brand/20 hover:border-brand font-bold transition-all cursor-pointer"
  >
  + Add Custom Role
  </button>
@@ -571,7 +571,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <span className="font-header font-bold text-white text-sm truncate block">{role.name}</span>
  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border inline-block mt-1 ${
  memberCount > 0
- ? 'bg-brand/10 border-brand/20 text-brand'
+ ? 'bg-[#00e5ff]/10 border-brand/20 text-[#00e5ff]'
  : 'bg-zinc-950 border-zinc-800 text-zinc-550'
  }`}>
  {memberCount} {memberCount === 1 ? 'staff' : 'staff'} assigned
@@ -581,7 +581,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="button"
  onClick={() => handleEditRoleClick(role)}
- className="text-brand hover:underline font-bold text-xs cursor-pointer border-none bg-transparent"
+ className="text-[#00e5ff] hover:underline font-bold text-xs cursor-pointer border-none bg-transparent"
  >
  Edit
  </button>
@@ -640,7 +640,7 @@ const handleOpenEditSubAdmin = (admin) => {
  {/* Registration form */}
  <form onSubmit={handleCreateSubAdmin} className="lg:col-span-7 bg-zinc-950 border border-zinc-850 p-5 rounded-lg space-y-4 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
- <Settings className="w-4 h-4 text-brand" /> Register Staff Profile
+ <Settings className="w-4 h-4 text-[#00e5ff]" /> Register Staff Profile
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -710,7 +710,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="submit"
  disabled={isRegistering || isSavingForm}
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed" //
+ className="w-full py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed" //
  >
  {isRegistering || isSavingForm ? (
  <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />
@@ -724,11 +724,11 @@ const handleOpenEditSubAdmin = (admin) => {
  {/* Role Scopes Viewer */}
  <div className="lg:col-span-5 border border-zinc-850 p-5 rounded-lg bg-zinc-955/40 space-y-4 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center gap-1.5">
- <Lock className="w-4 h-4 text-brand" /> Role Scope Permissions
+ <Lock className="w-4 h-4 text-[#00e5ff]" /> Role Scope Permissions
  </div>
 
  {rolesDb.length === 0 ? (
- <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-lg space-y-2">
+ <div className="p-4 bg-[#090d16]mber-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-lg space-y-2">
  <p className="font-bold">No Custom Roles Defined</p>
  <p className="text-sm text-zinc-400 leading-normal">
  To register sub-admin staff, you must first define a role title and assign its permission scopes using the "Create Custom Role Title" form above.
@@ -749,7 +749,7 @@ const handleOpenEditSubAdmin = (admin) => {
  const activeActions = module.actions.filter(act => selectedPermissions.includes(act.id));
 
  return (
- <div key={module.id} className={`p-3 border rounded-lg flex items-center justify-between transition-colors duration-200 ${isModuleEnabled ? 'border-brand/30 bg-brand/5 text-white' : 'border-zinc-800 bg-zinc-950/20 text-zinc-500'}`}>
+ <div key={module.id} className={`p-3 border rounded-lg flex items-center justify-between transition-colors duration-200 ${isModuleEnabled ? 'border-brand/30 bg-[#00e5ff]/5 text-white' : 'border-zinc-800 bg-zinc-950/20 text-zinc-500'}`}>
  <div className="text-sm min-w-0">
  <span className={`font-bold block ${isModuleEnabled ? 'text-white' : 'text-zinc-500'}`}>{module.name}</span>
  {isModuleEnabled && activeActions.length > 0 ? (
@@ -764,7 +764,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <span className="text-xs text-zinc-600 block mt-0.5">No Access</span>
  )}
  </div>
- <div className={`w-5 h-5 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${isModuleEnabled ? 'border-brand bg-brand text-zinc-955' : 'border-zinc-800 text-zinc-800'}`}>
+ <div className={`w-5 h-5 rounded-full border transition flex items-center justify-center shrink-0 ml-2 ${isModuleEnabled ? 'border-brand bg-[#00e5ff] text-zinc-955' : 'border-zinc-800 text-zinc-800'}`}>
  {isModuleEnabled && <Check className="w-3.5 h-3.5 stroke-[3]" />}
  </div>
  </div>
@@ -813,7 +813,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <td className="p-3">
  <span className="font-bold text-white block">{cleanName}</span>
  {roleTitle && (
- <span className="text-sm bg-brand/10 border border-brand/20 text-brand px-1.5 py-0.5 rounded font-bold inline-block mt-1">
+ <span className="text-sm bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] px-1.5 py-0.5 rounded font-bold inline-block mt-1">
  {roleTitle}
  </span>
  )}
@@ -835,7 +835,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="button"
  onClick={() => handleOpenEditSubAdmin(admin)}
- className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold "
+ className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold "
  >
  Edit
  </button>
@@ -844,7 +844,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="button"
  onClick={() => handleGenerateResetToken(admin.email)}
- className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-amber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
+ className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-[#090d16]mber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
  title="Generate Password Reset Link"
  >
  <KeyRound className="w-3.5 h-3.5" />
@@ -877,7 +877,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <form onSubmit={handleCreateRole} className="bg-zinc-950 border border-zinc-850 p-6 rounded-lg space-y-6 text-left">
  <div className="text-sm font-bold text-zinc-400 pb-1.5 border-b border-zinc-850 flex items-center justify-between">
  <div className="flex items-center gap-1.5">
- <Plus className="w-4 h-4 text-brand" /> {editingRoleId ? 'Modify Custom Role details' : 'Define New Custom Role'}
+ <Plus className="w-4 h-4 text-[#00e5ff]" /> {editingRoleId ? 'Modify Custom Role details' : 'Define New Custom Role'}
  </div>
  </div>
 
@@ -915,7 +915,7 @@ const handleOpenEditSubAdmin = (admin) => {
  (module.id === 'manage_psychologists' && !!newRolePermissions['MANAGE_PSYCHOLOGISTS']) ||
  (module.id === 'manage_bookings' && !!newRolePermissions['MANAGE_BOOKINGS']);
  return (
- <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
+ <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-[#00e5ff]/5' : 'border-zinc-850 bg-zinc-950'}`}>
  {/* Header */}
  <div className="flex items-center justify-between p-4 border-b border-zinc-900/60 bg-zinc-900/40">
  <span className="font-header font-bold text-sm text-white ">{module.name}</span>
@@ -927,7 +927,7 @@ const handleOpenEditSubAdmin = (admin) => {
  onChange={(e) => toggleModuleAllPermissions(module.id, module.actions, e.target.checked)}
  className="sr-only peer"
  />
- <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-950 peer-checked:after:border-zinc-955"></div>
+ <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-950 peer-checked:after:border-zinc-955"></div>
  </label>
  </div>
 
@@ -942,7 +942,7 @@ const handleOpenEditSubAdmin = (admin) => {
  type="checkbox"
  checked={isChecked}
  onChange={() => toggleChildAction(module.id, action.id, module.actions)}
- className="w-4 h-4 rounded border-zinc-800 bg-zinc-900 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+ className="w-4 h-4 rounded border-zinc-800 bg-zinc-900 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
  />
  </label>
  );
@@ -978,7 +978,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="submit"
  disabled={isRegistering} // Use isRegistering for form submission state
- className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition shadow-md flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="px-6 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition shadow-md flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm ? (
  <Loader2 className="w-4 h-4 animate-spin text-zinc-955" />

@@ -50,7 +50,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
         <div className="space-y-6 animate-in fade-in duration-200 text-sm">
             <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
                 <h3 className="text-sm font-bold text-zinc-500 font-header">Psychology Dashboard Overview</h3>
-                <span className="text-sm bg-brand/10 text-brand border border-brand/20 px-2 py-0.5 rounded font-bold ">Active Status</span>
+                <span className="text-sm bg-[#00e5ff]/10 text-[#00e5ff] border border-brand/20 px-2 py-0.5 rounded font-bold ">Active Status</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -60,7 +60,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                     style={shadowStyle}
                 >
                     <div className="space-y-3">
-                        <span className="text-xs bg-brand/10 text-brand border border-brand/20 px-2 py-0.5 rounded font-bold ">Next Client Session</span>
+                        <span className="text-xs bg-[#00e5ff]/10 text-[#00e5ff] border border-brand/20 px-2 py-0.5 rounded font-bold ">Next Client Session</span>
                         {pendingBookings.length > 0 ? (
                             <div className="space-y-1.5 pt-1">
                                 <h4 className="font-header font-bold text-sm text-white ">{pendingBookings[0].userName}</h4>
@@ -93,7 +93,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                                     const link = pendingBookings[0].meetLink || buildGoogleMeetUrl(canonicalId);
                                     window.open(link, '_blank');
                                 }}
-                                className="text-sm font-bold bg-brand text-zinc-955 hover:bg-brand-dark px-3.5 py-2 rounded-[10px] cursor-pointer flex items-center gap-1.5 transition-colors border-none"
+                                className="text-sm font-bold bg-[#00e5ff] text-zinc-955 hover:bg-[#00e5ff]-dark px-3.5 py-2 rounded-[10px] cursor-pointer flex items-center gap-1.5 transition-colors border-none"
                                 title="Join Google Meet Consultation"
                             >
                                 <Video className="w-3.5 h-3.5" />
@@ -153,7 +153,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                             </div>
                             <div className="flex justify-between font-bold text-zinc-400 items-center">
                                 <span>Payout Mode</span>
-                                <span className="text-brand font-bold text-xs">Direct Platform Settlement</span>
+                                <span className="text-[#00e5ff] font-bold text-xs">Direct Platform Settlement</span>
                             </div>
                         </div>
                     </div>
@@ -161,7 +161,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                     <div className="flex items-center gap-2 mt-4">
                         <button
                             onClick={() => setCurrentSection('revenue')}
-                            className="text-xs font-bold bg-brand/10 hover:bg-brand/20 text-brand border border-brand/20 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
+                            className="text-xs font-bold bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-brand/20 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
                         >
                             View Revenue Ledger
                         </button>

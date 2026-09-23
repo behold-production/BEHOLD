@@ -390,7 +390,7 @@ export default function TestResultsTab(props) {
  <div className="space-y-3">
  <div className="flex justify-between items-start">
  <div className="space-y-1">
- <span className="text-sm bg-brand text-zinc-955 px-2 py-0.5 rounded font-bold ">
+ <span className="text-sm bg-[#00e5ff] text-zinc-955 px-2 py-0.5 rounded font-bold ">
  Dominant: {res.dominantDomain}
  </span>
  <h4 className="font-header font-bold text-sm text-white truncate pt-1">{res.studentName}</h4>
@@ -399,7 +399,7 @@ export default function TestResultsTab(props) {
  <div className="flex items-center gap-1.5 shrink-0">
  <button
  onClick={() => handleExportAptitudeResults(res)}
- className="px-2.5 py-1 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] hover:text-brand rounded font-bold transition text-sm shrink-0 cursor-pointer"
+ className="px-2.5 py-1 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] hover:text-[#00e5ff] rounded font-bold transition text-sm shrink-0 cursor-pointer"
  title="Export Diagnostic Log"
  >
  Copy Report
@@ -422,11 +422,11 @@ export default function TestResultsTab(props) {
  <div key={key} className="space-y-1">
  <div className="flex justify-between items-center font-bold">
  <span className="text-zinc-400 ">{key}</span>
- <span className="text-brand ">{val}%</span>
+ <span className="text-[#00e5ff] ">{val}%</span>
  </div>
  <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-zinc-850">
  <div
- className="bg-brand h-full rounded-full transition-all duration-500"
+ className="bg-[#00e5ff] h-full rounded-full transition-all duration-500"
  style={{ width: `${val}%` }}
  />
  </div>

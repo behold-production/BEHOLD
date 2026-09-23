@@ -375,9 +375,9 @@ export default function AnalyticsTab(props) {
  const pct = ((count / maxBookings) * 100).toFixed(0);
  return (
  <div key={month} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
- <span className="text-sm text-brand font-bold opacity-0 group-hover:opacity-100 transition-opacity ">{count} Booking(s)</span>
+ <span className="text-sm text-[#00e5ff] font-bold opacity-0 group-hover:opacity-100 transition-opacity ">{count} Booking(s)</span>
  <div
- className="w-full bg-brand/15 hover:bg-brand border border-brand/30 hover:border-brand rounded-t transition-all duration-500 relative"
+ className="w-full bg-[#00e5ff]/15 hover:bg-[#00e5ff] border border-brand/30 hover:border-brand rounded-t transition-all duration-500 relative"
  style={{ height: `${pct}%`, minHeight: '6%' }}
  >
  <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
@@ -404,7 +404,7 @@ export default function AnalyticsTab(props) {
  <span className="text-white ">{serviceCounts.counselling} booked</span>
  </div>
  <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
- <div className="bg-brand h-full rounded-full" style={{ width: `${(serviceCounts.counselling / (bookingsDb.length || 1)) * 100}%` }} />
+ <div className="bg-[#00e5ff] h-full rounded-full" style={{ width: `${(serviceCounts.counselling / (bookingsDb.length || 1)) * 100}%` }} />
  </div>
  </div>
 
@@ -414,7 +414,7 @@ export default function AnalyticsTab(props) {
  <span className="text-white ">{serviceCounts.career} booked</span>
  </div>
  <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
- <div className="bg-brand h-full rounded-full" style={{ width: `${(serviceCounts.career / (bookingsDb.length || 1)) * 100}%` }} />
+ <div className="bg-[#00e5ff] h-full rounded-full" style={{ width: `${(serviceCounts.career / (bookingsDb.length || 1)) * 100}%` }} />
  </div>
  </div>
  </div>
@@ -427,10 +427,10 @@ export default function AnalyticsTab(props) {
  {sortedAdvisors.map(([name, count], idx) => (
  <div key={name} className="flex items-center justify-between p-2 bg-zinc-900/40 rounded border border-zinc-855">
  <div className="flex items-center gap-2">
- <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-brand text-sm font-bold flex items-center justify-center ">#{idx + 1}</span>
+ <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-[#00e5ff] text-sm font-bold flex items-center justify-center ">#{idx + 1}</span>
  <span className="font-bold text-white truncate max-w-[120px]">{name}</span>
  </div>
- <span className="text-brand font-bold text-sm">{count} Sessions</span>
+ <span className="text-[#00e5ff] font-bold text-sm">{count} Sessions</span>
  </div>
  ))}
  {sortedAdvisors.length === 0 && (

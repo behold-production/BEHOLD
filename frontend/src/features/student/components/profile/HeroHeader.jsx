@@ -9,7 +9,7 @@ const HeroHeader = ({
   handleProfilePicUpload
 }) => {
   const avatarUrl = profile.profilePic || profile.profileImage || profile.avatar || profile.photoURL || profile.image || user?.profilePic || user?.profileImage || user?.avatar || user?.photoURL || user?.image;
-  const joinDate = React.useMemo(() => new Date(profile.createdAt || user?.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }), [profile.createdAt, user?.createdAt]);
+  const joinDate = React.useMemo(() => new Date(profile.createdAt || user?.createdAt || '2025-01-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }), [profile.createdAt, user?.createdAt]);
 
   return (
     <div className="card-grad-gradient border border-slate-700 rounded-3xl filter-card-shadow overflow-hidden relative">

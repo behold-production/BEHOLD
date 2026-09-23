@@ -24,7 +24,7 @@ export default function SidebarNav(props) {
 
  <div className="flex items-center gap-1.5">
  <span className="font-header font-bold text-base tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
+ BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1 py-0.2 rounded font-bold">
  CONSOLE
@@ -39,7 +39,7 @@ export default function SidebarNav(props) {
  className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white hover:border-brand/30 flex items-center justify-center shadow-md cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
  title="Open Profile Menu"
  >
- <User className="w-4 h-4 text-brand" />
+ <User className="w-4 h-4 text-[#00e5ff]" />
  </button>
  </div>
 
@@ -58,7 +58,7 @@ export default function SidebarNav(props) {
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
  <span className="font-header font-bold text-lg tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
+ BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  <span className="text-sm bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-bold ">
  CONSOLE
@@ -168,7 +168,7 @@ export default function SidebarNav(props) {
  ? 'bg-rose-955/30 border border-rose-905 text-rose-455 font-semibold'
  : 'bg-transparent text-zinc-500 hover:text-rose-400 hover:bg-rose-950/20 font-medium')
  : (isActive
- ? 'bg-brand text-zinc-955 font-semibold shadow-sm'
+ ? 'bg-[#00e5ff] text-zinc-955 font-semibold shadow-sm'
  : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60 font-medium');
 
  return (

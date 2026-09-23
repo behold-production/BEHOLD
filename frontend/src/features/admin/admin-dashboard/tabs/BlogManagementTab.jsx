@@ -350,7 +350,7 @@ export default function BlogManagementTab() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white placeholder-slate-500 text-xs font-medium outline-none transition-colors"
           />
-          <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
         </div>
 
         {/* Filters */}
@@ -387,7 +387,7 @@ export default function BlogManagementTab() {
           </div>
         ) : filteredBlogs.length === 0 ? (
           <div className="text-center py-20">
-            <BookOpen className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+            <BookOpen className="w-10 h-10 text-slate-400 mx-auto mb-3" />
             <h4 className="text-base font-bold text-white mb-1">No Articles Found</h4>
             <p className="text-xs text-slate-400">Click "+ Write New Article" above to publish your first post.</p>
           </div>
@@ -422,7 +422,7 @@ export default function BlogManagementTab() {
                           <span className="text-[10px] text-slate-400 font-mono block">/blog/{post.slug}</span>
                           {post.primaryKeyword && (
                             <div className="flex flex-wrap items-center gap-1 mt-1">
-                              <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded bg-[#090d16]yan-500/15 text-cyan-300 border border-cyan-500/30">
                                 <Sparkles className="w-2.5 h-2.5" />
                                 {post.primaryKeyword}
                               </span>
@@ -458,7 +458,7 @@ export default function BlogManagementTab() {
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold cursor-pointer border transition-all ${
                           post.isPublished
                             ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25'
-                            : 'bg-amber-500/15 text-amber-400 border-amber-500/30 hover:bg-amber-500/25'
+                            : 'bg-[#090d16]mber-500/15 text-amber-400 border-amber-500/30 hover:bg-[#090d16]mber-500/25'
                         }`}
                       >
                         {post.isPublished ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
@@ -637,13 +637,13 @@ export default function BlogManagementTab() {
                     </>
                   ) : (
                     <div className="flex flex-col items-center justify-center text-slate-400">
-                      <UploadCloud className={`w-8 h-8 mb-2 ${dragActive ? 'text-[#00E5FF]' : 'text-slate-500'}`} />
+                      <UploadCloud className={`w-8 h-8 mb-2 ${dragActive ? 'text-[#00E5FF]' : 'text-slate-400'}`} />
                       <p className="text-xs font-medium">Drag & drop an image here</p>
-                      <p className="text-[10px] text-slate-500 mt-1">or click to browse files</p>
+                      <p className="text-[10px] text-slate-400 mt-1">or click to browse files</p>
                     </div>
                   )}
                 </div>
-                <div className="mt-2 text-[10px] text-slate-500">Alternatively, you can provide an external image URL below:</div>
+                <div className="mt-2 text-[10px] text-slate-400">Alternatively, you can provide an external image URL below:</div>
                 <input
                   type="text"
                   placeholder="https://images.unsplash.com/..."

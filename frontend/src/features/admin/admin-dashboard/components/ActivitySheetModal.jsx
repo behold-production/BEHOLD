@@ -80,8 +80,8 @@ export default function ActivitySheetModal({ booking, onClose }) {
     switch(status) {
       case 'DRAFT': return <span className="bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded text-xs font-bold">DRAFT</span>;
       case 'SHARED': return <span className="bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Share2 className="w-3 h-3"/> SHARED</span>;
-      case 'VIEWED': return <span className="bg-amber-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Eye className="w-3 h-3"/> VIEWED</span>;
-      case 'IN_PROGRESS': return <span className="bg-amber-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Clock className="w-3 h-3"/> IN PROGRESS</span>;
+      case 'VIEWED': return <span className="bg-[#090d16]mber-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Eye className="w-3 h-3"/> VIEWED</span>;
+      case 'IN_PROGRESS': return <span className="bg-[#090d16]mber-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Clock className="w-3 h-3"/> IN PROGRESS</span>;
       case 'SUBMITTED': return <span className="bg-emerald-900/30 text-emerald-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><CheckCircle className="w-3 h-3"/> SUBMITTED</span>;
       default: return null;
     }

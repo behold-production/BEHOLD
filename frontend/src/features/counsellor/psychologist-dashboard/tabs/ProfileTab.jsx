@@ -258,7 +258,7 @@ const ProfileTab = ({
   </div>
 
  <div className="sm:col-span-2 space-y-4 p-5 bg-zinc-900 border border-zinc-800 rounded-[10px]">
- <h4 className="text-xs font-bold text-brand tracking-wider">Practice / Geographic Location</h4>
+ <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider">Practice / Geographic Location</h4>
  
  {/* Search address input */}
  <div className="space-y-1.5 text-left relative">
@@ -281,7 +281,7 @@ const ProfileTab = ({
  type="button"
  onClick={handleAddressSearch}
  disabled={isSearching}
- className="w-full sm:w-auto px-4 py-2.5 bg-brand text-zinc-955 text-xs font-extrabold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
+ className="w-full sm:w-auto px-4 py-2.5 bg-[#00e5ff] text-zinc-955 text-xs font-extrabold rounded-full hover:bg-[#00e5ff]-dark transition cursor-pointer shrink-0 flex items-center justify-center"
  >
  {isSearching ? 'Searching...' : 'Search'}
  </button>
@@ -390,7 +390,7 @@ const ProfileTab = ({
  </>
  ) : (
  <>
- <svg className="w-3.5 h-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+ <svg className="w-3.5 h-3.5 text-[#00e5ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
  </svg>
@@ -429,7 +429,7 @@ const ProfileTab = ({
  }
  setEp({ modes: nextModes });
  }}
- className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand disabled:opacity-50 disabled:cursor-not-allowed"
+ className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand disabled:opacity-50 disabled:cursor-not-allowed"
  />
  <span className="font-semibold">
  {mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}
@@ -455,7 +455,7 @@ const ProfileTab = ({
  <div className="sm:col-span-2 pt-2">
  <button
  type="submit"
- className="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full transition-colors cursor-pointer border-none shadow-md"
+ className="w-full sm:w-auto px-6 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full transition-colors cursor-pointer border-none shadow-md"
  >
  Save Profile Changes
  </button>
@@ -533,8 +533,8 @@ const ProfileTab = ({
  {/* Browser Notification Settings Widget */}
  <div className="p-5 rounded-[10px] transition-all space-y-4" style={shadowStyle}>
  <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 text-left">
- <div className="w-10 h-10 rounded-[10px] bg-brand/10 border border-brand/20 flex items-center justify-center">
- <Bell className="w-5 h-5 text-brand" />
+ <div className="w-10 h-10 rounded-[10px] bg-[#00e5ff]/10 border border-brand/20 flex items-center justify-center">
+ <Bell className="w-5 h-5 text-[#00e5ff]" />
  </div>
  <div>
  <h3 className="text-sm font-bold text-white font-header">Desktop Alerts & Reminders</h3>
@@ -584,7 +584,7 @@ const ProfileTab = ({
   className={`min-h-[36px] px-4 py-2 rounded-full text-xs font-bold transition cursor-pointer border shadow-md flex items-center gap-1.5 ${
   permissionState === 'granted'
   ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800'
-  : 'bg-brand hover:bg-brand-dark text-zinc-955 border-none font-extrabold'
+  : 'bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 border-none font-extrabold'
   }`}
   >
   <Bell className="w-3.5 h-3.5" />

@@ -117,18 +117,18 @@ export default function OtpPinInput({ value = '', onChange, hasError, disabled =
               disabled
                 ? isDark
                   ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
-                  : 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
+                  : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
                 : hasError
                 ? isDark
                   ? 'bg-red-950/40 border-red-500/80 text-red-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
-                  : 'bg-rose-50/50 border-rose-400 text-rose-900 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                  : 'bg-red-950/40 border-red-500/80 text-red-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                 : isFilled
                 ? isDark
                   ? 'bg-[#050811] border-[#00E5FF] text-white shadow-sm ring-2 ring-[#00E5FF]/25'
-                  : 'bg-white border-[#00e5ff] text-zinc-900 shadow-sm ring-2 ring-[#00e5ff]/15'
+                  : 'bg-[#0f172a] border-[#00e5ff] text-white shadow-sm ring-2 ring-[#00e5ff]/25 filter-glow'
                 : isDark
                 ? 'bg-[#050811] border-slate-800 text-white focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20'
-                : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:bg-white focus:border-[#00e5ff] focus:ring-2 focus:ring-[#00e5ff]/20'
+                : 'bg-[#0f172a] border-slate-700 text-white focus:border-[#00e5ff] focus:ring-2 focus:ring-[#00e5ff]/20'
             }`}
           />
         );

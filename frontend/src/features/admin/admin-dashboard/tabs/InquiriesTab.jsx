@@ -394,13 +394,13 @@ export default function InquiriesTab(props) {
  <div className="flex items-center gap-2 flex-wrap">
  <span className={`px-2 py-0.5 rounded text-sm font-bold ${inq.status === 'RESOLVED'
  ? 'bg-emerald-955/20 border border-emerald-900/40 text-emerald-450'
- : 'bg-amber-955/20 border border-amber-900/40 text-amber-500'
+ : 'bg-[#090d16]mber-955/20 border border-amber-900/40 text-amber-500'
  }`}>
  {inq.status || 'PENDING'}
  </span>
  <span className="text-sm text-zinc-500 font-bold ">{formatDateString(inq.date)}</span>
  {(inq.utmCampaign || inq.utmSource || inq.fbclid) && (
-   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-2 py-0.5 rounded shadow-xs">
+   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-400 bg-[#090d16]yan-950/60 border border-cyan-800/60 px-2 py-0.5 rounded shadow-xs">
      🎯 {inq.utmCampaign ? String(inq.utmCampaign).substring(0, 18) : (inq.utmSource ? `Ad (${inq.utmSource})` : 'Meta Ad')}
    </span>
  )}
@@ -408,7 +408,7 @@ export default function InquiriesTab(props) {
 
  <div className="space-y-0.5">
  <h4 className="font-header font-bold text-sm text-white truncate">{inq.name}</h4>
- <p className="text-sm text-brand font-semibold break-all">{inq.email}</p>
+ <p className="text-sm text-[#00e5ff] font-semibold break-all">{inq.email}</p>
  </div>
 
  <p className="text-[12.5px] text-zinc-400 font-medium leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-850 whitespace-pre-wrap">
@@ -431,7 +431,7 @@ export default function InquiriesTab(props) {
  const noteVal = document.getElementById(`note-${inq.id}`).value;
  handleSaveInquiryNote(inq.id, noteVal);
  }}
- className="px-3 py-1.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-sm text-zinc-300 hover:text-brand hover:border-brand rounded font-bold transition cursor-pointer"
+ className="px-3 py-1.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-sm text-zinc-300 hover:text-[#00e5ff] hover:border-brand rounded font-bold transition cursor-pointer"
  >
  Save Note
  </button>
@@ -444,7 +444,7 @@ export default function InquiriesTab(props) {
  onClick={() => handleResolveInquiry(inq.id)}
  className={`px-4.5 py-2.5 rounded-lg text-sm font-bold transition cursor-pointer flex items-center gap-1 border border-zinc-800 ${inq.status === 'RESOLVED'
  ? 'bg-zinc-900 text-zinc-400 hover:text-white'
- : 'bg-brand hover:bg-brand-dark text-zinc-955'
+ : 'bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955'
  }`}
  >
  <Check className="w-3.5 h-3.5" />

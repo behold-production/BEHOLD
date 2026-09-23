@@ -132,7 +132,7 @@ export default function RefundRequestsTab(props) {
  {/* Info notice about refund flow */}
  <div className="bg-zinc-955/60 p-4 rounded-lg border border-zinc-850 text-xs text-zinc-400 space-y-1">
  <div className="flex items-center gap-2 font-bold text-white mb-1">
- <ShieldAlert className="w-4 h-4 text-brand" />
+ <ShieldAlert className="w-4 h-4 text-[#00e5ff]" />
  <span>About Cancellation Payouts & Refund Operations</span>
  </div>
  <p>When a booking is cancelled, if the payment was paid online via Razorpay, the refund status is set to PENDING.</p>
@@ -147,7 +147,7 @@ export default function RefundRequestsTab(props) {
  onClick={() => { setStatusFilter(status); setPage(1); }}
  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
  statusFilter === status
- ? 'bg-brand text-zinc-955 border-brand'
+ ? 'bg-[#00e5ff] text-zinc-955 border-brand'
  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
  }`}
  >
@@ -289,7 +289,7 @@ export default function RefundRequestsTab(props) {
  <>
  <div>
  <span className="text-zinc-500 font-semibold">Refund ID:</span>{' '}
- <span className="text-brand font-mono">{booking.refundId}</span>
+ <span className="text-[#00e5ff] font-mono">{booking.refundId}</span>
  </div>
  <div>
  <span className="text-zinc-500 font-semibold">Refunded At:</span>{' '}
@@ -302,8 +302,8 @@ export default function RefundRequestsTab(props) {
 
  {/* Counsellor Bank Settings */}
  <div className="bg-zinc-900/30 border border-zinc-850 p-3 rounded-lg space-y-2">
- <h5 className="text-xs font-bold text-brand tracking-wider flex items-center gap-1.5">
- <User className="w-3.5 h-3.5 text-brand" />
+ <h5 className="text-xs font-bold text-[#00e5ff] tracking-wider flex items-center gap-1.5">
+ <User className="w-3.5 h-3.5 text-[#00e5ff]" />
  Counsellor Bank Details
  </h5>
  <div className="text-xs text-zinc-300 space-y-1 pt-1">

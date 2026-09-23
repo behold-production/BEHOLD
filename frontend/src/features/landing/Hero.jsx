@@ -36,7 +36,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white">
                 Transform Your <br />
-                <span className="text-transparent bg-clip-text primary-cyan-gradient pb-2 block">Mental Health</span>
+                <span className="text-transparent bg-[#090d16]lip-text primary-cyan-gradient pb-2 block">Mental Health</span>
               </h1>
             </div>
             
@@ -56,7 +56,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             <div className="pt-10 flex items-center gap-5">
               <div className="flex -space-x-4">
                 {[1,2,3,4].map((i, index) => (
-                  <div key={i} className={`w-12 h-12 rounded-full border-[3px] border-[#0f172a] flex items-center justify-center text-xs font-bold text-slate-400 ${index === 3 ? 'bg-[#00e5ff] text-slate-900' : 'bg-slate-800'}`}>
+                  <div key={i} className={`w-12 h-12 rounded-full border-[3px] border-[#0f172a] flex items-center justify-center text-xs font-bold text-slate-400 ${index === 3 ? 'bg-[#00e5ff] text-white' : 'bg-slate-800'}`}>
                     {index === 3 ? '+2k' : ''}
                   </div>
                 ))}
@@ -76,7 +76,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
               {/* Top bar mock */}
               <div className="bg-slate-900 border border-slate-700 rounded-2xl p-4 flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                  <Search className="w-5 h-5 text-slate-500" />
+                  <Search className="w-5 h-5 text-slate-400" />
                   <div className="w-40 h-3 bg-slate-800 rounded-full" />
                 </div>
                 <div className="flex gap-3">
@@ -89,7 +89,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
               <div className="bg-slate-800/80 border border-[#00e5ff]/60 rounded-2xl p-5 mb-5 flex items-center gap-5 shadow-[0_0_20px_rgba(0,229,255,0.15)] transform -translate-x-4">
                 <div className="w-20 h-20 rounded-xl bg-slate-700 flex-shrink-0" />
                 <div className="flex-1 space-y-3">
-                  <div className="w-3/4 h-4 bg-white rounded-full" />
+                  <div className="w-3/4 h-4 bg-[#0f172a] rounded-full" />
                   <div className="w-1/3 h-3 bg-[#00e5ff] rounded-full" />
                   <div className="w-5/6 h-2.5 bg-slate-600 rounded-full" />
                 </div>
@@ -159,7 +159,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             {/* Header */}
             <div className="flex justify-between items-center mb-16">
               <div>
-                <div className="w-72 h-8 bg-white rounded-xl mb-5" />
+                <div className="w-72 h-8 bg-[#0f172a] rounded-xl mb-5" />
                 <div className="w-96 h-3 bg-slate-700 rounded-full" />
               </div>
               <div className="flex items-center gap-4">
@@ -174,12 +174,12 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               {/* Col 1 */}
               <div className="bg-slate-900 border border-slate-700/50 rounded-[32px] p-8">
-                <div className="w-40 h-3 bg-slate-500 rounded-full mb-6" />
+                <div className="w-40 h-3 bg-[#1e293b]0 rounded-full mb-6" />
                 <div className="w-full h-16 bg-slate-800 rounded-2xl mb-10" />
-                <div className="w-32 h-3 bg-slate-500 rounded-full mb-6" />
+                <div className="w-32 h-3 bg-[#1e293b]0 rounded-full mb-6" />
                 <div className="w-full h-16 bg-slate-800 rounded-2xl mb-10" />
                 <div className="w-full h-64 bg-slate-800/50 border border-slate-700/50 rounded-3xl flex items-center justify-center">
-                  <Calendar className="w-16 h-16 text-slate-600" />
+                  <Calendar className="w-16 h-16 text-slate-400" />
                 </div>
               </div>
               {/* Col 2 */}
@@ -187,7 +187,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
                 <div className="bg-slate-800/80 border border-[#00e5ff] rounded-3xl p-6 flex gap-5 shadow-[0_0_20px_rgba(0,229,255,0.1)]">
                   <div className="w-20 h-20 rounded-full bg-slate-700 flex-shrink-0" />
                   <div className="flex-1 space-y-3 pt-2">
-                    <div className="w-2/3 h-4 bg-white rounded-full" />
+                    <div className="w-2/3 h-4 bg-[#0f172a] rounded-full" />
                     <div className="w-1/3 h-3 bg-[#00e5ff] rounded-full" />
                     <div className="w-full h-2.5 bg-slate-600 rounded-full" />
                   </div>
@@ -195,7 +195,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
                 <div className="bg-slate-800/40 border border-slate-700/50 rounded-3xl p-6 flex gap-5">
                   <div className="w-20 h-20 rounded-full bg-slate-700 flex-shrink-0" />
                   <div className="flex-1 space-y-3 pt-2">
-                    <div className="w-1/2 h-4 bg-slate-500 rounded-full" />
+                    <div className="w-1/2 h-4 bg-[#1e293b]0 rounded-full" />
                     <div className="w-1/4 h-3 bg-slate-600 rounded-full" />
                     <div className="w-5/6 h-2.5 bg-slate-600 rounded-full" />
                   </div>
@@ -203,13 +203,13 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
               </div>
               {/* Col 3 */}
               <div className="bg-slate-900 border border-slate-700/50 rounded-[32px] p-8 flex flex-col">
-                 <div className="w-40 h-4 bg-white rounded-full mb-8" />
+                 <div className="w-40 h-4 bg-[#0f172a] rounded-full mb-8" />
                  <div className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-3xl p-8 space-y-6">
-                   <div className="w-40 h-3 bg-slate-500 rounded-full" />
+                   <div className="w-40 h-3 bg-[#1e293b]0 rounded-full" />
                    <div className="w-56 h-2.5 bg-slate-600 rounded-full" />
                    <hr className="border-slate-700 my-6" />
                    <div className="flex justify-between">
-                     <div className="w-32 h-3 bg-slate-500 rounded-full" />
+                     <div className="w-32 h-3 bg-[#1e293b]0 rounded-full" />
                      <div className="w-20 h-3 bg-[#00e5ff] rounded-full" />
                    </div>
                  </div>
@@ -238,8 +238,8 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             <div className="space-y-10">
               <div className="w-40 h-4 bg-[#00e5ff]/80 rounded-full" />
               <div className="space-y-5">
-                <div className="w-full h-10 bg-white rounded-xl" />
-                <div className="w-4/5 h-10 bg-white rounded-xl" />
+                <div className="w-full h-10 bg-[#0f172a] rounded-xl" />
+                <div className="w-4/5 h-10 bg-[#0f172a] rounded-xl" />
               </div>
               <div className="space-y-4">
                 <div className="w-full h-3.5 bg-slate-700 rounded-full" />
@@ -249,7 +249,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
               <div className="grid grid-cols-3 gap-6 pt-6">
                 {[1,2,3].map(i => (
                   <div key={i}>
-                    <div className={`w-full h-10 rounded-xl mb-3 ${i === 1 ? 'bg-[#00e5ff]' : 'bg-white'}`} />
+                    <div className={`w-full h-10 rounded-xl mb-3 ${i === 1 ? 'bg-[#00e5ff]' : 'bg-[#0f172a]'}`} />
                     <div className="w-3/4 h-3 bg-slate-600 rounded-full" />
                   </div>
                 ))}

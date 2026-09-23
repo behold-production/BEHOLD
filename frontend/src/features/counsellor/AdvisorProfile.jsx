@@ -328,7 +328,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       <div className="min-h-screen pt-24 pb-16 bg-[#F8FAFC] flex items-center justify-center px-4">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-4 border-[#00a680] border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-600 font-bold tracking-wide">Loading verified specialist details...</p>
+          <p className="text-slate-400 font-bold tracking-wide">Loading verified specialist details...</p>
         </div>
       </div>
     );
@@ -337,11 +337,11 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   if (!advisor) {
     return (
       <div className="min-h-screen pt-28 pb-16 bg-[#F8FAFC] text-center px-4 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-[#1e293b] border border-slate-700 flex items-center justify-center mb-4">
           <UserCheck className="w-8 h-8 text-slate-400" />
         </div>
-        <h2 className="text-2xl font-black mb-2 text-slate-900 tracking-tight">Specialist Profile Not Found</h2>
-        <p className="text-sm text-slate-500 max-w-sm mb-6">We could not retrieve the details for this counselor. Please check back or choose another expert from our directory.</p>
+        <h2 className="text-2xl font-black mb-2 text-white tracking-tight">Specialist Profile Not Found</h2>
+        <p className="text-sm text-slate-400 max-w-sm mb-6">We could not retrieve the details for this counselor. Please check back or choose another expert from our directory.</p>
         <button
           type="button"
           onClick={handleBack}
@@ -354,7 +354,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans pb-32 pt-0 animate-in fade-in duration-300 relative">
+    <div className="min-h-screen bg-[#F8FAFC] text-white font-sans pb-32 pt-0 animate-in fade-in duration-300 relative">
       <SEO 
         title={`${advisor.name} | Doctor Details`}
         description={`Book an online session with ${advisor.name}, ${advisor.role}. ${advisor.about ? advisor.about.substring(0, 100) + '...' : ''}`}
@@ -383,7 +383,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <button
             type="button"
             onClick={handleBack}
-            className="w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
+            className="w-10 h-10 rounded-full bg-[#0f172a]/80 hover:bg-[#0f172a] text-white backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
             title="Go Back"
           >
             <ChevronLeft className="w-5 h-5 pr-0.5" />
@@ -399,8 +399,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               onClick={handleBookmarkToggle}
               className={`w-10 h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border ${
                 isBookmarked 
-                  ? 'bg-amber-400 text-slate-950 border-amber-300' 
-                  : 'bg-white/80 hover:bg-white text-slate-900 border-white/40'
+                  ? 'bg-[#090d16]mber-400 text-slate-950 border-amber-300' 
+                  : 'bg-[#0f172a]/80 hover:bg-[#0f172a] text-white border-white/40'
               }`}
               title="Bookmark Specialist"
             >
@@ -410,7 +410,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <button
               type="button"
               onClick={handleShare}
-              className="w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40 hidden sm:flex"
+              className="w-10 h-10 rounded-full bg-[#0f172a]/80 hover:bg-[#0f172a] text-white backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40 hidden sm:flex"
               title="Share Profile"
             >
               <Share2 className="w-4 h-4" />
@@ -423,7 +423,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 -mt-12 sm:-mt-16">
 
         {/* ── FLOATING PROFILE INFO CARD ── */}
-        <div className="bg-white rounded-t-[32px] sm:rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-slate-100 p-6 sm:p-8 text-center space-y-4">
+        <div className="bg-[#0f172a] rounded-t-[32px] sm:rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-slate-800 p-6 sm:p-8 text-center space-y-4">
           
           {/* Certified Member Badge */}
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-blue-50 text-blue-600 rounded-full font-bold text-xs border border-blue-100/80 shadow-2xs mx-auto">
@@ -433,17 +433,17 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
           {/* Doctor Name */}
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
               {advisor.name}
             </h1>
-            <p className="text-sm sm:text-base font-semibold text-slate-500 mt-1">
+            <p className="text-sm sm:text-base font-semibold text-slate-400 mt-1">
               {advisor.role}
             </p>
           </div>
 
           {/* Rating & Primary Specialty Row */}
-          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-slate-700 flex-wrap pt-1">
-            <span className="flex items-center gap-1 text-slate-900">
+          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-slate-300 flex-wrap pt-1">
+            <span className="flex items-center gap-1 text-white">
               <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
               <span>{avgRatingDisplay}</span>
               <span className="text-slate-400 font-normal">({totalReviewsCount})</span>
@@ -451,7 +451,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
             <span className="text-slate-300">•</span>
 
-            <span className="flex items-center gap-1.5 text-slate-600">
+            <span className="flex items-center gap-1.5 text-slate-400">
               <MessageSquare className="w-4 h-4 text-teal-600" />
               <span>Psychologist</span>
             </span>
@@ -462,11 +462,11 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {advisor.modes && advisor.modes.map((mode, idx) => (
               <span 
                 key={idx}
-                className="px-3 py-1 rounded-full bg-slate-50 border border-slate-200/80 text-[11px] font-bold text-slate-700 flex items-center gap-1"
+                className="px-3 py-1 rounded-full bg-[#1e293b] border border-slate-700/80 text-[11px] font-bold text-slate-300 flex items-center gap-1"
               >
                 {mode === 'ONLINE' && <Video className="w-3 h-3 text-teal-600" />}
                 {mode === 'OFFLINE' && <MapPin className="w-3 h-3 text-blue-600" />}
-                {mode === 'DOOR_STEP' && <UserCheck className="w-3 h-3 text-emerald-600" />}
+                {mode === 'DOOR_STEP' && <UserCheck className="w-3 h-3 text-[#00e5ff]" />}
                 <span>{mode === 'ONLINE' ? 'Online Video' : mode === 'OFFLINE' ? 'Clinic Visit' : 'Doorstep Visit'}</span>
               </span>
             ))}
@@ -475,14 +475,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         </div>
 
         {/* ── SEGMENTED TAB NAVIGATION SWITCHER ── */}
-        <div className="my-6 bg-slate-200/60 p-1.5 rounded-2xl flex items-center justify-center gap-2 border border-slate-200">
+        <div className="my-6 bg-slate-800/60 p-1.5 rounded-2xl flex items-center justify-center gap-2 border border-slate-700">
           <button
             type="button"
             onClick={() => setActiveTab('overview')}
             className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all cursor-pointer border-none ${
               activeTab === 'overview'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900 bg-transparent'
+                ? 'bg-[#0f172a] text-white shadow-sm'
+                : 'text-slate-400 hover:text-white bg-transparent'
             }`}
           >
             Overview
@@ -492,8 +492,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             onClick={() => setActiveTab('review')}
             className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all cursor-pointer border-none ${
               activeTab === 'review'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900 bg-transparent'
+                ? 'bg-[#0f172a] text-white shadow-sm'
+                : 'text-slate-400 hover:text-white bg-transparent'
             }`}
           >
             Review ({totalReviewsCount})
@@ -507,28 +507,28 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <div className="space-y-6 animate-in fade-in duration-300">
             
             {/* About Card */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+            <div className="bg-[#0f172a] p-6 sm:p-8 rounded-2xl border border-slate-700/90 shadow-xs space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
                   <UserCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">About {advisor.name}</h3>
-                  <p className="text-xs text-slate-500">Professional background & therapeutic approach</p>
+                  <h3 className="text-lg font-bold text-white">About {advisor.name}</h3>
+                  <p className="text-xs text-slate-400">Professional background & therapeutic approach</p>
                 </div>
               </div>
               
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
                 {advisor.about}
               </p>
 
               {/* Specialties Tags */}
               {advisor.specs && advisor.specs.length > 0 && (
-                <div className="pt-4 border-t border-slate-100">
-                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Specialties & Focus Areas</h4>
+                <div className="pt-4 border-t border-slate-800">
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">Specialties & Focus Areas</h4>
                   <div className="flex flex-wrap gap-2">
                     {advisor.specs.map((spec, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs font-semibold text-slate-700">
+                      <span key={i} className="px-3 py-1.5 bg-[#1e293b] border border-slate-700/90 rounded-xl text-xs font-semibold text-slate-300">
                         {spec}
                       </span>
                     ))}
@@ -540,31 +540,31 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Qualifications & Experience Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+              <div className="bg-[#0f172a] p-5 rounded-2xl border border-slate-700/90 shadow-xs space-y-1">
                 <div className="flex items-center gap-2 text-teal-600 mb-2">
                   <Clock className="w-4 h-4" />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Experience</span>
                 </div>
-                <p className="text-sm font-bold text-slate-900">{advisor.hoursText}</p>
-                <p className="text-xs text-slate-500 font-medium">{advisor.expYears}+ Years Clinical Practice</p>
+                <p className="text-sm font-bold text-white">{advisor.hoursText}</p>
+                <p className="text-xs text-slate-400 font-medium">{advisor.expYears}+ Years Clinical Practice</p>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+              <div className="bg-[#0f172a] p-5 rounded-2xl border border-slate-700/90 shadow-xs space-y-1">
                 <div className="flex items-center gap-2 text-teal-600 mb-2">
                   <Globe className="w-4 h-4" />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Languages</span>
                 </div>
-                <p className="text-sm font-bold text-slate-900">{advisor.lang}</p>
-                <p className="text-xs text-slate-500 font-medium">Fluent Consultations</p>
+                <p className="text-sm font-bold text-white">{advisor.lang}</p>
+                <p className="text-xs text-slate-400 font-medium">Fluent Consultations</p>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+              <div className="bg-[#0f172a] p-5 rounded-2xl border border-slate-700/90 shadow-xs space-y-1">
                 <div className="flex items-center gap-2 text-teal-600 mb-2">
                   <GraduationCap className="w-4 h-4" />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Education</span>
                 </div>
-                <p className="text-sm font-bold text-slate-900 truncate">{advisor.education}</p>
-                <p className="text-xs text-slate-500 font-medium">Verified Credentials</p>
+                <p className="text-sm font-bold text-white truncate">{advisor.education}</p>
+                <p className="text-xs text-slate-400 font-medium">Verified Credentials</p>
               </div>
 
             </div>
@@ -600,7 +600,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             
             {/* Header Title with Write Review Action */}
             <div className="flex items-center justify-between">
-              <h3 className="text-lg sm:text-xl font-bold text-slate-900">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
                 Review Summary
               </h3>
               <button
@@ -613,17 +613,17 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             </div>
 
             {/* ── RATING BREAKDOWN CONTAINER CARD ── */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-xs space-y-6">
+            <div className="bg-[#0f172a] p-6 sm:p-8 rounded-2xl border border-slate-700/90 shadow-xs space-y-6">
               
               {/* Top Rating & Bar Chart Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-slate-100 pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-slate-800 pb-6">
                 
                 {/* Left Rating Box */}
-                <div className="md:col-span-4 text-center md:text-left space-y-1 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-6">
-                  <h2 className="text-5xl font-black text-slate-900 tracking-tight">
+                <div className="md:col-span-4 text-center md:text-left space-y-1 border-b md:border-b-0 md:border-r border-slate-800 pb-4 md:pb-0 md:pr-6">
+                  <h2 className="text-5xl font-black text-white tracking-tight">
                     {avgRatingDisplay}
                   </h2>
-                  <p className="text-xs font-bold text-slate-600">
+                  <p className="text-xs font-bold text-slate-400">
                     Avr Rating
                   </p>
                   <p className="text-[11px] text-slate-400 font-medium">
@@ -640,10 +640,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     { stars: 2, percent: '1%', count: '8' },
                     { stars: 1, percent: '1%', count: '6' }
                   ].map((row) => (
-                    <div key={row.stars} className="flex items-center gap-2 text-xs font-bold text-slate-600">
+                    <div key={row.stars} className="flex items-center gap-2 text-xs font-bold text-slate-400">
                       <span className="w-3 text-right">{row.stars}</span>
                       <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
-                      <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="flex-1 h-2 bg-[#1e293b] rounded-full overflow-hidden">
                         <div 
                           className="h-full bg-teal-500 rounded-full transition-all duration-500" 
                           style={{ width: row.percent }} 
@@ -663,8 +663,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     <Star className="w-4 h-4 text-teal-600" />
                   </div>
                   <div>
-                    <h5 className="text-xs sm:text-sm font-bold text-slate-900">Highly Recommended</h5>
-                    <p className="text-xs text-slate-500">97% of clients give this doctor 5 stars</p>
+                    <h5 className="text-xs sm:text-sm font-bold text-white">Highly Recommended</h5>
+                    <p className="text-xs text-slate-400">97% of clients give this doctor 5 stars</p>
                   </div>
                 </div>
 
@@ -673,8 +673,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     <Clock className="w-4 h-4 text-teal-600" />
                   </div>
                   <div>
-                    <h5 className="text-xs sm:text-sm font-bold text-slate-900">Excellent Wait Time</h5>
-                    <p className="text-xs text-slate-500">87% of clients experience prompt 1-click video starts</p>
+                    <h5 className="text-xs sm:text-sm font-bold text-white">Excellent Wait Time</h5>
+                    <p className="text-xs text-slate-400">87% of clients experience prompt 1-click video starts</p>
                   </div>
                 </div>
 
@@ -683,8 +683,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                     <ThumbsUp className="w-4 h-4 text-teal-600" />
                   </div>
                   <div>
-                    <h5 className="text-xs sm:text-sm font-bold text-slate-900">Great bedside manner</h5>
-                    <p className="text-xs text-slate-500">98% of clients highlight compassionate, empathic support</p>
+                    <h5 className="text-xs sm:text-sm font-bold text-white">Great bedside manner</h5>
+                    <p className="text-xs text-slate-400">98% of clients highlight compassionate, empathic support</p>
                   </div>
                 </div>
               </div>
@@ -704,8 +704,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       onClick={() => setSelectedFilter(tag)}
                       className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
                         selectedFilter === tag
-                          ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                          ? 'primary-cyan-gradient text-slate-950 font-black filter-glow border-none border-slate-900 shadow-xs'
+                          : 'bg-[#0f172a] text-slate-300 border-slate-700 hover:bg-[#1e293b]'
                       }`}
                     >
                       {tag}
@@ -722,13 +722,13 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search for a review..."
-                  className="w-full pl-11 pr-10 py-3 bg-white border border-slate-200/90 rounded-2xl text-xs sm:text-sm text-slate-900 outline-none focus:border-teal-500 transition-all shadow-2xs"
+                  className="w-full pl-11 pr-10 py-3 bg-[#0f172a] border border-slate-700/90 rounded-2xl text-xs sm:text-sm text-white outline-none focus:border-teal-500 transition-all shadow-2xs"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 bg-transparent border-none cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-400 bg-transparent border-none cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -747,7 +747,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
                   if (isReported) {
                     return (
-                      <div key={rev.id} className="p-4 bg-slate-100 rounded-2xl text-xs text-slate-400 text-center italic border border-slate-200">
+                      <div key={rev.id} className="p-4 bg-[#1e293b] rounded-2xl text-xs text-slate-400 text-center italic border border-slate-700">
                         This review has been reported and is hidden for review.
                       </div>
                     );
@@ -756,20 +756,20 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   return (
                     <div 
                       key={rev.id} 
-                      className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-3 relative"
+                      className="bg-[#0f172a] p-5 sm:p-6 rounded-2xl border border-slate-700/90 shadow-2xs space-y-3 relative"
                     >
                       {/* Review Header: User avatar, Name, Date, 3-dots */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 min-w-0">
                           {rev.avatar ? (
-                            <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-200" />
+                            <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-700" />
                           ) : (
-                            <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">
+                            <div className="w-10 h-10 rounded-full bg-[#1e293b] text-slate-300 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-700">
                               {getInitials(rev.author)}
                             </div>
                           )}
                           <div className="min-w-0">
-                            <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                            <h4 className="text-xs sm:text-sm font-bold text-white truncate">
                               {rev.author} <span className="text-slate-400 font-normal">· {rev.date}</span>
                             </h4>
                             <div className="flex items-center gap-1.5 mt-0.5">
@@ -781,7 +781,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                                   />
                                 ))}
                               </span>
-                              <span className="text-xs font-bold text-slate-700 ml-1">{rev.rating}</span>
+                              <span className="text-xs font-bold text-slate-300 ml-1">{rev.rating}</span>
                             </div>
                           </div>
                         </div>
@@ -791,13 +791,13 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                           <button
                             type="button"
                             onClick={() => setActiveMenuId(activeMenuId === rev.id ? null : rev.id)}
-                            className="p-2 text-slate-400 hover:text-slate-700 rounded-full cursor-pointer bg-transparent border-none"
+                            className="p-2 text-slate-400 hover:text-slate-300 rounded-full cursor-pointer bg-transparent border-none"
                           >
                             <MoreVertical className="w-4 h-4" />
                           </button>
                           
                           {activeMenuId === rev.id && (
-                            <div className="absolute right-0 top-8 bg-white border border-slate-200 rounded-xl shadow-lg p-1 z-20 min-w-[120px]">
+                            <div className="absolute right-0 top-8 bg-[#0f172a] border border-slate-700 rounded-xl shadow-lg p-1 z-20 min-w-[120px]">
                               <button
                                 type="button"
                                 onClick={() => { handleReport(rev.id); setActiveMenuId(null); }}
@@ -811,12 +811,12 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       </div>
 
                       {/* Review Title */}
-                      <h5 className="text-sm font-bold text-slate-900 pt-1">
+                      <h5 className="text-sm font-bold text-white pt-1">
                         {rev.title}
                       </h5>
 
                       {/* Review Text */}
-                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                      <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-normal">
                         {rev.content}
                       </p>
 
@@ -829,7 +829,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       )}
 
                       {/* Actions Footer: Like, Dislike, Report */}
-                      <div className="flex items-center gap-4 pt-2 border-t border-slate-100 text-xs font-semibold text-slate-500">
+                      <div className="flex items-center gap-4 pt-2 border-t border-slate-800 text-xs font-semibold text-slate-400">
                         <button
                           type="button"
                           onClick={() => handleLike(rev.id)}
@@ -842,7 +842,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                         <button
                           type="button"
                           onClick={() => handleDislike(rev.id)}
-                          className="flex items-center gap-1.5 hover:text-slate-800 transition-colors cursor-pointer bg-transparent border-none p-0"
+                          className="flex items-center gap-1.5 hover:text-slate-200 transition-colors cursor-pointer bg-transparent border-none p-0"
                         >
                           <ThumbsDown className="w-3.5 h-3.5" />
                           <span>Dislike {dislikesCount > 0 ? `(${dislikesCount})` : ''}</span>
@@ -861,7 +861,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   );
                 })
               ) : (
-                <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-500 text-xs font-medium">
+                <div className="p-8 text-center bg-[#0f172a] rounded-2xl border border-slate-700 text-slate-400 text-xs font-medium">
                   No matching reviews found for "{searchQuery || selectedFilter}".
                 </div>
               )}
@@ -875,14 +875,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       {/* ── WRITE REVIEW MODAL ── */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200">
+          <div className="bg-[#0f172a] rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl border border-slate-700 animate-in zoom-in-95 duration-200">
             
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-lg font-bold text-slate-900">Write a Verified Review</h3>
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-lg font-bold text-white">Write a Verified Review</h3>
               <button
                 type="button"
                 onClick={() => setShowReviewModal(false)}
-                className="p-1 text-slate-400 hover:text-slate-600 rounded-full cursor-pointer bg-transparent border-none"
+                className="p-1 text-slate-400 hover:text-slate-400 rounded-full cursor-pointer bg-transparent border-none"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -892,7 +892,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               
               {/* Star Rating Select */}
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Your Rating</label>
+                <label className="text-xs font-bold text-slate-300 block mb-1">Your Rating</label>
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <button
@@ -904,17 +904,17 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       <Star className={`w-6 h-6 ${s <= newRating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />
                     </button>
                   ))}
-                  <span className="text-sm font-bold text-slate-800 ml-2">{newRating} / 5</span>
+                  <span className="text-sm font-bold text-slate-200 ml-2">{newRating} / 5</span>
                 </div>
               </div>
 
               {/* Tag Category */}
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Primary Feedback Category</label>
+                <label className="text-xs font-bold text-slate-300 block mb-1">Primary Feedback Category</label>
                 <select
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none"
+                  className="w-full px-3 py-2.5 bg-[#1e293b] border border-slate-700 rounded-xl text-xs font-semibold text-white outline-none"
                 >
                   <option value="Skill">Skill & Expertise</option>
                   <option value="Conversation">Conversation & Empathy</option>
@@ -925,25 +925,25 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
               {/* Title Input */}
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Review Title</label>
+                <label className="text-xs font-bold text-slate-300 block mb-1">Review Title</label>
                 <input
                   type="text"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Amazingly Insightful & Helpful!"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:border-teal-500"
+                  className="w-full px-3.5 py-2.5 bg-[#1e293b] border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-teal-500"
                 />
               </div>
 
               {/* Text Message */}
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Review Details</label>
+                <label className="text-xs font-bold text-slate-300 block mb-1">Review Details</label>
                 <textarea
                   rows={3}
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Share your experience during the consultation..."
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:border-teal-500 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-[#1e293b] border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-teal-500 resize-none"
                 />
               </div>
 
@@ -951,14 +951,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <button
                   type="button"
                   onClick={() => setShowReviewModal(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer border-none bg-transparent"
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:bg-[#1e293b] cursor-pointer border-none bg-transparent"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingReview}
-                  className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer border-none flex items-center gap-1.5"
+                  className="px-5 py-2.5 primary-cyan-gradient text-slate-950 filter-glow hover:scale-105 border-none rounded-xl text-xs font-bold transition shadow-sm cursor-pointer border-none flex items-center gap-1.5"
                 >
                   {submittingReview ? 'Submitting...' : 'Submit Review'}
                 </button>
@@ -971,14 +971,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
       {/* ── STICKY BOTTOM BOOKING CTA BAR (Fixed on Mobile, Desktop Responsive) ── */}
       {enableBooking && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 px-4 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0f172a]/95 backdrop-blur-lg border-t border-slate-700/90 px-4 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
             
             {/* Fee summary left side */}
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Consultation Fee</span>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-lg sm:text-2xl font-black text-slate-900">
+                <span className="text-lg sm:text-2xl font-black text-white">
                   ₹{advisor.price.toLocaleString('en-IN')}
                 </span>
                 <span className="text-xs text-teal-600 font-semibold hidden xs:inline">

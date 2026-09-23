@@ -418,7 +418,7 @@ export default function BookingManagementTab(props) {
  setBookingFormSuccess('');
  setIsAddBookingOpen(true);
  }}
- className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+ className="px-4 py-2 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-950 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
  >
  <Plus className="w-3.5 h-3.5 text-zinc-955" /> Schedule Booking
  </button>
@@ -442,7 +442,7 @@ export default function BookingManagementTab(props) {
  key={status}
  onClick={() => { setBookingStatusFilter(status); setSelectedBookingIds([]); }}
  className={`px-3 py-1.5 rounded-lg text-sm font-bold transition cursor-pointer border ${bookingStatusFilter === status
- ? 'bg-brand text-zinc-955 border-brand font-bold'
+ ? 'bg-[#00e5ff] text-zinc-955 border-brand font-bold'
  : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
  }`}
  >
@@ -477,7 +477,7 @@ export default function BookingManagementTab(props) {
  {/* Bulk Actions Panel */}
  {selectedBookingIds.length > 0 && (
  <div className="flex items-center gap-3 bg-zinc-900/60 p-3 rounded-lg border border-zinc-800 animate-in slide-in-from-top duration-200">
- <span className="text-sm font-bold text-brand ">{selectedBookingIds.length} Selected</span>
+ <span className="text-sm font-bold text-[#00e5ff] ">{selectedBookingIds.length} Selected</span>
  <div className="flex items-center gap-2">
  <button
  onClick={() => handleBulkBookingStatus('CONFIRMED')}
@@ -573,7 +573,7 @@ export default function BookingManagementTab(props) {
   <div className="flex items-center gap-1.5 mt-0.5">
     <span className="text-sm text-zinc-555 font-bold">{booking.mode}</span>
     {(booking.utmCampaign || booking.utmSource || booking.fbclid) && (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-1.5 py-0.5 rounded shadow-xs">
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-400 bg-[#090d16]yan-950/60 border border-cyan-800/60 px-1.5 py-0.5 rounded shadow-xs">
         🎯 {booking.utmCampaign ? String(booking.utmCampaign).substring(0, 18) : (booking.utmSource ? `Ad (${booking.utmSource})` : 'Meta Ad')}
       </span>
     )}
@@ -589,7 +589,7 @@ export default function BookingManagementTab(props) {
  href={booking.meetLink}
  target="_blank"
  rel="noopener noreferrer"
- className="text-brand hover:underline font-bold inline-flex items-center gap-1 text-sm"
+ className="text-[#00e5ff] hover:underline font-bold inline-flex items-center gap-1 text-sm"
  >
  <Link className="w-3 h-3" /> Virtual Room
  </a>

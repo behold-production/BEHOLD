@@ -870,7 +870,7 @@ export default function PsychologistManagementTab(props) {
                   setPsyFormSuccess("");
                   setIsAddPsyOpen(true);
                 }}
-                className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+                className="px-4 py-2 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
               >
                 <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Psychologist
               </button>
@@ -921,7 +921,7 @@ export default function PsychologistManagementTab(props) {
                 setPsyPage(1);
               }}
               className={`px-4 py-2 text-xs font-bold rounded-lg transition duration-200 cursor-pointer flex items-center gap-1.5 ${psyFilter === tab.id
-                  ? "bg-brand text-zinc-955"
+                  ? "bg-[#00e5ff] text-zinc-955"
                   : "bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-zinc-400 hover:text-zinc-200 hover:bg-zinc-850"
                 }`}
             >
@@ -981,7 +981,7 @@ export default function PsychologistManagementTab(props) {
                       >
                         <td className="p-3 whitespace-nowrap">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-brand flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
+                            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-[#00e5ff] flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
                               {psy.profilePic || psy.image ? (
                                 <img
                                   src={psy.profilePic || psy.image}
@@ -1018,7 +1018,7 @@ export default function PsychologistManagementTab(props) {
                           <button
                             onClick={() => handleTogglePsyTopFive(psy)}
                             className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer border ${psy.isTopFive
-                                ? "bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30"
+                                ? "bg-[#090d16]mber-500/20 border-amber-500/40 text-amber-400 hover:bg-[#090d16]mber-500/30"
                                 : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-850"
                               }`}
                             title="Toggle Top 5 featured status"
@@ -1084,14 +1084,14 @@ export default function PsychologistManagementTab(props) {
                           <div className="flex items-center justify-center gap-2">
                             <button
                               onClick={() => setViewingPsychologist(psy)}
-                              className="px-2.5 py-1 bg-zinc-900 text-brand hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
+                              className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
                             >
                               Details
                             </button>
                             {canEditPsy && (
                               <button
                                 onClick={() => handleOpenShareModal(psy)}
-                                className="px-2.5 py-1 bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-400 rounded border border-cyan-800/60 transition cursor-pointer text-xs font-bold flex items-center gap-1"
+                                className="px-2.5 py-1 bg-[#090d16]yan-950/40 hover:bg-[#090d16]yan-900/60 text-cyan-400 rounded border border-cyan-800/60 transition cursor-pointer text-xs font-bold flex items-center gap-1"
                                 title="Change Share Percentage"
                               >
                                 <Percent className="w-3.5 h-3.5 text-cyan-400" />
@@ -1103,7 +1103,7 @@ export default function PsychologistManagementTab(props) {
                                 onClick={() =>
                                   handleGenerateResetToken(psy.email)
                                 }
-                                className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-amber-900/30 transition cursor-pointer text-sm font-bold "
+                                className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-[#090d16]mber-900/30 transition cursor-pointer text-sm font-bold "
                                 title="Generate Password Reset Link"
                               >
                                 <KeyRound className="w-4 h-4 inline-block" />
@@ -1208,7 +1208,7 @@ export default function PsychologistManagementTab(props) {
                     Profile Picture
                   </label>
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+                    <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-[#00e5ff] font-bold text-lg">
                       {psyProfilePicFile ? (
                         <img
                           src={URL.createObjectURL(psyProfilePicFile)}
@@ -1444,7 +1444,7 @@ export default function PsychologistManagementTab(props) {
                 </div>
 
                 <div className="sm:col-span-2 space-y-3.5 p-4 bg-zinc-950 border border-zinc-800 rounded-lg mt-2 text-left">
-                  <h4 className="text-xs font-bold text-brand tracking-wider">
+                  <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider">
                     Practice / Geographic Location
                   </h4>
 
@@ -1471,7 +1471,7 @@ export default function PsychologistManagementTab(props) {
                         type="button"
                         onClick={handleAdminAddressSearch}
                         disabled={props.isAdminSearching}
-                        className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
+                        className="w-full sm:w-auto px-4 py-2 bg-[#00e5ff] text-zinc-955 text-xs font-bold rounded-full hover:bg-[#00e5ff]-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                       >
                         {isAdminSearching ? "Searching..." : "Search"}
                       </button>
@@ -1573,7 +1573,7 @@ export default function PsychologistManagementTab(props) {
                     ) : (
                       <>
                         <svg
-                          className="w-3.5 h-3.5 text-brand"
+                          className="w-3.5 h-3.5 text-[#00e5ff]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -1619,7 +1619,7 @@ export default function PsychologistManagementTab(props) {
                               : [...currentModes, mode];
                             setPsyForm({ ...psyForm, modes: nextModes });
                           }}
-                          className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                          className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                         />
                         <span>
                           {mode === "DOOR_STEP"
@@ -1643,7 +1643,7 @@ export default function PsychologistManagementTab(props) {
                         onChange={(e) =>
                           setPsyForm({ ...psyForm, isActive: e.target.checked })
                         }
-                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                       />
                       <span>Active Profile (Accept Bookings)</span>
                     </label>
@@ -1658,7 +1658,7 @@ export default function PsychologistManagementTab(props) {
                             isTopFive: e.target.checked,
                           })
                         }
-                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                       />
                       <span>Featured Psychologist (Top 5)</span>
                     </label>
@@ -1762,7 +1762,7 @@ export default function PsychologistManagementTab(props) {
                 <button
                   type="submit"
                   disabled={isSavingForm}
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddPsyOpen ? "Save Psychologist" : "Update Details"}
@@ -1782,7 +1782,7 @@ export default function PsychologistManagementTab(props) {
           <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+                <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
                   {viewingPsychologist.profilePic ||
                     viewingPsychologist.image ? (
                     <img
@@ -1799,7 +1799,7 @@ export default function PsychologistManagementTab(props) {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
-                    <Award className="w-5 h-5 text-brand" /> Psychologist
+                    <Award className="w-5 h-5 text-[#00e5ff]" /> Psychologist
                     Profile Details
                   </h3>
                   <p className="text-sm text-zinc-500 mt-1">
@@ -1911,10 +1911,10 @@ export default function PsychologistManagementTab(props) {
                           <span className="text-zinc-500 block text-sm ">
                             Consultation Fee
                           </span>
-                          <span className="font-bold text-brand">
+                          <span className="font-bold text-[#00e5ff]">
                             ₹{price} / hour
                           </span>
-                          <span className="font-bold text-brand block">
+                          <span className="font-bold text-[#00e5ff] block">
                             ₹{halfSessionPrice} / half-session
                           </span>
                         </div>
@@ -1932,7 +1932,7 @@ export default function PsychologistManagementTab(props) {
                                 ? "bg-emerald-955/20 border border-emerald-900/30 text-emerald-450"
                                 : viewingPsychologist.status === "REJECTED"
                                   ? "bg-rose-955/20 border border-rose-900/30 text-rose-455"
-                                  : "bg-amber-955/20 border border-amber-900/30 text-amber-500"
+                                  : "bg-[#090d16]mber-955/20 border border-amber-900/30 text-amber-500"
                               }`}
                           >
                             {viewingPsychologist.status === "ACTIVE"
@@ -1945,7 +1945,7 @@ export default function PsychologistManagementTab(props) {
                             href={`#/advisor/${viewingPsychologist.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold transition"
+                            className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-[#00e5ff] rounded text-sm font-bold transition"
                           >
                             Preview Profile
                           </a>
@@ -2066,7 +2066,7 @@ export default function PsychologistManagementTab(props) {
                       <span className="text-sm font-bold text-zinc-500 block">
                         Consultation Schedule History
                       </span>
-                      <span className="text-sm text-brand font-bold ">
+                      <span className="text-sm text-[#00e5ff] font-bold ">
                         {
                           bookingsDb.filter(
                             (b) =>
@@ -2205,7 +2205,7 @@ export default function PsychologistManagementTab(props) {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-zinc-400 tracking-wide">Profile Picture</label>
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-brand font-bold text-lg">
+                    <div className="w-14 h-14 rounded-lg bg-zinc-950 border border-zinc-800 overflow-hidden shrink-0 flex items-center justify-center text-[#00e5ff] font-bold text-lg">
                       {psyProfilePicFile ? (
                         <img src={URL.createObjectURL(psyProfilePicFile)} alt="Preview" className="w-full h-full object-cover" />
                       ) : psyForm.profilePic ? (
@@ -2351,7 +2351,7 @@ export default function PsychologistManagementTab(props) {
                 </div>
 
                 <div className="sm:col-span-2 space-y-3.5 p-4 bg-zinc-950 border border-zinc-800 rounded-lg mt-2 text-left">
-                  <h4 className="text-xs font-bold text-brand tracking-wider">Practice / Geographic Location</h4>
+                  <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider">Practice / Geographic Location</h4>
 
                   {/* Address search field */}
                   <div className="space-y-1.5 relative">
@@ -2374,7 +2374,7 @@ export default function PsychologistManagementTab(props) {
                         type="button"
                         onClick={handleAdminAddressSearch}
                         disabled={isAdminSearching}
-                        className="w-full sm:w-auto px-4 py-2 bg-brand text-zinc-955 text-xs font-bold rounded-full hover:bg-brand-dark transition cursor-pointer shrink-0 flex items-center justify-center"
+                        className="w-full sm:w-auto px-4 py-2 bg-[#00e5ff] text-zinc-955 text-xs font-bold rounded-full hover:bg-[#00e5ff]-dark transition cursor-pointer shrink-0 flex items-center justify-center"
                       >
                         {isAdminSearching ? 'Searching...' : 'Search'}
                       </button>
@@ -2456,7 +2456,7 @@ export default function PsychologistManagementTab(props) {
                       </>
                     ) : (
                       <>
-                        <svg className="w-3.5 h-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-3.5 h-3.5 text-[#00e5ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
@@ -2481,7 +2481,7 @@ export default function PsychologistManagementTab(props) {
                               : [...currentModes, mode];
                             setPsyForm({ ...psyForm, modes: nextModes });
                           }}
-                          className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                          className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                         />
                         <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
                       </label>
@@ -2497,7 +2497,7 @@ export default function PsychologistManagementTab(props) {
                         type="checkbox"
                         checked={psyForm.isActive !== false}
                         onChange={(e) => setPsyForm({ ...psyForm, isActive: e.target.checked })}
-                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                       />
                       <span>Active Profile (Accept Bookings)</span>
                     </label>
@@ -2507,7 +2507,7 @@ export default function PsychologistManagementTab(props) {
                         type="checkbox"
                         checked={psyForm.isTopFive || false}
                         onChange={(e) => setPsyForm({ ...psyForm, isTopFive: e.target.checked })}
-                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                        className="w-4 h-4 rounded border-zinc-805 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                       />
                       <span>Featured Psychologist (Top 5)</span>
                     </label>
@@ -2597,7 +2597,7 @@ export default function PsychologistManagementTab(props) {
                 <button
                   type="submit"
                   disabled={isSavingForm}
-                  className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
                   {isAddPsyOpen ? 'Save Psychologist' : 'Update Details'}
@@ -2617,7 +2617,7 @@ export default function PsychologistManagementTab(props) {
           <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-brand/10 border border-brand/20 text-brand flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
+                <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
                   {viewingPsychologist.profilePic || viewingPsychologist.image ? (
                     <img src={viewingPsychologist.profilePic || viewingPsychologist.image} alt={viewingPsychologist.name} className="w-full h-full object-cover" />
                   ) : (
@@ -2626,7 +2626,7 @@ export default function PsychologistManagementTab(props) {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
-                    <Award className="w-5 h-5 text-brand" /> Psychologist Profile Details
+                    <Award className="w-5 h-5 text-[#00e5ff]" /> Psychologist Profile Details
                   </h3>
                   <p className="text-sm text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
                 </div>
@@ -2687,7 +2687,7 @@ export default function PsychologistManagementTab(props) {
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-sm ">Consultation Fee</span>
-                          <span className="font-bold text-brand">₹{price} / hour</span>
+                          <span className="font-bold text-[#00e5ff]">₹{price} / hour</span>
                           {viewingPsychologist.commissionPercent !== undefined && (
                             <div className="text-xs text-zinc-500 mt-0.5">
                               (₹{(((price) * (viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50)) / 100).toFixed(2)} Payout / Session)
@@ -2696,7 +2696,7 @@ export default function PsychologistManagementTab(props) {
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-sm ">Half Session Price</span>
-                          <span className="font-bold text-brand">₹{halfSessionPrice} / 30-min</span>
+                          <span className="font-bold text-[#00e5ff]">₹{halfSessionPrice} / 30-min</span>
                           {viewingPsychologist.commissionPercent !== undefined && (
                             <div className="text-xs text-zinc-500 mt-0.5">
                               (₹{(((halfSessionPrice) * (viewingPsychologist.commissionPercent !== undefined ? viewingPsychologist.commissionPercent : 50)) / 100).toFixed(2)} Payout / Session)
@@ -2712,7 +2712,7 @@ export default function PsychologistManagementTab(props) {
                             ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
                             : viewingPsychologist.status === 'REJECTED'
                               ? 'bg-rose-955/20 border border-rose-900/30 text-rose-455'
-                              : 'bg-amber-955/20 border border-amber-900/30 text-amber-500'
+                              : 'bg-[#090d16]mber-955/20 border border-amber-900/30 text-amber-500'
                             }`}>
                             {viewingPsychologist.status === 'ACTIVE' ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
                           </span>
@@ -2720,7 +2720,7 @@ export default function PsychologistManagementTab(props) {
                             href={`#/advisor/${viewingPsychologist.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-brand rounded text-sm font-bold transition"
+                            className="px-2.5 py-0.5 bg-zinc-900 border border-zinc-800 hover:text-[#00e5ff] rounded text-sm font-bold transition"
                           >
                             Preview Profile
                           </a>
@@ -2807,7 +2807,7 @@ export default function PsychologistManagementTab(props) {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-bold text-zinc-500 block">Consultation Schedule History</span>
-                      <span className="text-sm text-brand font-bold ">
+                      <span className="text-sm text-[#00e5ff] font-bold ">
                         {bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase())).length} consultations booked
                       </span>
                     </div>
@@ -2941,7 +2941,7 @@ export default function PsychologistManagementTab(props) {
                     onClick={() => setSharePercentValue(preset)}
                     className={`px-2.5 py-1 text-xs font-bold rounded-lg border transition cursor-pointer ${
                       Number(sharePercentValue) === preset
-                        ? 'bg-cyan-500 text-zinc-955 border-cyan-400 font-black'
+                        ? 'bg-[#090d16]yan-500 text-zinc-955 border-cyan-400 font-black'
                         : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-750'
                     }`}
                   >
@@ -2979,7 +2979,7 @@ export default function PsychologistManagementTab(props) {
                 <button
                   type="submit"
                   disabled={isUpdatingShare}
-                  className="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-xl transition border-none cursor-pointer shadow-md disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 bg-[#090d16]yan-500 hover:bg-[#090d16]yan-400 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-xl transition border-none cursor-pointer shadow-md disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {isUpdatingShare ? (
                     <div className="w-4 h-4 border-2 border-zinc-955 border-t-transparent rounded-full animate-spin" />

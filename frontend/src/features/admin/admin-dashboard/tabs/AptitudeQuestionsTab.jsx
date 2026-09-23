@@ -362,7 +362,7 @@ export default function AptitudeQuestionsTab(props) {
  setAptitudeFormSuccess('');
  setIsAddAptitudeOpen(true);
  }}
- className="px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0 border-none"
+ className="px-4 py-2 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0 border-none"
  >
  <Plus className="w-3.5 h-3.5 text-zinc-955" /> Add Question
  </button>
@@ -406,7 +406,7 @@ export default function AptitudeQuestionsTab(props) {
  >
  <div className="space-y-2 flex-1 min-w-0">
  <div className="flex items-center gap-3 mb-2">
- <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-sm text-brand flex items-center justify-center font-bold shrink-0">{((aptitudePage - 1) * aptitudeLimit) + index + 1}</span>
+ <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-sm text-[#00e5ff] flex items-center justify-center font-bold shrink-0">{((aptitudePage - 1) * aptitudeLimit) + index + 1}</span>
  <span className="text-xs font-bold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{q.category}</span>
  {!q.isActive && <span className="text-xs font-bold text-rose-500 bg-rose-955/20 px-2 py-0.5 rounded border border-rose-900/30">Disabled</span>}
  </div>

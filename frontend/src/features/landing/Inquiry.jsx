@@ -111,7 +111,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
             </button>
             <button
               onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
+              className="px-8 py-3.5 bg-[#0f172a]/10 hover:bg-[#0f172a]/20 text-white font-semibold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
             >
               Take Aptitude Test
             </button>
@@ -125,7 +125,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
             {/* Form — 7 cols */}
-            <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-slate-200 shadow-xl shadow-slate-200/40">
+            <div className="lg:col-span-7 bg-[#0f172a] rounded-xl p-6 sm:p-10 border border-slate-700 shadow-xl shadow-slate-200/40">
               <div className="mb-8">
                 <span className="text-xs font-semibold text-[#00e5ff] flex items-center gap-1.5 mb-2">
                   Get In Touch
@@ -226,7 +226,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
-                <div className="mt-8 p-6 bg-white rounded-xl border border-surface-200 shadow-xs">
+                <div className="mt-8 p-6 bg-[#0f172a] rounded-xl border border-surface-200 shadow-xs">
                   <h4 className="font-semibold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
                     <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm mb-2 hover:underline">

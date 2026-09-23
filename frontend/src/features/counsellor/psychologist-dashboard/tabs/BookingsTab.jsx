@@ -81,7 +81,7 @@ const BookingsTab = ({
           <h3 className="text-sm font-bold text-zinc-500 font-header">User Booking Details & Rooms</h3>
           <p className="text-sm text-zinc-400 mt-1 font-medium break-words">Manage virtual consultations, update appointment statuses, and log clinic summaries.</p>
         </div>
-        <span className="text-sm bg-brand/10 text-brand border border-brand/20 px-2 py-0.5 rounded font-bold shrink-0">{bookings.length} Total</span>
+        <span className="text-sm bg-[#00e5ff]/10 text-[#00e5ff] border border-brand/20 px-2 py-0.5 rounded font-bold shrink-0">{bookings.length} Total</span>
       </div>
 
       {/* Tab switcher */}
@@ -100,7 +100,7 @@ const BookingsTab = ({
               onClick={() => setActiveBookingTab(tab.id)}
               className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap border select-none ${
                 isActive
-                  ? 'bg-brand text-zinc-955 border-brand shadow-sm font-black'
+                  ? 'bg-[#00e5ff] text-zinc-955 border-brand shadow-sm font-black'
                   : 'bg-transparent border-transparent text-zinc-400 hover:text-white hover:bg-zinc-855/60'
               }`}
             >
@@ -150,7 +150,7 @@ const BookingsTab = ({
                   {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
                 </span>
                 <span className="text-xs text-zinc-400 font-bold bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800">{booking.mode}</span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded border ${booking.paymentStatus === 'PAID' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' : booking.paymentStatus === 'FAILED' ? 'bg-rose-950 text-rose-400 border-rose-900' : 'bg-amber-950 text-amber-400 border-amber-900'}`}>{booking.paymentStatus || 'PENDING'}</span>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded border ${booking.paymentStatus === 'PAID' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' : booking.paymentStatus === 'FAILED' ? 'bg-rose-950 text-rose-400 border-rose-900' : 'bg-[#090d16]mber-950 text-amber-400 border-amber-900'}`}>{booking.paymentStatus || 'PENDING'}</span>
               </div>
 
               <div className="space-y-0.5 text-left">
@@ -186,7 +186,7 @@ const BookingsTab = ({
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-bold text-zinc-400">Meeting Room:</span>
                     {editingBookingId === booking.id ? (
-                      <span className="text-xs text-brand font-semibold">Editing link below</span>
+                      <span className="text-xs text-[#00e5ff] font-semibold">Editing link below</span>
                     ) : booking.status === 'EXPIRED' ? (
                       <span className="text-xs font-semibold text-rose-400 italic flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5 text-rose-500" /> Access Expired
@@ -196,10 +196,10 @@ const BookingsTab = ({
                         <button
                           type="button"
                           onClick={() => window.open(booking.meetLink, '_blank')}
-                          className="text-xs font-bold bg-brand/15 hover:bg-brand/25 text-brand border border-brand/30 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                          className="text-xs font-bold bg-[#00e5ff]/15 hover:bg-[#00e5ff]/25 text-[#00e5ff] border border-brand/30 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer shadow-sm"
                           title="Join Google Meet Consultation Room"
                         >
-                          <Video className="w-3.5 h-3.5 text-brand shrink-0" />
+                          <Video className="w-3.5 h-3.5 text-[#00e5ff] shrink-0" />
                           <span>Join Google Meet</span>
                         </button>
                         <button
@@ -227,7 +227,7 @@ const BookingsTab = ({
                           })}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs font-semibold text-cyan-300 hover:text-white bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer no-underline"
+                          className="text-xs font-semibold text-cyan-300 hover:text-white bg-[#090d16]yan-950/40 hover:bg-[#090d16]yan-900/50 border border-cyan-800/60 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer no-underline"
                           title="Add to Google Calendar"
                         >
                           <Calendar className="w-3.5 h-3.5 text-cyan-400" />
@@ -252,7 +252,7 @@ const BookingsTab = ({
                             const canonicalId = booking.appointmentId || booking.id;
                             saveMeetLink(booking.id, buildGoogleMeetUrl(canonicalId));
                           }}
-                          className="text-xs font-bold bg-brand hover:bg-brand-dark text-zinc-955 px-3 py-1.5 rounded-lg cursor-pointer transition shadow-sm border-none"
+                          className="text-xs font-bold bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 px-3 py-1.5 rounded-lg cursor-pointer transition shadow-sm border-none"
                           title="Generate instant Google Meet room"
                         >
                           ⚡ Generate Google Meet
@@ -285,7 +285,7 @@ const BookingsTab = ({
                         <button
                           type="button"
                           onClick={() => saveMeetLink(booking.id)}
-                          className="px-3.5 py-2 bg-brand hover:bg-brand-dark text-zinc-955 text-xs font-bold rounded-lg cursor-pointer border-none shadow-sm"
+                          className="px-3.5 py-2 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 text-xs font-bold rounded-lg cursor-pointer border-none shadow-sm"
                         >
                           Save Link
                         </button>
@@ -305,7 +305,7 @@ const BookingsTab = ({
                             const canonicalId = booking.appointmentId || booking.id;
                             setMeetLinkInput(buildGoogleMeetUrl(canonicalId));
                           }}
-                          className="px-2.5 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand border border-brand/20 text-[11px] font-bold rounded-lg cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1.5 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-brand/20 text-[11px] font-bold rounded-lg cursor-pointer flex items-center gap-1"
                           title="Generate dedicated Google Meet URL"
                         >
                           ⚡ Auto Google Meet (Recommended)
@@ -337,7 +337,7 @@ const BookingsTab = ({
                   {editingFeedbackId === booking.id ? (
                     <div className="space-y-4 font-sans bg-zinc-950 p-4 rounded-[10px] border border-zinc-800">
                       <div className="border-b border-zinc-800 pb-2 flex items-center justify-between">
-                        <span className="text-xs font-bold text-brand uppercase tracking-wider">Report 1: Student Consultation Report (User-Facing)</span>
+                        <span className="text-xs font-bold text-[#00e5ff] uppercase tracking-wider">Report 1: Student Consultation Report (User-Facing)</span>
                         <span className="text-[10px] text-zinc-450 italic">Visible & downloadable by Student</span>
                       </div>
                       
@@ -407,7 +407,7 @@ const BookingsTab = ({
                         <button
                           type="button"
                           onClick={() => handleSendReportToAdmin(booking.id)}
-                          className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
+                          className="px-4 py-2 bg-[#090d16]mber-500 hover:bg-[#090d16]mber-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
                         >
                           <ShieldCheck className="w-3.5 h-3.5" /> Submit Confidential Report to Admin
                         </button>
@@ -436,7 +436,7 @@ const BookingsTab = ({
                           <span className="text-[10px] font-bold text-amber-400 tracking-wider flex items-center gap-1">
                             <Lock className="w-3 h-3 text-amber-400" /> Confidential Admin Report:
                           </span>
-                          <p className="text-xs text-amber-200/90 bg-amber-950/20 p-3 rounded-[10px] border border-amber-500/30 italic leading-relaxed font-medium">
+                          <p className="text-xs text-amber-200/90 bg-[#090d16]mber-950/20 p-3 rounded-[10px] border border-amber-500/30 italic leading-relaxed font-medium">
                             "{booking.adminNotes}"
                           </p>
                         </div>
@@ -463,7 +463,7 @@ const BookingsTab = ({
                             setNextSessionInput(booking.nextSession || '');
                             setAdminNotesInput(booking.adminNotes || '');
                           }}
-                          className="text-xs font-bold text-brand hover:underline flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
+                          className="text-xs font-bold text-[#00e5ff] hover:underline flex items-center gap-1 cursor-pointer border-none bg-transparent p-0"
                         >
                           <Edit className="w-3.5 h-3.5" /> Edit Consultation & Admin Reports
                         </button>
@@ -519,7 +519,7 @@ const BookingsTab = ({
                   href={booking.meetLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 bg-brand text-zinc-955 hover:bg-brand-dark rounded-[10px] text-xs font-black tracking-wider transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none"
+                  className="px-4 py-2.5 bg-[#00e5ff] text-zinc-955 hover:bg-[#00e5ff]-dark rounded-[10px] text-xs font-black tracking-wider transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center gap-1.5 border-none"
                   title="Direct 1-Click Consultation Room"
                 >
                   <Video className="w-4 h-4 text-zinc-955" />

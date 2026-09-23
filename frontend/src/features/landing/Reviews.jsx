@@ -35,7 +35,7 @@ function Stars({ count = 5, total = 5, interactive = false, onSelect }) {
 function ReviewCard({ review }) {
   const initial = (review.name || '?')[0].toUpperCase();
   return (
-    <div className="bg-white rounded-xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover-scale-card transition-all flex flex-col justify-between h-full p-6 sm:p-7 w-full group reveal-on-scroll reveal-scale-in">
+    <div className="bg-[#0f172a] rounded-xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover-scale-card transition-all flex flex-col justify-between h-full p-6 sm:p-7 w-full group reveal-on-scroll reveal-scale-in">
       <div className="flex-1 flex flex-col justify-between">
         {/* Stars */}
         <div className="flex gap-1 mb-4">
@@ -81,7 +81,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
 
   if (!user) {
     return (
-      <div className="text-center py-12 bg-white border border-gray-200 border-dashed rounded-xl shadow-sm flex flex-col items-center justify-center">
+      <div className="text-center py-12 bg-[#0f172a] border border-gray-200 border-dashed rounded-xl shadow-sm flex flex-col items-center justify-center">
         <div className="w-16 h-16 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
@@ -123,7 +123,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
   if (submitted) {
     return (
       <div className="text-center py-10">
-        <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5">
+        <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-5">
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -284,7 +284,7 @@ export default function Reviews({ siteSettings }) {
         {loading ? (
           <div className="px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-xl border border-surface-200 p-6 flex flex-col justify-between h-56 space-y-4 shadow-xs">
+              <div key={i} className="bg-[#0f172a] rounded-xl border border-surface-200 p-6 flex flex-col justify-between h-56 space-y-4 shadow-xs">
                 <div className="space-y-3">
                   <div className="shimmer h-4 w-28 rounded-md" />
                   <div className="shimmer h-3 w-full rounded-md" />
@@ -301,7 +301,7 @@ export default function Reviews({ siteSettings }) {
             ))}
           </div>
         ) : displayReviews.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-dashed border-gray-300 p-8 text-center max-w-lg mx-auto my-6 shadow-xs">
+          <div className="bg-[#0f172a]/80 backdrop-blur-md rounded-2xl border border-dashed border-gray-300 p-8 text-center max-w-lg mx-auto my-6 shadow-xs">
             <div className="w-14 h-14 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
               <span className="text-[#00e5ff] text-xl font-semibold">★</span>
             </div>
@@ -376,7 +376,7 @@ export default function Reviews({ siteSettings }) {
                     className={`w-9 h-9 rounded-full text-xs font-semibold transition-all cursor-pointer border flex items-center justify-center ${
                       currentPage === num
                         ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
-                        : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
+                        : 'bg-[#0f172a] text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
                     }`}
                   >
                     {num}
@@ -403,7 +403,7 @@ export default function Reviews({ siteSettings }) {
         {/* Submit Review Form Panel */}
         {showForm && (
           <div className="mt-10 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-lg mx-auto bg-white rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8">
+            <div className="max-w-lg mx-auto bg-[#0f172a] rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-serif font-semibold text-gray-900">Share Your Experience</h3>
                 <button

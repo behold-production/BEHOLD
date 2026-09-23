@@ -150,7 +150,7 @@ BEHOLD Wellness`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col border border-gray-100 overflow-hidden text-gray-900">
+      <div className="bg-[#0f172a] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col border border-gray-100 overflow-hidden text-gray-900">
         
         {/* Header */}
         <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-b border-gray-200">
@@ -173,7 +173,7 @@ BEHOLD Wellness`;
         </div>
 
         {/* Form Body */}
-        <div className="p-6 overflow-y-auto flex-1 space-y-5 bg-white text-gray-900">
+        <div className="p-6 overflow-y-auto flex-1 space-y-5 bg-[#0f172a] text-gray-900">
           {step === 1 && (
             <form id="admin-booking-form" onSubmit={handleCreateBooking} className="space-y-4">
               
@@ -189,7 +189,7 @@ BEHOLD Wellness`;
                     value={formData.clientName}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-medium"
                     placeholder="e.g. Rahul Sharma"
                   />
                 </div>
@@ -204,7 +204,7 @@ BEHOLD Wellness`;
                     value={formData.whatsappNumber}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-medium"
                     placeholder="e.g. +91 9876543210"
                   />
                 </div>
@@ -222,7 +222,7 @@ BEHOLD Wellness`;
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-medium"
                     placeholder="rahul@example.com"
                   />
                 </div>
@@ -236,7 +236,7 @@ BEHOLD Wellness`;
                     value={formData.psychologistId}
                     onChange={handlePsychologistChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
                   >
                     <option value="">Select Psychologist...</option>
                     {counsellorsDb.map(c => (
@@ -259,7 +259,7 @@ BEHOLD Wellness`;
                     value={formData.service}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
                   >
                     <option value="Individual Counselling">Individual Counselling</option>
                     <option value="Couples Counselling">Couples Counselling</option>
@@ -278,7 +278,7 @@ BEHOLD Wellness`;
                     value={formData.mode}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
                   >
                     <option value="ONLINE">Online Video Call (Google Meet)</option>
                     <option value="OFFLINE">In-Person / Clinic Visit</option>
@@ -298,7 +298,7 @@ BEHOLD Wellness`;
                     value={formData.date}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
                   />
                 </div>
 
@@ -312,7 +312,7 @@ BEHOLD Wellness`;
                     value={formData.time}
                     onChange={handleChange}
                     required
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
                   />
                 </div>
 
@@ -327,7 +327,7 @@ BEHOLD Wellness`;
                     onChange={handleChange}
                     required
                     min="1"
-                    className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
+                    className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition shadow-xs font-medium"
                     placeholder="899"
                   />
                 </div>
@@ -343,7 +343,7 @@ BEHOLD Wellness`;
                   value={formData.sessionDetails}
                   onChange={handleChange}
                   rows="2"
-                  className="w-full bg-white text-gray-900 border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-normal"
+                  className="w-full bg-[#0f172a] text-gray-900 border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition placeholder-gray-400 shadow-xs font-normal"
                   placeholder="Enter details about client concerns, special requests..."
                 />
               </div>
@@ -375,7 +375,7 @@ BEHOLD Wellness`;
                     <p className="text-gray-600 text-sm mt-1">Scan QR code or share WhatsApp link to collect payment</p>
                   </div>
                   
-                  <div className="p-4 bg-white border-2 border-teal-200 rounded-2xl shadow-md">
+                  <div className="p-4 bg-[#0f172a] border-2 border-teal-200 rounded-2xl shadow-md">
                     <img src={qrUrl} alt="UPI QR Code" className="w-52 h-52 object-contain" />
                   </div>
 
@@ -387,7 +387,7 @@ BEHOLD Wellness`;
                     <span>Share Payment Link via WhatsApp</span>
                   </button>
 
-                  <div className="w-full flex flex-col items-center p-4 bg-amber-50 rounded-xl border border-amber-200">
+                  <div className="w-full flex flex-col items-center p-4 bg-[#090d16]mber-50 rounded-xl border border-amber-200">
                     <div className="flex items-center space-x-2 text-amber-800 mb-1">
                       <Loader2 className="animate-spin" size={18} />
                       <span className="font-semibold text-sm">Payment Pending - Checking status automatically...</span>
@@ -405,7 +405,7 @@ BEHOLD Wellness`;
                         placeholder="UPI Txn Reference (Optional)"
                         value={manualReference}
                         onChange={(e) => setManualReference(e.target.value)}
-                        className="flex-1 bg-white text-gray-900 border border-gray-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                        className="flex-1 bg-[#0f172a] text-gray-900 border border-gray-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none"
                       />
                       <button
                         onClick={handleManualPaid}
@@ -431,7 +431,7 @@ BEHOLD Wellness`;
                       if (onComplete) onComplete();
                       onClose();
                     }}
-                    className="mt-4 px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition shadow-md"
+                    className="mt-4 px-8 py-3 primary-cyan-gradient text-slate-950 filter-glow hover:scale-105 border-none font-semibold rounded-xl transition shadow-md"
                   >
                     Done & Return to Dashboard
                   </button>
@@ -455,7 +455,7 @@ BEHOLD Wellness`;
               type="submit"
               form="admin-booking-form"
               disabled={isSubmitting}
-              className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-md disabled:opacity-50 flex items-center text-sm transition"
+              className="px-6 py-2.5 primary-cyan-gradient text-slate-950 filter-glow hover:scale-105 border-none font-semibold rounded-xl shadow-md disabled:opacity-50 flex items-center text-sm transition"
             >
               {isSubmitting ? <Loader2 className="animate-spin mr-2" size={18} /> : null}
               {formData.markAsPaid ? 'Confirm & Book Session' : 'Proceed to Payment QR'}

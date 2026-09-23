@@ -72,7 +72,7 @@ export default function ReviewsTab() {
       <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-4">
         <div>
           <h2 className="text-2xl font-bold text-white font-header flex items-center gap-2">
-            <MessageSquare className="w-6 h-6 text-brand" />
+            <MessageSquare className="w-6 h-6 text-[#00e5ff]" />
             Reviews & Testimonials
           </h2>
           <p className="text-sm text-zinc-500 font-medium pt-1">Approve or remove reviews submitted by users</p>
@@ -131,7 +131,7 @@ export default function ReviewsTab() {
                       </td>
                       <td className="p-4 text-center">
                         <span className={`px-2.5 py-1 text-[10px] font-bold rounded ${
-                          review.isApproved ? 'bg-emerald-955/30 text-emerald-450 border border-emerald-900/40' : 'bg-amber-955/30 text-amber-500 border border-amber-900/40'
+                          review.isApproved ? 'bg-emerald-955/30 text-emerald-450 border border-emerald-900/40' : 'bg-[#090d16]mber-955/30 text-amber-500 border border-amber-900/40'
                         }`}>
                           {review.isApproved ? 'Approved' : 'Pending'}
                         </span>

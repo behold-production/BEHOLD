@@ -215,9 +215,9 @@ export default function RevenueTab(props) {
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-2 shadow-lg">
  <div className="flex justify-between items-center text-zinc-500">
  <span className="text-xs font-bold tracking-wider">Platform Retention (Net Fee)</span>
- <TrendingUp className="w-4 h-4 text-brand" />
+ <TrendingUp className="w-4 h-4 text-[#00e5ff]" />
  </div>
- <div className="text-2xl font-bold text-brand font-header">
+ <div className="text-2xl font-bold text-[#00e5ff] font-header">
  ₹{formatAmount(metrics.retentionVolume)}
  </div>
  <p className="text-[11px] text-zinc-500 font-medium">Platform commission earnings (Variable %)</p>
@@ -273,11 +273,11 @@ export default function RevenueTab(props) {
  {/* Tooltip */}
  <div className="absolute bottom-full mb-2 bg-zinc-955 border border-zinc-800 rounded px-2 py-1 text-[10px] text-zinc-300 opacity-0 group-hover:opacity-100 transition duration-150 pointer-events-none z-20 whitespace-nowrap shadow-md">
  <div>Gross: ₹{formatAmount(d.amount)}</div>
- <div className="text-brand">Platform: ₹{formatAmount(d.platform)}</div>
+ <div className="text-[#00e5ff]">Platform: ₹{formatAmount(d.platform)}</div>
  </div>
  {/* Visual columns */}
  <div className="w-6 bg-zinc-850 border border-zinc-800 rounded-t relative overflow-hidden transition-all duration-300 hover:bg-zinc-700" style={{ height: `${Math.max(totalHeight, 2)}%` }}>
- <div className="absolute bottom-0 inset-x-0 bg-brand rounded-t transition-all duration-300" style={{ height: `${platformHeight}%` }} />
+ <div className="absolute bottom-0 inset-x-0 bg-[#00e5ff] rounded-t transition-all duration-300" style={{ height: `${platformHeight}%` }} />
  </div>
  <span className="text-[10px] text-zinc-550 font-bold mt-2">{d.month}</span>
  </div>
@@ -321,7 +321,7 @@ export default function RevenueTab(props) {
  <button
     type="button"
     onClick={handleExportPayoutCSV}
-    className="px-3 py-1.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-lg cursor-pointer transition flex items-center gap-1.5 border-none shadow-sm"
+    className="px-3 py-1.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-lg cursor-pointer transition flex items-center gap-1.5 border-none shadow-sm"
   >
     <Download className="w-3.5 h-3.5" />
     <span>Export Payout CSV</span>
@@ -336,7 +336,7 @@ export default function RevenueTab(props) {
  <th className="p-3 text-center">Sessions</th>
  <th className="p-3 text-right">Gross Earned</th>
  <th className="p-3 text-right">Retained Commission</th>
- <th className="p-3 text-right font-bold text-brand">Payout Share</th>
+ <th className="p-3 text-right font-bold text-[#00e5ff]">Payout Share</th>
  <th className="p-3 text-center">Razorpay Account ID</th>
  </tr>
  </thead>
@@ -360,7 +360,7 @@ export default function RevenueTab(props) {
  <td className="p-3 text-right font-bold text-emerald-450">₹{formatAmount(payout)}</td>
  <td className="p-3 text-center font-mono text-[11px]">
  {c.razorpayAccountId && c.razorpayAccountId.trim() ? (
- <span className="text-brand font-semibold">{c.razorpayAccountId}</span>
+ <span className="text-[#00e5ff] font-semibold">{c.razorpayAccountId}</span>
  ) : (
  <span className="text-zinc-600 italic">Not Linked (Manual routing required)</span>
  )}
@@ -457,7 +457,7 @@ export default function RevenueTab(props) {
  <th className="p-3">Session Date</th>
  <th className="p-3 text-right">Gross Paid</th>
  <th className="p-3 text-right">Commission (Platform)</th>
- <th className="p-3 text-right font-bold text-brand">Payout (Psychologist)</th>
+ <th className="p-3 text-right font-bold text-[#00e5ff]">Payout (Psychologist)</th>
  <th className="p-3 text-center">Payment Status</th>
  <th className="p-3 text-center">Receipt</th>
  </tr>

@@ -72,31 +72,31 @@ export default function ContactInquirySection() {
             Get In Touch
             <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
           </span>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 font-sans">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white font-sans">
             Want to Know More<span className="text-[#00e5ff]">.</span>
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-md mx-auto leading-relaxed">
             Have questions about psychological care or career mentoring? Send us a message and we'll reach out within 24 hours.
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white/90 backdrop-blur-md rounded-xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-9">
+        <div className="bg-[#0f172a]/90 backdrop-blur-md rounded-xl border border-slate-700/90 shadow-xl shadow-slate-200/50 p-6 sm:p-9">
 
           {submitted ? (
             <div className="flex flex-col items-center text-center gap-4 py-8">
-              <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center text-emerald-600 shadow-xs">
+              <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center text-[#00e5ff] shadow-xs">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-semibold text-slate-900 font-sans">
+              <h3 className="text-2xl font-semibold text-white font-sans">
                 Message Received!
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm">
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
                 Thank you for reaching out. Our counseling coordinator will contact you via email shortly.
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                className="mt-3 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-900 font-semibold text-xs px-6 py-3 rounded-full transition-all cursor-pointer shadow-xs border-none"
+                className="mt-3 bg-[#00e5ff] hover:bg-[#00b2be] text-white font-semibold text-xs px-6 py-3 rounded-full transition-all cursor-pointer shadow-xs border-none"
               >
                 Send Another Message
               </button>
@@ -106,7 +106,7 @@ export default function ContactInquirySection() {
 
               {/* Name */}
               <div className="flex flex-col gap-1.5 text-left">
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-slate-300">
                   Full Name <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -114,7 +114,7 @@ export default function ContactInquirySection() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Your full name"
-                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-white focus:ring-4 focus:ring-[#00e5ff]/10 transition-all font-medium"
+                  className="w-full bg-[#1e293b]/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-[#0f172a] focus:ring-4 focus:ring-[#00e5ff]/10 transition-all font-medium"
                   disabled={loading}
                   required
                 />
@@ -122,7 +122,7 @@ export default function ContactInquirySection() {
 
               {/* Email */}
               <div className="flex flex-col gap-1.5 text-left">
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-slate-300">
                   Email Address <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -130,7 +130,7 @@ export default function ContactInquirySection() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="your@email.com"
-                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-white focus:ring-4 focus:ring-[#00e5ff]/10 transition-all font-medium"
+                  className="w-full bg-[#1e293b]/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-[#0f172a] focus:ring-4 focus:ring-[#00e5ff]/10 transition-all font-medium"
                   disabled={loading}
                   required
                 />
@@ -138,7 +138,7 @@ export default function ContactInquirySection() {
 
               {/* Message */}
               <div className="flex flex-col gap-1.5 text-left">
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-slate-300">
                   Message <span className="text-rose-500">*</span>
                 </label>
                 <textarea
@@ -146,7 +146,7 @@ export default function ContactInquirySection() {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="How can we help you?"
-                  className="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-white focus:ring-4 focus:ring-[#00e5ff]/10 transition-all resize-none font-medium"
+                  className="w-full bg-[#1e293b]/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 outline-none focus:border-[#00e5ff] focus:bg-[#0f172a] focus:ring-4 focus:ring-[#00e5ff]/10 transition-all resize-none font-medium"
                   disabled={loading}
                   required
                 />

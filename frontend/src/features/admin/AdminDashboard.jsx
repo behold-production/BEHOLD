@@ -3072,13 +3072,13 @@ const _handleAdminDetectLocation = () => {
  return (
  <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4 relative overflow-hidden ">
  {/* Soft glows in background */}
- <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-brand/15 rounded-full blur-3xl pointer-events-none" />
- <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-[#00e5ff]/15 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-[#00e5ff]-accent/5 rounded-full blur-3xl pointer-events-none" />
 
  <div className="max-w-md w-full relative z-10 space-y-6">
  <div className="text-center space-y-2">
  <h1 className="text-3xl font-header font-bold tracking-tighter text-white">
- BEHOLD<span className="text-brand font-bold">.</span>
+ BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </h1>
  <p className="text-sm text-zinc-500 font-bold">ADMINISTRATOR CONTROL GATE</p>
  </div>
@@ -3131,7 +3131,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="submit"
  disabled={isLoggingIn}
- className="w-full py-3 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
+ className="w-full py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-950 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1"
  >
  {isLoggingIn ? 'Verifying Credentials...' : 'Enter Admin Console'}
  </button>
@@ -3324,8 +3324,8 @@ const _handleAdminDetectLocation = () => {
  <SEO title="Admin Dashboard | BEHOLD." noindex={true} />
  
  {/* Background Soft Glows */}
- <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-brand/5 rounded-full blur-3xl pointer-events-none" />
- <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-[#00e5ff]/5 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-[#00e5ff]-accent/5 rounded-full blur-3xl pointer-events-none" />
 
  <SidebarNav {...tabProps} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} setIsProfileDrawerOpen={setIsProfileDrawerOpen} user={user} isSuperAdmin={isSuperAdmin} parseStaffDetails={parseStaffDetails} handleNavClick={handleNavClick} currentSection={currentSection} logout={logout} isLogoutConfirmOpen={isLogoutConfirmOpen} setIsLogoutConfirmOpen={setIsLogoutConfirmOpen} hasUserPermission={hasUserPermission} hasPsyPermission={hasPsyPermission} hasBookingPermission={hasBookingPermission} hasBlogPermission={hasBlogPermission} />
 
@@ -3387,7 +3387,7 @@ const _handleAdminDetectLocation = () => {
  </div>
  <div>
  <h2 className="text-base font-bold text-white tracking-wide font-header">{cleanName}</h2>
- <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-brand/10 border border-brand/20 text-brand">
+ <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff]">
  {isSuperAdmin ? 'SUPER ADMIN' : (roleTitle || 'SUB ADMIN')}
  </span>
  </div>
@@ -3401,7 +3401,7 @@ const _handleAdminDetectLocation = () => {
  <div className="bg-zinc-955/60 rounded-lg p-4 space-y-3 border border-zinc-850">
  <div className="flex items-start gap-3">
  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
- <Mail className="w-3.5 h-3.5 text-brand" />
+ <Mail className="w-3.5 h-3.5 text-[#00e5ff]" />
  </div>
  <div className="min-w-0 flex-1">
  <p className="text-sm font-bold text-zinc-555">Email Address</p>
@@ -3410,7 +3410,7 @@ const _handleAdminDetectLocation = () => {
  </div>
  <div className="flex items-start gap-3">
  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
- <Shield className="w-3.5 h-3.5 text-brand" />
+ <Shield className="w-3.5 h-3.5 text-[#00e5ff]" />
  </div>
  <div className="min-w-0 flex-1">
  <p className="text-sm font-bold text-zinc-555">Role Authority</p>
@@ -3658,7 +3658,7 @@ const _handleAdminDetectLocation = () => {
      id="adminSendWhatsApp"
      checked={Boolean(bookingForm.sendWhatsApp)}
      onChange={(e) => setBookingForm({ ...bookingForm, sendWhatsApp: e.target.checked })}
-     className="w-4 h-4 rounded border-zinc-700 bg-zinc-955 text-brand focus:ring-brand cursor-pointer"
+     className="w-4 h-4 rounded border-zinc-700 bg-zinc-955 text-[#00e5ff] focus:ring-brand cursor-pointer"
    />
    <label htmlFor="adminSendWhatsApp" className="text-sm text-zinc-300 font-medium cursor-pointer">
      Send instant WhatsApp booking confirmation alert to client
@@ -3684,7 +3684,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="submit"
  disabled={isSavingForm}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
  {isAddBookingOpen ? 'Confirm & Create Booking' : 'Update Appointment'}
@@ -3756,7 +3756,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="submit"
  disabled={isSavingForm}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
  {isAddFaqOpen ? 'Create FAQ' : 'Save Changes'}
@@ -3777,7 +3777,7 @@ const _handleAdminDetectLocation = () => {
  <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
- <Brain className="w-5 h-5 text-brand" />
+ <Brain className="w-5 h-5 text-[#00e5ff]" />
  {isAddAptitudeOpen ? 'Create Aptitude Question' : 'Update Aptitude Question'}
  </h3>
  <p className="text-sm text-zinc-500 leading-none mt-1">
@@ -3807,7 +3807,7 @@ const _handleAdminDetectLocation = () => {
  type="checkbox"
  checked={aptitudeForm.isActive}
  onChange={(e) => setAptitudeForm({ ...aptitudeForm, isActive: e.target.checked })}
- className="w-4 h-4 text-brand bg-zinc-900 border-zinc-800 rounded focus:ring-brand focus:ring-2"
+ className="w-4 h-4 text-[#00e5ff] bg-zinc-900 border-zinc-800 rounded focus:ring-brand focus:ring-2"
  />
  <span className="text-sm font-bold text-zinc-400">Active</span>
  </label>
@@ -3887,7 +3887,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="submit"
  disabled={isSavingForm}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
  {isAddAptitudeOpen ? 'Create Question' : 'Save Changes'}
@@ -3910,10 +3910,10 @@ const _handleAdminDetectLocation = () => {
  <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
- <Lock className="w-4 h-4 text-brand" /> Edit Access Scopes
+ <Lock className="w-4 h-4 text-[#00e5ff]" /> Edit Access Scopes
  </h3>
  <p className="text-sm text-zinc-555 leading-none mt-1">
- Modify permission scopes for sub-admin: <span className="text-zinc-300 font-bold">{cleanName}</span> {roleTitle && <span className="text-brand font-semibold text-sm ml-1">({roleTitle})</span>}
+ Modify permission scopes for sub-admin: <span className="text-zinc-300 font-bold">{cleanName}</span> {roleTitle && <span className="text-[#00e5ff] font-semibold text-sm ml-1">({roleTitle})</span>}
  </p>
  </div>
 
@@ -3942,7 +3942,7 @@ const _handleAdminDetectLocation = () => {
  (module.id === 'manage_psychologists' && !!editSubAdminPermissionsObj['MANAGE_PSYCHOLOGISTS']) ||
  (module.id === 'manage_bookings' && !!editSubAdminPermissionsObj['MANAGE_BOOKINGS']);
  return (
- <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-brand/5' : 'border-zinc-850 bg-zinc-950'}`}>
+ <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-[#00e5ff]/5' : 'border-zinc-850 bg-zinc-950'}`}>
  <div className="flex items-center justify-between p-3 border-b border-zinc-900/60 bg-zinc-900/40">
  <span className="font-header font-bold text-xs text-white ">{module.name}</span>
  <label className="relative inline-flex items-center cursor-pointer select-none">
@@ -3952,7 +3952,7 @@ const _handleAdminDetectLocation = () => {
  onChange={(e) => toggleEditSubAdminModuleAll(module.id, module.actions, e.target.checked)}
  className="sr-only peer"
  />
- <div className="w-8 h-4.5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-zinc-955"></div>
+ <div className="w-8 h-4.5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-zinc-955"></div>
  </label>
  </div>
  <div className="p-3 space-y-1.5">
@@ -3965,7 +3965,7 @@ const _handleAdminDetectLocation = () => {
  type="checkbox"
  checked={isChecked}
  onChange={() => toggleEditSubAdminChildAction(module.id, action.id, module.actions)}
- className="w-3.5 h-3.5 rounded border-zinc-800 bg-zinc-900 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+ className="w-3.5 h-3.5 rounded border-zinc-800 bg-zinc-900 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
  />
  </label>
  );
@@ -3996,7 +3996,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="submit"
  disabled={isSavingForm}
- className="flex-1 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-sm rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isSavingForm && <Loader2 className="w-4 h-4 animate-spin" />}
  Save Scopes

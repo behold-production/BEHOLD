@@ -353,7 +353,7 @@ export default function AuthModals({ isOpen, onClose }) {
     <>
       <div className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
       <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-zinc-200 m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="relative w-full max-w-md card-grad-gradient border-slate-700 filter-card-shadow rounded-2xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-zinc-200 m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
@@ -419,7 +419,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <p className="text-sm text-[#0f172a] leading-relaxed font-medium">
                   We regret to inform you that your professional counsellor application has been rejected by the system administrator.
                 </p>
-                <div className="bg-white border border-rose-100 p-3 rounded-xl">
+                <div className="card-grad-gradient border-slate-700 filter-card-shadow border border-rose-100 p-3 rounded-xl">
                   <span className="text-[10px] font-semibold text-rose-600 tracking-wider block mb-1 uppercase">Reason for Rejection:</span>
                   <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
                 </div>
@@ -431,13 +431,13 @@ export default function AuthModals({ isOpen, onClose }) {
           ) : authStep === 'details' ? (
             /* Step 3: Mandatory Profile Details Entry */
             <form onSubmit={handleDetailsSubmit} className="p-6 space-y-4">
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center gap-3">
+              <div className="bg-[#0f172a] border border-slate-700 rounded-xl p-3.5 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-slate-900">Phone Verified: +91 {otpPhone}</p>
-                  <p className="text-[11px] text-slate-500">Only your verified details will be linked to your bookings.</p>
+                  <p className="text-xs font-semibold text-white">Phone Verified: +91 {otpPhone}</p>
+                  <p className="text-[11px] text-slate-400">Only your verified details will be linked to your bookings.</p>
                 </div>
               </div>
 
@@ -460,7 +460,7 @@ export default function AuthModals({ isOpen, onClose }) {
                     className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium text-zinc-900 outline-none transition border ${
                       fieldErrors.name
                         ? 'bg-rose-50/40 border-rose-400'
-                        : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'
+                        : 'bg-zinc-50 border-zinc-200 focus:card-grad-gradient border-slate-700 filter-card-shadow focus:border-brand focus:ring-2 focus:ring-brand/20'
                     }`}
                   />
                 </div>
@@ -485,7 +485,7 @@ export default function AuthModals({ isOpen, onClose }) {
                     className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium text-zinc-900 outline-none transition border ${
                       fieldErrors.email
                         ? 'bg-rose-50/40 border-rose-400'
-                        : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'
+                        : 'bg-zinc-50 border-zinc-200 focus:card-grad-gradient border-slate-700 filter-card-shadow focus:border-brand focus:ring-2 focus:ring-brand/20'
                     }`}
                   />
                 </div>
@@ -521,7 +521,7 @@ export default function AuthModals({ isOpen, onClose }) {
                       onChange={(e) => setOtpPhone(e.target.value)}
                       placeholder="10-digit number"
                       autoFocus
-                      className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
+                      className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:card-grad-gradient border-slate-700 filter-card-shadow focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                     />
                   </div>
                 </div>

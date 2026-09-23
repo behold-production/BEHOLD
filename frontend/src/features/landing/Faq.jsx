@@ -77,7 +77,7 @@ export default function Faq({ siteSettings }) {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="rounded-xl border border-surface-200 bg-white px-6 py-5 flex items-center justify-between gap-4">
+              <div key={i} className="rounded-xl border border-surface-200 bg-[#0f172a] px-6 py-5 flex items-center justify-between gap-4">
                 <div className="shimmer h-4 w-3/4 rounded-md" />
                 <div className="shimmer w-8 h-8 rounded-full shrink-0" />
               </div>
@@ -90,7 +90,7 @@ export default function Faq({ siteSettings }) {
               return (
                 <div
                   key={idx}
-                  className={`rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#00e5ff] bg-white shadow-sm' : 'border-surface-200 bg-white hover:border-[#00e5ff]'}`}
+                  className={`rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-[#00e5ff] bg-[#0f172a] shadow-sm' : 'border-surface-200 bg-[#0f172a] hover:border-[#00e5ff]'}`}
                 >
                   <button
                     type="button"

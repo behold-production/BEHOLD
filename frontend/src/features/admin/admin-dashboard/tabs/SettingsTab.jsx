@@ -409,11 +409,11 @@ export default function SettingsTab(props) {
                   type="button"
                   onClick={() => setActiveSettingsTab(tab.id)}
                   className={`flex items-center gap-2.5 px-4 py-3 rounded-lg text-xs font-bold transition-all duration-155 border cursor-pointer select-none text-left w-auto md:w-full shrink-0 ${isActive
-                    ? 'bg-brand/10 border-brand/40 text-brand shadow-sm shadow-brand/5 md:border-l-4 md:border-l-brand'
+                    ? 'bg-[#00e5ff]/10 border-brand/40 text-[#00e5ff] shadow-sm shadow-brand/5 md:border-l-4 md:border-l-brand'
                     : 'bg-zinc-900/40 hover:bg-zinc-800/60 border-zinc-800 text-zinc-400 hover:text-zinc-200'
                     }`}
                 >
-                  <Icon className={`w-4.5 h-4.5 shrink-0 ${isActive ? 'text-brand' : 'text-zinc-500'}`} />
+                  <Icon className={`w-4.5 h-4.5 shrink-0 ${isActive ? 'text-[#00e5ff]' : 'text-zinc-500'}`} />
                   <span className="truncate">{tab.label}</span>
                 </button>
               );
@@ -426,7 +426,7 @@ export default function SettingsTab(props) {
             {activeSettingsTab === 'general' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <Settings className="w-4 h-4 text-brand" />
+                  <Settings className="w-4 h-4 text-[#00e5ff]" />
                   <h4 className="text-sm font-bold text-white tracking-wider">General & Contact Settings</h4>
                 </div>
 
@@ -611,7 +611,7 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, showBanner: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
@@ -637,7 +637,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save General & Contact Settings</span>
@@ -650,14 +650,14 @@ export default function SettingsTab(props) {
             {activeSettingsTab === 'landing' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <Brain className="w-4 h-4 text-brand" />
+                  <Brain className="w-4 h-4 text-[#00e5ff]" />
                   <h4 className="text-sm font-bold text-white tracking-wider">Landing Page Content</h4>
                 </div>
 
 
                 {/* 1. Hero Main Visual & Headline Settings */}
                 <div className="bg-zinc-950/60 border border-zinc-800 p-5 rounded-lg space-y-5">
-                  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider flex items-center gap-2">
 
                     Main Hero Section Background & Copy
                   </h4>
@@ -759,7 +759,7 @@ export default function SettingsTab(props) {
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <div className="flex justify-between items-center">
                     <div>
-                      <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider flex items-center gap-2">
 
                         Hero Trust Stats Bar (Below Hero Buttons)
                       </h4>
@@ -771,7 +771,7 @@ export default function SettingsTab(props) {
                         const newStat = { num: '', label: '' };
                         setSettingsForm(prev => ({ ...prev, heroStats: [...(prev.heroStats || []), newStat] }));
                       }}
-                      className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand rounded flex items-center gap-1 text-xs font-bold transition-colors cursor-pointer shrink-0"
+                      className="px-3 py-1.5 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] rounded flex items-center gap-1 text-xs font-bold transition-colors cursor-pointer shrink-0"
                     >
                       <Plus className="w-3 h-3" />
                       Add Stat Card
@@ -871,7 +871,7 @@ export default function SettingsTab(props) {
 
                 {/* Career Mentoring Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
-                  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider flex items-center gap-2">
 
                     Career Mentoring Card Customization
                   </h4>
@@ -931,7 +931,7 @@ export default function SettingsTab(props) {
 
                 {/* Psychological Counselling Section */}
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
-                  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider flex items-center gap-2">
 
                     Psychological Counselling Card Customization
                   </h4>
@@ -991,7 +991,7 @@ export default function SettingsTab(props) {
 
                 {/* What We Offer Section */}
                 <div className="bg-zinc-955/40 border border-zinc-800 p-5 rounded-lg space-y-4">
-                  <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider flex items-center gap-2">
 
                     "What We Offer" Section Customization
                   </h4>
@@ -1026,7 +1026,7 @@ export default function SettingsTab(props) {
                             const currentCards = settingsForm.aboutCards || [];
                             setSettingsForm({ ...settingsForm, aboutCards: [...currentCards, { title: '', desc: '' }] });
                           }}
-                          className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand text-[10px] uppercase tracking-wider font-black rounded transition-colors"
+                          className="px-3 py-1.5 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] text-[10px] uppercase tracking-wider font-black rounded transition-colors"
                         >
                           + Add Card
                         </button>
@@ -1088,7 +1088,7 @@ export default function SettingsTab(props) {
                 <div className="bg-zinc-950/40 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <div className="flex justify-between items-center">
                     <div>
-                      <h4 className="text-xs font-bold text-brand tracking-wider flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-[#00e5ff] tracking-wider flex items-center gap-2">
 
                         About Us Section Statistics Grid
                       </h4>
@@ -1100,7 +1100,7 @@ export default function SettingsTab(props) {
                         const newStat = { value: '', label: '' };
                         setSettingsForm(prev => ({ ...prev, aboutStats: [...(prev.aboutStats || []), newStat] }));
                       }}
-                      className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand rounded flex items-center gap-1 text-xs font-bold transition-colors cursor-pointer shrink-0"
+                      className="px-3 py-1.5 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] rounded flex items-center gap-1 text-xs font-bold transition-colors cursor-pointer shrink-0"
                     >
                       <Plus className="w-3 h-3" />
                       Add Stat Card
@@ -1205,7 +1205,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Landing Page Content</span>
@@ -1218,14 +1218,14 @@ export default function SettingsTab(props) {
             {activeSettingsTab === 'modes' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <Video className="w-4 h-4 text-brand" />
+                  <Video className="w-4 h-4 text-[#00e5ff]" />
                   <h4 className="text-sm font-bold text-white tracking-wider">Services & Session Modes</h4>
                 </div>
                 {/* Feature Toggles */}
                 <div className="border border-zinc-800 p-5 rounded-lg space-y-4 bg-zinc-955/20">
                   <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Psychological Counselling</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable Psychological Counselling</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, psychological counselling services will be hidden from the public website.</span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -1235,13 +1235,13 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, enablePsychology: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Career Mentoring</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable Career Mentoring</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, career mentoring services will be hidden from the public website.</span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -1251,13 +1251,13 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, enableCareerMentoring: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Aptitude Test & Services</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable Aptitude Test & Services</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, CDAT Aptitude sessions and career aptitude buttons will be hidden from the public website.</span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -1267,13 +1267,13 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, enableAptitude: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Sample Assessment / Booking</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable Sample Assessment / Booking</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, Sample Test / Assessment pages and links will be hidden from the public website.</span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -1283,13 +1283,13 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, enableSampleTest: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Online Sessions (Video Call)</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable Online Sessions (Video Call)</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, Online / Video booking options will be disabled and hidden everywhere.</span>
                     </div>
                     <label className="relative inline-flex inline-flex items-center cursor-pointer shrink-0">
@@ -1299,13 +1299,13 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, enableOnline: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between gap-4 py-2 border-b border-zinc-800/40">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Offline Sessions (At Center)</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable Offline Sessions (At Center)</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, Offline At Center booking options will be disabled and hidden everywhere.</span>
                     </div>
                     <label className="relative inline-flex inline-flex items-center cursor-pointer shrink-0">
@@ -1315,13 +1315,13 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, enableOffline: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between gap-4 py-2">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable Doorstep Sessions (Home Visit)</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable Doorstep Sessions (Home Visit)</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">If disabled, Doorstep Home Visit booking options will be disabled and hidden everywhere.</span>
                     </div>
                     <label className="relative inline-flex inline-flex items-center cursor-pointer shrink-0">
@@ -1331,7 +1331,7 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, enableDoorstep: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
                 </div>
@@ -1344,7 +1344,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Services & Session Modes</span>
@@ -1357,7 +1357,7 @@ export default function SettingsTab(props) {
             {activeSettingsTab === 'payments' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <KeyRound className="w-4 h-4 text-brand" />
+                  <KeyRound className="w-4 h-4 text-[#00e5ff]" />
                   <h4 className="text-sm font-bold text-white tracking-wider">Payments & Taxation</h4>
                 </div>
 
@@ -1370,7 +1370,7 @@ export default function SettingsTab(props) {
 
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <span className="text-sm font-bold text-brand block">Enable GST on Bookings</span>
+                      <span className="text-sm font-bold text-[#00e5ff] block">Enable GST on Bookings</span>
                       <span className="text-xs text-zinc-500 block font-medium mt-1 leading-relaxed">When enabled, GST will be applied to the session fee on the booking checkout page.</span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -1380,7 +1380,7 @@ export default function SettingsTab(props) {
                         onChange={(e) => setSettingsForm({ ...settingsForm, gstEnabled: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
+                      <div className="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00e5ff] peer-checked:after:bg-zinc-955 peer-checked:after:border-none" />
                     </label>
                   </div>
 
@@ -1485,7 +1485,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Payments & Taxation Settings</span>
@@ -1499,7 +1499,7 @@ export default function SettingsTab(props) {
               <div className="space-y-6">
                 <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
                   <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                    <ShieldCheck className="w-4 h-4 text-brand" />
+                    <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />
                     <h4 className="text-sm font-bold text-white tracking-wider">Security & System</h4>
                   </div>
 
@@ -1573,7 +1573,7 @@ export default function SettingsTab(props) {
                     <button
                       type="submit"
                       disabled={isSavingSettings}
-                      className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      className={`px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                       <span>Save Security Settings</span>
@@ -1630,7 +1630,7 @@ export default function SettingsTab(props) {
                         <button
                           type="button"
                           onClick={handleEnableNotifications}
-                          className="min-h-[36px] px-4 py-2 bg-brand hover:bg-brand-dark text-zinc-955 rounded-full text-xs font-semibold transition cursor-pointer border-none shadow-md"
+                          className="min-h-[36px] px-4 py-2 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 rounded-full text-xs font-semibold transition cursor-pointer border-none shadow-md"
                         >
                           Enable Notifications
                         </button>
@@ -1721,7 +1721,7 @@ export default function SettingsTab(props) {
                     <button
                       type="submit"
                       disabled={isSendingAnnouncement}
-                      className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      className="px-6 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition border-none shadow-md flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
                       {isSendingAnnouncement && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                       <span>{isSendingAnnouncement ? 'Broadcasting...' : 'Broadcast Announcement'}</span>
@@ -1736,7 +1736,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
                   <div className="flex items-center gap-2">
-                    <FileSpreadsheet className="w-4 h-4 text-brand" />
+                    <FileSpreadsheet className="w-4 h-4 text-[#00e5ff]" />
                     <h4 className="text-sm font-bold text-white tracking-wider">Promotional Codes</h4>
                   </div>
                   <button
@@ -1805,7 +1805,7 @@ export default function SettingsTab(props) {
                                 type="checkbox"
                                 checked={promo.isActive !== false}
                                 onChange={(e) => handleUpdatePromoCode(idx, 'isActive', e.target.checked)}
-                                className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-brand focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
+                                className="w-4 h-4 rounded border-zinc-800 bg-zinc-955 text-[#00e5ff] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-brand"
                               />
                               <span className={promo.isActive !== false ? "text-emerald-400" : "text-zinc-500"}>Active</span>
                             </label>
@@ -1828,7 +1828,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Promo Codes</span>
@@ -1841,14 +1841,14 @@ export default function SettingsTab(props) {
             {activeSettingsTab === 'adLanding' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <Video className="w-4 h-4 text-brand" />
+                  <Video className="w-4 h-4 text-[#00e5ff]" />
                   <h4 className="text-sm font-bold text-white tracking-wider">Ad Campaign & Landing Page Management (/ad)</h4>
                 </div>
 
                 {/* 1. Hero Section */}
                 <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <Brain className="w-3.5 h-3.5 text-brand" />
+                    <Brain className="w-3.5 h-3.5 text-[#00e5ff]" />
                     Ad Hero Section Content
                   </h4>
 
@@ -1935,7 +1935,7 @@ export default function SettingsTab(props) {
                           className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-medium w-full"
                         />
                         <label className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold rounded-lg cursor-pointer transition shrink-0 border border-zinc-700 flex items-center gap-1.5">
-                          <Download className="w-3.5 h-3.5 text-brand" />
+                          <Download className="w-3.5 h-3.5 text-[#00e5ff]" />
                           <span>Upload File</span>
                           <input
                             type="file"
@@ -1972,7 +1972,7 @@ export default function SettingsTab(props) {
                 {/* 2. Video & Interactive Walkthrough Section */}
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <Video className="w-3.5 h-3.5 text-brand" />
+                    <Video className="w-3.5 h-3.5 text-[#00e5ff]" />
                     Video & Booking Walkthrough Section
                   </h4>
 
@@ -2029,13 +2029,13 @@ export default function SettingsTab(props) {
                 {/* 3. Trust Bar Badges */}
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <ShieldCheck className="w-3.5 h-3.5 text-brand" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#00e5ff]" />
                     Trust Bar Badges (4 Items)
                   </h4>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2 p-3 bg-zinc-900/60 rounded-lg border border-zinc-800">
-                      <span className="text-[11px] font-bold text-brand uppercase tracking-wider block">Trust Badge 1</span>
+                      <span className="text-[11px] font-bold text-[#00e5ff] uppercase tracking-wider block">Trust Badge 1</span>
                       <input
                         type="text"
                         value={settingsForm.adTrustBadge1Title || ''}
@@ -2111,7 +2111,7 @@ export default function SettingsTab(props) {
                 {/* 4. Self Reflection Section */}
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <HeartHandshake className="w-3.5 h-3.5 text-brand" />
+                    <HeartHandshake className="w-3.5 h-3.5 text-[#00e5ff]" />
                     Problem Reflection Prompts ("ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?")
                   </h4>
 
@@ -2185,7 +2185,7 @@ export default function SettingsTab(props) {
                     </div>
 
                     <div className="space-y-1 pt-2">
-                      <label className="text-xs font-bold text-brand">Closing Affirmation Line</label>
+                      <label className="text-xs font-bold text-[#00e5ff]">Closing Affirmation Line</label>
                       <input
                         type="text"
                         value={settingsForm.adReflectionClosing || ''}
@@ -2200,7 +2200,7 @@ export default function SettingsTab(props) {
                 {/* 5. Psychologist Section Header */}
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                    <User className="w-3.5 h-3.5 text-brand" />
+                    <User className="w-3.5 h-3.5 text-[#00e5ff]" />
                     Psychologist Section Headline & Intro
                   </h4>
 
@@ -2233,7 +2233,7 @@ export default function SettingsTab(props) {
                 <div className="bg-zinc-955/20 border border-zinc-800 p-5 rounded-lg space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-bold text-zinc-300 tracking-wider flex items-center gap-2">
-                      <HelpCircle className="w-3.5 h-3.5 text-brand" />
+                      <HelpCircle className="w-3.5 h-3.5 text-[#00e5ff]" />
                       Ad Landing Page FAQs ({Array.isArray(settingsForm.adFaqs) ? settingsForm.adFaqs.length : 0})
                     </h4>
                     <button
@@ -2245,7 +2245,7 @@ export default function SettingsTab(props) {
                           adFaqs: [...current, { q: 'പുതിയ ചോദ്യം?', a: 'ഉത്തരം ഇവിടെ എഴുതുക...' }]
                         });
                       }}
-                      className="px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand border border-brand/30 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer transition"
+                      className="px-3 py-1.5 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-brand/30 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer transition"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add Ad FAQ</span>
@@ -2304,7 +2304,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-6 py-3 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-6 py-3 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Ad Campaign Settings</span>
@@ -2317,7 +2317,7 @@ export default function SettingsTab(props) {
             {activeSettingsTab === 'legal' && (
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
-                  <ShieldCheck className="w-4 h-4 text-brand" />
+                  <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />
                   <h4 className="text-sm font-bold text-white tracking-wider">Policies, Legal & Client Consent Agreements</h4>
                 </div>
 
@@ -2337,7 +2337,7 @@ export default function SettingsTab(props) {
                           setSettingsForm({ ...settingsForm, termsOfUse: defaultTerms });
                           toast.success('Terms of Use template loaded!');
                         }}
-                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                        className="text-[10.5px] font-bold text-[#00e5ff] hover:underline cursor-pointer bg-transparent border-none p-0"
                       >
                         Reset Template
                       </button>
@@ -2366,7 +2366,7 @@ export default function SettingsTab(props) {
                           setSettingsForm({ ...settingsForm, privacyPolicy: defaultPrivacy });
                           toast.success('Privacy Policy template loaded!');
                         }}
-                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                        className="text-[10.5px] font-bold text-[#00e5ff] hover:underline cursor-pointer bg-transparent border-none p-0"
                       >
                         Reset Template
                       </button>
@@ -2395,7 +2395,7 @@ export default function SettingsTab(props) {
                           setSettingsForm({ ...settingsForm, refundPolicy: defaultRefund });
                           toast.success('Refund Policy template loaded!');
                         }}
-                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                        className="text-[10.5px] font-bold text-[#00e5ff] hover:underline cursor-pointer bg-transparent border-none p-0"
                       >
                         Reset Template
                       </button>
@@ -2417,7 +2417,7 @@ export default function SettingsTab(props) {
                   <div className="space-y-1.5 bg-zinc-950/40 p-4 rounded-xl border border-brand/30 ring-1 ring-brand/15">
                     <div className="flex items-center justify-between gap-2">
                       <label className="text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff]" />
                         Informed Consent & Client Agreement
                       </label>
                       <button
@@ -2427,7 +2427,7 @@ export default function SettingsTab(props) {
                           setSettingsForm({ ...settingsForm, consentPolicy: defaultConsent });
                           toast.success('Informed Consent template loaded!');
                         }}
-                        className="text-[10.5px] font-bold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+                        className="text-[10.5px] font-bold text-[#00e5ff] hover:underline cursor-pointer bg-transparent border-none p-0"
                       >
                         Reset Template
                       </button>
@@ -2454,7 +2454,7 @@ export default function SettingsTab(props) {
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className={`px-5 py-2.5 bg-brand hover:bg-brand-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 font-bold text-xs rounded-full cursor-pointer transition shadow-md border-none flex items-center justify-center gap-1.5 ${isSavingSettings ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSavingSettings && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-955" />}
                     <span>Save Policies & Legal</span>

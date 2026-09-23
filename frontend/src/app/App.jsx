@@ -17,8 +17,6 @@ import PrivacyPolicy from '../features/landing/PrivacyPolicy';
 import Footer from '../components/common/Footer';
 import AuthModals from '../features/auth/AuthModals';
 import CompleteProfileModal from '../features/auth/CompleteProfileModal';
-import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
-import FaqBlogSection from '../features/landing/FaqBlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
 import ActivitySheetView from '../features/student/ActivitySheetView';
 import globalBg from '../assets/greygreen.png';
@@ -56,7 +54,7 @@ const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingP
 const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
-import BlogSection from '../features/landing/BlogSection';
+
 
 import { useAuth } from '../context/AuthContext';
 import ApiService from '../services/api';
