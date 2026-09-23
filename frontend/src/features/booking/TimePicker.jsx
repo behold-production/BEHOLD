@@ -510,7 +510,7 @@ export default function TimePicker({
 
             <button
               type="button"
-              onClick={() => setShowInlineCalendar(true)}
+              onClick={() => onOpenDatePicker && onOpenDatePicker()}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-xl transition-all cursor-pointer border border-slate-200 shadow-xs"
             >
               <CalendarIcon className="w-4 h-4 text-[#3a0ca3]" />

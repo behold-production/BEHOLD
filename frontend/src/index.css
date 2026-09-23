@@ -692,9 +692,29 @@ body.no-scroll {
 
 @utility grid-bg {
   background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(30, 41, 59, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 41, 59, 0.3) 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+@utility bg-glow-gradient {
+  background: linear-gradient(135deg, #0f172a 0%, #030712 40%, #051923 100%);
+}
+
+@utility primary-cyan-gradient {
+  background: linear-gradient(to right, #00e5ff 0%, #00b2be 100%);
+}
+
+@utility card-grad-gradient {
+  background: linear-gradient(to bottom, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+}
+
+@utility filter-glow {
+  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.5));
+}
+
+@utility filter-card-shadow {
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.5));
 }
 
 /* Rich Ultra-Slow & Silky Animations for User Section */
