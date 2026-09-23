@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import { useNavigate, useLocation } from 'react-router-dom'; //
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { Menu, X } from 'lucide-react';
 import LogoutConfirmModal from './LogoutConfirmModal';
-import BrandIcon from './BrandIcon';
-import { Menu, X, User } from 'lucide-react';
 
-export default function Navbar({ navigateToSection, currentView, onOpenAuth, onOpenBooking, siteName, siteSettings }) {
+export default function Navbar({ navigateToSection, onOpenAuth, onOpenBooking, siteName, siteSettings }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
-  const { user, logout } = useAuth(); //
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,22 +18,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   }, []);
 
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
-  const [activeSection, setActiveSection] = useState('home'); //
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     if (location.pathname !== '/') return;
-
-    const sectionIds = ['home', 'services', 'experts', 'cdat', 'faqs', 'blog', 'inquiry'];
+    const sectionIds = ['home', 'services', 'experts', 'inquiry'];
     const handleScrollSection = () => {
       const scrollPos = window.scrollY + 140;
       for (const id of sectionIds) {
@@ -45,18 +35,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
           const top = el.offsetTop;
           const height = el.offsetHeight;
           if (scrollPos >= top && scrollPos < top + height) {
-            if (id === 'inquiry') setActiveSection('contact');
-            else if (id === 'experts') setActiveSection('services');
-            else setActiveSection(id);
+            setActiveSection(id);
             break;
           }
         }
       }
     };
-
     window.addEventListener('scroll', handleScrollSection, { passive: true });
     handleScrollSection();
-    return () => window.removeEventListener('scroll', handleScrollSection); //
+    return () => window.removeEventListener('scroll', handleScrollSection);
   }, [location.pathname]);
 
   const goTo = (section) => {
@@ -65,7 +52,12 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
       navigate(section);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      navigateToSection?.(section);
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => navigateToSection?.(section), 100);
+      } else {
+        navigateToSection?.(section);
+      }
     }
   };
 
@@ -74,7 +66,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      navigateToSection?.('top');
+      navigate('/');
     }
   };
 
@@ -90,24 +82,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     else navigate('/profile');
   };
 
-  const whatsappUrl = (() => {
-    const input = siteSettings?.whatsapp; //
-    if (!input || input === '#') return 'https://wa.link/4jpzfq';
-    const str = String(input).trim();
-    if (str.startsWith('http')) return str;
-    const digits = str.replace(/\D/g, '');
-    if (digits.length === 10) return `https://wa.me/91${digits}`;
-    if (digits.length > 10) return `https://wa.me/${digits}`;
-    return 'https://wa.link/4jpzfq';
-  })();
-
   const navLinks = [
     { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
+    { label: 'Experts', action: () => goTo('experts'), sectionId: 'experts', path: '/' },
     { label: 'Services', action: () => goTo('services'), sectionId: 'services', path: '/booking' },
     { label: 'About Us', action: () => goTo('/about'), sectionId: 'about', path: '/about' },
     { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
-  ].filter(Boolean);
- 
+  ];
+
   const navRefs = useRef([]);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
@@ -115,7 +97,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     location.pathname === path || (location.pathname === '/' && activeSection === sectionId)
   );
 
-  useEffect(() => { //
+  useEffect(() => {
     const targetEl = navRefs.current[activeIndex >= 0 ? activeIndex : 0];
     if (targetEl && activeIndex >= 0) {
       setIndicatorStyle({
@@ -130,19 +112,15 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
 
   return (
     <>
-      {/* Top Text-Only Announcement Bar - Only shows when Admin enables & assigns details */}
       {siteSettings?.showBanner && siteSettings?.bannerNotice && (
-        <div className="bg-white text-slate-800 text-xs py-2 px-4 border-b border-slate-100 font-medium flex items-center justify-center gap-3 relative z-50">
-          <span className="inline-block text-cyan-400 bg-slate-100 px-2.5 py-0.5 rounded-md text-[11px] font-semibold border border-slate-200">
+        <div className="bg-slate-900 text-white text-xs py-2 px-4 flex items-center justify-center gap-3 relative z-50 shadow-sm">
+          <span className="inline-block text-slate-900 bg-[#00e5ff] px-2.5 py-0.5 rounded-md text-[11px] font-bold">
             {siteSettings.bannerNotice}
           </span>
           {siteSettings?.contactPhone && (
             <>
-              <span className="hidden sm:inline text-slate-700">&middot;</span>
-              <a
-                href={`tel:${siteSettings.contactPhone}`}
-                className="text-slate-900 hover:underline font-semibold transition-colors"
-              >
+              <span className="hidden sm:inline text-slate-500">&middot;</span>
+              <a href={`tel:${siteSettings.contactPhone}`} className="text-white hover:text-[#00e5ff] font-semibold transition-colors">
                 Helpline: {siteSettings.contactPhone}
               </a>
             </>
@@ -150,245 +128,120 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
         </div>
       )}
 
-      {/* Classic Clean Fixed Header - Luxury Editorial Aesthetic */}
-      {(() => {
-        const isHomeTop = location.pathname === '/' && !isScrolled;
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || siteSettings?.showBanner ? 'bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm' : 'bg-transparent border-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3 lg:hidden">
+            <button onClick={() => setMobileMenuOpen(true)} className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 transition-colors border-none cursor-pointer">
+              <Menu className="w-5 h-5" />
+            </button>
+            <button onClick={handleLogoClick} className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0">
+              <span className="text-2xl font-black font-sans text-slate-900 tracking-tight">
+                {(siteName || 'BEHOLD').replace(/\.$/, '')}
+                <span className="text-[#00e5ff] font-black">.</span>
+              </span>
+            </button>
+          </div>
 
-        return (
-          <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHomeTop
-              ? 'bg-transparent border-none shadow-none text-slate-900'
-              : 'bg-slate-50/90 backdrop-blur-lg border-b border-slate-100/80 shadow-none text-slate-900'
-              }`}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+          <button onClick={handleLogoClick} className="hidden lg:flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0">
+            <span className="text-3xl font-black font-sans text-slate-900 tracking-tight">
+              {(siteName || 'BEHOLD').replace(/\.$/, '')}
+              <span className="text-[#00e5ff] font-black">.</span>
+            </span>
+          </button>
 
-              {/* Mobile/Tablet Left Controls: Hamburger Menu Trigger + Brand Title Logo */}
-              <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
+          <nav className="hidden lg:flex items-center gap-8 relative py-1">
+            <span
+              className="absolute bottom-0 h-1 bg-[#00e5ff] rounded-t-lg transition-all duration-300 ease-out pointer-events-none"
+              style={{ left: `${indicatorStyle.left}px`, width: `${indicatorStyle.width}px`, opacity: indicatorStyle.opacity }}
+            />
+            {navLinks.map(({ label, action }, idx) => {
+              const isActive = idx === activeIndex;
+              return (
                 <button
-                  onClick={() => setMobileMenuOpen(true)}
-                  className="p-1.5 rounded-xl transition-colors cursor-pointer border-none bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 flex items-center justify-center"
-                  aria-label="Open Navigation Drawer"
+                  key={label}
+                  ref={(el) => (navRefs.current[idx] = el)}
+                  onClick={action}
+                  className={`text-[15px] font-semibold transition-colors duration-200 bg-transparent cursor-pointer py-1.5 px-2 rounded-md border-none ${isActive ? 'text-[#00e5ff]' : 'text-slate-600 hover:text-slate-900'}`}
                 >
-                  <Menu className="w-5.5 h-5.5 text-slate-900" />
+                  {label}
                 </button>
+              );
+            })}
+          </nav>
 
-                <button
-                  onClick={handleLogoClick}
-                  className="flex items-center gap-1.5 text-left bg-transparent border-none cursor-pointer p-0"
-                >
-                  <span className="text-xl sm:text-2xl font-black font-sans text-slate-900 uppercase tracking-tight">
-                    {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                    <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
-                  </span>
-                </button>
-              </div>
+          <div className="hidden lg:flex items-center gap-4">
+            <button
+              onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="px-6 py-2.5 rounded-xl border-none cursor-pointer bg-[#00e5ff] hover:bg-[#00b2be] text-white font-bold transition-all shadow-[0_4px_14px_0_rgba(0,229,255,0.39)] hover:shadow-[0_6px_20px_rgba(0,229,255,0.23)] hover:-translate-y-0.5"
+            >
+              Book Session
+            </button>
 
-              {/* Desktop Brand Title Logo (visible on lg+) */}
+            {user ? (
               <button
-                onClick={handleLogoClick}
-                className="hidden lg:flex items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0"
+                onClick={handleProfileClick}
+                className="flex items-center gap-2.5 px-2 py-1.5 pr-4 rounded-full bg-white border border-slate-200 shadow-sm hover:border-[#00e5ff] transition-all cursor-pointer"
               >
-                <span className="text-2xl sm:text-3xl font-black font-sans text-slate-900 uppercase tracking-tight">
-                  {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-black">.</span>
+                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+                  {user.profilePic ? (
+                    <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-sm font-bold text-slate-600">{(user.name || 'U').charAt(0).toUpperCase()}</span>
+                  )}
+                </div>
+                <span className="text-sm font-semibold text-slate-900 hidden xl:block line-clamp-1 max-w-[120px]">
+                  {user.name?.split(' ')[0] || 'Profile'}
                 </span>
               </button>
+            ) : (
+              <button onClick={() => onOpenAuth?.()} className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition-colors border-none cursor-pointer">
+                Log In
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
 
-              {/* Desktop Nav Links - Smooth Sliding Underline Indicator */}
-              <nav className="hidden lg:flex items-center gap-6 xl:gap-8 relative py-1">
-                {/* Smooth Sliding Active Underline Indicator Bar */}
-                <span
-                  className="absolute bottom-0 h-[2.5px] bg-[#00e5ff] rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none shadow-[0_0_8px_rgba(0,201,214,0.6)]"
-                  style={{
-                    left: `${indicatorStyle.left}px`,
-                    width: `${indicatorStyle.width}px`,
-                    opacity: indicatorStyle.opacity,
-                  }}
-                />
-
-                {navLinks.map(({ label, action }, idx) => {
-                  const isActive = idx === activeIndex;
-                  return (
-                    <button
-                      key={label}
-                      ref={(el) => (navRefs.current[idx] = el)}
-                      onClick={action}
-                      className={`text-sm font-semibold transition-colors duration-200 bg-transparent cursor-pointer py-1 px-1 rounded-md border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] ${isActive
-                        ? 'text-[#00e5ff]'
-                        : 'text-slate-600 hover:text-[#00e5ff] hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]'
-                        }`}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </nav>
-
-              {/* Desktop Action Buttons */}
-              <div className="hidden lg:flex items-center gap-3">
-                <button
-                  onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all shadow-sm cursor-pointer border-none bg-[#00e5ff] text-slate-900 font-bold hover:bg-[#00b2be] transition-colors shadow-sm hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
-                >
-                  Book Session
-                </button>
-
-                {user ? (
-                  <button
-                    onClick={handleProfileClick}
-                    title={`Logged in as ${user.name || user.email}`}
-                    aria-label="User Profile"
-                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer border shrink-0 bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
-                  >
-                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 bg-[#00e5ff]/10 flex items-center justify-center border border-[#00e5ff]/30">
-                      {user.profilePic ? (
-                        <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="text-xs font-semibold text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
-                      )}
-                    </div>
-                    <div className="flex flex-col text-left leading-tight pr-1 hidden sm:flex">
-                      <span className="text-xs font-semibold text-slate-900 truncate max-w-[120px]">{user.name || 'Account'}</span>
-                      {user.email && <span className="text-[10px] text-slate-500 font-medium truncate max-w-[130px]">{user.email}</span>}
-                    </div>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => onOpenAuth?.()}
-                    className="px-5 py-2.5 font-semibold text-sm rounded-xl transition-all cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-900 border-slate-200 hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
-                  >
-                    Sign In
-                  </button>
-                )}
-              </div>
-
-              {/* Mobile Right Controls: User Profile Avatar / Sign In */}
-              <div className="flex items-center gap-2 lg:hidden">
-                {user ? (
-                  <button
-                    onClick={handleProfileClick}
-                    title={`Logged in as ${user.name || user.email}`}
-                    aria-label="User Profile"
-                    className="flex items-center gap-1.5 p-0.5 rounded-xl transition-all cursor-pointer border bg-slate-100/90 hover:bg-slate-200/90 text-slate-900 border-slate-200/80 shadow-xs active:scale-95"
-                  >
-                    <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#00e5ff] flex items-center justify-center text-white font-extrabold text-sm shadow-xs border-2 border-white">
-                      {user.profilePic ? (
-                        <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
-                      )}
-                    </div>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => onOpenAuth?.()}
-                    className="px-3.5 py-1.5 font-bold text-xs rounded-xl transition-all cursor-pointer border-none bg-[#00e5ff] text-slate-900 font-bold hover:bg-[#00b2be] transition-colors shadow-sm shadow-xs"
-                  >
-                    Sign In
-                  </button>
-                )}
-              </div>
-
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[60] lg:hidden">
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+          <div className="absolute top-0 right-0 bottom-0 w-[280px] bg-white shadow-2xl flex flex-col transform transition-transform duration-300">
+            <div className="p-5 flex items-center justify-between border-b border-slate-100">
+              <span className="text-xl font-black font-sans text-slate-900 tracking-tight">
+                {(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] font-black">.</span>
+              </span>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-full bg-slate-100 text-slate-600 border-none cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
             </div>
-          </header>
-        );
-      })()}
-
-      {/* Mobile Slide-out Menu via Portal */}
-      {typeof document !== 'undefined' && mobileMenuOpen && createPortal(
-        <div
-          className={`fixed inset-0 z-[100] lg:hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
-          }`}
-        >
-          {/* Backdrop */}
-          <div
-            className={`absolute inset-0 bg-white/40 backdrop-blur-sm transition-opacity duration-300 ${
-              mobileMenuOpen ? 'opacity-100' : 'opacity-0'
-            }`}
-            onClick={() => setMobileMenuOpen(false)}
-          />
-
-          {/* Left-Side Drawer Panel */}
-          <div
-            className={`absolute top-0 left-0 bottom-0 w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between border-r border-slate-200 transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-            }`}
-          >
-            <div>
-              <div className="flex items-center justify-between pb-6 border-b border-slate-200">
-                <span className="text-xl font-black font-sans text-slate-900 tracking-tight">
-                  {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00e5ff] font-black">.</span>
-                </span>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-slate-500 hover:text-slate-900 transition rounded-full hover:bg-slate-100 border-none bg-transparent cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-2 mt-6">
-                {navLinks.map(({ label, action }) => (
+            
+            <div className="flex-1 overflow-y-auto p-5 space-y-2">
+              {navLinks.map(({ label, action }, idx) => {
+                const isActive = idx === activeIndex;
+                return (
                   <button
                     key={label}
                     onClick={action}
-                    className="text-left py-3 px-4 rounded-xl text-sm font-semibold text-slate-700 hover:text-[#00e5ff] hover:bg-slate-50 transition border-none bg-transparent cursor-pointer"
+                    className={`w-full text-left px-4 py-3 rounded-xl text-[15px] font-semibold transition-colors border-none cursor-pointer ${isActive ? 'bg-[#00e5ff]/10 text-[#00e5ff]' : 'bg-transparent text-slate-700 hover:bg-slate-50'}`}
                   >
                     {label}
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
 
-            <div className="pt-6 border-t border-slate-200 flex flex-col gap-3">
-              {user && (
-                <button
-                  onClick={handleProfileClick}
-                  className="w-full py-3 bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm rounded-xl transition-all border border-[#00e5ff]/40 cursor-pointer shadow-xs text-center flex items-center justify-center gap-2"
-                >
-                  <User className="w-4 h-4 text-[#00e5ff]" />
-                  <span>My Profile / Dashboard</span>
-                </button>
-              )}
-              <button
-                onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
-                className={`w-full py-3 font-semibold text-sm rounded-xl transition-all cursor-pointer text-center ${user
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200'
-                  : 'bg-[#00e5ff] hover:bg-[#00b2be] text-slate-900 border border-transparent shadow-xs'
-                  }`}
-              >
+            <div className="p-5 border-t border-slate-100 space-y-3">
+              <button onClick={() => { setMobileMenuOpen(false); onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="w-full px-5 py-3 rounded-xl bg-[#00e5ff] text-white font-bold border-none shadow-md">
                 Book Session
               </button>
-              {user ? (
-                <button
-                  onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                  className="w-full py-2.5 border border-rose-200 text-rose-600 font-semibold text-sm rounded-xl transition bg-white hover:bg-rose-50 text-center cursor-pointer"
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <button
-                  onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                  className="w-full py-2.5 border border-slate-200 text-slate-900 font-semibold text-sm rounded-xl transition bg-slate-100 hover:bg-slate-200 text-center cursor-pointer"
-                >
-                  Sign In
-                </button>
-              )}
+              <button onClick={handleProfileClick} className="w-full px-5 py-3 rounded-xl bg-slate-100 text-slate-900 font-bold border-none hover:bg-slate-200">
+                {user ? 'My Profile' : 'Log In / Sign Up'}
+              </button>
             </div>
           </div>
-        </div>,
-        document.body
+        </div>
       )}
-
-      {/* Logout Confirm Modal */}
-      <LogoutConfirmModal
-        isOpen={isLogoutOpen}
-        onClose={() => setIsLogoutOpen(false)}
-        onConfirm={() => { logout(); setIsLogoutOpen(false); }}
-      />
     </>
   );
 }
