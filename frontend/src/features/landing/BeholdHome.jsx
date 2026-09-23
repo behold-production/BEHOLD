@@ -344,6 +344,7 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) 
               </p>
             </div>
             <div className="bh-hiw-grid">
+              <div className="bh-hiw-connector" />
               {[
                 { n: '1', title: 'Find a Psychologist', desc: 'Browse profiles, specializations, and reviews to find the right expert for you.' },
                 { n: '2', title: 'Book a Session', desc: 'Select a convenient date, time and mode — online or in-person.' },
@@ -398,6 +399,7 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) 
                           : <div className="bh-expert-photo-placeholder">{c.name?.charAt(0) || '?'}</div>
                         }
                         <button className="bh-expert-fav" aria-label="Favourite">♡</button>
+                        <span className="bh-expert-badge">{c.specialization || 'Psychologist'}</span>
                       </div>
                       <div className="bh-expert-body">
                         <h3 className="bh-expert-name">{c.name}</h3>
