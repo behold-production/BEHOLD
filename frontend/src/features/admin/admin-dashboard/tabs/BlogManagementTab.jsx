@@ -316,16 +316,16 @@ export default function BlogManagementTab() {
   return (
     <div className="space-y-6">
       {/* Top Banner & Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-slate-900 border border-slate-800 rounded-lg shadow-lg">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-white border border-slate-100 rounded-lg shadow-lg">
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[#00E5FF] text-xs font-black tracking-widest uppercase mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             <span>EDITORIAL CONTROL</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black font-header text-white">
+          <h2 className="text-xl sm:text-2xl font-black font-header text-slate-900">
             Blog & Articles Management
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-600">
             Create, edit, format, and publish expert career guidance and aptitude articles for BEHOLD..
           </p>
         </div>
@@ -340,7 +340,7 @@ export default function BlogManagementTab() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/60 p-4 rounded-lg border border-slate-100">
         {/* Search */}
         <div className="relative w-full md:w-80">
           <input
@@ -348,9 +348,9 @@ export default function BlogManagementTab() {
             placeholder="Search title, slug or category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white placeholder-slate-500 text-xs font-medium outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 placeholder-slate-500 text-xs font-medium outline-none transition-colors"
           />
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-slate-600 absolute left-3.5 top-3" />
         </div>
 
         {/* Filters */}
@@ -359,7 +359,7 @@ export default function BlogManagementTab() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-xs font-semibold outline-none cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-100 text-slate-700 text-xs font-semibold outline-none cursor-pointer"
           >
             {categoriesList.map((cat) => (
               <option key={cat} value={cat}>Category: {cat}</option>
@@ -370,7 +370,7 @@ export default function BlogManagementTab() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-xs font-semibold outline-none cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-100 text-slate-700 text-xs font-semibold outline-none cursor-pointer"
           >
             <option value="All">Status: All</option>
             <option value="Published">Published</option>
@@ -380,22 +380,22 @@ export default function BlogManagementTab() {
       </div>
 
       {/* Data Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden shadow-xl">
+      <div className="bg-white border border-slate-100 rounded-lg overflow-hidden shadow-xl">
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="w-8 h-8 border-3 border-[#00E5FF] border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : filteredBlogs.length === 0 ? (
           <div className="text-center py-20">
-            <BookOpen className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-            <h4 className="text-base font-bold text-white mb-1">No Articles Found</h4>
-            <p className="text-xs text-slate-400">Click "+ Write New Article" above to publish your first post.</p>
+            <BookOpen className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+            <h4 className="text-base font-bold text-slate-900 mb-1">No Articles Found</h4>
+            <p className="text-xs text-slate-600">Click "+ Write New Article" above to publish your first post.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 text-[11px] font-black uppercase tracking-wider">
+                <tr className="border-b border-slate-100 bg-slate-950/60 text-slate-600 text-[11px] font-black uppercase tracking-wider">
                   <th className="py-4 px-5">Article</th>
                   <th className="py-4 px-4">Category</th>
                   <th className="py-4 px-4">Author</th>
@@ -406,10 +406,10 @@ export default function BlogManagementTab() {
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-xs">
                 {filteredBlogs.map((post) => (
-                  <tr key={post.id || post._id} className="hover:bg-slate-800/40 transition-colors">
+                  <tr key={post.id || post._id} className="hover:bg-slate-100/40 transition-colors">
                     <td className="py-4 px-5">
                       <div className="flex items-center gap-3">
-                        <div className="w-14 h-10 rounded-lg bg-slate-950 overflow-hidden shrink-0 border border-slate-800">
+                        <div className="w-14 h-10 rounded-lg bg-slate-950 overflow-hidden shrink-0 border border-slate-100">
                           <img
                             src={post.coverImage ? getImageUrl(post.coverImage) : defaultBlogImage}
                             alt={post.title}
@@ -418,16 +418,16 @@ export default function BlogManagementTab() {
                           />
                         </div>
                         <div className="max-w-xs space-y-1">
-                          <h4 className="font-bold text-white line-clamp-1">{post.title}</h4>
-                          <span className="text-[10px] text-slate-400 font-mono block">/blog/{post.slug}</span>
+                          <h4 className="font-bold text-slate-900 line-clamp-1">{post.title}</h4>
+                          <span className="text-[10px] text-slate-600 font-mono block">/blog/{post.slug}</span>
                           {post.primaryKeyword && (
                             <div className="flex flex-wrap items-center gap-1 mt-1">
-                              <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded bg-[#090d16]yan-500/15 text-cyan-300 border border-cyan-500/30">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-extrabold px-2 py-0.5 rounded bg-whiteyan-500/15 text-cyan-300 border border-cyan-500/30">
                                 <Sparkles className="w-2.5 h-2.5" />
                                 {post.primaryKeyword}
                               </span>
                               {post.secondaryKeywords && post.secondaryKeywords.slice(0, 2).map((sk, skIdx) => (
-                                <span key={skIdx} className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                                <span key={skIdx} className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                                   {sk}
                                 </span>
                               ))}
@@ -444,11 +444,11 @@ export default function BlogManagementTab() {
                     </td>
 
                     <td className="py-4 px-4">
-                      <div className="font-bold text-slate-200">{post.author?.name || 'Editorial Team'}</div>
-                      <div className="text-[10px] text-slate-400">{post.author?.role || 'Mentor'}</div>
+                      <div className="font-bold text-slate-800">{post.author?.name || 'Editorial Team'}</div>
+                      <div className="text-[10px] text-slate-600">{post.author?.role || 'Mentor'}</div>
                     </td>
 
-                    <td className="py-4 px-4 text-slate-300 font-medium">
+                    <td className="py-4 px-4 text-slate-700 font-medium">
                       {post.readTime || '5 min read'}
                     </td>
 
@@ -458,7 +458,7 @@ export default function BlogManagementTab() {
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold cursor-pointer border transition-all ${
                           post.isPublished
                             ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25'
-                            : 'bg-[#090d16]mber-500/15 text-amber-400 border-amber-500/30 hover:bg-[#090d16]mber-500/25'
+                            : 'bg-whitember-500/15 text-amber-400 border-amber-500/30 hover:bg-whitember-500/25'
                         }`}
                       >
                         {post.isPublished ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
@@ -471,7 +471,7 @@ export default function BlogManagementTab() {
                         <button
                           onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
                           title="Preview Live Article"
-                          className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer border border-slate-700"
+                          className="p-2 rounded-lg bg-slate-100 hover:bg-slate-700 text-slate-700 hover:text-slate-900 transition-colors cursor-pointer border border-slate-200"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                         </button>
@@ -479,7 +479,7 @@ export default function BlogManagementTab() {
                         <button
                           onClick={() => handleShareToTelegram(post)}
                           title="Share to Telegram"
-                          className="p-2 rounded-lg bg-blue-500/15 hover:bg-blue-500 text-blue-400 hover:text-white transition-all cursor-pointer border border-blue-500/30"
+                          className="p-2 rounded-lg bg-blue-500/15 hover:bg-blue-500 text-blue-400 hover:text-slate-900 transition-all cursor-pointer border border-blue-500/30"
                         >
                           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.9-.45-.77-.25-1.38-.38-1.32-.8.03-.22.34-.44.93-.68 3.65-1.59 6.08-2.64 7.31-3.15 3.47-1.45 4.19-1.7 4.67-1.71.1 0 .34.02.48.13.12.09.16.22.17.34.02.09.02.19.01.26z"/>
@@ -497,7 +497,7 @@ export default function BlogManagementTab() {
                         <button
                           onClick={() => handleDeleteBlog(post.id || post._id, post.title)}
                           title="Delete Article"
-                          className="p-2 rounded-lg bg-red-500/15 hover:bg-red-600 text-red-400 hover:text-white transition-all cursor-pointer border border-red-500/30"
+                          className="p-2 rounded-lg bg-red-500/15 hover:bg-red-600 text-red-400 hover:text-slate-900 transition-all cursor-pointer border border-red-500/30"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -514,16 +514,16 @@ export default function BlogManagementTab() {
       {/* CREATE / EDIT MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-lg shadow-2xl overflow-hidden my-8">
+          <div className="relative w-full max-w-3xl bg-white border border-slate-100 rounded-lg shadow-2xl overflow-hidden my-8">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-slate-800 bg-slate-950/60">
-              <h3 className="text-lg font-black font-header text-white flex items-center gap-2">
+            <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-950/60">
+              <h3 className="text-lg font-black font-header text-slate-900 flex items-center gap-2">
                 {editingBlog ? <Edit className="w-5 h-5 text-[#00E5FF]" /> : <Plus className="w-5 h-5 text-[#00E5FF]" />}
                 <span>{editingBlog ? 'Edit Article' : 'Write New Article'}</span>
               </h3>
               <button
                 onClick={handleCloseModal}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer border-none bg-transparent"
+                className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer border-none bg-transparent"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -534,7 +534,7 @@ export default function BlogManagementTab() {
               {/* Title & Slug */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Article Title *
                   </label>
                   <input
@@ -543,12 +543,12 @@ export default function BlogManagementTab() {
                     placeholder="e.g. Top Career Options After 12th"
                     value={formData.title}
                     onChange={handleTitleChange}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-medium outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-medium outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     SEO Slug URL *
                   </label>
                   <input
@@ -557,7 +557,7 @@ export default function BlogManagementTab() {
                     placeholder="e.g. top-career-options-after-12th"
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-mono outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-mono outline-none"
                   />
                 </div>
               </div>
@@ -565,7 +565,7 @@ export default function BlogManagementTab() {
               {/* Category, Read Time, Published Status */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Category *
                   </label>
                   <input
@@ -574,12 +574,12 @@ export default function BlogManagementTab() {
                     placeholder="Career Guidance / Aptitude"
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-medium outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-medium outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Reading Time
                   </label>
                   <input
@@ -587,18 +587,18 @@ export default function BlogManagementTab() {
                     placeholder="5 min read"
                     value={formData.readTime}
                     onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-medium outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-medium outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Published Status
                   </label>
                   <select
                     value={formData.isPublished ? 'true' : 'false'}
                     onChange={(e) => setFormData({ ...formData, isPublished: e.target.value === 'true' })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-bold outline-none cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-bold outline-none cursor-pointer"
                   >
                     <option value="true">Published (Live immediately)</option>
                     <option value="false">Draft (Hidden from public)</option>
@@ -608,12 +608,12 @@ export default function BlogManagementTab() {
 
               {/* Cover Image Upload (Drag & Drop) */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Cover Image (Drag & Drop or Click)
                 </label>
                 <div
                   className={`relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg transition-colors ${
-                    dragActive ? 'border-[#00E5FF] bg-[#00E5FF]/5' : 'border-slate-700 bg-slate-950 hover:border-slate-500 hover:bg-slate-900/50'
+                    dragActive ? 'border-[#00E5FF] bg-[#00E5FF]/5' : 'border-slate-200 bg-slate-950 hover:border-slate-500 hover:bg-white/50'
                   } cursor-pointer overflow-hidden group`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
@@ -632,30 +632,30 @@ export default function BlogManagementTab() {
                     <>
                       <img src={getImageUrl(formData.coverImage)} alt="Cover Preview" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
-                        <span className="text-white text-xs font-bold flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Change Image</span>
+                        <span className="text-slate-900 text-xs font-bold flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Change Image</span>
                       </div>
                     </>
                   ) : (
-                    <div className="flex flex-col items-center justify-center text-slate-400">
-                      <UploadCloud className={`w-8 h-8 mb-2 ${dragActive ? 'text-[#00E5FF]' : 'text-slate-400'}`} />
+                    <div className="flex flex-col items-center justify-center text-slate-600">
+                      <UploadCloud className={`w-8 h-8 mb-2 ${dragActive ? 'text-[#00E5FF]' : 'text-slate-600'}`} />
                       <p className="text-xs font-medium">Drag & drop an image here</p>
-                      <p className="text-[10px] text-slate-400 mt-1">or click to browse files</p>
+                      <p className="text-[10px] text-slate-600 mt-1">or click to browse files</p>
                     </div>
                   )}
                 </div>
-                <div className="mt-2 text-[10px] text-slate-400">Alternatively, you can provide an external image URL below:</div>
+                <div className="mt-2 text-[10px] text-slate-600">Alternatively, you can provide an external image URL below:</div>
                 <input
                   type="text"
                   placeholder="https://images.unsplash.com/..."
                   value={formData.coverImage}
                   onChange={(e) => setFormData({ ...formData, coverImage: e.target.value, coverImageFile: null })}
-                  className="w-full mt-1 px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-mono outline-none"
+                  className="w-full mt-1 px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-mono outline-none"
                 />
               </div>
 
               {/* Excerpt / Summary */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Article Summary / Excerpt *
                 </label>
                 <textarea
@@ -664,38 +664,38 @@ export default function BlogManagementTab() {
                   placeholder="Brief summary shown on homepage and listing cards..."
                   value={formData.excerpt}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-medium outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-medium outline-none"
                 />
               </div>
 
               {/* Author Details */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Author Name
                   </label>
                   <input
                     type="text"
                     value={formData.authorName}
                     onChange={(e) => setFormData({ ...formData, authorName: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-medium outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-medium outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Author Role
                   </label>
                   <input
                     type="text"
                     value={formData.authorRole}
                     onChange={(e) => setFormData({ ...formData, authorRole: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-medium outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-medium outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Author Avatar URL
                   </label>
                   <input
@@ -703,21 +703,21 @@ export default function BlogManagementTab() {
                     placeholder="https://images.unsplash.com/..."
                     value={formData.authorAvatar}
                     onChange={(e) => setFormData({ ...formData, authorAvatar: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-mono outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-mono outline-none"
                   />
                 </div>
               </div>
 
               {/* SEO & Target Keywords Card */}
               <div className="p-4 rounded-xl bg-slate-950/80 border border-[#00E5FF]/30 space-y-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
                   <Sparkles className="w-4 h-4 text-[#00E5FF]" />
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">SEO & Keyword Optimization</h4>
+                  <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">SEO & Keyword Optimization</h4>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                       Primary Focus Keyword *
                     </label>
                     <input
@@ -725,13 +725,13 @@ export default function BlogManagementTab() {
                       placeholder="e.g. Career Options After 12th"
                       value={formData.primaryKeyword}
                       onChange={(e) => setFormData({ ...formData, primaryKeyword: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 focus:border-[#00E5FF] text-white text-xs font-semibold outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 focus:border-[#00E5FF] text-slate-900 text-xs font-semibold outline-none"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">Main topic keyword targeted for Google ranking</span>
+                    <span className="text-[10px] text-slate-600 mt-1 block">Main topic keyword targeted for Google ranking</span>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                       Secondary Keywords (Comma Separated)
                     </label>
                     <input
@@ -739,14 +739,14 @@ export default function BlogManagementTab() {
                       placeholder="e.g. Aptitude test, Stream selection, C-DAT"
                       value={formData.secondaryKeywords}
                       onChange={(e) => setFormData({ ...formData, secondaryKeywords: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 focus:border-[#00E5FF] text-white text-xs font-semibold outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 focus:border-[#00E5FF] text-slate-900 text-xs font-semibold outline-none"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">Related search terms and LSI keywords</span>
+                    <span className="text-[10px] text-slate-600 mt-1 block">Related search terms and LSI keywords</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Topic Tags (Comma Separated)
                   </label>
                   <input
@@ -754,14 +754,14 @@ export default function BlogManagementTab() {
                     placeholder="e.g. After 12th, Career Roadmap, Counseling"
                     value={formData.tags}
                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 focus:border-[#00E5FF] text-white text-xs font-semibold outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 focus:border-[#00E5FF] text-slate-900 text-xs font-semibold outline-none"
                   />
                 </div>
               </div>
 
               {/* Full Article Content */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Full Article Content (HTML / Markdown supported) *
                 </label>
                 <textarea
@@ -770,16 +770,16 @@ export default function BlogManagementTab() {
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   placeholder="Write your rich HTML or structured text paragraphs..."
-                  className="w-full px-3.5 py-3 rounded-lg bg-slate-950 border border-slate-800 focus:border-[#00E5FF] text-white text-xs font-mono outline-none leading-relaxed"
+                  className="w-full px-3.5 py-3 rounded-lg bg-slate-950 border border-slate-100 focus:border-[#00E5FF] text-slate-900 text-xs font-mono outline-none leading-relaxed"
                 />
               </div>
 
               {/* Submit Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="px-5 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs cursor-pointer border-none"
+                  className="px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-700 text-slate-700 font-bold text-xs cursor-pointer border-none"
                 >
                   Cancel
                 </button>

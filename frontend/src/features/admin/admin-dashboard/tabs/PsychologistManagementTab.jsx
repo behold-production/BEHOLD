@@ -788,7 +788,7 @@ export default function PsychologistManagementTab(props) {
       <div className="space-y-6 animate-in fade-in duration-200 text-sm">
         <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-bold text-white font-header">
+            <h3 className="text-sm font-bold text-slate-900 font-header">
               Psychologists Directory
             </h3>
             <p className="text-sm text-zinc-500 font-medium pt-1">
@@ -803,7 +803,7 @@ export default function PsychologistManagementTab(props) {
                 placeholder="Search psychologists..."
                 value={searchPsy}
                 onChange={(e) => setSearchPsy(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
+                className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-slate-900 outline-none"
               />
               <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
             </div>
@@ -811,7 +811,7 @@ export default function PsychologistManagementTab(props) {
               onClick={() =>
                 handleExportPDF("counsellors-table", "Psychologists_Directory")
               }
-              className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0"
+              className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0"
             >
               Export PDF
             </button>
@@ -822,7 +822,7 @@ export default function PsychologistManagementTab(props) {
                   "Psychologists_Directory",
                 )
               }
-              className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0"
+              className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0"
             >
               Export Image
             </button>
@@ -993,7 +993,7 @@ export default function PsychologistManagementTab(props) {
                               )}
                             </div>
                             <div>
-                              <span className="font-bold text-white block leading-tight">
+                              <span className="font-bold text-slate-900 block leading-tight">
                                 {psy.name}
                               </span>
                               <span className="text-sm text-zinc-505 break-all">
@@ -1018,7 +1018,7 @@ export default function PsychologistManagementTab(props) {
                           <button
                             onClick={() => handleTogglePsyTopFive(psy)}
                             className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer border ${psy.isTopFive
-                                ? "bg-[#090d16]mber-500/20 border-amber-500/40 text-amber-400 hover:bg-[#090d16]mber-500/30"
+                                ? "bg-whitember-500/20 border-amber-500/40 text-amber-400 hover:bg-whitember-500/30"
                                 : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-850"
                               }`}
                             title="Toggle Top 5 featured status"
@@ -1065,14 +1065,14 @@ export default function PsychologistManagementTab(props) {
                                 onClick={() =>
                                   handleTogglePsyVerification(psy.id, false)
                                 }
-                                className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-white rounded text-sm font-bold cursor-pointer border-none shadow-sm transition-colors"
+                                className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-750 text-slate-900 rounded text-sm font-bold cursor-pointer border-none shadow-sm transition-colors"
                                 title="Accept and verify counselor"
                               >
                                 Accept
                               </button>
                               <button
                                 onClick={() => handleRejectPsy(psy.id)}
-                                className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold cursor-pointer border-none shadow-sm transition-colors"
+                                className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-slate-900 rounded text-sm font-bold cursor-pointer border-none shadow-sm transition-colors"
                                 title="Reject counselor request"
                               >
                                 Reject
@@ -1084,14 +1084,14 @@ export default function PsychologistManagementTab(props) {
                           <div className="flex items-center justify-center gap-2">
                             <button
                               onClick={() => setViewingPsychologist(psy)}
-                              className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
+                              className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-slate-900 rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
                             >
                               Details
                             </button>
                             {canEditPsy && (
                               <button
                                 onClick={() => handleOpenShareModal(psy)}
-                                className="px-2.5 py-1 bg-[#090d16]yan-950/40 hover:bg-[#090d16]yan-900/60 text-cyan-400 rounded border border-cyan-800/60 transition cursor-pointer text-xs font-bold flex items-center gap-1"
+                                className="px-2.5 py-1 bg-whiteyan-950/40 hover:bg-whiteyan-900/60 text-cyan-400 rounded border border-cyan-800/60 transition cursor-pointer text-xs font-bold flex items-center gap-1"
                                 title="Change Share Percentage"
                               >
                                 <Percent className="w-3.5 h-3.5 text-cyan-400" />
@@ -1103,7 +1103,7 @@ export default function PsychologistManagementTab(props) {
                                 onClick={() =>
                                   handleGenerateResetToken(psy.email)
                                 }
-                                className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-[#090d16]mber-900/30 transition cursor-pointer text-sm font-bold "
+                                className="px-2.5 py-1 bg-zinc-900 text-amber-500 hover:text-amber-400 rounded border border-zinc-800 hover:bg-whitember-900/30 transition cursor-pointer text-sm font-bold "
                                 title="Generate Password Reset Link"
                               >
                                 <KeyRound className="w-4 h-4 inline-block" />
@@ -1140,7 +1140,7 @@ export default function PsychologistManagementTab(props) {
                             {canEditPsy && (
                               <button
                                 onClick={() => handleOpenEditPsy(psy)}
-                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+                                className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-slate-900 rounded border border-zinc-800 transition cursor-pointer"
                                 title="Edit Psychologist"
                               >
                                 <Edit className="w-3.5 h-3.5" />
@@ -1149,7 +1149,7 @@ export default function PsychologistManagementTab(props) {
                             {canDeletePsy && (
                               <button
                                 onClick={() => handleDeletePsy(psy.id)}
-                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+                                className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
                                 title="Remove Psychologist"
                               >
                                 <Trash className="w-3.5 h-3.5" />
@@ -1184,9 +1184,9 @@ export default function PsychologistManagementTab(props) {
               setIsEditPsyOpen(false);
             }}
           />
-          <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
+          <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
             <div>
-              <h3 className="text-base font-bold text-white font-header">
+              <h3 className="text-base font-bold text-slate-900 font-header">
                 {isAddPsyOpen
                   ? "Register Psychologist"
                   : "Edit Psychologist details"}
@@ -1239,7 +1239,7 @@ export default function PsychologistManagementTab(props) {
                       <button
                         type="button"
                         onClick={() => psyProfilePicRef.current?.click()}
-                        className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition bg-transparent"
+                        className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-slate-900 rounded-lg cursor-pointer transition bg-transparent"
                       >
                         {psyProfilePicFile ? "Change Image" : "Upload Photo"}
                       </button>
@@ -1265,7 +1265,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, name: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1281,7 +1281,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, email: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1302,7 +1302,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, password: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1317,7 +1317,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, education: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1332,7 +1332,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, title: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1347,7 +1347,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, phone: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1387,7 +1387,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, commissionPercent: Number(e.target.value) || 0 })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1403,7 +1403,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, lang: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1421,7 +1421,7 @@ export default function PsychologistManagementTab(props) {
                         hours: Number(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1439,7 +1439,7 @@ export default function PsychologistManagementTab(props) {
                         defaultMeetLink: e.target.value,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1459,7 +1459,7 @@ export default function PsychologistManagementTab(props) {
                         placeholder="Type an address to search..."
                         value={adminSearchQuery}
                         onChange={(e) => setAdminSearchQuery(e.target.value)}
-                        className="flex-1 min-w-0 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        className="flex-1 min-w-0 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
@@ -1494,7 +1494,7 @@ export default function PsychologistManagementTab(props) {
                               setAdminSearchQuery(res.display_name);
                               setAdminSearchResults([]);
                             }}
-                            className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors block truncate"
+                            className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-slate-900 hover:bg-zinc-800 transition-colors block truncate"
                           >
                             {res.display_name}
                           </button>
@@ -1518,7 +1518,7 @@ export default function PsychologistManagementTab(props) {
                         });
                         setAdminSearchQuery(e.target.value);
                       }}
-                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -1537,7 +1537,7 @@ export default function PsychologistManagementTab(props) {
                             latitude: parseFloat(e.target.value) || 0,
                           })
                         }
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -1555,7 +1555,7 @@ export default function PsychologistManagementTab(props) {
                             longitude: parseFloat(e.target.value) || 0,
                           })
                         }
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                       />
                     </div>
                   </div>
@@ -1676,7 +1676,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, specialties: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -1691,7 +1691,7 @@ export default function PsychologistManagementTab(props) {
                     onChange={(e) =>
                       setPsyForm({ ...psyForm, bio: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors resize-none"
                   />
                 </div>
                 {/* Availability Timings */}
@@ -1755,7 +1755,7 @@ export default function PsychologistManagementTab(props) {
                     setIsAddPsyOpen(false);
                     setIsEditPsyOpen(false);
                   }}
-                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
                 >
                   Cancel
                 </button>
@@ -1779,7 +1779,7 @@ export default function PsychologistManagementTab(props) {
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => setViewingPsychologist(null)}
           />
-          <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+          <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
@@ -1798,7 +1798,7 @@ export default function PsychologistManagementTab(props) {
                   )}
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-900 font-header flex items-center gap-2">
                     <Award className="w-5 h-5 text-[#00e5ff]" /> Psychologist
                     Profile Details
                   </h3>
@@ -1809,7 +1809,7 @@ export default function PsychologistManagementTab(props) {
               </div>
               <button
                 onClick={() => setViewingPsychologist(null)}
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-slate-900 hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1865,13 +1865,13 @@ export default function PsychologistManagementTab(props) {
                           <span className="text-zinc-500 block text-xs ">
                             Professional Title
                           </span>
-                          <span className="font-bold text-white">{title}</span>
+                          <span className="font-bold text-slate-900">{title}</span>
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-sm ">
                             Full Name
                           </span>
-                          <span className="font-bold text-white">
+                          <span className="font-bold text-slate-900">
                             {viewingPsychologist.name}
                           </span>
                         </div>
@@ -1932,7 +1932,7 @@ export default function PsychologistManagementTab(props) {
                                 ? "bg-emerald-955/20 border border-emerald-900/30 text-emerald-450"
                                 : viewingPsychologist.status === "REJECTED"
                                   ? "bg-rose-955/20 border border-rose-900/30 text-rose-455"
-                                  : "bg-[#090d16]mber-955/20 border border-amber-900/30 text-amber-500"
+                                  : "bg-whitember-955/20 border border-amber-900/30 text-amber-500"
                               }`}
                           >
                             {viewingPsychologist.status === "ACTIVE"
@@ -2122,7 +2122,7 @@ export default function PsychologistManagementTab(props) {
                                     className="border-b border-zinc-900/60 hover:bg-zinc-900/30"
                                   >
                                     <td className="p-2.5">
-                                      <span className="text-white block font-semibold">
+                                      <span className="text-slate-900 block font-semibold">
                                         {student
                                           ? student.name
                                           : "Unknown User"}
@@ -2175,7 +2175,7 @@ export default function PsychologistManagementTab(props) {
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setViewingPsychologist(null)}
-                className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+                className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
               >
                 Close Profile
               </button>
@@ -2190,9 +2190,9 @@ export default function PsychologistManagementTab(props) {
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
           />
-          <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
+          <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[90vh]">
             <div>
-              <h3 className="text-base font-bold text-white font-header">
+              <h3 className="text-base font-bold text-slate-900 font-header">
                 {isAddPsyOpen ? 'Register Psychologist' : 'Edit Psychologist details'}
               </h3>
               <p className="text-sm text-zinc-500 leading-none mt-1">
@@ -2216,7 +2216,7 @@ export default function PsychologistManagementTab(props) {
                     </div>
                     <div className="flex-1 space-y-1">
                       <input ref={psyProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setPsyProfilePicFile(file); }} />
-                      <button type="button" onClick={() => psyProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition bg-transparent">
+                      <button type="button" onClick={() => psyProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-slate-900 rounded-lg cursor-pointer transition bg-transparent">
                         {psyProfilePicFile ? 'Change Image' : 'Upload Photo'}
                       </button>
                       {psyProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{psyProfilePicFile.name}</p>)}
@@ -2233,7 +2233,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="e.g. Dr. Sandra Tomy"
                     value={psyForm.name}
                     onChange={(e) => setPsyForm({ ...psyForm, name: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2245,7 +2245,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="psychologist@example.com"
                     value={psyForm.email}
                     onChange={(e) => setPsyForm({ ...psyForm, email: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2259,7 +2259,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder={isEditPsyOpen ? "••••••••" : "Enter password"}
                     value={psyForm.password}
                     onChange={(e) => setPsyForm({ ...psyForm, password: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2270,7 +2270,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="e.g. MPhil Clinical Psychology"
                     value={psyForm.education}
                     onChange={(e) => setPsyForm({ ...psyForm, education: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2281,7 +2281,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="e.g. Consultant Psychologist, Clinical Psychologist"
                     value={psyForm.title}
                     onChange={(e) => setPsyForm({ ...psyForm, title: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2292,7 +2292,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="e.g. +91 94971 74011"
                     value={psyForm.phone}
                     onChange={(e) => setPsyForm({ ...psyForm, phone: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2324,7 +2324,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="e.g. Malayalam, English"
                     value={psyForm.lang}
                     onChange={(e) => setPsyForm({ ...psyForm, lang: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2335,7 +2335,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="e.g. 150"
                     value={psyForm.hours}
                     onChange={(e) => setPsyForm({ ...psyForm, hours: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2346,7 +2346,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="https://meet.google.com/abc-defg-hij"
                     value={psyForm.defaultMeetLink}
                     onChange={(e) => setPsyForm({ ...psyForm, defaultMeetLink: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2362,7 +2362,7 @@ export default function PsychologistManagementTab(props) {
                         placeholder="Type an address to search..."
                         value={adminSearchQuery}
                         onChange={(e) => setAdminSearchQuery(e.target.value)}
-                        className="flex-1 min-w-0 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        className="flex-1 min-w-0 px-3 py-2 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             e.preventDefault();
@@ -2397,7 +2397,7 @@ export default function PsychologistManagementTab(props) {
                               setAdminSearchQuery(res.display_name);
                               setAdminSearchResults([]);
                             }}
-                            className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors block truncate"
+                            className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-slate-900 hover:bg-zinc-800 transition-colors block truncate"
                           >
                             {res.display_name}
                           </button>
@@ -2416,7 +2416,7 @@ export default function PsychologistManagementTab(props) {
                         setPsyForm({ ...psyForm, locationName: e.target.value });
                         setAdminSearchQuery(e.target.value);
                       }}
-                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -2428,7 +2428,7 @@ export default function PsychologistManagementTab(props) {
                         placeholder="e.g. 11.2588"
                         value={psyForm.latitude || ''}
                         onChange={(e) => setPsyForm({ ...psyForm, latitude: parseFloat(e.target.value) || 0 })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2439,7 +2439,7 @@ export default function PsychologistManagementTab(props) {
                         placeholder="e.g. 75.7804"
                         value={psyForm.longitude || ''}
                         onChange={(e) => setPsyForm({ ...psyForm, longitude: parseFloat(e.target.value) || 0 })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-white rounded-lg outline-none focus:border-brand transition-all"
+                        className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-all"
                       />
                     </div>
                   </div>
@@ -2521,7 +2521,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="Anxiety, Stress Management, Mood Disorders"
                     value={psyForm.specialties}
                     onChange={(e) => setPsyForm({ ...psyForm, specialties: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
                   />
                 </div>
 
@@ -2532,7 +2532,7 @@ export default function PsychologistManagementTab(props) {
                     placeholder="Write clinical experience details..."
                     value={psyForm.bio}
                     onChange={(e) => setPsyForm({ ...psyForm, bio: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+                    className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors resize-none"
                   />
                 </div>
 
@@ -2590,7 +2590,7 @@ export default function PsychologistManagementTab(props) {
                 <button
                   type="button"
                   onClick={() => { setIsAddPsyOpen(false); setIsEditPsyOpen(false); }}
-                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
                 >
                   Cancel
                 </button>
@@ -2614,7 +2614,7 @@ export default function PsychologistManagementTab(props) {
             className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
             onClick={() => setViewingPsychologist(null)}
           />
-          <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+          <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
@@ -2625,7 +2625,7 @@ export default function PsychologistManagementTab(props) {
                   )}
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-900 font-header flex items-center gap-2">
                     <Award className="w-5 h-5 text-[#00e5ff]" /> Psychologist Profile Details
                   </h3>
                   <p className="text-sm text-zinc-500 mt-1">Credentials, availability, rates, and booking history logs.</p>
@@ -2633,7 +2633,7 @@ export default function PsychologistManagementTab(props) {
               </div>
               <button
                 onClick={() => setViewingPsychologist(null)}
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-slate-900 hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2663,11 +2663,11 @@ export default function PsychologistManagementTab(props) {
                       <div className="space-y-2.5">
                         <div>
                           <span className="text-zinc-500 block text-xs ">Professional Title</span>
-                          <span className="font-bold text-white">{title}</span>
+                          <span className="font-bold text-slate-900">{title}</span>
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-sm ">Full Name</span>
-                          <span className="font-bold text-white">{viewingPsychologist.name}</span>
+                          <span className="font-bold text-slate-900">{viewingPsychologist.name}</span>
                         </div>
                         <div>
                           <span className="text-zinc-500 block text-sm ">Email Address</span>
@@ -2712,7 +2712,7 @@ export default function PsychologistManagementTab(props) {
                             ? 'bg-emerald-955/20 border border-emerald-900/30 text-emerald-450'
                             : viewingPsychologist.status === 'REJECTED'
                               ? 'bg-rose-955/20 border border-rose-900/30 text-rose-455'
-                              : 'bg-[#090d16]mber-955/20 border border-amber-900/30 text-amber-500'
+                              : 'bg-whitember-955/20 border border-amber-900/30 text-amber-500'
                             }`}>
                             {viewingPsychologist.status === 'ACTIVE' ? 'Verified' : viewingPsychologist.status === 'REJECTED' ? 'Rejected' : 'Pending Verification'}
                           </span>
@@ -2838,7 +2838,7 @@ export default function PsychologistManagementTab(props) {
                                 return (
                                   <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
                                     <td className="p-2.5">
-                                      <span className="text-white block font-semibold">{student ? student.name : 'Unknown User'}</span>
+                                      <span className="text-slate-900 block font-semibold">{student ? student.name : 'Unknown User'}</span>
                                       <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
                                     </td>
                                     <td className="p-2.5">
@@ -2873,7 +2873,7 @@ export default function PsychologistManagementTab(props) {
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setViewingPsychologist(null)}
-                className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+                className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
               >
                 Close Profile
               </button>
@@ -2889,13 +2889,13 @@ export default function PsychologistManagementTab(props) {
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
                 <Percent className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-base font-bold text-white uppercase tracking-wider">
+                <h3 className="text-base font-bold text-slate-900 uppercase tracking-wider">
                   Set Share Percentage
                 </h3>
               </div>
               <button
                 onClick={() => setShareModalTarget(null)}
-                className="text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-800 border-none cursor-pointer"
+                className="text-zinc-400 hover:text-slate-900 p-1 rounded-lg bg-zinc-800 border-none cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2903,7 +2903,7 @@ export default function PsychologistManagementTab(props) {
 
             <div className="space-y-1">
               <p className="text-xs text-zinc-400">
-                Counsellor: <span className="text-white font-bold">{shareModalTarget.name}</span>
+                Counsellor: <span className="text-slate-900 font-bold">{shareModalTarget.name}</span>
               </p>
               <p className="text-xs text-zinc-500">
                 Set the revenue share percentage allocated to this counsellor for bookings.
@@ -2941,7 +2941,7 @@ export default function PsychologistManagementTab(props) {
                     onClick={() => setSharePercentValue(preset)}
                     className={`px-2.5 py-1 text-xs font-bold rounded-lg border transition cursor-pointer ${
                       Number(sharePercentValue) === preset
-                        ? 'bg-[#090d16]yan-500 text-zinc-955 border-cyan-400 font-black'
+                        ? 'bg-whiteyan-500 text-zinc-955 border-cyan-400 font-black'
                         : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-750'
                     }`}
                   >
@@ -2955,7 +2955,7 @@ export default function PsychologistManagementTab(props) {
                 <div className="bg-zinc-955 border border-zinc-800/80 p-3.5 rounded-xl space-y-2 text-xs">
                   <div className="flex justify-between items-center text-zinc-400 font-medium">
                     <span>Session Fee / Price:</span>
-                    <span className="font-bold text-white">₹{shareModalTarget.price || 1200}</span>
+                    <span className="font-bold text-slate-900">₹{shareModalTarget.price || 1200}</span>
                   </div>
                   <div className="flex justify-between items-center text-cyan-400 font-bold border-t border-zinc-850 pt-1.5">
                     <span>Psychologist Share ({Number(sharePercentValue) || 0}%):</span>
@@ -2979,7 +2979,7 @@ export default function PsychologistManagementTab(props) {
                 <button
                   type="submit"
                   disabled={isUpdatingShare}
-                  className="flex-1 py-3 bg-[#090d16]yan-500 hover:bg-[#090d16]yan-400 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-xl transition border-none cursor-pointer shadow-md disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 bg-whiteyan-500 hover:bg-whiteyan-400 text-zinc-955 font-bold text-xs uppercase tracking-wider rounded-xl transition border-none cursor-pointer shadow-md disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {isUpdatingShare ? (
                     <div className="w-4 h-4 border-2 border-zinc-955 border-t-transparent rounded-full animate-spin" />

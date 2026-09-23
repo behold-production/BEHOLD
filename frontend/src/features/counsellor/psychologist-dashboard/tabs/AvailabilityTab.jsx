@@ -167,7 +167,7 @@ const AvailabilityTab = ({
  <select
  value={customHour}
  onChange={(e) => setCustomHour(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer hover:border-zinc-700 transition-colors shadow-sm"
+ className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer hover:border-zinc-700 transition-colors shadow-sm"
  >
  {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
  <option key={h} value={h}>{h}</option>
@@ -179,7 +179,7 @@ const AvailabilityTab = ({
  <select
  value={customMinute}
  onChange={(e) => setCustomMinute(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer hover:border-zinc-700 transition-colors shadow-sm"
+ className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer hover:border-zinc-700 transition-colors shadow-sm"
  >
  {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
  <option key={m} value={m}>{m}</option>
@@ -191,7 +191,7 @@ const AvailabilityTab = ({
  <select
  value={customPeriod}
  onChange={(e) => setCustomPeriod(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer hover:border-zinc-700 transition-colors shadow-sm"
+ className="w-full px-2.5 py-2 bg-zinc-955 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer hover:border-zinc-700 transition-colors shadow-sm"
  >
  <option value="AM">AM</option>
  <option value="PM">PM</option>
@@ -217,7 +217,7 @@ const AvailabilityTab = ({
  <select
  value={fromHour}
  onChange={(e) => setFromHour(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
+ className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
  >
  {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
  <option key={h} value={h}>{h}</option>
@@ -226,7 +226,7 @@ const AvailabilityTab = ({
  <select
  value={fromMinute}
  onChange={(e) => setFromMinute(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
+ className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
  >
  {['00', '15', '30', '45'].map(m => (
  <option key={m} value={m}>{m}</option>
@@ -235,7 +235,7 @@ const AvailabilityTab = ({
  <select
  value={fromPeriod}
  onChange={(e) => setFromPeriod(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
+ className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
  >
  <option value="AM">AM</option>
  <option value="PM">PM</option>
@@ -249,7 +249,7 @@ const AvailabilityTab = ({
  <select
  value={toHour}
  onChange={(e) => setToHour(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
+ className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
  >
  {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
  <option key={h} value={h}>{h}</option>
@@ -258,7 +258,7 @@ const AvailabilityTab = ({
  <select
  value={toMinute}
  onChange={(e) => setToMinute(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
+ className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
  >
  {['00', '15', '30', '45'].map(m => (
  <option key={m} value={m}>{m}</option>
@@ -267,7 +267,7 @@ const AvailabilityTab = ({
  <select
  value={toPeriod}
  onChange={(e) => setToPeriod(e.target.value)}
- className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
+ className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer shadow-sm hover:border-zinc-700 transition-colors"
  >
  <option value="AM">AM</option>
  <option value="PM">PM</option>
@@ -283,7 +283,7 @@ const AvailabilityTab = ({
       <select
         value={slotInterval || 60}
         onChange={(e) => setSlotInterval(Number(e.target.value))}
-        className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-white outline-none focus:border-brand cursor-pointer shadow-sm"
+        className="w-full px-2.5 py-2 bg-zinc-950 border border-zinc-800 rounded-[10px] text-sm text-slate-900 outline-none focus:border-brand cursor-pointer shadow-sm"
       >
         <option value={30}>30 Minutes</option>
         <option value={60}>60 Minutes</option>
@@ -299,7 +299,7 @@ const AvailabilityTab = ({
       const toStr = `${toHour}:${toMinute} ${toPeriod}`;
       addTimeRangeSlots(fromStr, toStr, false, slotInterval);
     }}
-    className="w-full mt-3 bg-zinc-900 hover:bg-zinc-800 text-white py-2.5 text-sm font-bold rounded-[10px] transition-colors border border-zinc-800 cursor-pointer flex items-center justify-center shadow-sm"
+    className="w-full mt-3 bg-zinc-900 hover:bg-zinc-800 text-slate-900 py-2.5 text-sm font-bold rounded-[10px] transition-colors border border-zinc-800 cursor-pointer flex items-center justify-center shadow-sm"
   >
     Generate Time Slots
   </button>

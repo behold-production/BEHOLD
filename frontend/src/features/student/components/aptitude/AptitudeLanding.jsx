@@ -69,11 +69,11 @@ export default function AptitudeLanding({ setView }) {
           </p>
 
           {/* Main Teaser Hook Card */}
-          <div className="bg-[#0f172a] text-white rounded-xl p-8 sm:p-12 max-w-3xl mx-auto border border-[#00e5ff]/30 text-left mb-14 shadow-lg">
+          <div className="bg-white text-slate-900 rounded-xl p-8 sm:p-12 max-w-3xl mx-auto border border-[#00e5ff]/30 text-left mb-14 shadow-lg">
             <span className="inline-block px-3 py-1 rounded-md bg-[#00e5ff] text-[#0f172a] text-[10px] font-extrabold uppercase tracking-widest mb-4">
               Teaser Assessment
             </span>
-            <h3 className="text-2xl sm:text-3xl font-sans font-semibold uppercase text-white mb-3">
+            <h3 className="text-2xl sm:text-3xl font-sans font-semibold uppercase text-slate-900 mb-3">
               Begin Your Journey
             </h3>
             <p className="text-surface-300 text-xs sm:text-sm leading-relaxed mb-8 max-w-xl font-normal">

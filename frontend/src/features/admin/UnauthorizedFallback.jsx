@@ -41,26 +41,26 @@ export default function UnauthorizedFallback({ roleRequired }) {
   };
 
   return (
-    <div className='min-h-screen bg-[#030712] flex flex-col items-center justify-center text-white px-4 relative overflow-hidden text-left'>
+    <div className='min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-900 px-4 relative overflow-hidden text-left'>
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] opacity-10 pointer-events-none'
         style={{ background: 'radial-gradient(circle at 35% 45%, rgba(0, 229, 255, 0.08), transparent 50%), radial-gradient(circle at 65% 55%, rgba(99, 102, 241, 0.05), transparent 50%)' }} />
 
       <div className='text-center mb-8 relative z-10'>
-        <h1 className='text-3xl font-extrabold tracking-wider text-white font-header'>
+        <h1 className='text-3xl font-extrabold tracking-wider text-slate-900 font-header'>
           BEHOLD<span className='text-[#00E5FF]'>.</span>
         </h1>
-        <p className='text-[10px] tracking-[0.25em] font-semibold text-slate-400 mt-2 uppercase'>
+        <p className='text-[10px] tracking-[0.25em] font-semibold text-slate-600 mt-2 uppercase'>
           Administrator Control Gate
         </p>
       </div>
 
-      <div className='relative z-10 w-full max-w-[420px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
+      <div className='relative z-10 w-full max-w-[420px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-100/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
         <div className='p-8'>
           <div>
-            <h2 className='text-lg font-semibold text-white text-left font-header'>
+            <h2 className='text-lg font-semibold text-slate-900 text-left font-header'>
               Sign In To Dashboard
             </h2>
-            <p className='text-xs text-slate-400 text-left mt-1.5 mb-6 leading-relaxed'>
+            <p className='text-xs text-slate-600 text-left mt-1.5 mb-6 leading-relaxed'>
               Security clearance required for system administration.
             </p>
 
@@ -72,21 +72,21 @@ export default function UnauthorizedFallback({ roleRequired }) {
 
             <form onSubmit={handleLogin} className='space-y-5 text-left'>
               <div>
-                <label className='block text-xs font-medium text-slate-400 mb-2'>
+                <label className='block text-xs font-medium text-slate-600 mb-2'>
                   Email Address
                 </label>
                 <input
                   type='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                  className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                   placeholder='Enter Your Email Id'
                   disabled={loading}
                 />
               </div>
 
               <div>
-                <label className='block text-xs font-medium text-slate-400 mb-2'>
+                <label className='block text-xs font-medium text-slate-600 mb-2'>
                   Password
                 </label>
                 <div className='relative'>
@@ -94,14 +94,14 @@ export default function UnauthorizedFallback({ roleRequired }) {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
+                    className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
                     placeholder='••••••••'
                     disabled={loading}
                   />
                   <button
                     type='button'
                     onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                    className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                   >
                     {showPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                   </button>
@@ -112,7 +112,7 @@ export default function UnauthorizedFallback({ roleRequired }) {
                 <button
                   type='submit'
                   disabled={loading}
-                  className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-semibold py-3 rounded-lg text-sm transition duration-200 cursor-pointer active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#00E5FF]/10'
+                  className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-white font-semibold py-3 rounded-lg text-sm transition duration-200 cursor-pointer active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#00E5FF]/10'
                 >
                   {loading ? (
                     <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
@@ -124,7 +124,7 @@ export default function UnauthorizedFallback({ roleRequired }) {
                 <button
                   type='button'
                   onClick={() => navigate('/')}
-                  className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-2 cursor-pointer active:scale-[0.98] bg-transparent border-none outline-none'
+                  className='w-full text-center text-xs text-slate-600 hover:text-slate-350 transition pt-2 cursor-pointer active:scale-[0.98] bg-transparent border-none outline-none'
                 >
                   Back to Homepage
                 </button>

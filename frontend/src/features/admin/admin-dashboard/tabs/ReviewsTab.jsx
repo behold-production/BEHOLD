@@ -71,7 +71,7 @@ export default function ReviewsTab() {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-white font-header flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-slate-900 font-header flex items-center gap-2">
             <MessageSquare className="w-6 h-6 text-[#00e5ff]" />
             Reviews & Testimonials
           </h2>
@@ -88,7 +88,7 @@ export default function ReviewsTab() {
               placeholder="Search by name or content..."
               value={searchQuery}
               onChange={e => { setSearchQuery(e.target.value); setPage(1); }}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-brand"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-900 focus:outline-none focus:border-brand"
             />
             <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
           </div>
@@ -120,7 +120,7 @@ export default function ReviewsTab() {
                 ) : (
                   pagedReviews.map(review => (
                     <tr key={review._id} className="border-b border-zinc-850 hover:bg-zinc-900 transition-colors">
-                      <td className="p-4 font-semibold text-white">
+                      <td className="p-4 font-semibold text-slate-900">
                         {review.name}
                         {review.userId && <div className="text-[10px] text-zinc-500 font-mono mt-1">{review.userId.email}</div>}
                       </td>
@@ -131,7 +131,7 @@ export default function ReviewsTab() {
                       </td>
                       <td className="p-4 text-center">
                         <span className={`px-2.5 py-1 text-[10px] font-bold rounded ${
-                          review.isApproved ? 'bg-emerald-955/30 text-emerald-450 border border-emerald-900/40' : 'bg-[#090d16]mber-955/30 text-amber-500 border border-amber-900/40'
+                          review.isApproved ? 'bg-emerald-955/30 text-emerald-450 border border-emerald-900/40' : 'bg-whitember-955/30 text-amber-500 border border-amber-900/40'
                         }`}>
                           {review.isApproved ? 'Approved' : 'Pending'}
                         </span>

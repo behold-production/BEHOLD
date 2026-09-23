@@ -42,7 +42,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
     >
       {/* Premium Glassmorphic Backdrop */}
       <div
-        className="fixed inset-0 bg-[#0f172a]/60 backdrop-blur-md transition-opacity duration-300 animate-in fade-in z-[99999]"
+        className="fixed inset-0 bg-white/60 backdrop-blur-md transition-opacity duration-300 animate-in fade-in z-[99999]"
         onClick={handleClose}
         aria-hidden="true"
       />
@@ -73,7 +73,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
         <div className="p-8 text-center space-y-6 relative z-10">
           {/* Animated warning icon */}
           <div className="relative mx-auto w-16 h-16 flex items-center justify-center group">
-            <div className="absolute inset-0 bg-[#0f172a] rounded-2xl rotate-3 transition-transform duration-300 group-hover:rotate-6 shadow-lg shadow-[#0f172a]/20" />
+            <div className="absolute inset-0 bg-white rounded-2xl rotate-3 transition-transform duration-300 group-hover:rotate-6 shadow-lg shadow-[#0f172a]/20" />
             <div className="absolute inset-0 bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-2xl -rotate-3 transition-transform duration-300 group-hover:rotate-0" />
             <AlertTriangle className="w-7 h-7 text-[#00e5ff] relative z-10 drop-shadow-[0_0_10px_rgba(0,229,255,0.6)] animate-pulse" />
           </div>
@@ -95,7 +95,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             <button
               type="button"
               onClick={handleConfirm}
-              className="group relative w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-sm rounded-xl transition-all cursor-pointer border-none shadow-lg shadow-[#0f172a]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0f172a]/30 overflow-hidden"
+              className="group relative w-full flex items-center justify-center gap-2.5 py-3.5 bg-white hover:bg-slate-50 text-slate-900 font-semibold text-sm rounded-xl transition-all cursor-pointer border-none shadow-lg shadow-[#0f172a]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0f172a]/30 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
               <LogOut className="w-4 h-4 text-[#00e5ff]" />

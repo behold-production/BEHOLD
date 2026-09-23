@@ -82,7 +82,7 @@ export default function CdatSection({ setView, siteSettings }) {
             <div className="space-y-4 pt-2">
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-4">
-                  <div className="w-9 h-9 bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/30 rounded-xl flex items-center justify-center font-semibold text-xs shrink-0 mt-0.5 shadow-xs">
+                  <div className="w-9 h-9 bg-white text-[#00e5ff] border border-[#00e5ff]/30 rounded-xl flex items-center justify-center font-semibold text-xs shrink-0 mt-0.5 shadow-xs">
                     {step.num}
                   </div>
                   <div>
@@ -96,7 +96,7 @@ export default function CdatSection({ setView, siteSettings }) {
             <div className="pt-2">
               <button
                 onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs inline-flex items-center justify-center"
+                className="px-7 py-3 bg-white hover:bg-slate-50 text-slate-900 font-semibold text-xs uppercase tracking-widest rounded-xl transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs inline-flex items-center justify-center"
               >
                 Try a Free Sample Test
               </button>
@@ -139,7 +139,7 @@ export default function CdatSection({ setView, siteSettings }) {
                   />
                   {errors.email && <p className="text-rose-600 text-xs mt-1 font-semibold">{errors.email}</p>}
                 </div>
-                <button type="submit" className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs mt-2">
+                <button type="submit" className="w-full py-3.5 bg-white hover:bg-slate-50 text-slate-900 font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs mt-2">
                   Generate Group Code
                 </button>
                 <div className="relative flex items-center my-3">
@@ -169,7 +169,7 @@ export default function CdatSection({ setView, siteSettings }) {
                 </button>
                 <button
                   onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0 }); }}
-                  className="w-full py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold rounded-full transition text-sm border border-[#00e5ff]/30 cursor-pointer shadow-sm flex items-center justify-center"
+                  className="w-full py-3 bg-white hover:bg-slate-50 text-slate-900 font-semibold rounded-full transition text-sm border border-[#00e5ff]/30 cursor-pointer shadow-sm flex items-center justify-center"
                 >
                   Proceed with Code
                 </button>

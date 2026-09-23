@@ -189,14 +189,14 @@ export default function DateTimePicker({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-between border-b border-slate-700">
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-slate-900 flex items-center justify-between border-b border-slate-200">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-[#00e5ff] shrink-0">
               <CalendarIcon className="w-5 h-5" />
             </div>
             <div className="min-w-0">
-              <h3 className="font-bold text-base sm:text-lg text-white truncate">Choose Appointment Date</h3>
-              <p className="text-xs text-slate-300 truncate">
+              <h3 className="font-bold text-base sm:text-lg text-slate-900 truncate">Choose Appointment Date</h3>
+              <p className="text-xs text-slate-700 truncate">
                 {selectedAdvisorName ? `Available Consultation Dates for ${selectedAdvisorName}` : 'Select a date with open session slots'}
               </p>
             </div>
@@ -205,7 +205,7 @@ export default function DateTimePicker({
             type="button"
             onClick={onClose}
             aria-label="Close date picker"
-            className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer border-none shrink-0"
+            className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-slate-900 flex items-center justify-center transition cursor-pointer border-none shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
@@ -229,9 +229,9 @@ export default function DateTimePicker({
                     onClick={() => handleSelectDate(item.dateStr, item.obj)}
                     className={`py-2 px-2.5 rounded-xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
                       isSelected
-                        ? 'bg-slate-900 text-[#00e5ff] border-slate-900 shadow-sm ring-2 ring-[#00e5ff]/50'
+                        ? 'bg-white text-[#00e5ff] border-slate-200 shadow-sm ring-2 ring-[#00e5ff]/50'
                         : isDisabled
-                        ? 'bg-slate-50 border-slate-200 text-slate-300 cursor-not-allowed opacity-50'
+                        ? 'bg-slate-50 border-slate-200 text-slate-700 cursor-not-allowed opacity-50'
                         : item.isNext
                         ? 'bg-teal-50 hover:bg-teal-100 border-teal-300 text-teal-900 cursor-pointer shadow-xs'
                         : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-400 cursor-pointer'
@@ -241,7 +241,7 @@ export default function DateTimePicker({
                       {item.isNext && <Zap className="w-3 h-3 text-[#3a0ca3]" />}
                       <span className="font-bold">{item.label}</span>
                     </div>
-                    <span className={`text-[10px] font-medium ${isDisabled ? 'text-slate-300' : isSelected ? 'text-teal-300' : 'text-emerald-700'}`}>
+                    <span className={`text-[10px] font-medium ${isDisabled ? 'text-slate-700' : isSelected ? 'text-teal-300' : 'text-emerald-700'}`}>
                       {isDisabled ? '0 slots' : `${meta.slotCount} ${meta.slotCount === 1 ? 'slot' : 'slots'}`}
                     </span>
                   </button>
@@ -312,15 +312,15 @@ export default function DateTimePicker({
                     onClick={() => handleSelectDate(dateStr, dateObj)}
                     className={`relative aspect-square p-1 rounded-xl flex flex-col items-center justify-center text-center transition-all ${
                       !isCurrentMonth
-                        ? 'text-slate-300 opacity-20 pointer-events-none'
+                        ? 'text-slate-700 opacity-20 pointer-events-none'
                         : isSelected
-                        ? 'bg-slate-900 text-white font-bold shadow-md ring-2 ring-[#00e5ff]'
+                        ? 'bg-white text-slate-900 font-bold shadow-md ring-2 ring-[#00e5ff]'
                         : isClickable
                         ? 'bg-white hover:bg-teal-50 border border-slate-200/90 text-slate-900 font-semibold cursor-pointer hover:border-teal-500 hover:shadow-xs'
-                        : 'bg-slate-100/50 border border-slate-200/40 text-slate-400 opacity-40 cursor-not-allowed'
+                        : 'bg-slate-100/50 border border-slate-200/40 text-slate-600 opacity-40 cursor-not-allowed'
                     }`}
                   >
-                    <span className={`text-xs ${isSelected ? 'text-white' : ''}`}>
+                    <span className={`text-xs ${isSelected ? 'text-slate-900' : ''}`}>
                       {dayNum}
                     </span>
 
@@ -336,7 +336,7 @@ export default function DateTimePicker({
                     {/* Available slot count pill */}
                     {isClickable && !isToday && (
                       <span className={`text-[8px] font-medium leading-none mt-0.5 ${
-                        isSelected ? 'text-slate-300' : 'text-emerald-700 font-bold'
+                        isSelected ? 'text-slate-700' : 'text-emerald-700 font-bold'
                       }`}>
                         {meta.slotCount}
                       </span>
@@ -354,7 +354,7 @@ export default function DateTimePicker({
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Available Slots
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-[#00e5ff]" /> Selected
+                <span className="w-2.5 h-2.5 rounded-full bg-white border border-[#00e5ff]" /> Selected
               </span>
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-300" /> Unavailable

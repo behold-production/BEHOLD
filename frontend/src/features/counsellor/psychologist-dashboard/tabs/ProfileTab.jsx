@@ -134,13 +134,13 @@ const ProfileTab = ({
  <button
  type="button"
  onClick={() => avatarFileRef.current?.click()}
- className="absolute inset-0 flex items-center justify-center bg-zinc-900/60 opacity-0 group-hover:opacity-100 rounded-[12px] transition-opacity cursor-pointer text-white backdrop-blur-[1px]"
+ className="absolute inset-0 flex items-center justify-center bg-zinc-900/60 opacity-0 group-hover:opacity-100 rounded-[12px] transition-opacity cursor-pointer text-slate-900 backdrop-blur-[1px]"
  >
  <Edit className="w-5 h-5" />
  </button>
  </div>
  <div className="flex-1 space-y-1.5 text-left">
- <p className="text-sm font-bold text-white">{profile.name || 'Unnamed Psychologist'}</p>
+ <p className="text-sm font-bold text-slate-900">{profile.name || 'Unnamed Psychologist'}</p>
  <p className="text-xs text-zinc-500 font-medium">{user?.email || ''}</p>
  <input
  ref={avatarFileRef}
@@ -172,7 +172,7 @@ const ProfileTab = ({
  placeholder="e.g. Dr. Sandra Tomy"
  value={ep.name || ''}
  onChange={(e) => setEp({ name: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
  />
  </div>
 
@@ -183,7 +183,7 @@ const ProfileTab = ({
  placeholder="e.g. Consultant Psychologist, Clinical Psychologist"
  value={ep.title || ep.role || ''}
  onChange={(e) => setEp({ title: e.target.value, role: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
  />
  </div>
 
@@ -194,7 +194,7 @@ const ProfileTab = ({
  placeholder="e.g. PhD Clinical Psychology"
  value={ep.education || ''}
  onChange={(e) => setEp({ education: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
  />
  </div>
 
@@ -205,7 +205,7 @@ const ProfileTab = ({
  placeholder="1200"
  value={ep.price || ''}
  onChange={(e) => setEp({ price: Number(e.target.value) })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
  />
  </div>
 
@@ -216,7 +216,7 @@ const ProfileTab = ({
  placeholder="Malayalam, English, Tamil"
  value={ep.lang || ''}
  onChange={(e) => setEp({ lang: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
  />
  </div>
 
@@ -230,7 +230,7 @@ const ProfileTab = ({
     const val = Number(e.target.value);
     setEp({ hours: val, experience: String(val) });
   }}
-  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
   />
   </div>
 
@@ -241,7 +241,7 @@ const ProfileTab = ({
  placeholder="Anxiety, Relationship Dynamics, Career Stress"
  value={ep.specialties || ''}
  onChange={(e) => setEp({ specialties: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
  />
  </div>
 
@@ -252,7 +252,7 @@ const ProfileTab = ({
   placeholder="https://meet.google.com/abc-defg-hij"
   value={ep.defaultMeetLink || ''}
   onChange={(e) => setEp({ defaultMeetLink: e.target.value })}
-  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+  className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
   />
   <p className="text-[11px] text-zinc-500">Optional. Enter your personal persistent Google Meet link, or leave blank to automatically generate dedicated Google Meet links for each booking.</p>
   </div>
@@ -269,7 +269,7 @@ const ProfileTab = ({
  placeholder="Type an address to search... (e.g. Kozhikode, Kerala)"
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="flex-1 min-w-0 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ className="flex-1 min-w-0 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all"
  onKeyDown={(e) => {
  if (e.key === 'Enter') {
  e.preventDefault();
@@ -303,7 +303,7 @@ const ProfileTab = ({
  setSearchQuery(res.display_name);
  setSearchResults([]);
  }}
- className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-white hover:bg-zinc-850 transition-colors block truncate"
+ className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-300 hover:text-slate-900 hover:bg-zinc-850 transition-colors block truncate"
  >
  {res.display_name}
  </button>
@@ -324,7 +324,7 @@ const ProfileTab = ({
  setEp({ locationName: e.target.value });
  setSearchQuery(e.target.value);
  }}
- className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all ${
+ className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all ${
  (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.locationName?.trim()
  ? 'border-rose-800 focus:border-rose-600'
  : 'border-zinc-800'
@@ -347,7 +347,7 @@ const ProfileTab = ({
  placeholder="e.g. 11.2588"
  value={ep.latitude || ''}
  onChange={(e) => setEp({ latitude: parseFloat(e.target.value) || 0 })}
- className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all ${
+ className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all ${
  (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.latitude
  ? 'border-rose-800 focus:border-rose-600'
  : 'border-zinc-800'
@@ -364,7 +364,7 @@ const ProfileTab = ({
  placeholder="e.g. 75.7804"
  value={ep.longitude || ''}
  onChange={(e) => setEp({ longitude: parseFloat(e.target.value) || 0 })}
- className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all ${
+ className={`w-full px-3.5 py-2.5 bg-zinc-950 border text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all ${
  (ep.modes?.includes('OFFLINE') || ep.modes?.includes('DOOR_STEP')) && !ep.longitude
  ? 'border-rose-800 focus:border-rose-600'
  : 'border-zinc-800'
@@ -448,7 +448,7 @@ const ProfileTab = ({
  placeholder="Describe your clinical expertise..."
  value={ep.bio || ''}
  onChange={(e) => setEp({ bio: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all resize-none"
+ className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 text-sm text-slate-900 rounded-[10px] outline-none focus:border-brand transition-all resize-none"
  />
  </div>
  
@@ -466,7 +466,7 @@ const ProfileTab = ({
  {/* Google Calendar Connection */}
  <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-5 rounded-[10px] transition-all" style={shadowStyle}>
  <div className="space-y-1 text-left">
- <h4 className="text-sm font-bold text-white ">Google Calendar Sync</h4>
+ <h4 className="text-sm font-bold text-slate-900 ">Google Calendar Sync</h4>
  <p className="text-xs text-zinc-500 font-medium">Automatically create Google Meet links for online bookings.</p>
  </div>
  {profile?.googleRefreshToken ? (
@@ -481,7 +481,7 @@ const ProfileTab = ({
       </svg>
       <div className="text-left">
         {profile?.googleName && (
-          <p className="text-xs font-bold text-white leading-tight">{profile.googleName}</p>
+          <p className="text-xs font-bold text-slate-900 leading-tight">{profile.googleName}</p>
         )}
         {profile?.googleEmail && (
           <p className="text-xs text-zinc-400 leading-tight">{profile.googleEmail}</p>
@@ -537,7 +537,7 @@ const ProfileTab = ({
  <Bell className="w-5 h-5 text-[#00e5ff]" />
  </div>
  <div>
- <h3 className="text-sm font-bold text-white font-header">Desktop Alerts & Reminders</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Desktop Alerts & Reminders</h3>
  <p className="text-xs text-zinc-500 font-medium">Receive real-time notifications for client bookings.</p>
  </div>
  </div>
@@ -583,7 +583,7 @@ const ProfileTab = ({
   onClick={handleEnableNotifications}
   className={`min-h-[36px] px-4 py-2 rounded-full text-xs font-bold transition cursor-pointer border shadow-md flex items-center gap-1.5 ${
   permissionState === 'granted'
-  ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800'
+  ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-slate-900 hover:bg-zinc-800'
   : 'bg-[#00e5ff] hover:bg-[#00e5ff]-dark text-zinc-955 border-none font-extrabold'
   }`}
   >
@@ -594,7 +594,7 @@ const ProfileTab = ({
   <button
   type="button"
   onClick={handleTestNotification}
-  className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-full text-xs font-bold transition cursor-pointer shadow-sm flex items-center gap-1.5"
+  className="min-h-[36px] px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-slate-900 hover:bg-zinc-800 rounded-full text-xs font-bold transition cursor-pointer shadow-sm flex items-center gap-1.5"
   >
   Test Alert
   </button>

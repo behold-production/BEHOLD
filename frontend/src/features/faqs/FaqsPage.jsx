@@ -98,7 +98,7 @@ export default function FaqsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#1e293b]/50 text-white selection:bg-[#00e5ff] selection:text-slate-950 font-sans">
+    <div className="min-h-screen flex flex-col bg-slate-50/50 text-slate-900 selection:bg-[#00e5ff] selection:text-white font-sans">
       <SEO 
         title="Frequently Asked Questions & Support | Online Therapy & Counselling" 
         description="Find answers to common questions about BEHOLD's professional online therapy, career aptitude assessments, and mental wellbeing support."
@@ -108,7 +108,7 @@ export default function FaqsPage() {
       />
 
       {/* Header Section */}
-      <section className="relative py-12 sm:py-16 pt-24 sm:pt-28 border-b border-slate-700/80 bg-[#0f172a] overflow-hidden">
+      <section className="relative py-12 sm:py-16 pt-24 sm:pt-28 border-b border-slate-200/80 bg-white overflow-hidden">
         {/* Background Accent Image */}
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <img
@@ -120,44 +120,44 @@ export default function FaqsPage() {
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           {/* Breadcrumbs */}
-          <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-400 mb-4">
+          <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-600 mb-4">
             <button
               onClick={() => navigate('/')}
               className="hover:text-[#00e5ff] transition-colors cursor-pointer bg-transparent border-none p-0"
             >
               Home
             </button>
-            <span className="text-slate-400">/</span>
-            <span className="text-slate-200">FAQs & Help</span>
+            <span className="text-slate-600">/</span>
+            <span className="text-slate-800">FAQs & Help</span>
           </div>
 
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#00e5ff]/10 text-[#3a0ca3] font-bold text-[11px] uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" /> Help & Support Center
           </span>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
             Frequently Asked <span className="text-[#00e5ff]">Questions</span>
           </h1>
 
-          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-normal">
+          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
             Whatever’s on your mind, we’re here to help you understand what comes next.
           </p>
 
           {/* Search Box */}
           <div className="mt-6 sm:mt-8 max-w-xl mx-auto relative">
-            <div className="relative flex items-center bg-[#0f172a] rounded-2xl border border-slate-700 shadow-md focus-within:border-[#00e5ff] focus-within:ring-2 focus-within:ring-[#00e5ff]/20 transition-all duration-200">
-              <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
+            <div className="relative flex items-center bg-white rounded-2xl border border-slate-200 shadow-md focus-within:border-[#00e5ff] focus-within:ring-2 focus-within:ring-[#00e5ff]/20 transition-all duration-200">
+              <Search className="w-5 h-5 text-slate-600 absolute left-4 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Search questions or keywords..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-10 py-3.5 text-sm sm:text-base font-medium text-slate-200 placeholder-slate-400 bg-transparent outline-none border-none"
+                className="w-full pl-11 pr-10 py-3.5 text-sm sm:text-base font-medium text-slate-800 placeholder-slate-400 bg-transparent outline-none border-none"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3.5 p-1 rounded-lg text-slate-400 hover:text-slate-400 hover:bg-[#1e293b] transition cursor-pointer"
+                  className="absolute right-3.5 p-1 rounded-lg text-slate-600 hover:text-slate-600 hover:bg-slate-50 transition cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -174,8 +174,8 @@ export default function FaqsPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-4 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                     selectedCategory === cat
-                      ? 'primary-cyan-gradient text-slate-950 font-black filter-glow border-none shadow-sm'
-                      : 'bg-[#1e293b] hover:bg-slate-800 text-slate-300 border border-slate-700/80'
+                      ? 'bg-[#00e5ff] text-slate-900 font-bold hover:bg-[#00b2be] transition-colors shadow-sm border-none shadow-sm'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80'
                   }`}
                 >
                   {cat === 'ALL' ? 'All Questions' : cat}
@@ -193,17 +193,17 @@ export default function FaqsPage() {
             <div className="w-8 h-8 border-3 border-[#00e5ff] border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : filteredFaqs.length === 0 ? (
-          <div className="text-center py-12 px-6 bg-[#0f172a] rounded-xl border border-dashed border-slate-600 shadow-xs my-4">
-            <div className="w-12 h-12 bg-[#1e293b] rounded-2xl flex items-center justify-center mx-auto mb-3">
+          <div className="text-center py-12 px-6 bg-white rounded-xl border border-dashed border-slate-300 shadow-xs my-4">
+            <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
               <HelpCircle className="w-6 h-6 text-[#00e5ff]" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">No matching questions found</h3>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xs mx-auto mb-4">
+            <h3 className="text-base font-bold text-slate-900 mb-1">No matching questions found</h3>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto mb-4">
               Try adjusting your search terms or view all questions.
             </p>
             <button
               onClick={() => { setSearchQuery(''); setSelectedCategory('ALL'); }}
-              className="px-4 py-2 bg-slate-900 hover:bg-[#00e5ff] hover:text-slate-950 text-white font-bold text-xs rounded-xl transition shadow-xs cursor-pointer"
+              className="px-4 py-2 bg-white hover:bg-[#00e5ff] hover:text-white text-slate-900 font-bold text-xs rounded-xl transition shadow-xs cursor-pointer"
             >
               Reset Search
             </button>
@@ -215,21 +215,21 @@ export default function FaqsPage() {
               return (
                 <div
                   key={faq.id || idx}
-                  className="bg-[#0f172a] border border-slate-700/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-sm transition-all duration-200"
+                  className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-sm transition-all duration-200"
                 >
                   <button
                     onClick={() => toggleFaq(idx)}
-                    className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 cursor-pointer border-none bg-transparent hover:bg-[#1e293b]/50 transition-colors"
+                    className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 cursor-pointer border-none bg-transparent hover:bg-slate-50/50 transition-colors"
                   >
-                    <span className="font-bold text-white text-sm sm:text-base leading-snug">
+                    <span className="font-bold text-slate-900 text-sm sm:text-base leading-snug">
                       {faq.question}
                     </span>
-                    <span className="shrink-0 w-8 h-8 rounded-xl bg-[#1e293b] flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+                    <span className="shrink-0 w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-600 group-hover:text-slate-900 transition-colors">
                       {isOpen ? <Minus className="w-4 h-4 text-[#00e5ff]" /> : <Plus className="w-4 h-4" />}
                     </span>
                   </button>
                   {isOpen && (
-                    <div className="px-5 pb-5 pt-1 text-slate-400 text-xs sm:text-sm leading-relaxed border-t border-slate-800 font-medium animate-fade-in">
+                    <div className="px-5 pb-5 pt-1 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100 font-medium animate-fade-in">
                       {faq.answer}
                     </div>
                   )}
@@ -240,20 +240,20 @@ export default function FaqsPage() {
         )}
 
         {/* CTA Card */}
-        <div className="mt-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-xl p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl border border-slate-700/50">
+        <div className="mt-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-xl p-6 sm:p-8 text-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl border border-slate-200/50">
           <div className="absolute right-0 top-0 w-48 h-48 bg-[#00e5ff]/10 rounded-full blur-2xl pointer-events-none" />
           <div className="space-y-1 z-10">
-            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 flex items-center justify-center sm:justify-start gap-2">
               <MessageSquare className="w-5 h-5 text-[#00e5ff]" /> Still have questions?
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-md font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-700 max-w-md font-normal leading-relaxed">
               Can't find the answer you're looking for? Speak directly with our support team or book a consultation today.
             </p>
           </div>
 
           <button
             onClick={() => navigate('/#inquiry')}
-            className="z-10 shrink-0 px-6 py-3 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer whitespace-nowrap hover-scale-btn"
+            className="z-10 shrink-0 px-6 py-3 bg-[#00e5ff] hover:bg-[#00b2be] text-white font-bold text-xs sm:text-sm rounded-xl transition shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer whitespace-nowrap hover-scale-btn"
           >
             Contact Support Desk <ArrowRight className="w-4 h-4" />
           </button>

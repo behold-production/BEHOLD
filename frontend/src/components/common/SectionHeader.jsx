@@ -8,7 +8,7 @@ export default function SectionHeader({ subtitle, title, description }) {
                     {subtitle}
                 </span>
             )}
-            <h2 className="text-3xl md:text-4xl lg:text-[42px] font-semibold text-slate-950 tracking-tight leading-tight font-header">
+            <h2 className="text-3xl md:text-4xl lg:text-[42px] font-semibold text-white tracking-tight leading-tight font-header">
                 {title}
             </h2>
             {description && (

@@ -537,7 +537,7 @@ export default function StudentManagementTab(props) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Users Directory</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Users Directory</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">Register new user accounts, edit profiles, suspend/unsuspend access</p>
  </div>
  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
@@ -547,20 +547,20 @@ export default function StudentManagementTab(props) {
  placeholder="Search users..."
  value={searchUser}
  onChange={(e) => setSearchUser(e.target.value)}
- className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
+ className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-slate-900 outline-none"
  />
  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
  </div>
  <button
  onClick={handleExportStudentsCSV}
- className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-full transition-colors cursor-pointer shrink-0"
+ className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-sm font-bold rounded-full transition-colors cursor-pointer shrink-0"
  >
  Export CSV
  </button>
- <button onClick={() => handleExportPDF('students-table', 'Students_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0">
+ <button onClick={() => handleExportPDF('students-table', 'Students_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0">
  Export PDF
  </button>
- <button onClick={() => handleExportImage('students-table', 'Students_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0">
+ <button onClick={() => handleExportImage('students-table', 'Students_Directory')} className="px-3 py-2 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-sm font-bold rounded-lg transition-colors cursor-pointer shrink-0">
  Export Image
  </button>
  {canAddStudents && (
@@ -606,11 +606,11 @@ export default function StudentManagementTab(props) {
  )}
  </div>
  <div>
- <span className="font-bold text-white block leading-tight">{student.name}</span>
+ <span className="font-bold text-slate-900 block leading-tight">{student.name}</span>
  <div className="flex items-center gap-1.5 mt-0.5">
    <span className="text-sm text-zinc-500 break-all">ID: {student.id}</span>
    {(student.utmCampaign || student.utmSource || student.fbclid) && (
-     <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-cyan-400 bg-[#090d16]yan-950/60 border border-cyan-800/60 px-1 py-0.2 rounded shadow-xs">
+     <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-cyan-400 bg-whiteyan-950/60 border border-cyan-800/60 px-1 py-0.2 rounded shadow-xs">
        🎯 {student.utmCampaign ? String(student.utmCampaign).substring(0, 14) : (student.utmSource ? `Ad (${student.utmSource})` : 'Meta Ad')}
      </span>
    )}
@@ -645,14 +645,14 @@ export default function StudentManagementTab(props) {
   </button>
   <button
   onClick={() => setViewingStudent(student)}
-  className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-white rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
+  className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-slate-900 rounded border border-zinc-800 hover:bg-zinc-850 transition cursor-pointer text-sm font-bold "
   >
   Details
   </button>
  {canEditStudents && (
  <button
  onClick={() => handleOpenEditUser(student)}
- className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+ className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-slate-900 rounded border border-zinc-800 transition cursor-pointer"
  title="Edit User"
  >
  <Edit className="w-3.5 h-3.5" />
@@ -661,7 +661,7 @@ export default function StudentManagementTab(props) {
  {canEditStudents && (
  <button
  onClick={() => handleGenerateResetToken(student.email)}
- className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-[#090d16]mber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
+ className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-whitember-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer"
  title="Generate Password Reset Link"
  >
  <KeyRound className="w-3.5 h-3.5" />
@@ -670,7 +670,7 @@ export default function StudentManagementTab(props) {
  {canDeleteStudents && (
  <button
  onClick={() => handleDeleteUser(student.id)}
- className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+ className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
  title="Delete User"
  >
  <Trash className="w-3.5 h-3.5" />
@@ -700,9 +700,9 @@ export default function StudentManagementTab(props) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); setAdminUserSearchResults([]); setAdminUserSearchQuery(''); }}
  />
- <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
- <h3 className="text-base font-bold text-white font-header">
+ <h3 className="text-base font-bold text-slate-900 font-header">
  {isAddUserOpen ? 'Register User' : 'Edit User Details'}
  </h3>
  <p className="text-sm text-zinc-500 leading-none mt-1">
@@ -725,7 +725,7 @@ export default function StudentManagementTab(props) {
  </div>
  <div className="flex-1 space-y-1">
  <input ref={userProfilePicRef} type="file" accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) setUserProfilePicFile(file); }} />
- <button type="button" onClick={() => userProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-white rounded-lg cursor-pointer transition bg-transparent">
+ <button type="button" onClick={() => userProfilePicRef.current?.click()} className="px-3 py-2 text-xs font-bold bg-zinc-955 border border-zinc-800 hover:border-brand text-zinc-300 hover:text-slate-900 rounded-lg cursor-pointer transition bg-transparent">
  {userProfilePicFile ? 'Change Image' : 'Upload Photo'}
  </button>
  {userProfilePicFile && (<p className="text-xs text-zinc-500 truncate max-w-[180px]">{userProfilePicFile.name}</p>)}
@@ -736,18 +736,18 @@ export default function StudentManagementTab(props) {
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Full Name</label>
- <input type="text" required placeholder="e.g. John Doe" value={userForm.name} onChange={(e) => setUserForm({ ...userForm, name: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="text" required placeholder="e.g. John Doe" value={userForm.name} onChange={(e) => setUserForm({ ...userForm, name: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Email Address</label>
- <input type="email" required placeholder="john@example.com" value={userForm.email} onChange={(e) => setUserForm({ ...userForm, email: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="email" required placeholder="john@example.com" value={userForm.email} onChange={(e) => setUserForm({ ...userForm, email: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  </div>
  <div className="space-y-1">
  <label className="text-sm font-bold text-zinc-400">
  Password {isEditUserOpen && <span className="text-zinc-500 lowercase font-normal">(leave blank to keep unchanged)</span>}
  </label>
- <input type="password" required={isAddUserOpen} placeholder={isEditUserOpen ? "••••••••" : "Enter password"} value={userForm.password} onChange={(e) => setUserForm({ ...userForm, password: e.target.value })} className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="password" required={isAddUserOpen} placeholder={isEditUserOpen ? "••••••••" : "Enter password"} value={userForm.password} onChange={(e) => setUserForm({ ...userForm, password: e.target.value })} className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  {isEditUserOpen && (
  <>
@@ -756,15 +756,15 @@ export default function StudentManagementTab(props) {
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Phone Number</label>
- <input type="tel" placeholder="e.g. 9876543210" value={userForm.phone} onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="tel" placeholder="e.g. 9876543210" value={userForm.phone} onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Grade / Class</label>
- <input type="text" placeholder="e.g. Grade 10" value={userForm.grade} onChange={(e) => setUserForm({ ...userForm, grade: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="text" placeholder="e.g. Grade 10" value={userForm.grade} onChange={(e) => setUserForm({ ...userForm, grade: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  <div className="sm:col-span-2 space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">School Name</label>
- <input type="text" placeholder="e.g. St. Mary's School" value={userForm.schoolName} onChange={(e) => setUserForm({ ...userForm, schoolName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="text" placeholder="e.g. St. Mary's School" value={userForm.schoolName} onChange={(e) => setUserForm({ ...userForm, schoolName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  </div>
   <div className="border-t border-zinc-800 pt-3">
@@ -775,7 +775,7 @@ export default function StudentManagementTab(props) {
   <select
   value={userForm.hadPriorTherapy || ''}
   onChange={(e) => setUserForm({ ...userForm, hadPriorTherapy: e.target.value })}
-  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
   >
   <option value="">Select option</option>
   <option value="Yes">Yes</option>
@@ -790,7 +790,7 @@ export default function StudentManagementTab(props) {
   placeholder="Details about prior therapy experience..."
   value={userForm.priorTherapyDetails || ''}
   onChange={(e) => setUserForm({ ...userForm, priorTherapyDetails: e.target.value })}
-  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+  className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors resize-none"
   />
   </div>
   )}
@@ -802,15 +802,15 @@ export default function StudentManagementTab(props) {
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Guardian Name</label>
- <input type="text" placeholder="e.g. Mary Doe" value={userForm.guardianName} onChange={(e) => setUserForm({ ...userForm, guardianName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="text" placeholder="e.g. Mary Doe" value={userForm.guardianName} onChange={(e) => setUserForm({ ...userForm, guardianName: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Guardian Phone</label>
- <input type="tel" placeholder="e.g. 9876543211" value={userForm.guardianPhone} onChange={(e) => setUserForm({ ...userForm, guardianPhone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="tel" placeholder="e.g. 9876543211" value={userForm.guardianPhone} onChange={(e) => setUserForm({ ...userForm, guardianPhone: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Group / Batch Code</label>
- <input type="text" placeholder="e.g. CIGI-2024-A" value={userForm.groupCode} onChange={(e) => setUserForm({ ...userForm, groupCode: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors" />
+ <input type="text" placeholder="e.g. CIGI-2024-A" value={userForm.groupCode} onChange={(e) => setUserForm({ ...userForm, groupCode: e.target.value })} className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors" />
  </div>
  </div>
  </div>
@@ -822,7 +822,7 @@ export default function StudentManagementTab(props) {
  type="button"
  onClick={handleAdminUserDetectLocation}
  disabled={isAdminUserLocating}
- className="px-2 py-1 bg-zinc-950 border border-zinc-850 hover:border-brand text-zinc-300 hover:text-white rounded-full text-xs font-bold cursor-pointer transition flex items-center gap-1"
+ className="px-2 py-1 bg-zinc-950 border border-zinc-850 hover:border-brand text-zinc-300 hover:text-slate-900 rounded-full text-xs font-bold cursor-pointer transition flex items-center gap-1"
  >
  {isAdminUserLocating ? 'Locating...' : 'Detect GPS'}
  </button>
@@ -838,7 +838,7 @@ export default function StudentManagementTab(props) {
  placeholder="Type to search address... (e.g. Kozhikode, Kerala)"
  value={adminUserSearchQuery}
  onChange={(e) => setAdminUserSearchQuery(e.target.value)}
- className="flex-1 min-w-0 px-3 py-2 bg-zinc-955 border border-zinc-850 text-sm text-white rounded-lg outline-none focus:border-brand transition-colors"
+ className="flex-1 min-w-0 px-3 py-2 bg-zinc-955 border border-zinc-850 text-sm text-slate-900 rounded-lg outline-none focus:border-brand transition-colors"
  onKeyDown={(e) => {
  if (e.key === 'Enter') {
  e.preventDefault();
@@ -873,7 +873,7 @@ export default function StudentManagementTab(props) {
  setAdminUserSearchQuery(res.display_name);
  setAdminUserSearchResults([]);
  }}
- className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-350 hover:text-white hover:bg-zinc-850 transition-colors block truncate border-none cursor-pointer"
+ className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-350 hover:text-slate-900 hover:bg-zinc-850 transition-colors block truncate border-none cursor-pointer"
  >
  {res.display_name}
  </button>
@@ -893,7 +893,7 @@ export default function StudentManagementTab(props) {
  setUserForm({ ...userForm, locationName: e.target.value });
  setAdminUserSearchQuery(e.target.value);
  }}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  />
  </div>
 
@@ -906,7 +906,7 @@ export default function StudentManagementTab(props) {
  placeholder="e.g. 11.2588"
  value={userForm.latitude || ''}
  onChange={(e) => setUserForm({ ...userForm, latitude: parseFloat(e.target.value) || 0 })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  />
  </div>
  <div className="space-y-1.5">
@@ -917,7 +917,7 @@ export default function StudentManagementTab(props) {
  placeholder="e.g. 75.7804"
  value={userForm.longitude || ''}
  onChange={(e) => setUserForm({ ...userForm, longitude: parseFloat(e.target.value) || 0 })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  />
  </div>
  </div>
@@ -929,7 +929,7 @@ export default function StudentManagementTab(props) {
  {userFormSuccess && (<p className="text-sm text-emerald-500 font-bold tracking-wide">{userFormSuccess}</p>)}
  {isUserPicUploading && (<p className="text-xs text-[#00e5ff] font-bold animate-pulse">Uploading profile picture...</p>)}
  <div className="flex gap-3 pt-2">
- <button type="button" onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }} className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent">Cancel</button>
+ <button type="button" onClick={() => { setIsAddUserOpen(false); setIsEditUserOpen(false); }} className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent">Cancel</button>
  <button
  type="submit"
  disabled={isSavingForm}
@@ -950,7 +950,7 @@ export default function StudentManagementTab(props) {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => setViewingStudent(null)}
  />
- <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-white z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
+ <div className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 overflow-y-auto max-h-[85vh]">
  <div className="flex justify-between items-start">
  <div className="flex items-center gap-3">
  <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] flex items-center justify-center font-bold text-lg shrink-0 overflow-hidden">
@@ -961,7 +961,7 @@ export default function StudentManagementTab(props) {
  )}
  </div>
  <div>
- <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
+ <h3 className="text-base font-bold text-slate-900 font-header flex items-center gap-2">
  <User className="w-5 h-5 text-[#00e5ff]" /> Student Profile Details
  </h3>
  <p className="text-sm text-zinc-500 mt-1">Registry records, booking history, and diagnostic aptitude profiles.</p>
@@ -980,7 +980,7 @@ export default function StudentManagementTab(props) {
   </button>
   <button
   onClick={() => setViewingStudent(null)}
-  className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+  className="p-1.5 rounded-lg text-zinc-400 hover:text-slate-900 hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
   >
   <X className="w-4 h-4" />
   </button>
@@ -998,7 +998,7 @@ export default function StudentManagementTab(props) {
  </div>
  <div>
  <span className="text-zinc-500 block text-sm ">Full Name</span>
- <span className="font-bold text-white">{viewingStudent.name}</span>
+ <span className="font-bold text-slate-900">{viewingStudent.name}</span>
  </div>
  <div>
  <span className="text-zinc-500 block text-sm ">Email Address</span>
@@ -1083,7 +1083,7 @@ export default function StudentManagementTab(props) {
  return (
  <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
  <td className="p-2.5">
- <span className="text-white block font-semibold">{b.date}</span>
+ <span className="text-slate-900 block font-semibold">{b.date}</span>
  <span className="text-zinc-500 text-sm">{b.time}</span>
  </td>
  <td className="p-2.5 text-zinc-300 font-medium">
@@ -1203,7 +1203,7 @@ export default function StudentManagementTab(props) {
  href={res.fileUrl}
  target="_blank"
  rel="noopener noreferrer"
- className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-zinc-300 hover:text-white transition"
+ className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-zinc-300 hover:text-slate-900 transition"
  title="View File"
  >
  <Link className="w-3.5 h-3.5" />
@@ -1260,7 +1260,7 @@ export default function StudentManagementTab(props) {
  placeholder="e.g. Scored 85% logical"
  value={adminCigiNote}
  onChange={(e) => setAdminCigiNote(e.target.value)}
- className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+ className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-slate-900 outline-none transition-colors"
  />
  </div>
  </div>
@@ -1272,7 +1272,7 @@ export default function StudentManagementTab(props) {
  type="date"
  value={adminCigiDate}
  onChange={(e) => setAdminCigiDate(e.target.value)}
- className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+ className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-slate-900 outline-none transition-colors"
  />
  </div>
  <div>
@@ -1281,7 +1281,7 @@ export default function StudentManagementTab(props) {
  type="time"
  value={adminCigiTime}
  onChange={(e) => setAdminCigiTime(e.target.value)}
- className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-white outline-none transition-colors"
+ className="w-full p-2 bg-zinc-900 border border-zinc-800 focus:border-brand rounded text-xs text-slate-900 outline-none transition-colors"
  />
  </div>
  </div>
@@ -1291,7 +1291,7 @@ export default function StudentManagementTab(props) {
  <button
  type="button"
  onClick={handleAdminCancelEditCigi}
- className="px-3.5 py-1.5 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded text-xs font-semibold cursor-pointer border-none bg-transparent"
+ className="px-3.5 py-1.5 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-slate-900 rounded text-xs font-semibold cursor-pointer border-none bg-transparent"
  >
  Cancel
  </button>
@@ -1315,7 +1315,7 @@ export default function StudentManagementTab(props) {
  <div className="pt-2 flex justify-end">
  <button
  onClick={() => setViewingStudent(null)}
- className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+ className="px-6 py-2.5 border border-zinc-800 hover:bg-zinc-855 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
  >
  Close Profile
  </button>

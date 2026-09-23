@@ -88,14 +88,14 @@ export default function Inquiry({ testProfile, siteSettings }) {
   return (
     <>
       {/* Ready CTA Banner */}
-      <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#00e5ff]/30">
+      <section className="py-20 sm:py-28 bg-white text-slate-900 relative border-b border-[#00e5ff]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00e5ff] tracking-widest uppercase mb-3">
             <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
             <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
           </span>
-          <h2 className="text-3xl sm:text-5xl font-sans font-semibold uppercase text-white mb-4 tracking-tight leading-none">
+          <h2 className="text-3xl sm:text-5xl font-sans font-semibold uppercase text-slate-900 mb-4 tracking-tight leading-none">
             {settings.inquirySectionTitle || 'Ready to Build Your Future'}
             <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
           </h2>
@@ -111,7 +111,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
             </button>
             <button
               onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-[#0f172a]/10 hover:bg-[#0f172a]/20 text-white font-semibold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
+              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-slate-900 font-semibold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
             >
               Take Aptitude Test
             </button>
@@ -125,7 +125,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
             {/* Form — 7 cols */}
-            <div className="lg:col-span-7 bg-[#0f172a] rounded-xl p-6 sm:p-10 border border-slate-700 shadow-xl shadow-slate-200/40">
+            <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-slate-200 shadow-xl shadow-slate-200/40">
               <div className="mb-8">
                 <span className="text-xs font-semibold text-[#00e5ff] flex items-center gap-1.5 mb-2">
                   Get In Touch
@@ -146,14 +146,14 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
-                  <div className="w-12 h-12 bg-[#0f172a] text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-4 font-semibold text-lg border border-[#00e5ff]/40">
+                  <div className="w-12 h-12 bg-white text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-4 font-semibold text-lg border border-[#00e5ff]/40">
                     ✓
                   </div>
                   <h3 className="text-xl font-sans font-semibold text-[#0f172a] mb-2">Request Sent.</h3>
                   <p className="text-surface-600 text-sm">Our coordinator will contact you shortly.</p>
                   <button
                     onClick={() => setSubmitStatus(null)}
-                    className="mt-6 px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer"
+                    className="mt-6 px-7 py-3 bg-white hover:bg-slate-50 text-slate-900 font-semibold text-xs rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer"
                   >
                     Send Another
                   </button>
@@ -197,7 +197,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-[#00e5ff] font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-3.5 bg-white hover:bg-slate-50 text-[#00e5ff] font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
                   >
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>
@@ -213,7 +213,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
               <div className="space-y-6">
                 {steps.map((step, i) => (
                   <div key={i} className="flex gap-4 items-start">
-                    <div className="w-10 h-10 bg-[#0f172a] text-[#00e5ff] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs border border-[#00e5ff]/40">
+                    <div className="w-10 h-10 bg-white text-[#00e5ff] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs border border-[#00e5ff]/40">
                       {step.icon}
                     </div>
                     <div>
@@ -226,7 +226,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
-                <div className="mt-8 p-6 bg-[#0f172a] rounded-xl border border-surface-200 shadow-xs">
+                <div className="mt-8 p-6 bg-white rounded-xl border border-surface-200 shadow-xs">
                   <h4 className="font-semibold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
                     <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm mb-2 hover:underline">

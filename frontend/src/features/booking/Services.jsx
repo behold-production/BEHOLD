@@ -135,7 +135,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
               >
                 <div>
                   {/* Top Bar: Icon */}
-                  <div className={`${isSingle ? 'w-14 h-14' : 'w-11 h-11'} rounded-2xl bg-[#00e5ff]/10 text-[#007078] flex items-center justify-center mb-5 group-hover:bg-[#00e5ff] group-hover:text-slate-950 group-hover:scale-110 transition-all duration-300 shadow-xs`}>
+                  <div className={`${isSingle ? 'w-14 h-14' : 'w-11 h-11'} rounded-2xl bg-[#00e5ff]/10 text-[#007078] flex items-center justify-center mb-5 group-hover:bg-[#00e5ff] group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-xs`}>
                     <Icon className={isSingle ? 'w-7 h-7' : 'w-5 h-5'} />
                   </div>
 
@@ -159,7 +159,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
                   <button
                     type="button"
                     onClick={service.onAction}
-                    className={`${isSingle ? 'px-6 py-3 text-xs' : 'px-4.5 py-2.5 text-xs'} rounded-xl bg-[#0f172a] hover:bg-[#00e5ff] hover:text-slate-950 text-white font-semibold hover-scale-btn transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 group/btn shrink-0 border-none`}
+                    className={`${isSingle ? 'px-6 py-3 text-xs' : 'px-4.5 py-2.5 text-xs'} rounded-xl bg-white hover:bg-[#00e5ff] hover:text-white text-slate-900 font-semibold hover-scale-btn transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 group/btn shrink-0 border-none`}
                   >
                     <span>{service.actionText}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />

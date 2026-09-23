@@ -12,7 +12,7 @@ const HeroHeader = ({
   const joinDate = React.useMemo(() => new Date(profile.createdAt || user?.createdAt || '2025-01-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }), [profile.createdAt, user?.createdAt]);
 
   return (
-    <div className="card-grad-gradient border border-slate-700 rounded-3xl filter-card-shadow overflow-hidden relative">
+    <div className="bg-white shadow-sm border border-slate-200 rounded-3xl shadow-md overflow-hidden relative">
       <div className="p-8 sm:p-10 relative z-10">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8">
 
@@ -27,7 +27,7 @@ const HeroHeader = ({
                   className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-[3px] border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.3)]"
                 />
               ) : (
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#0f172a] border-[3px] border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center text-[#00e5ff] font-bold text-3xl uppercase">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white border-[3px] border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center text-[#00e5ff] font-bold text-3xl uppercase">
                   {getInitials(profile.name, user?.name)}
                 </div>
               )}
@@ -44,7 +44,7 @@ const HeroHeader = ({
 
             {/* Profile Info */}
             <div className="flex-1 text-center sm:text-left min-w-0 w-full py-2">
-              <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight truncate mb-2">
+              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight truncate mb-2">
                 {(displayName || '').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
               </h1>
               
@@ -52,7 +52,7 @@ const HeroHeader = ({
                 Premium Member <span className="text-slate-600">•</span> Client ID: #BH-{profile._id?.slice(-5) || '89241'}
               </div>
               
-              <div className="text-slate-400 font-medium text-sm">
+              <div className="text-slate-600 font-medium text-sm">
                 {profile.email || user?.email || 'Add email'} <span className="text-slate-600 px-2">•</span> Member since {joinDate}
               </div>
             </div>
@@ -60,7 +60,7 @@ const HeroHeader = ({
 
           {/* Right: Actions */}
           <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full lg:w-auto mt-4 lg:mt-8">
-             <button onClick={() => window.location.href = '/booking'} className="w-full sm:w-auto px-8 py-3.5 primary-cyan-gradient text-slate-950 font-bold text-sm rounded-xl filter-glow hover:scale-105 transition-transform border-none cursor-pointer">
+             <button onClick={() => window.location.href = '/booking'} className="w-full sm:w-auto px-8 py-3.5 bg-[#00e5ff] text-white font-bold text-sm rounded-xl shadow-sm hover:scale-105 transition-transform border-none cursor-pointer">
                + New Session
              </button>
              <button onClick={() => {
@@ -68,7 +68,7 @@ const HeroHeader = ({
                 searchParams.set('tab', 'details');
                 window.history.pushState({}, '', `${window.location.pathname}?${searchParams.toString()}`);
                 window.dispatchEvent(new PopStateEvent('popstate'));
-             }} className="w-full sm:w-auto px-8 py-3.5 bg-[#1e293b] text-white border border-slate-700 font-bold text-sm rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+             }} className="w-full sm:w-auto px-8 py-3.5 bg-slate-50 text-slate-900 border border-slate-200 font-bold text-sm rounded-xl hover:bg-slate-100 transition-colors cursor-pointer">
                Edit Profile
              </button>
           </div>

@@ -30,7 +30,7 @@ const SidebarNav = ({
  {/* Logo & Header */}
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
- <span className="font-header font-bold text-lg tracking-tighter text-white">
+ <span className="font-header font-bold text-lg tracking-tighter text-slate-900">
  BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  </div>
@@ -38,7 +38,7 @@ const SidebarNav = ({
  <button
  type="button"
  onClick={() => setIsMobileMenuOpen(false)}
- className="lg:hidden p-1.5 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white rounded-[10px] transition-colors cursor-pointer border-none"
+ className="lg:hidden p-1.5 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-slate-900 rounded-[10px] transition-colors cursor-pointer border-none"
  title="Close Navigation Drawer"
  >
  <X className="w-4 h-4" />
@@ -59,7 +59,7 @@ const SidebarNav = ({
  )}
  </div>
  <div className="min-w-0 flex-1">
- <h4 className="text-sm font-bold text-white truncate leading-tight font-header">
+ <h4 className="text-sm font-bold text-slate-900 truncate leading-tight font-header">
  {profile.name || 'Psychologist'}
  </h4>
  <span className="text-xs text-zinc-500 font-bold truncate block">
@@ -105,7 +105,7 @@ const SidebarNav = ({
  className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] text-[13px] transition-all text-left cursor-pointer border-none ${
  isActive
  ? 'bg-[#00e5ff] text-zinc-955 font-semibold shadow-sm'
- : 'bg-transparent text-zinc-450 hover:text-white hover:bg-zinc-850/60 font-medium'
+ : 'bg-transparent text-zinc-450 hover:text-slate-900 hover:bg-zinc-850/60 font-medium'
  }`}
  >
  <Icon className="w-4 h-4 shrink-0" />
@@ -133,7 +133,7 @@ const SidebarNav = ({
  </button>
  <button
  onClick={() => setIsLogoutConfirmOpen(true)}
- className="w-full py-2 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-white font-semibold text-xs rounded-[10px] flex items-center justify-center gap-2 transition-colors cursor-pointer"
+ className="w-full py-2 border border-rose-900/50 hover:border-rose-650 text-rose-500 bg-rose-955/20 hover:bg-rose-900/40 hover:text-slate-900 font-semibold text-xs rounded-[10px] flex items-center justify-center gap-2 transition-colors cursor-pointer"
  >
  <LogOut className="w-3.5 h-3.5" /> Exit Console
  </button>

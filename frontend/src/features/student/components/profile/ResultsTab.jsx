@@ -56,7 +56,7 @@ const ResultsTab = ({
  <button
  type="button"
  onClick={() => navigate('/sample-test')}
- className="mt-4 inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 text-white tracking-widest text-[10px] font-semibold rounded-[10px] hover:bg-surface-800 transition-colors border-none shadow-none"
+ className="mt-4 inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 text-slate-900 tracking-widest text-[10px] font-semibold rounded-[10px] hover:bg-surface-800 transition-colors border-none shadow-none"
  >
  <Target className="w-3.5 h-3.5" /> Start Sample Test
  </button>
@@ -64,9 +64,9 @@ const ResultsTab = ({
  ) : (
  <div className="space-y-4">
  {/* Dominant Domain Card */}
- <div className="bg-surface-900 rounded-[10px] p-5 text-white">
+ <div className="bg-surface-900 rounded-[10px] p-5 text-slate-900">
  <p className="text-[10px] text-surface-400 font-semibold tracking-widest mb-1">Dominant Domain</p>
- <h4 className="text-xl font-semibold tracking-widest text-white">{topDomain}</h4>
+ <h4 className="text-xl font-semibold tracking-widest text-slate-900">{topDomain}</h4>
  <p className="text-xs text-surface-400 mt-1.5">
  Your primary strength outcome. Click below to view the full detailed breakdown.
  </p>
@@ -187,7 +187,7 @@ const ResultsTab = ({
  <button
  type="submit"
  disabled={isCigiUploading}
- className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-500 text-white rounded-xl text-xs font-bold transition-all border-none shadow-xs cursor-pointer hover-scale-btn"
+ className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-100 disabled:bg-slate-500 text-slate-900 rounded-xl text-xs font-bold transition-all border-none shadow-xs cursor-pointer hover-scale-btn"
  >
  {isCigiUploading ? (
  <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading...</>

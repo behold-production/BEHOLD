@@ -135,7 +135,7 @@ export default function StudentProfile({ onOpenBooking }) {
   const nextSession = bookedSessions[0];
 
   return (
-    <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-glow-gradient grid-bg text-white font-sans text-left relative overflow-hidden -mt-[90px] pt-[120px]">
+    <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-glow-gradient grid-bg text-slate-900 font-sans text-left relative overflow-hidden -mt-[90px] pt-[120px]">
       <SEO title="Dashboard | BEHOLD." noindex={true} />
       
       {/* Background Glows matching SVG */}

@@ -27,19 +27,19 @@ const PrivacyPolicy = () => {
           <p className="text-lg text-zinc-800 max-w-2xl mx-auto font-medium">
             At BEHOLD., we take your privacy seriously. Learn how we collect, use, and protect your information.
           </p>
-          <div className="mt-8 inline-block bg-[#0f172a]/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">
+          <div className="mt-8 inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">
             Last Updated: August 2026
           </div>
         </div>
         
         {/* Background Decorative Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#0f172a]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-zinc-950/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
       </section>
 
       {/* Content Section */}
       <section className="py-16 md:py-24 px-6">
-        <div className="max-w-4xl mx-auto bg-[#0f172a] rounded-xl shadow-sm border border-zinc-200/60 p-8 md:p-12">
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-zinc-200/60 p-8 md:p-12">
           
           <div className="prose prose-zinc max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-p:text-zinc-600 prose-li:text-zinc-600">
             <p className="text-lg leading-relaxed text-zinc-700 font-medium mb-8">

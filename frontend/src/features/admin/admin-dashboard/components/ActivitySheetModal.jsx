@@ -80,8 +80,8 @@ export default function ActivitySheetModal({ booking, onClose }) {
     switch(status) {
       case 'DRAFT': return <span className="bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded text-xs font-bold">DRAFT</span>;
       case 'SHARED': return <span className="bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Share2 className="w-3 h-3"/> SHARED</span>;
-      case 'VIEWED': return <span className="bg-[#090d16]mber-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Eye className="w-3 h-3"/> VIEWED</span>;
-      case 'IN_PROGRESS': return <span className="bg-[#090d16]mber-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Clock className="w-3 h-3"/> IN PROGRESS</span>;
+      case 'VIEWED': return <span className="bg-whitember-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Eye className="w-3 h-3"/> VIEWED</span>;
+      case 'IN_PROGRESS': return <span className="bg-whitember-900/30 text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><Clock className="w-3 h-3"/> IN PROGRESS</span>;
       case 'SUBMITTED': return <span className="bg-emerald-900/30 text-emerald-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1"><CheckCircle className="w-3 h-3"/> SUBMITTED</span>;
       default: return null;
     }
@@ -94,7 +94,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-zinc-800 bg-zinc-900/50">
           <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-400" />
               Session Activity Sheets
             </h2>
@@ -104,7 +104,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-xl transition-colors cursor-pointer"
+            className="p-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-slate-900 rounded-xl transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -115,7 +115,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
           
           {/* Upload New Worksheet */}
           <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-5">
-            <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
               <UploadCloud className="w-4 h-4 text-emerald-400" /> Upload New Activity Sheet
             </h3>
             <form onSubmit={handleUpload} className="space-y-4">
@@ -125,7 +125,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
                   type="file" 
                   accept="application/pdf"
                   onChange={(e) => setFile(e.target.files[0])}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-slate-900 text-sm focus:outline-none focus:border-emerald-500 transition-colors file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700"
                 />
               </div>
               <div>
@@ -134,13 +134,13 @@ export default function ActivitySheetModal({ booking, onClose }) {
                   value={optionalMessage}
                   onChange={(e) => setOptionalMessage(e.target.value)}
                   placeholder="Instructions for the client..."
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors resize-none h-20"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-emerald-500 transition-colors resize-none h-20"
                 />
               </div>
               <button 
                 type="submit" 
                 disabled={uploading || !file}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors text-sm shadow-lg shadow-emerald-900/20"
+                className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-slate-900 font-bold py-3 rounded-xl transition-colors text-sm shadow-lg shadow-emerald-900/20"
               >
                 {uploading ? 'Uploading...' : 'Upload & Save Draft'}
               </button>
@@ -149,7 +149,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
 
           {/* Existing Worksheets */}
           <div>
-            <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-zinc-800 pb-2">
+            <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-zinc-800 pb-2">
               <FileText className="w-4 h-4 text-emerald-400" /> Uploaded Activity Sheets
             </h3>
             
@@ -163,7 +163,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
                   <div key={ws.worksheetId} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <p className="text-sm font-bold text-white">{ws.originalFileName}</p>
+                        <p className="text-sm font-bold text-slate-900">{ws.originalFileName}</p>
                         {renderStatus(ws.status)}
                       </div>
                       {ws.optionalMessage && (
@@ -185,7 +185,7 @@ export default function ActivitySheetModal({ booking, onClose }) {
                         href={`${apiUrl}/worksheets/psychologist/${ws.worksheetId}/file`}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 sm:flex-none px-3 py-1.5 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white border border-zinc-700 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="flex-1 sm:flex-none px-3 py-1.5 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-slate-900 border border-zinc-700 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                         onClick={(e) => {
                            // Quick hack: manually add Auth header if needed, but since it's an <a> tag we can't easily send headers. 
                            // Wait, standard token-based API needs headers. So we should fetch as blob and download it.

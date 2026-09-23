@@ -101,7 +101,7 @@ const BookingsTab = ({
               className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap border select-none ${
                 isActive
                   ? 'bg-[#00e5ff] text-zinc-955 border-brand shadow-sm font-black'
-                  : 'bg-transparent border-transparent text-zinc-400 hover:text-white hover:bg-zinc-855/60'
+                  : 'bg-transparent border-transparent text-zinc-400 hover:text-slate-900 hover:bg-zinc-855/60'
               }`}
             >
               <span className="whitespace-nowrap">{tab.label}</span>
@@ -150,11 +150,11 @@ const BookingsTab = ({
                   {booking.service === 'counselling' ? 'Psychological Session' : 'Career Session'}
                 </span>
                 <span className="text-xs text-zinc-400 font-bold bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800">{booking.mode}</span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded border ${booking.paymentStatus === 'PAID' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' : booking.paymentStatus === 'FAILED' ? 'bg-rose-950 text-rose-400 border-rose-900' : 'bg-[#090d16]mber-950 text-amber-400 border-amber-900'}`}>{booking.paymentStatus || 'PENDING'}</span>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded border ${booking.paymentStatus === 'PAID' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' : booking.paymentStatus === 'FAILED' ? 'bg-rose-950 text-rose-400 border-rose-900' : 'bg-whitember-950 text-amber-400 border-amber-900'}`}>{booking.paymentStatus || 'PENDING'}</span>
               </div>
 
               <div className="space-y-0.5 text-left">
-                <h4 className="font-header font-bold text-base text-white">{booking.userName}</h4>
+                <h4 className="font-header font-bold text-base text-slate-900">{booking.userName}</h4>
                 {(booking.age || booking.feelingLately) && (
                   <p className="text-xs text-zinc-400 mt-0.5 mb-1.5 leading-relaxed bg-zinc-900/50 p-2 rounded-md border border-zinc-800/50">
                     {booking.age && <><span className="font-semibold text-zinc-300">Age:</span> {booking.age}</>}
@@ -208,7 +208,7 @@ const BookingsTab = ({
                             navigator.clipboard.writeText(booking.meetLink);
                             toast.success('Meeting link copied to clipboard!');
                           }}
-                          className="text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 px-2.5 py-1.5 rounded-lg transition cursor-pointer"
+                          className="text-xs font-semibold text-zinc-300 hover:text-slate-900 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 px-2.5 py-1.5 rounded-lg transition cursor-pointer"
                           title="Copy Link to Clipboard"
                         >
                           Copy Link
@@ -227,7 +227,7 @@ const BookingsTab = ({
                           })}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs font-semibold text-cyan-300 hover:text-white bg-[#090d16]yan-950/40 hover:bg-[#090d16]yan-900/50 border border-cyan-800/60 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer no-underline"
+                          className="text-xs font-semibold text-cyan-300 hover:text-slate-900 bg-whiteyan-950/40 hover:bg-whiteyan-900/50 border border-cyan-800/60 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer no-underline"
                           title="Add to Google Calendar"
                         >
                           <Calendar className="w-3.5 h-3.5 text-cyan-400" />
@@ -236,7 +236,7 @@ const BookingsTab = ({
                         <button
                           type="button"
                           onClick={() => startEditMeetLink(booking)}
-                          className="text-xs font-semibold text-zinc-400 hover:text-white underline cursor-pointer bg-transparent border-none p-0 ml-1"
+                          className="text-xs font-semibold text-zinc-400 hover:text-slate-900 underline cursor-pointer bg-transparent border-none p-0 ml-1"
                         >
                           Edit Link
                         </button>
@@ -260,7 +260,7 @@ const BookingsTab = ({
                         <button
                           type="button"
                           onClick={() => startEditMeetLink(booking)}
-                          className="text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 px-2.5 py-1.5 rounded-lg cursor-pointer transition shadow-sm"
+                          className="text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-slate-900 border border-zinc-700 px-2.5 py-1.5 rounded-lg cursor-pointer transition shadow-sm"
                         >
                           Custom Link
                         </button>
@@ -280,7 +280,7 @@ const BookingsTab = ({
                             setMeetLinkError('');
                           }}
                           placeholder="https://meet.google.com/abc-defg-hij"
-                          className="px-3 py-2 bg-zinc-900 border border-zinc-700 text-xs text-white rounded-lg outline-none focus:border-brand flex-1 min-w-[240px]"
+                          className="px-3 py-2 bg-zinc-900 border border-zinc-700 text-xs text-slate-900 rounded-lg outline-none focus:border-brand flex-1 min-w-[240px]"
                         />
                         <button
                           type="button"
@@ -350,7 +350,7 @@ const BookingsTab = ({
                           onChange={(e) => setNotesInput(e.target.value)}
                           placeholder="Enter clinical observations and findings for the student..."
                           rows={3}
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-slate-900 text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
                         />
                       </div>
 
@@ -363,7 +363,7 @@ const BookingsTab = ({
                           onChange={(e) => setFeedbackInput(e.target.value)}
                           placeholder="Enter key guidance, advice, and recommendations for student download..."
                           rows={3}
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-slate-900 text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
                         />
                       </div>
 
@@ -376,7 +376,7 @@ const BookingsTab = ({
                           value={nextSessionInput}
                           onChange={(e) => setNextSessionInput(e.target.value)}
                           placeholder="e.g., In 2 weeks, Mid-August, or specific date"
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand font-semibold"
+                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-slate-900 text-sm rounded-[10px] outline-none focus:border-brand font-semibold"
                         />
                       </div>
 
@@ -407,7 +407,7 @@ const BookingsTab = ({
                         <button
                           type="button"
                           onClick={() => handleSendReportToAdmin(booking.id)}
-                          className="px-4 py-2 bg-[#090d16]mber-500 hover:bg-[#090d16]mber-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
+                          className="px-4 py-2 bg-whitember-500 hover:bg-whitember-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
                         >
                           <ShieldCheck className="w-3.5 h-3.5" /> Submit Confidential Report to Admin
                         </button>
@@ -436,7 +436,7 @@ const BookingsTab = ({
                           <span className="text-[10px] font-bold text-amber-400 tracking-wider flex items-center gap-1">
                             <Lock className="w-3 h-3 text-amber-400" /> Confidential Admin Report:
                           </span>
-                          <p className="text-xs text-amber-200/90 bg-[#090d16]mber-950/20 p-3 rounded-[10px] border border-amber-500/30 italic leading-relaxed font-medium">
+                          <p className="text-xs text-amber-200/90 bg-whitember-950/20 p-3 rounded-[10px] border border-amber-500/30 italic leading-relaxed font-medium">
                             "{booking.adminNotes}"
                           </p>
                         </div>

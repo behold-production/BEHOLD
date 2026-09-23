@@ -3077,7 +3077,7 @@ const _handleAdminDetectLocation = () => {
 
  <div className="max-w-md w-full relative z-10 space-y-6">
  <div className="text-center space-y-2">
- <h1 className="text-3xl font-header font-bold tracking-tighter text-white">
+ <h1 className="text-3xl font-header font-bold tracking-tighter text-slate-900">
  BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </h1>
  <p className="text-sm text-zinc-500 font-bold">ADMINISTRATOR CONTROL GATE</p>
@@ -3085,7 +3085,7 @@ const _handleAdminDetectLocation = () => {
 
  <div className="bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-lg shadow-2xl space-y-6 text-left">
  <div className="space-y-1">
- <h2 className="text-base font-bold text-white ">Sign In to Dashboard</h2>
+ <h2 className="text-base font-bold text-slate-900 ">Sign In to Dashboard</h2>
  <p className="text-sm text-zinc-500 leading-none">Security clearance required for system administration.</p>
  </div>
 
@@ -3099,7 +3099,7 @@ const _handleAdminDetectLocation = () => {
  placeholder="Enter Your Email Id"
  value={loginEmail}
  onChange={(e) => setLoginEmail(e.target.value)}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  />
  </div>
 
@@ -3112,7 +3112,7 @@ const _handleAdminDetectLocation = () => {
  placeholder="••••••••"
  value={loginPassword}
  onChange={(e) => setLoginPassword(e.target.value)}
- className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-full pl-3.5 pr-12 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  />
  <button
  type="button"
@@ -3320,7 +3320,7 @@ const _handleAdminDetectLocation = () => {
  };
 
  return (
- <div className="h-screen overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative">
+ <div className="h-screen overflow-hidden bg-zinc-955 text-slate-900 text-left flex flex-col lg:flex-row relative">
  <SEO title="Admin Dashboard | BEHOLD." noindex={true} />
  
  {/* Background Soft Glows */}
@@ -3362,16 +3362,16 @@ const _handleAdminDetectLocation = () => {
  onClick={() => setIsProfileDrawerOpen(false)}
  />
  {/* Drawer panel */}
- <div className="w-80 bg-zinc-900 border-l border-zinc-800 h-full overflow-y-auto animate-in slide-in-from-right duration-300 flex flex-col text-left text-white">
+ <div className="w-80 bg-zinc-900 border-l border-zinc-800 h-full overflow-y-auto animate-in slide-in-from-right duration-300 flex flex-col text-left text-slate-900">
  {/* Header */}
  <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
  <div>
- <h3 className="text-sm font-bold text-white font-header">My Profile</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">My Profile</h3>
  <p className="text-sm text-zinc-555 mt-0.5">Admin Security Clearance</p>
  </div>
  <button
  onClick={() => setIsProfileDrawerOpen(false)}
- className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+ className="p-2 rounded-lg text-zinc-400 hover:text-slate-900 hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
  >
  <X className="w-4 h-4" />
  </button>
@@ -3386,7 +3386,7 @@ const _handleAdminDetectLocation = () => {
  {(cleanName || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div>
- <h2 className="text-base font-bold text-white tracking-wide font-header">{cleanName}</h2>
+ <h2 className="text-base font-bold text-slate-900 tracking-wide font-header">{cleanName}</h2>
  <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff]">
  {isSuperAdmin ? 'SUPER ADMIN' : (roleTitle || 'SUB ADMIN')}
  </span>
@@ -3447,10 +3447,10 @@ const _handleAdminDetectLocation = () => {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
  />
- <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+ <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200">
  <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
    <div>
-     <h3 className="text-lg font-bold text-white font-header">
+     <h3 className="text-lg font-bold text-slate-900 font-header">
        {isAddBookingOpen ? 'Schedule Consultation (Full Details)' : 'Update Appointment'}
      </h3>
      <p className="text-sm text-zinc-400 mt-1">
@@ -3460,7 +3460,7 @@ const _handleAdminDetectLocation = () => {
    <button
      type="button"
      onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
-     className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition cursor-pointer"
+     className="p-1.5 text-zinc-400 hover:text-slate-900 rounded-lg hover:bg-zinc-800 transition cursor-pointer"
    >
      <X className="w-5 h-5" />
    </button>
@@ -3473,7 +3473,7 @@ const _handleAdminDetectLocation = () => {
  required
  value={bookingForm.userId}
  onChange={(e) => setBookingForm({ ...bookingForm, userId: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="" disabled>-- Select a user --</option>
  {usersDb.filter(u => ['USER', 'CUSTOMER', 'STUDENT'].includes(String(u.role || 'USER').toUpperCase())).map(student => (
@@ -3503,7 +3503,7 @@ const _handleAdminDetectLocation = () => {
    meetLink: bookingForm.meetLink || nextPsy?.defaultMeetLink || ''
  });
  }}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="" disabled>-- Select psychologist --</option>
  {usersDb.filter(u => ['PSYCHOLOGIST', 'COUNSELLOR'].includes(String(u.role || '').toUpperCase())).map(psy => (
@@ -3518,7 +3518,7 @@ const _handleAdminDetectLocation = () => {
  <select
  value={bookingForm.service}
  onChange={(e) => setBookingForm({ ...bookingForm, service: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="counselling">Emotional Wellbeing</option>
  <option value="career">Career Mapping</option>
@@ -3535,7 +3535,7 @@ const _handleAdminDetectLocation = () => {
    const nextAmount = is30 ? 499 : 899;
    setBookingForm({ ...bookingForm, duration: dur, amountPaid: bookingForm.paymentStatus === 'FREE' ? 0 : nextAmount });
  }}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="1 Hour (60 Mins)">1 Hour (60 Mins)</option>
  <option value="30 Minutes (Introductory Session)">30 Minutes (Introductory)</option>
@@ -3547,7 +3547,7 @@ const _handleAdminDetectLocation = () => {
  <select
  value={bookingForm.mode}
  onChange={(e) => setBookingForm({ ...bookingForm, mode: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="ONLINE">ONLINE (Video Call)</option>
  <option value="OFFLINE">OFFLINE (In-Person)</option>
@@ -3564,7 +3564,7 @@ const _handleAdminDetectLocation = () => {
  required
  value={bookingForm.date}
  onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
 
@@ -3573,7 +3573,7 @@ const _handleAdminDetectLocation = () => {
  <select
  value={bookingForm.time}
  onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="" disabled>-- Select time slot --</option>
  {getAdvisorSlotsForBookingForm().map(slot => (
@@ -3593,7 +3593,7 @@ const _handleAdminDetectLocation = () => {
    const amt = ps === 'FREE' ? 0 : (bookingForm.amountPaid || 899);
    setBookingForm({ ...bookingForm, paymentStatus: ps, amountPaid: amt });
  }}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="PAID">PAID (Confirmed)</option>
  <option value="FREE">FREE / Complimentary (₹0)</option>
@@ -3608,7 +3608,7 @@ const _handleAdminDetectLocation = () => {
  min="0"
  value={bookingForm.amountPaid !== undefined ? bookingForm.amountPaid : 899}
  onChange={(e) => setBookingForm({ ...bookingForm, amountPaid: Number(e.target.value) })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
  </div>
@@ -3621,7 +3621,7 @@ const _handleAdminDetectLocation = () => {
  placeholder="https://meet.google.com/abc-def-ghi"
  value={bookingForm.meetLink || ''}
  onChange={(e) => setBookingForm({ ...bookingForm, meetLink: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
 
@@ -3630,7 +3630,7 @@ const _handleAdminDetectLocation = () => {
  <select
  value={bookingForm.status}
  onChange={(e) => setBookingForm({ ...bookingForm, status: e.target.value })}
- className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3 py-2.5 bg-zinc-955 border border-zinc-855 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="CONFIRMED">CONFIRMED</option>
  <option value="APPROVED">APPROVED</option>
@@ -3648,7 +3648,7 @@ const _handleAdminDetectLocation = () => {
      placeholder="e.g. Student requested focus on career guidance, intake notes..."
      value={bookingForm.notes || ''}
      onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
-     className="w-full px-3 py-2 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none resize-none"
+     className="w-full px-3 py-2 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none resize-none"
    />
  </div>
 
@@ -3677,7 +3677,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="button"
  onClick={() => { setIsAddBookingOpen(false); setIsEditBookingOpen(false); }}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
+ className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
  >
  Cancel
  </button>
@@ -3702,9 +3702,9 @@ const _handleAdminDetectLocation = () => {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddFaqOpen(false); setIsEditFaqOpen(false); }}
  />
- <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200">
+ <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200">
  <div>
- <h3 className="text-base font-bold text-white font-header">
+ <h3 className="text-base font-bold text-slate-900 font-header">
  {isAddFaqOpen ? 'Create FAQ Record' : 'Update FAQ Record'}
  </h3>
  <p className="text-sm text-zinc-500 leading-none mt-1">
@@ -3721,7 +3721,7 @@ const _handleAdminDetectLocation = () => {
  placeholder="e.g. How does the aptitude assessment work?"
  value={faqForm.question}
  onChange={(e) => setFaqForm({ ...faqForm, question: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  />
  </div>
 
@@ -3733,7 +3733,7 @@ const _handleAdminDetectLocation = () => {
  placeholder="Provide a detailed, helpful answer..."
  value={faqForm.answer}
  onChange={(e) => setFaqForm({ ...faqForm, answer: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors resize-none"
  />
  </div>
 
@@ -3749,7 +3749,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="button"
  onClick={() => { setIsAddFaqOpen(false); setIsEditFaqOpen(false); }}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
+ className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
  >
  Cancel
  </button>
@@ -3774,9 +3774,9 @@ const _handleAdminDetectLocation = () => {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => { setIsAddAptitudeOpen(false); setIsEditAptitudeOpen(false); }}
  />
- <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
- <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
+ <h3 className="text-base font-bold text-slate-900 font-header flex items-center gap-2">
  <Brain className="w-5 h-5 text-[#00e5ff]" />
  {isAddAptitudeOpen ? 'Create Aptitude Question' : 'Update Aptitude Question'}
  </h3>
@@ -3792,7 +3792,7 @@ const _handleAdminDetectLocation = () => {
  <select
  value={aptitudeForm.category}
  onChange={(e) => setAptitudeForm({ ...aptitudeForm, category: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  >
  <option value="Logical">Logical</option>
  <option value="Verbal">Verbal</option>
@@ -3822,7 +3822,7 @@ const _handleAdminDetectLocation = () => {
  placeholder="e.g. Which number comes next in the sequence?"
  value={aptitudeForm.question}
  onChange={(e) => setAptitudeForm({ ...aptitudeForm, question: e.target.value })}
- className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors resize-none"
+ className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors resize-none"
  />
  </div>
 
@@ -3847,7 +3847,7 @@ const _handleAdminDetectLocation = () => {
  newOpts[idx].text = e.target.value;
  setAptitudeForm({ ...aptitudeForm, options: newOpts });
  }}
- className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  />
  <input
  type="number"
@@ -3861,7 +3861,7 @@ const _handleAdminDetectLocation = () => {
  newOpts[idx].weight = Number(e.target.value) || 0;
  setAptitudeForm({ ...aptitudeForm, options: newOpts });
  }}
- className="w-20 px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none transition-colors"
+ className="w-20 px-3 py-2.5 bg-zinc-955 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none transition-colors"
  title="Weight (Score value)"
  />
  </div>
@@ -3880,7 +3880,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="button"
  onClick={() => { setIsAddAptitudeOpen(false); setIsEditAptitudeOpen(false); }}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
+ className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-850 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center bg-transparent"
  >
  Cancel
  </button>
@@ -3907,9 +3907,9 @@ const _handleAdminDetectLocation = () => {
  className="absolute inset-0 bg-zinc-955/80 backdrop-blur-xs animate-in fade-in duration-300"
  onClick={() => setEditingSubAdmin(null)}
  />
- <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-white z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+ <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-lg p-6 sm:p-8 shadow-2xl space-y-5 text-left text-slate-900 z-10 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
  <div>
- <h3 className="text-base font-bold text-white font-header flex items-center gap-2">
+ <h3 className="text-base font-bold text-slate-900 font-header flex items-center gap-2">
  <Lock className="w-4 h-4 text-[#00e5ff]" /> Edit Access Scopes
  </h3>
  <p className="text-sm text-zinc-555 leading-none mt-1">
@@ -3923,7 +3923,7 @@ const _handleAdminDetectLocation = () => {
  <select
  value={editSubAdminRoleName}
  onChange={(e) => handleEditSubAdminRoleChange(e.target.value)}
- className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer"
+ className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer"
  >
  <option value="">-- Custom / No Role --</option>
  {rolesDb.map(r => (
@@ -3944,7 +3944,7 @@ const _handleAdminDetectLocation = () => {
  return (
  <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-[#00e5ff]/5' : 'border-zinc-850 bg-zinc-950'}`}>
  <div className="flex items-center justify-between p-3 border-b border-zinc-900/60 bg-zinc-900/40">
- <span className="font-header font-bold text-xs text-white ">{module.name}</span>
+ <span className="font-header font-bold text-xs text-slate-900 ">{module.name}</span>
  <label className="relative inline-flex items-center cursor-pointer select-none">
  <input
  type="checkbox"
@@ -3959,7 +3959,7 @@ const _handleAdminDetectLocation = () => {
  {module.actions.map(action => {
  const isChecked = !!editSubAdminPermissionsObj[action.id];
  return (
- <label key={action.id} className="flex items-center justify-between cursor-pointer text-xs select-none hover:text-white text-zinc-400 transition-colors">
+ <label key={action.id} className="flex items-center justify-between cursor-pointer text-xs select-none hover:text-slate-900 text-zinc-400 transition-colors">
  <span className="">{action.name.split(' ')[0]}</span>
  <input
  type="checkbox"
@@ -3989,7 +3989,7 @@ const _handleAdminDetectLocation = () => {
  <button
  type="button"
  onClick={() => setEditingSubAdmin(null)}
- className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-white font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
+ className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-855 text-slate-900 font-bold text-sm rounded-lg cursor-pointer transition text-center border-none bg-transparent"
  >
  Cancel
  </button>

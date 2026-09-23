@@ -218,7 +218,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
       {/* Modal Container */}
       <div className="fixed inset-0 z-[210] flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain">
         <div 
-          className="relative w-full max-w-md my-auto card-grad-gradient border border-slate-700 filter-card-shadow rounded-2xl shadow-2xl animate-modal-in border border-zinc-200 flex flex-col max-h-[92vh] overflow-hidden text-left"
+          className="relative w-full max-w-md my-auto bg-white shadow-sm border border-slate-200 shadow-md rounded-2xl shadow-2xl animate-modal-in border border-zinc-200 flex flex-col max-h-[92vh] overflow-hidden text-left"
           onClick={(e) => e.stopPropagation()}
         >
           
@@ -228,7 +228,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
               type="button"
               onClick={handleCloseModal}
               aria-label="Close profile modal"
-              className="absolute right-3.5 top-3.5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-white transition-colors flex items-center justify-center border-none cursor-pointer"
+              className="absolute right-3.5 top-3.5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition-colors flex items-center justify-center border-none cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -239,7 +239,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
             <p className="text-xs text-surface-500 font-normal mt-1.5 leading-relaxed max-w-xs mx-auto">
               Please enter your details to personalize your experience and confirm your sessions.
             </p>
-            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-0.5 bg-amber-50 border border-amber-200/60 rounded-full text-[11px] text-amber-800 font-medium">
+            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-0.5 bg-whitember-50 border border-amber-200/60 rounded-full text-[11px] text-amber-800 font-medium">
               <span className="text-rose-500 font-bold text-xs">*</span>
               <span>Fields marked with red star are mandatory</span>
             </div>
@@ -263,7 +263,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="e.g. Rahul Sharma"
-                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:card-grad-gradient border border-slate-700 filter-card-shadow focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white shadow-sm border border-slate-200 shadow-md focus:ring-2 outline-none transition-all font-medium ${
                     errors.name 
                       ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
                       : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
@@ -292,7 +292,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="you@example.com"
-                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:card-grad-gradient border border-slate-700 filter-card-shadow focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white shadow-sm border border-slate-200 shadow-md focus:ring-2 outline-none transition-all font-medium ${
                     errors.email 
                       ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
                       : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
@@ -325,7 +325,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                   placeholder="e.g. 24"
                   min="5"
                   max="120"
-                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:card-grad-gradient border border-slate-700 filter-card-shadow focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white shadow-sm border border-slate-200 shadow-md focus:ring-2 outline-none transition-all font-medium ${
                     errors.age 
                       ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
                       : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
@@ -358,7 +358,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                       onClick={() => handleSelectFeeling(selected ? '' : opt)}
                       className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all cursor-pointer ${
                         selected
-                          ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff]'
+                          ? 'bg-white text-[#00e5ff] border-[#00e5ff]'
                           : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                       }`}
                     >
@@ -377,7 +377,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                   value={formData.feelingLately}
                   onChange={handleInputChange}
                   placeholder="Or describe briefly in your own words..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:card-grad-gradient border border-slate-700 filter-card-shadow focus:border-brand outline-none font-medium"
+                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:bg-white shadow-sm border border-slate-200 shadow-md focus:border-brand outline-none font-medium"
                 />
               </div>
             </div>
@@ -406,7 +406,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                         onClick={() => handleSelectPriorTherapy(opt)}
                         className={`flex-1 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                           selected
-                            ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff] shadow-sm'
+                            ? 'bg-white text-[#00e5ff] border-[#00e5ff] shadow-sm'
                             : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                         }`}
                       >
@@ -429,7 +429,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                     value={formData.priorTherapyDetails}
                     onChange={handleInputChange}
                     placeholder="Tell us a little more about your prior therapy experience..."
-                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:card-grad-gradient border border-slate-700 filter-card-shadow focus:border-brand outline-none font-medium resize-none"
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:bg-white shadow-sm border border-slate-200 shadow-md focus:border-brand outline-none font-medium resize-none"
                   />
                 </div>
               )}
@@ -438,11 +438,11 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
             </div>
 
             {/* Submit & Dismiss Row */}
-            <div className="p-4 sm:p-5 border-t border-zinc-100 card-grad-gradient border border-slate-700 filter-card-shadow shrink-0 space-y-2">
+            <div className="p-4 sm:p-5 border-t border-zinc-100 bg-white shadow-sm border border-slate-200 shadow-md shrink-0 space-y-2">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 sm:py-3.5 min-h-[46px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                className="w-full py-3 sm:py-3.5 min-h-[46px] bg-zinc-900 hover:bg-zinc-800 text-slate-900 font-semibold hover-scale-btn text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save & Continue'}
               </button>

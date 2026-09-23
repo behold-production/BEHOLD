@@ -341,7 +341,7 @@ export default function FaqsTab(props) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Frequently Asked Questions (FAQ)</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Frequently Asked Questions (FAQ)</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">Manage standard questions displayed on the landing page</p>
  </div>
  <button
@@ -376,7 +376,7 @@ export default function FaqsTab(props) {
  className="bg-zinc-950 border border-zinc-850 rounded-lg p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-5"
  >
  <div className="space-y-2 flex-1 min-w-0">
- <h4 className="font-header font-bold text-sm text-white flex items-center gap-2">
+ <h4 className="font-header font-bold text-sm text-slate-900 flex items-center gap-2">
  <span className="w-5 h-5 rounded bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] text-sm text-[#00e5ff] flex items-center justify-center font-bold shrink-0">{index + 1}</span>
  <span>{faq.question}</span>
  </h4>
@@ -388,14 +388,14 @@ export default function FaqsTab(props) {
  <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
  <button
  onClick={() => handleOpenEditFaq(faq, index)}
- className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+ className="p-2 bg-zinc-900 text-zinc-400 hover:text-slate-900 rounded border border-zinc-800 transition cursor-pointer"
  title="Edit FAQ"
  >
  <Edit className="w-3.5 h-3.5" />
  </button>
  <button
  onClick={() => handleDeleteFaq(index)}
- className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+ className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
  title="Delete FAQ"
  >
  <Trash className="w-3.5 h-3.5" />

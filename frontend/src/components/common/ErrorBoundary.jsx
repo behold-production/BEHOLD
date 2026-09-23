@@ -44,7 +44,7 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-zinc-955 text-white flex flex-col items-center justify-center p-4 relative overflow-hidden select-none font-sans text-left">
+        <div className="min-h-screen bg-zinc-955 text-slate-900 flex flex-col items-center justify-center p-4 relative overflow-hidden select-none font-sans text-left">
           {/* Decorative glow elements */}
           <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-brand/10 rounded-full blur-3xl pointer-events-none mix-blend-screen" />
           <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none mix-blend-screen" />
@@ -55,7 +55,7 @@ export default class ErrorBoundary extends React.Component {
               <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/30 rounded-[10px] flex items-center justify-center mx-auto text-rose-500 shadow-lg shadow-rose-955/20 float-slow mb-3">
                 <AlertTriangle className="w-8 h-8" />
               </div>
-              <h1 className="text-3xl font-header font-semibold tracking-tight leading-none text-white ">
+              <h1 className="text-3xl font-header font-semibold tracking-tight leading-none text-slate-900 ">
                 Interface Encounters An Issue
               </h1>
               <p className="text-zinc-450 text-sm max-w-md mx-auto leading-relaxed mt-2">
@@ -95,7 +95,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-xs tracking-widest rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 border border-zinc-700 w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-slate-900 font-semibold text-xs tracking-widest rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 border border-zinc-700 w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
               >
                 <Home className="w-4 h-4" />
                 Go Back Home

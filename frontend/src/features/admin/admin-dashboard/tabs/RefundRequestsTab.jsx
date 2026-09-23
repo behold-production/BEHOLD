@@ -112,7 +112,7 @@ export default function RefundRequestsTab(props) {
  {/* Header */}
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Refund Requests & Payouts</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Refund Requests & Payouts</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">
  Manage refund payouts to users and review linked counsellor bank accounts.
  </p>
@@ -123,7 +123,7 @@ export default function RefundRequestsTab(props) {
  placeholder="Search refunds..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-9 pr-4 py-2 bg-zinc-955 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
+ className="w-full pl-9 pr-4 py-2 bg-zinc-955 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-slate-900 outline-none"
  />
  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
  </div>
@@ -131,7 +131,7 @@ export default function RefundRequestsTab(props) {
 
  {/* Info notice about refund flow */}
  <div className="bg-zinc-955/60 p-4 rounded-lg border border-zinc-850 text-xs text-zinc-400 space-y-1">
- <div className="flex items-center gap-2 font-bold text-white mb-1">
+ <div className="flex items-center gap-2 font-bold text-slate-900 mb-1">
  <ShieldAlert className="w-4 h-4 text-[#00e5ff]" />
  <span>About Cancellation Payouts & Refund Operations</span>
  </div>
@@ -148,7 +148,7 @@ export default function RefundRequestsTab(props) {
  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
  statusFilter === status
  ? 'bg-[#00e5ff] text-zinc-955 border-brand'
- : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
+ : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-slate-900'
  }`}
  >
  {status} ({
@@ -194,17 +194,17 @@ export default function RefundRequestsTab(props) {
  <td className="p-3 text-center">
  <button
  onClick={() => toggleExpand(booking.id)}
- className="p-1 text-zinc-500 hover:text-white rounded hover:bg-zinc-800 transition cursor-pointer"
+ className="p-1 text-zinc-500 hover:text-slate-900 rounded hover:bg-zinc-800 transition cursor-pointer"
  >
  {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
  </button>
  </td>
  <td className="p-3">
- <span className="font-bold text-white block leading-tight">{booking.studentName}</span>
+ <span className="font-bold text-slate-900 block leading-tight">{booking.studentName}</span>
  <span className="text-xs text-zinc-500">{booking.studentEmail || 'No Email'}</span>
  </td>
  <td className="p-3">
- <span className="font-bold text-white block leading-tight">{booking.counsellorName}</span>
+ <span className="font-bold text-slate-900 block leading-tight">{booking.counsellorName}</span>
  <span className="text-xs text-zinc-500">{booking.counsellorEmail || 'No Email'}</span>
  </td>
  <td className="p-3">
@@ -236,7 +236,7 @@ export default function RefundRequestsTab(props) {
  <button
  onClick={() => handleApprove(booking.id)}
  disabled={actioningId !== null}
- className="p-1.5 bg-emerald-955/20 text-emerald-450 hover:bg-emerald-900 hover:text-white rounded border border-emerald-900/30 transition text-xs font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+ className="p-1.5 bg-emerald-955/20 text-emerald-450 hover:bg-emerald-900 hover:text-slate-900 rounded border border-emerald-900/30 transition text-xs font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
  title="Approve & Payout"
  >
  <Check className="w-3.5 h-3.5" />
@@ -244,7 +244,7 @@ export default function RefundRequestsTab(props) {
  <button
  onClick={() => handleReject(booking.id)}
  disabled={actioningId !== null}
- className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition text-xs font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+ className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition text-xs font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
  title="Reject Request"
  >
  <X className="w-3.5 h-3.5" />

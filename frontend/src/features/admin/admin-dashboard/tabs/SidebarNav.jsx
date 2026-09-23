@@ -16,14 +16,14 @@ export default function SidebarNav(props) {
  <button
  type="button"
  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
- className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
+ className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-slate-900 rounded-lg transition-colors cursor-pointer border-none"
  title={isMobileMenuOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
  >
  {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
  </button>
 
  <div className="flex items-center gap-1.5">
- <span className="font-header font-bold text-base tracking-tighter text-white">
+ <span className="font-header font-bold text-base tracking-tighter text-slate-900">
  BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  <span className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-400 px-1 py-0.2 rounded font-bold">
@@ -36,7 +36,7 @@ export default function SidebarNav(props) {
  <button
  type="button"
  onClick={() => setIsProfileDrawerOpen(true)}
- className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white hover:border-brand/30 flex items-center justify-center shadow-md cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
+ className="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-slate-900 hover:border-brand/30 flex items-center justify-center shadow-md cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
  title="Open Profile Menu"
  >
  <User className="w-4 h-4 text-[#00e5ff]" />
@@ -57,7 +57,7 @@ export default function SidebarNav(props) {
  {/* Logo & Header */}
  <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
  <div className="flex items-center gap-2">
- <span className="font-header font-bold text-lg tracking-tighter text-white">
+ <span className="font-header font-bold text-lg tracking-tighter text-slate-900">
  BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  <span className="text-sm bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-bold ">
@@ -68,7 +68,7 @@ export default function SidebarNav(props) {
  <button
  type="button"
  onClick={() => setIsMobileMenuOpen(false)}
- className="lg:hidden p-1 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer border-none"
+ className="lg:hidden p-1 bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-slate-900 rounded-lg transition-colors cursor-pointer border-none"
  title="Close Navigation Drawer"
  >
  <X className="w-4 h-4" />
@@ -92,7 +92,7 @@ export default function SidebarNav(props) {
  )}
  </div>
  <div className="min-w-0 flex-1">
- <h4 className="text-sm font-semibold text-white truncate leading-tight ">
+ <h4 className="text-sm font-semibold text-slate-900 truncate leading-tight ">
  {cleanName}
  </h4>
  <span className="text-xs text-zinc-550 font-bold ">
@@ -169,7 +169,7 @@ export default function SidebarNav(props) {
  : 'bg-transparent text-zinc-500 hover:text-rose-400 hover:bg-rose-950/20 font-medium')
  : (isActive
  ? 'bg-[#00e5ff] text-zinc-955 font-semibold shadow-sm'
- : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-850/60 font-medium');
+ : 'bg-transparent text-zinc-400 hover:text-slate-900 hover:bg-zinc-850/60 font-medium');
 
  return (
  <button
@@ -193,7 +193,7 @@ export default function SidebarNav(props) {
  <div className="space-y-4 pt-4 border-t border-zinc-800 mt-auto shrink-0">
  <button
  onClick={() => setIsLogoutConfirmOpen(true)}
- className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-950/20 hover:bg-rose-900 hover:text-white font-semibold text-xs rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
+ className="w-full py-2 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-950/20 hover:bg-rose-900 hover:text-slate-900 font-semibold text-xs rounded-lg flex items-center justify-center gap-1 transition-colors cursor-pointer"
  >
  <LogOut className="w-3.5 h-3.5" /> Sign Out Portal
  </button>

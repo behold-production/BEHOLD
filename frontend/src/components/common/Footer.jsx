@@ -25,7 +25,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
       ];
 
   return (
-    <footer className="relative z-10 bg-[#030712] text-white pt-10 sm:pt-12 pb-20 lg:pb-6 border-t border-[#00e5ff]/20">
+    <footer className="relative z-10 bg-slate-50 text-slate-900 pt-10 sm:pt-12 pb-20 lg:pb-6 border-t border-[#00e5ff]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 items-start">
 
@@ -34,22 +34,22 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             <button
               id="footer-brand"
               onClick={() => navigateToSection?.('top')}
-              className="text-2xl sm:text-3xl font-sans font-black text-white uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
+              className="text-2xl sm:text-3xl font-sans font-black text-slate-900 uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
             >
               <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span></span>
             </button>
-            <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed font-normal max-w-md">
+            <p className="text-slate-700 text-xs sm:text-[13px] leading-relaxed font-normal max-w-md">
               Professional online psychological counselling for individuals seeking better mental wellbeing. Confidential, evidence-based support from qualified psychologists—wherever you are.
             </p>
             <div className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 text-xs font-medium pt-0.5">
               {emailAddr && (
-                <a href={`mailto:${emailAddr}`} className="flex items-center gap-2 text-slate-300 hover:text-[#00e5ff] transition-colors">
+                <a href={`mailto:${emailAddr}`} className="flex items-center gap-2 text-slate-700 hover:text-[#00e5ff] transition-colors">
                   <Mail className="w-3.5 h-3.5 shrink-0 text-[#00e5ff]" />
                   <span>{emailAddr}</span>
                 </a>
               )}
               {phoneVal && (
-                <a href={`tel:${phoneVal}`} className="flex items-center gap-2 text-slate-300 hover:text-[#00e5ff] transition-colors">
+                <a href={`tel:${phoneVal}`} className="flex items-center gap-2 text-slate-700 hover:text-[#00e5ff] transition-colors">
                   <Phone className="w-3.5 h-3.5 shrink-0 text-[#00e5ff]" />
                   <span>{phoneVal}</span>
                 </a>
@@ -57,7 +57,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             </div>
 
             {/* Social Links */}
-            <div className="pt-1.5 flex flex-wrap items-center justify-start gap-2 text-slate-400 text-xs">
+            <div className="pt-1.5 flex flex-wrap items-center justify-start gap-2 text-slate-600 text-xs">
               <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider shrink-0">Social:</span>
               <div className="flex flex-wrap items-center justify-start gap-2">
                 {socialList.map((social, idx) => (
@@ -67,7 +67,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                         href={social.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-[#00e5ff] transition-colors text-xs font-medium text-slate-300"
+                        className="hover:text-[#00e5ff] transition-colors text-xs font-medium text-slate-700"
                         title={social.name}
                       >
                         {social.name}
@@ -84,7 +84,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           <div className="col-span-1 md:col-span-6 lg:col-span-7 grid grid-cols-2 gap-6 sm:gap-8 md:pl-4 lg:pl-8 text-left">
             {/* Services Column */}
             <div>
-              <h4 className="text-white font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
+              <h4 className="text-slate-900 font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
                 Services
               </h4>
               <ul className="space-y-2.5 text-xs sm:text-[13px] font-normal">
@@ -95,7 +95,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <li key={label}>
                     <button
                       onClick={action}
-                      className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
+                      className="text-slate-700 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
                     >
                       {label}
                     </button>
@@ -106,7 +106,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
             {/* Company Column */}
             <div>
-              <h4 className="text-white font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
+              <h4 className="text-slate-900 font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
                 Company
               </h4>
               <ul className="space-y-2.5 text-xs sm:text-[13px] font-normal">
@@ -119,7 +119,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <li key={label}>
                     <button
                       onClick={action}
-                      className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
+                      className="text-slate-700 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
                     >
                       {label}
                     </button>
@@ -132,7 +132,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-5 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 text-center sm:text-left">
+        <div className="mt-8 pt-5 border-t border-slate-100/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600 text-center sm:text-left">
           <div className="text-center sm:text-left w-full sm:w-auto">
             {(() => {
               const year = new Date().getFullYear();
@@ -148,11 +148,11 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             })()}
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center w-full sm:w-auto">
-            <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Privacy Policy</button>
+            <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-600">Privacy Policy</button>
             <span className="text-slate-600 px-0.5">•</span>
-            <button onClick={() => onOpenDocs?.('terms')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Terms & Conditions</button>
+            <button onClick={() => onOpenDocs?.('terms')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-600">Terms & Conditions</button>
             <span className="text-slate-600 px-0.5">•</span>
-            <button onClick={() => onOpenDocs?.('refund')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Refund & Cancellation Policy</button>
+            <button onClick={() => onOpenDocs?.('refund')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-600">Refund & Cancellation Policy</button>
           </div>
         </div>
 

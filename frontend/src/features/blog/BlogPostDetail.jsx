@@ -145,7 +145,7 @@ const BlogPostDetail = () => {
             <button
               type="button"
               onClick={handleBack}
-              className="px-7 py-3 rounded-xl bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
+              className="px-7 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-900 font-semibold text-xs uppercase tracking-widest cursor-pointer border border-[#00e5ff]/30 shadow-xs transition-all"
             >
               Back to All Articles
             </button>
@@ -169,7 +169,7 @@ const BlogPostDetail = () => {
         author={post.author?.name || post.authorName || 'BEHOLD Editorial Team'}
         schema={schema}
       />
-      <div className="min-h-screen flex flex-col text-white pt-28 pb-20 selection:bg-[#0f172a] selection:text-[#00e5ff] relative overflow-hidden select-none">
+      <div className="min-h-screen flex flex-col text-slate-900 pt-28 pb-20 selection:bg-white selection:text-[#00e5ff] relative overflow-hidden select-none">
       {bgLayer}
       <main className="flex-1 relative z-10">
         <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
@@ -178,33 +178,33 @@ const BlogPostDetail = () => {
           <button
             type="button"
             onClick={handleBack}
-            className="group inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest text-slate-400 hover:text-white mb-10 transition-all cursor-pointer bg-transparent border-none p-0 uppercase"
+            className="group inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest text-slate-600 hover:text-slate-900 mb-10 transition-all cursor-pointer bg-transparent border-none p-0 uppercase"
           >
-            <span className="w-7 h-7 rounded-full bg-[#1e293b] group-hover:bg-[#00e5ff]/15 flex items-center justify-center transition-colors">
-              <ArrowLeft className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#00e5ff] transition-colors" />
+            <span className="w-7 h-7 rounded-full bg-slate-50 group-hover:bg-[#00e5ff]/15 flex items-center justify-center transition-colors">
+              <ArrowLeft className="w-3.5 h-3.5 text-slate-600 group-hover:text-[#00e5ff] transition-colors" />
             </span>
             Back to All Articles
           </button>
 
           {/* Category & Read Time */}
           <div className="flex flex-wrap items-center gap-3 mb-5">
-            <span className="px-4 py-1.5 rounded-xl bg-[#0f172a] text-white text-[10px] font-semibold tracking-widest uppercase shadow-sm">
+            <span className="px-4 py-1.5 rounded-xl bg-white text-slate-900 text-[10px] font-semibold tracking-widest uppercase shadow-sm">
               {post.category || 'Career Guidance'}
             </span>
             <div className="h-4 w-px bg-slate-300"></div>
-            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 tracking-wider">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600 tracking-wider">
               <Clock className="w-3.5 h-3.5 text-[#007078]" />
               <span>{post.readTime || '5 min read'}</span>
             </div>
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-[2.85rem] font-semibold tracking-tight text-white leading-[1.15] mb-8">
+          <h1 className="text-3xl sm:text-4xl lg:text-[2.85rem] font-semibold tracking-tight text-slate-900 leading-[1.15] mb-8">
             {post.title}
           </h1>
 
           {/* Author & Share Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 mb-10 border-b border-slate-700/80">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 mb-10 border-b border-slate-200/80">
 
             {/* Author */}
             <div className="flex items-center gap-3 shrink-0">
@@ -212,7 +212,7 @@ const BlogPostDetail = () => {
                 <img
                   src={getImageUrl(post.author.avatar)}
                   alt={post.author?.name}
-                  className="w-10 h-10 rounded-xl object-cover border border-slate-700 shrink-0 shadow-sm"
+                  className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0 shadow-sm"
                 />
               ) : (
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00e5ff] flex items-center justify-center font-semibold text-sm shrink-0 shadow-sm">
@@ -220,10 +220,10 @@ const BlogPostDetail = () => {
                 </div>
               )}
               <div>
-                <h3 className="text-[13px] font-semibold text-white tracking-wide leading-tight">
+                <h3 className="text-[13px] font-semibold text-slate-900 tracking-wide leading-tight">
                   {post.author?.name || 'BEHOLD Editorial Team'}
                 </h3>
-                <p className="text-[10px] text-slate-400 font-semibold tracking-widest uppercase mt-0.5">
+                <p className="text-[10px] text-slate-600 font-semibold tracking-widest uppercase mt-0.5">
                   {post.author?.role || 'Senior Career Counsellor & Mentor'}
                 </p>
               </div>
@@ -231,12 +231,12 @@ const BlogPostDetail = () => {
 
             {/* Share Buttons — single row, no wrap */}
             <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto scrollbar-none pb-0.5">
-              <span className="text-[10px] font-semibold text-slate-400 tracking-widest uppercase mr-0.5 shrink-0 hidden sm:block">Share</span>
+              <span className="text-[10px] font-semibold text-slate-600 tracking-widest uppercase mr-0.5 shrink-0 hidden sm:block">Share</span>
 
               <button
                 type="button"
                 onClick={handleShareWhatsApp}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366] text-[#1a9c4c] hover:text-white text-[10px] font-semibold transition-all cursor-pointer border border-[#25D366]/30 hover:border-[#25D366] hover-scale-btn shrink-0"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366] text-[#1a9c4c] hover:text-slate-900 text-[10px] font-semibold transition-all cursor-pointer border border-[#25D366]/30 hover:border-[#25D366] hover-scale-btn shrink-0"
               >
                 <MessageCircle className="w-3 h-3" />
                 <span>WhatsApp</span>
@@ -245,7 +245,7 @@ const BlogPostDetail = () => {
               <button
                 type="button"
                 onClick={handleShareTelegram}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0088cc]/10 hover:bg-[#0088cc] text-[#0077b3] hover:text-white text-[10px] font-semibold transition-all cursor-pointer border border-[#0088cc]/30 hover:border-[#0088cc] hover-scale-btn shrink-0"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0088cc]/10 hover:bg-[#0088cc] text-[#0077b3] hover:text-slate-900 text-[10px] font-semibold transition-all cursor-pointer border border-[#0088cc]/30 hover:border-[#0088cc] hover-scale-btn shrink-0"
               >
                 <Send className="w-3 h-3" />
                 <span>Telegram</span>
@@ -254,7 +254,7 @@ const BlogPostDetail = () => {
               <button
                 type="button"
                 onClick={handleShareLinkedIn}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0077b5]/10 hover:bg-[#0077b5] text-[#005c8f] hover:text-white text-[10px] font-semibold transition-all cursor-pointer border border-[#0077b5]/30 hover:border-[#0077b5] hover-scale-btn shrink-0"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0077b5]/10 hover:bg-[#0077b5] text-[#005c8f] hover:text-slate-900 text-[10px] font-semibold transition-all cursor-pointer border border-[#0077b5]/30 hover:border-[#0077b5] hover-scale-btn shrink-0"
               >
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -265,7 +265,7 @@ const BlogPostDetail = () => {
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#1e293b] hover:bg-slate-800 text-slate-400 text-[10px] font-semibold transition-all cursor-pointer border border-slate-700 hover-scale-btn shrink-0"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 text-[10px] font-semibold transition-all cursor-pointer border border-slate-200 hover-scale-btn shrink-0"
               >
                 {copied ? <Check className="w-3 h-3 text-[#00e5ff]" /> : <Copy className="w-3 h-3" />}
                 <span>{copied ? 'Copied!' : 'Copy'}</span>
@@ -274,7 +274,7 @@ const BlogPostDetail = () => {
           </div>
 
           {/* Cover Image */}
-          <div className="mb-12 rounded-2xl overflow-hidden border border-slate-700/90 shadow-md bg-slate-950 relative group flex items-center justify-center">
+          <div className="mb-12 rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-slate-950 relative group flex items-center justify-center">
             <img
               src={post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage)}
               alt={post.title}
@@ -285,8 +285,8 @@ const BlogPostDetail = () => {
 
           {/* Article Excerpt Banner */}
           {post.excerpt && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#0f172a]/90 backdrop-blur-md border-l-4 border-[#00e5ff] border border-slate-700/80 mb-12 shadow-sm">
-              <p className="text-base sm:text-lg text-slate-200 font-medium leading-relaxed italic">
+            <div className="p-6 sm:p-8 rounded-2xl bg-white/90 backdrop-blur-md border-l-4 border-[#00e5ff] border border-slate-200/80 mb-12 shadow-sm">
+              <p className="text-base sm:text-lg text-slate-800 font-medium leading-relaxed italic">
                 "{post.excerpt}"
               </p>
             </div>
@@ -294,18 +294,18 @@ const BlogPostDetail = () => {
 
           {/* Rich Content Body */}
           <div
-            className="prose max-w-none text-slate-200 text-base sm:text-lg leading-relaxed space-y-6 [&_h2]:text-2xl [&_h2]:sm:text-3xl [&_h2]:font-semibold [&_h2]:text-white [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:tracking-tight [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-white [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-2"
+            className="prose max-w-none text-slate-800 text-base sm:text-lg leading-relaxed space-y-6 [&_h2]:text-2xl [&_h2]:sm:text-3xl [&_h2]:font-semibold [&_h2]:text-slate-900 [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:tracking-tight [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-2"
             dangerouslySetInnerHTML={{ __html: formatBlogContent(post.content) }}
           />
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-slate-700 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-slate-400 tracking-wider mr-2">Topics:</span>
+            <div className="mt-12 pt-8 border-t border-slate-200 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold text-slate-600 tracking-wider mr-2">Topics:</span>
               {post.tags.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-3.5 py-1.5 rounded-md bg-[#0f172a] border border-slate-700 text-[10px] font-semibold tracking-wider text-white shadow-2xs"
+                  className="px-3.5 py-1.5 rounded-md bg-white border border-slate-200 text-[10px] font-semibold tracking-wider text-slate-900 shadow-2xs"
                 >
                   #{tag}
                 </span>
@@ -315,20 +315,20 @@ const BlogPostDetail = () => {
 
           {/* Primary Focus Keyword & Secondary Keywords */}
           {(post.primaryKeyword || (post.secondaryKeywords && post.secondaryKeywords.length > 0)) && (
-            <div className="mt-8 p-5 rounded-2xl bg-[#1e293b] border border-slate-700/90 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-300 uppercase tracking-wider">
+            <div className="mt-8 p-5 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
                 <Sparkles className="w-4 h-4 text-[#00e5ff]" />
                 <span>Focus Keywords & Key Topics</span>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 {post.primaryKeyword && (
-                  <span className="px-3.5 py-1.5 rounded-md bg-[#0f172a] text-white text-[11px] font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
+                  <span className="px-3.5 py-1.5 rounded-md bg-white text-slate-900 text-[11px] font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
                     <span className="w-2 h-2 rounded-full bg-[#00e5ff] animate-pulse"></span>
                     Primary: {post.primaryKeyword}
                   </span>
                 )}
                 {post.secondaryKeywords && post.secondaryKeywords.map((sk, idx) => (
-                  <span key={idx} className="px-3 py-1 rounded-md bg-[#0f172a] border border-slate-700 text-slate-300 text-[10px] font-semibold tracking-wide">
+                  <span key={idx} className="px-3 py-1 rounded-md bg-white border border-slate-200 text-slate-700 text-[10px] font-semibold tracking-wide">
                     {sk}
                   </span>
                 ))}
@@ -339,8 +339,8 @@ const BlogPostDetail = () => {
 
         {/* Related Articles Section */}
         {relatedBlogs.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-16 border-t border-slate-700 reveal-on-scroll">
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white mb-8">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-16 border-t border-slate-200 reveal-on-scroll">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mb-8">
               More Insights From BEHOLD<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,201,214,0.6)] font-semibold">.</span>
             </h2>
 
@@ -349,15 +349,15 @@ const BlogPostDetail = () => {
                 <div
                   key={item.slug}
                   onClick={() => navigate(`/blog/${item.slug}`)}
-                  className={`bg-[#0f172a]/95 backdrop-blur-md hover:bg-[#0f172a] border border-slate-700/90 hover:border-[#00e5ff]/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-md hover-scale-card group reveal-on-scroll reveal-scale-in reveal-delay-${idx + 1}`}
+                  className={`bg-white/95 backdrop-blur-md hover:bg-white border border-slate-200/90 hover:border-[#00e5ff]/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 space-y-3 shadow-md hover-scale-card group reveal-on-scroll reveal-scale-in reveal-delay-${idx + 1}`}
                 >
                   <span className="text-[10px] font-semibold text-[#007078] tracking-wider block">
                     {item.category}
                   </span>
-                  <h3 className="text-base font-semibold text-white group-hover:text-[#007078] transition-colors line-clamp-2 leading-tight">
+                  <h3 className="text-base font-semibold text-slate-900 group-hover:text-[#007078] transition-colors line-clamp-2 leading-tight">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed font-normal">{item.excerpt}</p>
+                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-normal">{item.excerpt}</p>
                 </div>
               ))}
             </div>

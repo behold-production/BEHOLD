@@ -341,7 +341,7 @@ export default function AptitudeQuestionsTab(props) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Aptitude Questions</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Aptitude Questions</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">Manage assessment questions and cognitive profiles</p>
  </div>
  <button
@@ -375,7 +375,7 @@ export default function AptitudeQuestionsTab(props) {
  placeholder="Search questions by text or category..."
  value={searchAptitude}
  onChange={(e) => setSearchAptitude(e.target.value)}
- className="w-full bg-transparent border-none text-sm text-white outline-none placeholder-zinc-550"
+ className="w-full bg-transparent border-none text-sm text-slate-900 outline-none placeholder-zinc-550"
  />
  </div>
 
@@ -410,7 +410,7 @@ export default function AptitudeQuestionsTab(props) {
  <span className="text-xs font-bold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{q.category}</span>
  {!q.isActive && <span className="text-xs font-bold text-rose-500 bg-rose-955/20 px-2 py-0.5 rounded border border-rose-900/30">Disabled</span>}
  </div>
- <h4 className="font-header font-bold text-sm text-white mb-3">
+ <h4 className="font-header font-bold text-sm text-slate-900 mb-3">
  {q.question}
  </h4>
  <ul className="space-y-1.5 pl-2 mt-2 border-l border-zinc-850">
@@ -426,14 +426,14 @@ export default function AptitudeQuestionsTab(props) {
  <div className="shrink-0 flex items-center gap-2 self-end sm:self-start">
  <button
  onClick={() => handleOpenEditAptitudeQuestion(q)}
- className="p-2 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+ className="p-2 bg-zinc-900 text-zinc-400 hover:text-slate-900 rounded border border-zinc-800 transition cursor-pointer"
  title="Edit Question"
  >
  <Edit className="w-3.5 h-3.5" />
  </button>
  <button
  onClick={() => handleDeleteAptitudeQuestion(q.id)}
- className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+ className="p-2 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
  title="Delete Question"
  >
  <Trash className="w-3.5 h-3.5" />

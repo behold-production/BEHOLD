@@ -81,7 +81,7 @@ export default function RootLayout({ children }) {
         />
         <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
       </head>
-      <body className="bg-slate-50 antialiased font-sans text-slate-800 selection:bg-[#00e5ff] selection:text-slate-950">
+      <body className="bg-slate-50 antialiased font-sans text-slate-800 selection:bg-[#00e5ff] selection:text-white">
         <Providers>
           <Toaster position="top-right" />
           {children}

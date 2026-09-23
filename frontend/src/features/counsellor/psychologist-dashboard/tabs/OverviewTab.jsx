@@ -63,7 +63,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                         <span className="text-xs bg-[#00e5ff]/10 text-[#00e5ff] border border-brand/20 px-2 py-0.5 rounded font-bold ">Next Client Session</span>
                         {pendingBookings.length > 0 ? (
                             <div className="space-y-1.5 pt-1">
-                                <h4 className="font-header font-bold text-sm text-white ">{pendingBookings[0].userName}</h4>
+                                <h4 className="font-header font-bold text-sm text-slate-900 ">{pendingBookings[0].userName}</h4>
                                 <p className="text-sm text-zinc-400">Session Type: {pendingBookings[0].service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}</p>
                                 <div className="flex items-center gap-1.5 text-sm font-bold text-zinc-300">
                                     <Clock className="w-3.5 h-3.5 text-zinc-550" />
@@ -102,7 +102,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                         )}
                         <button
                             onClick={() => setCurrentSection('bookings')}
-                            className="text-sm font-bold bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
+                            className="text-sm font-bold bg-zinc-900 border border-zinc-800 text-slate-900 hover:bg-zinc-800 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
                         >
                             {pendingBookings.length > 0 && !pendingBookings[0].meetLink ? 'Set Meet Link' : 'Manage Bookings'}
                         </button>
@@ -119,21 +119,21 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                         <div className="space-y-1.5 pt-2">
                             <div className="flex justify-between font-bold text-zinc-400">
                                 <span>Hourly Booking Charge</span>
-                                <span className="text-white">₹{profile.price} / Hr</span>
+                                <span className="text-slate-900">₹{profile.price} / Hr</span>
                             </div>
                             <div className="flex justify-between font-bold text-zinc-400">
                                 <span>Consultant Credential</span>
-                                <span className="text-white truncate max-w-[150px]">{profile.education}</span>
+                                <span className="text-slate-900 truncate max-w-[150px]">{profile.education}</span>
                             </div>
                             <div className="flex justify-between font-bold text-zinc-400">
                                 <span>Language scope</span>
-                                <span className="text-white">{profile.lang}</span>
+                                <span className="text-slate-900">{profile.lang}</span>
                             </div>
                         </div>
                     </div>
                     <button
                         onClick={() => setCurrentSection('profile')}
-                        className="w-fit text-sm font-bold bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors"
+                        className="w-fit text-sm font-bold bg-zinc-900 text-zinc-300 hover:text-slate-900 border border-zinc-800 px-4 py-2 rounded-[10px] mt-4 cursor-pointer transition-colors"
                     >
                         Edit Profile Info
                     </button>
@@ -167,7 +167,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                         </button>
                         <button
                             onClick={() => setCurrentSection('profile')}
-                            className="text-xs font-bold bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
+                            className="text-xs font-bold bg-zinc-900 text-zinc-300 hover:text-slate-900 border border-zinc-800 px-3.5 py-2 rounded-[10px] cursor-pointer transition-colors"
                         >
                             Bank Details
                         </button>
@@ -233,7 +233,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                                 className={`inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-[8px] border transition-all cursor-pointer ${
                                     copied
                                         ? 'bg-emerald-900/40 border-emerald-700/50 text-emerald-400'
-                                        : 'bg-zinc-800 border-zinc-700 text-zinc-200 hover:bg-zinc-700 hover:text-white'
+                                        : 'bg-zinc-800 border-zinc-700 text-zinc-200 hover:bg-zinc-700 hover:text-slate-900'
                                 }`}
                             >
                                 {copied ? (
@@ -247,7 +247,7 @@ const OverviewTab = ({ profile, bookings, isSessionCompleted, setCurrentSection 
                                 href={shareableLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-[8px] border bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all"
+                                className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-[8px] border bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-slate-900 hover:border-zinc-700 transition-all"
                             >
                                 <ExternalLink className="w-3.5 h-3.5" /> Preview
                             </a>

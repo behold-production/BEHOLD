@@ -152,7 +152,7 @@ export default function ActivitySheetView() {
           <div className="w-16 h-16 bg-emerald-900/30 rounded-full flex items-center justify-center mb-6">
             <Lock className="w-8 h-8 text-emerald-500" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Secure Access</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Secure Access</h2>
           <p className="text-sm text-zinc-400 mb-8">
             Please verify your identity to access this activity sheet.
           </p>
@@ -168,14 +168,14 @@ export default function ActivitySheetView() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="Enter registered number"
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none transition-colors"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-3 text-slate-900 text-sm focus:border-emerald-500 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
               <button 
                 type="submit" 
                 disabled={authLoading}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition-colors"
+                className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-slate-900 font-bold py-3 rounded-xl transition-colors"
               >
                 {authLoading ? 'Sending...' : 'Send Verification Code'}
               </button>
@@ -189,13 +189,13 @@ export default function ActivitySheetView() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="Enter 6-digit code"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none transition-colors text-center tracking-widest text-lg font-mono"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-slate-900 text-sm focus:border-emerald-500 focus:outline-none transition-colors text-center tracking-widest text-lg font-mono"
                 />
               </div>
               <button 
                 type="submit" 
                 disabled={authLoading}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition-colors"
+                className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-slate-900 font-bold py-3 rounded-xl transition-colors"
               >
                 {authLoading ? 'Verifying...' : 'Access Activity Sheet'}
               </button>
@@ -226,12 +226,12 @@ export default function ActivitySheetView() {
       <div className="w-full max-w-2xl">
         <div className="flex items-center gap-3 mb-8">
           <BrandIcon className="w-8 h-8 text-emerald-500" />
-          <h1 className="text-xl font-bold text-white">BEHOLD Activity Sheet</h1>
+          <h1 className="text-xl font-bold text-slate-900">BEHOLD Activity Sheet</h1>
         </div>
         
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
           <div className="p-6 sm:p-8 border-b border-zinc-800 bg-zinc-900/50">
-            <h2 className="text-2xl font-bold text-white mb-2">{worksheet.originalFileName}</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">{worksheet.originalFileName}</h2>
             {worksheet.optionalMessage && (
               <div className="bg-zinc-950 border border-zinc-800 p-4 rounded-xl mt-4">
                 <p className="text-sm text-zinc-300 italic">"{worksheet.optionalMessage}"</p>
@@ -240,7 +240,7 @@ export default function ActivitySheetView() {
             
             <button 
               onClick={handleDownloadOriginal}
-              className="mt-6 flex items-center justify-center gap-2 w-full sm:w-auto bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-6 rounded-xl transition-colors border border-zinc-700"
+              className="mt-6 flex items-center justify-center gap-2 w-full sm:w-auto bg-zinc-800 hover:bg-zinc-700 text-slate-900 font-bold py-3 px-6 rounded-xl transition-colors border border-zinc-700"
             >
               <Download className="w-5 h-5" /> Download Worksheet
             </button>
@@ -252,14 +252,14 @@ export default function ActivitySheetView() {
                 <div className="w-16 h-16 bg-emerald-900/40 rounded-full flex items-center justify-center mb-4">
                   <CheckCircle className="w-8 h-8 text-emerald-500" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Successfully Submitted</h3>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Successfully Submitted</h3>
                 <p className="text-sm text-zinc-400">
                   Your completed activity sheet has been securely submitted to your psychologist.
                 </p>
               </div>
             ) : (
               <div>
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                   <UploadCloud className="w-5 h-5 text-emerald-400" /> Upload Completed Worksheet
                 </h3>
                 <p className="text-sm text-zinc-400 mb-6">
@@ -270,12 +270,12 @@ export default function ActivitySheetView() {
                     type="file" 
                     accept="application/pdf"
                     onChange={(e) => setSubmitFile(e.target.files[0])}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 cursor-pointer"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 cursor-pointer"
                   />
                   <button 
                     type="submit" 
                     disabled={submitting || !submitFile}
-                    className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 sm:py-4 rounded-xl transition-colors text-sm sm:text-base shadow-lg shadow-emerald-900/20 flex justify-center items-center gap-2"
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-slate-900 font-bold py-3 sm:py-4 rounded-xl transition-colors text-sm sm:text-base shadow-lg shadow-emerald-900/20 flex justify-center items-center gap-2"
                   >
                     {submitting ? 'Submitting...' : 'Submit Completed Worksheet'}
                   </button>

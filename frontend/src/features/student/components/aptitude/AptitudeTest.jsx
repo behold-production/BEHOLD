@@ -414,7 +414,7 @@ export default function AptitudeTest({ onFinishTest }) {
  {/* Header Shield */}
  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-surface-100 mb-6 sm:mb-10">
  <div className="flex items-center gap-4">
- <div className="w-12 h-12 bg-surface-900 text-white rounded-[10px] flex items-center justify-center shadow-square-light shrink-0">
+ <div className="w-12 h-12 bg-surface-900 text-slate-900 rounded-[10px] flex items-center justify-center shadow-square-light shrink-0">
  <Brain className="w-6 h-6" />
  </div>
  <div>
@@ -488,11 +488,11 @@ export default function AptitudeTest({ onFinishTest }) {
  id="btn-results-consult"
  onClick={handleClaimMentoring}
  disabled={isClaiming}
- className="w-full py-3.5 sm:py-4 bg-surface-900 hover:bg-surface-800 text-white font-semibold text-[10px] tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+ className="w-full py-3.5 sm:py-4 bg-surface-900 hover:bg-surface-800 text-slate-900 font-semibold text-[10px] tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
  >
  {isClaiming ? (
  <>
- <Loader2 className="w-4 h-4 animate-spin text-white" />
+ <Loader2 className="w-4 h-4 animate-spin text-slate-900" />
  <span>Claiming...</span>
  </>
  ) : (

@@ -187,7 +187,7 @@ export default function RevenueTab(props) {
  {/* Header */}
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Revenue Operations Control</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Revenue Operations Control</h3>
  <p className="text-xs text-zinc-500 font-medium pt-1">Auditing transactions, payout configurations, service fee commissions, and refunds ledger</p>
  </div>
  <div className="flex items-center gap-2">
@@ -205,7 +205,7 @@ export default function RevenueTab(props) {
  <span className="text-xs font-bold tracking-wider">Gross Platform Volume</span>
  <DollarSign className="w-4 h-4 text-emerald-450" />
  </div>
- <div className="text-2xl font-bold text-white font-header">
+ <div className="text-2xl font-bold text-slate-900 font-header">
  ₹{formatAmount(metrics.grossVolume)}
  </div>
  <p className="text-[11px] text-zinc-500 font-medium">All settled client payments (net of refunds)</p>
@@ -229,7 +229,7 @@ export default function RevenueTab(props) {
  <span className="text-xs font-bold tracking-wider">Psychologist Payouts Volume</span>
  <Users className="w-4 h-4 text-indigo-400" />
  </div>
- <div className="text-2xl font-bold text-white font-header">
+ <div className="text-2xl font-bold text-slate-900 font-header">
  ₹{formatAmount(metrics.payoutVolume)}
  </div>
  <p className="text-[11px] text-zinc-500 font-medium">Routed directly to consultant accounts (Variable %)</p>
@@ -253,7 +253,7 @@ export default function RevenueTab(props) {
  {/* SVG Chart */}
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg lg:col-span-2 space-y-4">
  <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
- <h4 className="text-xs font-bold text-white tracking-wider">Monthly Revenue Trend</h4>
+ <h4 className="text-xs font-bold text-slate-900 tracking-wider">Monthly Revenue Trend</h4>
  <span className="text-[11px] text-zinc-500">Gross volume vs Platform Retention (Teal)</span>
  </div>
 
@@ -290,25 +290,25 @@ export default function RevenueTab(props) {
  {/* distribution summary */}
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg space-y-4">
  <div className="pb-2 border-b border-zinc-800/60">
- <h4 className="text-xs font-bold text-white tracking-wider font-header">Platform Summary</h4>
+ <h4 className="text-xs font-bold text-slate-900 tracking-wider font-header">Platform Summary</h4>
  </div>
 
  <div className="space-y-4 pt-2">
  <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
  <span className="text-zinc-500 font-bold ">Total Bookings Count</span>
- <span className="text-white font-bold">{bookingsDb.length}</span>
+ <span className="text-slate-900 font-bold">{bookingsDb.length}</span>
  </div>
  <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
  <span className="text-zinc-500 font-bold ">Completed & Paid</span>
- <span className="text-white font-bold">{metrics.totalPaidBookings}</span>
+ <span className="text-slate-900 font-bold">{metrics.totalPaidBookings}</span>
  </div>
  <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
  <span className="text-zinc-500 font-bold ">Average Order Value</span>
- <span className="text-white font-bold">₹{metrics.totalPaidBookings > 0 ? Math.round(metrics.grossVolume / metrics.totalPaidBookings) : 0}</span>
+ <span className="text-slate-900 font-bold">₹{metrics.totalPaidBookings > 0 ? Math.round(metrics.grossVolume / metrics.totalPaidBookings) : 0}</span>
  </div>
  <div className="flex justify-between items-center text-xs">
  <span className="text-zinc-500 font-bold ">Active Pending Bookings</span>
- <span className="text-white font-bold">{bookingsDb.filter(b => b.status === 'PENDING').length}</span>
+ <span className="text-slate-900 font-bold">{bookingsDb.filter(b => b.status === 'PENDING').length}</span>
  </div>
  </div>
  </div>
@@ -317,7 +317,7 @@ export default function RevenueTab(props) {
  {/* Counsellor breakdown matrix */}
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg shadow-lg space-y-4">
  <div className="pb-2 border-b border-zinc-800/60 flex items-center justify-between">
- <h4 className="text-xs font-bold text-white tracking-wider">Psychologists Ledger & Account Routing</h4>
+ <h4 className="text-xs font-bold text-slate-900 tracking-wider">Psychologists Ledger & Account Routing</h4>
  <button
     type="button"
     onClick={handleExportPayoutCSV}
@@ -353,7 +353,7 @@ export default function RevenueTab(props) {
 
  return (
  <tr key={c.id} className="border-b border-zinc-850 hover:bg-zinc-950/40 transition-colors">
- <td className="p-3 font-semibold text-white">{c.name || 'Psychologist'}</td>
+ <td className="p-3 font-semibold text-slate-900">{c.name || 'Psychologist'}</td>
  <td className="p-3 text-center text-zinc-300 font-bold">{paidBookings.length}</td>
  <td className="p-3 text-right text-zinc-455 font-semibold">₹{formatAmount(gross)}</td>
  <td className="p-3 text-right text-zinc-455 font-semibold">₹{formatAmount(ret)}</td>
@@ -376,7 +376,7 @@ export default function RevenueTab(props) {
  {/* Audit ledger filter bar */}
  <div className="bg-zinc-900/40 border border-zinc-800 p-5 rounded-lg space-y-4 shadow-lg">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800/60 pb-3">
- <h4 className="text-xs font-bold text-white tracking-wider flex items-center gap-1.5 font-header">
+ <h4 className="text-xs font-bold text-slate-900 tracking-wider flex items-center gap-1.5 font-header">
  <Filter className="w-4 h-4 text-zinc-500" /> Payment & Transaction Ledger
  </h4>
 
@@ -387,7 +387,7 @@ export default function RevenueTab(props) {
  placeholder="Search ledger..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-8 pr-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs font-semibold focus:border-brand text-white outline-none"
+ className="w-full pl-8 pr-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs font-semibold focus:border-brand text-slate-900 outline-none"
  />
  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-2.5 top-2" />
  </div>
@@ -395,7 +395,7 @@ export default function RevenueTab(props) {
  <select
  value={counsellorFilter}
  onChange={(e) => setCounsellorFilter(e.target.value)}
- className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-white outline-none cursor-pointer"
+ className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-slate-900 outline-none cursor-pointer"
  >
  <option value="ALL">All Psychologists</option>
  {counsellors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -404,7 +404,7 @@ export default function RevenueTab(props) {
  <select
  value={serviceFilter}
  onChange={(e) => setServiceFilter(e.target.value)}
- className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-white outline-none cursor-pointer"
+ className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-slate-900 outline-none cursor-pointer"
  >
  <option value="ALL">All Services</option>
  <option value="counselling">Counselling</option>
@@ -414,7 +414,7 @@ export default function RevenueTab(props) {
  <select
  value={paymentStatusFilter}
  onChange={(e) => setPaymentStatusFilter(e.target.value)}
- className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-white outline-none cursor-pointer"
+ className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1.5 text-slate-900 outline-none cursor-pointer"
  >
   <option value="ALL">All Payment Statuses</option>
   <option value="PAID">PAID</option>
@@ -427,7 +427,7 @@ export default function RevenueTab(props) {
         type="month"
         value={dateFilter.length === 7 ? dateFilter : ''}
         onChange={(e) => setDateFilter(e.target.value)}
-        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-white outline-none cursor-pointer"
+        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-slate-900 outline-none cursor-pointer"
         title="Filter by Month"
       />
       <span className="text-zinc-600 text-xs font-bold">OR</span>
@@ -435,7 +435,7 @@ export default function RevenueTab(props) {
         type="date"
         value={dateFilter.length === 10 ? dateFilter : ''}
         onChange={(e) => setDateFilter(e.target.value)}
-        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-white outline-none cursor-pointer"
+        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-slate-900 outline-none cursor-pointer"
         title="Filter by Exact Date"
       />
       {dateFilter && (
@@ -482,10 +482,10 @@ export default function RevenueTab(props) {
  return (
  <tr key={b.id} className="border-b border-zinc-900 hover:bg-zinc-900/30 transition-colors">
  <td className="p-3 font-mono font-semibold">SB-{b.id}</td>
- <td className="p-3 font-bold text-white">{b.userName || b.studentName || 'Student'}</td>
+ <td className="p-3 font-bold text-slate-900">{b.userName || b.studentName || 'Student'}</td>
  <td className="p-3 text-zinc-400 font-medium">{b.advisorName || b.counsellorName || 'Psychologist'}</td>
  <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {b.time}</td>
- <td className="p-3 text-right font-bold text-white">₹{formatAmount(gross)}</td>
+ <td className="p-3 text-right font-bold text-slate-900">₹{formatAmount(gross)}</td>
  <td className="p-3 text-right text-zinc-500">₹{formatAmount(commission)}</td>
  <td className="p-3 text-right font-bold text-emerald-450">₹{formatAmount(payout)}</td>
  <td className="p-3 text-center">
@@ -509,7 +509,7 @@ export default function RevenueTab(props) {
  <td className="p-3 text-center">
  <button
  onClick={() => downloadPDFReceipt(b)}
- className="p-1 text-zinc-450 hover:text-white rounded hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+ className="p-1 text-zinc-450 hover:text-slate-900 rounded hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
  title="Download PDF Receipt"
  >
  <Download className="w-3.5 h-3.5" />

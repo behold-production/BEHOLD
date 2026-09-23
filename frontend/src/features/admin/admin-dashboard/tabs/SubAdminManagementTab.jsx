@@ -479,7 +479,7 @@ const handleOpenEditSubAdmin = (admin) => {
  return (
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-805 pb-3">
- <h3 className="text-sm font-bold text-white font-header">Staff Roles & Permissions Scopes</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Staff Roles & Permissions Scopes</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">Create sub-admin staff, configure dynamic role titles, and adjust access permissions</p>
  </div>
 
@@ -496,7 +496,7 @@ const handleOpenEditSubAdmin = (admin) => {
  }}
  className={`px-4 py-2 border-b-2 text-sm font-bold transition-all cursor-pointer border-none bg-transparent ${activeRoleTab === 'roles'
  ? 'border-brand text-[#00e5ff] font-bold'
- : 'border-transparent text-zinc-400 hover:text-white'
+ : 'border-transparent text-zinc-400 hover:text-slate-900'
  }`}
  >
  Roles & Staff Registry
@@ -508,7 +508,7 @@ const handleOpenEditSubAdmin = (admin) => {
  }}
  className={`px-4 py-2 border-b-2 text-sm font-bold transition-all cursor-pointer border-none bg-transparent ${activeRoleTab === 'new_role'
  ? 'border-brand text-[#00e5ff] font-bold'
- : 'border-transparent text-zinc-400 hover:text-white'
+ : 'border-transparent text-zinc-400 hover:text-slate-900'
  }`}
  >
  {editingRoleId ? 'Edit Role' : 'Create Custom Role'}
@@ -568,7 +568,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <div className="space-y-2">
  <div className="flex justify-between items-start gap-1">
  <div className="min-w-0">
- <span className="font-header font-bold text-white text-sm truncate block">{role.name}</span>
+ <span className="font-header font-bold text-slate-900 text-sm truncate block">{role.name}</span>
  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border inline-block mt-1 ${
  memberCount > 0
  ? 'bg-[#00e5ff]/10 border-brand/20 text-[#00e5ff]'
@@ -588,7 +588,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="button"
  onClick={() => handleDuplicateRole(role)}
- className="text-zinc-400 hover:text-white font-bold text-xs cursor-pointer border-none bg-transparent"
+ className="text-zinc-400 hover:text-slate-900 font-bold text-xs cursor-pointer border-none bg-transparent"
  title="Duplicate this role"
  >
  Clone
@@ -652,7 +652,7 @@ const handleOpenEditSubAdmin = (admin) => {
  placeholder="e.g. Sandra Tomy"
  value={subAdminForm.name}
  onChange={(e) => setSubAdminForm({ ...subAdminForm, name: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
 
@@ -662,7 +662,7 @@ const handleOpenEditSubAdmin = (admin) => {
  value={subAdminForm.roleName}
  onChange={(e) => handleRoleChangeInForm(e.target.value)}
  disabled={rolesDb.length === 0}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+ className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-slate-900 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {rolesDb.length === 0 ? (
  <option value="">-- No Roles Defined --</option>
@@ -682,7 +682,7 @@ const handleOpenEditSubAdmin = (admin) => {
  placeholder="staff@example.com"
  value={subAdminForm.email}
  onChange={(e) => setSubAdminForm({ ...subAdminForm, email: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
 
@@ -694,7 +694,7 @@ const handleOpenEditSubAdmin = (admin) => {
  placeholder="••••••••"
  value={subAdminForm.password}
  onChange={(e) => setSubAdminForm({ ...subAdminForm, password: e.target.value })}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
  </div>
@@ -728,7 +728,7 @@ const handleOpenEditSubAdmin = (admin) => {
  </div>
 
  {rolesDb.length === 0 ? (
- <div className="p-4 bg-[#090d16]mber-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-lg space-y-2">
+ <div className="p-4 bg-whitember-500/10 border border-amber-500/20 text-amber-500 text-sm rounded-lg space-y-2">
  <p className="font-bold">No Custom Roles Defined</p>
  <p className="text-sm text-zinc-400 leading-normal">
  To register sub-admin staff, you must first define a role title and assign its permission scopes using the "Create Custom Role Title" form above.
@@ -749,9 +749,9 @@ const handleOpenEditSubAdmin = (admin) => {
  const activeActions = module.actions.filter(act => selectedPermissions.includes(act.id));
 
  return (
- <div key={module.id} className={`p-3 border rounded-lg flex items-center justify-between transition-colors duration-200 ${isModuleEnabled ? 'border-brand/30 bg-[#00e5ff]/5 text-white' : 'border-zinc-800 bg-zinc-950/20 text-zinc-500'}`}>
+ <div key={module.id} className={`p-3 border rounded-lg flex items-center justify-between transition-colors duration-200 ${isModuleEnabled ? 'border-brand/30 bg-[#00e5ff]/5 text-slate-900' : 'border-zinc-800 bg-zinc-950/20 text-zinc-500'}`}>
  <div className="text-sm min-w-0">
- <span className={`font-bold block ${isModuleEnabled ? 'text-white' : 'text-zinc-500'}`}>{module.name}</span>
+ <span className={`font-bold block ${isModuleEnabled ? 'text-slate-900' : 'text-zinc-500'}`}>{module.name}</span>
  {isModuleEnabled && activeActions.length > 0 ? (
  <span className="text-xs text-zinc-400 block mt-0.5 ">
  Privileges: {activeActions.map(act => act.name.split(' ')[0]).join(', ')}
@@ -781,8 +781,8 @@ const handleOpenEditSubAdmin = (admin) => {
  <div className="flex items-center justify-between">
  <h4 className="font-header font-bold text-zinc-300 text-sm ">Active Sub-Admin Personnel</h4>
  <div className="flex gap-2">
- <button type="button" onClick={() => handleExportPDF('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer bg-transparent">Export PDF</button>
- <button type="button" onClick={() => handleExportImage('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer bg-transparent">Export Image</button>
+ <button type="button" onClick={() => handleExportPDF('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer bg-transparent">Export PDF</button>
+ <button type="button" onClick={() => handleExportImage('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer bg-transparent">Export Image</button>
  </div>
  </div>
  <div className="border-0 sm:border border-zinc-850 rounded-none sm:rounded-lg overflow-hidden bg-transparent sm:bg-zinc-955">
@@ -811,7 +811,7 @@ const handleOpenEditSubAdmin = (admin) => {
  return (
  <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
  <td className="p-3">
- <span className="font-bold text-white block">{cleanName}</span>
+ <span className="font-bold text-slate-900 block">{cleanName}</span>
  {roleTitle && (
  <span className="text-sm bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] px-1.5 py-0.5 rounded font-bold inline-block mt-1">
  {roleTitle}
@@ -835,7 +835,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="button"
  onClick={() => handleOpenEditSubAdmin(admin)}
- className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold "
+ className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-slate-900 rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold "
  >
  Edit
  </button>
@@ -844,7 +844,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="button"
  onClick={() => handleGenerateResetToken(admin.email)}
- className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-[#090d16]mber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
+ className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-whitember-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
  title="Generate Password Reset Link"
  >
  <KeyRound className="w-3.5 h-3.5" />
@@ -852,7 +852,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <button
  type="button"
  onClick={() => handleDeleteUser(admin.id)}
- className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+ className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
  title="Delete sub-admin account"
  >
  <Trash className="w-3.5 h-3.5" />
@@ -890,7 +890,7 @@ const handleOpenEditSubAdmin = (admin) => {
  placeholder="e.g. Admissions Lead"
  value={newRoleName}
  onChange={(e) => setNewRoleName(e.target.value)}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
 
@@ -901,7 +901,7 @@ const handleOpenEditSubAdmin = (admin) => {
  placeholder="Provide a brief summary description of this role's access area..."
  value={newRoleDescription}
  onChange={(e) => setNewRoleDescription(e.target.value)}
- className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  </div>
  </div>
@@ -918,7 +918,7 @@ const handleOpenEditSubAdmin = (admin) => {
  <div key={module.id} className={`bg-zinc-950 border rounded-lg overflow-hidden shadow-md text-left transition-colors duration-200 ${isParentChecked ? 'border-brand/40 bg-[#00e5ff]/5' : 'border-zinc-850 bg-zinc-950'}`}>
  {/* Header */}
  <div className="flex items-center justify-between p-4 border-b border-zinc-900/60 bg-zinc-900/40">
- <span className="font-header font-bold text-sm text-white ">{module.name}</span>
+ <span className="font-header font-bold text-sm text-slate-900 ">{module.name}</span>
  {/* Parent Toggle Switch */}
  <label className="relative inline-flex items-center cursor-pointer select-none">
  <input
@@ -936,7 +936,7 @@ const handleOpenEditSubAdmin = (admin) => {
  {module.actions.map(action => {
  const isChecked = !!newRolePermissions[action.id];
  return (
- <label key={action.id} className="flex items-center justify-between cursor-pointer text-sm select-none hover:text-white text-zinc-400 transition-colors">
+ <label key={action.id} className="flex items-center justify-between cursor-pointer text-sm select-none hover:text-slate-900 text-zinc-400 transition-colors">
  <span className="">{action.name.split(' ')[0]}</span>
  <input
  type="checkbox"
@@ -971,7 +971,7 @@ const handleOpenEditSubAdmin = (admin) => {
  setNewRolePermissions({});
  setActiveRoleTab('roles');
  }}
- className="px-4 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-zinc-400 hover:text-white rounded-lg border border-zinc-800 text-sm font-bold transition cursor-pointer"
+ className="px-4 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-zinc-400 hover:text-slate-900 rounded-lg border border-zinc-800 text-sm font-bold transition cursor-pointer"
  >
  Cancel
  </button>

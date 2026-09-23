@@ -175,7 +175,7 @@ export default function RazorpayCheckoutButton({
     >
       {loading ? (
         <>
-          <span className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"></span>
+          <span className="w-4 h-4 border-2 border-slate-200 border-t-transparent rounded-full animate-spin"></span>
           Processing...
         </>
       ) : (

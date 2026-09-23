@@ -35,7 +35,7 @@ function Stars({ count = 5, total = 5, interactive = false, onSelect }) {
 function ReviewCard({ review }) {
   const initial = (review.name || '?')[0].toUpperCase();
   return (
-    <div className="bg-[#0f172a] rounded-xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover-scale-card transition-all flex flex-col justify-between h-full p-6 sm:p-7 w-full group reveal-on-scroll reveal-scale-in">
+    <div className="bg-white rounded-xl border border-surface-200 hover:border-[#00e5ff] shadow-xs hover-scale-card transition-all flex flex-col justify-between h-full p-6 sm:p-7 w-full group reveal-on-scroll reveal-scale-in">
       <div className="flex-1 flex flex-col justify-between">
         {/* Stars */}
         <div className="flex gap-1 mb-4">
@@ -54,7 +54,7 @@ function ReviewCard({ review }) {
 
       {/* Author */}
       <div className="flex items-center gap-3 pt-4 border-t border-surface-100">
-        <div className="w-9 h-9 bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/40 font-sans font-semibold rounded-full flex items-center justify-center text-sm shrink-0">
+        <div className="w-9 h-9 bg-white text-[#00e5ff] border border-[#00e5ff]/40 font-sans font-semibold rounded-full flex items-center justify-center text-sm shrink-0">
           {initial}
         </div>
         <div>
@@ -81,7 +81,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
 
   if (!user) {
     return (
-      <div className="text-center py-12 bg-[#0f172a] border border-gray-200 border-dashed rounded-xl shadow-sm flex flex-col items-center justify-center">
+      <div className="text-center py-12 bg-white border border-gray-200 border-dashed rounded-xl shadow-sm flex flex-col items-center justify-center">
         <div className="w-16 h-16 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
@@ -91,7 +91,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
         <p className="text-gray-500 text-sm mb-6 max-w-xs font-medium leading-relaxed">
           You must be logged in to share your experience with the BEHOLD community.
         </p>
-        <a href="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold text-sm rounded-full hover:bg-black hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+        <a href="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-slate-900 font-semibold text-sm rounded-full hover:bg-black hover:shadow-lg transition-all transform hover:-translate-y-0.5">
           Login or Register
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -183,7 +183,7 @@ function SubmitReviewForm({ onSubmitSuccess }) {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full py-3 bg-gray-900 hover:bg-black text-white font-semibold text-sm rounded-md transition border-none cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+        className="w-full py-3 bg-gray-900 hover:bg-black text-slate-900 font-semibold text-sm rounded-md transition border-none cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
       >
         {submitting ? 'Submitting...' : 'Submit Review'}
       </button>
@@ -284,7 +284,7 @@ export default function Reviews({ siteSettings }) {
         {loading ? (
           <div className="px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-[#0f172a] rounded-xl border border-surface-200 p-6 flex flex-col justify-between h-56 space-y-4 shadow-xs">
+              <div key={i} className="bg-white rounded-xl border border-surface-200 p-6 flex flex-col justify-between h-56 space-y-4 shadow-xs">
                 <div className="space-y-3">
                   <div className="shimmer h-4 w-28 rounded-md" />
                   <div className="shimmer h-3 w-full rounded-md" />
@@ -301,8 +301,8 @@ export default function Reviews({ siteSettings }) {
             ))}
           </div>
         ) : displayReviews.length === 0 ? (
-          <div className="bg-[#0f172a]/80 backdrop-blur-md rounded-2xl border border-dashed border-gray-300 p-8 text-center max-w-lg mx-auto my-6 shadow-xs">
-            <div className="w-14 h-14 bg-[#0f172a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-dashed border-gray-300 p-8 text-center max-w-lg mx-auto my-6 shadow-xs">
+            <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-[#00e5ff]/40 shadow-xs">
               <span className="text-[#00e5ff] text-xl font-semibold">★</span>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-1">Be the First to Leave a Review</h3>
@@ -311,7 +311,7 @@ export default function Reviews({ siteSettings }) {
             </p>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="px-6 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs tracking-wider uppercase rounded-full transition shadow-xs border border-[#00e5ff]/30 cursor-pointer"
+              className="px-6 py-2.5 bg-white hover:bg-slate-50 text-slate-900 font-semibold text-xs tracking-wider uppercase rounded-full transition shadow-xs border border-[#00e5ff]/30 cursor-pointer"
             >
               {showForm ? 'Close Form' : 'Write a Review'}
             </button>
@@ -323,14 +323,14 @@ export default function Reviews({ siteSettings }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => scrollReviews('left')}
-                  className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
+                  className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
                   aria-label="Previous Testimonial"
                 >
                   <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
                 </button>
                 <button
                   onClick={() => scrollReviews('right')}
-                  className="w-8 h-8 rounded-full bg-[#0f172a] text-white flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
+                  className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center border border-[#00e5ff]/30 active:scale-95 transition-all p-0 shadow-2xs"
                   aria-label="Next Testimonial"
                 >
                   <ChevronRight className="w-4 h-4 text-[#00e5ff]" />
@@ -363,7 +363,7 @@ export default function Reviews({ siteSettings }) {
                   className={`w-9 h-9 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${
                     currentPage === 1
                       ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
-                      : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
+                      : 'border-[#0f172a] bg-white text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
@@ -375,8 +375,8 @@ export default function Reviews({ siteSettings }) {
                     onClick={() => setCurrentPage(num)}
                     className={`w-9 h-9 rounded-full text-xs font-semibold transition-all cursor-pointer border flex items-center justify-center ${
                       currentPage === num
-                        ? 'bg-[#0f172a] text-white border-[#00e5ff] shadow-xs'
-                        : 'bg-[#0f172a] text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
+                        ? 'bg-white text-slate-900 border-[#00e5ff] shadow-xs'
+                        : 'bg-white text-[#0f172a] border-surface-200 hover:border-[#00e5ff]'
                     }`}
                   >
                     {num}
@@ -390,7 +390,7 @@ export default function Reviews({ siteSettings }) {
                   className={`w-9 h-9 rounded-full text-sm font-semibold transition-all cursor-pointer border flex items-center justify-center ${
                     currentPage === totalPages
                       ? 'border-surface-200 text-surface-400 bg-surface-100 cursor-not-allowed'
-                      : 'border-[#0f172a] bg-[#0f172a] text-white hover:bg-[#1e293b]'
+                      : 'border-[#0f172a] bg-white text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <ChevronRight className="w-4 h-4 text-[#00e5ff]" />
@@ -403,7 +403,7 @@ export default function Reviews({ siteSettings }) {
         {/* Submit Review Form Panel */}
         {showForm && (
           <div className="mt-10 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-lg mx-auto bg-[#0f172a] rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8">
+            <div className="max-w-lg mx-auto bg-white rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-serif font-semibold text-gray-900">Share Your Experience</h3>
                 <button

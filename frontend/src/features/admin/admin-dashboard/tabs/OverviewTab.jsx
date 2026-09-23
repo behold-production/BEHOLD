@@ -431,7 +431,7 @@ export default function OverviewTab(props) {
  <span className="text-sm text-zinc-500 font-bold block">Users</span>
  <User className={`w-3.5 h-3.5 ${activeStatHighlight === 'students' ? 'text-[#00e5ff]' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-bold text-white text-left pt-0.5">{studentsCount}</p>
+ <p className="text-xl font-bold text-slate-900 text-left pt-0.5">{studentsCount}</p>
  <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
  <span className=" text-emerald-450">{activeStudentsCount} Active</span>
  <span className=" text-zinc-600">{suspendedStudentsCount} Suspended</span>
@@ -450,7 +450,7 @@ export default function OverviewTab(props) {
  <span className="text-sm text-zinc-500 font-bold block">Psychologists</span>
  <Award className={`w-3.5 h-3.5 ${activeStatHighlight === 'psychologists' ? 'text-[#00e5ff]' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-bold text-white text-left pt-0.5">{psyCount}</p>
+ <p className="text-xl font-bold text-slate-900 text-left pt-0.5">{psyCount}</p>
  <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
  <span className=" text-emerald-450">{approvedPsyCount} Verified</span>
  <span className=" text-amber-500">{pendingPsyCount} Pending</span>
@@ -469,7 +469,7 @@ export default function OverviewTab(props) {
  <span className="text-sm text-zinc-500 font-bold block">Total Bookings</span>
  <Calendar className={`w-3.5 h-3.5 ${activeStatHighlight === 'bookings' ? 'text-[#00e5ff]' : 'text-zinc-500'}`} />
  </div>
- <p className="text-xl font-bold text-white text-left pt-0.5">{totalBookingsCount}</p>
+ <p className="text-xl font-bold text-slate-900 text-left pt-0.5">{totalBookingsCount}</p>
  <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 text-zinc-500 font-semibold pt-0.5">
  <span className=" text-zinc-400">{confirmedBookingsCount} Confirmed</span>
  <span className=" text-zinc-650">{pendingBookingsCount} Pending</span>
@@ -539,7 +539,7 @@ export default function OverviewTab(props) {
  <div className="bg-zinc-950 border border-zinc-850 p-5 rounded-lg space-y-4 animate-in slide-in-from-top-4 duration-300 relative">
  <button
  onClick={() => setActiveStatHighlight(null)}
- className="absolute top-4 right-4 p-1.5 bg-zinc-900 hover:bg-zinc-805 text-zinc-450 hover:text-white rounded border border-zinc-800 cursor-pointer transition border-none"
+ className="absolute top-4 right-4 p-1.5 bg-zinc-900 hover:bg-zinc-805 text-zinc-450 hover:text-slate-900 rounded border border-zinc-800 cursor-pointer transition border-none"
  title="Close Details Panel"
  >
  <X className="w-3.5 h-3.5" />
@@ -549,7 +549,7 @@ export default function OverviewTab(props) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <User className="w-4 h-4 text-[#00e5ff]" />
- <h4 className="font-header font-bold text-sm text-white">Users Registry Breakdown</h4>
+ <h4 className="font-header font-bold text-sm text-slate-900">Users Registry Breakdown</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
@@ -557,11 +557,11 @@ export default function OverviewTab(props) {
  <div className="flex gap-2">
  <div className="flex-1 bg-zinc-950 p-2.5 rounded border border-zinc-850 text-center">
  <span className="text-sm text-emerald-450 font-bold block">Active Accounts</span>
- <p className="text-lg font-bold text-white">{activeStudentsCount}</p>
+ <p className="text-lg font-bold text-slate-900">{activeStudentsCount}</p>
  </div>
  <div className="flex-1 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-center">
  <span className="text-sm text-rose-500 font-bold block">Suspended Accounts</span>
- <p className="text-lg font-bold text-white">{suspendedStudentsCount}</p>
+ <p className="text-lg font-bold text-slate-900">{suspendedStudentsCount}</p>
  </div>
  </div>
  <div className="space-y-1">
@@ -582,7 +582,7 @@ export default function OverviewTab(props) {
  {usersDb.filter(u => u.role === 'USER' || !u.role).reverse().slice(0, 3).map(st => (
  <div key={st.id} className="flex justify-between items-center text-sm bg-zinc-955 p-2 rounded border border-zinc-855">
  <div>
- <span className="font-bold text-white block truncate max-w-[140px]">{st.name}</span>
+ <span className="font-bold text-slate-900 block truncate max-w-[140px]">{st.name}</span>
  <span className="text-sm text-zinc-500 block break-all">{st.email}</span>
  </div>
  <span className={`text-sm px-1.5 py-0.2 rounded font-bold ${st.status === 'SUSPENDED' ? 'bg-rose-955/20 text-rose-500 border border-rose-900/30' : 'bg-emerald-955/20 text-emerald-450 border border-emerald-900/30'
@@ -600,7 +600,7 @@ export default function OverviewTab(props) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <Award className="w-4 h-4 text-[#00e5ff]" />
- <h4 className="font-header font-bold text-sm text-white">Psychologists Status & Verification</h4>
+ <h4 className="font-header font-bold text-sm text-slate-900">Psychologists Status & Verification</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-12 gap-5">
  <div className="sm:col-span-4 bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
@@ -623,19 +623,19 @@ export default function OverviewTab(props) {
  {usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'PENDING').map(psy => (
  <div key={psy.id} className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-sm">
  <div>
- <span className="font-bold text-white block leading-tight">{psy.name}</span>
+ <span className="font-bold text-slate-900 block leading-tight">{psy.name}</span>
  <span className="text-zinc-500 text-sm break-all">{psy.email}</span>
  </div>
  <div className="flex items-center gap-1.5 self-end sm:self-auto">
  <button
  onClick={() => handleTogglePsyVerification(psy.id, false)}
- className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-sm font-bold cursor-pointer border-none transition"
+ className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-slate-900 rounded text-sm font-bold cursor-pointer border-none transition"
  >
  Accept
  </button>
  <button
  onClick={() => handleRejectPsy(psy.id)}
- className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-sm font-bold cursor-pointer border-none transition"
+ className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-slate-900 rounded text-sm font-bold cursor-pointer border-none transition"
  >
  Reject
  </button>
@@ -655,7 +655,7 @@ export default function OverviewTab(props) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <Calendar className="w-4 h-4 text-[#00e5ff]" />
- <h4 className="font-header font-bold text-sm text-white">Consultation Bookings Analytics</h4>
+ <h4 className="font-header font-bold text-sm text-slate-900">Consultation Bookings Analytics</h4>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
@@ -663,11 +663,11 @@ export default function OverviewTab(props) {
  <div className="space-y-2 text-sm">
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Confirmed Sessions</span>
- <span className="text-white font-bold ">{confirmedBookingsCount}</span>
+ <span className="text-slate-900 font-bold ">{confirmedBookingsCount}</span>
  </div>
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Pending Requests</span>
- <span className="text-white font-bold ">{pendingBookingsCount}</span>
+ <span className="text-slate-900 font-bold ">{pendingBookingsCount}</span>
  </div>
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Completed Sessions</span>
@@ -690,7 +690,7 @@ export default function OverviewTab(props) {
  <div className="space-y-1">
  <div className="flex justify-between text-sm font-bold ">
  <span className="text-zinc-450">Emotional Wellbeing</span>
- <span className="text-white ">{counsellingCount} booked</span>
+ <span className="text-slate-900 ">{counsellingCount} booked</span>
  </div>
  <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 flex">
  <div className="bg-[#00e5ff] h-full rounded-full" style={{ width: `${totalBookingsCount > 0 ? (counsellingCount / totalBookingsCount) * 100 : 0}%` }} />
@@ -699,7 +699,7 @@ export default function OverviewTab(props) {
  <div className="space-y-1">
  <div className="flex justify-between text-sm font-bold ">
  <span className="text-zinc-450">Career Mapping (Aptitude)</span>
- <span className="text-white ">{aptitudeCount} booked</span>
+ <span className="text-slate-900 ">{aptitudeCount} booked</span>
  </div>
  <div className="w-full bg-zinc-950 h-1.5 rounded-full overflow-hidden border border-zinc-850 flex">
  <div className="bg-[#00e5ff] h-full rounded-full" style={{ width: `${totalBookingsCount > 0 ? (aptitudeCount / totalBookingsCount) * 100 : 0}%` }} />
@@ -713,15 +713,15 @@ export default function OverviewTab(props) {
  <div className="space-y-2 text-sm">
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Online Google Meet</span>
- <span className="text-white font-bold ">{onlineCount}</span>
+ <span className="text-slate-900 font-bold ">{onlineCount}</span>
  </div>
  <div className="flex justify-between border-b border-zinc-950 pb-1">
  <span className="text-zinc-400">Offline Center Visit</span>
- <span className="text-white font-bold ">{offlineCount}</span>
+ <span className="text-slate-900 font-bold ">{offlineCount}</span>
  </div>
  <div className="flex justify-between">
  <span className="text-zinc-400">Doorstep Outreach</span>
- <span className="text-white font-bold ">{doorstepCount}</span>
+ <span className="text-slate-900 font-bold ">{doorstepCount}</span>
  </div>
  </div>
  </div>
@@ -733,7 +733,7 @@ export default function OverviewTab(props) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <MessageSquare className="w-4 h-4 text-[#00e5ff]" />
- <h4 className="font-header font-bold text-sm text-white">User Inquiries Desk</h4>
+ <h4 className="font-header font-bold text-sm text-slate-900">User Inquiries Desk</h4>
  </div>
  <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-850 space-y-3">
  <span className="text-sm font-bold text-zinc-500 block">Pending Inquiries ({pendingInquiriesCount})</span>
@@ -741,12 +741,12 @@ export default function OverviewTab(props) {
  {inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).map(inq => (
  <div key={inq.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-zinc-955 p-2.5 rounded border border-zinc-850 text-sm">
  <div className="min-w-0 flex-1">
- <span className="font-bold text-white block leading-tight break-all">{inq.name} ({inq.email})</span>
+ <span className="font-bold text-slate-900 block leading-tight break-all">{inq.name} ({inq.email})</span>
  <p className="text-zinc-450 font-medium italic mt-1 ">"{inq.message}"</p>
  </div>
  <button
  onClick={() => handleResolveInquiry(inq.id)}
- className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-sm font-bold cursor-pointer border-none transition shrink-0 self-end sm:self-auto"
+ className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-slate-900 rounded text-sm font-bold cursor-pointer border-none transition shrink-0 self-end sm:self-auto"
  >
  Quick Resolve
  </button>
@@ -764,7 +764,7 @@ export default function OverviewTab(props) {
  <div className="space-y-4">
  <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
  <Check className="w-4 h-4 text-[#00e5ff]" />
- <h4 className="font-header font-bold text-sm text-white">Session Fulfilment Rates</h4>
+ <h4 className="font-header font-bold text-sm text-slate-900">Session Fulfilment Rates</h4>
  </div>
  <div className="bg-zinc-900/60 p-5 rounded-lg border border-zinc-850 space-y-4 text-center">
  <span className="text-sm font-bold text-zinc-500 block">Session Completion Analysis</span>
@@ -801,7 +801,7 @@ export default function OverviewTab(props) {
   <div className="space-y-4">
   <div className="flex items-center gap-2 border-b border-zinc-900 pb-2">
   <span className="text-[#00e5ff] font-bold text-sm">₹</span>
-  <h4 className="font-header font-bold text-sm text-white">Revenue Audits</h4>
+  <h4 className="font-header font-bold text-sm text-slate-900">Revenue Audits</h4>
   </div>
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
   <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
@@ -811,7 +811,7 @@ export default function OverviewTab(props) {
   </div>
   <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
   <span className="text-sm text-zinc-500 font-bold block">Projected Booked Revenue</span>
-  <p className="text-xl font-bold text-white ">₹{projectedRevenue}</p>
+  <p className="text-xl font-bold text-slate-900 ">₹{projectedRevenue}</p>
   <span className="text-xs text-zinc-650 font-bold block mt-1">Scheduled (CONFIRMED/PENDING)</span>
   </div>
   <div className="bg-zinc-900/60 p-4.5 rounded-lg border border-zinc-850 space-y-1">
@@ -843,7 +843,7 @@ export default function OverviewTab(props) {
  setUserFormSuccess('');
  setIsAddUserOpen(true);
  }}
- className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold flex items-center gap-1.5"
+ className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-slate-900 rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold flex items-center gap-1.5"
  >
  <UserPlus className="w-3.5 h-3.5 text-[#00e5ff]" /> Provision User
  </button>
@@ -864,7 +864,7 @@ export default function OverviewTab(props) {
  setPsyFormSuccess('');
  setIsAddPsyOpen(true);
  }}
- className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold flex items-center gap-1.5"
+ className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-slate-900 rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold flex items-center gap-1.5"
  >
  <Plus className="w-3.5 h-3.5 text-[#00e5ff]" /> Register Psychologist
  </button>
@@ -886,7 +886,7 @@ export default function OverviewTab(props) {
  setBookingFormSuccess('');
  setIsAddBookingOpen(true);
  }}
- className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-white rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold flex items-center gap-1.5"
+ className="px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-850 text-slate-900 rounded-lg border border-zinc-800 transition cursor-pointer text-sm font-bold flex items-center gap-1.5"
  >
  <Calendar className="w-3.5 h-3.5 text-[#00e5ff]" /> Schedule Booking
  </button>
@@ -908,7 +908,7 @@ export default function OverviewTab(props) {
  onClick={() => setOverviewActivityTab('bookings')}
  className={`flex-1 px-4 py-2 whitespace-nowrap rounded-md text-sm font-bold transition-all cursor-pointer border-none flex items-center justify-center gap-1.5 shrink-0 ${overviewActivityTab === 'bookings'
  ? 'bg-[#00e5ff] text-zinc-955 font-bold shadow-sm'
- : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-950'
+ : 'bg-transparent text-zinc-400 hover:text-slate-900 hover:bg-zinc-950'
  }`}
  >
  <Calendar className="w-3.5 h-3.5" /> Bookings
@@ -917,7 +917,7 @@ export default function OverviewTab(props) {
  onClick={() => setOverviewActivityTab('inquiries')}
  className={`flex-1 px-4 py-2 whitespace-nowrap rounded-md text-sm font-bold transition-all cursor-pointer border-none flex items-center justify-center gap-1.5 shrink-0 ${overviewActivityTab === 'inquiries'
  ? 'bg-[#00e5ff] text-zinc-955 font-bold shadow-sm'
- : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
+ : 'bg-transparent text-zinc-400 hover:text-slate-900 hover:bg-zinc-955'
  }`}
  >
  <MessageSquare className="w-3.5 h-3.5" /> Inquiries
@@ -926,7 +926,7 @@ export default function OverviewTab(props) {
  onClick={() => setOverviewActivityTab('results')}
  className={`flex-1 px-4 py-2 whitespace-nowrap rounded-md text-sm font-bold transition-all cursor-pointer border-none flex items-center justify-center gap-1.5 shrink-0 ${overviewActivityTab === 'results'
  ? 'bg-[#00e5ff] text-zinc-955 font-bold shadow-sm'
- : 'bg-transparent text-zinc-400 hover:text-white hover:bg-zinc-955'
+ : 'bg-transparent text-zinc-400 hover:text-slate-900 hover:bg-zinc-955'
  }`}
  >
  <FileSpreadsheet className="w-3.5 h-3.5" /> Aptitude Results
@@ -954,7 +954,7 @@ export default function OverviewTab(props) {
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
  <div className="space-y-3 flex-1 min-w-0">
  <div className="flex flex-wrap items-center gap-2">
- <span className="font-bold text-white shrink-0">{b.userName}</span>
+ <span className="font-bold text-slate-900 shrink-0">{b.userName}</span>
  <span className="text-zinc-550 text-xs shrink-0">booked with</span>
  <span className="font-bold text-[#00e5ff] shrink-0">{b.advisorName}</span>
  <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-1 rounded font-bold tracking-wider shrink-0 whitespace-nowrap mt-1 sm:mt-0">
@@ -965,7 +965,7 @@ export default function OverviewTab(props) {
  <span className="text-[11px] bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-1 rounded font-bold tracking-wider shrink-0 whitespace-nowrap">{b.mode}</span>
  <span className="text-[11px] bg-zinc-950 text-zinc-500 border border-zinc-850 px-2 py-1 rounded font-bold tracking-wider shrink-0 whitespace-nowrap">{b.service}</span>
  <span className={`text-[11px] px-2 py-1 rounded tracking-wider font-bold border shrink-0 whitespace-nowrap ${b.status === 'CONFIRMED' ? 'bg-emerald-955/20 border-emerald-900/40 text-emerald-450' :
- b.status === 'PENDING' ? 'bg-[#090d16]mber-955/20 border-amber-900/40 text-amber-500' :
+ b.status === 'PENDING' ? 'bg-whitember-955/20 border-amber-900/40 text-amber-500' :
  b.status === 'COMPLETED' ? 'bg-[#00e5ff]/10 border-brand/20 text-[#00e5ff]' :
  b.status === 'CANCELLED' ? 'bg-rose-955/20 border-rose-900/30 text-rose-500' :
  'bg-zinc-800 border-zinc-700 text-zinc-400'
@@ -986,7 +986,7 @@ export default function OverviewTab(props) {
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm bg-zinc-955/60 p-2.5 rounded border border-zinc-900">
  <div>
  <span className="text-zinc-550 block font-bold text-xs ">Psychologist Designation</span>
- <span className="text-white font-medium block mt-0.5">{b.advisorRole || 'Consultant Psychologist'}</span>
+ <span className="text-slate-900 font-medium block mt-0.5">{b.advisorRole || 'Consultant Psychologist'}</span>
  </div>
  <div>
  <span className="text-zinc-550 block font-bold text-xs ">Appointment ID</span>
@@ -1001,7 +1001,7 @@ export default function OverviewTab(props) {
  navigator.clipboard.writeText(b.meetLink);
  await showAlert("Google Meet Link copied!", "Success");
  }}
- className="px-2.5 py-1 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] hover:border-brand/40 text-white rounded text-sm font-bold cursor-pointer transition shrink-0"
+ className="px-2.5 py-1 bg-zinc-900 border border-zinc-800/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_3px_rgba(11,20,36,0.04),0_6px_20px_-6px_rgba(11,20,36,0.08)] hover:border-brand/40 text-slate-900 rounded text-sm font-bold cursor-pointer transition shrink-0"
  >
  Copy Link
  </button>
@@ -1039,12 +1039,12 @@ export default function OverviewTab(props) {
  <div key={i.id} className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
  <div>
- <span className="text-white font-bold block leading-tight">{i.name}</span>
+ <span className="text-slate-900 font-bold block leading-tight">{i.name}</span>
  <span className="text-zinc-550 text-xs block mt-0.5 break-all">{i.email}</span>
  </div>
  <div className="flex items-center gap-2 shrink-0">
  <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-0.5 rounded font-bold ">{formatDateString(i.date)}</span>
- <span className={`text-xs px-2 py-0.5 rounded font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-[#090d16]mber-955/20 border-amber-900/30 text-amber-500'}`}>{i.status || 'PENDING'}</span>
+ <span className={`text-xs px-2 py-0.5 rounded font-bold border ${isResolved ? 'bg-emerald-955/20 border-emerald-900/30 text-emerald-455' : 'bg-whitember-955/20 border-amber-900/30 text-amber-500'}`}>{i.status || 'PENDING'}</span>
  </div>
  </div>
  <p className="text-zinc-350 font-medium italic border-l-2 border-brand/30 pl-2.5 leading-relaxed bg-zinc-955/20 p-2.5 rounded-r-lg">"{i.message}"</p>
@@ -1053,8 +1053,8 @@ export default function OverviewTab(props) {
  <button
  onClick={() => handleResolveInquiry(i.id)}
  className={`px-3 py-1.5 rounded-lg text-sm font-bold cursor-pointer border transition-colors shrink-0 ${isResolved
- ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-white'
- : 'bg-emerald-600 hover:bg-emerald-700 border-none text-white'
+ ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-400 hover:text-slate-900'
+ : 'bg-emerald-600 hover:bg-emerald-700 border-none text-slate-900'
  }`}
  >
  {isResolved ? 'Mark Pending' : 'Mark Resolved'}
@@ -1065,7 +1065,7 @@ export default function OverviewTab(props) {
  placeholder="Add staff summary note..."
  value={inquiryNotesText[i.id] !== undefined ? inquiryNotesText[i.id] : (i.note || '')}
  onChange={(e) => setInquiryNotesText({ ...inquiryNotesText, [i.id]: e.target.value })}
- className="flex-1 px-3 py-1.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-white outline-none"
+ className="flex-1 px-3 py-1.5 bg-zinc-950 border border-zinc-850 focus:border-brand rounded-lg text-sm text-slate-900 outline-none"
  />
  <button
  onClick={() => handleSaveInquiryNote(i.id, inquiryNotesText[i.id] || '')}
@@ -1102,7 +1102,7 @@ export default function OverviewTab(props) {
  <div key={res.id} className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-855 text-sm space-y-3.5 hover:border-zinc-800 transition-colors">
  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5">
  <div>
- <span className="text-white font-bold block leading-tight">{res.studentName}</span>
+ <span className="text-slate-900 font-bold block leading-tight">{res.studentName}</span>
  <span className="text-zinc-550 text-xs block mt-0.5">{res.studentEmail}</span>
  </div>
  <div className="flex items-center gap-2 shrink-0">
@@ -1120,7 +1120,7 @@ export default function OverviewTab(props) {
  <div key={key} className="space-y-1 bg-zinc-950/40 p-2.5 rounded-lg border border-zinc-900">
  <div className="flex flex-wrap justify-between items-center text-xs gap-x-2 font-bold text-zinc-400 ">
  <span>{key}</span>
- <span className="text-white">{val}%</span>
+ <span className="text-slate-900">{val}%</span>
  </div>
  <div className="w-full bg-zinc-950 h-1 rounded-full overflow-hidden border border-zinc-850">
  <div className="bg-[#00e5ff] h-full rounded-full transition-all duration-500" style={{ width: `${val}%` }} />
@@ -1183,7 +1183,7 @@ export default function OverviewTab(props) {
  <div className="space-y-3.5">
  <div className="flex justify-between items-center">
  <span className="text-zinc-450 font-bold text-sm">Sandbox Storage</span>
- <span className="text-white font-bold ">{kbUsed} KB Used</span>
+ <span className="text-slate-900 font-bold ">{kbUsed} KB Used</span>
  </div>
  <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-850">
  <div className="bg-[#00e5ff] h-full rounded-full" style={{ width: `${Math.min(100, Number(kbUsed) * 2)}%` }} />
@@ -1234,7 +1234,7 @@ export default function OverviewTab(props) {
  </div>
  <button
  onClick={() => setScanResults(null)}
- className="w-full py-1 bg-zinc-950 hover:bg-zinc-900 border border-zinc-855 text-zinc-500 hover:text-white rounded text-sm font-bold cursor-pointer transition"
+ className="w-full py-1 bg-zinc-950 hover:bg-zinc-900 border border-zinc-855 text-zinc-500 hover:text-slate-900 rounded text-sm font-bold cursor-pointer transition"
  >
  Dismiss Report
  </button>
@@ -1256,8 +1256,8 @@ export default function OverviewTab(props) {
  <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
  <h4 className="font-header font-bold text-zinc-300 text-sm ">Active Sub-Admin Personnel</h4>
  <div className="flex gap-2">
- <button onClick={() => handleExportPDF('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer ">Export PDF</button>
- <button onClick={() => handleExportImage('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-white text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer ">Export Image</button>
+ <button onClick={() => handleExportPDF('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer ">Export PDF</button>
+ <button onClick={() => handleExportImage('subadmins-table', 'SubAdmins_Directory')} className="px-2 py-1 border border-zinc-800 hover:bg-zinc-850 hover:text-slate-900 text-zinc-400 text-xs font-bold rounded transition-colors cursor-pointer ">Export Image</button>
  </div>
  </div>
  <div className="border border-zinc-850 rounded-lg overflow-hidden bg-zinc-955">
@@ -1285,7 +1285,7 @@ export default function OverviewTab(props) {
  return (
  <tr key={admin.id} className="border-b border-zinc-900 hover:bg-zinc-900/50">
  <td className="p-3 whitespace-nowrap">
- <span className="font-bold text-white block">{cleanName}</span>
+ <span className="font-bold text-slate-900 block">{cleanName}</span>
  {roleTitle && (
  <span className="text-sm bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff] px-1.5 py-0.5 rounded font-bold inline-block mt-1">
  {roleTitle}
@@ -1329,7 +1329,7 @@ export default function OverviewTab(props) {
  <td className="p-3 text-center whitespace-nowrap">
  <button
  onClick={() => handleOpenEditSubAdmin(admin)}
- className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-white rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold "
+ className="px-2.5 py-1 bg-zinc-900 text-[#00e5ff] hover:text-slate-900 rounded border border-zinc-800 hover:bg-zinc-855 transition cursor-pointer text-sm font-bold "
  >
  Edit
  </button>
@@ -1337,14 +1337,14 @@ export default function OverviewTab(props) {
  <td className="p-3 text-center space-x-1 whitespace-nowrap">
  <button
  onClick={() => handleGenerateResetToken(admin.email)}
- className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-[#090d16]mber-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
+ className="p-1.5 bg-zinc-900 text-amber-500 hover:bg-whitember-900/30 hover:text-amber-400 rounded border border-zinc-800 transition cursor-pointer inline-flex"
  title="Generate Password Reset Link"
  >
  <KeyRound className="w-3.5 h-3.5" />
  </button>
  <button
  onClick={() => handleDeleteUser(admin.id)}
- className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+ className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
  title="Delete sub-admin account"
  >
  <Trash className="w-3.5 h-3.5" />

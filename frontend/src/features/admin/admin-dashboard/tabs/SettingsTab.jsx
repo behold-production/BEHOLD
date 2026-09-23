@@ -393,7 +393,7 @@ export default function SettingsTab(props) {
     <>
       <div className="space-y-6 animate-in fade-in duration-200 text-sm">
         <div className="border-b border-zinc-800 pb-3">
-          <h3 className="text-sm font-bold text-white font-header">Site Configuration Panel</h3>
+          <h3 className="text-sm font-bold text-slate-900 font-header">Site Configuration Panel</h3>
           <p className="text-sm text-zinc-500 font-medium pt-1">Manage global landing page titles, support endpoints, and booking behavior</p>
         </div>
 
@@ -427,7 +427,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <Settings className="w-4 h-4 text-[#00e5ff]" />
-                  <h4 className="text-sm font-bold text-white tracking-wider">General & Contact Settings</h4>
+                  <h4 className="text-sm font-bold text-slate-900 tracking-wider">General & Contact Settings</h4>
                 </div>
 
                 <div className="bg-zinc-950/20 border border-zinc-800 p-5 rounded-lg space-y-4">
@@ -443,7 +443,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.siteName}
                         onChange={(e) => setSettingsForm({ ...settingsForm, siteName: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. BEHOLD"
                       />
                     </div>
@@ -454,7 +454,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.siteCopyright}
                         onChange={(e) => setSettingsForm({ ...settingsForm, siteCopyright: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. © 2026 Behold. All rights reserved."
                       />
                     </div>
@@ -474,7 +474,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.whatsapp}
                         onChange={(e) => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. 9497174011 or https://wa.me/..."
                       />
                     </div>
@@ -485,7 +485,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.contactEmail}
                         onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. support@behold.com"
                       />
                     </div>
@@ -496,7 +496,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.contactPhone || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, contactPhone: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. 9207 07 51 51"
                       />
                     </div>
@@ -507,7 +507,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.openHours || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, openHours: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. Open Hours: Mon - Sat: 9:00 AM - 9:00 PM"
                       />
                     </div>
@@ -535,7 +535,7 @@ export default function SettingsTab(props) {
                                 updated[idx] = { ...updated[idx], name: e.target.value };
                                 setSettingsForm({ ...settingsForm, socialLinks: updated });
                               }}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                               placeholder="e.g. Facebook"
                             />
                           </div>
@@ -550,7 +550,7 @@ export default function SettingsTab(props) {
                                 updated[idx] = { ...updated[idx], url: e.target.value };
                                 setSettingsForm({ ...settingsForm, socialLinks: updated });
                               }}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                               placeholder="https://"
                             />
                           </div>
@@ -564,7 +564,7 @@ export default function SettingsTab(props) {
                                 updated[idx] = { ...updated[idx], logo: e.target.value };
                                 setSettingsForm({ ...settingsForm, socialLinks: updated });
                               }}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                               placeholder="e.g. Facebook"
                             />
                           </div>
@@ -590,7 +590,7 @@ export default function SettingsTab(props) {
                         updated.push({ name: 'New Social', url: 'https://', logo: '' });
                         setSettingsForm({ ...settingsForm, socialLinks: updated });
                       }}
-                      className="w-full py-2 bg-zinc-800/40 hover:bg-zinc-800/80 border border-zinc-700/50 hover:border-brand text-zinc-300 hover:text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                      className="w-full py-2 bg-zinc-800/40 hover:bg-zinc-800/80 border border-zinc-700/50 hover:border-brand text-zinc-300 hover:text-slate-900 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <span>+ Add Social Channel</span>
                     </button>
@@ -622,7 +622,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.bannerNotice}
                         onChange={(e) => setSettingsForm({ ...settingsForm, bannerNotice: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="Write dynamic alert banner message..."
                       />
                     </div>
@@ -651,7 +651,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <Brain className="w-4 h-4 text-[#00e5ff]" />
-                  <h4 className="text-sm font-bold text-white tracking-wider">Landing Page Content</h4>
+                  <h4 className="text-sm font-bold text-slate-900 tracking-wider">Landing Page Content</h4>
                 </div>
 
 
@@ -670,10 +670,10 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.heroBgImage || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, heroBgImage: e.target.value })}
-                        className="flex-1 px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none w-full"
+                        className="flex-1 px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none w-full"
                         placeholder="Paste Image URL or select file below..."
                       />
-                      <label className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs rounded-lg cursor-pointer transition shrink-0 border border-zinc-700 flex items-center gap-1.5">
+                      <label className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-slate-900 font-bold text-xs rounded-lg cursor-pointer transition shrink-0 border border-zinc-700 flex items-center gap-1.5">
                         <Download className="w-3.5 h-3.5" />
                         <span>Upload Image</span>
                         <input
@@ -700,7 +700,7 @@ export default function SettingsTab(props) {
                         <button
                           type="button"
                           onClick={() => setSettingsForm({ ...settingsForm, heroBgImage: '' })}
-                          className="absolute top-2 right-2 p-1 bg-red-600/80 hover:bg-red-600 text-white rounded-full text-xs"
+                          className="absolute top-2 right-2 p-1 bg-red-600/80 hover:bg-red-600 text-slate-900 rounded-full text-xs"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -716,7 +716,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.heroEyebrow || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, heroEyebrow: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none"
                         placeholder="Whatever you feel,"
                       />
                     </div>
@@ -726,7 +726,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.heroBtnText || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, heroBtnText: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none"
                         placeholder="BOOK CONSULTATION"
                       />
                     </div>
@@ -738,7 +738,7 @@ export default function SettingsTab(props) {
                       rows={3}
                       value={settingsForm.heroTitle || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, heroTitle: e.target.value })}
-                      className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-mono"
+                      className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-mono"
                       placeholder={'WE DESIGN\nTHE CLARITY\nOF YOU'}
                     />
                   </div>
@@ -749,7 +749,7 @@ export default function SettingsTab(props) {
                       rows={2}
                       value={settingsForm.heroSub || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, heroSub: e.target.value })}
-                      className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+                      className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none"
                       placeholder="Should guide your new experience..."
                     />
                   </div>
@@ -802,7 +802,7 @@ export default function SettingsTab(props) {
                                   newStats[idx] = { ...newStats[idx], num: e.target.value };
                                   setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
                                 }}
-                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white font-bold outline-none"
+                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 font-bold outline-none"
                               />
                             </div>
                           </div>
@@ -819,7 +819,7 @@ export default function SettingsTab(props) {
                                   newStats[idx] = { ...newStats[idx], label: e.target.value };
                                   setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
                                 }}
-                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none"
                               />
                             </div>
                             <div className="flex items-center gap-1 shrink-0 self-end mb-0.5">
@@ -831,7 +831,7 @@ export default function SettingsTab(props) {
                                   [newStats[idx - 1], newStats[idx]] = [newStats[idx], newStats[idx - 1]];
                                   setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
                                 }}
-                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-slate-900 transition-all"
                                 title="Move Up"
                               >
                                 <ChevronUp className="w-4 h-4" />
@@ -844,7 +844,7 @@ export default function SettingsTab(props) {
                                   [newStats[idx + 1], newStats[idx]] = [newStats[idx], newStats[idx + 1]];
                                   setSettingsForm(prev => ({ ...prev, heroStats: newStats }));
                                 }}
-                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-slate-900 transition-all"
                                 title="Move Down"
                               >
                                 <ChevronDown className="w-4 h-4" />
@@ -883,7 +883,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.careerBadge || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, careerBadge: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="space-y-1">
@@ -893,7 +893,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.careerTitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, careerTitle: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="space-y-1">
@@ -903,7 +903,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.careerSubtitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, careerSubtitle: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="space-y-1">
@@ -913,7 +913,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.careerBtnText || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, careerBtnText: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="sm:col-span-2 space-y-1">
@@ -923,7 +923,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.careerDesc || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, careerDesc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none resize-none font-semibold transition-colors"
                       />
                     </div>
                   </div>
@@ -943,7 +943,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.counselBadge || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, counselBadge: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="space-y-1">
@@ -953,7 +953,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.counselTitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, counselTitle: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="space-y-1">
@@ -963,7 +963,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.counselSubtitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, counselSubtitle: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="space-y-1">
@@ -973,7 +973,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.counselBtnText || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, counselBtnText: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="sm:col-span-2 space-y-1">
@@ -983,7 +983,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.counselDesc || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, counselDesc: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800/80 focus:border-brand rounded-lg text-xs text-slate-900 outline-none resize-none font-semibold transition-colors"
                       />
                     </div>
                   </div>
@@ -1003,7 +1003,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.aboutTitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, aboutTitle: e.target.value })}
-                        className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1013,7 +1013,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.aboutSub || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, aboutSub: e.target.value })}
-                        className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                       />
                     </div>
 
@@ -1057,7 +1057,7 @@ export default function SettingsTab(props) {
                                 newCards[idx].title = e.target.value;
                                 setSettingsForm({ ...settingsForm, aboutCards: newCards });
                               }}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold mb-2 transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold mb-2 transition-colors"
                             />
                             <textarea
                               rows={2}
@@ -1069,7 +1069,7 @@ export default function SettingsTab(props) {
                                 newCards[idx].desc = e.target.value;
                                 setSettingsForm({ ...settingsForm, aboutCards: newCards });
                               }}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none resize-none font-semibold transition-colors"
                             />
                           </div>
                         ))}
@@ -1131,7 +1131,7 @@ export default function SettingsTab(props) {
                                   newStats[idx] = { ...newStats[idx], value: e.target.value };
                                   setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
                                 }}
-                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white font-bold outline-none"
+                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 font-bold outline-none"
                               />
                             </div>
                           </div>
@@ -1148,7 +1148,7 @@ export default function SettingsTab(props) {
                                   newStats[idx] = { ...newStats[idx], label: e.target.value };
                                   setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
                                 }}
-                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none"
+                                className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none"
                               />
                             </div>
                             <div className="flex items-center gap-1 shrink-0 self-end mb-0.5">
@@ -1160,7 +1160,7 @@ export default function SettingsTab(props) {
                                   [newStats[idx - 1], newStats[idx]] = [newStats[idx], newStats[idx - 1]];
                                   setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
                                 }}
-                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-slate-900 transition-all"
                                 title="Move Up"
                               >
                                 <ChevronUp className="w-4 h-4" />
@@ -1173,7 +1173,7 @@ export default function SettingsTab(props) {
                                   [newStats[idx + 1], newStats[idx]] = [newStats[idx], newStats[idx + 1]];
                                   setSettingsForm(prev => ({ ...prev, aboutStats: newStats }));
                                 }}
-                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-white transition-all"
+                                className="p-1.5 hover:bg-zinc-800 rounded disabled:opacity-30 disabled:pointer-events-none cursor-pointer text-zinc-400 hover:text-slate-900 transition-all"
                                 title="Move Down"
                               >
                                 <ChevronDown className="w-4 h-4" />
@@ -1219,7 +1219,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <Video className="w-4 h-4 text-[#00e5ff]" />
-                  <h4 className="text-sm font-bold text-white tracking-wider">Services & Session Modes</h4>
+                  <h4 className="text-sm font-bold text-slate-900 tracking-wider">Services & Session Modes</h4>
                 </div>
                 {/* Feature Toggles */}
                 <div className="border border-zinc-800 p-5 rounded-lg space-y-4 bg-zinc-955/20">
@@ -1358,7 +1358,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <KeyRound className="w-4 h-4 text-[#00e5ff]" />
-                  <h4 className="text-sm font-bold text-white tracking-wider">Payments & Taxation</h4>
+                  <h4 className="text-sm font-bold text-slate-900 tracking-wider">Payments & Taxation</h4>
                 </div>
 
                 {/* GST / Tax Configuration */}
@@ -1400,7 +1400,7 @@ export default function SettingsTab(props) {
                           if (val > 100) val = 100;
                           setSettingsForm({ ...settingsForm, gstPercent: val });
                         }}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. 18"
                       />
                       <p className="text-[11px] text-zinc-500 font-medium">Set to 0 to show ₹0 for GST. Common values: 5%, 12%, 18%, 28%</p>
@@ -1429,7 +1429,7 @@ export default function SettingsTab(props) {
                         if (val > 100) val = 100;
                         setSettingsForm({ ...settingsForm, counsellorSplitPercent: val });
                       }}
-                      className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                      className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                       placeholder="e.g. 50"
                     />
                     <p className="text-[11px] text-zinc-500 font-medium leading-relaxed pt-1">Configure the percentage of the booking payment routed automatically to the psychologist's Razorpay linked account. The remaining percentage will be kept by the platform.</p>
@@ -1449,7 +1449,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adminBankAccountName || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountName: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. BEHOLD Platform Pvt Ltd"
                       />
                     </div>
@@ -1459,7 +1459,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adminBankAccountNumber || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adminBankAccountNumber: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. 50200012345678"
                       />
                     </div>
@@ -1469,7 +1469,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adminBankIfscCode || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adminBankIfscCode: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. HDFC0000123"
                       />
                     </div>
@@ -1500,7 +1500,7 @@ export default function SettingsTab(props) {
                 <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
                   <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                     <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />
-                    <h4 className="text-sm font-bold text-white tracking-wider">Security & System</h4>
+                    <h4 className="text-sm font-bold text-slate-900 tracking-wider">Security & System</h4>
                   </div>
 
                   {/* Aptitude Section Header Customization */}
@@ -1517,7 +1517,7 @@ export default function SettingsTab(props) {
                           required
                           value={settingsForm.aptitudeSectionTitle || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, aptitudeSectionTitle: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="e.g. Discover Your Inherent Strengths"
                         />
                       </div>
@@ -1528,7 +1528,7 @@ export default function SettingsTab(props) {
                           required
                           value={settingsForm.aptitudeSectionSub || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, aptitudeSectionSub: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="e.g. CDAT APTITUDE ASSESSMENT"
                         />
                       </div>
@@ -1540,7 +1540,7 @@ export default function SettingsTab(props) {
                         rows={2}
                         value={settingsForm.aptitudeSectionDesc || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, aptitudeSectionDesc: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors resize-none"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors resize-none"
                         placeholder="e.g. Identify your potential with scientific assessments..."
                       />
                     </div>
@@ -1558,7 +1558,7 @@ export default function SettingsTab(props) {
                         required
                         value={settingsForm.cdatGroupCode || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, cdatGroupCode: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. cdat@behold"
                       />
                       <span className="text-[11px] text-zinc-500 block font-medium">Global group/school referral code for CDAT registrations.</span>
@@ -1588,7 +1588,7 @@ export default function SettingsTab(props) {
                       <Bell className="w-4 h-4 text-indigo-400" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-white">Desktop Alerts & Reminders</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Desktop Alerts & Reminders</h3>
                       <p className="text-xs text-zinc-500 font-medium mt-0.5">Receive real-time notifications for system alerts and platform events</p>
                     </div>
                   </div>
@@ -1639,7 +1639,7 @@ export default function SettingsTab(props) {
                         <button
                           type="button"
                           onClick={handleTestNotification}
-                          className="min-h-[36px] px-4 py-2 bg-zinc-955 border border-zinc-800 text-zinc-300 hover:text-white rounded-full text-xs font-semibold transition cursor-pointer"
+                          className="min-h-[36px] px-4 py-2 bg-zinc-955 border border-zinc-800 text-zinc-300 hover:text-slate-900 rounded-full text-xs font-semibold transition cursor-pointer"
                         >
                           Test Alert Notification
                         </button>
@@ -1660,7 +1660,7 @@ export default function SettingsTab(props) {
                       <Send className="w-4 h-4 text-indigo-400" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-white">Broadcast System Announcement</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Broadcast System Announcement</h3>
                       <p className="text-xs text-zinc-500 font-medium mt-0.5">Send real-time push/desktop local alerts to active users and consultants</p>
                     </div>
                   </div>
@@ -1672,7 +1672,7 @@ export default function SettingsTab(props) {
                         <select
                           value={announcementRole}
                           onChange={(e) => setAnnouncementRole(e.target.value)}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold cursor-pointer transition-colors"
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold cursor-pointer transition-colors"
                         >
                           <option value="user">All Users</option>
                           <option value="counsellor">All Psychologists</option>
@@ -1687,7 +1687,7 @@ export default function SettingsTab(props) {
                           required
                           value={announcementTitle}
                           onChange={(e) => setAnnouncementTitle(e.target.value)}
-                          className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="e.g. Schedule Maintenance"
                         />
                       </div>
@@ -1700,7 +1700,7 @@ export default function SettingsTab(props) {
                         required
                         value={announcementMessage}
                         onChange={(e) => setAnnouncementMessage(e.target.value)}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none resize-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none resize-none font-semibold transition-colors"
                         placeholder="Write message content here..."
                       />
                     </div>
@@ -1737,12 +1737,12 @@ export default function SettingsTab(props) {
                 <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
                   <div className="flex items-center gap-2">
                     <FileSpreadsheet className="w-4 h-4 text-[#00e5ff]" />
-                    <h4 className="text-sm font-bold text-white tracking-wider">Promotional Codes</h4>
+                    <h4 className="text-sm font-bold text-slate-900 tracking-wider">Promotional Codes</h4>
                   </div>
                   <button
                     type="button"
                     onClick={handleAddPromoCode}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-955 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white rounded-full text-xs font-bold transition cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-955 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-slate-900 rounded-full text-xs font-bold transition cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add Code
@@ -1757,7 +1757,7 @@ export default function SettingsTab(props) {
                           <button
                             type="button"
                             onClick={() => handleRemovePromoCode(idx)}
-                            className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition cursor-pointer shadow-md border-none"
+                            className="absolute -top-2 -right-2 bg-rose-500 text-slate-900 rounded-full p-1 opacity-0 group-hover:opacity-100 transition cursor-pointer shadow-md border-none"
                             title="Remove Promo Code"
                           >
                             <X className="w-3 h-3" />
@@ -1770,7 +1770,7 @@ export default function SettingsTab(props) {
                               required
                               value={promo.code}
                               onChange={(e) => handleUpdatePromoCode(idx, 'code', e.target.value.toUpperCase())}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                               placeholder="CODE"
                             />
                           </div>
@@ -1780,7 +1780,7 @@ export default function SettingsTab(props) {
                             <select
                               value={promo.type}
                               onChange={(e) => handleUpdatePromoCode(idx, 'type', e.target.value)}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold cursor-pointer transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold cursor-pointer transition-colors"
                             >
                               <option value="PERCENTAGE">Percentage (%)</option>
                               <option value="FLAT">Flat (₹)</option>
@@ -1795,7 +1795,7 @@ export default function SettingsTab(props) {
                               min={0}
                               value={promo.value}
                               onChange={(e) => handleUpdatePromoCode(idx, 'value', Number(e.target.value))}
-                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                              className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                             />
                           </div>
 
@@ -1842,7 +1842,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-6 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <Video className="w-4 h-4 text-[#00e5ff]" />
-                  <h4 className="text-sm font-bold text-white tracking-wider">Ad Campaign & Landing Page Management (/ad)</h4>
+                  <h4 className="text-sm font-bold text-slate-900 tracking-wider">Ad Campaign & Landing Page Management (/ad)</h4>
                 </div>
 
                 {/* 1. Hero Section */}
@@ -1860,7 +1860,7 @@ export default function SettingsTab(props) {
                           type="text"
                           value={settingsForm.adHeroTitle || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, adHeroTitle: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="e.g. മനസ്സിലാക്കപ്പെടുന്നത് ഇവിടെ തുടങ്ങുന്നു."
                         />
                       </div>
@@ -1871,7 +1871,7 @@ export default function SettingsTab(props) {
                           type="text"
                           value={settingsForm.adHeroBtnText || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, adHeroBtnText: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="e.g. Book My Session"
                         />
                       </div>
@@ -1883,7 +1883,7 @@ export default function SettingsTab(props) {
                         rows={3}
                         value={settingsForm.adHeroSub || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adHeroSub: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-none transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold resize-none transition-colors"
                         placeholder="e.g. Qualified psychologists-നൊപ്പം, വീട്ടിലിരുന്ന് തന്നെ ഒന്ന് തുറന്നു സംസാരിക്കാം. വെറും ₹899-ന് ഒരു session ബുക്ക് ചെയ്യാം."
                       />
                     </div>
@@ -1895,7 +1895,7 @@ export default function SettingsTab(props) {
                           type="number"
                           value={settingsForm.adHeroPrice || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, adHeroPrice: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="899"
                         />
                       </div>
@@ -1906,7 +1906,7 @@ export default function SettingsTab(props) {
                           type="text"
                           value={settingsForm.adHeroBadge || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, adHeroBadge: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="e.g. 100% Confidential & Secure"
                         />
                       </div>
@@ -1917,7 +1917,7 @@ export default function SettingsTab(props) {
                           type="text"
                           value={settingsForm.adHeroRatingText || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, adHeroRatingText: e.target.value })}
-                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                          className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                           placeholder="e.g. ★ 4.9/5 Rating (500+ Consultations)"
                         />
                       </div>
@@ -1932,7 +1932,7 @@ export default function SettingsTab(props) {
                           value={settingsForm.adHeroImage || ''}
                           onChange={(e) => setSettingsForm({ ...settingsForm, adHeroImage: e.target.value })}
                           placeholder="Paste image URL (https://...)"
-                          className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-white outline-none font-medium w-full"
+                          className="flex-1 px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-xs text-slate-900 outline-none font-medium w-full"
                         />
                         <label className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold rounded-lg cursor-pointer transition shrink-0 border border-zinc-700 flex items-center gap-1.5">
                           <Download className="w-3.5 h-3.5 text-[#00e5ff]" />
@@ -1958,7 +1958,7 @@ export default function SettingsTab(props) {
                           <button
                             type="button"
                             onClick={() => setSettingsForm({ ...settingsForm, adHeroImage: '' })}
-                            className="absolute top-1 right-1 p-1 bg-red-500/80 hover:bg-red-500 text-white rounded-full text-xs"
+                            className="absolute top-1 right-1 p-1 bg-red-500/80 hover:bg-red-500 text-slate-900 rounded-full text-xs"
                             title="Remove image"
                           >
                             <X className="w-3 h-3" />
@@ -1983,7 +1983,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adVideoTitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adVideoTitle: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. How Booking Works"
                       />
                     </div>
@@ -1994,7 +1994,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adVideoSub || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adVideoSub: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. ലളിതമായ 3 ഘട്ടങ്ങളിലൂടെ ഒരു session ബുക്ക് ചെയ്യാം."
                       />
                     </div>
@@ -2007,7 +2007,7 @@ export default function SettingsTab(props) {
                         type="url"
                         value={settingsForm.adVideoUrl || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adVideoUrl: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. https://www.youtube.com/embed/XXXXX or https://.../video.mp4"
                       />
                       <p className="text-[11px] text-zinc-500">Leave empty to use interactive visual walkthrough card.</p>
@@ -2019,7 +2019,7 @@ export default function SettingsTab(props) {
                         type="url"
                         value={settingsForm.adVideoPoster || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adVideoPoster: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. https://www.behold.co.in/assets/video_cover.jpg"
                       />
                     </div>
@@ -2040,7 +2040,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adTrustBadge1Title || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge1Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. 11 Qualified"
                       />
                       <input
@@ -2058,7 +2058,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adTrustBadge2Title || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge2Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. 100% Confidential"
                       />
                       <input
@@ -2076,7 +2076,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adTrustBadge3Title || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge3Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. Malayalam & English"
                       />
                       <input
@@ -2094,7 +2094,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adTrustBadge4Title || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adTrustBadge4Title: e.target.value })}
-                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. Secure Online Payment"
                       />
                       <input
@@ -2122,7 +2122,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adReflectionTitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionTitle: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. ഇത് നിങ്ങൾക്ക് പരിചയമുള്ളതാണോ?"
                       />
                     </div>
@@ -2133,7 +2133,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adReflectionSub || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionSub: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. (Does this feel familiar?)"
                       />
                     </div>
@@ -2146,7 +2146,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adReflectionPrompt1 || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt1: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. എപ്പോഴും ക്ഷീണം തോന്നാറുണ്ടോ, rest എടുത്തിട്ടും?"
                       />
                     </div>
@@ -2157,7 +2157,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adReflectionPrompt2 || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt2: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. ചിന്തകൾ നിർത്താൻ പറ്റാതെ, രാത്രി ഉറക്കം കിട്ടാതെ ആണോ?"
                       />
                     </div>
@@ -2168,7 +2168,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adReflectionPrompt3 || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt3: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. Work-ന്റെ stress വീട്ടിലേക്കും കൂടെ വരാറുണ്ടോ?"
                       />
                     </div>
@@ -2179,7 +2179,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adReflectionPrompt4 || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionPrompt4: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-white"
+                        className="w-full px-3.5 py-2.5 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900"
                         placeholder="e.g. എന്തോ ഒന്ന് missing ആണെന്ന് തോന്നാറുണ്ടോ, പക്ഷെ എന്താണെന്ന് exactly അറിയില്ലേ?"
                       />
                     </div>
@@ -2190,7 +2190,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adReflectionClosing || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adReflectionClosing: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-brand/50 rounded-lg text-sm text-white font-bold"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-brand/50 rounded-lg text-sm text-slate-900 font-bold"
                         placeholder="e.g. ഇത് weakness അല്ല. ഇത് ഒന്ന് സംസാരിക്കേണ്ട സമയമാണ്."
                       />
                     </div>
@@ -2211,7 +2211,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adPsychologistTitle || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adPsychologistTitle: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. നിങ്ങൾക്കൊപ്പം സംസാരിക്കുന്നത് ഇവരാണ്"
                       />
                     </div>
@@ -2222,7 +2222,7 @@ export default function SettingsTab(props) {
                         type="text"
                         value={settingsForm.adPsychologistSub || ''}
                         onChange={(e) => setSettingsForm({ ...settingsForm, adPsychologistSub: e.target.value })}
-                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold transition-colors"
+                        className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold transition-colors"
                         placeholder="e.g. Qualified. Experienced. Judgment-free. നിങ്ങളുടെ concern-ന് ചേരുന്ന ഒരാളെ തിരഞ്ഞെടുക്കൂ."
                       />
                     </div>
@@ -2277,7 +2277,7 @@ export default function SettingsTab(props) {
                             updated[idx] = { ...updated[idx], q: e.target.value };
                             setSettingsForm({ ...settingsForm, adFaqs: updated });
                           }}
-                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-white font-semibold"
+                          className="w-full px-3 py-2 bg-zinc-955 border border-zinc-800 rounded text-xs text-slate-900 font-semibold"
                           placeholder="ചോദ്യം (Question)..."
                         />
                         <textarea
@@ -2318,7 +2318,7 @@ export default function SettingsTab(props) {
               <form onSubmit={handleSaveSettings} className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-lg space-y-5 animate-in fade-in duration-200 shadow-lg">
                 <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/60">
                   <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />
-                  <h4 className="text-sm font-bold text-white tracking-wider">Policies, Legal & Client Consent Agreements</h4>
+                  <h4 className="text-sm font-bold text-slate-900 tracking-wider">Policies, Legal & Client Consent Agreements</h4>
                 </div>
 
                 <p className="text-xs text-zinc-400 font-medium leading-relaxed">
@@ -2347,7 +2347,7 @@ export default function SettingsTab(props) {
                       required
                       value={settingsForm.termsOfUse || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, termsOfUse: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Platform Terms & Conditions..."
                     />
                     <span className="text-[10px] text-zinc-500 font-medium block text-right">
@@ -2376,7 +2376,7 @@ export default function SettingsTab(props) {
                       required
                       value={settingsForm.privacyPolicy || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, privacyPolicy: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Platform Privacy Policy..."
                     />
                     <span className="text-[10px] text-zinc-500 font-medium block text-right">
@@ -2405,7 +2405,7 @@ export default function SettingsTab(props) {
                       required
                       value={settingsForm.refundPolicy || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, refundPolicy: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Platform Return & Refund Policy..."
                     />
                     <span className="text-[10px] text-zinc-500 font-medium block text-right">
@@ -2416,7 +2416,7 @@ export default function SettingsTab(props) {
                   {/* Informed Consent & Client Agreement */}
                   <div className="space-y-1.5 bg-zinc-950/40 p-4 rounded-xl border border-brand/30 ring-1 ring-brand/15">
                     <div className="flex items-center justify-between gap-2">
-                      <label className="text-xs font-bold text-white flex items-center gap-1.5">
+                      <label className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff]" />
                         Informed Consent & Client Agreement
                       </label>
@@ -2437,7 +2437,7 @@ export default function SettingsTab(props) {
                       required
                       value={settingsForm.consentPolicy || ''}
                       onChange={(e) => setSettingsForm({ ...settingsForm, consentPolicy: e.target.value })}
-                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-white outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
+                      className="w-full px-3.5 py-3 bg-zinc-955 border border-zinc-800 focus:border-brand rounded-lg text-sm text-slate-900 outline-none font-semibold resize-y transition-colors font-mono text-xs leading-relaxed"
                       placeholder="Write Client Informed Consent Agreement..."
                     />
                     <span className="text-[10px] text-zinc-500 font-medium block text-right">

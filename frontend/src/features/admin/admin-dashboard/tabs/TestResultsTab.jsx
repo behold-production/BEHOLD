@@ -343,7 +343,7 @@ export default function TestResultsTab(props) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Aptitude Test Results</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Aptitude Test Results</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">Monitor user diagnostic assessment outcomes and profiles</p>
  </div>
  <div className="relative w-full sm:max-w-[240px]">
@@ -352,7 +352,7 @@ export default function TestResultsTab(props) {
  placeholder="Search results..."
  value={searchTestResult}
  onChange={(e) => setSearchTestResult(e.target.value)}
- className="w-full pl-9 pr-4 py-2 bg-zinc-955 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
+ className="w-full pl-9 pr-4 py-2 bg-zinc-955 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-slate-900 outline-none"
  />
  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
  </div>
@@ -393,7 +393,7 @@ export default function TestResultsTab(props) {
  <span className="text-sm bg-[#00e5ff] text-zinc-955 px-2 py-0.5 rounded font-bold ">
  Dominant: {res.dominantDomain}
  </span>
- <h4 className="font-header font-bold text-sm text-white truncate pt-1">{res.studentName}</h4>
+ <h4 className="font-header font-bold text-sm text-slate-900 truncate pt-1">{res.studentName}</h4>
  <span className="text-sm text-zinc-550 block font-medium truncate leading-none">{res.studentEmail}</span>
  </div>
  <div className="flex items-center gap-1.5 shrink-0">
@@ -407,7 +407,7 @@ export default function TestResultsTab(props) {
  <span className="text-sm text-zinc-500 font-bold ">{formatDateString(res.date)}</span>
  <button
  onClick={() => handleDeleteTestResult(res.id)}
- className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+ className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
  title="Delete Result Log"
  >
  <Trash className="w-3.5 h-3.5" />

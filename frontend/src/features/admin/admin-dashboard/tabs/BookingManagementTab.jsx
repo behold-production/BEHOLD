@@ -380,7 +380,7 @@ export default function BookingManagementTab(props) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
  <div>
- <h3 className="text-sm font-bold text-white font-header">Consultation Bookings</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header">Consultation Bookings</h3>
  <p className="text-sm text-zinc-500 font-medium pt-1">Schedule new consultations, manage session statuses, and meeting links</p>
  </div>
  <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
@@ -390,7 +390,7 @@ export default function BookingManagementTab(props) {
  placeholder="Search bookings..."
  value={searchBooking}
  onChange={(e) => setSearchBooking(e.target.value)}
- className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
+ className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-slate-900 outline-none"
  />
  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
  </div>
@@ -426,7 +426,7 @@ export default function BookingManagementTab(props) {
  {canAddBookings && (
  <button
  onClick={() => setShowAdminBookingFlow(true)}
- className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+ className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-slate-900 text-sm font-bold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
  >
  <Plus className="w-3.5 h-3.5" /> Admin Booking
  </button>
@@ -443,7 +443,7 @@ export default function BookingManagementTab(props) {
  onClick={() => { setBookingStatusFilter(status); setSelectedBookingIds([]); }}
  className={`px-3 py-1.5 rounded-lg text-sm font-bold transition cursor-pointer border ${bookingStatusFilter === status
  ? 'bg-[#00e5ff] text-zinc-955 border-brand font-bold'
- : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
+ : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-slate-900'
  }`}
  >
  {status} ({
@@ -481,25 +481,25 @@ export default function BookingManagementTab(props) {
  <div className="flex items-center gap-2">
  <button
  onClick={() => handleBulkBookingStatus('CONFIRMED')}
- className="px-2.5 py-1 bg-emerald-955/20 text-emerald-400 hover:bg-emerald-900 hover:text-white rounded border border-emerald-900/30 transition text-sm font-bold cursor-pointer"
+ className="px-2.5 py-1 bg-emerald-955/20 text-emerald-400 hover:bg-emerald-900 hover:text-slate-900 rounded border border-emerald-900/30 transition text-sm font-bold cursor-pointer"
  >
  Confirm
  </button>
  <button
  onClick={() => handleBulkBookingStatus('COMPLETED')}
- className="px-2.5 py-1 bg-indigo-955/20 text-indigo-400 hover:bg-indigo-900 hover:text-white rounded border border-indigo-900/30 transition text-sm font-bold cursor-pointer"
+ className="px-2.5 py-1 bg-indigo-955/20 text-indigo-400 hover:bg-indigo-900 hover:text-slate-900 rounded border border-indigo-900/30 transition text-sm font-bold cursor-pointer"
  >
  Complete
  </button>
  <button
  onClick={() => handleBulkBookingStatus('CANCELLED')}
- className="px-2.5 py-1 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition text-sm font-bold cursor-pointer"
+ className="px-2.5 py-1 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition text-sm font-bold cursor-pointer"
  >
  Cancel
  </button>
  <button
  onClick={handleBulkDeleteBookings}
- className="px-2.5 py-1 bg-rose-950/40 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/50 transition text-sm font-bold cursor-pointer"
+ className="px-2.5 py-1 bg-rose-950/40 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/50 transition text-sm font-bold cursor-pointer"
  >
  Delete
  </button>
@@ -559,21 +559,21 @@ export default function BookingManagementTab(props) {
  />
  </td>
  <td className="p-3 whitespace-nowrap">
- <span className="font-bold text-white block leading-tight">{booking.userName}</span>
+ <span className="font-bold text-slate-900 block leading-tight">{booking.userName}</span>
  <span className="text-sm text-zinc-500">ID: {booking.userId}</span>
  </td>
  <td className="p-3 whitespace-nowrap">
- <span className="font-bold text-white block leading-tight">{booking.advisorName}</span>
+ <span className="font-bold text-slate-900 block leading-tight">{booking.advisorName}</span>
  <span className="text-sm text-zinc-500">{booking.advisorRole}</span>
  </td>
   <td className="p-3 whitespace-nowrap">
-  <span className="font-semibold block text-white leading-tight">
+  <span className="font-semibold block text-slate-900 leading-tight">
   {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
   </span>
   <div className="flex items-center gap-1.5 mt-0.5">
     <span className="text-sm text-zinc-555 font-bold">{booking.mode}</span>
     {(booking.utmCampaign || booking.utmSource || booking.fbclid) && (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-400 bg-[#090d16]yan-950/60 border border-cyan-800/60 px-1.5 py-0.5 rounded shadow-xs">
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-400 bg-whiteyan-950/60 border border-cyan-800/60 px-1.5 py-0.5 rounded shadow-xs">
         🎯 {booking.utmCampaign ? String(booking.utmCampaign).substring(0, 18) : (booking.utmSource ? `Ad (${booking.utmSource})` : 'Meta Ad')}
       </span>
     )}
@@ -617,7 +617,7 @@ export default function BookingManagementTab(props) {
     <>
       <button
         onClick={() => downloadPDFReceipt(booking)}
-        className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+        className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-slate-900 rounded border border-zinc-800 transition cursor-pointer"
         title="Download Receipt PDF"
       >
         <Download className="w-3.5 h-3.5" />
@@ -637,7 +637,7 @@ export default function BookingManagementTab(props) {
             toast.error('Error sending WhatsApp reminder.');
           }
         }}
-        className="p-1.5 bg-emerald-955/30 text-emerald-450 hover:text-white hover:bg-emerald-900/60 rounded border border-emerald-900/40 transition cursor-pointer"
+        className="p-1.5 bg-emerald-955/30 text-emerald-450 hover:text-slate-900 hover:bg-emerald-900/60 rounded border border-emerald-900/40 transition cursor-pointer"
         title="Send Instant WhatsApp Session Reminder"
       >
         <Send className="w-3.5 h-3.5" />
@@ -647,7 +647,7 @@ export default function BookingManagementTab(props) {
  {booking.status === 'COMPLETED' && (
  <button
  onClick={() => setViewingReportBooking(booking)}
- className="p-1.5 bg-zinc-900 text-emerald-500 hover:text-white hover:bg-emerald-900 rounded border border-zinc-800 transition cursor-pointer"
+ className="p-1.5 bg-zinc-900 text-emerald-500 hover:text-slate-900 hover:bg-emerald-900 rounded border border-zinc-800 transition cursor-pointer"
  title="View Clinical Report"
  >
  <Eye className="w-3.5 h-3.5" />
@@ -656,7 +656,7 @@ export default function BookingManagementTab(props) {
  {['CONFIRMED', 'COMPLETED', 'RESCHEDULED'].includes(booking.status) && (
    <button
      onClick={() => setViewingActivitySheetsBooking(booking)}
-     className="p-1.5 bg-zinc-900 text-blue-400 hover:text-white hover:bg-blue-900 rounded border border-zinc-800 transition cursor-pointer"
+     className="p-1.5 bg-zinc-900 text-blue-400 hover:text-slate-900 hover:bg-blue-900 rounded border border-zinc-800 transition cursor-pointer"
      title="Activity Sheets"
    >
      <FileText className="w-3.5 h-3.5" />
@@ -665,7 +665,7 @@ export default function BookingManagementTab(props) {
  {canEditBookings && (
  <button
  onClick={() => handleOpenEditBooking(booking)}
- className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-white rounded border border-zinc-800 transition cursor-pointer"
+ className="p-1.5 bg-zinc-900 text-zinc-400 hover:text-slate-900 rounded border border-zinc-800 transition cursor-pointer"
  title="Edit / Reschedule"
  >
  <Edit className="w-3.5 h-3.5" />
@@ -674,7 +674,7 @@ export default function BookingManagementTab(props) {
  {canDeleteBookings && (
  <button
  onClick={() => handleDeleteBooking(booking.id)}
- className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-white rounded border border-rose-900/30 transition cursor-pointer"
+ className="p-1.5 bg-rose-955/20 text-rose-500 hover:bg-rose-900 hover:text-slate-900 rounded border border-rose-900/30 transition cursor-pointer"
  title="Cancel Booking"
  >
  <Trash className="w-3.5 h-3.5" />
@@ -705,7 +705,7 @@ export default function BookingManagementTab(props) {
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-zinc-800 bg-zinc-900/50">
           <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-400" />
               Clinical Consultation Report
             </h2>
@@ -715,7 +715,7 @@ export default function BookingManagementTab(props) {
           </div>
           <button
             onClick={() => setViewingReportBooking(null)}
-            className="p-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-xl transition-colors cursor-pointer"
+            className="p-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-slate-900 rounded-xl transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -790,7 +790,7 @@ export default function BookingManagementTab(props) {
           </button>
           <button
             onClick={() => downloadDiagnosticPDF(viewingReportBooking)}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors cursor-pointer text-sm flex items-center gap-2 shadow-lg shadow-emerald-900/20"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-bold rounded-xl transition-colors cursor-pointer text-sm flex items-center gap-2 shadow-lg shadow-emerald-900/20"
           >
             <Download className="w-4 h-4" />
             Download PDF

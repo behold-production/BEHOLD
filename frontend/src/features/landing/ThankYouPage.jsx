@@ -174,7 +174,7 @@ export default function ThankYouPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-white font-sans antialiased flex flex-col justify-between relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased flex flex-col justify-between relative overflow-x-hidden">
       <SEO
         title="Booking Confirmed | BEHOLD Psychological Counselling"
         description="Your confidential psychological counselling session is confirmed. We look forward to meeting you."
@@ -183,10 +183,10 @@ export default function ThankYouPage() {
       />
 
       {/* ── TOP FOCUSED BRAND BAR ── */}
-      <header className="w-full bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-700/80 sticky top-0 z-40 shadow-2xs">
+      <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1.5 no-underline text-inherit">
-            <span className="text-xl sm:text-2xl font-semibold text-white tracking-tight flex items-baseline">
+            <span className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight flex items-baseline">
               BEHOLD<span className="text-[#00e5ff] font-semibold text-2xl leading-none">.</span>
             </span>
           </Link>
@@ -196,7 +196,7 @@ export default function ThankYouPage() {
               href="https://wa.me/919400898011?text=Hi%20BEHOLD%2C%20I%20have%20a%20question%20regarding%20my%20session%20booking"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-slate-300 bg-[#1e293b] hover:bg-slate-800 transition-all cursor-pointer no-underline"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 transition-all cursor-pointer no-underline"
             >
               <MessageSquare className="w-3.5 h-3.5 text-[#00e5ff]" />
               <span className="hidden xs:inline">WhatsApp Support</span>
@@ -223,11 +223,11 @@ export default function ThankYouPage() {
             <span>{isRescheduled ? 'Reschedule Submitted' : '100% Confirmed & Paid'}</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
             {isRescheduled ? 'Reschedule Request Submitted!' : 'Booking Confirmed Successfully!'}
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium">
             {isRescheduled 
               ? 'Your requested time slot has been submitted for counselor confirmation. Review your appointment details below.'
               : 'Your confidential psychological counselling session is confirmed. Review your appointment details below.'}
@@ -235,12 +235,12 @@ export default function ThankYouPage() {
         </div>
 
         {/* Booking Details Card */}
-        <div className="bg-[#0f172a] rounded-xl border border-slate-700/90 shadow-xl p-6 sm:p-8 space-y-6 text-left">
+        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6 text-left">
 
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Appointment Summary</span>
-              <p className="text-xs sm:text-sm font-semibold text-slate-200 mt-0.5">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 block">Appointment Summary</span>
+              <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5">
                 Private Consultation Session
               </p>
             </div>
@@ -251,7 +251,7 @@ export default function ThankYouPage() {
           </div>
 
           {isLoading ? (
-            <div className="py-12 text-center text-slate-400 space-y-2">
+            <div className="py-12 text-center text-slate-600 space-y-2">
               <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#00e5ff]" />
               <p className="text-xs font-semibold">Loading booking details...</p>
             </div>
@@ -266,18 +266,18 @@ export default function ThankYouPage() {
                     className="w-12 h-12 rounded-2xl object-cover object-top shadow-sm border-2 border-white shrink-0"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-2xl bg-[#00e5ff] text-slate-950 flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
+                  <div className="w-12 h-12 rounded-2xl bg-[#00e5ff] text-white flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
                     {getInitials(bookingData?.advisorName)}
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
-                    <h3 className="font-semibold text-white text-sm sm:text-base truncate">
+                    <h3 className="font-semibold text-slate-900 text-sm sm:text-base truncate">
                       {bookingData?.advisorName || 'Assigned Psychologist'}
                     </h3>
                     <ShieldCheck className="w-4 h-4 text-[#3a0ca3] shrink-0" title="Verified Professional" />
                   </div>
-                  <p className="text-xs text-slate-400 font-medium truncate">
+                  <p className="text-xs text-slate-600 font-medium truncate">
                     {bookingData?.advisorRole || 'Consultant Psychologist'}
                   </p>
                 </div>
@@ -285,32 +285,32 @@ export default function ThankYouPage() {
 
               {/* Schedule grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 bg-[#1e293b] rounded-2xl border border-slate-700/80 text-left">
-                  <div className="flex items-center gap-1.5 text-slate-400 mb-1">
+                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-left">
+                  <div className="flex items-center gap-1.5 text-slate-600 mb-1">
                     <Calendar className="w-3.5 h-3.5 text-[#3a0ca3]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Date</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-white">
+                  <p className="text-xs sm:text-sm font-semibold text-slate-900">
                     {bookingData?.date ? formatDateString(bookingData.date) : 'Upcoming'}
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#1e293b] rounded-2xl border border-slate-700/80 text-left">
-                  <div className="flex items-center gap-1.5 text-slate-400 mb-1">
+                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-left">
+                  <div className="flex items-center gap-1.5 text-slate-600 mb-1">
                     <Clock className="w-3.5 h-3.5 text-[#3a0ca3]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Time</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-white">
+                  <p className="text-xs sm:text-sm font-semibold text-slate-900">
                     {bookingData?.time || '10:00 AM'}
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#1e293b] rounded-2xl border border-slate-700/80 text-left col-span-2 sm:col-span-1">
-                  <div className="flex items-center gap-1.5 text-slate-400 mb-1">
+                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-left col-span-2 sm:col-span-1">
+                  <div className="flex items-center gap-1.5 text-slate-600 mb-1">
                     <Video className="w-3.5 h-3.5 text-[#3a0ca3]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Mode</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-white truncate">
+                  <p className="text-xs sm:text-sm font-semibold text-slate-900 truncate">
                     {bookingData?.mode || '1-on-1 Online Video'}
                   </p>
                 </div>
@@ -322,15 +322,15 @@ export default function ThankYouPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Video className="w-4 h-4 text-teal-600" />
-                      <span className="text-xs font-semibold text-slate-950">Private Video Consultation Room</span>
+                      <span className="text-xs font-semibold text-white">Private Video Consultation Room</span>
                     </div>
                     <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                       Direct Join · Encrypted
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-[#0f172a] p-2 rounded-xl border border-teal-100">
-                    <span className="text-xs text-slate-400 font-mono truncate flex-1 pl-1">
+                  <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-teal-100">
+                    <span className="text-xs text-slate-600 font-mono truncate flex-1 pl-1">
                       {bookingData.meetLink}
                     </span>
                     <button
@@ -347,7 +347,7 @@ export default function ThankYouPage() {
                     href={bookingData.meetLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-slate-900 hover:bg-black text-[#00e5ff] text-xs font-bold rounded-xl transition shadow-sm no-underline"
+                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-white hover:bg-black text-[#00e5ff] text-xs font-bold rounded-xl transition shadow-sm no-underline"
                     title="Join Google Meet Video Consultation Room"
                   >
                     <Video className="w-3.5 h-3.5" />
@@ -358,12 +358,12 @@ export default function ThankYouPage() {
               )}
 
               {/* What happens next instructions */}
-              <div className="p-4 rounded-2xl bg-[#1e293b] border border-slate-700/80 space-y-3">
-                <h3 className="text-xs font-semibold text-white uppercase tracking-wider">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
                   What Happens Next
                 </h3>
 
-                <div className="space-y-2.5 text-sm text-slate-400">
+                <div className="space-y-2.5 text-sm text-slate-600">
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-[#00e5ff] shrink-0 mt-0.5" />
                     <span>Your booking confirmation and session room link have been sent to your WhatsApp & Email.</span>
@@ -380,9 +380,9 @@ export default function ThankYouPage() {
               </div>
 
               {/* Payment Summary */}
-              <div className="flex items-center justify-between p-3.5 bg-[#1e293b] rounded-2xl border border-slate-700 text-xs">
-                <span className="font-semibold text-slate-400">Amount Paid (Included GST):</span>
-                <span className="text-base font-semibold text-slate-950">₹{bookingData?.amountPaid ?? 899}</span>
+              <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
+                <span className="font-semibold text-slate-600">Amount Paid (Included GST):</span>
+                <span className="text-base font-semibold text-white">₹{bookingData?.amountPaid ?? 899}</span>
               </div>
             </>
           )}
@@ -410,7 +410,7 @@ export default function ThankYouPage() {
 
             <button
               onClick={handleDownloadReceipt}
-              className="w-full sm:flex-1 py-3.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+              className="w-full sm:flex-1 py-3.5 px-4 bg-white hover:bg-slate-100 active:bg-slate-950 text-slate-900 font-semibold text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
             >
               <Download className="w-4 h-4 text-[#00e5ff] shrink-0" />
               <span>Download Receipt</span>
@@ -418,7 +418,7 @@ export default function ThankYouPage() {
 
             <button
               onClick={() => navigate('/')}
-              className="w-full sm:w-auto py-3.5 px-6 bg-[#1e293b] hover:bg-slate-800 active:bg-slate-300 text-slate-300 font-semibold text-sm rounded-2xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+              className="w-full sm:w-auto py-3.5 px-6 bg-slate-50 hover:bg-slate-100 active:bg-slate-300 text-slate-700 font-semibold text-sm rounded-2xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
             >
               <Home className="w-4 h-4 shrink-0" />
               <span>Return Home</span>
@@ -428,7 +428,7 @@ export default function ThankYouPage() {
         </div>
 
         {/* Support note */}
-        <p className="text-[13px] text-slate-400 text-center leading-relaxed">
+        <p className="text-[13px] text-slate-600 text-center leading-relaxed">
           Questions or need help?{' '}
           <a href="mailto:support@behold.co.in" className="text-[#3a0ca3] font-semibold underline underline-offset-2 hover:text-[#00e5ff] transition-colors">
             support@behold.co.in
@@ -438,7 +438,7 @@ export default function ThankYouPage() {
       </main>
 
       {/* ── MINIMAL COMPACT FOOTER ── */}
-      <footer className="py-4 text-slate-400 text-xs text-center border-t border-slate-700/80 bg-[#0f172a]/50">
+      <footer className="py-4 text-slate-600 text-xs text-center border-t border-slate-200/80 bg-white/50">
         <p>© {new Date().getFullYear()} BEHOLD. All rights reserved. Confidential Psychological Care.</p>
       </footer>
 

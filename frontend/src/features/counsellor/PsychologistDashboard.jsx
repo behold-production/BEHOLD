@@ -1316,14 +1316,14 @@ reportRegError("Please enter a valid email address.");
   // --- 1. COUNSELLOR PORTAL LOGIN GATE ---
   if (!isCounsellor) {
     return (
-      <div className='min-h-screen bg-[#030712] flex flex-col items-center justify-center text-white px-4 relative overflow-hidden text-left'>
+      <div className='min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-900 px-4 relative overflow-hidden text-left'>
         {/* Ambient background glows */}
         <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[140px] opacity-10 pointer-events-none'
              style={{ background: 'radial-gradient(circle at 35% 45%, rgba(0, 229, 255, 0.08), transparent 50%), radial-gradient(circle at 65% 55%, rgba(99, 102, 241, 0.05), transparent 50%)' }} />
         
         {/* Logo Header outside the card */}
         <div className='text-center mb-8 relative z-10'>
-          <h1 className='text-3xl font-extrabold tracking-wider text-white font-header'>
+          <h1 className='text-3xl font-extrabold tracking-wider text-slate-900 font-header'>
             BEHOLD<span className='text-[#00E5FF]'>.</span>
           </h1>
           <p className='text-[10px] tracking-[0.25em] font-bold text-[#818CF8] mt-2 uppercase'>
@@ -1331,14 +1331,14 @@ reportRegError("Please enter a valid email address.");
           </p>
         </div>
 
-        <div className='relative z-10 w-full max-w-[460px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-800/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
+        <div className='relative z-10 w-full max-w-[460px] bg-[#0c1424]/95 backdrop-blur-xl border border-slate-100/80 rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300'>
           {/* Tabs */}
-          <div className='flex border-b border-slate-800/80'>
+          <div className='flex border-b border-slate-100/80'>
             <button
               type='button'
               onClick={() => { setGateMode('login'); setForgotError(''); setLoginError(''); }}
               className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
-                gateMode === 'login' || gateMode === 'forgot-password' ? 'text-white' : 'text-slate-400 hover:text-slate-350'
+                gateMode === 'login' || gateMode === 'forgot-password' ? 'text-slate-900' : 'text-slate-600 hover:text-slate-350'
               }`}
             >
               Sign In
@@ -1350,7 +1350,7 @@ reportRegError("Please enter a valid email address.");
               type='button'
               onClick={() => { setGateMode('register'); setOnboardingStep(1); setRegError(''); setForgotError(''); setLoginError(''); }}
               className={`w-1/2 py-4 text-center font-bold text-sm transition relative cursor-pointer ${
-                gateMode === 'register' ? 'text-white' : 'text-slate-400 hover:text-slate-350'
+                gateMode === 'register' ? 'text-slate-900' : 'text-slate-600 hover:text-slate-350'
               }`}
             >
               Register Consultant
@@ -1376,18 +1376,18 @@ reportRegError("Please enter a valid email address.");
                         setForgotError('');
                       }
                     }}
-                    className='flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition cursor-pointer bg-transparent border-none p-0 outline-none'
+                    className='flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition cursor-pointer bg-transparent border-none p-0 outline-none'
                   >
                     <ArrowLeft className='w-3.5 h-3.5' />
                     <span>{forgotStep === 1 ? 'Back to Sign In' : 'Back'}</span>
                   </button>
 
                   <div className='flex items-center gap-1.5 text-[11px] font-semibold'>
-                    <span className={forgotStep === 1 ? 'text-[#00E5FF]' : 'text-slate-400'}>1. Email</span>
-                    <span className='text-slate-300'>&gt;</span>
-                    <span className={forgotStep === 2 ? 'text-[#00E5FF]' : 'text-slate-400'}>2. Verify OTP</span>
-                    <span className='text-slate-300'>&gt;</span>
-                    <span className={forgotStep === 3 ? 'text-[#00E5FF]' : 'text-slate-400'}>3. Password</span>
+                    <span className={forgotStep === 1 ? 'text-[#00E5FF]' : 'text-slate-600'}>1. Email</span>
+                    <span className='text-slate-700'>&gt;</span>
+                    <span className={forgotStep === 2 ? 'text-[#00E5FF]' : 'text-slate-600'}>2. Verify OTP</span>
+                    <span className='text-slate-700'>&gt;</span>
+                    <span className={forgotStep === 3 ? 'text-[#00E5FF]' : 'text-slate-600'}>3. Password</span>
                   </div>
                 </div>
 
@@ -1404,15 +1404,15 @@ reportRegError("Please enter a valid email address.");
                       <div className='w-8 h-8 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF]'>
                         <KeyRound className='w-4 h-4' />
                       </div>
-                      <h2 className='text-lg font-bold text-white font-header'>Forgot Password</h2>
+                      <h2 className='text-lg font-bold text-slate-900 font-header'>Forgot Password</h2>
                     </div>
-                    <p className='text-xs text-slate-400 mt-1 mb-6 leading-relaxed'>
+                    <p className='text-xs text-slate-600 mt-1 mb-6 leading-relaxed'>
                       Enter your registered psychologist email address. We'll send a 6-digit verification code to reset your password.
                     </p>
 
                     <form onSubmit={handleSendForgotOtp} className='space-y-5 text-left'>
                       <div>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Registered Email Address
                         </label>
                         <input
@@ -1421,7 +1421,7 @@ reportRegError("Please enter a valid email address.");
                           placeholder='counsellor@example.com'
                           value={forgotEmail}
                           onChange={(e) => setForgotEmail(e.target.value)}
-                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                           disabled={isForgotLoading}
                           autoFocus
                         />
@@ -1431,7 +1431,7 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='submit'
                           disabled={isForgotLoading}
-                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-2'
+                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-white font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-2'
                         >
                           {isForgotLoading ? (
                             <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
@@ -1446,7 +1446,7 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='button'
                           onClick={() => { setGateMode('login'); setForgotError(''); }}
-                          className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-4 cursor-pointer block bg-transparent border-none'
+                          className='w-full text-center text-xs text-slate-600 hover:text-slate-350 transition pt-4 cursor-pointer block bg-transparent border-none'
                         >
                           Cancel and return to Sign In
                         </button>
@@ -1462,15 +1462,15 @@ reportRegError("Please enter a valid email address.");
                       <div className='w-8 h-8 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF]'>
                         <ShieldCheck className='w-4 h-4' />
                       </div>
-                      <h2 className='text-lg font-bold text-white font-header'>Verify Email Code</h2>
+                      <h2 className='text-lg font-bold text-slate-900 font-header'>Verify Email Code</h2>
                     </div>
-                    <p className='text-xs text-slate-400 mt-1 mb-6 leading-relaxed'>
-                      A 6-digit code has been sent to <span className='text-white font-semibold'>{forgotEmail}</span>. Enter the code below:
+                    <p className='text-xs text-slate-600 mt-1 mb-6 leading-relaxed'>
+                      A 6-digit code has been sent to <span className='text-slate-900 font-semibold'>{forgotEmail}</span>. Enter the code below:
                     </p>
 
                     <form onSubmit={handleVerifyForgotOtp} className='space-y-5 text-left'>
                       <div>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           6-Digit Verification Code
                         </label>
                         <OtpPinInput
@@ -1484,7 +1484,7 @@ reportRegError("Please enter a valid email address.");
 
                       {/* Resend Row */}
                       <div className='flex items-center justify-between text-xs pt-1'>
-                        <span className='text-slate-400'>Didn't receive code?</span>
+                        <span className='text-slate-600'>Didn't receive code?</span>
                         {forgotResendTimer === 0 ? (
                           <button
                             type='button'
@@ -1496,7 +1496,7 @@ reportRegError("Please enter a valid email address.");
                             <span>Resend Code</span>
                           </button>
                         ) : (
-                          <span className='text-slate-400 tabular-nums'>
+                          <span className='text-slate-600 tabular-nums'>
                             Resend in <span className='text-[#00E5FF] font-semibold'>0:{String(forgotResendTimer).padStart(2, '0')}</span>
                           </span>
                         )}
@@ -1506,7 +1506,7 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='submit'
                           disabled={isForgotLoading || forgotOtp.length !== 6}
-                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed'
+                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-white font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed'
                         >
                           {isForgotLoading ? (
                             <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
@@ -1518,7 +1518,7 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='button'
                           onClick={() => { setForgotStep(1); setForgotError(''); }}
-                          className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none p-0'
+                          className='w-full text-center text-xs text-slate-600 hover:text-slate-350 transition cursor-pointer bg-transparent border-none p-0'
                         >
                           ← Change email address
                         </button>
@@ -1534,15 +1534,15 @@ reportRegError("Please enter a valid email address.");
                       <div className='w-8 h-8 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF]'>
                         <Lock className='w-4 h-4' />
                       </div>
-                      <h2 className='text-lg font-bold text-white font-header'>Set New Password</h2>
+                      <h2 className='text-lg font-bold text-slate-900 font-header'>Set New Password</h2>
                     </div>
-                    <p className='text-xs text-slate-400 mt-1 mb-6 leading-relaxed'>
+                    <p className='text-xs text-slate-600 mt-1 mb-6 leading-relaxed'>
                       Create a strong new password for your Psychologist account.
                     </p>
 
                     <form onSubmit={handleResetPasswordSubmit} className='space-y-4 text-left'>
                       <div>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           New Password
                         </label>
                         <div className='relative'>
@@ -1552,14 +1552,14 @@ reportRegError("Please enter a valid email address.");
                             placeholder='At least 6 characters'
                             value={forgotNewPassword}
                             onChange={(e) => setForgotNewPassword(e.target.value)}
-                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
+                            className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
                             disabled={isForgotLoading}
                             autoFocus
                           />
                           <button
                             type='button'
                             onClick={() => setShowForgotNewPassword(v => !v)}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showForgotNewPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                           </button>
@@ -1567,7 +1567,7 @@ reportRegError("Please enter a valid email address.");
                       </div>
 
                       <div>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Confirm New Password
                         </label>
                         <div className='relative'>
@@ -1577,13 +1577,13 @@ reportRegError("Please enter a valid email address.");
                             placeholder='Re-enter new password'
                             value={forgotConfirmPassword}
                             onChange={(e) => setForgotConfirmPassword(e.target.value)}
-                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
+                            className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
                             disabled={isForgotLoading}
                           />
                           <button
                             type='button'
                             onClick={() => setShowForgotConfirmPassword(v => !v)}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showForgotConfirmPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                           </button>
@@ -1594,7 +1594,7 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='submit'
                           disabled={isForgotLoading}
-                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1'
+                          className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-white font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1'
                         >
                           {isForgotLoading ? (
                             <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
@@ -1609,8 +1609,8 @@ reportRegError("Please enter a valid email address.");
               </div>
             ) : gateMode === 'login' ? (
               <div>
-                <h2 className='text-lg font-bold text-white text-left font-header'>Psychologist Sign In</h2>
-                <p className='text-xs text-slate-400 text-left mt-1.5 mb-6 leading-relaxed'>
+                <h2 className='text-lg font-bold text-slate-900 text-left font-header'>Psychologist Sign In</h2>
+                <p className='text-xs text-slate-600 text-left mt-1.5 mb-6 leading-relaxed'>
                   Access schedules, update clinic slots, and edit video rooms.
                 </p>
 
@@ -1629,7 +1629,7 @@ reportRegError("Please enter a valid email address.");
 
                 <form onSubmit={handleCounsellorLogin} className='space-y-5 text-left'>
                   <div>
-                    <label className='block text-xs font-medium text-slate-400 mb-2'>
+                    <label className='block text-xs font-medium text-slate-600 mb-2'>
                       Email Address
                     </label>
                     <input
@@ -1638,14 +1638,14 @@ reportRegError("Please enter a valid email address.");
                       placeholder='enter your mail id'
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       disabled={isLoggingIn}
                     />
                   </div>
 
                   <div>
                     <div className='flex items-center justify-between mb-2'>
-                      <label className='block text-xs font-medium text-slate-400'>
+                      <label className='block text-xs font-medium text-slate-600'>
                         Password
                       </label>
                       <button
@@ -1672,13 +1672,13 @@ reportRegError("Please enter a valid email address.");
                         placeholder='••••••••'
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-650 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-10 transition duration-200'
                         disabled={isLoggingIn}
                       />
                       <button
                         type='button'
                         onClick={() => setShowPassword(v => !v)}
-                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                       >
                         {showPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
                       </button>
@@ -1689,7 +1689,7 @@ reportRegError("Please enter a valid email address.");
                     <button
                       type='submit'
                       disabled={isLoggingIn}
-                      className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1'
+                      className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-white font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none flex items-center justify-center gap-1'
                     >
                       {isLoggingIn ? (
                         <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
@@ -1698,7 +1698,7 @@ reportRegError("Please enter a valid email address.");
                       )}
                     </button>
                     
-                    <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-4 cursor-pointer block'>
+                    <a href='/' className='w-full text-center text-xs text-slate-600 hover:text-slate-350 transition pt-4 cursor-pointer block'>
                       Back to Homepage
                     </a>
                   </div>
@@ -1708,15 +1708,15 @@ reportRegError("Please enter a valid email address.");
               <div>
                 {/* Steps tracker */}
                 <div className='flex items-center justify-start gap-2 mb-6 text-xs font-semibold'>
-                  <span className={onboardingStep === 1 ? 'text-[#818CF8]' : 'text-slate-400'}>
+                  <span className={onboardingStep === 1 ? 'text-[#818CF8]' : 'text-slate-600'}>
                     1. Account Details
                   </span>
-                  <span className='text-slate-400'>&gt;</span>
-                  <span className={onboardingStep === 2 ? 'text-[#818CF8]' : 'text-slate-400'}>
+                  <span className='text-slate-600'>&gt;</span>
+                  <span className={onboardingStep === 2 ? 'text-[#818CF8]' : 'text-slate-600'}>
                     2. Qualifications
                   </span>
-                  <span className='text-slate-400'>&gt;</span>
-                  <span className={onboardingStep === 3 ? 'text-[#818CF8]' : 'text-slate-400'}>
+                  <span className='text-slate-600'>&gt;</span>
+                  <span className={onboardingStep === 3 ? 'text-[#818CF8]' : 'text-slate-600'}>
                     3. Schedule
                   </span>
                 </div>
@@ -1731,7 +1731,7 @@ reportRegError("Please enter a valid email address.");
                 {onboardingStep === 1 && (
                   <form onSubmit={handleStepOneNext} className='space-y-4.5 text-left'>
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Full Name
                       </label>
                       <input
@@ -1740,12 +1740,12 @@ reportRegError("Please enter a valid email address.");
                         placeholder='e.g. Dr. Sandra Tomy'
                         value={regForm.name}
                         onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       />
                     </div>
 
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Email Address
                       </label>
                       <input
@@ -1754,13 +1754,13 @@ reportRegError("Please enter a valid email address.");
                         placeholder='psychologist@example.com'
                         value={regForm.email}
                         onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       />
                     </div>
 
                     <div className='flex gap-4'>
                       <div className='w-1/2'>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Password
                         </label>
                         <div className='relative'>
@@ -1770,12 +1770,12 @@ reportRegError("Please enter a valid email address.");
                             placeholder='••••••••'
                             value={regForm.password}
                             onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
-                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-9 transition duration-200'
+                            className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-9 transition duration-200'
                           />
                           <button
                             type='button'
                             onClick={() => setShowRegPassword(v => !v)}
-                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showRegPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
                           </button>
@@ -1783,7 +1783,7 @@ reportRegError("Please enter a valid email address.");
                       </div>
 
                       <div className='w-1/2'>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Confirm
                         </label>
                         <div className='relative'>
@@ -1793,12 +1793,12 @@ reportRegError("Please enter a valid email address.");
                             placeholder='••••••••'
                             value={regForm.confirmPassword}
                             onChange={(e) => setRegForm({ ...regForm, confirmPassword: e.target.value })}
-                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-9 transition duration-200'
+                            className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] pr-9 transition duration-200'
                           />
                           <button
                             type='button'
                             onClick={() => setShowRegConfirmPassword(v => !v)}
-                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
+                            className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showRegConfirmPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
                           </button>
@@ -1809,12 +1809,12 @@ reportRegError("Please enter a valid email address.");
                     <div className='pt-4'>
                       <button
                         type='submit'
-                        className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
+                        className='w-full bg-[#00E5FF] hover:bg-[#00bccc] text-white font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
                       >
                         Next: Clinical Details
                       </button>
                       
-                      <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-4 cursor-pointer block'>
+                      <a href='/' className='w-full text-center text-xs text-slate-600 hover:text-slate-350 transition pt-4 cursor-pointer block'>
                         Back to Homepage
                       </a>
                     </div>
@@ -1825,7 +1825,7 @@ reportRegError("Please enter a valid email address.");
                 {onboardingStep === 2 && (
                   <form onSubmit={handleStepTwoNext} className='space-y-4.5 text-left'>
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Education / Degree
                       </label>
                       <input
@@ -1834,13 +1834,13 @@ reportRegError("Please enter a valid email address.");
                         placeholder='e.g. PhD Clinical Psychology'
                         value={regForm.education}
                         onChange={(e) => setRegForm({ ...regForm, education: e.target.value })}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       />
                     </div>
 
                     <div className='flex gap-4'>
                       <div className='w-1/2'>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Hourly Session Fee (INR)
                         </label>
                         <input
@@ -1849,11 +1849,11 @@ reportRegError("Please enter a valid email address.");
                           placeholder='1200'
                           value={regForm.price}
                           onChange={(e) => setRegForm({ ...regForm, price: e.target.value })}
-                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                         />
                       </div>
                       <div className='w-1/2'>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Half Session Fee (INR)
                         </label>
                         <input
@@ -1862,14 +1862,14 @@ reportRegError("Please enter a valid email address.");
                           placeholder='499'
                           value={regForm.halfSessionPrice}
                           onChange={(e) => setRegForm({ ...regForm, halfSessionPrice: e.target.value })}
-                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                         />
                       </div>
                     </div>
 
                     <div className='flex gap-4'>
                       <div className='w-full'>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Experience Hours
                         </label>
                         <input
@@ -1878,13 +1878,13 @@ reportRegError("Please enter a valid email address.");
                           placeholder='150'
                           value={regForm.hours}
                           onChange={(e) => setRegForm({ ...regForm, hours: e.target.value })}
-                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Languages Spoken
                       </label>
                       <input
@@ -1893,12 +1893,12 @@ reportRegError("Please enter a valid email address.");
                         placeholder='Malayalam, English, Tamil'
                         value={regForm.lang}
                         onChange={(e) => setRegForm({ ...regForm, lang: e.target.value })}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       />
                     </div>
 
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Specialties (comma-separated)
                       </label>
                       <input
@@ -1907,12 +1907,12 @@ reportRegError("Please enter a valid email address.");
                         placeholder='Anxiety, Relationship Dynamics, Career Stress'
                         value={regForm.specialties}
                         onChange={(e) => setRegForm({ ...regForm, specialties: e.target.value })}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       />
                     </div>
 
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Default Google Meet Link (optional)
                       </label>
                       <input
@@ -1920,19 +1920,19 @@ reportRegError("Please enter a valid email address.");
                         placeholder='https://meet.google.com/abc-defg-hij'
                         value={regForm.defaultMeetLink}
                         onChange={(e) => setRegForm({ ...regForm, defaultMeetLink: e.target.value })}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       />
                     </div>
 
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Supported Session Modes
                       </label>
                       <div className='flex gap-4 pt-1 justify-start text-left'>
                         {['ONLINE', 'OFFLINE', 'DOOR_STEP'].map(mode => {
                           const isSelected = regForm.modes?.includes(mode);
                           return (
-                            <label key={mode} className='flex items-center gap-1.5 cursor-pointer text-sm text-white select-none'>
+                            <label key={mode} className='flex items-center gap-1.5 cursor-pointer text-sm text-slate-900 select-none'>
                               <input
                                 type='checkbox'
                                 checked={isSelected}
@@ -1945,7 +1945,7 @@ reportRegError("Please enter a valid email address.");
                                   }
                                   setRegForm({ ...regForm, modes: nextModes });
                                 }}
-                                className='w-3.5 h-3.5 rounded border-slate-800 bg-[#050811] text-[#00E5FF] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#00E5FF]'
+                                className='w-3.5 h-3.5 rounded border-slate-100 bg-[#050811] text-[#00E5FF] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#00E5FF]'
                               />
                               <span>{mode === 'DOOR_STEP' ? 'Doorstep' : mode.charAt(0) + mode.slice(1).toLowerCase()}</span>
                             </label>
@@ -1954,12 +1954,12 @@ reportRegError("Please enter a valid email address.");
                       </div>
                     </div>
 
-                    <div className='border-t border-slate-800/80 pt-4 space-y-4'>
+                    <div className='border-t border-slate-100/80 pt-4 space-y-4'>
                       <h5 className='text-xs font-bold text-[#00E5FF] tracking-wider flex items-center gap-1.5'>
                         <MapPin className='w-3.5 h-3.5' /> Location & Practice Center
                       </h5>
                       <div>
-                        <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        <label className='block text-xs font-medium text-slate-600 mb-2'>
                           Clinic / Practice Center Address
                         </label>
                         <input
@@ -1968,12 +1968,12 @@ reportRegError("Please enter a valid email address.");
                           placeholder='e.g. BEHOLD Mental Health Space, Cochin, Kerala'
                           value={regForm.locationName}
                           onChange={(e) => setRegForm({ ...regForm, locationName: e.target.value })}
-                          className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                          className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                         />
                       </div>
                       <div className='flex gap-4 items-end'>
                         <div className='w-1/2'>
-                          <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          <label className='block text-xs font-medium text-slate-600 mb-2'>
                             Latitude
                           </label>
                           <input
@@ -1983,11 +1983,11 @@ reportRegError("Please enter a valid email address.");
                             placeholder='e.g. 9.9816'
                             value={regForm.latitude}
                             onChange={(e) => setRegForm({ ...regForm, latitude: e.target.value })}
-                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                            className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                           />
                         </div>
                         <div className='w-1/2'>
-                          <label className='block text-xs font-medium text-slate-400 mb-2'>
+                          <label className='block text-xs font-medium text-slate-600 mb-2'>
                             Longitude
                           </label>
                           <input
@@ -1997,7 +1997,7 @@ reportRegError("Please enter a valid email address.");
                             placeholder='e.g. 76.2999'
                             value={regForm.longitude}
                             onChange={(e) => setRegForm({ ...regForm, longitude: e.target.value })}
-                            className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                            className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                           />
                         </div>
                       </div>
@@ -2023,14 +2023,14 @@ reportRegError("Please enter a valid email address.");
                             toast.error("Geolocation is not supported by this browser.");
                           }
                         }}
-                        className='w-full py-2 bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white rounded-lg text-xs font-bold transition-all border border-slate-800 cursor-pointer flex items-center justify-center gap-1.5'
+                        className='w-full py-2 bg-white hover:bg-slate-850 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all border border-slate-100 cursor-pointer flex items-center justify-center gap-1.5'
                       >
                         <Navigation className='w-3.5 h-3.5 text-[#00E5FF]' /> Auto-Detect Coordinates
                       </button>
                     </div>
 
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Professional Bio
                       </label>
                       <textarea
@@ -2039,7 +2039,7 @@ reportRegError("Please enter a valid email address.");
                         placeholder='Describe your clinical expertise and background...'
                         value={regForm.bio}
                         onChange={(e) => setRegForm({ ...regForm, bio: e.target.value })}
-                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200 resize-none'
+                        className='w-full bg-[#050811] border border-slate-100 rounded-lg px-4 py-2.5 text-sm text-slate-900 placeholder-slate-655 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200 resize-none'
                       />
                     </div>
 
@@ -2047,19 +2047,19 @@ reportRegError("Please enter a valid email address.");
                       <button
                         type='button'
                         onClick={() => setOnboardingStep(1)}
-                        className='w-1/3 border border-slate-800 text-slate-300 hover:text-white rounded-lg font-bold text-sm py-3 transition cursor-pointer active:scale-[0.98] bg-transparent'
+                        className='w-1/3 border border-slate-100 text-slate-700 hover:text-slate-900 rounded-lg font-bold text-sm py-3 transition cursor-pointer active:scale-[0.98] bg-transparent'
                       >
                         Back
                       </button>
                       <button
                         type='submit'
-                        className='w-2/3 bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
+                        className='w-2/3 bg-[#00E5FF] hover:bg-[#00bccc] text-white font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
                       >
                         Next: Calendar
                       </button>
                     </div>
                     
-                    <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-2 cursor-pointer block'>
+                    <a href='/' className='w-full text-center text-xs text-slate-600 hover:text-slate-350 transition pt-2 cursor-pointer block'>
                       Back to Homepage
                     </a>
                   </form>
@@ -2069,7 +2069,7 @@ reportRegError("Please enter a valid email address.");
                 {onboardingStep === 3 && (
                   <form onSubmit={handleCompleteOnboarding} className='space-y-5 text-left max-h-[50vh] overflow-y-auto pr-1 custom-scrollbar'>
                     <div>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Operational Days
                       </label>
                       <div className='flex flex-wrap gap-1.5'>
@@ -2083,7 +2083,7 @@ reportRegError("Please enter a valid email address.");
                               className={`px-3 py-1.5 border rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
                                 active
                                   ? 'bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40'
-                                  : 'bg-[#050811] border-slate-800 text-slate-400 hover:text-white'
+                                  : 'bg-[#050811] border-slate-100 text-slate-600 hover:text-slate-900'
                               }`}
                             >
                               {day.label.substring(0, 3)}
@@ -2093,8 +2093,8 @@ reportRegError("Please enter a valid email address.");
                       </div>
                     </div>
 
-                    <div className='space-y-2 border-t border-slate-800/80 pt-4'>
-                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                    <div className='space-y-2 border-t border-slate-100/80 pt-4'>
+                      <label className='block text-xs font-medium text-slate-600 mb-2'>
                         Timing Slots (Active)
                       </label>
                       <div className='grid grid-cols-2 gap-2'>
@@ -2114,7 +2114,7 @@ reportRegError("Please enter a valid email address.");
                                 className={`flex-1 py-2 border rounded-lg font-bold transition cursor-pointer text-xs ${
                                   exists
                                     ? 'bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40'
-                                    : 'bg-[#050811] border-slate-800 text-slate-400 hover:text-slate-350'
+                                    : 'bg-[#050811] border-slate-100 text-slate-600 hover:text-slate-350'
                                 }`}
                               >
                                 {slot}
@@ -2122,7 +2122,7 @@ reportRegError("Please enter a valid email address.");
                               <button
                                 type='button'
                                 onClick={() => handleRemoveRegSlot(slot)}
-                                className='px-2.5 py-2 bg-transparent border border-slate-800 hover:bg-rose-955/40 hover:border-rose-900 text-slate-400 hover:text-rose-450 rounded-lg text-xs font-bold transition cursor-pointer shrink-0'
+                                className='px-2.5 py-2 bg-transparent border border-slate-100 hover:bg-rose-955/40 hover:border-rose-900 text-slate-600 hover:text-rose-450 rounded-lg text-xs font-bold transition cursor-pointer shrink-0'
                                 title='Remove Slot'
                               >
                                 Remove
@@ -2131,22 +2131,22 @@ reportRegError("Please enter a valid email address.");
                           );
                         })}
                         {regAllSlots.length === 0 && (
-                          <div className='col-span-2 py-4 bg-[#050811] border border-dashed border-slate-800 rounded-lg text-slate-400 italic text-xs text-center w-full'>
+                          <div className='col-span-2 py-4 bg-[#050811] border border-dashed border-slate-100 rounded-lg text-slate-600 italic text-xs text-center w-full'>
                             No timing slots configured. Use the controls below to add custom slots or generate from a time range.
                           </div>
                         )}
                       </div>
                     </div>
 
-                    <div className='space-y-3 border-t border-slate-800/80 pt-4'>
-                      <label className='block text-xs font-medium text-slate-400'>Add Custom Timing Slot</label>
+                    <div className='space-y-3 border-t border-slate-100/80 pt-4'>
+                      <label className='block text-xs font-medium text-slate-600'>Add Custom Timing Slot</label>
                       <div className='flex gap-2 items-end'>
                         <div className='flex-1 space-y-1.5'>
-                          <label className='text-[10px] text-slate-400 font-bold block'>Hour</label>
+                          <label className='text-[10px] text-slate-600 font-bold block'>Hour</label>
                           <select
                             value={regCustomHour}
                             onChange={(e) => setRegCustomHour(e.target.value)}
-                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                           >
                             {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
                               <option key={h} value={h}>{h}</option>
@@ -2154,11 +2154,11 @@ reportRegError("Please enter a valid email address.");
                           </select>
                         </div>
                         <div className='flex-1 space-y-1.5'>
-                          <label className='text-[10px] text-slate-400 font-bold block'>Minute</label>
+                          <label className='text-[10px] text-slate-600 font-bold block'>Minute</label>
                           <select
                             value={regCustomMinute}
                             onChange={(e) => setRegCustomMinute(e.target.value)}
-                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                           >
                             {['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'].map(m => (
                               <option key={m} value={m}>{m}</option>
@@ -2166,11 +2166,11 @@ reportRegError("Please enter a valid email address.");
                           </select>
                         </div>
                         <div className='flex-1 space-y-1.5'>
-                          <label className='text-[10px] text-slate-400 font-bold block'>AM/PM</label>
+                          <label className='text-[10px] text-slate-600 font-bold block'>AM/PM</label>
                           <select
                             value={regCustomPeriod}
                             onChange={(e) => setRegCustomPeriod(e.target.value)}
-                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                            className='w-full bg-[#050811] border border-slate-805 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                           >
                             <option value='AM'>AM</option>
                             <option value='PM'>PM</option>
@@ -2179,23 +2179,23 @@ reportRegError("Please enter a valid email address.");
                         <button
                           type='button'
                           onClick={handleAddRegCustomSlot}
-                          className='bg-[#00E5FF]/20 hover:bg-[#00E5FF] text-[#00E5FF] hover:text-slate-950 px-3.5 py-2 text-xs font-bold rounded-lg transition border border-[#00E5FF]/30 hover:border-none cursor-pointer shrink-0 h-[34px] flex items-center justify-center font-header'
+                          className='bg-[#00E5FF]/20 hover:bg-[#00E5FF] text-[#00E5FF] hover:text-white px-3.5 py-2 text-xs font-bold rounded-lg transition border border-[#00E5FF]/30 hover:border-none cursor-pointer shrink-0 h-[34px] flex items-center justify-center font-header'
                         >
                           Add Slot
                         </button>
                       </div>
                     </div>
 
-                    <div className='space-y-3 border-t border-slate-800/80 pt-4'>
-                      <label className='block text-xs font-medium text-slate-400'>Add Custom Time Range (From / To)</label>
+                    <div className='space-y-3 border-t border-slate-100/80 pt-4'>
+                      <label className='block text-xs font-medium text-slate-600'>Add Custom Time Range (From / To)</label>
                       <div className='flex flex-col gap-3'>
                         <div className='flex gap-2 items-center'>
-                          <span className='text-xs text-slate-400 font-bold tracking-wide w-10 text-left'>From:</span>
+                          <span className='text-xs text-slate-600 font-bold tracking-wide w-10 text-left'>From:</span>
                           <div className='flex-1'>
                             <select
                               value={regFromHour}
                               onChange={(e) => setRegFromHour(e.target.value)}
-                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                              className='w-full bg-[#050811] border border-slate-100 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                             >
                               {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
                                 <option key={h} value={h}>{h}</option>
@@ -2206,7 +2206,7 @@ reportRegError("Please enter a valid email address.");
                             <select
                               value={regFromMinute}
                               onChange={(e) => setRegFromMinute(e.target.value)}
-                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                              className='w-full bg-[#050811] border border-slate-100 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                             >
                               {['00', '15', '30', '45'].map(m => (
                                 <option key={m} value={m}>{m}</option>
@@ -2217,7 +2217,7 @@ reportRegError("Please enter a valid email address.");
                             <select
                               value={regFromPeriod}
                               onChange={(e) => setRegFromPeriod(e.target.value)}
-                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                              className='w-full bg-[#050811] border border-slate-100 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                             >
                               <option value='AM'>AM</option>
                               <option value='PM'>PM</option>
@@ -2226,12 +2226,12 @@ reportRegError("Please enter a valid email address.");
                         </div>
 
                         <div className='flex gap-2 items-center'>
-                          <span className='text-xs text-slate-400 font-bold tracking-wide w-10 text-left'>To:</span>
+                          <span className='text-xs text-slate-600 font-bold tracking-wide w-10 text-left'>To:</span>
                           <div className='flex-1'>
                             <select
                               value={regToHour}
                               onChange={(e) => setRegToHour(e.target.value)}
-                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                              className='w-full bg-[#050811] border border-slate-100 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                             >
                               {['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map(h => (
                                 <option key={h} value={h}>{h}</option>
@@ -2242,7 +2242,7 @@ reportRegError("Please enter a valid email address.");
                             <select
                               value={regToMinute}
                               onChange={(e) => setRegToMinute(e.target.value)}
-                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                              className='w-full bg-[#050811] border border-slate-100 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                             >
                               {['00', '15', '30', '45'].map(m => (
                                 <option key={m} value={m}>{m}</option>
@@ -2253,7 +2253,7 @@ reportRegError("Please enter a valid email address.");
                             <select
                               value={regToPeriod}
                               onChange={(e) => setRegToPeriod(e.target.value)}
-                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                              className='w-full bg-[#050811] border border-slate-100 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                             >
                               <option value='AM'>AM</option>
                               <option value='PM'>PM</option>
@@ -2262,12 +2262,12 @@ reportRegError("Please enter a valid email address.");
                         </div>
 
                         <div className='flex gap-2 items-center mt-3'>
-                          <span className='text-xs text-slate-400 font-bold w-20'>Interval:</span>
+                          <span className='text-xs text-slate-600 font-bold w-20'>Interval:</span>
                           <div className='flex-1'>
                             <select
                               value={regSlotInterval}
                               onChange={(e) => setRegSlotInterval(Number(e.target.value))}
-                              className='w-full bg-[#050811] border border-slate-800 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-white outline-none cursor-pointer'
+                              className='w-full bg-[#050811] border border-slate-100 focus:border-[#00E5FF] rounded-lg px-2.5 py-2 text-xs text-slate-900 outline-none cursor-pointer'
                             >
                               <option value={30}>30 Minutes</option>
                               <option value={60}>60 Minutes</option>
@@ -2283,7 +2283,7 @@ reportRegError("Please enter a valid email address.");
                             const toStr = `${regToHour}:${regToMinute} ${regToPeriod}`;
                             addTimeRangeSlots(fromStr, toStr, true, regSlotInterval);
                           }}
-                          className='w-full bg-[#00E5FF]/20 hover:bg-[#00E5FF] text-[#00E5FF] hover:text-slate-950 py-2.5 text-xs font-bold rounded-lg transition border border-[#00E5FF]/30 hover:border-none cursor-pointer flex items-center justify-center font-header'
+                          className='w-full bg-[#00E5FF]/20 hover:bg-[#00E5FF] text-[#00E5FF] hover:text-white py-2.5 text-xs font-bold rounded-lg transition border border-[#00E5FF]/30 hover:border-none cursor-pointer flex items-center justify-center font-header'
                         >
                           Generate Hourly Slots from Range
                         </button>
@@ -2294,14 +2294,14 @@ reportRegError("Please enter a valid email address.");
                       <button
                         type='button'
                         onClick={() => setOnboardingStep(2)}
-                        className='w-1/3 border border-slate-800 text-slate-300 hover:text-white rounded-lg font-bold text-sm py-3 transition cursor-pointer active:scale-[0.98] bg-transparent'
+                        className='w-1/3 border border-slate-100 text-slate-700 hover:text-slate-900 rounded-lg font-bold text-sm py-3 transition cursor-pointer active:scale-[0.98] bg-transparent'
                       >
                         Back
                       </button>
                       <button
                         type='submit'
                         disabled={isLoggingIn}
-                        className='w-2/3 bg-[#00E5FF] hover:bg-[#00bccc] text-slate-950 font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
+                        className='w-2/3 bg-[#00E5FF] hover:bg-[#00bccc] text-white font-bold py-3 rounded-lg text-sm transition duration-200 cursor-pointer shadow-lg shadow-[#00E5FF]/10 active:scale-[0.98] border-none'
                       >
                         {isLoggingIn ? (
                           <div className='w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mx-auto' />
@@ -2311,7 +2311,7 @@ reportRegError("Please enter a valid email address.");
                       </button>
                     </div>
                     
-                    <a href='/' className='w-full text-center text-xs text-slate-400 hover:text-slate-350 transition pt-2 cursor-pointer block'>
+                    <a href='/' className='w-full text-center text-xs text-slate-600 hover:text-slate-350 transition pt-2 cursor-pointer block'>
                       Back to Homepage
                     </a>
                   </form>
@@ -2334,7 +2334,7 @@ reportRegError("Please enter a valid email address.");
  <div className="w-16 h-16 mx-auto rounded-full bg-rose-955/20 border border-rose-900/30 flex items-center justify-center text-rose-500">
  <ShieldAlert className="w-8 h-8 animate-pulse" />
  </div>
- <h2 className="text-xl font-bold tracking-tight text-white font-header">Application Rejected</h2>
+ <h2 className="text-xl font-bold tracking-tight text-slate-900 font-header">Application Rejected</h2>
  <p className="text-sm text-zinc-500 font-medium">
  We regret to inform you that your professional counsellor application has been rejected by the system administrator.
  </p>
@@ -2366,7 +2366,7 @@ reportRegError("Please enter a valid email address.");
 
  // --- 2. DEDICATED LOGGED-IN COUNSELLOR CONSOLE ---
  return (
- <div className="h-screen overflow-hidden bg-zinc-955 text-white text-left flex flex-col lg:flex-row relative">
+ <div className="h-screen overflow-hidden bg-zinc-955 text-slate-900 text-left flex flex-col lg:flex-row relative">
  <SEO title="Counsellor Dashboard | BEHOLD." noindex={true} />
 
  {/* Background Soft Glows */}
@@ -2380,14 +2380,14 @@ reportRegError("Please enter a valid email address.");
  <button
  type="button"
  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
- className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-white rounded-[10px] transition-colors cursor-pointer border-none"
+ className="p-1.5 bg-zinc-955 border border-zinc-850 text-zinc-400 hover:text-slate-900 rounded-[10px] transition-colors cursor-pointer border-none"
  title={isMobileMenuOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
  >
  {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
  </button>
 
  <div className="flex items-center gap-1.5">
- <span className="font-header font-bold text-base tracking-tighter text-white">
+ <span className="font-header font-bold text-base tracking-tighter text-slate-900">
  BEHOLD<span className="text-[#00e5ff] font-bold">.</span>
  </span>
  </div>
@@ -2397,7 +2397,7 @@ reportRegError("Please enter a valid email address.");
  <button
  type="button"
  onClick={() => setIsProfileDrawerOpen(true)}
- className="w-8 h-8 rounded-[10px] bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-white hover:border-brand/30 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
+ className="w-8 h-8 rounded-[10px] bg-zinc-950 border border-zinc-850 text-zinc-400 hover:text-slate-900 hover:border-brand/30 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all shrink-0"
  title="Open Profile Menu"
  >
  <User className="w-4 h-4 text-[#00e5ff]" />
@@ -2424,10 +2424,10 @@ reportRegError("Please enter a valid email address.");
 
  <div className="space-y-1 relative z-10 w-full sm:w-auto text-left">
  <div className="flex flex-wrap items-center gap-2">
- <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide text-white flex items-center gap-2">
+ <h1 className="text-xl sm:text-2xl font-header font-bold tracking-wide text-slate-900 flex items-center gap-2">
  {profile.name}
  {counsellorStatus === 'PENDING' && (
- <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#090d16]mber-955/20 border border-amber-900/30 text-amber-500 tracking-wider">
+ <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-whitember-955/20 border border-amber-900/30 text-amber-500 tracking-wider">
  Pending
  </span>
  )}
@@ -2484,7 +2484,7 @@ reportRegError("Please enter a valid email address.");
  </div>
  </div>
  ) : !isCounsellorVerified() ? (
- <div className="bg-[#090d16]mber-955/20 border border-amber-900/60 p-4 rounded-[10px] flex items-center gap-3 text-amber-300 text-sm animate-in slide-in-from-top duration-300">
+ <div className="bg-whitember-955/20 border border-amber-900/60 p-4 rounded-[10px] flex items-center gap-3 text-amber-300 text-sm animate-in slide-in-from-top duration-300">
  <ShieldAlert className="w-5 h-5 text-amber-450 shrink-0" />
  <div className="text-left">
  <span className="font-bold block mb-0.5">Account Pending Verification</span>
@@ -2637,12 +2637,12 @@ reportRegError("Please enter a valid email address.");
  {/* Header */}
  <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800">
  <div>
- <h3 className="text-sm font-bold text-white font-header font-bold">My Profile</h3>
+ <h3 className="text-sm font-bold text-slate-900 font-header font-bold">My Profile</h3>
  <p className="text-sm text-zinc-500 mt-0.5">Clinical Staff Profile</p>
  </div>
  <button
  onClick={() => setIsProfileDrawerOpen(false)}
- className="p-2 rounded-[10px] text-zinc-500 hover:text-white hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
+ className="p-2 rounded-[10px] text-zinc-500 hover:text-slate-900 hover:bg-zinc-800 transition cursor-pointer border-none bg-transparent"
  >
  <X className="w-4 h-4" />
  </button>
@@ -2654,7 +2654,7 @@ reportRegError("Please enter a valid email address.");
  {(profile?.name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
  </div>
  <div>
- <h2 className="text-base font-bold text-white tracking-wide font-header font-bold">{profile.name}</h2>
+ <h2 className="text-base font-bold text-slate-900 tracking-wide font-header font-bold">{profile.name}</h2>
  <span className="inline-block mt-1 text-sm px-2.5 py-1 rounded-full font-bold bg-[#00e5ff]/10 border border-brand/20 text-[#00e5ff]">
  Consultant Psychologist
  </span>
@@ -2671,7 +2671,7 @@ reportRegError("Please enter a valid email address.");
  </div>
  <div className="min-w-0 flex-1">
  <p className="text-sm font-bold text-zinc-500 ">Email Address</p>
- <p className="text-sm text-white font-semibold truncate">{user?.email}</p>
+ <p className="text-sm text-slate-900 font-semibold truncate">{user?.email}</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
@@ -2680,7 +2680,7 @@ reportRegError("Please enter a valid email address.");
  </div>
  <div>
  <p className="text-sm font-bold text-zinc-500 ">Education</p>
- <p className="text-sm text-white font-semibold">{profile.education}</p>
+ <p className="text-sm text-slate-900 font-semibold">{profile.education}</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
@@ -2689,8 +2689,8 @@ reportRegError("Please enter a valid email address.");
  </div>
  <div>
  <p className="text-sm text-zinc-400">Consultation Fee</p>
- <p className="text-sm text-white font-semibold">₹{profile.price} / Hour</p>
- <p className="text-sm text-white font-semibold mt-0.5">₹{profile.halfSessionPrice || 499} / Half Session</p>
+ <p className="text-sm text-slate-900 font-semibold">₹{profile.price} / Hour</p>
+ <p className="text-sm text-slate-900 font-semibold mt-0.5">₹{profile.halfSessionPrice || 499} / Half Session</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
@@ -2699,7 +2699,7 @@ reportRegError("Please enter a valid email address.");
  </div>
  <div>
  <p className="text-sm font-bold text-zinc-500 ">Languages</p>
- <p className="text-sm text-white font-semibold">{profile.lang}</p>
+ <p className="text-sm text-slate-900 font-semibold">{profile.lang}</p>
  </div>
  </div>
  </div>
@@ -2723,13 +2723,13 @@ reportRegError("Please enter a valid email address.");
  <div className="px-6 py-5 border-t border-zinc-800 space-y-2">
  <button
  onClick={() => { handleNavClick('profile'); setIsProfileDrawerOpen(false); }}
- className="w-full py-2.5 border border-zinc-700 hover:border-indigo-500 text-zinc-300 hover:text-white font-bold text-sm rounded-[10px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer bg-zinc-900"
+ className="w-full py-2.5 border border-zinc-700 hover:border-indigo-500 text-zinc-300 hover:text-slate-900 font-bold text-sm rounded-[10px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer bg-zinc-900"
  >
  <Edit className="w-3.5 h-3.5 text-[#00e5ff]" /> Edit Profile
  </button>
  <button
  onClick={() => { setIsProfileDrawerOpen(false); setIsLogoutConfirmOpen(true); }}
- className="w-full py-2.5 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-955/20 hover:bg-rose-900 hover:text-white font-bold text-sm rounded-[10px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+ className="w-full py-2.5 border border-rose-900/50 hover:border-rose-600 text-rose-500 bg-rose-955/20 hover:bg-rose-900 hover:text-slate-900 font-bold text-sm rounded-[10px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
  >
  <LogOut className="w-3.5 h-3.5" /> Sign Out
  </button>

@@ -30,12 +30,12 @@ export default function BrandIcon({
       <div
         className={`relative flex items-center justify-center shrink-0 rounded-xl font-sans font-semibold select-none transition-all duration-300 ${currentSize.icon} ${
           darkBg
-            ? 'bg-[#070b14] border border-slate-800/80 shadow-md shadow-black/40 text-white'
-            : 'bg-slate-900 border border-slate-700 text-white shadow-sm'
+            ? 'bg-[#070b14] border border-slate-100/80 shadow-md shadow-black/40 text-slate-900'
+            : 'bg-white border border-slate-200 text-slate-900 shadow-sm'
         } ${className}`}
       >
         <span className="tracking-tighter flex items-baseline">
-          <span className="text-white font-semibold leading-none drop-shadow-xs">B</span>
+          <span className="text-slate-900 font-semibold leading-none drop-shadow-xs">B</span>
           <span className="inline-block rounded-full bg-[#00E5FF] shadow-[0_0_10px_#00E5FF] ml-[1px] w-[6px] h-[6px]" />
         </span>
       </div>
@@ -49,18 +49,18 @@ export default function BrandIcon({
         <div
           className={`relative flex items-center justify-center shrink-0 rounded-xl font-sans font-semibold ${currentSize.icon} ${
             darkBg
-              ? 'bg-[#070b14] border border-slate-800/80 shadow-md shadow-black/40 text-white'
-              : 'bg-slate-900 border border-slate-700 text-white shadow-sm'
+              ? 'bg-[#070b14] border border-slate-100/80 shadow-md shadow-black/40 text-slate-900'
+              : 'bg-white border border-slate-200 text-slate-900 shadow-sm'
           }`}
         >
           <span className="tracking-tighter flex items-baseline">
-            <span className="text-white font-semibold leading-none">B</span>
+            <span className="text-slate-900 font-semibold leading-none">B</span>
             <span className="inline-block rounded-full bg-[#00E5FF] shadow-[0_0_10px_#00E5FF] ml-[1px] w-[6px] h-[6px]" />
           </span>
         </div>
 
         {/* Wordmark */}
-        <span className={`tracking-tight uppercase font-extrabold ${currentSize.text} ${darkBg ? 'text-white' : 'text-slate-900'}`}>
+        <span className={`tracking-tight uppercase font-extrabold ${currentSize.text} ${darkBg ? 'text-slate-900' : 'text-slate-900'}`}>
           BEHOLD<span className="text-[#00E5FF] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)] font-semibold">.</span>
         </span>
       </div>
@@ -69,7 +69,7 @@ export default function BrandIcon({
 
   // textOnly
   return (
-    <span className={`font-sans font-semibold tracking-tight uppercase ${currentSize.text} ${darkBg ? 'text-white' : 'text-slate-900'} ${className}`}>
+    <span className={`font-sans font-semibold tracking-tight uppercase ${currentSize.text} ${darkBg ? 'text-slate-900' : 'text-slate-900'} ${className}`}>
       BEHOLD<span className="text-[#00E5FF] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)] font-semibold">.</span>
     </span>
   );
