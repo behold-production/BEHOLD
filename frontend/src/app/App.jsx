@@ -680,7 +680,12 @@ export default function App() {
           {/* Landing Page - MindCare Design */}
           <Route path="/" element={
             <main className="fade-in-up">
-              <MindCareHome onOpenAuth={() => setIsAuthModalOpen(true)} onOpenBooking={handleOpenGeneralBooking} />
+              <MindCareHome 
+                onOpenAuth={() => setIsAuthModalOpen(true)} 
+                onOpenBooking={handleOpenGeneralBooking} 
+                siteSettings={siteSettings}
+                navigateToSection={navigateToSection}
+              />
             </main>
           } />
 

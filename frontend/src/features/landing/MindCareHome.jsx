@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiService from '../../services/api';
 import './mindcare.css'; // The scoped CSS for this layout
+import BrandIcon from '../../components/common/BrandIcon';
+import FaqBlogSection from './FaqBlogSection';
+import ContactInquirySection from './ContactInquirySection';
 
-export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
+export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, navigateToSection }) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [counsellors, setCounsellors] = useState([]);
@@ -51,16 +54,16 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
     <div className="mindcare-theme">
       <header className="site-header">
         <div className="mc-container nav">
-          <a href="/" onClick={(e) => handleNav(e, '#home')} className="brand">
-            <span className="brand-mark"><span></span><span></span></span>
-            <span>MindCare</span>
+          <a href="/" onClick={(e) => handleNav(e, '#home')} className="brand flex items-center gap-2">
+            <BrandIcon className="w-6 h-6 text-[#00e5ff]" />
+            <span className="font-bold tracking-tight text-xl text-slate-900">{siteSettings?.siteName || 'BEHOLD'}</span>
           </a>
 
           <nav className={`desktop-nav ${mobileMenuOpen ? '!flex !flex-col !absolute !top-[68px] !left-0 !w-full !bg-white !shadow-lg !p-6 !z-50 !m-0 !items-start !gap-4' : ''}`} aria-label="Main navigation">
             <a href="#home" onClick={(e) => handleNav(e, '#home')} className="active">Home</a>
             <a href="#psychologists" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</a>
             <a href="#how-it-works" onClick={(e) => handleNav(e, '#how-it-works')}>How it Works</a>
-            <a href="#resources" onClick={(e) => handleNav(e, '#resources')}>Resources</a>
+            <a href="#faqs" onClick={(e) => handleNav(e, '#faqs')}>FAQ & Blog</a>
             <a href="#about" onClick={(e) => handleNav(e, '#about')}>About</a>
           </nav>
 
@@ -79,7 +82,7 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
         <section className="hero">
           <div className="mc-container hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow">A Healthier Mind. A Brighter You</p>
+              <p className="eyebrow">Elevating Minds. Empowering Lives.</p>
               <h1>You Deserve<br />To <span>Feel Better</span></h1>
               <p className="hero-text">
                 Book a session with certified psychologists,<br className="hidden md:block" />
@@ -235,9 +238,9 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
         <section className="section why" id="about">
           <div className="mc-container why-grid">
             <div>
-              <p className="eyebrow">WHY CHOOSE MINDCARE</p>
+              <p className="eyebrow">WHY CHOOSE {siteSettings?.siteName?.toUpperCase() || 'BEHOLD'}</p>
               <h2>More Than Just<br />A Booking Platform</h2>
-              <p className="why-text">We believe that mental health care should be accessible, affordable, and stigma-free. Our platform connects you with trusted psychologists who truly care.</p>
+              <p className="why-text">We believe that mental health care should be accessible, affordable, and stigma-free. Our platform connects you with trusted psychologists who truly care about your well-being.</p>
             </div>
             <div className="why-list">
               <div><span>♥</span><div><strong>Trusted &amp; Verified Professionals</strong><p>All our psychologists are licensed and background-checked.</p></div></div>
@@ -248,7 +251,7 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
           </div>
         </section>
 
-        <section className="section stories" id="resources">
+        <section className="section stories" id="reviews">
           <div className="mc-container">
             <div className="section-heading">
               <p className="eyebrow">REAL STORIES</p>
@@ -256,7 +259,7 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
             </div>
             <div className="testimonial-grid">
               <article className="testimonial">
-                <p>“MindCare made it so easy to find the right therapist. I finally feel heard and supported.”</p>
+                <p>“{siteSettings?.siteName || 'BEHOLD'} made it so easy to find the right therapist. I finally feel heard and supported.”</p>
                 <div className="reviewer">
                   <img src="https://i.pravatar.cc/80?img=49" alt="User 1" />
                   <div><strong>Priya S.</strong><small>Verified User</small></div>
@@ -283,6 +286,16 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
           </div>
         </section>
 
+        {/* Dynamic FAQ & Blog Section (Rendered in its original form as requested) */}
+        <div id="faqs">
+          <FaqBlogSection />
+        </div>
+
+        {/* Dynamic Contact Section */}
+        <div id="contact">
+          <ContactInquirySection />
+        </div>
+
         <section className="cta-section">
           <div className="mc-container cta">
             <div>
@@ -298,22 +311,25 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking }) {
       <footer>
         <div className="mc-container footer-main">
           <div className="footer-brand">
-            <a href="#" className="brand"><span className="brand-mark"><span></span><span></span></span><span>MindCare</span></a>
-            <p>Supporting Minds. Building Brighter Tomorrows.</p>
+            <a href="/" onClick={(e) => handleNav(e, '#home')} className="brand flex items-center gap-2">
+              <BrandIcon className="w-6 h-6 text-[#00e5ff]" />
+              <span className="font-bold tracking-tight text-xl text-slate-900">{siteSettings?.siteName || 'BEHOLD'}</span>
+            </a>
+            <p>Empowering Minds. Elevating Lives.</p>
           </div>
           <div className="footer-links">
             <a href="#home" onClick={(e) => handleNav(e, '#home')}>Home</a>
             <a href="#psychologists" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</a>
-            <a href="#resources" onClick={(e) => handleNav(e, '#resources')}>Resources</a>
+            <a href="#faqs" onClick={(e) => handleNav(e, '#faqs')}>FAQ & Blog</a>
             <a href="#about" onClick={(e) => handleNav(e, '#about')}>About</a>
-            <a href="#" onClick={(e) => handleNav(e, '/contact')}>Contact</a>
+            <a href="#contact" onClick={(e) => handleNav(e, '#contact')}>Contact</a>
           </div>
           <div className="socials">
             <a href="#">◎</a><a href="#">in</a><a href="#">♥</a><a href="#">▶</a>
           </div>
         </div>
         <div className="mc-container footer-bottom">
-          <span>© 2026 MindCare. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} {siteSettings?.siteCopyright || 'BEHOLD Ltd'}. All rights reserved.</span>
           <div>
             <a href="#" onClick={(e) => handleNav(e, '/privacy')}>Privacy Policy</a>
             <a href="#" onClick={(e) => handleNav(e, '/terms')}>Terms of Service</a>
