@@ -1,0 +1,927 @@
+/* mindcare.css - Scoped styles for the MindCare landing page */
+.mindcare-theme {
+  --purple:#6047d8;
+  --purple-dark:#24235a;
+  --purple-soft:#f1edff;
+  --lavender:#e9e2ff;
+  --text:#202152;
+  --muted:#6e708a;
+  --line:#e9e9f1;
+  --white:#fff;
+  --green:#39a987;
+  --orange:#f59b65;
+  --blue:#4b94e8;
+  --yellow:#ffb900;
+  
+  font-family: "DM Sans", sans-serif;
+  color: var(--text);
+  background: #fff;
+  line-height: 1.5;
+}
+
+.mindcare-theme * {
+  box-sizing: border-box;
+}
+
+.mindcare-theme a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mindcare-theme img {
+  display: block;
+  max-width: 100%;
+}
+
+.mindcare-theme button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.mindcare-theme .mc-container {
+  width: min(1180px, calc(100% - 80px));
+  margin: auto;
+}
+
+.mindcare-theme .site-header {
+  height: 68px;
+  background: #fff;
+  position: relative;
+  z-index: 10;
+}
+
+.mindcare-theme .nav {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.mindcare-theme .brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 700;
+  font-size: 17px;
+  color: #2e2a76;
+  white-space: nowrap;
+}
+
+.mindcare-theme .brand-mark {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  position: relative;
+}
+
+.mindcare-theme .brand-mark span:first-child {
+  width: 14px;
+  height: 20px;
+  background: #5b45d5;
+  border-radius: 10px 10px 2px 10px;
+  transform: rotate(-42deg);
+  position: absolute;
+  left: 2px;
+  top: 1px;
+}
+
+.mindcare-theme .brand-mark span:last-child {
+  width: 14px;
+  height: 20px;
+  background: #755ee3;
+  border-radius: 10px 10px 10px 2px;
+  transform: rotate(42deg);
+  position: absolute;
+  left: 8px;
+  top: 1px;
+}
+
+.mindcare-theme .desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 31px;
+  margin-left: auto;
+  margin-right: 35px;
+}
+
+.mindcare-theme .desktop-nav a {
+  font-size: 12px;
+  font-weight: 500;
+  color: #33365d;
+}
+
+.mindcare-theme .desktop-nav a.active {
+  color: var(--purple);
+  font-weight: 700;
+}
+
+.mindcare-theme .nav-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.mindcare-theme .login-btn,
+.mindcare-theme .signup-btn {
+  height: 34px;
+  padding: 0 20px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mindcare-theme .login-btn {
+  border: 1px solid #8777df;
+  color: #332d78;
+  background: #fff;
+}
+
+.mindcare-theme .signup-btn {
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(96, 71, 216, .2);
+  border: none;
+}
+
+.mindcare-theme .mobile-menu {
+  display: none;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  color: var(--purple);
+}
+
+.mindcare-theme .hero {
+  padding: 10px 0 32px;
+  background: linear-gradient(110deg, #fff 40%, #fbf9ff 100%);
+  overflow: hidden;
+}
+
+.mindcare-theme .hero-grid {
+  min-height: 325px;
+  display: grid;
+  grid-template-columns: 47% 53%;
+  align-items: center;
+}
+
+.mindcare-theme .hero-copy {
+  padding-left: 0;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.mindcare-theme .eyebrow {
+  color: #806be0;
+  font-size: 11px;
+  letter-spacing: .05em;
+  font-weight: 700;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.mindcare-theme .hero h1 {
+  font-family: Manrope, sans-serif;
+  font-size: 46px;
+  line-height: 1.04;
+  letter-spacing: -2px;
+  color: #11174d;
+  margin-bottom: 13px;
+  font-weight: 800;
+}
+
+.mindcare-theme .hero h1 span {
+  color: var(--purple);
+}
+
+.mindcare-theme .hero-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #70728b;
+  margin-bottom: 18px;
+}
+
+.mindcare-theme .hero-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 21px;
+}
+
+.mindcare-theme .primary-btn,
+.mindcare-theme .secondary-btn {
+  height: 40px;
+  border-radius: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 22px;
+  border: none;
+}
+
+.mindcare-theme .primary-btn {
+  background: linear-gradient(90deg, #5b43d2, #6849dd);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(92, 68, 211, .18);
+}
+
+.mindcare-theme .primary-btn b {
+  font-size: 19px;
+  margin-left: 13px;
+  font-weight: 400;
+}
+
+.mindcare-theme .secondary-btn {
+  border: 1px solid #dedee9;
+  color: #202152;
+  background: #fff;
+}
+
+.mindcare-theme .trust-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.mindcare-theme .trust-row span {
+  font-size: 10px;
+  color: #666983;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.mindcare-theme .trust-row i {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: #e6f5ee;
+  color: #2ca77d;
+  font-style: normal;
+  font-size: 8px;
+  margin-right: 5px;
+}
+
+.mindcare-theme .trust-row span:first-child i {
+  background: #e9e5ff;
+  color: #6450d9;
+}
+
+.mindcare-theme .hero-visual {
+  height: 335px;
+  position: relative;
+}
+
+.mindcare-theme .hero-visual:before {
+  content: "";
+  position: absolute;
+  width: 470px;
+  height: 325px;
+  right: -5px;
+  top: 5px;
+  background: #f1effc;
+  border-radius: 47% 32% 44% 40%;
+  transform: rotate(-5deg);
+}
+
+.mindcare-theme .hero-visual > img {
+  position: absolute;
+  width: 420px;
+  height: 315px;
+  object-fit: cover;
+  right: 5px;
+  top: 12px;
+  border-radius: 140px 115px 100px 135px;
+  filter: saturate(.9);
+}
+
+.mindcare-theme .quote-card {
+  position: absolute;
+  right: 7px;
+  top: 48px;
+  width: 148px;
+  padding: 20px 17px;
+  background: rgba(255, 255, 255, .93);
+  border: 1px solid #eeeef5;
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(54, 44, 115, .09);
+  text-align: left;
+}
+
+.mindcare-theme .quote-card strong {
+  display: block;
+  font-family: Manrope, sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
+  color: #252550;
+}
+
+.mindcare-theme .quote-card small {
+  display: block;
+  font-size: 9px;
+  line-height: 1.45;
+  color: #7a7b91;
+  margin-top: 7px;
+}
+
+.mindcare-theme .quote-card span {
+  display: block;
+  color: #f0785d;
+  margin-top: 7px;
+  font-size: 13px;
+}
+
+.mindcare-theme .people-card {
+  position: absolute;
+  right: 13px;
+  bottom: 20px;
+  background: #fff;
+  border-radius: 17px;
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 25px rgba(42, 35, 100, .1);
+}
+
+.mindcare-theme .avatars {
+  display: flex;
+  padding-left: 5px;
+}
+
+.mindcare-theme .avatars img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  margin-left: -6px;
+}
+
+.mindcare-theme .people-card strong {
+  font-size: 11px;
+  display: block;
+  color: #28275b;
+}
+
+.mindcare-theme .people-card small {
+  font-size: 8px;
+  color: #85869a;
+  display: block;
+}
+
+.mindcare-theme .benefits {
+  border-top: 1px solid #f0f0f5;
+  border-bottom: 1px solid #f0f0f5;
+  padding: 26px 0;
+}
+
+.mindcare-theme .benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align: center;
+}
+
+.mindcare-theme .benefit {
+  border-right: 1px solid #eeeeF4;
+}
+
+.mindcare-theme .benefit:last-child {
+  border: 0;
+}
+
+.mindcare-theme .benefit-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  font-size: 18px;
+}
+
+.mindcare-theme .benefit-icon.purple {
+  background: #efeaff;
+  color: #6047d8;
+}
+
+.mindcare-theme .benefit-icon.green {
+  background: #e6f6ef;
+  color: #3fa882;
+}
+
+.mindcare-theme .benefit-icon.orange {
+  background: #fff0e9;
+  color: #ef8b56;
+}
+
+.mindcare-theme .benefit-icon.blue {
+  background: #eaf3ff;
+  color: #3986df;
+}
+
+.mindcare-theme .benefit h3 {
+  font-size: 14px;
+  color: #202152;
+  margin-bottom: 2px;
+}
+
+.mindcare-theme .benefit p {
+  font-size: 10px;
+  line-height: 1.35;
+  color: #74758b;
+}
+
+.mindcare-theme .section {
+  padding: 52px 0;
+}
+
+.mindcare-theme .section-heading h2 {
+  font-family: Manrope, sans-serif;
+  font-size: 27px;
+  line-height: 1.15;
+  color: #202152;
+  letter-spacing: -.7px;
+}
+
+.mindcare-theme .section-heading > p:last-child {
+  font-size: 12px;
+  color: #7a7b90;
+  margin-top: 7px;
+}
+
+.mindcare-theme .centered {
+  text-align: center;
+}
+
+.mindcare-theme .how {
+  padding-top: 48px;
+}
+
+.mindcare-theme .steps {
+  display: grid;
+  grid-template-columns: 1fr 50px 1fr 50px 1fr;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.mindcare-theme .step {
+  text-align: center;
+}
+
+.mindcare-theme .step-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.mindcare-theme .number {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #5d45d2;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mindcare-theme .step-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #f0ecff;
+  color: #6047d8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.mindcare-theme .step h3 {
+  font-size: 13px;
+  margin: 10px 0 5px;
+}
+
+.mindcare-theme .step p {
+  font-size: 10px;
+  color: #77798d;
+  line-height: 1.45;
+}
+
+.mindcare-theme .step-arrow {
+  font-size: 20px;
+  color: #676976;
+  text-align: center;
+}
+
+.mindcare-theme .experts {
+  padding-top: 34px;
+}
+
+.mindcare-theme .expert-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.mindcare-theme .outline-small {
+  border: 1px solid #9e91e5;
+  border-radius: 18px;
+  padding: 7px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #5743c9;
+  display: inline-flex;
+  align-items: center;
+}
+
+.mindcare-theme .outline-small span {
+  font-size: 15px;
+  margin-left: 7px;
+}
+
+.mindcare-theme .doctor-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 17px;
+}
+
+.mindcare-theme .doctor-card {
+  border: 1px solid #e9e9f0;
+  border-radius: 13px;
+  padding: 12px 12px 13px;
+  box-shadow: 0 5px 16px rgba(35, 34, 82, .035);
+  background: #fff;
+  text-align: left;
+}
+
+.mindcare-theme .doctor-photo {
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #f3f2f7;
+}
+
+.mindcare-theme .doctor-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mindcare-theme .doctor-photo button {
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 23px;
+  height: 23px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #4c4774;
+  font-size: 15px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mindcare-theme .doctor-card h3 {
+  font-size: 12px;
+  margin-top: 9px;
+}
+
+.mindcare-theme .doctor-card .role,
+.mindcare-theme .experience {
+  font-size: 9px;
+  color: #77798d;
+}
+
+.mindcare-theme .rating {
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.mindcare-theme .rating b {
+  color: #ffb900;
+}
+
+.mindcare-theme .rating span {
+  color: #818294;
+}
+
+.mindcare-theme .tags {
+  display: flex;
+  gap: 5px;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+.mindcare-theme .tags span {
+  background: #f0edff;
+  color: #5549a5;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 8px;
+}
+
+.mindcare-theme .card-btn {
+  height: 27px;
+  background: linear-gradient(90deg, #6045d5, #6d4bdd);
+  border-radius: 16px;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: none;
+}
+
+.mindcare-theme .why {
+  background: #fff;
+}
+
+.mindcare-theme .why-grid {
+  display: grid;
+  grid-template-columns: 45% 55%;
+  gap: 70px;
+  align-items: center;
+  text-align: left;
+}
+
+.mindcare-theme .why-text {
+  font-size: 12px;
+  color: #73758a;
+  line-height: 1.6;
+  max-width: 430px;
+  margin-top: 13px;
+}
+
+.mindcare-theme .why-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mindcare-theme .why-list > div {
+  display: flex;
+  gap: 13px;
+}
+
+.mindcare-theme .why-list > div > span {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  background: #f0ecff;
+  color: #5d48d2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.mindcare-theme .why-list strong {
+  font-size: 11px;
+}
+
+.mindcare-theme .why-list p {
+  font-size: 9px;
+  color: #7b7c8f;
+  margin-top: 2px;
+}
+
+.mindcare-theme .stories {
+  padding-top: 25px;
+}
+
+.mindcare-theme .testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.mindcare-theme .testimonial {
+  border: 1px solid #e9e9f0;
+  border-radius: 12px;
+  padding: 18px;
+  min-height: 115px;
+  text-align: left;
+}
+
+.mindcare-theme .testimonial > p {
+  font-size: 11px;
+  color: #55576f;
+  line-height: 1.55;
+}
+
+.mindcare-theme .reviewer {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  gap: 8px;
+}
+
+.mindcare-theme .reviewer img {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+}
+
+.mindcare-theme .reviewer strong {
+  display: block;
+  font-size: 9px;
+}
+
+.mindcare-theme .reviewer small {
+  display: block;
+  font-size: 8px;
+  color: #858699;
+}
+
+.mindcare-theme .reviewer > b {
+  margin-left: auto;
+  color: #ffb900;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.mindcare-theme .cta-section {
+  padding: 5px 0 30px;
+}
+
+.mindcare-theme .cta {
+  min-height: 110px;
+  border-radius: 15px;
+  background: linear-gradient(105deg, #eeeaff, #e5ddff);
+  display: flex;
+  align-items: center;
+  padding: 22px 27px;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+
+.mindcare-theme .cta h2 {
+  font-family: Manrope, sans-serif;
+  font-size: 21px;
+  color: #2c2876;
+}
+
+.mindcare-theme .cta p {
+  font-size: 11px;
+  color: #66687f;
+  line-height: 1.45;
+  margin-top: 5px;
+}
+
+.mindcare-theme .cta .primary-btn {
+  margin-left: auto;
+  margin-right: 85px;
+}
+
+.mindcare-theme .leaf-decoration {
+  position: absolute;
+  right: 14px;
+  bottom: -9px;
+  color: #b9afe8;
+  font-size: 60px;
+  line-height: .5;
+  transform: rotate(25deg);
+  opacity: .8;
+}
+
+.mindcare-theme footer {
+  padding-top: 10px;
+}
+
+.mindcare-theme .footer-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  text-align: left;
+}
+
+.mindcare-theme .footer-brand p {
+  font-size: 8px;
+  color: #898a9b;
+  margin-top: 6px;
+}
+
+.mindcare-theme .footer-links {
+  display: flex;
+  gap: 23px;
+  font-size: 9px;
+  color: #565870;
+}
+
+.mindcare-theme .socials {
+  display: flex;
+  gap: 9px;
+}
+
+.mindcare-theme .socials a {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e3e3eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: #51536c;
+}
+
+.mindcare-theme .footer-bottom {
+  border-top: 1px solid #eeeeF3;
+  padding: 12px 0 18px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #898a9a;
+}
+
+.mindcare-theme .footer-bottom div {
+  display: flex;
+  gap: 22px;
+}
+
+/* Media Queries */
+@media(max-width: 900px) {
+  .mindcare-theme .mc-container {
+    width: min(100% - 36px, 700px);
+  }
+  .mindcare-theme .desktop-nav { display: none; }
+  .mindcare-theme .nav-actions { margin-left: auto; }
+  .mindcare-theme .mobile-menu { display: block; }
+  .mindcare-theme .hero-grid { grid-template-columns: 1fr; min-height: auto; }
+  .mindcare-theme .hero-copy { text-align: center; padding: 35px 0 10px; }
+  .mindcare-theme .hero-buttons, .mindcare-theme .trust-row { justify-content: center; }
+  .mindcare-theme .hero-visual { height: 350px; margin-top: 10px; }
+  .mindcare-theme .hero-visual > img { right: 50%; transform: translateX(50%); width: min(450px, 92%); }
+  .mindcare-theme .hero-visual:before { right: 50%; transform: translateX(50%) rotate(-5deg); width: min(490px, 100%); }
+  .mindcare-theme .quote-card { right: 5%; }
+  .mindcare-theme .people-card { right: 7%; }
+  .mindcare-theme .benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .mindcare-theme .benefit { border-right: 0; }
+  .mindcare-theme .steps { grid-template-columns: 1fr; gap: 24px; }
+  .mindcare-theme .step-arrow { display: none; }
+  .mindcare-theme .doctor-grid { grid-template-columns: repeat(2, 1fr); }
+  .mindcare-theme .why-grid { grid-template-columns: 1fr; gap: 30px; }
+  .mindcare-theme .testimonial-grid { grid-template-columns: 1fr; }
+  .mindcare-theme .cta { flex-wrap: wrap; gap: 15px; }
+  .mindcare-theme .cta .primary-btn { margin: 0; }
+  .mindcare-theme .footer-main { flex-wrap: wrap; gap: 20px; }
+  .mindcare-theme .footer-links { order: 3; width: 100%; justify-content: center; flex-wrap: wrap; }
+}
+
+@media(max-width: 560px) {
+  .mindcare-theme .mc-container { width: calc(100% - 28px); }
+  .mindcare-theme .site-header, .mindcare-theme .nav { height: 62px; }
+  .mindcare-theme .nav-actions { display: none; }
+  .mindcare-theme .hero h1 { font-size: 37px; }
+  .mindcare-theme .hero-text { font-size: 13px; }
+  .mindcare-theme .desktop-only { display: none; }
+  .mindcare-theme .hero-visual { height: 285px; }
+  .mindcare-theme .hero-visual > img { height: 265px; }
+  .mindcare-theme .hero-visual:before { height: 270px; }
+  .mindcare-theme .quote-card { top: 35px; width: 125px; padding: 14px; }
+  .mindcare-theme .quote-card strong { font-size: 12px; }
+  .mindcare-theme .quote-card small { font-size: 8px; }
+  .mindcare-theme .people-card { bottom: 7px; padding: 7px; }
+  .mindcare-theme .benefits-grid { grid-template-columns: 1fr 1fr; gap: 20px 8px; }
+  .mindcare-theme .benefit h3 { font-size: 12px; }
+  .mindcare-theme .section { padding: 38px 0; }
+  .mindcare-theme .section-heading h2 { font-size: 23px; }
+  .mindcare-theme .expert-heading { align-items: start; gap: 12px; }
+  .mindcare-theme .expert-heading .outline-small { display: none; }
+  .mindcare-theme .doctor-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mindcare-theme .doctor-card { padding: 9px; }
+  .mindcare-theme .doctor-photo { height: 120px; }
+  .mindcare-theme .why-grid { gap: 24px; }
+  .mindcare-theme .cta { padding: 22px; }
+  .mindcare-theme .cta h2 { font-size: 19px; }
+  .mindcare-theme .cta .primary-btn { width: 100%; }
+  .mindcare-theme .footer-main { justify-content: center; text-align: center; }
+  .mindcare-theme .footer-bottom { flex-direction: column; gap: 9px; text-align: center; }
+  .mindcare-theme .footer-bottom div { justify-content: center; }
+}

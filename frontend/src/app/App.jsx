@@ -21,6 +21,7 @@ import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import FaqBlogSection from '../features/landing/FaqBlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
 import ActivitySheetView from '../features/student/ActivitySheetView';
+import MindCareHome from '../features/landing/MindCareHome';
 import globalBg from '../assets/greygreen.png';
 import globalBgTexture from '../assets/greygreen.png';
 
@@ -559,6 +560,7 @@ export default function App() {
     isSpecialRole ||
     isAdLandingRoute ||
     isConfirmationRoute ||
+    location.pathname === '/' ||
     location.pathname === '/admin' ||
     location.pathname.startsWith('/admin/') ||
     location.pathname === '/counsellor' ||
@@ -675,13 +677,10 @@ export default function App() {
         </div>
       }>
         <Routes>
-          {/* Landing Page - Exactly 4 Sections */}
-          <Route path="/" element={ //
+          {/* Landing Page - MindCare Design */}
+          <Route path="/" element={
             <main className="fade-in-up">
-              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              <TherapistSwipeSection siteSettings={siteSettings} navigateToSection={navigateToSection} onOpenBooking={handleOpenGeneralBooking} />
-              <FaqBlogSection />
-              <ContactInquirySection />
+              <MindCareHome onOpenAuth={() => setIsAuthModalOpen(true)} onOpenBooking={handleOpenGeneralBooking} />
             </main>
           } />
 
