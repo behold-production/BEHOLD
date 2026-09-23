@@ -183,22 +183,35 @@
 .bh-experts-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; gap: 20px; }
 .bh-doctors-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 
+.bh-doctors-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: start; }
+
 .bh-doctor-card {
   background: white; border: 1px solid #f1f5f9; border-radius: 18px;
   overflow: hidden; transition: all 0.25s ease;
   box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  display: flex; flex-direction: column;
+  height: 100%;
 }
 .bh-doctor-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,229,255,0.12); border-color: #b2f0fa; }
 
-.bh-doctor-photo { position: relative; height: 180px; background: #f1f5f9; overflow: hidden; }
-.bh-doctor-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.bh-doctor-photo { position: relative; height: 200px; flex-shrink: 0; background: #f1f5f9; overflow: hidden; }
+.bh-doctor-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
 .bh-doctor-photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 900; color: #94a3b8; background: linear-gradient(135deg, #e0faff, #cff8ff); }
-.bh-doctor-fav { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 14px; transition: all 0.2s; }
+.bh-doctor-fav { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 14px; transition: all 0.2s; cursor: pointer; }
 .bh-doctor-fav:hover { color: #f43f5e; }
-.bh-doctor-body { padding: 16px; }
+/* Card body grows to fill remaining height, pinning button to bottom */
+.bh-doctor-body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
 .bh-doctor-name { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
-.bh-doctor-spec { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
-.bh-doctor-desc { font-size: 12px; color: #64748b; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; }
+.bh-doctor-spec { font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
+/* Strictly clamp description to 3 lines and fix height */
+.bh-doctor-desc {
+  font-size: 12px; color: #64748b; line-height: 1.5;
+  height: calc(12px * 1.5 * 3); /* exactly 3 lines */
+  overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  margin-bottom: 10px; flex-shrink: 0;
+}
+.bh-doctor-meta { margin-top: auto; } /* pushes rating/tags/btn to bottom */
 .bh-doctor-rating { display: flex; align-items: center; gap: 5px; font-size: 12px; margin-bottom: 10px; }
 .bh-rating-star { color: #f59e0b; font-size: 13px; }
 .bh-rating-val { font-weight: 700; color: #0f172a; }
@@ -206,10 +219,10 @@
 .bh-doctor-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .bh-tag { background: #e0faff; color: #0284c7; border-radius: 100px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
 .bh-doctor-btn {
-  width: 100%; height: 40px; border-radius: 100px;
+  width: 100%; height: 40px; border-radius: 100px; flex-shrink: 0;
   background: linear-gradient(135deg, #00e5ff, #00b2be);
   color: #0f172a; font-size: 13px; font-weight: 700;
-  transition: all 0.2s;
+  transition: all 0.2s; margin-top: auto;
 }
 .bh-doctor-btn:hover { box-shadow: 0 6px 18px rgba(0,229,255,0.35); transform: translateY(-1px); }
 

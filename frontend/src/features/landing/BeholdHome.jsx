@@ -249,8 +249,9 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) 
                       <h3 className="bh-doctor-name">{c.name}</h3>
                       <p className="bh-doctor-spec">{c.specialization || 'Clinical Psychologist'}</p>
                       {c.bio && <p className="bh-doctor-desc">{c.bio}</p>}
+                    <div className="bh-doctor-meta">
                       {c.experience && (
-                        <p className="bh-doctor-spec">{c.experience} years experience</p>
+                        <p className="bh-doctor-spec" style={{ marginBottom: '8px' }}>{c.experience} years experience</p>
                       )}
                       <div className="bh-doctor-rating">
                         <span className="bh-rating-star">★</span>
@@ -263,6 +264,7 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) 
                         ))}
                       </div>
                       <button className="bh-doctor-btn" onClick={handleBook}>Book a Session</button>
+                    </div>
                     </div>
                   </article>
                 ))
