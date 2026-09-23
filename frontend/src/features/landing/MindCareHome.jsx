@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiService from '../../services/api';
-import './mindcare.css'; // The scoped CSS for this layout
+import './mindcare.css'; // The scoped CSS for this layout (now containing V2 styles)
 import BrandIcon from '../../components/common/BrandIcon';
 import FaqBlogSection from './FaqBlogSection';
 import ContactInquirySection from './ContactInquirySection';
@@ -50,16 +50,18 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
     else navigate('/profile');
   };
 
+  const siteName = siteSettings?.siteName || 'BEHOLD';
+
   return (
-    <div className="mindcare-theme">
+    <div className="behold-theme">
       <header className="site-header">
-        <div className="mc-container nav">
-          <a href="/" onClick={(e) => handleNav(e, '#home')} className="brand flex items-center gap-2">
+        <div className="container nav">
+          <a href="/" onClick={(e) => handleNav(e, '#home')} className="logo !flex !items-center !gap-2">
             <BrandIcon className="w-6 h-6 text-[#00e5ff]" />
-            <span className="font-bold tracking-tight text-xl text-slate-900">{siteSettings?.siteName || 'BEHOLD'}</span>
+            <span className="font-bold tracking-tight text-xl text-slate-900">{siteName}</span>
           </a>
 
-          <nav className={`desktop-nav ${mobileMenuOpen ? '!flex !flex-col !absolute !top-[68px] !left-0 !w-full !bg-white !shadow-lg !p-6 !z-50 !m-0 !items-start !gap-4' : ''}`} aria-label="Main navigation">
+          <nav className={`main-nav ${mobileMenuOpen ? '!flex !flex-col !absolute !top-[68px] !left-0 !w-full !bg-white !shadow-lg !p-6 !z-50 !m-0 !items-start !gap-4' : ''}`} aria-label="Main navigation">
             <a href="#home" onClick={(e) => handleNav(e, '#home')} className="active">Home</a>
             <a href="#psychologists" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</a>
             <a href="#how-it-works" onClick={(e) => handleNav(e, '#how-it-works')}>How it Works</a>
@@ -68,11 +70,11 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
           </nav>
 
           <div className="nav-actions">
-            <a href="#" className="login-btn" onClick={handleAuth}>Log in</a>
-            <button className="signup-btn cursor-pointer" onClick={handleAuth}>Sign Up</button>
+            <a href="#" className="btn-outline" onClick={handleAuth}>Log in</a>
+            <button className="btn-solid cursor-pointer" onClick={handleAuth}>Sign Up</button>
           </div>
 
-          <button className="mobile-menu cursor-pointer" aria-label="Open menu" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button className="menu cursor-pointer" aria-label="Menu" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
         </div>
@@ -80,37 +82,36 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
 
       <main id="home">
         <section className="hero">
-          <div className="mc-container hero-grid">
+          <div className="container hero-inner">
             <div className="hero-copy">
               <p className="eyebrow">Elevating Minds. Empowering Lives.</p>
               <h1>You Deserve<br />To <span>Feel Better</span></h1>
-              <p className="hero-text">
+              <p className="lead">
                 Book a session with certified psychologists,<br className="hidden md:block" />
                 from the comfort of your home. Take the first<br className="hidden md:block" />
                 step towards a happier, healthier you.
               </p>
 
-              <div className="hero-buttons">
-                <button className="primary-btn cursor-pointer" onClick={handleBook}>Book a Session <b>→</b></button>
-                <button className="secondary-btn cursor-pointer" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</button>
+              <div className="actions">
+                <button className="btn-solid pill cursor-pointer" onClick={handleBook}>Book a Session <b>→</b></button>
+                <button className="btn-outline pill cursor-pointer" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</button>
               </div>
 
-              <div className="trust-row">
+              <div className="hero-trust">
                 <span><i>✓</i> Verified Professionals</span>
                 <span><i>✓</i> Secure &amp; Private</span>
                 <span><i>✓</i> Flexible Scheduling</span>
               </div>
             </div>
 
-            <div className="hero-visual">
-              <div className="hero-blob"></div>
+            <div className="visual">
               <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=85" alt="Person relaxing during a peaceful moment" />
-              <div className="quote-card">
+              <div className="quote">
                 <strong>“It’s okay to<br />ask for help”</strong>
                 <small>Better mental health<br />brings a brighter tomorrow.</small>
-                <span>♥</span>
+                <b>♥</b>
               </div>
-              <div className="people-card">
+              <div className="people">
                 <div className="avatars">
                   <img src="https://i.pravatar.cc/80?img=47" alt="User 1" />
                   <img src="https://i.pravatar.cc/80?img=12" alt="User 2" />
@@ -122,77 +123,77 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
           </div>
         </section>
 
-        <section className="benefits">
-          <div className="mc-container benefits-grid">
-            <article className="benefit">
-              <div className="benefit-icon purple">▰</div>
+        <section className="feature-strip">
+          <div className="container feature-grid">
+            <div className="feature">
+              <div className="icon-circle">▰</div>
               <h3>Online &amp; In-Person</h3>
               <p>Choose what's comfortable<br />for you</p>
-            </article>
-            <article className="benefit">
-              <div className="benefit-icon green">◆</div>
+            </div>
+            <div className="feature">
+              <div className="icon-circle">◆</div>
               <h3>Verified Experts</h3>
               <p>Licensed and experienced<br />professionals</p>
-            </article>
-            <article className="benefit">
-              <div className="benefit-icon orange">▣</div>
+            </div>
+            <div className="feature">
+              <div className="icon-circle">▣</div>
               <h3>Flexible Timings</h3>
               <p>Book sessions at your<br />convenience</p>
-            </article>
-            <article className="benefit">
-              <div className="benefit-icon blue">▣</div>
+            </div>
+            <div className="feature">
+              <div className="icon-circle">▣</div>
               <h3>100% Confidential</h3>
               <p>Your privacy is our priority</p>
-            </article>
+            </div>
           </div>
         </section>
 
-        <section className="section how" id="how-it-works">
-          <div className="mc-container">
-            <div className="section-heading centered">
+        <section className="section" id="how-it-works">
+          <div className="container">
+            <div className="section-head center">
               <p className="eyebrow">GET STARTED</p>
               <h2>How It Works</h2>
-              <p>Getting support is simple and takes just a few minutes.</p>
+              <p className="lead">Getting support is simple and takes just a few minutes.</p>
             </div>
 
             <div className="steps">
-              <article className="step">
-                <div className="step-top"><span className="number">1</span><span className="step-icon">⌕</span></div>
+              <div className="step">
+                <div className="step-top"><span className="num">1</span><span className="step-icon">⌕</span></div>
                 <h3>Find a Psychologist</h3>
                 <p>Browse profiles and choose<br />the right expert for you.</p>
-              </article>
-              <div className="step-arrow">→</div>
-              <article className="step">
-                <div className="step-top"><span className="number">2</span><span className="step-icon">▦</span></div>
+              </div>
+              <div className="arrow">→</div>
+              <div className="step">
+                <div className="step-top"><span className="num">2</span><span className="step-icon">▦</span></div>
                 <h3>Book a Session</h3>
-                <p>Select a convenient date,<br />time and mode (online/in-person).</p>
-              </article>
-              <div className="step-arrow">→</div>
-              <article className="step">
-                <div className="step-top"><span className="number">3</span><span className="step-icon">●</span></div>
+                <p>Select a convenient date,<br />time and mode.</p>
+              </div>
+              <div className="arrow">→</div>
+              <div className="step">
+                <div className="step-top"><span className="num">3</span><span className="step-icon">●</span></div>
                 <h3>Start Your Journey</h3>
                 <p>Join the session and take a step<br />towards a better you.</p>
-              </article>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="section experts" id="psychologists">
-          <div className="mc-container">
-            <div className="section-heading expert-heading">
+        <section className="section" style={{ paddingTop: '10px' }} id="psychologists">
+          <div className="container">
+            <div className="expert-head">
               <div>
                 <p className="eyebrow">MEET OUR EXPERTS</p>
                 <h2>Find the Right Psychologist for You</h2>
-                <p>Our certified professionals are here to support you through life's challenges.</p>
+                <p className="lead">Our certified professionals are here to support you through life's challenges.</p>
               </div>
-              <button className="outline-small cursor-pointer" onClick={() => navigate('/booking')}>View All <span>→</span></button>
+              <button className="small-outline cursor-pointer" onClick={() => navigate('/booking')}>View All <span>→</span></button>
             </div>
 
-            <div className="doctor-grid">
+            <div className="doctors">
               {loading ? (
                 // Skeletons while fetching real data
                 [1, 2, 3, 4].map((i) => (
-                  <article key={i} className="doctor-card animate-pulse">
+                  <article key={i} className="doctor animate-pulse">
                     <div className="doctor-photo bg-slate-200 h-[100px] w-full rounded-md mb-2"></div>
                     <div className="h-4 bg-slate-200 rounded w-3/4 mb-1"></div>
                     <div className="h-3 bg-slate-200 rounded w-1/2 mb-1"></div>
@@ -203,7 +204,7 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
               ) : counsellors.length > 0 ? (
                 // Map over real dynamic backend data
                 counsellors.map((c) => (
-                  <article key={c._id || c.id} className="doctor-card">
+                  <article key={c._id || c.id} className="doctor">
                     <div className="doctor-photo">
                       {c.profilePic ? (
                         <img src={c.profilePic} alt={c.name} />
@@ -212,15 +213,15 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
                           {c.name.charAt(0)}
                         </div>
                       )}
-                      <button className="cursor-pointer">♡</button>
+                      <button className="heart cursor-pointer">♡</button>
                     </div>
                     <h3>{c.name}</h3>
-                    <p className="role">{c.specialization || 'Clinical Psychologist'}</p>
-                    <p className="experience">{c.experience ? `${c.experience} years experience` : '5+ years experience'}</p>
+                    <p className="muted">{c.specialization || 'Clinical Psychologist'}</p>
+                    <p className="muted">{c.experience ? `${c.experience} years experience` : '5+ years experience'}</p>
                     <p className="rating"><b>★</b> 4.9 <span>({(c.name.length * 12) + 20} reviews)</span></p>
                     <div className="tags">
                       {(c.tags || ['Anxiety', 'Stress']).slice(0, 2).map((tag, idx) => (
-                        <span key={idx}>{tag}</span>
+                        <span key={idx} className="tag">{tag}</span>
                       ))}
                     </div>
                     <button onClick={handleBook} className="card-btn cursor-pointer mt-3 w-full">Book a Session</button>
@@ -235,58 +236,70 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
           </div>
         </section>
 
-        <section className="section why" id="about">
-          <div className="mc-container why-grid">
-            <div>
-              <p className="eyebrow">WHY CHOOSE {siteSettings?.siteName?.toUpperCase() || 'BEHOLD'}</p>
+        <section className="section" id="about">
+          <div className="container two-col">
+            <div className="why-copy">
+              <p className="eyebrow">WHY CHOOSE {siteName.toUpperCase()}</p>
               <h2>More Than Just<br />A Booking Platform</h2>
-              <p className="why-text">We believe that mental health care should be accessible, affordable, and stigma-free. Our platform connects you with trusted psychologists who truly care about your well-being.</p>
+              <p className="lead">We believe that mental health care should be accessible, affordable, and stigma-free. Our platform connects you with trusted psychologists who truly care about your well-being.</p>
             </div>
-            <div className="why-list">
-              <div><span>♥</span><div><strong>Trusted &amp; Verified Professionals</strong><p>All our psychologists are licensed and background-checked.</p></div></div>
-              <div><span>♣</span><div><strong>Wide Range of Specializations</strong><p>From anxiety to career guidance, find the right support.</p></div></div>
-              <div><span>₹</span><div><strong>Affordable &amp; Transparent Pricing</strong><p>No hidden costs. Quality care within your reach.</p></div></div>
-              <div><span>◆</span><div><strong>A Safe &amp; Supportive Community</strong><p>Resources, workshops and a community that understands you.</p></div></div>
+            <div className="reason-list">
+              <div className="reason">
+                <span className="icon-circle">♥</span>
+                <div><strong>Trusted &amp; Verified Professionals</strong><p>All our psychologists are licensed and background-checked.</p></div>
+              </div>
+              <div className="reason">
+                <span className="icon-circle">♣</span>
+                <div><strong>Wide Range of Specializations</strong><p>From anxiety to career guidance, find the right support.</p></div>
+              </div>
+              <div className="reason">
+                <span className="icon-circle">₹</span>
+                <div><strong>Affordable &amp; Transparent Pricing</strong><p>No hidden costs. Quality care within your reach.</p></div>
+              </div>
+              <div className="reason">
+                <span className="icon-circle">◆</span>
+                <div><strong>A Safe &amp; Supportive Community</strong><p>Resources, workshops and a community that understands you.</p></div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="section stories" id="reviews">
-          <div className="mc-container">
-            <div className="section-heading">
+        <section className="section" id="reviews">
+          <div className="container">
+            <div className="section-head">
               <p className="eyebrow">REAL STORIES</p>
               <h2>What Our Users Say</h2>
             </div>
-            <div className="testimonial-grid">
-              <article className="testimonial">
-                <p>“{siteSettings?.siteName || 'BEHOLD'} made it so easy to find the right therapist. I finally feel heard and supported.”</p>
+            <div className="testimonials">
+              <div className="testimonial">
+                <p>“{siteName} made it so easy to find the right therapist. I finally feel heard and supported.”</p>
                 <div className="reviewer">
                   <img src="https://i.pravatar.cc/80?img=49" alt="User 1" />
                   <div><strong>Priya S.</strong><small>Verified User</small></div>
-                  <b>★★★★★</b>
+                  <span className="stars">★★★★★</span>
                 </div>
-              </article>
-              <article className="testimonial">
+              </div>
+              <div className="testimonial">
                 <p>“The sessions have really helped me manage my anxiety. Highly recommend this platform!”</p>
                 <div className="reviewer">
                   <img src="https://i.pravatar.cc/80?img=11" alt="User 2" />
                   <div><strong>Arjun K.</strong><small>Verified User</small></div>
-                  <b>★★★★★</b>
+                  <span className="stars">★★★★★</span>
                 </div>
-              </article>
-              <article className="testimonial">
+              </div>
+              <div className="testimonial">
                 <p>“Professional, easy to use, and truly caring. A great platform for mental health support.”</p>
                 <div className="reviewer">
                   <img src="https://i.pravatar.cc/80?img=45" alt="User 3" />
                   <div><strong>Sneha M.</strong><small>Verified User</small></div>
-                  <b>★★★★★</b>
+                  <span className="stars">★★★★★</span>
                 </div>
-              </article>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Dynamic FAQ & Blog Section (Rendered in its original form as requested) */}
+        {/* Dynamic FAQ & Blog Section */}
         <div id="faqs">
           <FaqBlogSection />
         </div>
@@ -296,26 +309,28 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
           <ContactInquirySection />
         </div>
 
-        <section className="cta-section">
-          <div className="mc-container cta">
+        <section className="section" style={{ paddingTop: '5px' }}>
+          <div className="container cta">
             <div>
               <h2>Take the First Step Today</h2>
-              <p>Your mental well-being matters. Book a session now and<br className="hidden md:block" /> start your journey towards a healthier, happier you.</p>
+              <p>Your mental well-being matters. Book a session now and start your journey towards a healthier, happier you.</p>
             </div>
-            <button onClick={handleBook} className="primary-btn cursor-pointer">Book a Session <b>→</b></button>
-            <div className="leaf-decoration">◜<br />◝</div>
+            <button className="btn-solid cursor-pointer" onClick={handleBook}>Book a Session <b>→</b></button>
+            <div className="leaf">◜<br />◝</div>
           </div>
         </section>
       </main>
 
       <footer>
-        <div className="mc-container footer-main">
-          <div className="footer-brand">
-            <a href="/" onClick={(e) => handleNav(e, '#home')} className="brand flex items-center gap-2">
+        <div className="container footer-main">
+          <div>
+            <a href="/" onClick={(e) => handleNav(e, '#home')} className="logo !flex !items-center !gap-2">
               <BrandIcon className="w-6 h-6 text-[#00e5ff]" />
-              <span className="font-bold tracking-tight text-xl text-slate-900">{siteSettings?.siteName || 'BEHOLD'}</span>
+              <span className="font-bold tracking-tight text-xl text-slate-900">{siteName}</span>
             </a>
-            <p>Empowering Minds. Elevating Lives.</p>
+            <div style={{ fontSize: '10px', color: '#898b9d', marginTop: '5px', fontWeight: '500' }}>
+              Empowering Minds. Elevating Lives.
+            </div>
           </div>
           <div className="footer-links">
             <a href="#home" onClick={(e) => handleNav(e, '#home')}>Home</a>
@@ -324,11 +339,11 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
             <a href="#about" onClick={(e) => handleNav(e, '#about')}>About</a>
             <a href="#contact" onClick={(e) => handleNav(e, '#contact')}>Contact</a>
           </div>
-          <div className="socials">
+          <div className="social">
             <a href="#">◎</a><a href="#">in</a><a href="#">♥</a><a href="#">▶</a>
           </div>
         </div>
-        <div className="mc-container footer-bottom">
+        <div className="container footer-bottom">
           <span>© {new Date().getFullYear()} {siteSettings?.siteCopyright || 'BEHOLD Ltd'}. All rights reserved.</span>
           <div>
             <a href="#" onClick={(e) => handleNav(e, '/privacy')}>Privacy Policy</a>
