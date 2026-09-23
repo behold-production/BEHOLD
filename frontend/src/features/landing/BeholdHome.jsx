@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiService from '../../services/api';
-import './behold.css'; // The scoped CSS for this layout (now containing V2 styles)
+import './behold.css';
 import BrandIcon from '../../components/common/BrandIcon';
 import FaqBlogSection from './FaqBlogSection';
 import ContactInquirySection from './ContactInquirySection';
 
-export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings, navigateToSection }) {
+export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [counsellors, setCounsellors] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const siteName = siteSettings?.siteName || 'BEHOLD';
+
   useEffect(() => {
-    // Fetch dynamic counsellors from admin data
     ApiService.getCounsellors({ limit: 4 })
       .then((res) => {
         if (res?.success && Array.isArray(res.data)) {
@@ -24,18 +25,10 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings, na
       .finally(() => setLoading(false));
   }, []);
 
-  const handleNav = (e, path) => {
-    e.preventDefault();
+  const scrollTo = (id) => {
     setMobileMenuOpen(false);
-    if (path.startsWith('#')) {
-      const el = document.getElementById(path.substring(1));
-      if (el) {
-        window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' });
-      }
-    } else {
-      navigate(path);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    const el = document.getElementById(id);
+    if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
   };
 
   const handleBook = (e) => {
@@ -47,307 +40,391 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings, na
   const handleAuth = (e) => {
     e.preventDefault();
     if (onOpenAuth) onOpenAuth();
-    else navigate('/profile');
+    else navigate('/login');
   };
-
-  const siteName = siteSettings?.siteName || 'BEHOLD';
 
   return (
     <div className="behold-theme">
-      <header className="site-header">
-        <div className="container nav">
-          <a href="/" onClick={(e) => handleNav(e, '#home')} className="logo !flex !items-center !gap-2">
-            <BrandIcon className="w-6 h-6 text-[#00e5ff]" />
-            <span className="font-bold tracking-tight text-xl text-slate-900">{siteName}</span>
+      {/* ── NAVBAR ── */}
+      <header className="bh-nav">
+        <div className="bh-container bh-nav-inner">
+          <a href="/" onClick={(e) => { e.preventDefault(); scrollTo('home'); }} className="bh-logo">
+            <BrandIcon className="bh-logo-icon" />
+            {siteName}
           </a>
 
-          <nav className={`main-nav ${mobileMenuOpen ? '!flex !flex-col !absolute !top-[68px] !left-0 !w-full !bg-white !shadow-lg !p-6 !z-50 !m-0 !items-start !gap-4' : ''}`} aria-label="Main navigation">
-            <a href="#home" onClick={(e) => handleNav(e, '#home')} className="active">Home</a>
-            <a href="#psychologists" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</a>
-            <a href="#how-it-works" onClick={(e) => handleNav(e, '#how-it-works')}>How it Works</a>
-            <a href="#faqs" onClick={(e) => handleNav(e, '#faqs')}>FAQ & Blog</a>
-            <a href="#about" onClick={(e) => handleNav(e, '#about')}>About</a>
+          <nav className="bh-nav-links" aria-label="Main navigation">
+            <a href="#home" onClick={(e) => { e.preventDefault(); scrollTo('home'); }} className="active">Home</a>
+            <a href="#psychologists" onClick={(e) => { e.preventDefault(); scrollTo('psychologists'); }}>Find a Psychologist</a>
+            <a href="#how-it-works" onClick={(e) => { e.preventDefault(); scrollTo('how-it-works'); }}>How it Works</a>
+            <a href="#faqs" onClick={(e) => { e.preventDefault(); scrollTo('faqs'); }}>FAQ &amp; Blog</a>
+            <a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }}>About</a>
           </nav>
 
-          <div className="nav-actions">
-            <a href="#" className="btn-outline" onClick={handleAuth}>Log in</a>
-            <button className="btn-solid cursor-pointer" onClick={handleAuth}>Sign Up</button>
+          <div className="bh-nav-actions">
+            <button className="bh-nav-login" onClick={handleAuth}>Log in</button>
+            <button className="bh-nav-signup" onClick={handleAuth}>Sign Up →</button>
           </div>
 
-          <button className="menu cursor-pointer" aria-label="Menu" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button className="bh-hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Menu">
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`bh-mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+          <a href="#home" onClick={(e) => { e.preventDefault(); scrollTo('home'); }}>Home</a>
+          <a href="#psychologists" onClick={(e) => { e.preventDefault(); scrollTo('psychologists'); }}>Find a Psychologist</a>
+          <a href="#how-it-works" onClick={(e) => { e.preventDefault(); scrollTo('how-it-works'); }}>How it Works</a>
+          <a href="#faqs" onClick={(e) => { e.preventDefault(); scrollTo('faqs'); }}>FAQ &amp; Blog</a>
+          <a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }}>About</a>
+          <div className="bh-mobile-btn" style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+            <button className="bh-nav-login" onClick={handleAuth} style={{ flex: 1 }}>Log in</button>
+            <button className="bh-nav-signup" onClick={handleAuth} style={{ flex: 1 }}>Sign Up →</button>
+          </div>
         </div>
       </header>
 
       <main id="home">
-        <section className="hero">
-          <div className="container hero-inner">
-            <div className="hero-copy">
-              <p className="eyebrow">Elevating Minds. Empowering Lives.</p>
-              <h1>You Deserve<br />To <span>Feel Better</span></h1>
-              <p className="lead">
-                Book a session with certified psychologists,<br className="hidden md:block" />
-                from the comfort of your home. Take the first<br className="hidden md:block" />
-                step towards a happier, healthier you.
+
+        {/* ── HERO ── */}
+        <section className="bh-hero">
+          <div className="bh-container bh-hero-inner">
+            <div className="bh-hero-copy">
+              <p className="bh-eyebrow">Elevating Minds. Empowering Lives.</p>
+              <h1 className="bh-hero-h1">
+                You Deserve<br />
+                To <span className="highlight">Feel Better</span>
+              </h1>
+              <p className="bh-hero-lead">
+                Book a session with certified psychologists, from the comfort of your home.
+                Take the first step towards a happier, healthier you.
               </p>
-
-              <div className="actions">
-                <button className="btn-solid pill cursor-pointer" onClick={handleBook}>Book a Session <b>→</b></button>
-                <button className="btn-outline pill cursor-pointer" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</button>
+              <div className="bh-hero-actions">
+                <button className="bh-btn-primary" onClick={handleBook}>
+                  Book a Session →
+                </button>
+                <button className="bh-btn-secondary" onClick={(e) => { e.preventDefault(); scrollTo('psychologists'); }}>
+                  Find a Psychologist
+                </button>
               </div>
-
-              <div className="hero-trust">
-                <span><i>✓</i> Verified Professionals</span>
-                <span><i>✓</i> Secure &amp; Private</span>
-                <span><i>✓</i> Flexible Scheduling</span>
+              <div className="bh-hero-trust">
+                <span className="bh-trust-item">
+                  <span className="bh-trust-check">✓</span> Verified Professionals
+                </span>
+                <span className="bh-trust-item">
+                  <span className="bh-trust-check">✓</span> Secure &amp; Private
+                </span>
+                <span className="bh-trust-item">
+                  <span className="bh-trust-check">✓</span> Flexible Scheduling
+                </span>
               </div>
             </div>
 
-            <div className="visual">
-              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=85" alt="Person relaxing during a peaceful moment" />
-              <div className="quote">
-                <strong>“It’s okay to<br />ask for help”</strong>
-                <small>Better mental health<br />brings a brighter tomorrow.</small>
-                <b>♥</b>
-              </div>
-              <div className="people">
-                <div className="avatars">
-                  <img src="https://i.pravatar.cc/80?img=47" alt="User 1" />
-                  <img src="https://i.pravatar.cc/80?img=12" alt="User 2" />
-                  <img src="https://i.pravatar.cc/80?img=32" alt="User 3" />
+            <div className="bh-hero-visual">
+              <div className="bh-hero-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=85"
+                  alt="Person relaxing peacefully"
+                  loading="eager"
+                />
+                <div className="bh-quote-card">
+                  <strong>"It's okay to ask for help"</strong>
+                  <small>Better mental health brings a brighter tomorrow.</small>
+                  <span className="bh-quote-heart">♥</span>
                 </div>
-                <div><strong>5000+</strong><small>People trusted us</small></div>
+                <div className="bh-people-card">
+                  <div className="bh-avatars">
+                    <img src="https://i.pravatar.cc/80?img=47" alt="User" />
+                    <img src="https://i.pravatar.cc/80?img=12" alt="User" />
+                    <img src="https://i.pravatar.cc/80?img=32" alt="User" />
+                  </div>
+                  <div>
+                    <strong>5000+</strong>
+                    <small>People trusted us</small>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="feature-strip">
-          <div className="container feature-grid">
-            <div className="feature">
-              <div className="icon-circle">▰</div>
+        {/* ── FEATURES STRIP ── */}
+        <section className="bh-features">
+          <div className="bh-container bh-features-grid">
+            <div className="bh-feat">
+              <div className="bh-feat-icon">🖥️</div>
               <h3>Online &amp; In-Person</h3>
-              <p>Choose what's comfortable<br />for you</p>
+              <p>Choose what's comfortable for you</p>
             </div>
-            <div className="feature">
-              <div className="icon-circle">◆</div>
+            <div className="bh-feat">
+              <div className="bh-feat-icon">🏅</div>
               <h3>Verified Experts</h3>
-              <p>Licensed and experienced<br />professionals</p>
+              <p>Licensed and experienced professionals</p>
             </div>
-            <div className="feature">
-              <div className="icon-circle">▣</div>
+            <div className="bh-feat">
+              <div className="bh-feat-icon">🗓️</div>
               <h3>Flexible Timings</h3>
-              <p>Book sessions at your<br />convenience</p>
+              <p>Book sessions at your convenience</p>
             </div>
-            <div className="feature">
-              <div className="icon-circle">▣</div>
+            <div className="bh-feat">
+              <div className="bh-feat-icon">🔒</div>
               <h3>100% Confidential</h3>
               <p>Your privacy is our priority</p>
             </div>
           </div>
         </section>
 
-        <section className="section" id="how-it-works">
-          <div className="container">
-            <div className="section-head center">
-              <p className="eyebrow">GET STARTED</p>
-              <h2>How It Works</h2>
-              <p className="lead">Getting support is simple and takes just a few minutes.</p>
+        {/* ── HOW IT WORKS ── */}
+        <section className="bh-section" id="how-it-works">
+          <div className="bh-container">
+            <div style={{ textAlign: 'center', maxWidth: '540px', margin: '0 auto' }}>
+              <p className="bh-eyebrow">GET STARTED</p>
+              <h2 className="bh-h2">How It Works</h2>
+              <p className="bh-lead">Getting support is simple and takes just a few minutes.</p>
             </div>
 
-            <div className="steps">
-              <div className="step">
-                <div className="step-top"><span className="num">1</span><span className="step-icon">⌕</span></div>
+            <div className="bh-steps-grid">
+              <div className="bh-step">
+                <div className="bh-step-num">1</div>
                 <h3>Find a Psychologist</h3>
-                <p>Browse profiles and choose<br />the right expert for you.</p>
+                <p>Browse profiles and choose the right expert for you.</p>
               </div>
-              <div className="arrow">→</div>
-              <div className="step">
-                <div className="step-top"><span className="num">2</span><span className="step-icon">▦</span></div>
+              <div className="bh-step">
+                <div className="bh-step-num">2</div>
                 <h3>Book a Session</h3>
-                <p>Select a convenient date,<br />time and mode.</p>
+                <p>Select a convenient date, time and mode.</p>
               </div>
-              <div className="arrow">→</div>
-              <div className="step">
-                <div className="step-top"><span className="num">3</span><span className="step-icon">●</span></div>
+              <div className="bh-step">
+                <div className="bh-step-num">3</div>
                 <h3>Start Your Journey</h3>
-                <p>Join the session and take a step<br />towards a better you.</p>
+                <p>Join the session and take a step towards a better you.</p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="section" style={{ paddingTop: '10px' }} id="psychologists">
-          <div className="container">
-            <div className="expert-head">
+        {/* ── MEET OUR EXPERTS ── */}
+        <section className="bh-section" id="psychologists" style={{ background: '#f8fafc', paddingTop: '80px' }}>
+          <div className="bh-container">
+            <div className="bh-experts-head">
               <div>
-                <p className="eyebrow">MEET OUR EXPERTS</p>
-                <h2>Find the Right Psychologist for You</h2>
-                <p className="lead">Our certified professionals are here to support you through life's challenges.</p>
+                <p className="bh-eyebrow">MEET OUR EXPERTS</p>
+                <h2 className="bh-h2">Find the Right Psychologist for You</h2>
+                <p className="bh-lead" style={{ marginTop: '8px' }}>Our certified professionals are here to support you through life's challenges.</p>
               </div>
-              <button className="small-outline cursor-pointer" onClick={() => navigate('/booking')}>View All <span>→</span></button>
+              <button className="bh-btn-ghost" onClick={() => navigate('/booking')} style={{ flexShrink: 0 }}>
+                View All →
+              </button>
             </div>
 
-            <div className="doctors">
+            <div className="bh-doctors-grid">
               {loading ? (
-                // Skeletons while fetching real data
                 [1, 2, 3, 4].map((i) => (
-                  <article key={i} className="doctor animate-pulse">
-                    <div className="doctor-photo bg-slate-200 h-[100px] w-full rounded-md mb-2"></div>
-                    <div className="h-4 bg-slate-200 rounded w-3/4 mb-1"></div>
-                    <div className="h-3 bg-slate-200 rounded w-1/2 mb-1"></div>
-                    <div className="h-3 bg-slate-200 rounded w-1/3 mb-4"></div>
-                    <div className="h-6 bg-slate-200 rounded-full w-full"></div>
-                  </article>
+                  <div key={i} className="bh-doctor-card">
+                    <div className="bh-doctor-photo bh-skeleton" style={{ height: '180px' }} />
+                    <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div className="bh-skeleton" style={{ height: '16px', borderRadius: '4px', width: '70%' }} />
+                      <div className="bh-skeleton" style={{ height: '12px', borderRadius: '4px', width: '50%' }} />
+                      <div className="bh-skeleton" style={{ height: '12px', borderRadius: '4px', width: '90%' }} />
+                      <div className="bh-skeleton" style={{ height: '12px', borderRadius: '4px', width: '80%' }} />
+                      <div className="bh-skeleton" style={{ height: '40px', borderRadius: '100px', marginTop: '8px' }} />
+                    </div>
+                  </div>
                 ))
               ) : counsellors.length > 0 ? (
-                // Map over real dynamic backend data
                 counsellors.map((c) => (
-                  <article key={c._id || c.id} className="doctor">
-                    <div className="doctor-photo">
+                  <article key={c._id || c.id} className="bh-doctor-card">
+                    <div className="bh-doctor-photo">
                       {c.profilePic ? (
                         <img src={c.profilePic} alt={c.name} />
                       ) : (
-                        <div className="w-full h-full bg-slate-200 flex items-center justify-center text-3xl font-black text-slate-400">
-                          {c.name.charAt(0)}
+                        <div className="bh-doctor-photo-placeholder">
+                          {c.name?.charAt(0) || '?'}
                         </div>
                       )}
-                      <button className="heart cursor-pointer">♡</button>
+                      <button className="bh-doctor-fav" aria-label="Favourite">♡</button>
                     </div>
-                    <h3>{c.name}</h3>
-                    <p className="muted">{c.specialization || 'Clinical Psychologist'}</p>
-                    <p className="muted">{c.experience ? `${c.experience} years experience` : '5+ years experience'}</p>
-                    <p className="rating"><b>★</b> 4.9 <span>({(c.name.length * 12) + 20} reviews)</span></p>
-                    <div className="tags">
-                      {(c.tags || ['Anxiety', 'Stress']).slice(0, 2).map((tag, idx) => (
-                        <span key={idx} className="tag">{tag}</span>
-                      ))}
+                    <div className="bh-doctor-body">
+                      <h3 className="bh-doctor-name">{c.name}</h3>
+                      <p className="bh-doctor-spec">{c.specialization || 'Clinical Psychologist'}</p>
+                      {c.bio && <p className="bh-doctor-desc">{c.bio}</p>}
+                      {c.experience && (
+                        <p className="bh-doctor-spec">{c.experience} years experience</p>
+                      )}
+                      <div className="bh-doctor-rating">
+                        <span className="bh-rating-star">★</span>
+                        <span className="bh-rating-val">4.9</span>
+                        <span className="bh-rating-count">({(c.name?.length || 5) * 12 + 20} reviews)</span>
+                      </div>
+                      <div className="bh-doctor-tags">
+                        {(c.tags || ['Anxiety', 'Stress']).slice(0, 2).map((tag, idx) => (
+                          <span key={idx} className="bh-tag">{tag}</span>
+                        ))}
+                      </div>
+                      <button className="bh-doctor-btn" onClick={handleBook}>Book a Session</button>
                     </div>
-                    <button onClick={handleBook} className="card-btn cursor-pointer mt-3 w-full">Book a Session</button>
                   </article>
                 ))
               ) : (
-                <div className="col-span-4 text-center py-10 text-slate-500">
-                  No experts found at the moment.
+                <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '48px', color: '#94a3b8', fontSize: '15px' }}>
+                  No experts found at the moment. Please check back soon.
                 </div>
               )}
             </div>
           </div>
         </section>
 
-        <section className="section" id="about">
-          <div className="container two-col">
-            <div className="why-copy">
-              <p className="eyebrow">WHY CHOOSE {siteName.toUpperCase()}</p>
-              <h2>More Than Just<br />A Booking Platform</h2>
-              <p className="lead">We believe that mental health care should be accessible, affordable, and stigma-free. Our platform connects you with trusted psychologists who truly care about your well-being.</p>
+        {/* ── WHY CHOOSE BEHOLD ── */}
+        <section className="bh-section bh-why" id="about">
+          <div className="bh-container bh-why-grid">
+            <div className="bh-why-copy">
+              <p className="bh-eyebrow">WHY CHOOSE {siteName.toUpperCase()}</p>
+              <h2 className="bh-h2">More Than Just<br />A Booking Platform</h2>
+              <p className="bh-lead">
+                We believe that mental health care should be accessible, affordable, and stigma-free.
+                Our platform connects you with trusted psychologists who truly care about your well-being.
+              </p>
             </div>
-            <div className="reason-list">
-              <div className="reason">
-                <span className="icon-circle">♥</span>
-                <div><strong>Trusted &amp; Verified Professionals</strong><p>All our psychologists are licensed and background-checked.</p></div>
-              </div>
-              <div className="reason">
-                <span className="icon-circle">♣</span>
-                <div><strong>Wide Range of Specializations</strong><p>From anxiety to career guidance, find the right support.</p></div>
-              </div>
-              <div className="reason">
-                <span className="icon-circle">₹</span>
-                <div><strong>Affordable &amp; Transparent Pricing</strong><p>No hidden costs. Quality care within your reach.</p></div>
-              </div>
-              <div className="reason">
-                <span className="icon-circle">◆</span>
-                <div><strong>A Safe &amp; Supportive Community</strong><p>Resources, workshops and a community that understands you.</p></div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <section className="section" id="reviews">
-          <div className="container">
-            <div className="section-head">
-              <p className="eyebrow">REAL STORIES</p>
-              <h2>What Our Users Say</h2>
-            </div>
-            <div className="testimonials">
-              <div className="testimonial">
-                <p>“{siteName} made it so easy to find the right therapist. I finally feel heard and supported.”</p>
-                <div className="reviewer">
-                  <img src="https://i.pravatar.cc/80?img=49" alt="User 1" />
-                  <div><strong>Priya S.</strong><small>Verified User</small></div>
-                  <span className="stars">★★★★★</span>
+            <div className="bh-reasons">
+              <div className="bh-reason">
+                <div className="bh-reason-icon">❤️</div>
+                <div>
+                  <h4>Trusted &amp; Verified Professionals</h4>
+                  <p>All our psychologists are licensed and background-checked.</p>
                 </div>
               </div>
-              <div className="testimonial">
-                <p>“The sessions have really helped me manage my anxiety. Highly recommend this platform!”</p>
-                <div className="reviewer">
-                  <img src="https://i.pravatar.cc/80?img=11" alt="User 2" />
-                  <div><strong>Arjun K.</strong><small>Verified User</small></div>
-                  <span className="stars">★★★★★</span>
+              <div className="bh-reason">
+                <div className="bh-reason-icon blue">🎓</div>
+                <div>
+                  <h4>Wide Range of Specializations</h4>
+                  <p>From anxiety to career guidance, find the right support.</p>
                 </div>
               </div>
-              <div className="testimonial">
-                <p>“Professional, easy to use, and truly caring. A great platform for mental health support.”</p>
-                <div className="reviewer">
-                  <img src="https://i.pravatar.cc/80?img=45" alt="User 3" />
-                  <div><strong>Sneha M.</strong><small>Verified User</small></div>
-                  <span className="stars">★★★★★</span>
+              <div className="bh-reason">
+                <div className="bh-reason-icon green">💸</div>
+                <div>
+                  <h4>Affordable &amp; Transparent Pricing</h4>
+                  <p>No hidden costs. Quality care within your reach.</p>
+                </div>
+              </div>
+              <div className="bh-reason">
+                <div className="bh-reason-icon orange">🤝</div>
+                <div>
+                  <h4>A Safe &amp; Supportive Community</h4>
+                  <p>Resources, workshops and a community that understands you.</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Dynamic FAQ & Blog Section */}
+        {/* ── TESTIMONIALS ── */}
+        <section className="bh-section" id="reviews">
+          <div className="bh-container">
+            <p className="bh-eyebrow">REAL STORIES</p>
+            <h2 className="bh-h2">What Our Users Say</h2>
+            <div className="bh-testi-grid">
+              <div className="bh-testi-card">
+                <p className="bh-testi-quote">"{siteName} made it so easy to find the right therapist. I finally feel heard and supported."</p>
+                <div className="bh-testi-user">
+                  <img src="https://i.pravatar.cc/80?img=49" alt="Priya S." />
+                  <div>
+                    <div className="bh-testi-name">Priya S.</div>
+                    <div className="bh-testi-label">Verified User</div>
+                  </div>
+                  <span className="bh-testi-stars">★★★★★</span>
+                </div>
+              </div>
+              <div className="bh-testi-card">
+                <p className="bh-testi-quote">"The sessions have really helped me manage my anxiety. Highly recommend this platform!"</p>
+                <div className="bh-testi-user">
+                  <img src="https://i.pravatar.cc/80?img=11" alt="Arjun K." />
+                  <div>
+                    <div className="bh-testi-name">Arjun K.</div>
+                    <div className="bh-testi-label">Verified User</div>
+                  </div>
+                  <span className="bh-testi-stars">★★★★★</span>
+                </div>
+              </div>
+              <div className="bh-testi-card">
+                <p className="bh-testi-quote">"Professional, easy to use, and truly caring. A great platform for mental health support."</p>
+                <div className="bh-testi-user">
+                  <img src="https://i.pravatar.cc/80?img=45" alt="Sneha M." />
+                  <div>
+                    <div className="bh-testi-name">Sneha M.</div>
+                    <div className="bh-testi-label">Verified User</div>
+                  </div>
+                  <span className="bh-testi-stars">★★★★★</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAQ & BLOG ── */}
         <div id="faqs">
           <FaqBlogSection />
         </div>
 
-        {/* Dynamic Contact Section */}
+        {/* ── CONTACT ── */}
         <div id="contact">
           <ContactInquirySection />
         </div>
 
-        <section className="section" style={{ paddingTop: '5px' }}>
-          <div className="container cta">
-            <div>
-              <h2>Take the First Step Today</h2>
-              <p>Your mental well-being matters. Book a session now and start your journey towards a healthier, happier you.</p>
+        {/* ── CTA BANNER ── */}
+        <section className="bh-section" style={{ paddingTop: '0' }}>
+          <div className="bh-container">
+            <div className="bh-cta-banner">
+              <div>
+                <h2>Take the First Step Today</h2>
+                <p>Your mental well-being matters. Book a session now and start your journey.</p>
+              </div>
+              <button className="bh-btn-primary" onClick={handleBook} style={{ flexShrink: 0 }}>
+                Book a Session →
+              </button>
             </div>
-            <button className="btn-solid cursor-pointer" onClick={handleBook}>Book a Session <b>→</b></button>
-            <div className="leaf">◜<br />◝</div>
           </div>
         </section>
       </main>
 
-      <footer>
-        <div className="container footer-main">
-          <div>
-            <a href="/" onClick={(e) => handleNav(e, '#home')} className="logo !flex !items-center !gap-2">
-              <BrandIcon className="w-6 h-6 text-[#00e5ff]" />
-              <span className="font-bold tracking-tight text-xl text-slate-900">{siteName}</span>
+      {/* ── FOOTER ── */}
+      <footer className="bh-footer">
+        <div className="bh-container bh-footer-main">
+          <div className="bh-footer-brand">
+            <a href="/" onClick={(e) => { e.preventDefault(); scrollTo('home'); }} className="bh-logo">
+              <BrandIcon className="bh-logo-icon" />
+              {siteName}
             </a>
-            <div style={{ fontSize: '10px', color: '#898b9d', marginTop: '5px', fontWeight: '500' }}>
-              Empowering Minds. Elevating Lives.
-            </div>
+            <p className="bh-footer-tagline">Empowering Minds. Elevating Lives.</p>
           </div>
-          <div className="footer-links">
-            <a href="#home" onClick={(e) => handleNav(e, '#home')}>Home</a>
-            <a href="#psychologists" onClick={(e) => handleNav(e, '#psychologists')}>Find a Psychologist</a>
-            <a href="#faqs" onClick={(e) => handleNav(e, '#faqs')}>FAQ & Blog</a>
-            <a href="#about" onClick={(e) => handleNav(e, '#about')}>About</a>
-            <a href="#contact" onClick={(e) => handleNav(e, '#contact')}>Contact</a>
+          <div className="bh-footer-col">
+            <h4>Platform</h4>
+            <a href="#home" onClick={(e) => { e.preventDefault(); scrollTo('home'); }}>Home</a>
+            <a href="#psychologists" onClick={(e) => { e.preventDefault(); scrollTo('psychologists'); }}>Find a Psychologist</a>
+            <a href="#how-it-works" onClick={(e) => { e.preventDefault(); scrollTo('how-it-works'); }}>How it Works</a>
+            <a href="#faqs" onClick={(e) => { e.preventDefault(); scrollTo('faqs'); }}>FAQ &amp; Blog</a>
           </div>
-          <div className="social">
-            <a href="#">◎</a><a href="#">in</a><a href="#">♥</a><a href="#">▶</a>
+          <div className="bh-footer-col">
+            <h4>Company</h4>
+            <a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }}>About Us</a>
+            <a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }}>Contact</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+          </div>
+          <div className="bh-footer-col">
+            <h4>Contact</h4>
+            <a href="tel:+919999999999">+91 99999 99999</a>
+            <a href="mailto:hello@behold.co.in">hello@behold.co.in</a>
+            <a>Kochi, Kerala, India</a>
           </div>
         </div>
-        <div className="container footer-bottom">
+        <div className="bh-container bh-footer-bottom">
           <span>© {new Date().getFullYear()} {siteSettings?.siteCopyright || 'BEHOLD Ltd'}. All rights reserved.</span>
-          <div>
-            <a href="#" onClick={(e) => handleNav(e, '/privacy')}>Privacy Policy</a>
-            <a href="#" onClick={(e) => handleNav(e, '/terms')}>Terms of Service</a>
+          <div className="bh-footer-legal">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
           </div>
         </div>
       </footer>
