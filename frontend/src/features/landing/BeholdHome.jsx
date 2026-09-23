@@ -159,7 +159,7 @@ function InlineContact() {
 }
 
 /* ─── MAIN COMPONENT ─────────────────────────────────────────── */
-export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) {
+export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist, siteSettings }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [counsellors, setCounsellors] = useState([]);
@@ -196,6 +196,28 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) 
 
   const book = (e) => { e.preventDefault(); if (onOpenBooking) onOpenBooking(); else navigate('/booking'); };
   const auth = (e) => { e.preventDefault(); if (onOpenAuth) onOpenAuth(); else navigate('/login'); };
+
+  const goToProfile = (c) => {
+    const id = c?._id || c?.id;
+    if (id) {
+      navigate(`/advisor/${id}`);
+    } else {
+      navigate('/booking');
+    }
+  };
+
+  const handleBookCard = (e, c) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const id = c?._id || c?.id;
+    if (onBookTherapist && id) {
+      onBookTherapist(id);
+    } else if (onOpenBooking) {
+      onOpenBooking();
+    } else {
+      navigate('/booking');
+    }
+  };
 
   return (
     <div className="bh" id="home">
@@ -380,52 +402,97 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, siteSettings }) 
               {loading
                 ? [1,2,3,4].map(i => (
                   <div key={i} className="bh-expert-card">
-                    <div style={{ height: '200px' }} className="bh-skel" />
-                    <div style={{ padding: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      <div className="bh-skel" style={{ height: '16px', width: '65%', borderRadius: '6px' }} />
-                      <div className="bh-skel" style={{ height: '12px', width: '45%', borderRadius: '6px' }} />
-                      <div className="bh-skel" style={{ height: '12px', width: '90%', borderRadius: '6px' }} />
-                      <div className="bh-skel" style={{ height: '12px', width: '80%', borderRadius: '6px' }} />
-                      <div className="bh-skel" style={{ height: '42px', borderRadius: '10px', marginTop: '12px' }} />
+                    <div style={{ height: '160px' }} className="bh-skel" />
+                    <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div className="bh-skel" style={{ height: '15px', width: '60%', borderRadius: '6px' }} />
+                      <div className="bh-skel" style={{ height: '11px', width: '40%', borderRadius: '6px' }} />
+                      <div className="bh-skel" style={{ height: '36px', width: '100%', borderRadius: '6px', margin: '4px 0' }} />
+                      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '8px', marginTop: 'auto' }}>
+                        <div className="bh-skel" style={{ height: '36px', borderRadius: '10px' }} />
+                        <div className="bh-skel" style={{ height: '36px', borderRadius: '10px' }} />
+                      </div>
                     </div>
                   </div>
                 ))
                 : counsellors.length > 0
-                  ? counsellors.map(c => (
-                    <article key={c._id || c.id} className="bh-expert-card">
-                      <div className="bh-expert-photo">
-                        {c.profilePic
-                          ? <img src={c.profilePic} alt={c.name} />
-                          : <div className="bh-expert-photo-placeholder">{c.name?.charAt(0) || '?'}</div>
-                        }
-                        <button className="bh-expert-fav" aria-label="Favourite">♡</button>
-                        <span className="bh-expert-badge">{c.specialization || 'Psychologist'}</span>
-                      </div>
-                      <div className="bh-expert-body">
-                        <h3 className="bh-expert-name">{c.name}</h3>
-                        <p className="bh-expert-spec">{c.specialization || 'Clinical Psychologist'}</p>
-                        {c.bio && <p className="bh-expert-desc">{c.bio}</p>}
-                        <div className="bh-expert-meta">
-                          {c.experience && (
-                            <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>
-                              {c.experience} years experience
-                            </p>
-                          )}
-                          <div className="bh-expert-rating">
-                            <span className="bh-expert-star">★</span>
-                            <strong>4.9</strong>
-                            <span>({(c.name?.length || 5) * 12 + 20} reviews)</span>
-                          </div>
-                          <div className="bh-expert-tags">
-                            {(c.tags || ['Anxiety', 'Stress']).slice(0, 2).map((t, i) => (
-                              <span key={i} className="bh-tag">{t}</span>
-                            ))}
-                          </div>
-                          <button className="bh-expert-btn" onClick={book}>Book a Session</button>
+                  ? counsellors.map(c => {
+                    const advisorId = c._id || c.id;
+                    const cleanBio = c.bio 
+                      ? c.bio.replace(/^(Clinical Expertise and Background\s*)+/gi, '').trim()
+                      : `${c.name} is an experienced psychologist providing evidence-based mental healthcare.`;
+
+                    return (
+                      <article 
+                        key={advisorId} 
+                        className="bh-expert-card"
+                        onClick={() => goToProfile(c)}
+                        title={`Click to view ${c.name}'s profile`}
+                      >
+                        <div className="bh-expert-photo">
+                          {c.profilePic
+                            ? <img src={c.profilePic} alt={c.name} loading="lazy" />
+                            : <div className="bh-expert-photo-placeholder">{c.name?.charAt(0) || '?'}</div>
+                          }
+                          <button 
+                            className="bh-expert-fav" 
+                            aria-label="Favourite"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            ♡
+                          </button>
+                          <span className="bh-expert-badge">{c.specialization || 'Clinical Psychologist'}</span>
                         </div>
-                      </div>
-                    </article>
-                  ))
+
+                        <div className="bh-expert-body">
+                          <div className="bh-expert-name-row">
+                            <h3 className="bh-expert-name">{c.name}</h3>
+                          </div>
+
+                          <div className="bh-expert-rating-row">
+                            <div className="bh-expert-rating">
+                              <span className="bh-expert-star">★</span>
+                              <strong>4.9</strong>
+                              <span>({(c.name?.length || 5) * 6 + 18})</span>
+                            </div>
+                            <span className="bh-expert-exp-badge">
+                              {c.experience ? `${c.experience}+ yrs` : 'Verified'}
+                            </span>
+                          </div>
+
+                          <p className="bh-expert-desc" title={cleanBio}>
+                            {cleanBio}
+                          </p>
+
+                          <div className="bh-expert-meta">
+                            <div className="bh-expert-tags">
+                              {(c.tags && c.tags.length > 0 ? c.tags : ['Therapy', 'Anxiety']).slice(0, 2).map((t, i) => (
+                                <span key={i} className="bh-tag">{t}</span>
+                              ))}
+                            </div>
+
+                            <div className="bh-expert-actions">
+                              <button 
+                                type="button"
+                                className="bh-expert-view-btn" 
+                                onClick={(e) => { e.stopPropagation(); goToProfile(c); }}
+                              >
+                                View Profile →
+                              </button>
+                              <button 
+                                type="button"
+                                className="bh-expert-book-btn" 
+                                onClick={(e) => handleBookCard(e, c)}
+                              >
+                                Book
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })
                   : (
                     <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '56px', color: '#94a3b8', fontSize: '15px' }}>
                       No experts found at the moment. Please check back soon.

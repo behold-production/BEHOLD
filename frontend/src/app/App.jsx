@@ -683,6 +683,7 @@ export default function App() {
               <BeholdHome 
                 onOpenAuth={() => setIsAuthModalOpen(true)} 
                 onOpenBooking={handleOpenGeneralBooking} 
+                onBookTherapist={handleBookTherapist}
                 siteSettings={siteSettings}
                 navigateToSection={navigateToSection}
               />
