@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
 
 :root{
-  --primary:#5d43d4; --primary2:#704fe0; --ink:#171951; --text:#30345f;
-  --muted:#747793; --soft:#f2efff; --soft2:#f8f7ff; --line:#e8e8f1;
-  --green:#32a77c; --orange:#ef8e58; --yellow:#ffb900; --danger:#e85d69;
-  --shadow:0 10px 28px rgba(41,35,105,.055);
+  --primary:#00e5ff; --primary2:#00b2be; --ink:#0f172a; --text:#334155;
+  --muted:#64748b; --soft:#e0faff; --soft2:#f0fdff; --line:#e2e8f0;
+  --green:#10b981; --orange:#f59e0b; --yellow:#fbbf24; --danger:#ef4444;
+  --shadow:0 10px 28px rgba(0,229,255,0.08);
 }
 .behold-theme *{box-sizing:border-box} .behold-theme html{scroll-behavior:smooth}
 .behold-theme body{margin:0;font-family:"DM Sans",Arial,sans-serif;color:var(--ink);background:#fff}
@@ -87,4 +87,72 @@
 }
 @media(max-width:600px){
  .behold-theme .container{width:calc(100% - 26px)}.behold-theme .site-header,.behold-theme .nav{height:62px}.behold-theme .nav-actions{display:none}.behold-theme h1{font-size:35px}.behold-theme .search-copy h1{font-size:34px}.behold-theme .hero .lead br{display:none}.behold-theme .visual{height:280px}.behold-theme .visual>img{width:92%;height:260px}.behold-theme .visual:before{width:100%;height:260px}.behold-theme .quote{right:2%;top:32px;width:125px;padding:13px}.behold-theme .people{right:3%;bottom:3px}.behold-theme .feature-grid{gap:16px 5px}.behold-theme .section{padding:38px 0}.behold-theme .steps{grid-template-columns:1fr}.behold-theme .arrow{display:none}.behold-theme .doctors,.behold-theme .results-grid{grid-template-columns:1fr 1fr;gap:9px}.behold-theme .doctor{padding:8px}.behold-theme .doctor-photo,.behold-theme .results-grid .doctor-photo{height:105px}.behold-theme .expert-head{align-items:start}.behold-theme .small-outline{display:none}.behold-theme .profile-photo{width:100%;height:350px}.behold-theme .profile-content,.behold-theme .info-boxes{grid-template-columns:1fr}.behold-theme .specials{grid-template-columns:1fr 1fr}.behold-theme .days{gap:3px}.behold-theme .times{grid-template-columns:repeat(2,1fr)}.behold-theme .booking-form h1,.behold-theme .confirm-copy h1{font-size:31px}.behold-theme .mode-grid{grid-template-columns:1fr}.behold-theme .progress-step small{display:none}.behold-theme .progress{padding-bottom:20px}.behold-theme .booking-detail{grid-template-columns:110px 1fr}.behold-theme .session-top{display:block}.behold-theme .session-actions,.behold-theme .form-actions{flex-direction:column}.behold-theme .resource-grid{grid-template-columns:1fr}.behold-theme .dash-hero{height:auto;min-height:170px}.behold-theme .dash-hero img{display:none}.behold-theme .stat-grid{grid-template-columns:1fr 1fr}.behold-theme .past-row{grid-template-columns:45px 1fr 70px}.behold-theme .past-row>span:nth-child(3){display:none}.behold-theme .recommend{grid-template-columns:1fr}.behold-theme .profile-card{flex-direction:column;align-items:flex-start}.behold-theme .profile-avatar{margin:auto}.behold-theme .form-grid{grid-template-columns:1fr}.behold-theme .footer-main{flex-wrap:wrap;gap:16px;justify-content:center;text-align:center}.behold-theme .footer-links{width:100%;justify-content:center;flex-wrap:wrap}.behold-theme .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+}
+
+/* Custom Behold Neon Blue Theme Overrides */
+.behold-theme .hero {
+  background: linear-gradient(105deg, #ffffff 36%, #f8fafc);
+  padding: 80px 0;
+}
+.behold-theme h1 {
+  font-size: 52px;
+  letter-spacing: -1.2px;
+}
+.behold-theme .hero-copy .lead {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 20px 0 30px;
+}
+.behold-theme .actions .pill {
+  font-size: 14px;
+  height: 48px;
+  padding: 0 30px;
+}
+.behold-theme .btn-solid, .behold-theme .btn-outline {
+  font-size: 14px;
+  height: 44px;
+}
+.behold-theme .visual:before {
+  background: var(--soft);
+}
+.behold-theme .feature-strip {
+  padding: 40px 0;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.behold-theme .feature h3 {
+  font-size: 16px;
+  margin-top: 15px;
+}
+.behold-theme .feature p {
+  font-size: 13px;
+  color: var(--text);
+}
+.behold-theme .icon-circle {
+  width: 54px;
+  height: 54px;
+  font-size: 20px;
+}
+.behold-theme .btn-outline {
+  border-color: var(--primary2);
+  color: var(--primary2);
+}
+.behold-theme .hero-trust span {
+  font-size: 11px;
+}
+.behold-theme .doctor h3 {
+  font-size: 15px;
+}
+.behold-theme .doctor p {
+  font-size: 11px;
+}
+.behold-theme .doctor .card-btn {
+  height: 34px;
+  font-size: 11px;
+}
+.behold-theme .section-head h2 {
+  font-size: 32px;
+}
+.behold-theme .section-head .lead {
+  font-size: 14px;
 }
