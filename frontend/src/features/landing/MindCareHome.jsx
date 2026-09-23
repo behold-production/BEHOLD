@@ -14,7 +14,7 @@ export default function MindCareHome({ onOpenAuth, onOpenBooking, siteSettings, 
 
   useEffect(() => {
     // Fetch dynamic counsellors from admin data
-    ApiService.getPublicCounsellors({ limit: 4 })
+    ApiService.getCounsellors({ limit: 4 })
       .then((res) => {
         if (res?.success && Array.isArray(res.data)) {
           setCounsellors(res.data.slice(0, 4));
