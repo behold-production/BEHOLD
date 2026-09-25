@@ -63,6 +63,11 @@ export default function AuthModals({ isOpen, onClose }) {
     onClose();
   }, [authStep, onClose]);
 
+  const handleModalBackRef = useRef(handleModalBack);
+  useEffect(() => {
+    handleModalBackRef.current = handleModalBack;
+  }, [handleModalBack]);
+
   // Reset state when modal opens/closes
   useEffect(() => {
     if (isOpen) {
@@ -85,7 +90,7 @@ export default function AuthModals({ isOpen, onClose }) {
     };
   }, [isOpen]);
 
-  // Body scroll lock + Esc to close + popstate history back
+  // Body scroll lock + Esc to close + popstate history back (stable: attaches once per modal open)
   useEffect(() => {
     if (!isOpen) return;
 
@@ -96,10 +101,10 @@ export default function AuthModals({ isOpen, onClose }) {
     window.history.pushState({ modalState: stateId }, '');
 
     const handleEsc = (e) => {
-      if (e.key === 'Escape') handleModalBack();
+      if (e.key === 'Escape') handleModalBackRef.current?.();
     };
     const handlePopState = () => {
-      handleModalBack();
+      handleModalBackRef.current?.();
     };
 
     document.addEventListener('keydown', handleEsc);
@@ -110,9 +115,8 @@ export default function AuthModals({ isOpen, onClose }) {
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
       window.removeEventListener('popstate', handlePopState);
-      clearInterval(timerRef.current);
     };
-  }, [isOpen, handleModalBack]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -166,10 +170,14 @@ export default function AuthModals({ isOpen, onClose }) {
 
     try {
       if (authStep === 'phone') {
-        if (!otpPhone.trim()) throw new Error('Phone number is required');
-        if (!validateIndianPhone(otpPhone)) throw new Error('Please enter a valid 10-digit Indian phone number');
+        const parsed = parseIndianPhone(otpPhone);
+        if (!parsed.isValid) throw new Error('Please enter a valid 10-digit Indian phone number');
 
-        await sendOtp(otpPhone);
+        const cleanPhone = parsed.phone10;
+        setOtpPhone(cleanPhone);
+
+        await sendOtp(cleanPhone);
+        setOtpCode('');
         setAuthStep('otp');
         startResendTimer();
         showToast('OTP sent to your WhatsApp!', 'success');
@@ -252,8 +260,14 @@ export default function AuthModals({ isOpen, onClose }) {
     } catch (err) {
       if (err.message && err.message.startsWith('REJECTED_USER:')) {
         setRejectionReason(err.message.replace('REJECTED_USER:', ''));
-      } else if (err.message && !err.message.includes('Status:')) {
-        showToast(err.message);
+      } else {
+        const msg = err.message || 'An error occurred. Please try again.';
+        showToast(msg);
+        if (authStep === 'phone') {
+          setFieldErrors(prev => ({ ...prev, otpPhone: msg }));
+        } else if (authStep === 'otp') {
+          setFieldErrors(prev => ({ ...prev, otpCode: msg }));
+        }
       }
     } finally {
       setIsLoading(false);
@@ -384,7 +398,7 @@ export default function AuthModals({ isOpen, onClose }) {
                     : authStep === 'details'
                     ? 'Please provide your name and email to finish setting up your account.'
                     : authStep === 'otp'
-                    ? `Code sent to WhatsApp +91 ${otpPhone}`
+                    ? `Code sent to WhatsApp +91 ${parseIndianPhone(otpPhone).phone10 || otpPhone}`
                     : 'Enter your WhatsApp number to sign in securely.'}
                 </p>
               </div>
@@ -436,7 +450,7 @@ export default function AuthModals({ isOpen, onClose }) {
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-slate-900">Phone Verified: +91 {otpPhone}</p>
+                  <p className="text-xs font-semibold text-slate-900">Phone Verified: +91 {parseIndianPhone(otpPhone).phone10 || otpPhone}</p>
                   <p className="text-[11px] text-slate-500">Only your verified details will be linked to your bookings.</p>
                 </div>
               </div>
@@ -518,8 +532,18 @@ export default function AuthModals({ isOpen, onClose }) {
                     <input
                       type="tel"
                       value={otpPhone}
-                      onChange={(e) => setOtpPhone(e.target.value)}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, '');
+                        if (raw.length > 10 && raw.startsWith('91')) {
+                          setOtpPhone(raw.slice(2, 12));
+                        } else if (raw.length > 10 && raw.startsWith('0')) {
+                          setOtpPhone(raw.slice(1, 11));
+                        } else {
+                          setOtpPhone(raw.slice(0, 10));
+                        }
+                      }}
                       placeholder="10-digit number"
+                      maxLength={10}
                       autoFocus
                       className="w-full pl-16 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-lg text-sm text-zinc-900 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all"
                     />

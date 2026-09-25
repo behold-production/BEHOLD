@@ -784,15 +784,22 @@ const AuthController = {
       console.log(`TO: ${normalizedPhone}`);
       console.log(`======================================\n`);
 
-      // Send via WhatsApp (use original phone so WaSender formats correctly)
-      const waResponse = await WhatsAppService.sendOTP(phone, otpCode);
+      // Dispatch via WhatsApp asynchronously without blocking the HTTP response
+      WhatsAppService.sendOTP(phone, otpCode)
+        .then((waResponse) => {
+          if (!waResponse?.success && !waResponse?.mock) {
+            console.warn(`[WhatsApp OTP Warning]: WASender API failed for ${phone}:`, waResponse?.error);
+            console.log(`[Fallback OTP]: Code generated for ${phone} is ${otpCode}`);
+          } else {
+            console.log(`[WhatsApp OTP Success]: Dispatched code to ${phone}`);
+          }
+        })
+        .catch((waErr) => {
+          console.error(`[WhatsApp OTP Error]: Failed to send OTP to ${phone}:`, waErr.message);
+          console.log(`[Fallback OTP]: Code generated for ${phone} is ${otpCode}`);
+        });
 
-      if (!waResponse.success && !waResponse.mock) {
-        console.warn(`[WhatsApp OTP Warning]: WASender API failed for ${phone}:`, waResponse.error);
-        console.log(`[Fallback OTP]: Code generated for ${phone} is ${otpCode}`);
-      }
-
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: 'OTP sent successfully via WhatsApp',
         ...(process.env.NODE_ENV !== 'production' || !process.env.WASENDER_TOKEN ? { devOtp: otpCode } : {})
@@ -816,6 +823,7 @@ const AuthController = {
       const normalizedPhone = phoneClean.length === 10 ? '91' + phoneClean : phoneClean;
       const last10 = normalizedPhone.slice(-10);
       const formattedPhone = normalizePhoneWithCountryCode(phone) || `+${normalizedPhone}`;
+      const cleanOtpInput = String(otpCode).trim();
 
       // Find OTP records using normalized phone and fallback formats
       const otps = await StorageService.findAll('otps', {
@@ -830,7 +838,7 @@ const AuthController = {
       const validOtps = otps.filter((o) => !o.used && new Date(o.expiresAt) > new Date());
       const latestOtp = validOtps.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
-      if (!latestOtp || latestOtp.otpCode !== otpCode) {
+      if (!latestOtp || String(latestOtp.otpCode).trim() !== cleanOtpInput) {
         return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
       }
 

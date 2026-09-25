@@ -55,6 +55,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     onClose();
   }, [authStep, onClose]);
 
+  const handleModalBackRef = useRef(handleModalBack);
+  useEffect(() => {
+    handleModalBackRef.current = handleModalBack;
+  }, [handleModalBack]);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -76,9 +81,9 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       clearInterval(timerRef.current);
     }
     return () => { document.body.style.overflow = ''; };
-  }, [isOpen, bookingForm]);
+  }, [isOpen]);
 
-  // Body scroll lock + Esc to close + popstate history back
+  // Body scroll lock + Esc to close + popstate history back (stable: attaches once per modal open)
   useEffect(() => {
     if (!isOpen) return;
 
@@ -88,8 +93,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     const stateId = `booking_auth_modal_${Date.now()}`;
     window.history.pushState({ modalState: stateId }, '');
 
-    const handleEsc = (e) => { if (e.key === 'Escape') handleModalBack(); };
-    const handlePopState = () => { handleModalBack(); };
+    const handleEsc = (e) => { if (e.key === 'Escape') handleModalBackRef.current?.(); };
+    const handlePopState = () => { handleModalBackRef.current?.(); };
 
     document.addEventListener('keydown', handleEsc);
     window.addEventListener('popstate', handlePopState);
@@ -99,9 +104,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
       window.removeEventListener('popstate', handlePopState);
-      clearInterval(timerRef.current);
     };
-  }, [isOpen, handleModalBack]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -132,6 +136,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         if (!validateIndianPhone(cleanPhone)) throw new Error('Please enter a valid 10-digit Indian phone number');
 
         await sendOtp(cleanPhone);
+        setOtpPhone(cleanPhone);
+        setOtpCode('');
         setAuthStep('otp');
         startResendTimer();
         showToast('OTP sent to your WhatsApp!', 'success');
@@ -226,8 +232,12 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         }
       }
     } catch (err) {
-      if (err.message && !err.message.includes('Status:')) {
-        showToast(err.message || 'Authentication failed.');
+      const msg = err?.message || 'Authentication failed. Please check your phone number and try again.';
+      showToast(msg);
+      if (authStep === 'phone') {
+        setFieldErrors(prev => ({ ...prev, otpPhone: msg }));
+      } else if (authStep === 'otp') {
+        setFieldErrors(prev => ({ ...prev, otpCode: msg }));
       }
     } finally {
       setIsLoading(false);
@@ -370,7 +380,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   {authStep === 'details'
                     ? 'Please enter your name and email to link and confirm your booking.'
                     : authStep === 'otp'
-                    ? `Code sent to WhatsApp +91 ${otpPhone}`
+                    ? `Code sent to WhatsApp +91 ${parseIndianPhone(otpPhone).phone10 || otpPhone}`
                     : 'Verify your WhatsApp number to link this booking securely.'}
                 </p>
               </div>
@@ -406,7 +416,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-slate-900">Phone Verified: +91 {otpPhone}</p>
+                  <p className="text-xs font-semibold text-slate-900">Phone Verified: +91 {parseIndianPhone(otpPhone).phone10 || otpPhone}</p>
                   <p className="text-[11px] text-slate-500">Only the details you enter will be saved for this booking.</p>
                 </div>
               </div>
@@ -489,9 +499,15 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       type="tel"
                       value={otpPhone}
                       onChange={(e) => {
-                        setOtpPhone(e.target.value);
+                        let val = e.target.value.replace(/\D/g, '');
+                        if (val.length > 10 && (val.startsWith('91') || val.startsWith('0'))) {
+                          val = val.startsWith('91') ? val.slice(2) : val.slice(1);
+                        }
+                        val = val.slice(0, 10);
+                        setOtpPhone(val);
                         if (fieldErrors.otpPhone) setFieldErrors(prev => ({ ...prev, otpPhone: null }));
                       }}
+                      maxLength={10}
                       placeholder="10-digit number"
                       autoFocus
                       className={`w-full pl-16 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border ${fieldErrors.otpPhone ? 'bg-rose-50/40 border-rose-400' : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'}`}
