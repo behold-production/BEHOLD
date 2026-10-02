@@ -58,6 +58,10 @@ const appointmentSchema = new mongoose.Schema(
     utmTerm: { type: String, default: '' },
     fbclid: { type: String, default: '' },
     reminderSentAt: { type: Date, default: null },
+    reminder24hUserSentAt: { type: Date, default: null },
+    reminder24hPsychologistSentAt: { type: Date, default: null },
+    reminder1hUserSentAt: { type: Date, default: null },
+    reminder1hPsychologistSentAt: { type: Date, default: null },
     whatsappNotificationLogs: { type: [String], default: [] },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null }

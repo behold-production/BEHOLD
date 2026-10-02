@@ -322,18 +322,20 @@ const AppointmentController = {
           console.warn(`[Create Booking WhatsApp] Skipped: No phone found for appointment ${newAppointment.id}`);
         }
 
-        // WhatsApp to Psychologist
+        // WhatsApp to Psychologist (Delayed by 10 seconds to prevent WASender concurrent collision)
         if (counsellorPhone) {
-          WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, actionType, {
-            studentName: sName,
-            counsellorName: cName,
-            date,
-            time,
-            mode: newAppointment.mode || mode || 'ONLINE',
-            duration: sessionDurationStr,
-            bookingId: newAppointment.id || '',
-            meetLink: finalMeetLink
-          }).catch((err) => console.error('[WhatsApp Counsellor Alert Error]:', err));
+          setTimeout(() => {
+            WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, actionType, {
+              studentName: sName,
+              counsellorName: cName,
+              date,
+              time,
+              mode: newAppointment.mode || mode || 'ONLINE',
+              duration: sessionDurationStr,
+              bookingId: newAppointment.id || '',
+              meetLink: finalMeetLink
+            }).catch((err) => console.error('[WhatsApp Counsellor Alert Error]:', err));
+          }, 10000);
         }
       } catch (notifErr) {
         console.error('[Notification Task Error in createAppointment]:', notifErr);
@@ -446,18 +448,24 @@ const AppointmentController = {
             meetLink,
             recipientRole: 'user'
           }) : Promise.resolve(),
-          counsellorPhone ? WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, 'approved', {
-            studentName: sName,
-            counsellorName: counsellor ? counsellor.name : 'Psychologist',
-            date: appointment.date,
-            time: appointment.time,
-            mode: appointment.mode || 'ONLINE',
-            duration: appointment.duration || '1 Hour (60 Mins)',
-            bookingId: appointment.id || '',
-            meetLink
-          }) : Promise.resolve(),
           user ? EmailService.sendAppointmentApproved({ user, counsellor, appointment: { ...appointment, meetLink } }) : Promise.resolve()
         ]);
+
+        // WhatsApp to Psychologist (Delayed to prevent collision)
+        if (counsellorPhone) {
+          setTimeout(() => {
+            WhatsAppService.sendCounsellorBookingAlert(counsellorPhone, 'approved', {
+              studentName: sName,
+              counsellorName: counsellor ? counsellor.name : 'Psychologist',
+              date: appointment.date,
+              time: appointment.time,
+              mode: appointment.mode || 'ONLINE',
+              duration: appointment.duration || '1 Hour (60 Mins)',
+              bookingId: appointment.id || '',
+              meetLink
+            }).catch(e => console.error('[WhatsApp Counsellor Alert Error]:', e));
+          }, 10000);
+        }
       } catch (notifErr) {
         console.error('[Notification Task Error in approveAppointment]:', notifErr);
       }
@@ -701,9 +709,16 @@ const AppointmentController = {
             isRead: false
           }),
           userPhone ? WhatsAppService.sendBookingAlert(userPhone, 'rescheduled', details) : Promise.resolve(),
-          counsellor && counsellor.phone ? WhatsAppService.sendCounsellorBookingAlert(counsellor.phone, 'rescheduled', details) : Promise.resolve(),
           user ? EmailService.sendAppointmentRescheduled({ user, counsellor, appointment: { ...appointment, date, time } }) : Promise.resolve()
         ]);
+
+        // WhatsApp to Psychologist (Delayed to prevent collision)
+        if (counsellor && counsellor.phone) {
+          setTimeout(() => {
+            WhatsAppService.sendCounsellorBookingAlert(counsellor.phone, 'rescheduled', details)
+              .catch(e => console.error('[WhatsApp Counsellor Alert Error]:', e));
+          }, 10000);
+        }
       } catch (notifErr) {
         console.error('[Notification Task Error in rescheduleAppointment]:', notifErr);
       }
