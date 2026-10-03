@@ -73,6 +73,10 @@ const AdminController = {
   // Admin Dashboard Statistics
   async getDashboard(req, res, next) {
     try {
+      const cacheKey = 'admin_dashboard_stats';
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
+
       await autoExpireSessions();
       const [totalUsers, totalCounsellors, pendingRequests, appointments, totalSessions] = await Promise.all([
         StorageService.count('users'),
@@ -110,7 +114,7 @@ const AdminController = {
         }
       });
 
-      res.status(200).json({
+      const responsePayload = {
         success: true,
         message: 'Admin dashboard statistics retrieved successfully',
         data: {
@@ -121,7 +125,9 @@ const AdminController = {
           pendingRequests,
           monthlyStats
         }
-      });
+      };
+      cacheHelper.set(cacheKey, responsePayload, 60);
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }
@@ -130,14 +136,19 @@ const AdminController = {
   // Manage Users - List
   async getUsers(req, res, next) {
     try {
-      const users = await StorageService.findAll('users', { status: { $ne: 'DELETED' }, isDeleted: { $ne: true } });
-      const safeUsers = users.map(({ password, ...data }) => data);
+      const cacheKey = 'admin_users_list';
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
 
-      res.status(200).json({
+      const users = await StorageService.findAll('users', { status: { $ne: 'DELETED' }, isDeleted: { $ne: true } }, '-password');
+
+      const responsePayload = {
         success: true,
         message: 'Users retrieved successfully',
-        data: safeUsers
-      });
+        data: users
+      };
+      cacheHelper.set(cacheKey, responsePayload, 60);
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }
@@ -146,14 +157,19 @@ const AdminController = {
   // Manage Counsellors - List
   async getCounsellors(req, res, next) {
     try {
-      const counsellors = await StorageService.findAll('counsellors', { isDeleted: { $ne: true } });
-      const safeCounsellors = counsellors.map(({ password, ...data }) => data);
+      const cacheKey = 'admin_counsellors_list';
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
 
-      res.status(200).json({
+      const counsellors = await StorageService.findAll('counsellors', { isDeleted: { $ne: true } }, '-password');
+
+      const responsePayload = {
         success: true,
         message: 'Counsellors retrieved successfully',
-        data: safeCounsellors
-      });
+        data: counsellors
+      };
+      cacheHelper.set(cacheKey, responsePayload, 60);
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }
@@ -295,14 +311,18 @@ If you have questions or would like to reapply with updated information, please 
   // Get All Appointments
   async getAppointments(req, res, next) {
     try {
+      const cacheKey = 'admin_appointments_list';
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
+
       await autoExpireSessions();
       const { cleanDuplicateAppointments } = require('../utils/appointmentDeduplicator');
       await cleanDuplicateAppointments();
 
       const [appointments, users, counsellors, sessions] = await Promise.all([
         StorageService.findWithPagination('appointments', { isDeleted: { $ne: true } }, { limit: 2000 }),
-        StorageService.findAll('users'),
-        StorageService.findAll('counsellors'),
+        StorageService.findAll('users', {}, 'name email phone schoolName grade guardianName guardianPhone'),
+        StorageService.findAll('counsellors', {}, 'name email phone title education specialties qualifications'),
         StorageService.findWithPagination('sessions', {}, { limit: 2000 })
       ]);
 
@@ -345,11 +365,13 @@ If you have questions or would like to reapply with updated information, please 
         };
       });
 
-      res.status(200).json({
+      const responsePayload = {
         success: true,
         message: 'Appointments retrieved successfully',
         data: populated
-      });
+      };
+      cacheHelper.set(cacheKey, responsePayload, 60);
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }

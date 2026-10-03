@@ -349,8 +349,12 @@ const UserController = {
   // User Dashboard APIs
   async getDashboard(req, res, next) {
     try {
-      await autoExpireSessions();
       const userId = req.user.id;
+      const cacheKey = `user_dashboard_${userId}`;
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
+
+      await autoExpireSessions();
 
       // Get appointments
       const appointments = await StorageService.findAll('appointments', { userId });
@@ -377,7 +381,7 @@ const UserController = {
         recipientId: userId
       });
 
-      res.status(200).json({
+      const responsePayload = {
         success: true,
         message: 'User dashboard data retrieved successfully',
         data: {
@@ -386,7 +390,9 @@ const UserController = {
           notifications: notifications.slice(0, 10), // Limit to top 10
           favouriteCounsellors: [] // Mock list
         }
-      });
+      };
+      cacheHelper.set(cacheKey, responsePayload, 60);
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }
