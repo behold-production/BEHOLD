@@ -179,20 +179,18 @@ const CounsellorController = {
   // Counsellor Dashboard APIs
   async getDashboard(req, res, next) {
     try {
-      await autoExpireSessions();
       const counsellorId = req.user.id;
+      const cacheKey = `counsellor_dashboard_${counsellorId}`;
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
 
-      // Validate counsellor exists
-      const counsellor = await StorageService.findById('counsellors', counsellorId);
-      if (!counsellor) {
-        return res.status(404).json({ success: false, message: 'Counsellor not found' });
-      }
+      await autoExpireSessions();
 
       const todayStr = new Date().toISOString().split('T')[0];
 
       // Sessions for this counsellor
-      const sessions = await StorageService.findAll('sessions', { counsellorId });
-      const appointments = await StorageService.findAll('appointments', { counsellorId });
+      const sessions = await StorageService.findAll('sessions', { counsellorId }, 'date status appointmentId nextSession notes feedback');
+      const appointments = await StorageService.findAll('appointments', { counsellorId }, 'date time status userId clientName clientPhone meetLink duration');
 
       // Today's sessions
       const todaySessions = sessions.filter((s) => s.date === todayStr && s.status !== 'CANCELLED');
@@ -219,7 +217,7 @@ const CounsellorController = {
           ? parseFloat((feedbacks.reduce((sum, f) => sum + f.rating, 0) / feedbacks.length).toFixed(1))
           : 5.0;
 
-      res.status(200).json({
+      const responsePayload = {
         success: true,
         message: 'Counsellor dashboard data retrieved successfully',
         data: {
@@ -230,7 +228,9 @@ const CounsellorController = {
           feedbackSummary: feedbacks.slice(0, 5),
           earningsPlaceholder: `$${sessions.filter((s) => s.status === 'COMPLETED').length * 50}` // Dev mock
         }
-      });
+      };
+      cacheHelper.set(cacheKey, responsePayload, 60);
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }

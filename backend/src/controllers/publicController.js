@@ -479,13 +479,17 @@ const PublicController = {
   // Get Campaign & Meta Ads Conversion Statistics
   async getCampaignStats(req, res, next) {
     try {
+      const cacheKey = 'admin_campaign_stats';
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
+
       let appointments = [];
       let users = [];
       let events = [];
 
-      try { appointments = await StorageService.findAll('appointments', {}) || []; } catch {}
-      try { users = await StorageService.findAll('users', {}) || []; } catch {}
-      try { events = await StorageService.findAll('campaign_events', {}) || []; } catch {}
+      try { appointments = await StorageService.findAll('appointments', {}, 'utmSource utmCampaign fbclid status paymentStatus amountPaid') || []; } catch {}
+      try { users = await StorageService.findAll('users', {}, 'utmSource utmCampaign fbclid') || []; } catch {}
+      try { events = await StorageService.findAll('campaign_events', {}, 'id') || []; } catch {}
 
       const adBookings = appointments.filter(a => a && (a.utmSource || a.utmCampaign || a.fbclid));
       const adUsers = users.filter(u => u && (u.utmSource || u.utmCampaign || u.fbclid));
@@ -530,7 +534,7 @@ const PublicController = {
         .filter(b => b.status === 'COMPLETED' || b.paymentStatus === 'PAID')
         .reduce((sum, b) => sum + Number(b.amountPaid || 0), 0);
 
-      res.status(200).json({
+      const responsePayload = {
         success: true,
         data: {
           pixelId: '2080399902866260',
@@ -540,7 +544,9 @@ const PublicController = {
           totalAttributedRevenue: totalRevenue,
           campaigns: Object.values(campaignGroups)
         }
-      });
+      };
+      cacheHelper.set(cacheKey, responsePayload, 300); // Cache for 5 mins
+      res.status(200).json(responsePayload);
     } catch (error) {
       res.status(200).json({
         success: true,

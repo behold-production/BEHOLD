@@ -15,7 +15,12 @@ class BlogController {
   static async getPublishedBlogs(req, res) {
     try {
       const { category, search, limit = 50 } = req.query;
-      let blogs = await StorageService.findAll('blogs', { isPublished: true });
+      const cacheKey = `public_blogs_${category || 'all'}_${search || 'none'}_${limit}`;
+      const cacheHelper = require('../utils/cacheHelper');
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
+
+      let blogs = await StorageService.findAll('blogs', { isPublished: true }, 'title slug excerpt category coverImage tags primaryKeyword secondaryKeywords author readTime publishedAt createdAt isPublished');
 
       if (category && category !== 'All') {
         blogs = blogs.filter((b) => b.category === category);
@@ -46,7 +51,9 @@ class BlogController {
         blogs = blogs.slice(0, parsedLimit);
       }
 
-      res.status(200).json({ success: true, count: blogs.length, data: blogs });
+      const responsePayload = { success: true, count: blogs.length, data: blogs };
+      cacheHelper.set(cacheKey, responsePayload, 120);
+      res.status(200).json(responsePayload);
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -56,6 +63,10 @@ class BlogController {
   static async getBlogBySlug(req, res) {
     try {
       const { slug } = req.params;
+      const cacheKey = `public_blog_slug_${slug}`;
+      const cacheHelper = require('../utils/cacheHelper');
+      const cached = cacheHelper.get(cacheKey);
+      if (cached) return res.status(200).json(cached);
 
       let blog = await StorageService.findOne('blogs', { slug });
       if (!blog) {
@@ -71,7 +82,9 @@ class BlogController {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
       }
 
-      res.status(200).json({ success: true, data: blog });
+      const responsePayload = { success: true, data: blog };
+      cacheHelper.set(cacheKey, responsePayload, 120);
+      res.status(200).json(responsePayload);
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
