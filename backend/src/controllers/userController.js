@@ -216,10 +216,10 @@ const UserController = {
         );
       }
 
-      // Get all active appointments
+      // Get all active appointments (optimized with projection)
       const allActiveAppointments = await StorageService.findAll('appointments', {
         status: { $in: ['APPROVED', 'PENDING', 'CONFIRMED'] }
-      });
+      }, 'counsellorId date time');
 
       // Get settings for global session modes
       const settings = await StorageService.getGlobalSettings();
@@ -227,16 +227,16 @@ const UserController = {
       const globalOffline = settings.enableOffline !== false;
       const globalDoorstep = settings.enableDoorstep !== false;
 
-      // Fetch all feedbacks to compute per-counsellor reviewCount and rating
-      const allFeedbacks = await Feedback.find({ isModerated: false }).lean();
+      // Use MongoDB aggregation to compute per-counsellor reviewCount and rating
+      const feedbackStats = await Feedback.aggregate([
+        { $match: { isModerated: false, counsellorId: { $exists: true, $ne: null } } },
+        { $group: { _id: "$counsellorId", count: { $sum: 1 }, total: { $sum: { $toDouble: "$rating" } } } }
+      ]);
 
       // Build a map: counsellorId -> { count, totalRating }
       const feedbackMap = {};
-      for (const fb of allFeedbacks) {
-        if (!fb.counsellorId) continue;
-        if (!feedbackMap[fb.counsellorId]) feedbackMap[fb.counsellorId] = { count: 0, total: 0 };
-        feedbackMap[fb.counsellorId].count += 1;
-        feedbackMap[fb.counsellorId].total += Number(fb.rating) || 0;
+      for (const stat of feedbackStats) {
+        feedbackMap[stat._id.toString()] = { count: stat.count, total: stat.total };
       }
 
       // Format response to hide sensitive details

@@ -133,10 +133,25 @@ async function seedDefaultAdmin() {
 }
 
 const StorageService = {
-  // Find all records
-  async findAll(table, filter = {}) {
+  // Find all records (Warning: Use findWithPagination for large collections)
+  async findAll(table, filter = {}, projection = null) {
     const Model = getModel(table);
+    if (projection) {
+      return await Model.find(filter).select(projection).lean();
+    }
     return await Model.find(filter).lean();
+  },
+
+  // Count records efficiently
+  async count(table, filter = {}) {
+    const Model = getModel(table);
+    return await Model.countDocuments(filter);
+  },
+
+  // Find records with pagination and sorting
+  async findWithPagination(table, filter = {}, { limit = 20, skip = 0, sort = { createdAt: -1 } } = {}) {
+    const Model = getModel(table);
+    return await Model.find(filter).sort(sort).skip(skip).limit(limit).lean();
   },
 
   // Find record by custom ID

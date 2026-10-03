@@ -74,14 +74,15 @@ const AdminController = {
   async getDashboard(req, res, next) {
     try {
       await autoExpireSessions();
-      const [users, counsellors, appointments, sessions] = await Promise.all([
-        StorageService.findAll('users'),
-        StorageService.findAll('counsellors'),
-        StorageService.findAll('appointments'),
-        StorageService.findAll('sessions')
+      const [totalUsers, totalCounsellors, pendingRequests, appointments, totalSessions] = await Promise.all([
+        StorageService.count('users'),
+        StorageService.count('counsellors'),
+        StorageService.count('counsellors', { isVerified: false }),
+        StorageService.findAll('appointments'), // Used for monthly stats calculation
+        StorageService.count('sessions')
       ]);
 
-      const pendingRequests = counsellors.filter((c) => !c.isVerified).length;
+
 
       // Calculate mock monthly statistics
       const monthlyStats = {
@@ -113,10 +114,10 @@ const AdminController = {
         success: true,
         message: 'Admin dashboard statistics retrieved successfully',
         data: {
-          totalUsers: users.length,
-          totalCounsellors: counsellors.length,
+          totalUsers,
+          totalCounsellors,
           totalAppointments: appointments.length,
-          totalSessions: sessions.length,
+          totalSessions,
           pendingRequests,
           monthlyStats
         }
@@ -299,10 +300,10 @@ If you have questions or would like to reapply with updated information, please 
       await cleanDuplicateAppointments();
 
       const [appointments, users, counsellors, sessions] = await Promise.all([
-        StorageService.findAll('appointments', { isDeleted: { $ne: true } }),
+        StorageService.findWithPagination('appointments', { isDeleted: { $ne: true } }, { limit: 2000 }),
         StorageService.findAll('users'),
         StorageService.findAll('counsellors'),
-        StorageService.findAll('sessions')
+        StorageService.findWithPagination('sessions', {}, { limit: 2000 })
       ]);
 
       const userMap = new Map(users.flatMap(u => [[u.id, u], [u._id?.toString(), u]]));
