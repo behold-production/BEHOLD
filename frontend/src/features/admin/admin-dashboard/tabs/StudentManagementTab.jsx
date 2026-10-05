@@ -304,12 +304,12 @@ export default function StudentManagementTab(props) {
     }
 
     if (userForm.phone && !validateIndianPhone(userForm.phone)) {
-      setUserFormError("Please enter a valid 10-digit Indian phone number.");
+      setUserFormError("Please enter a valid phone number (include country code if outside India).");
       return;
     }
 
     if (userForm.guardianPhone && !validateIndianPhone(userForm.guardianPhone)) {
-      setUserFormError("Please enter a valid 10-digit Indian guardian phone number.");
+      setUserFormError("Please enter a valid guardian phone number (include country code if outside India).");
       return;
     }
 

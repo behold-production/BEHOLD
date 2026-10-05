@@ -273,7 +273,7 @@ export default function PsychologistManagementTab(props) {
     }
 
     if (psyForm.phone && !validateIndianPhone(psyForm.phone)) {
-      setPsyFormError("Please enter a valid 10-digit Indian phone number.");
+      setPsyFormError("Please enter a valid 10-digit Indian phone number or include the country code.");
       return;
     }
 

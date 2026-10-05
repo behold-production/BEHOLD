@@ -77,10 +77,10 @@ export function useStudentProfile() {
     if (!formData.email?.trim()) err.email = 'Email is required';
     else if (!validateEmail(formData.email)) err.email = 'Invalid email address';
     if (formData.phone?.trim() && !validateIndianPhone(formData.phone)) {
-      err.phone = 'Please enter a valid 10-digit Indian phone number';
+      err.phone = 'Please enter a valid phone number (include country code if outside India)';
     }
     if (formData.guardianPhone?.trim() && !validateIndianPhone(formData.guardianPhone)) {
-      err.guardianPhone = 'Please enter a valid 10-digit Indian guardian phone number';
+      err.guardianPhone = 'Please enter a valid phone number (include country code if outside India)';
     }
     return err;
   };

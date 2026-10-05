@@ -220,6 +220,17 @@ const ProfileTab = ({
  />
  </div>
 
+ <div className="space-y-1.5">
+ <label className="text-zinc-400 font-bold text-xs tracking-wide">WhatsApp Number</label>
+ <input
+ type="tel"
+ placeholder="+91 98765 43210"
+ value={ep.phone || ''}
+ onChange={(e) => setEp({ phone: e.target.value })}
+ className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 text-sm text-white rounded-[10px] outline-none focus:border-brand transition-all"
+ />
+ </div>
+
   <div className="space-y-1.5">
   <label className="text-zinc-400 font-bold text-xs tracking-wide">Experience / Therapy Hours (e.g. 500)</label>
   <input

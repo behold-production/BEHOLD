@@ -168,6 +168,7 @@ export default function PsychologistDashboard({ setView: _setView }) {
     email: '',
     password: '',
     confirmPassword: '',
+    phone: '',
     education: '',
     specialties: '',
     price: '',
@@ -725,6 +726,7 @@ reportRegError("Please enter a valid email address.");
     const extraPayload = {
       education: regForm.education.trim(),
       specialties: specialtiesArr,
+      phone: regForm.phone.trim(),
       price: Number(regForm.price) || 1200,
       halfSessionPrice: Number(regForm.halfSessionPrice) || 499,
       lang: regForm.lang.trim(),
@@ -1256,8 +1258,7 @@ reportRegError("Please enter a valid email address.");
       const res = await ApiService.updateAppointmentFeedback(bookingId, {
         notes: notesInput.trim(),
         feedback: feedbackInput.trim(),
-        nextSession: nextSessionInput.trim(),
-        adminNotes: adminNotesInput.trim()
+        nextSession: nextSessionInput.trim()
       });
       if (res.success) {
         toast.success("Consultation Report saved successfully!");
@@ -1273,10 +1274,7 @@ reportRegError("Please enter a valid email address.");
   const handleSendReportToAdmin = async (bookingId) => {
     try {
       const res = await ApiService.sendReportToAdmin(bookingId, {
-        adminNotes: adminNotesInput.trim(),
-        notes: notesInput.trim(),
-        feedback: feedbackInput.trim(),
-        nextSession: nextSessionInput.trim()
+        adminNotes: adminNotesInput.trim()
       });
       if (res.success) {
         toast.success("Confidential Clinical Report submitted to Admin!");
@@ -1754,6 +1752,20 @@ reportRegError("Please enter a valid email address.");
                         placeholder='psychologist@example.com'
                         value={regForm.email}
                         onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
+                        className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
+                      />
+                    </div>
+
+                    <div>
+                      <label className='block text-xs font-medium text-slate-400 mb-2'>
+                        Phone Number (WhatsApp)
+                      </label>
+                      <input
+                        type='tel'
+                        required
+                        placeholder='+91 98765 43210'
+                        value={regForm.phone}
+                        onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
                         className='w-full bg-[#050811] border border-slate-800 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition duration-200'
                       />
                     </div>

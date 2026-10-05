@@ -34,12 +34,17 @@ export const parseIndianPhone = (phone) => {
     digits = digits.slice(1);
   }
 
-  const isValid = digits.length === 10 && /^[6-9]\d{9}$/.test(digits);
-  const formattedWithCode = isValid ? `+91 ${digits.slice(0, 5)} ${digits.slice(5)}` : (phone ? `+91 ${phone.trim()}` : '');
+  const isIndian = digits.length === 10 && /^[6-9]\d{9}$/.test(digits);
+  const isInternational = digits.length > 10 && digits.length <= 15;
+  const isValid = isIndian || isInternational;
+  
+  const formattedWithCode = isValid 
+    ? (isIndian ? `+91 ${digits.slice(0, 5)} ${digits.slice(5)}` : `+${digits}`) 
+    : (phone ? `+91 ${phone.trim()}` : '');
 
   return {
     isValid,
-    phone10: isValid ? digits : '',
+    phone10: digits,
     formattedWithCode
   };
 };

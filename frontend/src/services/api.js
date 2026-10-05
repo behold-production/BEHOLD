@@ -608,9 +608,10 @@ const ApiService = {
     });
   },
 
-  async sendReportToAdmin(id) {
+  async sendReportToAdmin(id, payload = {}) {
     return await request(`/appointments/${id}/send-report`, {
-      method: 'PUT'
+      method: 'PUT',
+      body: JSON.stringify(payload)
     });
   },
 

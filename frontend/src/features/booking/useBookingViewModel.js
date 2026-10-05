@@ -1261,7 +1261,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
 
       if (clientPhone && !validateIndianPhone(clientPhone)) {
-        throw new Error("Please enter a valid 10-digit Indian phone number.");
+        throw new Error("Please enter a valid phone number (include country code if outside India).");
       }
 
       const todayStr = getLocalTodayString();

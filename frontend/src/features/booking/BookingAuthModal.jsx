@@ -133,7 +133,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       if (authStep === 'phone') {
         const cleanPhone = parseIndianPhone(otpPhone).phone10;
         if (!cleanPhone) throw new Error('Phone number is required');
-        if (!validateIndianPhone(cleanPhone)) throw new Error('Please enter a valid 10-digit Indian phone number');
+        if (!validateIndianPhone(cleanPhone)) throw new Error('Please enter a valid phone number (include country code if outside India)');
 
         await sendOtp(cleanPhone);
         setOtpPhone(cleanPhone);

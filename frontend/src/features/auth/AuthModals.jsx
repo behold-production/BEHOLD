@@ -171,7 +171,7 @@ export default function AuthModals({ isOpen, onClose }) {
     try {
       if (authStep === 'phone') {
         const parsed = parseIndianPhone(otpPhone);
-        if (!parsed.isValid) throw new Error('Please enter a valid 10-digit Indian phone number');
+        if (!parsed.isValid) throw new Error('Please enter a valid phone number (include country code if outside India)');
 
         const cleanPhone = parsed.phone10;
         setOtpPhone(cleanPhone);

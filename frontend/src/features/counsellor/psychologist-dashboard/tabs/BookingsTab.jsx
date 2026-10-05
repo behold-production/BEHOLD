@@ -335,14 +335,14 @@ const BookingsTab = ({
                   </span>
 
                   {editingFeedbackId === booking.id ? (
-                    <div className="space-y-4 font-sans bg-zinc-950 p-4 rounded-[10px] border border-zinc-800">
-                      <div className="border-b border-zinc-800 pb-2 flex items-center justify-between">
-                        <span className="text-xs font-bold text-brand uppercase tracking-wider">Report 1: Student Consultation Report (User-Facing)</span>
-                        <span className="text-[10px] text-zinc-450 italic">Visible & downloadable by Student</span>
+                    <div className="space-y-6 font-sans bg-[#0f172a] p-5 sm:p-6 rounded-[12px] border border-[#1e293b] shadow-xl">
+                      <div className="border-b border-[#1e293b] pb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
+                        <span className="text-[13px] font-black text-[#00e5ff] uppercase tracking-widest">Report 1: Student Consultation Report (User-Facing)</span>
+                        <span className="text-[11px] text-slate-400 italic">Visible & downloadable by Student</span>
                       </div>
                       
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-300 tracking-wider block">
+                      <div className="space-y-1.5">
+                        <label className="text-[13px] font-bold text-slate-200 tracking-wide block">
                           Clinical Observations & Findings
                         </label>
                         <textarea
@@ -350,12 +350,12 @@ const BookingsTab = ({
                           onChange={(e) => setNotesInput(e.target.value)}
                           placeholder="Enter clinical observations and findings for the student..."
                           rows={3}
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
+                          className="w-full px-4 py-3 bg-[#1e293b] border border-[#334155] text-slate-100 text-sm rounded-[10px] outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff]/20 resize-none font-medium transition-all shadow-inner placeholder:text-slate-500"
                         />
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-300 tracking-wider block">
+                      <div className="space-y-1.5">
+                        <label className="text-[13px] font-bold text-slate-200 tracking-wide block">
                           Student Guidance & Actionable Recommendations
                         </label>
                         <textarea
@@ -363,12 +363,12 @@ const BookingsTab = ({
                           onChange={(e) => setFeedbackInput(e.target.value)}
                           placeholder="Enter key guidance, advice, and recommendations for student download..."
                           rows={3}
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand resize-none font-medium"
+                          className="w-full px-4 py-3 bg-[#1e293b] border border-[#334155] text-slate-100 text-sm rounded-[10px] outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff]/20 resize-none font-medium transition-all shadow-inner placeholder:text-slate-500"
                         />
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs font-bold text-zinc-300 tracking-wider block">
+                      <div className="space-y-1.5">
+                        <label className="text-[13px] font-bold text-slate-200 tracking-wide block">
                           Next Recommended Session Time (Optional)
                         </label>
                         <input
@@ -376,45 +376,45 @@ const BookingsTab = ({
                           value={nextSessionInput}
                           onChange={(e) => setNextSessionInput(e.target.value)}
                           placeholder="e.g., In 2 weeks, Mid-August, or specific date"
-                          className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 text-white text-sm rounded-[10px] outline-none focus:border-brand font-semibold"
+                          className="w-full px-4 py-3 bg-[#1e293b] border border-[#334155] text-slate-100 text-sm rounded-[10px] outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff]/20 font-medium transition-all shadow-inner placeholder:text-slate-500"
                         />
                       </div>
 
-                      <div className="border-t border-b border-zinc-800 py-3 my-2 space-y-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                            <Lock className="w-3 h-3 text-amber-400" /> Report 2: Confidential Admin Clinical Report (Admin-Facing)
+                      <div className="border-t border-b border-[#1e293b] py-5 my-2 space-y-2">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 mb-2">
+                          <span className="text-[13px] font-black text-[#f59e0b] uppercase tracking-widest flex items-center gap-1.5">
+                            <Lock className="w-4 h-4 text-[#f59e0b]" /> Report 2: Confidential Admin Clinical Report (Admin-Facing)
                           </span>
-                          <span className="text-[10px] text-amber-400/70 italic">Hidden from Student · Strictly for Admin</span>
+                          <span className="text-[11px] text-[#f59e0b]/80 italic">Hidden from Student · Strictly for Admin</span>
                         </div>
                         <textarea
                           value={adminNotesInput}
                           onChange={(e) => setAdminNotesInput(e.target.value)}
                           placeholder="Enter confidential internal case notes strictly for System Administration..."
                           rows={3}
-                          className="w-full px-3 py-2 bg-zinc-900 border border-amber-500/20 text-amber-100 text-sm rounded-[10px] outline-none focus:border-amber-400 resize-none font-medium"
+                          className="w-full px-4 py-3 bg-[#1e293b] border border-[#334155] focus:border-[#f59e0b] focus:ring-1 focus:ring-[#f59e0b]/20 text-slate-100 text-sm rounded-[10px] outline-none resize-none font-medium transition-all shadow-inner placeholder:text-slate-500"
                         />
                       </div>
 
-                      <div className="flex flex-wrap gap-2 pt-2">
+                      <div className="flex flex-wrap items-center gap-3 pt-2">
                         <button
                           type="button"
                           onClick={() => saveFeedback(booking.id)}
-                          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
+                          className="px-5 py-2.5 bg-[#10b981] hover:bg-[#059669] text-[#022c22] rounded-[10px] text-[13px] font-bold cursor-pointer shadow-md border-none flex items-center gap-2 transition-all transform hover:scale-[1.02]"
                         >
-                          <Send className="w-3.5 h-3.5" /> Save & Send to Student
+                          <Send className="w-4 h-4" /> Save & Send to Student
                         </button>
                         <button
                           type="button"
                           onClick={() => handleSendReportToAdmin(booking.id)}
-                          className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-zinc-955 rounded-[10px] text-xs font-bold cursor-pointer shadow-sm border-none flex items-center gap-1.5"
+                          className="px-5 py-2.5 bg-[#f59e0b] hover:bg-[#d97706] text-[#451a03] rounded-[10px] text-[13px] font-bold cursor-pointer shadow-md border-none flex items-center gap-2 transition-all transform hover:scale-[1.02]"
                         >
-                          <ShieldCheck className="w-3.5 h-3.5" /> Submit Confidential Report to Admin
+                          <ShieldCheck className="w-4 h-4" /> Submit Confidential Report to Admin
                         </button>
                         <button
                           type="button"
                           onClick={() => setEditingFeedbackId(null)}
-                          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-[10px] text-xs font-bold cursor-pointer border-none"
+                          className="px-5 py-2.5 bg-[#334155] hover:bg-[#475569] text-slate-200 rounded-[10px] text-[13px] font-bold cursor-pointer border-none transition-all"
                         >
                           Cancel
                         </button>

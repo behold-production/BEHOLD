@@ -162,7 +162,7 @@ class WhatsAppService {
    * Core dispatcher — sends via WASender or falls back to console mock
    * Uses sequential queue throttling (6s gap) to prevent Account Protection rate limits
    */
-  async _dispatch(phone, text, { skipDeduplication = false } = {}) {
+  async _dispatch(phone, text, { skipDeduplication = false, bypassQueue = false } = {}) {
     this._init(); // re-read env each time so .env changes take effect without restart
     if (!phone) return { success: false, error: 'Phone number is required' };
 
@@ -175,6 +175,18 @@ class WhatsAppService {
     }
 
     if (this.isWaSenderConfigured) {
+      if (bypassQueue) {
+        console.log(`[WhatsApp] 🚀 Bypassing queue for high-priority message to ${phone}...`);
+        try {
+          const result = await this._sendViaWaSender(phone, truncated);
+          this._lastSendTime = Date.now(); // Reset timer so regular messages wait
+          return result;
+        } catch (e) {
+          this._lastSendTime = Date.now();
+          throw e;
+        }
+      }
+
       // Chain message dispatch onto sequential queue ensuring a minimum 6.0s gap between consecutive sends
       const sendTask = this._sendQueue.then(async () => {
         const now = Date.now();
@@ -219,7 +231,7 @@ class WhatsAppService {
     const text =
       `Your BEHOLD. verification code is: ${code}\n\n` +
       `Valid for 5 minutes. Please do not share this code with anyone.`;
-    return this._dispatch(phone, text, { skipDeduplication: true });
+    return this._dispatch(phone, text, { skipDeduplication: true, bypassQueue: true });
   }
 
   /**
