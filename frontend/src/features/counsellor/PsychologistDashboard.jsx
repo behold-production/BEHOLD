@@ -1558,7 +1558,7 @@ reportRegError("Please enter a valid email address.");
                           />
                           <button
                             type='button'
-                            onClick={() => setShowForgotNewPassword(v => !v)}
+                            onClick={() => setShowForgotNewPassword(prev => !prev)}
                             className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showForgotNewPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
@@ -1582,7 +1582,7 @@ reportRegError("Please enter a valid email address.");
                           />
                           <button
                             type='button'
-                            onClick={() => setShowForgotConfirmPassword(v => !v)}
+                            onClick={() => setShowForgotConfirmPassword(prev => !prev)}
                             className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showForgotConfirmPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
@@ -1677,7 +1677,7 @@ reportRegError("Please enter a valid email address.");
                       />
                       <button
                         type='button'
-                        onClick={() => setShowPassword(v => !v)}
+                        onClick={() => setShowPassword(prev => !prev)}
                         className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                       >
                         {showPassword ? <EyeOff className='w-4.5 h-4.5' /> : <Eye className='w-4.5 h-4.5' />}
@@ -1774,7 +1774,7 @@ reportRegError("Please enter a valid email address.");
                           />
                           <button
                             type='button'
-                            onClick={() => setShowRegPassword(v => !v)}
+                            onClick={() => setShowRegPassword(prev => !prev)}
                             className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showRegPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
@@ -1797,7 +1797,7 @@ reportRegError("Please enter a valid email address.");
                           />
                           <button
                             type='button'
-                            onClick={() => setShowRegConfirmPassword(v => !v)}
+                            onClick={() => setShowRegConfirmPassword(prev => !prev)}
                             className='absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-350 transition cursor-pointer bg-transparent border-none outline-none'
                           >
                             {showRegConfirmPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
@@ -2600,6 +2600,9 @@ reportRegError("Please enter a valid email address.");
  setFeedbackInput={setFeedbackInput}
  nextSessionInput={nextSessionInput}
  setNextSessionInput={setNextSessionInput}
+ adminNotesInput={adminNotesInput}
+ setAdminNotesInput={setAdminNotesInput}
+ handleSendReportToAdmin={handleSendReportToAdmin}
  saveFeedback={saveFeedback}
  downloadDiagnosticPDF={downloadDiagnosticPDF}
  editingBookingId={editingBookingId}
