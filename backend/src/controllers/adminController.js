@@ -333,13 +333,15 @@ If you have questions or would like to reapply with updated information, please 
       const populated = appointments.map((a) => {
         const user = userMap.get(a.userId);
         const activeCounsellorId = a.counsellorId || a.advisorId;
-        const counsellor = counsellorMap.get(activeCounsellorId);
+        const counsellor = counsellorMap.get(activeCounsellorId) || userMap.get(activeCounsellorId);
         const session = sessionMap.get(a.id) || sessionMap.get(a._id?.toString()) || null;
         const sName = resolveStudentName(a.clientName, user?.name) || user?.name || 'Student';
         return {
           ...a,
           studentName: sName,
           counsellorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+          advisorName: counsellor ? counsellor.name : 'Unknown Counsellor',
+          advisorRole: counsellor ? counsellor.role || 'Consultant Psychologist' : 'Consultant Psychologist',
           notes: session ? session.notes || a.notes || '' : a.notes || '',
           feedback: session ? session.feedback || a.feedback || '' : a.feedback || '',
           nextSession: session ? session.nextSession || a.nextSession || '' : a.nextSession || '',
@@ -2467,7 +2469,7 @@ If you have questions or would like to reapply with updated information, please 
         .map((a) => {
           const user = userMap.get(a.userId);
           const activeCounsellorId = a.counsellorId || a.advisorId;
-          const counsellor = counsellorMap.get(activeCounsellorId);
+          const counsellor = counsellorMap.get(activeCounsellorId) || userMap.get(activeCounsellorId);
           const sName = resolveStudentName(a.clientName, user?.name) || user?.name || 'Student';
           return {
             ...a,
