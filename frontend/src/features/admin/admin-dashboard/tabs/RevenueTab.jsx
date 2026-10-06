@@ -25,7 +25,7 @@ export default function RevenueTab(props) {
  const [counsellorFilter, setCounsellorFilter] = useState('ALL');
  const [serviceFilter, setServiceFilter] = useState('ALL');
  const [paymentStatusFilter, setPaymentStatusFilter] = useState('PAID');
- const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+ const [dateFilter, setDateFilter] = useState({ type: 'ALL_TIME', startDate: '', endDate: '' });
 
  const timeFilteredBookings = useMemo(() => {
    return filterByDateRange(bookingsDb, 'date', dateFilter);

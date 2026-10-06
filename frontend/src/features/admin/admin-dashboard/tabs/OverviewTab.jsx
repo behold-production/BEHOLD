@@ -347,7 +347,7 @@ export default function OverviewTab(props) {
  } = props;
 
 
- const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+ const [dateFilter, setDateFilter] = useState({ type: 'ALL_TIME', startDate: '', endDate: '' });
 
  const timeFilteredBookings = useMemo(() => {
    return filterByDateRange(bookingsDb, 'date', dateFilter);

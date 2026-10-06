@@ -345,7 +345,7 @@ export default function BookingManagementTab(props) {
  } = props;
 
 
-  const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+  const [dateFilter, setDateFilter] = useState({ type: 'ALL_TIME', startDate: '', endDate: '' });
 
   const uniqueBookingsMap = new Map();
   (bookingsDb || []).forEach(b => {

@@ -87,7 +87,7 @@ export default function RefundRequestsTab(props) {
  setExpandedId(expandedId === id ? null : id);
  };
 
-  const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+  const [dateFilter, setDateFilter] = useState({ type: 'ALL_TIME', startDate: '', endDate: '' });
 
   const timeFilteredRefunds = useMemo(() => {
     return filterByDateRange(refunds, 'date', dateFilter);
