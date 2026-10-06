@@ -2070,7 +2070,7 @@ export default function PsychologistManagementTab(props) {
                         {
                           bookingsDb.filter(
                             (b) =>
-                              b.advisorId === viewingPsychologist.id ||
+                              b.counsellorId === viewingPsychologist.id || b.advisorId === viewingPsychologist.id ||
                               (b.advisorName &&
                                 b.advisorName.toLowerCase() ===
                                 viewingPsychologist.name.toLowerCase()),
@@ -2095,7 +2095,7 @@ export default function PsychologistManagementTab(props) {
                             {(() => {
                               const psyBookings = bookingsDb.filter(
                                 (b) =>
-                                  b.advisorId === viewingPsychologist.id ||
+                                  b.counsellorId === viewingPsychologist.id || b.advisorId === viewingPsychologist.id ||
                                   (b.advisorName &&
                                     b.advisorName.toLowerCase() ===
                                     viewingPsychologist.name.toLowerCase()),
@@ -2125,7 +2125,7 @@ export default function PsychologistManagementTab(props) {
                                       <span className="text-white block font-semibold">
                                         {student
                                           ? student.name
-                                          : "Unknown User"}
+                                          : b.clientName || b.studentName || "Unknown User"}
                                       </span>
                                       <span className="text-zinc-500 text-sm truncate block max-w-[150px]">
                                         {student ? student.email : ""}
@@ -2808,7 +2808,7 @@ export default function PsychologistManagementTab(props) {
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-bold text-zinc-500 block">Consultation Schedule History</span>
                       <span className="text-sm text-brand font-bold ">
-                        {bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase())).length} consultations booked
+                        {bookingsDb.filter(b => b.counsellorId === viewingPsychologist.id || b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase())).length} consultations booked
                       </span>
                     </div>
 
@@ -2825,7 +2825,7 @@ export default function PsychologistManagementTab(props) {
                           </thead>
                           <tbody>
                             {(() => {
-                              const psyBookings = bookingsDb.filter(b => b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase()));
+                              const psyBookings = bookingsDb.filter(b => b.counsellorId === viewingPsychologist.id || b.advisorId === viewingPsychologist.id || (b.advisorName && b.advisorName.toLowerCase() === viewingPsychologist.name.toLowerCase()));
                               if (psyBookings.length === 0) {
                                 return (
                                   <tr>
@@ -2838,7 +2838,7 @@ export default function PsychologistManagementTab(props) {
                                 return (
                                   <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
                                     <td className="p-2.5">
-                                      <span className="text-white block font-semibold">{student ? student.name : 'Unknown User'}</span>
+                                      <span className="text-white block font-semibold">{student ? student.name : b.clientName || b.studentName || 'Unknown User'}</span>
                                       <span className="text-zinc-500 text-sm truncate block max-w-[150px]">{student ? student.email : ''}</span>
                                     </td>
                                     <td className="p-2.5">

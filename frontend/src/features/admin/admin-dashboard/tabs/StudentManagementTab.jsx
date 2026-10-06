@@ -1079,7 +1079,8 @@ export default function StudentManagementTab(props) {
  );
  }
  return studentBookings.map(b => {
- const psychologist = usersDb.find(u => u.id === b.advisorId);
+ const activeCounsellorId = b.counsellorId || b.advisorId;
+ const psychologist = usersDb.find(u => u.id === activeCounsellorId);
  return (
  <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
  <td className="p-2.5">

@@ -372,7 +372,8 @@ export default function OverviewTab(props) {
  if (b.amountPaid !== undefined && b.amountPaid !== null) {
  return acc + Number(b.amountPaid);
  }
- const advisor = usersDb.find(u => u.id === b.advisorId) || usersDb.find(u => u.name === b.advisorName);
+ const activeCounsellorId = b.counsellorId || b.advisorId;
+ const advisor = usersDb.find(u => u.id === activeCounsellorId) || usersDb.find(u => u.name === b.counsellorName || u.name === b.advisorName);
  let price = 1250;
  if (advisor && advisor.price) {
  price = Number(advisor.price);
@@ -385,7 +386,8 @@ export default function OverviewTab(props) {
  if (b.amountPaid !== undefined && b.amountPaid !== null) {
  return acc + Number(b.amountPaid);
  }
- const advisor = usersDb.find(u => u.id === b.advisorId) || usersDb.find(u => u.name === b.advisorName);
+ const activeCounsellorId = b.counsellorId || b.advisorId;
+ const advisor = usersDb.find(u => u.id === activeCounsellorId) || usersDb.find(u => u.name === b.counsellorName || u.name === b.advisorName);
  let price = 1250;
  if (advisor && advisor.price) {
  price = Number(advisor.price);

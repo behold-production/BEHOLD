@@ -1826,6 +1826,7 @@ If you have questions or would like to reapply with updated information, please 
       const {
         userId,
         advisorId,
+        counsellorId,
         service,
         mode,
         date,
@@ -1844,11 +1845,12 @@ If you have questions or would like to reapply with updated information, please 
         sendWhatsApp
       } = req.body;
 
-      if (!userId || !advisorId || !date || !time) {
-        return res.status(400).json({ success: false, message: 'UserId, advisorId, date, and time are required' });
+      const activeCounsellorId = counsellorId || advisorId;
+      if (!userId || !activeCounsellorId || !date || !time) {
+        return res.status(400).json({ success: false, message: 'UserId, counsellorId, date, and time are required' });
       }
 
-      const counsellor = (await StorageService.findById('counsellors', advisorId)) || (await StorageService.findById('users', advisorId));
+      const counsellor = (await StorageService.findById('counsellors', activeCounsellorId)) || (await StorageService.findById('users', activeCounsellorId));
       const student = await StorageService.findById('users', userId);
 
       const canonicalApptId = `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
@@ -1995,6 +1997,7 @@ If you have questions or would like to reapply with updated information, please 
       const {
         userId,
         advisorId,
+        counsellorId,
         service,
         duration,
         mode,
@@ -2021,7 +2024,9 @@ If you have questions or would like to reapply with updated information, please 
 
       const updates = {};
       if (userId !== undefined) updates.userId = userId;
-      if (advisorId !== undefined) updates.counsellorId = advisorId;
+      
+      const activeCounsellorId = counsellorId !== undefined ? counsellorId : advisorId;
+      if (activeCounsellorId !== undefined) updates.counsellorId = activeCounsellorId;
       if (service !== undefined) updates.service = service;
       if (duration !== undefined) {
         updates.duration = duration;
