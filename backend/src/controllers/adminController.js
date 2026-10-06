@@ -321,8 +321,8 @@ If you have questions or would like to reapply with updated information, please 
 
       const [appointments, users, counsellors, sessions] = await Promise.all([
         StorageService.findWithPagination('appointments', { isDeleted: { $ne: true } }, { limit: 2000 }),
-        StorageService.findAll('users', {}, 'name email phone schoolName grade guardianName guardianPhone'),
-        StorageService.findAll('counsellors', {}, 'name email phone title education specialties qualifications'),
+        StorageService.findAll('users', {}, 'id name email phone role schoolName grade guardianName guardianPhone'),
+        StorageService.findAll('counsellors', {}, 'id name email phone title education specialties qualifications'),
         StorageService.findWithPagination('sessions', {}, { limit: 2000 })
       ]);
 

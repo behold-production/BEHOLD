@@ -189,8 +189,8 @@ const CounsellorController = {
       const todayStr = new Date().toISOString().split('T')[0];
 
       // Sessions for this counsellor
-      const sessions = await StorageService.findAll('sessions', { counsellorId }, 'date status appointmentId nextSession notes feedback');
-      const appointments = await StorageService.findAll('appointments', { counsellorId }, 'date time status userId clientName clientPhone meetLink duration');
+      const sessions = await StorageService.findAll('sessions', { counsellorId }, 'id date status appointmentId nextSession notes feedback');
+      const appointments = await StorageService.findAll('appointments', { counsellorId }, 'id date time status userId clientName clientPhone meetLink duration');
 
       // Today's sessions
       const todaySessions = sessions.filter((s) => s.date === todayStr && s.status !== 'CANCELLED');
