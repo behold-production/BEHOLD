@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { formatDateString } from '../utils';
+import { formatDateString, formatTimeString } from '../utils';
 import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 
 const formatAmount = (num) => {
@@ -973,7 +973,7 @@ export default function OverviewTab(props) {
  <span className="text-zinc-550 text-xs shrink-0">booked with</span>
  <span className="font-bold text-brand shrink-0">{b.advisorName}</span>
  <span className="text-xs bg-zinc-950 text-zinc-400 border border-zinc-850 px-2 py-1 rounded font-bold tracking-wider shrink-0 whitespace-nowrap mt-1 sm:mt-0">
- {formatDateString(b.date)} • {b.time}
+ {formatDateString(b.date)} • {formatTimeString(b.time)}
  </span>
  </div>
  <div className="flex flex-wrap items-center gap-2">

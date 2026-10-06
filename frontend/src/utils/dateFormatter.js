@@ -264,4 +264,25 @@ export const calculateNextAvailable = (availability, bookedSlots) => {
   return 'Unavailable';
 };
 
+export const formatTimeString = (timeInput) => {
+  if (!timeInput) return '';
+  const clean = String(timeInput).trim();
+  
+  if (clean.match(/AM|PM/i)) {
+    return clean;
+  }
+  
+  const match24 = clean.match(/^(\d{1,2}):(\d{2})/);
+  if (match24) {
+    let hours = Number(match24[1]);
+    const minutes = match24[2];
+    const meridiem = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    if (hours === 0) hours = 12;
+    return `${String(hours).padStart(2, '0')}:${minutes} ${meridiem}`;
+  }
+  
+  return clean;
+};
+
 

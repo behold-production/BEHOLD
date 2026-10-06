@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import ApiService from "../../../../services/api";
 import { validateEmail, validateIndianPhone, parseIndianPhone } from "../../../../utils/validation";
-import { formatDateString } from "../utils";
+import { formatDateString, formatTimeString } from "../utils";
 import {
   User,
   ShieldAlert,
@@ -2137,7 +2137,7 @@ export default function PsychologistManagementTab(props) {
                                         {formatDateString(b.date)}
                                       </span>
                                       <span className="text-zinc-500 text-sm">
-                                        {b.time}
+                                        {formatTimeString(b.time)}
                                       </span>
                                     </td>
                                     <td className="p-2.5 text-zinc-400 font-medium">
@@ -2844,7 +2844,7 @@ export default function PsychologistManagementTab(props) {
                                     </td>
                                     <td className="p-2.5">
                                       <span className="text-zinc-300 block font-semibold">{formatDateString(b.date)}</span>
-                                      <span className="text-zinc-500 text-sm">{b.time}</span>
+                                      <span className="text-zinc-500 text-sm">{formatTimeString(b.time)}</span>
                                     </td>
                                     <td className="p-2.5 text-zinc-400 font-medium">
                                       {b.service === 'counselling' ? 'Wellbeing' : 'Career'} ({b.mode})

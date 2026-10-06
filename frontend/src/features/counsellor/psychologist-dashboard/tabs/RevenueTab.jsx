@@ -5,7 +5,7 @@ import {
  Building, CheckCircle, Wallet
 } from 'lucide-react';
 import ApiService from '../../../../services/api';
-import { formatDateString } from '../../../../utils/dateFormatter';
+import { formatDateString, formatTimeString } from '../../../../utils/dateFormatter';
 import { generateReceiptPDFDoc } from "../../../student/utils/utils";
 import toast from 'react-hot-toast';
 
@@ -518,7 +518,7 @@ export default function RevenueTab(props) {
  <tr key={b.id} className="border-b border-zinc-900 hover:bg-zinc-900/30 transition-colors">
  <td className="p-3 font-mono font-semibold">SB-{b.id}</td>
  <td className="p-3 font-bold text-white">{b.userName || b.studentName || 'User'}</td>
- <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {b.time}</td>
+ <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {formatTimeString(b.time)}</td>
  <td className="p-3">
  <span className="text-xs bg-zinc-900 text-zinc-400 border border-zinc-800 px-2 py-0.5 rounded font-semibold ">
  {b.mode}

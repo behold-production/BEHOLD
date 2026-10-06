@@ -5,7 +5,7 @@ import {
   CalendarDays, CheckCircle2, Star, Award, Trophy, Trash2,
   MessageSquare, Send, ChevronDown
 } from 'lucide-react';
-import { formatDateString } from "../../../../utils/dateFormatter";
+import { formatDateString, formatTimeString } from "../../../../utils/dateFormatter";
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
 import { formatCountdown, buildGoogleMeetUrl } from '../../utils/utils';
 
@@ -276,7 +276,7 @@ const BookedSessionsTab = ({
                       </div>
                       <div className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-surface-50 border border-surface-200 text-[10px] tracking-widest text-surface-600 font-semibold">
                         <Clock className="w-3.5 h-3.5 text-surface-400 shrink-0" />
-                        <span className="font-semibold truncate">{session.time}</span>
+                        <span className="font-semibold truncate">{formatTimeString(session.time)}</span>
                       </div>
                     </div>
 
@@ -535,7 +535,7 @@ const BookedSessionsTab = ({
                           <Clock className="w-3.5 h-3.5 text-surface-400" />
                           <span className="font-semibold">{formatDateString(session.date)}</span>
                           <span className="text-surface-300">·</span>
-                          <span>{session.time}</span>
+                          <span>{formatTimeString(session.time)}</span>
                         </div>
                       </div>
 

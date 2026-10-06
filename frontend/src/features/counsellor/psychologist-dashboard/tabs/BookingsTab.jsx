@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, AlertCircle, Link, Video, FileText, Send, Edit, ShieldCheck, Lock, Calendar } from 'lucide-react';
-import { formatDateString } from '../../../../utils/dateFormatter';
+import { formatDateString, formatTimeString } from '../../../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
 import { buildGoogleMeetUrl } from '../../../student/utils/utils';
 import ApiService from '../../../../services/api';
@@ -164,7 +164,7 @@ const BookingsTab = ({
                 )}
                 <div className="flex items-center gap-1.5 text-sm text-zinc-450 font-semibold">
                   <Clock className="w-3.5 h-3.5 text-zinc-550" />
-                  <span>{formatDateString(booking.date)} at {booking.time}</span>
+                  <span>{formatDateString(booking.date)} at {formatTimeString(booking.time)}</span>
                 </div>
                 {booking.mode === 'DOOR_STEP' && booking.clientLocationName && (
                   <p className="text-xs text-zinc-400 mt-1 font-semibold flex items-start gap-1">

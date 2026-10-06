@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, CreditCard, Download, TrendingUp, DollarSign, Calendar, Users, Filter, BookOpen, AlertCircle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { formatDateString } from '../utils';
+import { formatDateString, formatTimeString } from '../utils';
 import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 
 const formatAmount = (num) => {
@@ -471,7 +471,7 @@ export default function RevenueTab(props) {
  <td className="p-3 font-mono font-semibold">SB-{b.id}</td>
  <td className="p-3 font-bold text-white">{b.userName || b.studentName || 'Student'}</td>
  <td className="p-3 text-zinc-400 font-medium">{b.advisorName || b.counsellorName || 'Psychologist'}</td>
- <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {b.time}</td>
+ <td className="p-3 text-zinc-350">{formatDateString(b.date)} at {formatTimeString(b.time)}</td>
  <td className="p-3 text-right font-bold text-white">₹{formatAmount(gross)}</td>
  <td className="p-3 text-right text-zinc-500">₹{formatAmount(commission)}</td>
  <td className="p-3 text-right font-bold text-emerald-450">₹{formatAmount(payout)}</td>

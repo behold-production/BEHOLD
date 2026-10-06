@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import { formatDateString } from '../../../utils/dateFormatter';
+import { formatDateString, formatTimeString } from '../../../utils/dateFormatter';
 import toast from 'react-hot-toast';
 
 export const isSessionCompleted = (booking) => {
@@ -143,7 +143,7 @@ export const downloadDiagnosticPDF = async (booking) => {
     doc.setTextColor(15, 23, 42);
     const displayId = booking.id ? booking.id.toString().substring(Math.max(0, booking.id.toString().length - 6)) : 'N/A';
     doc.text(`CL-REP-${displayId}`, 24, 88);
-    doc.text(`${formatDateString(booking.date)} at ${booking.time}`, 80, 88);
+    doc.text(`${formatDateString(booking.date)} at ${formatTimeString(booking.time)}`, 80, 88);
     doc.text(`${formatDateString(new Date())}`, 145, 88);
 
     // Clinical Notes / Diagnostics Header

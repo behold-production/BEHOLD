@@ -1,6 +1,6 @@
 import React from 'react';
 import { Calendar, Video, Download, MapPin } from 'lucide-react';
-import { formatDateString } from "../../../../utils/dateFormatter";
+import { formatDateString, formatTimeString } from "../../../../utils/dateFormatter";
 import { formatCountdown, buildGoogleMeetUrl } from '../../utils/utils';
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
 
@@ -64,7 +64,7 @@ export default function OverviewTab({
                   {formatDateString(nextSession.date)}
                 </span>
                 <span className="bg-slate-50 px-3 py-1 rounded-lg border border-slate-200">
-                  {nextSession.time}
+                  {formatTimeString(nextSession.time)}
                 </span>
               </div>
             </div>

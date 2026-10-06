@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { formatDateString } from '../utils';
+import { formatDateString, formatTimeString } from '../utils';
 import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 import ApiService from '../../../../services/api';
 import toast from 'react-hot-toast';
@@ -588,7 +588,7 @@ export default function BookingManagementTab(props) {
   </td>
  <td className="p-3 font-semibold text-zinc-300 whitespace-nowrap">
  <span className="block">{formatDateString(booking.date)}</span>
- <span className="text-sm text-zinc-500 font-bold">{booking.time}</span>
+ <span className="text-sm text-zinc-500 font-bold">{formatTimeString(booking.time)}</span>
  </td>
  <td className="p-3 whitespace-nowrap">
  {booking.meetLink ? (

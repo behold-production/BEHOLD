@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Search, ShieldAlert, Check, X, CreditCard, ChevronDown, ChevronUp, Clock, User, Building2, HelpCircle } from 'lucide-react';
 import ApiService from '../../../../services/api';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
-import { formatDateString } from '../utils';
+import { formatDateString, formatTimeString } from '../utils';
 import { toast } from 'react-hot-toast';
 import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 
@@ -216,7 +216,7 @@ export default function RefundRequestsTab(props) {
  </td>
  <td className="p-3">
  <div className="text-zinc-300 font-semibold text-xs">
- {formatDateString(booking.date)} at {booking.time}
+ {formatDateString(booking.date)} at {formatTimeString(booking.time)}
  </div>
  <div className="text-xs text-zinc-555 font-bold pt-0.5">
  {booking.mode} ({booking.service === 'counselling' ? 'Wellbeing' : 'Career'})
