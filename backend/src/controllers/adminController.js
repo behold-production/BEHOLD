@@ -332,7 +332,8 @@ If you have questions or would like to reapply with updated information, please 
 
       const populated = appointments.map((a) => {
         const user = userMap.get(a.userId);
-        const counsellor = counsellorMap.get(a.counsellorId);
+        const activeCounsellorId = a.counsellorId || a.advisorId;
+        const counsellor = counsellorMap.get(activeCounsellorId);
         const session = sessionMap.get(a.id) || sessionMap.get(a._id?.toString()) || null;
         const sName = resolveStudentName(a.clientName, user?.name) || user?.name || 'Student';
         return {
@@ -2460,7 +2461,8 @@ If you have questions or would like to reapply with updated information, please 
         .filter(a => a.refundStatus && a.refundStatus !== 'NONE')
         .map((a) => {
           const user = userMap.get(a.userId);
-          const counsellor = counsellorMap.get(a.counsellorId);
+          const activeCounsellorId = a.counsellorId || a.advisorId;
+          const counsellor = counsellorMap.get(activeCounsellorId);
           const sName = resolveStudentName(a.clientName, user?.name) || user?.name || 'Student';
           return {
             ...a,

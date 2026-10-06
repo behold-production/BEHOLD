@@ -67,8 +67,9 @@ const SessionController = {
       const populated = await Promise.all(
         mergedSessions.map(async (s) => {
           const user = await StorageService.findById('users', s.userId);
-          const counsellor = await StorageService.findById('counsellors', s.counsellorId);
           const appt = appointments.find((a) => (a.id && a.id === s.appointmentId) || (a._id && a._id.toString() === s.appointmentId));
+          const activeCounsellorId = s.counsellorId || (appt ? (appt.counsellorId || appt.advisorId) : null);
+          const counsellor = activeCounsellorId ? await StorageService.findById('counsellors', activeCounsellorId) : null;
           const canonicalId = s.appointmentId || appt?.id || s.id;
 
           // Authorized meeting link resolution
@@ -175,10 +176,11 @@ const SessionController = {
       }
 
       const user = await StorageService.findById('users', session.userId);
-      const counsellor = await StorageService.findById('counsellors', session.counsellorId);
+      const appt = await StorageService.findById('appointments', session.appointmentId);
+      const activeCounsellorId = session.counsellorId || (appt ? (appt.counsellorId || appt.advisorId) : null);
+      const counsellor = activeCounsellorId ? await StorageService.findById('counsellors', activeCounsellorId) : null;
 
       const { buildDirectRoomUrl, isValidCustomMeetLink } = require('../utils/calendarHelper');
-      const appt = await StorageService.findById('appointments', session.appointmentId);
 
       // Direct meeting link resolution
       const canonicalId = session.appointmentId || appt?.id || session.id;
