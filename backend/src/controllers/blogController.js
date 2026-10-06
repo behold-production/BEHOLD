@@ -151,14 +151,14 @@ class BlogController {
       const tagArray = Array.isArray(tags)
         ? tags
         : typeof tags === 'string'
-        ? tags.split(',').map((t) => t.trim()).filter(Boolean)
-        : [];
+          ? tags.split(',').map((t) => t.trim()).filter(Boolean)
+          : [];
 
       const secKeywordsArray = Array.isArray(secondaryKeywords)
         ? secondaryKeywords
         : typeof secondaryKeywords === 'string'
-        ? secondaryKeywords.split(',').map((k) => k.trim()).filter(Boolean)
-        : [];
+          ? secondaryKeywords.split(',').map((k) => k.trim()).filter(Boolean)
+          : [];
 
       const newBlogData = {
         title: title.trim(),
@@ -236,7 +236,7 @@ class BlogController {
           updates.slug = existing && (existing.id !== id && existing._id !== id) ? `${newSlug}-${Date.now().toString().slice(-4)}` : newSlug;
         }
       }
-      
+
       if (excerpt !== undefined) updates.excerpt = excerpt;
       if (content !== undefined) updates.content = content;
       if (category !== undefined) updates.category = category;
@@ -247,8 +247,8 @@ class BlogController {
         updates.secondaryKeywords = Array.isArray(secondaryKeywords)
           ? secondaryKeywords
           : typeof secondaryKeywords === 'string'
-          ? secondaryKeywords.split(',').map((k) => k.trim()).filter(Boolean)
-          : blog.secondaryKeywords || [];
+            ? secondaryKeywords.split(',').map((k) => k.trim()).filter(Boolean)
+            : blog.secondaryKeywords || [];
       }
 
       // Handle Image Update
@@ -273,8 +273,8 @@ class BlogController {
         updates.tags = Array.isArray(tags)
           ? tags
           : typeof tags === 'string'
-          ? tags.split(',').map((t) => t.trim()).filter(Boolean)
-          : blog.tags;
+            ? tags.split(',').map((t) => t.trim()).filter(Boolean)
+            : blog.tags;
       }
 
       if (authorName !== undefined || authorRole !== undefined || authorAvatar !== undefined) {
@@ -322,7 +322,7 @@ class BlogController {
       if (!deleted) {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
       }
-      
+
       res.status(200).json({ success: true, message: 'Blog post deleted successfully' });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });

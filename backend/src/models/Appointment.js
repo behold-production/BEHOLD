@@ -64,7 +64,8 @@ const appointmentSchema = new mongoose.Schema(
     reminder1hPsychologistSentAt: { type: Date, default: null },
     whatsappNotificationLogs: { type: [String], default: [] },
     isDeleted: { type: Boolean, default: false },
-    deletedAt: { type: Date, default: null }
+    deletedAt: { type: Date, default: null },
+    isAdminCreated: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

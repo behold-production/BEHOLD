@@ -577,13 +577,18 @@ export default function BookingManagementTab(props) {
   <span className="font-semibold block text-white leading-tight">
   {booking.service === 'counselling' ? 'Emotional Wellbeing' : 'Career Mapping'}
   </span>
-  <div className="flex items-center gap-1.5 mt-0.5">
-    <span className="text-sm text-zinc-555 font-bold">{booking.mode}</span>
-    {(booking.utmCampaign || booking.utmSource || booking.fbclid) && (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-1.5 py-0.5 rounded shadow-xs">
-        🎯 {booking.utmCampaign ? String(booking.utmCampaign).substring(0, 18) : (booking.utmSource ? `Ad (${booking.utmSource})` : 'Meta Ad')}
-      </span>
-    )}
+  <div className="flex flex-col gap-1.5 mt-1.5">
+    <div className="flex items-center gap-1.5">
+      <span className="text-sm text-zinc-555 font-bold">{booking.mode}</span>
+      {(booking.utmCampaign || booking.utmSource || booking.fbclid) && (
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-1.5 py-0.5 rounded shadow-xs">
+          🎯 {booking.utmCampaign ? String(booking.utmCampaign).substring(0, 18) : (booking.utmSource ? `Ad (${booking.utmSource})` : 'Meta Ad')}
+        </span>
+      )}
+    </div>
+    <span className={`w-fit inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs border ${booking.isAdminCreated ? 'text-purple-400 bg-purple-950/60 border-purple-800/60' : 'text-blue-400 bg-blue-950/60 border-blue-800/60'}`}>
+      {booking.isAdminCreated ? '🛠 Booked by Admin' : '👤 Booked by User'}
+    </span>
   </div>
   </td>
  <td className="p-3 font-semibold text-zinc-300 whitespace-nowrap">
