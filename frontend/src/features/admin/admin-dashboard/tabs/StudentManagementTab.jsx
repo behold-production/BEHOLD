@@ -3,6 +3,7 @@ import ApiService from '../../../../services/api';
 import { User, Trash, Plus, KeyRound, Search, Edit, X, Loader2, Link, Navigation, Calendar } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../../../utils/validation';
+import { formatDateString } from '../utils';
 
 export default function StudentManagementTab(props) {
  
@@ -1084,7 +1085,7 @@ export default function StudentManagementTab(props) {
  return (
  <tr key={b.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/30">
  <td className="p-2.5">
- <span className="text-white block font-semibold">{b.date}</span>
+ <span className="text-white block font-semibold">{formatDateString(b.date)}</span>
  <span className="text-zinc-500 text-sm">{b.time}</span>
  </td>
  <td className="p-2.5 text-zinc-300 font-medium">

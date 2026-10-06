@@ -70,8 +70,8 @@ export const formatDateString = (dateInput) => {
     }
 
     return dateObj.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
+      month: 'short',
+      day: '2-digit',
       year: 'numeric'
     });
   } catch (e) {
