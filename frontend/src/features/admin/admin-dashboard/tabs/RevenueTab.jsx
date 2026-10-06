@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, CreditCard, Download, TrendingUp, DollarSign, Calendar, Users, Filter, BookOpen, AlertCircle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
+import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 
 const formatAmount = (num) => {
  const val = Number(num) || 0;
@@ -23,8 +24,13 @@ export default function RevenueTab(props) {
  const [searchQuery, setSearchQuery] = useState('');
  const [counsellorFilter, setCounsellorFilter] = useState('ALL');
  const [serviceFilter, setServiceFilter] = useState('ALL');
- const [paymentStatusFilter, setPaymentStatusFilter] = useState('ALL');
- const [dateFilter, setDateFilter] = useState('');
+ const [paymentStatusFilter, setPaymentStatusFilter] = useState('PAID');
+ const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+
+ const timeFilteredBookings = useMemo(() => {
+   return filterByDateRange(bookingsDb, 'date', dateFilter);
+ }, [bookingsDb, dateFilter]);
+
  const [page, setPage] = useState(1);
  const [limit, setLimit] = useState(10);
 
@@ -44,7 +50,7 @@ export default function RevenueTab(props) {
    try {
      const headers = ['Counsellor Name', 'Email', 'Paid Sessions', 'Gross Earned (INR)', 'Platform Retention (INR)', 'Counsellor Payout Share (INR)', 'Razorpay Route Account ID'];
      const rows = counsellors.map(c => {
-       const cBookings = bookingsDb.filter(b => b.counsellorId === c.id || b.advisorId === c.id);
+       const cBookings = timeFilteredBookings.filter(b => b.counsellorId === c.id || b.advisorId === c.id);
        const paidBookings = cBookings.filter(b => b.paymentStatus === 'PAID' && b.refundStatus !== 'REFUNDED');
        const gross = paidBookings.reduce((sum, b) => sum + (Number(b.amountPaid) || 0), 0);
        const payout = paidBookings.reduce((sum, b) => {
@@ -86,7 +92,7 @@ export default function RevenueTab(props) {
  let completedCount = 0;
  let activePaidCount = 0;
 
- bookingsDb.forEach(b => {
+ timeFilteredBookings.forEach(b => {
  const amount = Number(b.amountPaid) || 0;
  if (b.refundStatus === 'REFUNDED') {
  refundedVolume += amount;
@@ -117,14 +123,14 @@ export default function RevenueTab(props) {
  activePaidCount,
  totalPaidBookings: completedCount + activePaidCount
  };
- }, [bookingsDb, defaultSplit]);
+ }, [timeFilteredBookings, defaultSplit]);
 
  // Chart data calculations (Monthly SVG-based charts)
  const monthlyChartData = useMemo(() => {
  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
  const data = months.map(m => ({ month: m, amount: 0, platform: 0 }));
 
- bookingsDb.forEach(b => {
+ timeFilteredBookings.forEach(b => {
  if (b.paymentStatus === 'PAID' && b.refundStatus !== 'REFUNDED' && b.date) {
  // Simple month parsing from date format "YYYY-MM-DD"
  const parts = b.date.split('-');
@@ -143,11 +149,11 @@ export default function RevenueTab(props) {
  // Find max value to scale the SVG chart
  const maxVal = Math.max(...data.map(d => d.amount), 1000);
  return { data, maxVal };
- }, [bookingsDb, defaultSplit]);
+ }, [timeFilteredBookings, defaultSplit]);
 
  // Filtering
  const filteredBookings = useMemo(() => {
- return bookingsDb.filter(b => {
+ return timeFilteredBookings.filter(b => {
  const studentName = b.studentName || b.userName || '';
  const advisorName = b.counsellorName || b.advisorName || '';
  const matchesSearch = 
@@ -169,13 +175,11 @@ export default function RevenueTab(props) {
  b.paymentStatus === paymentStatusFilter ||
  (paymentStatusFilter === 'REFUNDED' && b.refundStatus === 'REFUNDED');
 
- const matchesDate = 
- dateFilter === '' ||
- (b.date && b.date.startsWith(dateFilter));
+ const matchesDate = true;
 
  return matchesSearch && matchesCounsellor && matchesService && matchesPaymentStatus && matchesDate;
  });
- }, [bookingsDb, searchQuery, counsellorFilter, serviceFilter, paymentStatusFilter, dateFilter]);
+ }, [timeFilteredBookings, searchQuery, counsellorFilter, serviceFilter, paymentStatusFilter, dateFilter]);
 
  // Pagination
  const pagedBookings = useMemo(() => {
@@ -296,7 +300,7 @@ export default function RevenueTab(props) {
  <div className="space-y-4 pt-2">
  <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
  <span className="text-zinc-500 font-bold ">Total Bookings Count</span>
- <span className="text-white font-bold">{bookingsDb.length}</span>
+ <span className="text-white font-bold">{timeFilteredBookings.length}</span>
  </div>
  <div className="flex justify-between items-center text-xs pb-2 border-b border-zinc-800/40">
  <span className="text-zinc-500 font-bold ">Completed & Paid</span>
@@ -308,7 +312,7 @@ export default function RevenueTab(props) {
  </div>
  <div className="flex justify-between items-center text-xs">
  <span className="text-zinc-500 font-bold ">Active Pending Bookings</span>
- <span className="text-white font-bold">{bookingsDb.filter(b => b.status === 'PENDING').length}</span>
+ <span className="text-white font-bold">{timeFilteredBookings.filter(b => b.status === 'PENDING').length}</span>
  </div>
  </div>
  </div>
@@ -342,7 +346,7 @@ export default function RevenueTab(props) {
  </thead>
  <tbody>
  {counsellors.map((c) => {
- const cBookings = bookingsDb.filter(b => b.counsellorId === c.id || b.advisorId === c.id);
+ const cBookings = timeFilteredBookings.filter(b => b.counsellorId === c.id || b.advisorId === c.id);
  const paidBookings = cBookings.filter(b => b.paymentStatus === 'PAID' && b.refundStatus !== 'REFUNDED');
  const gross = paidBookings.reduce((sum, b) => sum + (Number(b.amountPaid) || 0), 0);
  const payout = paidBookings.reduce((sum, b) => {
@@ -423,24 +427,7 @@ export default function RevenueTab(props) {
   </select>
 
   <div className="flex items-center gap-2 border-l border-zinc-800 pl-2">
-      <input
-        type="month"
-        value={dateFilter.length === 7 ? dateFilter : ''}
-        onChange={(e) => setDateFilter(e.target.value)}
-        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-white outline-none cursor-pointer"
-        title="Filter by Month"
-      />
-      <span className="text-zinc-600 text-xs font-bold">OR</span>
-      <input
-        type="date"
-        value={dateFilter.length === 10 ? dateFilter : ''}
-        onChange={(e) => setDateFilter(e.target.value)}
-        className="bg-zinc-955 border border-zinc-800 rounded-lg text-xs font-semibold px-2 py-1 text-white outline-none cursor-pointer"
-        title="Filter by Exact Date"
-      />
-      {dateFilter && (
-        <button onClick={() => setDateFilter('')} className="text-xs text-rose-400 font-bold px-2 py-1 border border-rose-900 rounded-lg bg-rose-950/50 hover:bg-rose-900/50 transition">Clear</button>
-      )}
+      <DateFilter value={dateFilter} onChange={setDateFilter} />
   </div>
   </div>
   </div>

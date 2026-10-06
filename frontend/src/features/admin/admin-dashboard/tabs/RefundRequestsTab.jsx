@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Search, ShieldAlert, Check, X, CreditCard, ChevronDown, ChevronUp, Clock, User, Building2, HelpCircle } from 'lucide-react';
 import ApiService from '../../../../services/api';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
 import { toast } from 'react-hot-toast';
+import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 
 export default function RefundRequestsTab(props) {
  const { settingsForm } = props;
@@ -86,8 +87,14 @@ export default function RefundRequestsTab(props) {
  setExpandedId(expandedId === id ? null : id);
  };
 
+  const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+
+  const timeFilteredRefunds = useMemo(() => {
+    return filterByDateRange(refunds, 'date', dateFilter);
+  }, [refunds, dateFilter]);
+
   // Filtering
-  const filtered = refunds.filter(r => {
+  const filtered = timeFilteredRefunds.filter(r => {
     const query = (searchQuery || '').toLowerCase();
     const matchesSearch = !query ||
       (r.studentName && r.studentName.toLowerCase().includes(query)) ||
@@ -153,8 +160,8 @@ export default function RefundRequestsTab(props) {
  >
  {status} ({
  status === 'ALL'
- ? refunds.length
- : refunds.filter(r => r.refundStatus === status).length
+ ? timeFilteredRefunds.length
+ : timeFilteredRefunds.filter(r => r.refundStatus === status).length
  })
  </button>
  ))}

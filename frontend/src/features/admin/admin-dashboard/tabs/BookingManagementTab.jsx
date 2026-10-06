@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
+import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 import ApiService from '../../../../services/api';
 import toast from 'react-hot-toast';
 import AdminBookingFlow from '../components/AdminBookingFlow';
@@ -344,6 +345,8 @@ export default function BookingManagementTab(props) {
  } = props;
 
 
+  const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+
   const uniqueBookingsMap = new Map();
   (bookingsDb || []).forEach(b => {
     const key = b.id || b._id || ((b.razorpayOrderId && b.razorpayOrderId.trim()) 
@@ -359,7 +362,9 @@ export default function BookingManagementTab(props) {
     }
   });
 
-  const filteredBookings = Array.from(uniqueBookingsMap.values()).filter(b => {
+  const timeFilteredBookings = filterByDateRange(Array.from(uniqueBookingsMap.values()), 'date', dateFilter);
+
+  const filteredBookings = timeFilteredBookings.filter(b => {
     const matchesSearch = (b.userName && b.userName.toLowerCase().includes(searchBooking.toLowerCase())) ||
     (b.advisorName && b.advisorName.toLowerCase().includes(searchBooking.toLowerCase())) ||
     (b.status && b.status.toLowerCase().includes(searchBooking.toLowerCase()));
@@ -392,8 +397,9 @@ export default function BookingManagementTab(props) {
  onChange={(e) => setSearchBooking(e.target.value)}
  className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-semibold focus:border-brand text-white outline-none"
  />
- <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
- </div>
+  <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
+  </div>
+  <DateFilter value={dateFilter} onChange={setDateFilter} />
  {canAddBookings && (
  <button
  onClick={() => {

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { User, ShieldAlert, Award, Trash, Check, Plus, Lock, Settings, KeyRound, BarChart3, LogOut, Search, ShieldCheck, Calendar, Clock, Link, AlertCircle, Edit, Video, UserPlus, MessageSquare, FileSpreadsheet, HelpCircle, X, ChevronRight, ChevronLeft, Mail, Shield, Menu, Brain, Download, FileText, Eye, EyeOff, Bell, Send } from 'lucide-react';
 import { SkeletonTableRows, PaginationBar } from '../components/SharedAdminUI';
 import { formatDateString } from '../utils';
+import DateFilter, { filterByDateRange } from '../../../../components/common/DateFilter';
 
 const formatAmount = (num) => {
  const val = Number(num) || 0;
@@ -346,6 +347,12 @@ export default function OverviewTab(props) {
  } = props;
 
 
+ const [dateFilter, setDateFilter] = useState({ type: 'THIS_MONTH', startDate: '', endDate: '' });
+
+ const timeFilteredBookings = useMemo(() => {
+   return filterByDateRange(bookingsDb, 'date', dateFilter);
+ }, [bookingsDb, dateFilter]);
+
  const studentsCount = usersDb.filter(u => u.role === 'USER' || !u.role).length;
  const activeStudentsCount = usersDb.filter(u => (u.role === 'USER' || !u.role) && u.status !== 'SUSPENDED').length;
  const suspendedStudentsCount = usersDb.filter(u => (u.role === 'USER' || !u.role) && u.status === 'SUSPENDED').length;
@@ -355,19 +362,24 @@ export default function OverviewTab(props) {
  const pendingPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status !== 'APPROVED' && u.status !== 'ACTIVE' && u.status !== 'REJECTED').length;
  const rejectedPsyCount = usersDb.filter(u => u.role === 'PSYCHOLOGIST' && u.status === 'REJECTED').length;
 
- const totalBookingsCount = bookingsDb.length;
- const confirmedBookingsCount = bookingsDb.filter(b => b.status === 'CONFIRMED').length;
- const pendingBookingsCount = bookingsDb.filter(b => b.status === 'PENDING').length;
- const completedBookingsCount = bookingsDb.filter(b => b.status === 'COMPLETED').length;
- const expiredBookingsCount = bookingsDb.filter(b => b.status === 'EXPIRED').length;
- const cancelledBookingsCount = bookingsDb.filter(b => b.status === 'CANCELLED').length;
+ const totalBookingsCount = timeFilteredBookings.length;
+ const confirmedBookingsCount = timeFilteredBookings.filter(b => b.status === 'CONFIRMED').length;
+ const pendingBookingsCount = timeFilteredBookings.filter(b => b.status === 'PENDING').length;
+ const completedBookingsCount = timeFilteredBookings.filter(b => b.status === 'COMPLETED').length;
+ const expiredBookingsCount = timeFilteredBookings.filter(b => b.status === 'EXPIRED').length;
+ const cancelledBookingsCount = timeFilteredBookings.filter(b => b.status === 'CANCELLED').length;
 
- const pendingInquiriesCount = inquiriesDb.filter(i => i.status === 'PENDING' || !i.status).length;
- const resolvedInquiriesCount = inquiriesDb.filter(i => i.status === 'RESOLVED').length;
- const totalInquiriesCount = inquiriesDb.length;
+ const timeFilteredInquiries = useMemo(() => {
+   return filterByDateRange(inquiriesDb, 'createdAt', dateFilter);
+ }, [inquiriesDb, dateFilter]);
+
+ const pendingInquiriesCount = timeFilteredInquiries.filter(i => i.status === 'PENDING' || !i.status).length;
+ const resolvedInquiriesCount = timeFilteredInquiries.filter(i => i.status === 'RESOLVED').length;
+ const totalInquiriesCount = timeFilteredInquiries.length;
  const inquiryResolutionRate = totalInquiriesCount > 0 ? Math.round((resolvedInquiriesCount / totalInquiriesCount) * 100) : 0;
 
- const totalRevenue = bookingsDb.reduce((acc, b) => {
+
+ const totalRevenue = timeFilteredBookings.reduce((acc, b) => {
  if (b.status !== 'COMPLETED' && b.status !== 'EXPIRED') return acc;
  if (b.amountPaid !== undefined && b.amountPaid !== null) {
  return acc + Number(b.amountPaid);
@@ -381,7 +393,7 @@ export default function OverviewTab(props) {
  return acc + Number(price);
  }, 0);
 
- const projectedRevenue = bookingsDb.reduce((acc, b) => {
+ const projectedRevenue = timeFilteredBookings.reduce((acc, b) => {
  if (b.status !== 'CONFIRMED' && b.status !== 'PENDING') return acc;
  if (b.amountPaid !== undefined && b.amountPaid !== null) {
  return acc + Number(b.amountPaid);
@@ -417,6 +429,7 @@ export default function OverviewTab(props) {
  <div className="space-y-6 animate-in fade-in duration-200 text-sm">
  <div className="border-b border-zinc-800 pb-3 flex justify-between items-center">
  <h3 className="text-sm font-bold text-zinc-400">Super Admin Command Center</h3>
+ <DateFilter value={dateFilter} onChange={setDateFilter} />
  </div>
 
  {/* KPI stats Grid */}
