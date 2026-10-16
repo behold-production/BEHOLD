@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ApiService from '../../services/api';
 import './behold.css';
 import BrandIcon from '../../components/common/BrandIcon';
+import { useAuth } from '../../context/AuthContext';
 
 /* ─── Inline FAQ ─────────────────────────────────────────────── */
 function InlineFaq({ faqs, loading }) {
@@ -336,6 +337,7 @@ function normalizeDoctor(c, index = 0) {
 /* ─── MAIN COMPONENT ─────────────────────────────────────────── */
 export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist, siteSettings }) {
   const navigate = useNavigate();
+  const { user, login, register, logout } = useAuth();
 
   // Desktop/Tablet API State
   const [menuOpen, setMenuOpen] = useState(false);
@@ -345,6 +347,79 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
   const [faqLoading, setFaqLoading] = useState(true);
   const [blogs, setBlogs] = useState([]);
   const [blogLoading, setBlogLoading] = useState(true);
+
+  // Client Contact Information for Booking & Razorpay
+  const [clientInfo, setClientInfo] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || ''
+  });
+  const [clientErrors, setClientErrors] = useState({});
+  const [confirmedBooking, setConfirmedBooking] = useState(null);
+  const [userAppointments, setUserAppointments] = useState([]);
+  const [loadingAppointments, setLoadingAppointments] = useState(false);
+
+  // Mobile Auth Gate Form States
+  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authName, setAuthName] = useState('');
+  const [authPhone, setAuthPhone] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
+
+  // Notifications State
+  const [notifications, setNotifications] = useState([
+    {
+      id: 'notif_welcome',
+      title: 'Welcome to BEHOLD Sanctuary',
+      desc: 'Connect with certified clinical psychologists for confidential online & in-person care.',
+      time: 'Today',
+      unread: true
+    },
+    {
+      id: 'notif_mindful',
+      title: 'Mindfulness Practice',
+      desc: 'Use the 4–7–8 somatic breathing technique whenever you feel stress or anxiety rise.',
+      time: 'Today',
+      unread: true
+    }
+  ]);
+
+  // Keep client contact info in sync with logged-in user
+  useEffect(() => {
+    if (user) {
+      setClientInfo(prev => ({
+        name: user.name || prev.name || '',
+        email: user.email || prev.email || '',
+        phone: user.phone || prev.phone || ''
+      }));
+    }
+  }, [user]);
+
+  // Fetch verified user appointments from backend
+  const fetchUserAppointments = async () => {
+    if (!user) return;
+    setLoadingAppointments(true);
+    try {
+      const res = await ApiService.getAppointments();
+      if (res && res.success && Array.isArray(res.data)) {
+        setUserAppointments(res.data);
+      }
+    } catch (e) {
+      console.warn('Could not load user appointments', e);
+    } finally {
+      setLoadingAppointments(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchUserAppointments();
+    } else {
+      setUserAppointments([]);
+    }
+  }, [user]);
 
   // Mobile Application State (Workflow router)
   const [mobileScreen, setMobileScreen] = useState('home');
@@ -561,40 +636,281 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
     setPromoMsg({ text: '', type: '' });
   };
 
-  /* Payment Simulation */
-  const handlePay = () => {
-    if (payMethod === 'card') {
-      const cleanNum = cardFields.num.replace(/\s/g, '');
-      if (cleanNum.length < 16) {
-        setCardErr('Please enter a valid 16-digit card number');
+    /* Validate client details for booking & Razorpay */
+  const validateClientInfo = () => {
+    const errors = {};
+    const cleanName = (clientInfo.name || '').trim();
+    const cleanEmail = (clientInfo.email || '').trim();
+    const cleanPhone = (clientInfo.phone || '').replace(/[^0-9]/g, '');
+
+    if (!cleanName || cleanName.length < 2) {
+      errors.name = 'Please enter your full name (minimum 2 letters)';
+    }
+    if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+      errors.email = 'Please enter a valid email address';
+    }
+    if (!cleanPhone || cleanPhone.length < 10) {
+      errors.phone = 'Please enter a valid 10-digit WhatsApp number';
+    }
+    setClientErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  /* Dynamic Razorpay Checkout SDK loader */
+  const loadRazorpaySDK = () => {
+    return new Promise((resolve) => {
+      if (typeof window !== 'undefined' && window.Razorpay) {
+        resolve(true);
         return;
       }
-      if (!cardFields.exp || cardFields.exp.length < 4) {
-        setCardErr('Please enter valid expiry date (MM/YY)');
-        return;
+      const existing = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      if (existing) {
+        existing.remove();
       }
-      if (!cardFields.cvv || cardFields.cvv.length < 3) {
-        setCardErr('Please enter valid 3-digit CVV');
-        return;
-      }
-      setCardErr('');
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => resolve(!!window.Razorpay);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  /* Real Razorpay Checkout & Verification integration */
+  const handleRazorpayPayment = async () => {
+    if (!validateClientInfo()) {
+      showToast('Please verify your contact details');
+      return;
     }
 
     setIsPaying(true);
-    setTimeout(() => {
-      setIsPaying(false);
-      const { total } = computePrice();
-      const newBooking = {
-        id: "BH-" + Math.floor(100000 + Math.random() * 900000),
-        doctor: selectedDoctor?.name || primaryDoctor.name,
-        service: selectedService.name,
-        when: `${selectedDate ? fmtShort(selectedDate) : 'Tomorrow'} • ${selectedTime}`,
-        mode: sessionMode,
-        paid: total
+
+    try {
+      const scriptLoaded = await loadRazorpaySDK();
+      if (!scriptLoaded || typeof window === 'undefined' || !window.Razorpay) {
+        throw new Error('Failed to load Razorpay SDK. Please check your internet connection.');
+      }
+
+      const { total, base, discount } = computePrice();
+      const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      const cleanContact = (clientInfo.phone || '').replace(/[^0-9]/g, '').slice(-10);
+
+      // 1. Create order on Behold backend (/api/payments/create-order)
+      const orderPayload = {
+        amount: total,
+        currency: 'INR',
+        receipt: `rcpt_${Date.now()}`,
+        counsellorId: selectedDoctor?.id || selectedDoctor?.raw?.id || selectedDoctor?.raw?._id,
+        date: formattedDate,
+        time: selectedTime,
+        duration: 60,
+        bookingDuration: 60,
+        mode: sessionMode === 'In-person' ? 'IN_PERSON' : 'ONLINE',
+        service: 'counselling',
+        couponCode: promoCode || '',
+        clientName: clientInfo.name.trim(),
+        clientEmail: clientInfo.email.trim(),
+        clientPhone: cleanContact
       };
-      setBookings(prev => [newBooking, ...prev]);
-      goMobile('done', { replace: true });
-    }, 1200);
+
+      const orderRes = await ApiService.createOrder(orderPayload);
+
+      if (!orderRes || !orderRes.success) {
+        throw new Error(orderRes?.message || 'Failed to initialize payment gateway.');
+      }
+
+      const orderId = orderRes.order?.id || orderRes.order_id || orderRes.data?.orderId;
+      const rawKey = orderRes.order?.keyId || orderRes.data?.keyId || orderRes.keyId || (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_RAZORPAY_KEY_ID : '');
+      const keyId = (rawKey || '').trim().replace(/^["']|["']$/g, '');
+
+      if (!keyId || !orderId) {
+        throw new Error('Invalid Razorpay order configuration returned by server.');
+      }
+
+      // 2. Open official Razorpay Checkout modal
+      const options = {
+        key: keyId,
+        amount: Math.round(total * 100),
+        currency: orderRes.currency || 'INR',
+        name: 'BEHOLD.',
+        description: `Psychological Consultation with ${selectedDoctor?.name || 'Psychologist'}`,
+        image: 'https://www.behold.co.in/pwa-512.png',
+        order_id: orderId,
+        prefill: {
+          name: clientInfo.name.trim(),
+          email: clientInfo.email.trim(),
+          contact: cleanContact
+        },
+        theme: {
+          color: '#345143'
+        },
+        handler: async function (paymentResponse) {
+          try {
+            showToast('Verifying payment signature with server…');
+            const bookingDetails = {
+              counsellorId: selectedDoctor?.id || selectedDoctor?.raw?.id || selectedDoctor?.raw?._id,
+              date: formattedDate,
+              time: selectedTime,
+              duration: 60,
+              bookingDuration: 60,
+              mode: sessionMode === 'In-person' ? 'IN_PERSON' : 'ONLINE',
+              service: 'counselling',
+              couponCode: promoCode || '',
+              appliedDiscount: discount,
+              baseFee: base,
+              gstAmount: 0,
+              amount: total,
+              clientName: clientInfo.name.trim(),
+              clientEmail: clientInfo.email.trim(),
+              clientPhone: cleanContact
+            };
+
+            const verifyRes = await ApiService.verifyPaymentAndBook(paymentResponse, bookingDetails);
+            if (verifyRes && verifyRes.success) {
+              showToast('Payment verified! Booking confirmed.');
+              const bookedData = verifyRes.data || {};
+              setConfirmedBooking(bookedData);
+
+              const newBooking = {
+                id: bookedData.id || bookedData.bookingId || ('BEH-' + Math.floor(100000 + Math.random() * 900000)),
+                doctor: selectedDoctor?.name || 'Psychologist',
+                doctorAvatar: selectedDoctor?.avatar || '',
+                service: selectedService?.name || 'Psychological Consultation',
+                when: `${fmtShort(selectedDate)} • ${selectedTime}`,
+                date: formattedDate,
+                time: selectedTime,
+                mode: sessionMode,
+                meetLink: bookedData.meetLink || '',
+                status: 'CONFIRMED',
+                paid: total
+              };
+
+              setBookings(prev => [newBooking, ...prev]);
+
+              setNotifications(prev => [
+                {
+                  id: 'notif_' + Date.now(),
+                  title: 'Booking Confirmed!',
+                  desc: `Your consultation with ${selectedDoctor.name} on ${fmtShort(selectedDate)} at ${selectedTime} is confirmed.`,
+                  time: 'Just now',
+                  unread: true
+                },
+                ...prev
+              ]);
+              setUnreadNotifs(prev => prev + 1);
+
+              try {
+                sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
+                  id: newBooking.id,
+                  advisorName: selectedDoctor.name,
+                  advisorRole: selectedDoctor.role,
+                  advisorPhoto: selectedDoctor.avatar,
+                  date: formattedDate,
+                  time: selectedTime,
+                  mode: sessionMode,
+                  amountPaid: total,
+                  meetLink: bookedData.meetLink || '',
+                  userName: clientInfo.name,
+                  userEmail: clientInfo.email,
+                  userPhone: cleanContact,
+                  status: 'CONFIRMED',
+                  paymentStatus: 'PAID'
+                }));
+              } catch (e) {}
+
+              setIsPaying(false);
+              goMobile('done', { replace: true });
+            } else {
+              throw new Error(verifyRes?.message || 'Payment signature verification failed.');
+            }
+          } catch (err) {
+            console.error('[Razorpay Verify Error]:', err);
+            showToast(err.message || 'Payment verification failed.');
+            setIsPaying(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setIsPaying(false);
+            showToast('Payment window cancelled');
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (err) {
+        console.error('[Razorpay Payment Failed]:', err);
+        setIsPaying(false);
+        showToast(err.error?.description || 'Payment was unsuccessful. Please retry.');
+      });
+      rzp.open();
+    } catch (error) {
+      console.error('[Payment Process Error]:', error);
+      setIsPaying(false);
+      showToast(error.message || 'Unable to start payment checkout');
+    }
+  };
+
+  /* Mobile Auth Handlers */
+  const handleMobileLogin = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setAuthError('');
+    if (!authEmail.trim() || !authPassword) {
+      setAuthError('Please enter both your email address and password.');
+      return;
+    }
+    setAuthLoading(true);
+    try {
+      const loggedUser = await login(authEmail.trim().toLowerCase(), authPassword);
+      showToast(`Welcome back, ${loggedUser.name}!`);
+      setAuthEmail('');
+      setAuthPassword('');
+      fetchUserAppointments();
+    } catch (err) {
+      setAuthError(err.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleMobileRegister = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setAuthError('');
+    if (!authName.trim() || !authEmail.trim() || !authPassword) {
+      setAuthError('Please fill in all required fields.');
+      return;
+    }
+    setAuthLoading(true);
+    try {
+      const newUser = await register(
+        authName.trim(),
+        authEmail.trim().toLowerCase(),
+        authPassword,
+        'user',
+        { phone: authPhone.trim() }
+      );
+      showToast(`Account created! Welcome, ${newUser.name}!`);
+      setAuthName('');
+      setAuthEmail('');
+      setAuthPhone('');
+      setAuthPassword('');
+      fetchUserAppointments();
+    } catch (err) {
+      setAuthError(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleMobileLogout = async () => {
+    try {
+      await logout();
+      showToast('Logged out securely');
+      setUserAppointments([]);
+      setBookings([]);
+    } catch (err) {
+      showToast('Logged out');
+    }
   };
 
   /* Add to Google Calendar */
@@ -731,9 +1047,20 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
             <button className="bh-btn bh-btn-cyan" onClick={book} style={{ height: '40px', padding: '0 22px', borderRadius: '10px' }}>
               Book Session
             </button>
-            <button className="bh-btn bh-btn-dark" onClick={auth} style={{ height: '40px', padding: '0 22px', borderRadius: '10px' }}>
-              Log In
-            </button>
+            {user ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '14px', fontWeight: 600, color: '#1c241e' }}>
+                  Hi, {user.name?.split(' ')[0] || 'User'}
+                </span>
+                <button className="bh-btn bh-btn-dark" onClick={logout} style={{ height: '40px', padding: '0 16px', borderRadius: '10px' }}>
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <button className="bh-btn bh-btn-dark" onClick={auth} style={{ height: '40px', padding: '0 22px', borderRadius: '10px' }}>
+                Log In
+              </button>
+            )}
           </div>
 
           <button className="bh-hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
@@ -748,7 +1075,11 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
           ))}
           <div className="bh-mobile-nav-btns">
             <button className="bh-btn bh-btn-cyan" onClick={book}>Book Session</button>
-            <button className="bh-btn bh-btn-dark" onClick={auth}>Log In</button>
+            {user ? (
+              <button className="bh-btn bh-btn-dark" onClick={logout}>Log Out ({user.name?.split(' ')[0]})</button>
+            ) : (
+              <button className="bh-btn bh-btn-dark" onClick={auth}>Log In</button>
+            )}
           </div>
         </div>
       </header>
@@ -1174,12 +1505,12 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                 <button className="home-hello" onClick={() => goMobile('me')} aria-label="Open profile">
                   <img
                     className="avatar"
-                    src="https://api.dicebear.com/7.x/initials/svg?seed=Priya&backgroundColor=ce8e6c&textColor=ffffff"
-                    alt=""
+                    src={user?.avatar || user?.photo || ("https://api.dicebear.com/7.x/initials/svg?seed=" + encodeURIComponent(user?.name || 'Sanctuary') + "&backgroundColor=345143&textColor=ffffff")}
+                    alt={user?.name || 'User'}
                   />
                   <div style={{ textAlign: 'left' }}>
-                    <small>Warm welcome,</small>
-                    <strong id="homeName">Priya</strong>
+                    <small>{user ? 'Welcome back,' : 'Warm welcome,'}</small>
+                    <strong id="homeName">{user ? (user.name?.split(' ')[0] || 'Friend') : 'Guest'}</strong>
                   </div>
                 </button>
                 <button className="icon-btn" onClick={() => goMobile('notif')} aria-label="Notifications" style={{ position: 'relative' }}>
@@ -1635,6 +1966,63 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                 <div className="summary-row"><span>Duration</span><span>{selectedService.meta.split(' • ')[0]}</span></div>
               </div>
 
+                            {/* Client Contact Info for Booking & WhatsApp */}
+              <div className="card" style={{ marginBottom: '18px', textAlign: 'left' }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px' }}>
+                  Your Contact Information
+                </div>
+                <p className="small muted" style={{ marginBottom: '14px', lineHeight: 1.4 }}>
+                  Session meet link and calendar confirmation will be sent to this WhatsApp &amp; Email.
+                </p>
+
+                <div className="client-form-field">
+                  <label className="client-field-label">Full Name *</label>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="e.g. Rahul Sharma"
+                    value={clientInfo.name}
+                    onChange={(e) => {
+                      setClientInfo(prev => ({ ...prev, name: e.target.value }));
+                      if (clientErrors.name) setClientErrors(prev => ({ ...prev, name: '' }));
+                    }}
+                  />
+                  {clientErrors.name && <span className="field-error">{clientErrors.name}</span>}
+                </div>
+
+                <div className="client-form-field">
+                  <label className="client-field-label">Email Address *</label>
+                  <input
+                    type="email"
+                    className="input"
+                    placeholder="e.g. rahul@example.com"
+                    value={clientInfo.email}
+                    onChange={(e) => {
+                      setClientInfo(prev => ({ ...prev, email: e.target.value }));
+                      if (clientErrors.email) setClientErrors(prev => ({ ...prev, email: '' }));
+                    }}
+                  />
+                  {clientErrors.email && <span className="field-error">{clientErrors.email}</span>}
+                </div>
+
+                <div className="client-form-field">
+                  <label className="client-field-label">WhatsApp Mobile Number *</label>
+                  <input
+                    type="tel"
+                    className="input"
+                    placeholder="10-digit WhatsApp number"
+                    maxLength={10}
+                    value={clientInfo.phone}
+                    onChange={(e) => {
+                      const v = e.target.value.replace(/\D/g, '').slice(0, 10);
+                      setClientInfo(prev => ({ ...prev, phone: v }));
+                      if (clientErrors.phone) setClientErrors(prev => ({ ...prev, phone: '' }));
+                    }}
+                  />
+                  {clientErrors.phone && <span className="field-error">{clientErrors.phone}</span>}
+                </div>
+              </div>
+
               <div className="small" style={{ fontWeight: 700, color: 'var(--ink)', marginBottom: '8px' }}>Have a promo code?</div>
               <div className="promo-quick">
                 <button type="button" onClick={() => { setPromoInput('SAFEPEACE20'); handleApplyPromo('SAFEPEACE20'); }}>SAFEPEACE20 · ₹300 off</button>
@@ -1673,7 +2061,18 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
             </div>
 
             <div className="cta-dock">
-              <button className="btn" onClick={() => goMobile('pay')}>Proceed to Payment</button>
+              <button 
+                className="btn" 
+                onClick={() => {
+                  if (!validateClientInfo()) {
+                    showToast('Please provide your name, email and 10-digit phone number');
+                    return;
+                  }
+                  goMobile('pay');
+                }}
+              >
+                Proceed to Payment
+              </button>
             </div>
           </section>
         )}
@@ -1688,7 +2087,7 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                   <polyline points="12 19 5 12 12 5" />
                 </svg>
               </button>
-              <h2>Payment</h2>
+              <h2>Payment Checkout</h2>
               <span className="spacer" />
             </div>
 
@@ -1696,21 +2095,29 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
               <div className="card amount-card">
                 <small>Total payable amount</small>
                 <strong>{inr(total)}</strong>
-                <span>Booking ID: BH-982410</span>
+                <span>Client: {clientInfo.name || 'Client'} • {clientInfo.phone || ''}</span>
               </div>
 
-              <h3 className="section-title" style={{ marginTop: 0 }}>Select Payment Method</h3>
+              <div className="razorpay-badge">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>Razorpay Secured Gateway (UPI, Cards, NetBanking)</span>
+              </div>
+
+              <h3 className="section-title" style={{ marginTop: 0 }}>Select Payment Mode</h3>
 
               {/* UPI */}
-              <div className={`card pay-opt ${payMethod === 'upi' ? 'selected' : ''}`} onClick={() => setPayMethod('upi')}>
+              <div className={'card pay-opt ' + (payMethod === 'upi' ? 'selected' : '')} onClick={() => setPayMethod('upi')}>
                 <div className="pay-head">
                   <span className="radio" />
-                  <span className="pay-name">UPI (GPay, PhonePe, Paytm)</span>
+                  <span className="pay-name">Instant UPI (Google Pay, PhonePe, Paytm, BHIM)</span>
                 </div>
                 {payMethod === 'upi' && (
                   <div className="pay-body">
                     <div className="sub-pills">
-                      {['Google Pay', 'PhonePe', 'Paytm'].map(upi => (
+                      {['Google Pay', 'PhonePe', 'Paytm', 'Any UPI'].map(upi => (
                         <button key={upi} type="button" className={selectedUpi === upi ? 'active' : ''} onClick={(e) => { e.stopPropagation(); setSelectedUpi(upi); }}>
                           {upi}
                         </button>
@@ -1721,79 +2128,37 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
               </div>
 
               {/* Card */}
-              <div className={`card pay-opt ${payMethod === 'card' ? 'selected' : ''}`} onClick={() => setPayMethod('card')}>
+              <div className={'card pay-opt ' + (payMethod === 'card' ? 'selected' : '')} onClick={() => setPayMethod('card')}>
                 <div className="pay-head">
                   <span className="radio" />
-                  <span className="pay-name">Credit / Debit Card</span>
+                  <span className="pay-name">Credit &amp; Debit Cards (Visa, MasterCard, RuPay)</span>
                 </div>
-                {payMethod === 'card' && (
-                  <div className="pay-body" onClick={(e) => e.stopPropagation()}>
-                    <div className="card-grid">
-                      <input
-                        className="input full"
-                        placeholder="Card number"
-                        maxLength={19}
-                        value={cardFields.num}
-                        onChange={(e) => {
-                          const v = e.target.value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
-                          setCardFields(p => ({ ...p, num: v }));
-                          setCardErr('');
-                        }}
-                      />
-                      <input
-                        className="input"
-                        placeholder="MM / YY"
-                        maxLength={7}
-                        value={cardFields.exp}
-                        onChange={(e) => {
-                          const d = e.target.value.replace(/\D/g, "").slice(0, 4);
-                          const formatted = d.length >= 3 ? d.slice(0, 2) + " / " + d.slice(2) : d;
-                          setCardFields(p => ({ ...p, exp: formatted }));
-                          setCardErr('');
-                        }}
-                      />
-                      <input
-                        className="input"
-                        placeholder="CVV"
-                        type="password"
-                        maxLength={4}
-                        value={cardFields.cvv}
-                        onChange={(e) => {
-                          setCardFields(p => ({ ...p, cvv: e.target.value.slice(0, 4) }));
-                          setCardErr('');
-                        }}
-                      />
-                    </div>
-                    {cardErr && <div className="field-error" style={{ marginTop: '6px' }}>{cardErr}</div>}
-                  </div>
-                )}
               </div>
 
-              {/* Netbanking */}
-              <div className={`card pay-opt ${payMethod === 'netbanking' ? 'selected' : ''}`} onClick={() => setPayMethod('netbanking')}>
+              {/* NetBanking */}
+              <div className={'card pay-opt ' + (payMethod === 'netbanking' ? 'selected' : '')} onClick={() => setPayMethod('netbanking')}>
                 <div className="pay-head">
                   <span className="radio" />
-                  <span className="pay-name">Net Banking</span>
+                  <span className="pay-name">Net Banking (All Indian Banks)</span>
                 </div>
-                {payMethod === 'netbanking' && (
-                  <div className="pay-body">
-                    <div className="sub-pills">
-                      {['HDFC Bank', 'ICICI Bank', 'SBI', 'Axis Bank'].map(b => (
-                        <button key={b} type="button" className={selectedBank === b ? 'active' : ''} onClick={(e) => { e.stopPropagation(); setSelectedBank(b); }}>
-                          {b.replace(' Bank', '')}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
 
-              <div className="ssl">🔒 256-bit SSL secured payment</div>
+              <div className="ssl">🔒 256-bit SSL encrypted • Official Razorpay Payment Verification</div>
             </div>
 
             <div className="cta-dock">
-              <button className={`btn ${isPaying ? 'loading' : ''}`} onClick={handlePay} disabled={isPaying}>
-                {isPaying ? <><span className="spinner" /> Securing payment…</> : `Pay ${inr(total)}`}
+              <button 
+                className={'btn ' + (isPaying ? 'loading' : '')} 
+                onClick={handleRazorpayPayment} 
+                disabled={isPaying}
+              >
+                {isPaying ? (
+                  <>
+                    <span className="spinner" /> Securing Razorpay Checkout…
+                  </>
+                ) : (
+                  'Pay ' + inr(total) + ' via Razorpay'
+                )}
               </button>
             </div>
           </section>
@@ -1816,9 +2181,29 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                 <div className="summary-row"><span>Service</span><span>{selectedService.name}</span></div>
                 <div className="summary-row"><span>Date &amp; time</span><span>{selectedDate ? fmtShort(selectedDate) : ''} • {selectedTime}</span></div>
                 <div className="summary-row"><span>Session</span><span>{sessionMode}</span></div>
-                <div className="summary-row"><span>Paid</span><span>{inr(total)}</span></div>
-                <div className="summary-row"><span>Booking ID</span><span>BH-982410</span></div>
+                <div className="summary-row"><span>Payment</span><span style={{ color: '#16a34a', fontWeight: 700 }}>{inr(total)} (Paid)</span></div>
+                <div className="summary-row"><span>Booking ID</span><span style={{ fontWeight: 700 }}>{confirmedBooking?.id || confirmedBooking?.bookingId || ('BEH-' + Math.floor(100000 + Math.random() * 900000))}</span></div>
+                {confirmedBooking?.meetLink && (
+                  <div className="summary-row" style={{ marginTop: '8px' }}>
+                    <span>Meet Link</span>
+                    <a href={confirmedBooking.meetLink} target="_blank" rel="noreferrer" style={{ color: '#0284c7', fontWeight: 700 }}>
+                      Join Room →
+                    </a>
+                  </div>
+                )}
               </div>
+
+              {confirmedBooking?.meetLink && (
+                <a
+                  href={confirmedBooking.meetLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn forest"
+                  style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+                >
+                  🎥 Join Telehealth Room
+                </a>
+              )}
 
               <button className="btn outline" onClick={handleAddToCalendar} style={{ marginBottom: '12px' }}>
                 Add to Google Calendar
@@ -1840,22 +2225,73 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
         {mobileScreen === 'sessions' && (
           <section className="screen active" aria-label="Sessions">
             <div className="screen-scroll">
-              <h1 className="large-title">Sessions</h1>
-              {bookings.length === 0 ? (
+              <div className="row" style={{ marginBottom: '8px' }}>
+                <h1 className="large-title" style={{ margin: 0 }}>Sessions</h1>
+                {user && (
+                  <button className="link-btn" onClick={fetchUserAppointments} style={{ fontSize: '12px' }}>
+                    ↻ Refresh
+                  </button>
+                )}
+              </div>
+
+              {loadingAppointments && (
+                <div style={{ textAlign: 'center', padding: '20px', color: 'var(--muted)', fontSize: '13px' }}>
+                  Loading your appointments…
+                </div>
+              )}
+
+              {bookings.length === 0 && userAppointments.length === 0 && !loadingAppointments ? (
                 <div className="card" style={{ textAlign: 'center', padding: '36px 18px' }}>
-                  <p className="muted" style={{ fontSize: '14px', marginBottom: '14px' }}>No upcoming sessions booked yet.</p>
+                  <p className="muted" style={{ fontSize: '14px', marginBottom: '14px' }}>No sessions booked yet.</p>
                   <button className="btn-mini" onClick={() => goMobile('explore')}>Find a therapist</button>
                 </div>
               ) : (
-                bookings.map(b => (
-                  <div key={b.id} className="card" style={{ marginBottom: '12px' }}>
-                    <div className="summary-row"><span>Therapist</span><span>{b.doctor}</span></div>
-                    <div className="summary-row"><span>Service</span><span>{b.service}</span></div>
-                    <div className="summary-row"><span>When</span><span>{b.when}</span></div>
-                    <div className="summary-row"><span>Mode</span><span>{b.mode}</span></div>
-                    <div className="summary-row"><span>Paid</span><span>{inr(b.paid)}</span></div>
-                  </div>
-                ))
+                <>
+                  {bookings.map(b => (
+                    <div key={b.id} className="card" style={{ marginBottom: '12px', textAlign: 'left' }}>
+                      <div className="row" style={{ marginBottom: '8px' }}>
+                        <div>
+                          <strong style={{ fontSize: '15px', color: 'var(--ink)' }}>{b.doctor}</strong>
+                          <div className="small muted">{b.service}</div>
+                        </div>
+                        <span className="tag" style={{ background: '#dcfce7', color: '#16a34a' }}>CONFIRMED</span>
+                      </div>
+                      <div className="summary-row"><span>Schedule</span><span>{b.when}</span></div>
+                      <div className="summary-row"><span>Mode</span><span>{b.mode}</span></div>
+                      <div className="summary-row"><span>Amount</span><span>{inr(b.paid)}</span></div>
+                      {b.meetLink && (
+                        <div style={{ marginTop: '10px' }}>
+                          <a href={b.meetLink} target="_blank" rel="noreferrer" className="session-meet-btn">
+                            🎥 Join Session
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {userAppointments.map(a => (
+                    <div key={a.id || a._id} className="card" style={{ marginBottom: '12px', textAlign: 'left' }}>
+                      <div className="row" style={{ marginBottom: '8px' }}>
+                        <div>
+                          <strong style={{ fontSize: '15px', color: 'var(--ink)' }}>{a.counsellorName || 'Psychologist'}</strong>
+                          <div className="small muted">{a.service || 'Counselling'} • {a.duration || '60 min'}</div>
+                        </div>
+                        <span className="tag" style={{ background: a.status === 'CONFIRMED' || a.status === 'APPROVED' ? '#dcfce7' : '#fef3c7', color: a.status === 'CONFIRMED' || a.status === 'APPROVED' ? '#16a34a' : '#d97706' }}>
+                          {a.status || 'CONFIRMED'}
+                        </span>
+                      </div>
+                      <div className="summary-row"><span>Schedule</span><span>{a.date} • {a.time}</span></div>
+                      <div className="summary-row"><span>Mode</span><span>{a.mode || 'ONLINE'}</span></div>
+                      {a.meetLink && (
+                        <div style={{ marginTop: '10px' }}>
+                          <a href={a.meetLink} target="_blank" rel="noreferrer" className="session-meet-btn">
+                            🎥 Join Meeting Link
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </>
               )}
             </div>
           </section>
@@ -1881,55 +2317,21 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                 </button>
               </div>
 
-              <h4 className="notif-group">Today</h4>
-              <button
-                className={`notif ${!notifsRead ? 'unread' : ''}`}
-                onClick={() => { setChatKey('aarav'); goMobile('chat'); }}
-              >
-                <span className="notif-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#345143" strokeWidth="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                </span>
-                <span className="notif-body">
-                  <h4>Session Reminder {!notifsRead && <span className="dot" />}</h4>
-                  <p>Your session with Dr. Aarav Mehta starts in 30 minutes.</p>
-                  <small>10:00 AM</small>
-                </span>
-              </button>
-
-              <button
-                className={`notif ${!notifsRead ? 'unread' : ''}`}
-                onClick={() => { setChatKey('aarav'); goMobile('chat'); }}
-              >
-                <span className="notif-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#345143" strokeWidth="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                </span>
-                <span className="notif-body">
-                  <h4>New Message {!notifsRead && <span className="dot" />}</h4>
-                  <p>Dr. Aarav Mehta: "Remember the 4–7–8 breathing…"</p>
-                  <small>8:45 AM</small>
-                </span>
-              </button>
-
-              <h4 className="notif-group">Earlier</h4>
-              <button className="notif" onClick={() => showToast('Booking confirmed on record')}>
-                <span className="notif-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#345143" strokeWidth="2.2">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </span>
-                <span className="notif-body">
-                  <h4>Booking Confirmed</h4>
-                  <p>Your session on Wed, Jan 29 has been booked.</p>
-                  <small>Yesterday</small>
-                </span>
-              </button>
+              <h4 className="notif-group">Recent Updates</h4>
+              {notifications.map(n => (
+                <div key={n.id} className={'notif ' + (n.unread && !notifsRead ? 'unread' : '')} style={{ textAlign: 'left' }}>
+                  <span className="notif-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#345143" strokeWidth="2.2">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </span>
+                  <span className="notif-body">
+                    <h4>{n.title} {n.unread && !notifsRead && <span className="dot" />}</h4>
+                    <p>{n.desc}</p>
+                    <small>{n.time}</small>
+                  </span>
+                </div>
+              ))}
             </div>
           </section>
         )}
@@ -2033,59 +2435,201 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
         {mobileScreen === 'me' && (
           <section className="screen active" aria-label="My profile">
             <div className="screen-scroll">
-              <h1 className="large-title">My Profile</h1>
-              <div className="me-head">
-                <img
-                  className="avatar lg"
-                  src="https://api.dicebear.com/7.x/initials/svg?seed=PS&backgroundColor=ce8e6c&textColor=ffffff"
-                  alt=""
-                />
-                <h3>Priya Sharma</h3>
-                <p>priya@behold.co.in</p>
-                <button className="link-btn" onClick={() => showToast('Profile editor coming soon')}>Edit Profile</button>
-              </div>
+              {!user ? (
+                <>
+                  <h1 className="large-title">My Account</h1>
+                  <div className="auth-card">
+                    <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+                      <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(52,81,67,0.1)', color: 'var(--forest)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', margin: '0 auto 10px' }}>
+                        🌿
+                      </div>
+                      <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px' }}>
+                        Welcome to BEHOLD
+                      </h3>
+                      <p className="small muted">
+                        Sign in or register to view booked appointments, join tele-health rooms, and track receipts.
+                      </p>
+                    </div>
 
-              <h3 className="section-title" style={{ marginTop: 0 }}>Account</h3>
-              <div className="card menu">
-                <button className="menu-item" onClick={() => showToast('Personal information settings')}>
-                  <span className="left"><span className="menu-icon">👤</span>Personal Information</span>
-                  <span>›</span>
-                </button>
-                <button className="menu-item" onClick={() => showToast('Password reset link sent')}>
-                  <span className="left"><span className="menu-icon">🔒</span>Change Password</span>
-                  <span>›</span>
-                </button>
-                <button className="menu-item" onClick={() => showToast('Saved payment methods')}>
-                  <span className="left"><span className="menu-icon">💳</span>Payment Methods</span>
-                  <span>›</span>
-                </button>
-              </div>
+                    <div className="auth-tabs">
+                      <button
+                        type="button"
+                        className={'auth-tab ' + (authMode === 'login' ? 'active' : '')}
+                        onClick={() => { setAuthMode('login'); setAuthError(''); }}
+                      >
+                        Sign In
+                      </button>
+                      <button
+                        type="button"
+                        className={'auth-tab ' + (authMode === 'register' ? 'active' : '')}
+                        onClick={() => { setAuthMode('register'); setAuthError(''); }}
+                      >
+                        Create Account
+                      </button>
+                    </div>
 
-              <h3 className="section-title">Preferences</h3>
-              <div className="card menu">
-                <button className="menu-item" onClick={() => goMobile('notif')}>
-                  <span className="left"><span className="menu-icon">🔔</span>Notification Settings</span>
-                  <span>›</span>
-                </button>
-                <button className="menu-item" onClick={() => showToast('Language: English (US)')}>
-                  <span className="left"><span className="menu-icon">🌐</span>Language</span>
-                  <span>›</span>
-                </button>
-                <button className="menu-item" onClick={toggleDark} role="switch" aria-checked={dark}>
-                  <span className="left"><span className="menu-icon">🌙</span>Relaxing Dark Mode</span>
-                  <span className={`switch ${dark ? 'on' : ''}`} />
-                </button>
-              </div>
+                    {authError && (
+                      <div style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#b91c1c', padding: '10px 14px', borderRadius: '10px', fontSize: '12px', marginBottom: '14px', textAlign: 'left' }}>
+                        {authError}
+                      </div>
+                    )}
 
-              <button
-                className="logout"
-                onClick={() => {
-                  showToast('Logged out securely');
-                  setTimeout(() => goMobile('home', { replace: true }), 400);
-                }}
-              >
-                Log Out
-              </button>
+                    {authMode === 'login' ? (
+                      <form onSubmit={handleMobileLogin}>
+                        <div className="client-form-field">
+                          <label className="client-field-label">Email Address</label>
+                          <input
+                            type="email"
+                            className="input"
+                            placeholder="your.email@example.com"
+                            value={authEmail}
+                            onChange={(e) => setAuthEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="client-form-field">
+                          <label className="client-field-label">Password</label>
+                          <input
+                            type="password"
+                            className="input"
+                            placeholder="Enter your password"
+                            value={authPassword}
+                            onChange={(e) => setAuthPassword(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className={'btn forest ' + (authLoading ? 'loading' : '')}
+                          disabled={authLoading}
+                          style={{ marginTop: '12px', width: '100%' }}
+                        >
+                          {authLoading ? 'Signing In…' : 'Sign In'}
+                        </button>
+                      </form>
+                    ) : (
+                      <form onSubmit={handleMobileRegister}>
+                        <div className="client-form-field">
+                          <label className="client-field-label">Full Name</label>
+                          <input
+                            type="text"
+                            className="input"
+                            placeholder="e.g. Rahul Sharma"
+                            value={authName}
+                            onChange={(e) => setAuthName(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="client-form-field">
+                          <label className="client-field-label">Email Address</label>
+                          <input
+                            type="email"
+                            className="input"
+                            placeholder="e.g. rahul@example.com"
+                            value={authEmail}
+                            onChange={(e) => setAuthEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="client-form-field">
+                          <label className="client-field-label">WhatsApp Mobile Number</label>
+                          <input
+                            type="tel"
+                            className="input"
+                            placeholder="10-digit mobile number"
+                            maxLength={10}
+                            value={authPhone}
+                            onChange={(e) => setAuthPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                          />
+                        </div>
+                        <div className="client-form-field">
+                          <label className="client-field-label">Password</label>
+                          <input
+                            type="password"
+                            className="input"
+                            placeholder="At least 6 characters"
+                            value={authPassword}
+                            onChange={(e) => setAuthPassword(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className={'btn forest ' + (authLoading ? 'loading' : '')}
+                          disabled={authLoading}
+                          style={{ marginTop: '12px', width: '100%' }}
+                        >
+                          {authLoading ? 'Creating Account…' : 'Create Account'}
+                        </button>
+                      </form>
+                    )}
+
+                    <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                      <button
+                        type="button"
+                        className="link-btn"
+                        style={{ fontSize: '12px' }}
+                        onClick={() => onOpenAuth && onOpenAuth()}
+                      >
+                        Prefer desktop portal? Open Modal Sign In →
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h1 className="large-title">My Profile</h1>
+                  <div className="me-head">
+                    <img
+                      className="avatar lg"
+                      src={user.avatar || user.photo || ('https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(user.name || 'User') + '&backgroundColor=345143&textColor=ffffff')}
+                      alt={user.name}
+                    />
+                    <h3>{user.name}</h3>
+                    <p>{user.email}</p>
+                    <span className="verified-badge">✓ Verified Client</span>
+                  </div>
+
+                  <h3 className="section-title" style={{ marginTop: '20px' }}>Personal Details</h3>
+                  <div className="card menu">
+                    <div className="menu-item" style={{ cursor: 'default' }}>
+                      <span className="left"><span className="menu-icon">👤</span>Full Name</span>
+                      <span style={{ fontWeight: 600, color: 'var(--ink)' }}>{user.name}</span>
+                    </div>
+                    <div className="menu-item" style={{ cursor: 'default' }}>
+                      <span className="left"><span className="menu-icon">✉️</span>Email</span>
+                      <span style={{ fontWeight: 500, color: 'var(--ink-2)', fontSize: '13px' }}>{user.email}</span>
+                    </div>
+                    <div className="menu-item" style={{ cursor: 'default' }}>
+                      <span className="left"><span className="menu-icon">📱</span>WhatsApp</span>
+                      <span style={{ fontWeight: 600, color: 'var(--ink)' }}>{user.phone || 'Not added'}</span>
+                    </div>
+                  </div>
+
+                  <h3 className="section-title">Quick Actions</h3>
+                  <div className="card menu">
+                    <button className="menu-item" onClick={() => goMobile('sessions')}>
+                      <span className="left"><span className="menu-icon">📅</span>My Booked Sessions ({bookings.length + userAppointments.length})</span>
+                      <span>›</span>
+                    </button>
+                    <button className="menu-item" onClick={() => goMobile('notif')}>
+                      <span className="left"><span className="menu-icon">🔔</span>Notifications ({unreadNotifs})</span>
+                      <span>›</span>
+                    </button>
+                    <button className="menu-item" onClick={toggleDark} role="switch" aria-checked={dark}>
+                      <span className="left"><span className="menu-icon">🌙</span>Relaxing Dark Mode</span>
+                      <span className={'switch ' + (dark ? 'on' : '')} />
+                    </button>
+                  </div>
+
+                  <button
+                    className="logout"
+                    onClick={handleMobileLogout}
+                  >
+                    Log Out Securely
+                  </button>
+                </>
+              )}
             </div>
           </section>
         )}
