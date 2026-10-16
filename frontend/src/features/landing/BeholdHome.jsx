@@ -1159,11 +1159,6 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
           Full Sanctuary design system connected to real Behold data
           ================================================================ */}
       <div className="bh-mobile-app-root">
-{/* ================================================================
-          MOBILE APPLICATION CONTAINER (Screen width <= 768px)
-          All interactive workflows from prototype
-          ================================================================ */}
-      <div className="bh-mobile-app-root">
 
         {/* Global Toast */}
         <div className={`toast ${toastMsg ? 'show' : ''}`} role="status" aria-live="polite">
