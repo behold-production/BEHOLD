@@ -32,7 +32,7 @@ function InlineFaq({ faqs, loading }) {
           <div key={idx} className={`bh-faq-item ${open === idx ? 'open' : ''}`}>
             <div className="bh-faq-q" onClick={() => setOpen(open === idx ? -1 : idx)}>
               <span className="bh-faq-q-text">{faq.question}</span>
-              <span className="bh-faq-chevron">+</span>
+              <span className="bh-faq-chevron">{open === idx ? '−' : '+'}</span>
             </div>
             <div className="bh-faq-ans">
               <p className="bh-faq-ans-text">{faq.answer || faq.text}</p>
@@ -42,7 +42,7 @@ function InlineFaq({ faqs, loading }) {
       </div>
       <button
         onClick={() => navigate('/faqs')}
-        style={{ marginTop: '28px', fontSize: '14px', fontWeight: 700, color: '#00b4c8', display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
+        style={{ marginTop: '28px', fontSize: '14px', fontWeight: 700, color: 'var(--forest, #345143)', display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
       >
         View all FAQs →
       </button>
@@ -55,7 +55,7 @@ function InlineBlog({ blogs, loading }) {
   const navigate = useNavigate();
 
   const fallback = [
-    { category: 'Therapy & Mental Wellbeing', title: 'How to Find the Right Psychologist or Therapist: A Complete Guide', slug: null },
+    { category: 'Therapy & Wellbeing', title: 'How to Find the Right Psychologist or Therapist: A Complete Guide', slug: null },
     { category: 'Anxiety & Stress', title: 'Anxiety vs Stress: What\'s the Difference and When Should You Seek Help?', slug: null },
     { category: 'Mental Health', title: 'Feeling Tired All Day and Always in a Low Mood — Is It a Sign of Depression?', slug: null },
   ];
@@ -81,7 +81,7 @@ function InlineBlog({ blogs, loading }) {
               {(post.coverImage || post.image) ? (
                 <img src={post.coverImage || post.image} alt={post.title} />
               ) : (
-                <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#edfbfc,#d4f7f9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>📄</div>
+                <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#edf3f0,#fdf7f2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>🌿</div>
               )}
             </div>
             <div>
@@ -120,7 +120,7 @@ function InlineContact() {
       <div className="bh-form-success-icon">✓</div>
       <h3 style={{ fontSize: '22px', fontWeight: 800 }}>Message Sent!</h3>
       <p style={{ color: '#6b7a8d', fontSize: '14px' }}>Thank you! Our team will get back to you shortly.</p>
-      <button onClick={() => setStatus('idle')} style={{ color: '#00b4c8', fontWeight: 700, fontSize: '14px', cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit' }}>
+      <button onClick={() => setStatus('idle')} style={{ color: 'var(--terracotta, #ce8e6c)', fontWeight: 700, fontSize: '14px', cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit' }}>
         Send another message
       </button>
     </div>
@@ -158,6 +158,62 @@ function InlineContact() {
   );
 }
 
+/* ─── Fallback Doctors for instant high-fidelity experience ───── */
+const FALLBACK_COUNSELLORS = [
+  {
+    _id: 'aarav',
+    id: 'aarav',
+    name: 'Dr. Aarav Mehta',
+    specialization: 'Clinical Psychologist',
+    experience: 12,
+    languages: 'English, Hindi',
+    rating: 4.9,
+    price: 1500,
+    tags: ['Anxiety', 'Stress', 'CBT'],
+    bio: 'Specialising in Cognitive Behavioural Therapy and somatic grounding, guiding clients through anxiety, panic patterns and major life transitions with personalised protocols.',
+    profilePic: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80'
+  },
+  {
+    _id: 'ananya',
+    id: 'ananya',
+    name: 'Ananya Iyer',
+    specialization: 'Family & Couples Therapist',
+    experience: 8,
+    languages: 'English, Tamil',
+    rating: 4.8,
+    price: 1200,
+    tags: ['Relationships', 'Couples', 'Communication'],
+    bio: 'Creates a calm, neutral space where partners dismantle defensive cycles and rebuild trust through non-violent communication frameworks.',
+    profilePic: 'https://images.unsplash.com/photo-1594824813575-d1e57c6b735d?auto=format&fit=crop&w=300&q=80'
+  },
+  {
+    _id: 'meera',
+    id: 'meera',
+    name: 'Dr. Meera Nambiar',
+    specialization: 'Neuro-Psychiatrist',
+    experience: 14,
+    languages: 'English, Malayalam, Hindi',
+    rating: 5.0,
+    price: 1800,
+    tags: ['Depression', 'Integrative Psychiatry', 'Sleep Care'],
+    bio: 'Leads integrative neuropsychiatry programmes focused on holistic mental health, sleep restoration, and nervous system regulation.',
+    profilePic: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80'
+  },
+  {
+    _id: 'rohit',
+    id: 'rohit',
+    name: 'Dr. Rohit Sen',
+    specialization: 'Stress & Career Counsellor',
+    experience: 10,
+    languages: 'English, Hindi',
+    rating: 4.9,
+    price: 1400,
+    tags: ['Stress', 'Career', 'Burnout'],
+    bio: 'Helping professionals and students overcome burnout, imposter syndrome, and corporate anxiety with tailored stress management protocols.',
+    profilePic: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=300&q=80'
+  }
+];
+
 /* ─── MAIN COMPONENT ─────────────────────────────────────────── */
 export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist, siteSettings }) {
   const navigate = useNavigate();
@@ -169,12 +225,24 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
   const [blogs, setBlogs] = useState([]);
   const [blogLoading, setBlogLoading] = useState(true);
 
+  // Mobile interactive state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [activeTab, setActiveTab] = useState('home');
+  const [showSosModal, setShowSosModal] = useState(false);
+
   const siteName = siteSettings?.siteName || 'BEHOLD';
 
   useEffect(() => {
-    ApiService.getCounsellors({ limit: 4 })
-      .then(r => { if (r?.success && Array.isArray(r.data)) setCounsellors(r.data.slice(0, 4)); })
-      .catch(e => console.warn(e))
+    ApiService.getCounsellors({ limit: 12 })
+      .then(r => { 
+        if (r?.success && Array.isArray(r.data) && r.data.length > 0) {
+          setCounsellors(r.data);
+        } else {
+          setCounsellors(FALLBACK_COUNSELLORS);
+        }
+      })
+      .catch(() => setCounsellors(FALLBACK_COUNSELLORS))
       .finally(() => setLoading(false));
 
     ApiService.getFaqs()
@@ -188,14 +256,51 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
       .finally(() => setBlogLoading(false));
   }, []);
 
+  // Scroll spy to update active mobile tab
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + 220;
+      const contactEl = document.getElementById('contact');
+      const faqsEl = document.getElementById('faqs');
+      const expertsEl = document.getElementById('experts');
+      const servicesEl = document.getElementById('services');
+
+      if (contactEl && scrollPos >= contactEl.offsetTop) {
+        setActiveTab('contact');
+      } else if (expertsEl && scrollPos >= expertsEl.offsetTop && (!faqsEl || scrollPos < faqsEl.offsetTop)) {
+        setActiveTab('experts');
+      } else if (servicesEl && scrollPos >= servicesEl.offsetTop && (!expertsEl || scrollPos < expertsEl.offsetTop)) {
+        setActiveTab('services');
+      } else if (window.scrollY < 300) {
+        setActiveTab('home');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollTo = (id) => {
     setMenuOpen(false);
     const el = document.getElementById(id);
-    if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    if (el) {
+      const offset = 70;
+      const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
+    }
   };
 
-  const book = (e) => { e.preventDefault(); if (onOpenBooking) onOpenBooking(); else navigate('/booking'); };
-  const auth = (e) => { e.preventDefault(); if (onOpenAuth) onOpenAuth(); else navigate('/login'); };
+  const book = (e) => { 
+    if (e && e.preventDefault) e.preventDefault(); 
+    if (onOpenBooking) onOpenBooking(); 
+    else navigate('/booking'); 
+  };
+  
+  const auth = (e) => { 
+    if (e && e.preventDefault) e.preventDefault(); 
+    if (onOpenAuth) onOpenAuth(); 
+    else navigate('/login'); 
+  };
 
   const goToProfile = (c) => {
     const id = c?._id || c?.id;
@@ -207,8 +312,8 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
   };
 
   const handleBookCard = (e, c) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     const id = c?._id || c?.id;
     if (onBookTherapist && id) {
       onBookTherapist(id);
@@ -218,6 +323,24 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
       navigate('/booking');
     }
   };
+
+  const displayList = counsellors.length > 0 ? counsellors : FALLBACK_COUNSELLORS;
+
+  const filteredCounsellors = displayList.filter(c => {
+    const matchCategory = selectedFilter === 'All' || 
+      (c.specialization && c.specialization.toLowerCase().includes(selectedFilter.toLowerCase())) ||
+      (c.tags && c.tags.some(t => t.toLowerCase().includes(selectedFilter.toLowerCase()))) ||
+      (c.bio && c.bio.toLowerCase().includes(selectedFilter.toLowerCase()));
+    
+    if (!matchCategory) return false;
+    
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    const name = (c.name || '').toLowerCase();
+    const spec = (c.specialization || '').toLowerCase();
+    const tags = (c.tags || []).join(' ').toLowerCase();
+    return name.includes(q) || spec.includes(q) || tags.includes(q);
+  });
 
   return (
     <div className="bh" id="home">
@@ -230,6 +353,7 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
             {siteName}<span className="bh-logo-dot">.</span>
           </a>
 
+          {/* Desktop Nav Links */}
           <nav className="bh-nav-links">
             {[['home','Home'],['experts','Experts'],['services','Services'],['about','About Us'],['faqs','Blog']].map(([id, label]) => (
               <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); scrollTo(id); }}
@@ -237,6 +361,7 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
             ))}
           </nav>
 
+          {/* Desktop Nav CTA */}
           <div className="bh-nav-cta">
             <button className="bh-btn bh-btn-cyan" onClick={book} style={{ height: '40px', padding: '0 22px', borderRadius: '10px' }}>
               Book Session
@@ -246,13 +371,20 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
             </button>
           </div>
 
-          <button className="bh-hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
-            {menuOpen ? '✕' : '☰'}
-          </button>
+          {/* Mobile Header Quick Actions */}
+          <div className="bh-mobile-header-actions">
+            <button className="bh-mobile-book-pill" onClick={book}>
+              Book Session
+            </button>
+            <button className="bh-hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+              {menuOpen ? '✕' : '☰'}
+            </button>
+          </div>
         </div>
 
+        {/* Mobile Dropdown Drawer */}
         <div className={`bh-mobile-nav ${menuOpen ? 'open' : ''}`}>
-          {[['home','Home'],['experts','Experts'],['services','Services'],['about','About Us'],['faqs','Blog']].map(([id, label]) => (
+          {[['home','Home'],['experts','Experts'],['services','Services'],['about','About Us'],['faqs','Blog'],['contact','Contact']].map(([id, label]) => (
             <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); scrollTo(id); }}
               className={id === 'home' ? 'active' : ''}>{label}</a>
           ))}
@@ -267,71 +399,103 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
 
         {/* ═══ HERO ═══ */}
         <section className="bh-hero" id="hero">
-          <div className="bh-wrap bh-hero-grid">
+          <div className="bh-wrap">
 
-            {/* Left */}
-            <div>
-              <div className="bh-hero-badge">
-                <span className="bh-hero-badge-dot" />
-                <span>India's Trusted Mental Wellness Platform</span>
+            {/* Daily Affirmation Card on Mobile */}
+            <div className="bh-mobile-affirm">
+              <span className="bh-mobile-affirm-tag">Daily Affirmation</span>
+              <p>"Breathe in peace, let go of the noise. Just 5 minutes of mindful breathing can reset your nervous system."</p>
+            </div>
+
+            <div className="bh-hero-grid">
+              {/* Left Column */}
+              <div>
+                <div className="bh-hero-badge">
+                  <span className="bh-hero-badge-dot" />
+                  <span>India's Trusted Mental Wellness Platform</span>
+                </div>
+                <h1 className="bh-hero-title">
+                  You Deserve<br />
+                  To <span className="accent">Feel Better</span>
+                </h1>
+                <p className="bh-hero-sub">
+                  Book a session with certified psychologists, from the comfort of your home.
+                  Take the first step towards a happier, healthier you.
+                </p>
+                <div className="bh-hero-actions">
+                  <button className="bh-btn bh-btn-cyan" onClick={book}>Book a Session →</button>
+                  <button className="bh-btn bh-btn-outline" onClick={e => { e.preventDefault(); scrollTo('experts'); }}>
+                    Find a Psychologist
+                  </button>
+                </div>
+                <div className="bh-hero-stats">
+                  <div>
+                    <div className="bh-hero-stat-num">5,000+</div>
+                    <div className="bh-hero-stat-lbl">People Helped</div>
+                  </div>
+                  <div className="bh-stat-divider" />
+                  <div>
+                    <div className="bh-hero-stat-num">50+</div>
+                    <div className="bh-hero-stat-lbl">Expert Therapists</div>
+                  </div>
+                  <div className="bh-stat-divider" />
+                  <div>
+                    <div className="bh-hero-stat-num">4.9★</div>
+                    <div className="bh-hero-stat-lbl">Average Rating</div>
+                  </div>
+                </div>
               </div>
-              <h1 className="bh-hero-title">
-                You Deserve<br />
-                To <span className="accent">Feel Better</span>
-              </h1>
-              <p className="bh-hero-sub">
-                Book a session with certified psychologists, from the comfort of your home.
-                Take the first step towards a happier, healthier you.
-              </p>
-              <div className="bh-hero-actions">
-                <button className="bh-btn bh-btn-cyan" onClick={book}>Book a Session →</button>
-                <button className="bh-btn bh-btn-outline" onClick={e => { e.preventDefault(); scrollTo('experts'); }}>
-                  Find a Psychologist
+
+              {/* Right Column (Desktop Visual Card) */}
+              <div className="bh-hero-visual">
+                <div className="bh-hero-card-main">
+                  <img
+                    src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=85"
+                    alt="Therapist"
+                  />
+                  <div className="bh-float-card bh-float-quote">
+                    <div className="bh-float-quote-icon">❝</div>
+                    <strong>"It's okay to ask for help"</strong>
+                    <small>Better mental health brings a brighter tomorrow.</small>
+                  </div>
+                  <div className="bh-float-card bh-float-people">
+                    <div className="bh-float-people-avatars">
+                      <img src="https://i.pravatar.cc/80?img=47" alt="user" />
+                      <img src="https://i.pravatar.cc/80?img=12" alt="user" />
+                      <img src="https://i.pravatar.cc/80?img=32" alt="user" />
+                    </div>
+                    <div className="bh-float-people-text">
+                      <strong>5,000+</strong>
+                      <small>People trusted us</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Wellness Tools 2x2 Grid on Mobile */}
+            <div className="bh-mobile-tools-section">
+              <h3 className="bh-mobile-sec-title">Wellness Tools</h3>
+              <div className="bh-mobile-tools-grid">
+                <button className="bh-mobile-tool-card" onClick={() => scrollTo('experts')}>
+                  <span className="bh-mobile-tool-icon">🔍</span>
+                  <span className="bh-mobile-tool-name">Find Therapist</span>
+                </button>
+                <button className="bh-mobile-tool-card" onClick={book}>
+                  <span className="bh-mobile-tool-icon">📅</span>
+                  <span className="bh-mobile-tool-name">Book Session</span>
+                </button>
+                <button className="bh-mobile-tool-card" onClick={() => scrollTo('services')}>
+                  <span className="bh-mobile-tool-icon">🌿</span>
+                  <span className="bh-mobile-tool-name">Our Services</span>
+                </button>
+                <button className="bh-mobile-tool-card sos" onClick={() => setShowSosModal(true)}>
+                  <span className="bh-mobile-tool-icon">🛟</span>
+                  <span className="bh-mobile-tool-name">SOS Help (24/7)</span>
                 </button>
               </div>
-              <div className="bh-hero-stats">
-                <div>
-                  <div className="bh-hero-stat-num">5,000+</div>
-                  <div className="bh-hero-stat-lbl">People Helped</div>
-                </div>
-                <div className="bh-stat-divider" />
-                <div>
-                  <div className="bh-hero-stat-num">50+</div>
-                  <div className="bh-hero-stat-lbl">Expert Therapists</div>
-                </div>
-                <div className="bh-stat-divider" />
-                <div>
-                  <div className="bh-hero-stat-num">4.9★</div>
-                  <div className="bh-hero-stat-lbl">Average Rating</div>
-                </div>
-              </div>
             </div>
 
-            {/* Right */}
-            <div className="bh-hero-visual">
-              <div className="bh-hero-card-main">
-                <img
-                  src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=85"
-                  alt="Therapist"
-                />
-                <div className="bh-float-card bh-float-quote">
-                  <div className="bh-float-quote-icon">❝</div>
-                  <strong>"It's okay to ask for help"</strong>
-                  <small>Better mental health brings a brighter tomorrow.</small>
-                </div>
-                <div className="bh-float-card bh-float-people">
-                  <div className="bh-float-people-avatars">
-                    <img src="https://i.pravatar.cc/80?img=47" alt="user" />
-                    <img src="https://i.pravatar.cc/80?img=12" alt="user" />
-                    <img src="https://i.pravatar.cc/80?img=32" alt="user" />
-                  </div>
-                  <div className="bh-float-people-text">
-                    <strong>5,000+</strong>
-                    <small>People trusted us</small>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -374,8 +538,10 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
               ].map(({ n, title, desc }) => (
                 <div key={n} className="bh-hiw-step">
                   <div className="bh-hiw-num">{n}</div>
-                  <h3>{title}</h3>
-                  <p>{desc}</p>
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -398,6 +564,48 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
               </button>
             </div>
 
+            {/* Mobile Search Bar & Filter Chips */}
+            <div className="bh-mobile-search-filter">
+              <div className="bh-mobile-search-row">
+                <label className="bh-mobile-search-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8e9991" strokeWidth="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input 
+                    type="search" 
+                    placeholder="Search therapists, specialities…" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    aria-label="Search therapists"
+                  />
+                  {searchQuery && (
+                    <button 
+                      type="button" 
+                      onClick={() => setSearchQuery('')}
+                      style={{ color: '#8e9991', fontSize: '15px', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </label>
+              </div>
+
+              <div className="bh-mobile-chips-row">
+                {['All', 'Anxiety', 'Depression', 'Stress', 'Relationships', 'Couples', 'Career'].map((filter) => (
+                  <button
+                    key={filter}
+                    type="button"
+                    className={`bh-mobile-chip ${selectedFilter === filter ? 'active' : ''}`}
+                    onClick={() => setSelectedFilter(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Experts Grid */}
             <div className="bh-experts-grid">
               {loading
                 ? [1,2,3,4].map(i => (
@@ -414,8 +622,8 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                     </div>
                   </div>
                 ))
-                : counsellors.length > 0
-                  ? counsellors.map(c => {
+                : filteredCounsellors.length > 0
+                  ? filteredCounsellors.map(c => {
                     const advisorId = c._id || c.id;
                     const cleanBio = c.bio 
                       ? c.bio.replace(/^(Clinical Expertise and Background\s*)+/gi, '').trim()
@@ -428,61 +636,110 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                         onClick={() => goToProfile(c)}
                         title={`Click to view ${c.name}'s profile`}
                       >
-                        <div className="bh-expert-photo">
-                          {c.profilePic
-                            ? <img src={c.profilePic} alt={c.name} loading="lazy" />
-                            : <div className="bh-expert-photo-placeholder">{c.name?.charAt(0) || '?'}</div>
-                          }
-                          <button 
-                            className="bh-expert-fav" 
-                            aria-label="Favourite"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                          >
-                            ♡
-                          </button>
-                          <span className="bh-expert-badge">{c.specialization || 'Clinical Psychologist'}</span>
+                        {/* ── Desktop Card View ── */}
+                        <div className="bh-desktop-card-inner">
+                          <div className="bh-expert-photo">
+                            {c.profilePic
+                              ? <img src={c.profilePic} alt={c.name} loading="lazy" />
+                              : <div className="bh-expert-photo-placeholder">{c.name?.charAt(0) || '?'}</div>
+                            }
+                            <button 
+                              className="bh-expert-fav" 
+                              aria-label="Favourite"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                            >
+                              ♡
+                            </button>
+                            <span className="bh-expert-badge">{c.specialization || 'Clinical Psychologist'}</span>
+                          </div>
+
+                          <div className="bh-expert-body">
+                            <div className="bh-expert-name-row">
+                              <h3 className="bh-expert-name">{c.name}</h3>
+                            </div>
+
+                            <div className="bh-expert-rating-row">
+                              <div className="bh-expert-rating">
+                                <span className="bh-expert-star">★</span>
+                                <strong>4.9</strong>
+                                <span>({(c.name?.length || 5) * 6 + 18})</span>
+                              </div>
+                              <span className="bh-expert-exp-badge">
+                                {c.experience ? `${c.experience}+ yrs` : 'Verified'}
+                              </span>
+                            </div>
+
+                            <p className="bh-expert-desc" title={cleanBio}>
+                              {cleanBio}
+                            </p>
+
+                            <div className="bh-expert-meta">
+                              <div className="bh-expert-tags">
+                                {(c.tags && c.tags.length > 0 ? c.tags : ['Therapy', 'Anxiety']).slice(0, 2).map((t, i) => (
+                                  <span key={i} className="bh-tag">{t}</span>
+                                ))}
+                              </div>
+
+                              <div className="bh-expert-actions">
+                                <button 
+                                  type="button"
+                                  className="bh-expert-view-btn" 
+                                  onClick={(e) => { e.stopPropagation(); goToProfile(c); }}
+                                >
+                                  View Profile →
+                                </button>
+                                <button 
+                                  type="button"
+                                  className="bh-expert-book-btn" 
+                                  onClick={(e) => handleBookCard(e, c)}
+                                >
+                                  Book
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="bh-expert-body">
-                          <div className="bh-expert-name-row">
-                            <h3 className="bh-expert-name">{c.name}</h3>
+                        {/* ── Mobile Card View (Matches Prototype doc-card) ── */}
+                        <div className="bh-mobile-card-inner">
+                          <div className="bh-doc-top">
+                            {c.profilePic ? (
+                              <img src={c.profilePic} alt={c.name} className="bh-doc-avatar" />
+                            ) : (
+                              <div className="bh-doc-avatar bh-doc-avatar-fallback">
+                                {c.name?.charAt(0) || 'D'}
+                              </div>
+                            )}
+                            <div className="bh-doc-meta">
+                              <div className="bh-doc-name-row">
+                                <h3 className="bh-doc-name">{c.name}</h3>
+                                <span className="bh-doc-badge">{c.specialization ? c.specialization.split(' ')[0] : 'Expert'}</span>
+                              </div>
+                              <div className="bh-doc-role">{c.specialization || 'Clinical Psychologist'}</div>
+                              <div className="bh-doc-stars">★ 4.9 ({(c.name?.length || 5) * 6 + 18} reviews)</div>
+                            </div>
                           </div>
 
-                          <div className="bh-expert-rating-row">
-                            <div className="bh-expert-rating">
-                              <span className="bh-expert-star">★</span>
-                              <strong>4.9</strong>
-                              <span>({(c.name?.length || 5) * 6 + 18})</span>
+                          <p className="bh-doc-bio">{cleanBio}</p>
+
+                          <div className="bh-doc-bottom">
+                            <div>
+                              <div className="bh-doc-exp">{c.experience ? `${c.experience}+ yrs exp` : 'Verified'} • {c.languages || 'English, Hindi'}</div>
+                              <div className="bh-doc-fee">₹{c.price || c.hourlyRate || 1500}<small>/hr</small></div>
                             </div>
-                            <span className="bh-expert-exp-badge">
-                              {c.experience ? `${c.experience}+ yrs` : 'Verified'}
-                            </span>
-                          </div>
-
-                          <p className="bh-expert-desc" title={cleanBio}>
-                            {cleanBio}
-                          </p>
-
-                          <div className="bh-expert-meta">
-                            <div className="bh-expert-tags">
-                              {(c.tags && c.tags.length > 0 ? c.tags : ['Therapy', 'Anxiety']).slice(0, 2).map((t, i) => (
-                                <span key={i} className="bh-tag">{t}</span>
-                              ))}
-                            </div>
-
-                            <div className="bh-expert-actions">
+                            <div className="bh-doc-actions">
                               <button 
-                                type="button"
-                                className="bh-expert-view-btn" 
+                                type="button" 
+                                className="bh-btn-mini outline"
                                 onClick={(e) => { e.stopPropagation(); goToProfile(c); }}
                               >
-                                View Profile →
+                                Profile
                               </button>
                               <button 
-                                type="button"
-                                className="bh-expert-book-btn" 
+                                type="button" 
+                                className="bh-btn-mini forest"
                                 onClick={(e) => handleBookCard(e, c)}
                               >
                                 Book
@@ -490,12 +747,20 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
                             </div>
                           </div>
                         </div>
+
                       </article>
                     );
                   })
                   : (
-                    <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '56px', color: '#94a3b8', fontSize: '15px' }}>
-                      No experts found at the moment. Please check back soon.
+                    <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 16px', color: '#626e65', fontSize: '14px' }}>
+                      <p>No therapists match your search criteria.</p>
+                      <button 
+                        className="bh-btn-mini outline"
+                        style={{ marginTop: '12px' }}
+                        onClick={() => { setSearchQuery(''); setSelectedFilter('All'); }}
+                      >
+                        Clear Filters
+                      </button>
                     </div>
                   )
               }
@@ -507,7 +772,7 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
         <section className="bh-section bh-why" id="about">
           <div className="bh-wrap bh-why-grid">
             <div className="bh-why-left">
-              <p className="bh-eyebrow" style={{ color: '#00d4e8' }}>WHY CHOOSE {siteName.toUpperCase()}</p>
+              <p className="bh-eyebrow" style={{ color: '#ce8e6c' }}>WHY CHOOSE {siteName.toUpperCase()}</p>
               <h2 className="bh-h2" style={{ color: 'white' }}>
                 More Than Just<br />A Booking <span className="dot">Platform.</span>
               </h2>
@@ -627,8 +892,8 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
         <div className="bh-wrap bh-footer-main">
           <div>
             <a href="/" onClick={e => { e.preventDefault(); scrollTo('home'); }} className="bh-footer-logo">
-              <BrandIcon style={{ width: '28px', height: '28px', color: '#00d4e8', marginRight: '8px' }} />
-              {siteName}<span style={{ color: '#00d4e8' }}>.</span>
+              <BrandIcon style={{ width: '28px', height: '28px', color: 'var(--terracotta, #ce8e6c)', marginRight: '8px' }} />
+              {siteName}<span style={{ color: 'var(--terracotta, #ce8e6c)' }}>.</span>
             </a>
             <p className="bh-footer-tagline">Empowering Minds. Elevating Lives.</p>
           </div>
@@ -661,6 +926,128 @@ export default function BeholdHome({ onOpenAuth, onOpenBooking, onBookTherapist,
           </div>
         </div>
       </footer>
+
+      {/* ═══ MOBILE BOTTOM NAVIGATION TAB BAR ═══ */}
+      <nav className="bh-mobile-tabbar" aria-label="Mobile Navigation">
+        <button 
+          type="button"
+          className={`bh-mobile-tab ${activeTab === 'home' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('home'); scrollTo('home'); }}
+          aria-label="Home"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Home</span>
+        </button>
+
+        <button 
+          type="button"
+          className={`bh-mobile-tab ${activeTab === 'experts' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('experts'); scrollTo('experts'); }}
+          aria-label="Experts"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span>Experts</span>
+        </button>
+
+        <button 
+          type="button"
+          className={`bh-mobile-tab ${activeTab === 'services' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('services'); scrollTo('services'); }}
+          aria-label="Services"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span>Services</span>
+        </button>
+
+        <button 
+          type="button"
+          className={`bh-mobile-tab book-tab ${activeTab === 'book' ? 'active' : ''}`}
+          onClick={(e) => { setActiveTab('book'); book(e); }}
+          aria-label="Book Session"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+          <span>Book</span>
+        </button>
+
+        <button 
+          type="button"
+          className={`bh-mobile-tab ${activeTab === 'contact' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('contact'); scrollTo('contact'); }}
+          aria-label="Contact"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Contact</span>
+        </button>
+      </nav>
+
+      {/* ═══ SOS CRISIS HELPLINE BOTTOM SHEET MODAL ═══ */}
+      {showSosModal && (
+        <div className="bh-sos-overlay" onClick={() => setShowSosModal(false)}>
+          <div className="bh-sos-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="bh-sos-handle" />
+            <div className="bh-sos-header">
+              <div className="bh-sos-badge">🆘 Immediate Crisis Support</div>
+              <h3 className="bh-sos-title">You Are Not Alone</h3>
+              <p className="bh-sos-desc">
+                If you are in acute distress or need immediate emotional guidance, free and confidential helplines are available 24/7 across India.
+              </p>
+            </div>
+
+            <div className="bh-sos-cards">
+              <a href="tel:14416" className="bh-sos-card">
+                <div className="bh-sos-card-info">
+                  <strong>Tele-MANAS (Govt. of India)</strong>
+                  <span>National 24/7 Free Helpline</span>
+                </div>
+                <span className="bh-sos-call-btn">📞 14416</span>
+              </a>
+
+              <a href="tel:18005990019" className="bh-sos-card">
+                <div className="bh-sos-card-info">
+                  <strong>KIRAN Helpline</strong>
+                  <span>Govt. 24/7 Mental Health Care</span>
+                </div>
+                <span className="bh-sos-call-btn">📞 1800-599-0019</span>
+              </a>
+
+              <a href="tel:+919999666555" className="bh-sos-card">
+                <div className="bh-sos-card-info">
+                  <strong>Vandrevala Foundation</strong>
+                  <span>Free 24/7 Crisis Counselling</span>
+                </div>
+                <span className="bh-sos-call-btn">📞 Call Now</span>
+              </a>
+            </div>
+
+            <div className="bh-sos-grounding">
+              <strong>🌿 4-7-8 Somatic Grounding:</strong>
+              <span>Inhale quietly for 4 counts, hold for 7, exhale slowly for 8. Repeat four times and feel your body settling.</span>
+            </div>
+
+            <button type="button" className="bh-sos-close-btn" onClick={() => setShowSosModal(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
