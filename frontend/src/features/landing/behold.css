@@ -3,23 +3,10 @@
    Clean white bg · Electric Cyan · Deep Navy · Vibrant cards
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 
-/* ── Reset & Visibility ── */
+/* ── Reset ── */
 .bh *, .bh *::before, .bh *::after { box-sizing: border-box; margin: 0; padding: 0; }
-.bh-mobile-affirm,
-.bh-mobile-tools-section,
-.bh-mobile-search-filter,
-.bh-mobile-tabbar,
-.bh-mobile-header-actions,
-.bh-mobile-card-inner {
-  display: none;
-}
-.bh-desktop-card-inner {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
 .bh {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   color: #111827;
@@ -608,12 +595,51 @@
   .bh-footer-main { grid-template-columns: 1fr 1fr; gap: 40px; }
   .bh-cta-banner { padding: 48px; }
 }
-/* ================================================================
-   MOBILE RESPONSIVE — BEHOLD Premium Sanctuary Theme (from prototype)
-   ================================================================ */
+@media (max-width: 768px) {
+  .bh-section { padding: 64px 0; }
+  .bh-nav-links, .bh-nav-cta { display: none; }
+  .bh-hamburger { display: flex; }
+  .bh-hero { padding: 48px 0 56px; }
+  .bh-hero-grid { grid-template-columns: 1fr; text-align: center; gap: 48px; }
+  .bh-hero-sub { margin: 0 auto 38px; }
+  .bh-hero-actions { justify-content: center; }
+  .bh-hero-stats { justify-content: center; }
+  .bh-hero-card-main { max-width: 320px; margin: 0 auto; }
+  .bh-float-quote { left: -10px; top: 12px; }
+  .bh-float-people { left: -10px; }
+  .bh-feat-grid { grid-template-columns: 1fr 1fr; }
+  .bh-feat-item:nth-child(even) { border-right: none; }
+  .bh-feat-item:nth-child(n+3) { border-top: 1px solid #e5e7eb; }
+  .bh-hiw-grid { grid-template-columns: 1fr; gap: 48px; }
+  .bh-hiw-connector { display: none; }
+  .bh-experts-grid { grid-template-columns: 1fr 1fr; }
+  .bh-experts-top { flex-direction: column; }
+  .bh-why-grid { grid-template-columns: 1fr; gap: 48px; }
+  .bh-testi-grid { grid-template-columns: 1fr; }
+  .bh-faq-blog-grid { grid-template-columns: 1fr; gap: 56px; }
+  .bh-contact-card { grid-template-columns: 1fr; }
+  .bh-contact-left { padding: 40px 32px; }
+  .bh-contact-right { padding: 40px 32px; }
+  .bh-form-row { grid-template-columns: 1fr; }
+  .bh-form-footer { flex-direction: column; align-items: stretch; gap: 12px; }
+  .bh-form-submit { width: 100%; }
+  .bh-cta-banner { flex-direction: column; text-align: center; padding: 40px 32px; }
+  .bh-footer-main { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .bh-wrap { width: calc(100% - 32px); }
+  .bh-hero-title { font-size: 38px; letter-spacing: -1.5px; }
+  .bh-feat-grid { grid-template-columns: 1fr; }
+  .bh-feat-item { border-right: none !important; border-top: 1px solid #e5e7eb !important; }
+  .bh-feat-item:first-child { border-top: none !important; }
+  .bh-experts-grid { grid-template-columns: 1fr; }
+  .bh-footer-main { grid-template-columns: 1fr; }
+}
+
 
 /* ================================================================
    DUAL ARCHITECTURE DISPLAY TOGGLES
+   Desktop & Tablet display normal Behold design
    ================================================================ */
 .bh-desktop-landing {
   display: block;
@@ -623,9 +649,10 @@
 }
 
 /* ================================================================
-   MOBILE RESPONSIVE — BEHOLD Premium Sanctuary Theme (Prototype Engine)
+   MOBILE DEVICES ONLY (Screen width <= 640px)
+   Tablets and Desktops retain the normal Behold layout
    ================================================================ */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .bh-desktop-landing {
     display: none !important;
   }
