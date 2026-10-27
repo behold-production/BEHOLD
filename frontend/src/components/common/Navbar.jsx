@@ -106,7 +106,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
       { label: 'How it works', action: () => goTo('how-it-works'), sectionId: 'how-it-works', path: '/' },
       { label: 'Find a psychologist', action: () => goTo('experts'), sectionId: 'experts', path: '/' },
       { label: 'Our approach', action: () => goTo('why-behold'), sectionId: 'why-behold', path: '/' },
-      { label: 'FAQs & articles', action: () => goTo('faqs-blogs'), sectionId: 'faqs-blogs', path: '/' },
+      { label: 'FAQs', action: () => goTo('faqs'), sectionId: 'faqs', path: '/' },
+      { label: 'Articles', action: () => goTo('blog'), sectionId: 'blog', path: '/' },
     ]
     : [
       { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },

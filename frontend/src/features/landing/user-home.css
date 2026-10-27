@@ -48,6 +48,18 @@
   background: var(--bh-coral);
 }
 
+.bh-landscape-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: #f7faf8;
+}
+
+.bh-landscape-hero #bh-hero-title .font-script-hero {
+  font-family: 'Rough', 'Dancing Script', 'Caveat', 'Satisfy', cursive !important;
+}
+
 .bh-hero {
   min-height: min(850px, 100vh);
   min-height: min(850px, 100svh);
@@ -395,7 +407,23 @@
 .bh-step h3 { margin: 29px 0 7px; color: var(--bh-ink); font-family: "Cormorant Garamond", Georgia, serif; font-size: 25px; font-weight: 600; }.bh-step p { max-width: 300px; margin: 0; color: var(--bh-muted); font-size: 10px; line-height: 1.8; }
 .bh-approach-cta { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding-top: 20px; margin-top: 20px; border-top: 1px solid rgba(51,83,69,.15); color: #66766b; font-size: 10px; }
 
-/* Keep the existing, data-backed FAQs, blog cards and enquiry form in the new public palette. */
+.bh-home #faqs-blogs,
+.bh-home #faqs,
+.bh-home #blog {
+  scroll-margin-top: 75px;
+  color: var(--bh-ink);
+}
+.bh-home #faqs h2,
+.bh-home #blog h2 {
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  color: var(--bh-ink) !important;
+  font-size: clamp(32px, 4.5vw, 48px) !important;
+  letter-spacing: -0.02em !important;
+}
+.bh-home #faqs h2 > span,
+.bh-home #blog h2 > span {
+  color: var(--bh-teal) !important;
+}
 .bh-home #faqs-blogs { padding-top: 88px; padding-bottom: 88px; color: var(--bh-ink); background: #fbfaf6; }
 .bh-home #faqs-blogs > div:last-child > div { min-width: 0; }
 .bh-home #faqs-blogs h2,

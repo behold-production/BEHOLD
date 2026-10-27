@@ -5,7 +5,8 @@ import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import Hero from '../features/landing/Hero';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
-import FaqBlogSection from '../features/landing/FaqBlogSection';
+import Faq from '../features/landing/Faq';
+import BlogSection from '../features/landing/BlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
 import ServiceBooking from '../features/booking/ServiceBooking';
 import AuthModals from '../features/auth/AuthModals';
@@ -115,7 +116,8 @@ export default function HomePage() {
           onBookTherapist={handleBookTherapist}
           navigateToSection={navigateToSection}
         />
-        <FaqBlogSection />
+        <Faq siteSettings={siteSettings} />
+        <BlogSection siteSettings={siteSettings} />
         <ContactInquirySection />
       </main>
 

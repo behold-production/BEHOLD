@@ -1,144 +1,112 @@
 import React from 'react';
-import { ArrowRight, MessageCircleHeart, ShieldCheck } from 'lucide-react';
 import SEO from '../../components/common/SEO';
+import heroLandscapeBg from '../../assets/header_landscape.jpg';
 
 const getFirstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
 
-const DEFAULT_HERO_PHOTO = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=85';
-
-const CONCERN_TAGS = ['Anxiety', 'Relationships', 'Stress', 'Self-esteem', 'Life changes'];
-
 export default function Hero({ siteSettings, navigateToSection, onOpenBooking }) {
   const settings = siteSettings || {};
-  const eyebrow = getFirstText(settings.heroEyebrow, 'A softer place to begin');
-  const title = getFirstText(settings.heroTitle, 'You don’t have to figure it all out on your own.');
+
+  // Content defaults matching reference design exactly, with live dynamic siteSettings support
   const description = getFirstText(
     settings.heroSub,
-    'Meet a psychologist who listens without judgment and helps you find your way forward, one conversation at a time.'
+    'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.'
   );
-  const buttonText = getFirstText(settings.heroBtnText, 'Find your psychologist');
-  const heroImage = getFirstText(settings.heroArtImage, settings.heroBgImage) || DEFAULT_HERO_PHOTO;
 
-  const scrollToExperts = (concern) => {
-    if (concern && typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('behold:filter_specialty', { detail: { specialty: concern } }));
+  const buttonText = getFirstText(settings.heroBtnText, "Let's Connect");
+
+  // Determine split for "It's Okay to be" and cursive cyan "not okay"
+  let mainTitle = "It's Okay to be";
+  let scriptHighlight = "not okay";
+
+  if (settings.heroTitle) {
+    if (settings.heroTitle.toLowerCase().includes('not okay')) {
+      const parts = settings.heroTitle.split(/not okay/i);
+      mainTitle = parts[0]?.trim() || "It's Okay to be";
+      scriptHighlight = "not okay";
+    } else if (settings.heroTitle.includes('\n')) {
+      const lines = settings.heroTitle.split('\n');
+      mainTitle = lines.slice(0, -1).join(' ') || lines[0];
+      scriptHighlight = lines[lines.length - 1];
+    } else {
+      mainTitle = settings.heroTitle;
+      scriptHighlight = '';
     }
-    if (navigateToSection) navigateToSection('experts');
-    else document.getElementById('experts')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const handleConnectClick = () => {
+    if (typeof onOpenBooking === 'function') {
+      onOpenBooking();
+    } else if (navigateToSection) {
+      navigateToSection('services');
+    } else {
+      document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <>
       <SEO
-        title={`${settings.siteName || 'BEHOLD'} | ${title}`}
+        title={`${settings.siteName || 'BEHOLD'} | ${mainTitle} ${scriptHighlight}`.trim()}
         description={description}
         canonicalUrl="https://www.behold.co.in/"
       />
-      <section className="bh-hero" id="home" aria-labelledby="bh-hero-title">
-        <div className="bh-hero-content bh-section-shell">
-          {/* Left Column: Copy & Actions */}
-          <div className="bh-hero-copy">
-            <span className="bh-eyebrow bh-hero-eyebrow">
-              <span className="bh-eyebrow-dot" aria-hidden="true" />
-              {eyebrow}
-            </span>
+      <section
+        className="bh-landscape-hero relative w-full min-h-[580px] sm:min-h-[640px] md:min-h-[720px] lg:min-h-[820px] xl:min-h-[880px] flex items-center overflow-hidden"
+        id="home"
+        aria-labelledby="bh-hero-title"
+        style={{
+          backgroundImage: `url(${heroLandscapeBg})`,
+          backgroundPosition: 'center bottom',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {/* Soft upper gradient to ensure navbar links and logo remain crystal clear */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/35 via-white/10 to-transparent pointer-events-none" />
 
-            <h1 id="bh-hero-title">
-              {settings.heroTitle ? (
-                settings.heroTitle.split('\n').map((line, i) => (
-                  <React.Fragment key={i}>
-                    {line}
-                    {i < settings.heroTitle.split('\n').length - 1 && <br />}
-                  </React.Fragment>
-                ))
-              ) : (
-                <>
-                  You don’t have<br />
-                  to figure it all <em>out</em><br />
-                  on your own.
-                </>
+        {/* Hero Content Shell */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 lg:pb-28">
+          <div className="max-w-xl lg:max-w-2xl text-left">
+            <h1
+              id="bh-hero-title"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[62px] font-extrabold text-[#0f172a] tracking-tight leading-[1.08] font-sans"
+            >
+              <span>{mainTitle}</span>
+              {scriptHighlight && (
+                <span className="block mt-1 sm:mt-2 text-[#00E5FF] font-normal text-5xl sm:text-6xl md:text-7xl lg:text-[78px] xl:text-[84px] font-script-hero leading-tight select-none relative inline-block">
+                  {scriptHighlight}
+                  {/* Delicate watercolor flourish underline stroke */}
+                  <svg
+                    className="w-full h-3 sm:h-4 text-[#00E5FF]/70 absolute -bottom-1 sm:-bottom-2 left-0 pointer-events-none"
+                    viewBox="0 0 200 12"
+                    fill="none"
+                    preserveAspectRatio="none"
+                  >
+                    <path
+                      d="M2 8 C 45 2, 95 10, 198 5"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
               )}
             </h1>
 
-            <p className="bh-hero-description">{description}</p>
+            <p className="mt-5 sm:mt-6 text-sm sm:text-base md:text-[17px] text-slate-700 font-normal leading-relaxed max-w-lg">
+              {description}
+            </p>
 
-            <div className="bh-hero-actions">
+            <div className="mt-7 sm:mt-9 flex items-center gap-4">
               <button
                 type="button"
-                className="bh-button bh-button-primary"
-                onClick={() => scrollToExperts()}
+                onClick={handleConnectClick}
+                className="inline-flex items-center justify-center px-8 py-3.5 sm:px-9 sm:py-4 rounded-xl text-sm sm:text-base font-bold bg-[#00E5FF] hover:bg-[#00cbe2] text-slate-950 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98] border-none"
               >
-                {buttonText} <ArrowRight size={16} aria-hidden="true" />
+                {buttonText}
               </button>
-
-              <div className="bh-hero-trust">
-                <span className="bh-trust-mark" aria-hidden="true">
-                  <MessageCircleHeart size={18} />
-                </span>
-                <span>
-                  Care that meets you<br />where you are
-                </span>
-              </div>
             </div>
-
-            <div className="bh-hero-assurance">
-              <span>
-                <ShieldCheck size={15} aria-hidden="true" />
-                Private, thoughtful, and always at your pace
-              </span>
-            </div>
-          </div>
-
-          {/* Right Column: Visual Frame & Stamps */}
-          <div className="bh-hero-art" aria-hidden="true">
-            <div className="bh-hero-photo-wrap">
-              <img
-                src={heroImage}
-                alt="A warm, sunlit, supportive therapy space"
-                className="bh-hero-photo"
-                loading="eager"
-              />
-              <div className="bh-photo-wash" />
-              <div className="bh-photo-caption">
-                <span className="bh-caption-icon">
-                  <MessageCircleHeart size={18} />
-                </span>
-                <div>
-                  <strong>A little more understood.</strong>
-                  <small>It starts with one conversation.</small>
-                </div>
-              </div>
-              <span className="bh-floating-leaf bh-leaf-one">✳</span>
-              <span className="bh-floating-leaf bh-leaf-two">✳</span>
-            </div>
-
-            <div className="bh-hero-side-note">
-              <span />
-              <span>MADE FOR YOUR<br />REAL, EVERYDAY LIFE</span>
-            </div>
-
-            <div className="bh-hero-stamp">
-              <span>ROOM<br />TO GROW</span>
-              <i>🌸</i>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Line: Emotional Concern Tags */}
-        <div className="bh-hero-bottomline bh-section-shell">
-          <span>Support for the things that feel heavy</span>
-          <div className="bh-concern-tags">
-            {CONCERN_TAGS.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => scrollToExperts(tag)}
-                className="cursor-pointer transition-all hover:border-[#315c4e] hover:text-[#315c4e]"
-                title={`Find psychologists specializing in ${tag}`}
-              >
-                {tag}
-              </button>
-            ))}
           </div>
         </div>
       </section>

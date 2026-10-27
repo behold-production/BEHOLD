@@ -18,7 +18,7 @@ import Footer from '../components/common/Footer';
 import AuthModals from '../features/auth/AuthModals';
 import CompleteProfileModal from '../features/auth/CompleteProfileModal';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
-import FaqBlogSection from '../features/landing/FaqBlogSection';
+import BlogSection from '../features/landing/BlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
 import HomeValuesSection from '../features/landing/HomeValuesSection';
 import HomeClosingSection from '../features/landing/HomeClosingSection';
@@ -60,7 +60,6 @@ const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingP
 const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
-import BlogSection from '../features/landing/BlogSection';
 
 import { useAuth } from '../context/AuthContext';
 import ApiService from '../services/api';
@@ -396,6 +395,11 @@ export default function App() {
     if (targetId === 'contact') targetId = 'inquiry';
     if (targetId === 'counselling-intro') targetId = 'services';
     if (targetId === 'faq') targetId = 'faqs';
+    if (targetId === 'articles' || targetId === 'blogs') targetId = 'blog';
+    if (targetId === 'faqs-blogs') {
+      const el = document.getElementById('blog') || document.getElementById('faqs');
+      if (el) targetId = el.id;
+    }
     if (targetId === 'whyChooseUs') targetId = 'why-choose-us';
 
     const element = document.getElementById(targetId); //
@@ -631,7 +635,8 @@ export default function App() {
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               <HomeValuesSection siteSettings={siteSettings} navigateToSection={navigateToSection} />
               <HomeClosingSection navigateToSection={navigateToSection} />
-              <FaqBlogSection siteSettings={siteSettings} />
+              {siteSettings.enableFaq !== false && <Faq siteSettings={siteSettings} />}
+              {siteSettings.enableBlog !== false && <BlogSection siteSettings={siteSettings} />}
               {siteSettings.enableInquiry !== false && <ContactInquirySection siteSettings={siteSettings} />}
             </main>
           } />
@@ -851,8 +856,8 @@ export default function App() {
       )}
 
       {/* Floating WhatsApp Icon */}
-      {siteSettings?.whatsapp && !hideNavbarAndFooter && (() => {
-        const input = siteSettings.whatsapp;
+      {!hideNavbarAndFooter && siteSettings?.whatsapp !== false && siteSettings?.whatsapp !== 'disabled' && (() => {
+        const input = siteSettings?.whatsapp;
         let href = 'https://wa.me/919497174011';
         if (input && input !== '#') {
           const str = String(input).trim();
