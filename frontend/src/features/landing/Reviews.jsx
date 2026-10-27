@@ -40,7 +40,7 @@ function ReviewCard({ review }) {
         {/* Stars */}
         <div className="flex gap-1 mb-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <svg key={i} className={`w-4 h-4 fill-current ${i < (review.rating || 5) ? 'text-amber-400' : 'text-surface-200'}`} viewBox="0 0 24 24">
+            <svg key={i} className={`w-4 h-4 fill-current ${i < (Number(review.rating) || 0) ? 'text-amber-400' : 'text-surface-200'}`} viewBox="0 0 24 24">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
           ))}
@@ -193,17 +193,8 @@ function SubmitReviewForm({ onSubmitSuccess }) {
 
 /* ── Main Reviews Component ───────────────────────────────── */
 export default function Reviews({ siteSettings }) {
-  const [apiReviews, setApiReviews] = useState(() => {
-    try {
-      const cached = localStorage.getItem('behold_reviews_cache');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) { }
-    return [];
-  });
-  const [loading, setLoading] = useState(() => apiReviews.length === 0);
+  const [apiReviews, setApiReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const reviewScrollRef = useRef(null);
@@ -211,11 +202,9 @@ export default function Reviews({ siteSettings }) {
 
   const fetchReviews = async () => {
     try {
-      if (apiReviews.length === 0) setLoading(true);
       const res = await ApiService.getPublicReviews();
-      if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.success && Array.isArray(res.data)) {
         setApiReviews(res.data);
-        localStorage.setItem('behold_reviews_cache', JSON.stringify(res.data));
       } else {
         setApiReviews([]);
       }

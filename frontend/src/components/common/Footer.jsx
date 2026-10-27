@@ -3,8 +3,8 @@ import { Mail, Phone } from 'lucide-react';
 
 export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, siteSettings }) {
   const settings = siteSettings || {};
-  const emailAddr = settings.contactEmail?.trim() || 'admin@behold.co.in';
-  const phoneVal = settings.contactPhone?.trim() || '9400090106';
+  const emailAddr = settings.contactEmail?.trim() || '';
+  const phoneVal = settings.contactPhone?.trim() || '';
 
   const goTo = (section) => {
     if (section.startsWith('/')) {
@@ -15,14 +15,9 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
     }
   };
 
-  const socialList = settings.socialLinks && Array.isArray(settings.socialLinks) && settings.socialLinks.length > 0
-    ? settings.socialLinks
-    : [
-        { name: 'Facebook', url: '#' },
-        { name: 'Instagram', url: '#' },
-        { name: 'Linkedin', url: '#' },
-        { name: 'YouTube', url: '#' }
-      ];
+  const socialList = Array.isArray(settings.socialLinks)
+    ? settings.socialLinks.filter((social) => social?.name && social?.url && social.url !== '#')
+    : [];
 
   return (
     <footer className="relative z-10 bg-[#0f172a] text-white pt-10 sm:pt-12 pb-20 lg:pb-6 border-t border-[#00e5ff]/20">
@@ -38,9 +33,9 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             >
               <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span></span>
             </button>
-            <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed font-normal max-w-md">
-              Professional online psychological counselling for individuals seeking better mental wellbeing. Confidential, evidence-based support from qualified psychologists—wherever you are.
-            </p>
+            {(settings.footerDescription || settings.aboutSub) && <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed font-normal max-w-md">
+              {settings.footerDescription || settings.aboutSub}
+            </p>}
             <div className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 text-xs font-medium pt-0.5">
               {emailAddr && (
                 <a href={`mailto:${emailAddr}`} className="flex items-center gap-2 text-slate-300 hover:text-[#00e5ff] transition-colors">
@@ -57,7 +52,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             </div>
 
             {/* Social Links */}
-            <div className="pt-1.5 flex flex-wrap items-center justify-start gap-2 text-slate-400 text-xs">
+            {socialList.length > 0 && <div className="pt-1.5 flex flex-wrap items-center justify-start gap-2 text-slate-400 text-xs">
               <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider shrink-0">Social:</span>
               <div className="flex flex-wrap items-center justify-start gap-2">
                 {socialList.map((social, idx) => (
@@ -77,7 +72,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   ) : null
                 ))}
               </div>
-            </div>
+            </div>}
           </div>
 
           {/* Links Grid: 2 Columns on Mobile, 2 Columns on Tablet/Desktop */}
@@ -136,7 +131,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
           <div className="text-center sm:text-left w-full sm:w-auto">
             {(() => {
               const year = new Date().getFullYear();
-              if (!siteCopyright) return `© ${year} BEHOLD Ltd. All rights reserved.`;
+              if (!siteCopyright) return `© ${year} ${siteName || 'BEHOLD'}.`;
               let clean = String(siteCopyright)
                 .replace(/^©\s*/, '')
                 .replace(/\.?\s*All rights reserved\.?$/i, '')

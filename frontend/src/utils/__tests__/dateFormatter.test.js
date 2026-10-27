@@ -9,17 +9,17 @@ describe('formatDateString', () => {
 
   it('should format Date objects correctly', () => {
     const date = new Date(2026, 5, 22); // June 22, 2026
-    expect(formatDateString(date)).toBe('June 22, 2026');
+    expect(formatDateString(date)).toBe('Jun 22, 2026');
   });
 
   it('should format ISO date strings correctly', () => {
-    expect(formatDateString('2026-06-22T00:00:00.000Z')).toBe('June 22, 2026');
-    expect(formatDateString('2026-06-22')).toBe('June 22, 2026');
+    expect(formatDateString('2026-06-22T00:00:00.000Z')).toBe('Jun 22, 2026');
+    expect(formatDateString('2026-06-22')).toBe('Jun 22, 2026');
   });
 
   it('should format timestamps correctly', () => {
     const timestamp = new Date(2026, 5, 22).getTime();
-    expect(formatDateString(timestamp)).toBe('June 22, 2026');
+    expect(formatDateString(timestamp)).toBe('Jun 22, 2026');
   });
 
   it('should fall back to raw string on invalid formats', () => {

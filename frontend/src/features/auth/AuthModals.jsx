@@ -365,9 +365,9 @@ export default function AuthModals({ isOpen, onClose }) {
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
-      <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-zinc-200 m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
+      <div className="bh-auth-backdrop fixed inset-0 z-[110] bg-zinc-900/60 backdrop-blur-md animate-backdrop-in" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
+      <div className="bh-auth-overlay fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
+        <div className="bh-auth-dialog relative w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-zinc-200 m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
@@ -635,4 +635,3 @@ export default function AuthModals({ isOpen, onClose }) {
     document.body
   );
 }
-

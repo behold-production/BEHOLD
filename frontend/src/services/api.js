@@ -77,15 +77,22 @@ async function executeRequest(endpoint, options = {}) {
   }
 
   let response;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
   try {
     response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
-      headers
+      headers,
+      signal: options.signal || controller.signal
     });
   } catch (err) {
-    const errorMsg = 'Network error occurred. Please verify your connection.';
+    const errorMsg = controller.signal.aborted && !options.signal?.aborted
+      ? 'The server did not respond in time. Please try again.'
+      : 'Network error occurred. Please verify your connection.';
     if (typeof window !== 'undefined') toast.error(errorMsg, { id: 'network-error' });
     throw new Error(errorMsg, { cause: err });
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   const text = await response.text();
@@ -303,6 +310,35 @@ function invalidateCache(endpoint) {
   }
 }
 
+function invalidateApiServiceCache(endpoint) {
+  const normalized = endpoint.toLowerCase();
+  if (normalized.includes('/faqs')) {
+    ApiService._faqsCache = null;
+    ApiService._faqsCacheTime = 0;
+  }
+  if (normalized.includes('/settings')) {
+    ApiService._settingsCache = null;
+    ApiService._settingsCacheTime = 0;
+  }
+  if (
+    normalized.includes('/admin/users') ||
+    normalized.includes('/admin/counsellors') ||
+    normalized.includes('/users/counsellors') ||
+    normalized.includes('/auth/register')
+  ) {
+    ApiService._counsellorsCache = null;
+    ApiService._counsellorsCacheTime = 0;
+    safeStorage.removeItem('behold_counsellors_cache');
+  }
+}
+
+function notifyPublicContentUpdated(endpoint) {
+  if (typeof window === 'undefined') return;
+  const normalized = endpoint.toLowerCase();
+  if (normalized.includes('/faqs')) window.dispatchEvent(new Event('behold_faqs_updated'));
+  if (normalized.includes('/blogs')) window.dispatchEvent(new Event('behold_blogs_updated'));
+}
+
 async function request(endpoint, options = {}) {
   const method = options.method || 'GET'; //
   const forceRefresh = options.forceRefresh || false;
@@ -310,6 +346,7 @@ async function request(endpoint, options = {}) {
   // Invalidate cache on mutations
   if (method !== 'GET') {
     invalidateCache(endpoint);
+    invalidateApiServiceCache(endpoint);
   }
 
   // Handle cache lookups for GET requests
@@ -347,7 +384,9 @@ async function request(endpoint, options = {}) {
     return promise.then(data => JSON.parse(JSON.stringify(data)));
   }
 
-  return executeRequest(endpoint, options);
+  const response = await executeRequest(endpoint, options);
+  if (method !== 'GET' && response?.success) notifyPublicContentUpdated(endpoint);
+  return response;
 }
 
 const ApiService = {
@@ -497,16 +536,9 @@ const ApiService = {
     // Cache the default full list to prevent sudden loading screens
     if (!qs && !forceRefresh) {
       if (this._counsellorsCache && (Date.now() - this._counsellorsCacheTime < 2 * 60 * 1000)) {
-        request('/users/counsellors').then((res) => {
-          if (res && res.success) {
-            this._counsellorsCache = res;
-            this._counsellorsCacheTime = Date.now();
-            try { safeStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data)); } catch (e) {}
-          }
-        }).catch(() => {});
         return this._counsellorsCache;
       }
-      const res = await request('/users/counsellors');
+      const res = await request('/users/counsellors', { forceRefresh });
       if (res && res.success) {
         this._counsellorsCache = res;
         this._counsellorsCacheTime = Date.now();
@@ -515,7 +547,7 @@ const ApiService = {
       return res;
     }
 
-    const res = await request(`/users/counsellors${qs ? `?${qs}` : ''}`);
+    const res = await request(`/users/counsellors${qs ? `?${qs}` : ''}`, { forceRefresh });
     if (res && res.success && !query.specialty && !query.mode && !query.search) {
       this._counsellorsCache = res;
       this._counsellorsCacheTime = Date.now();
@@ -941,15 +973,9 @@ const ApiService = {
   _faqsCacheTime: 0,
   async getFaqs(forceRefresh = false) {
     if (!forceRefresh && this._faqsCache && (Date.now() - this._faqsCacheTime < 10 * 60 * 1000)) {
-      request('/faqs').then(res => {
-        if (res && res.success) {
-          this._faqsCache = res;
-          this._faqsCacheTime = Date.now();
-        }
-      }).catch(() => {});
       return this._faqsCache;
     }
-    const res = await request('/faqs');
+    const res = await request('/faqs', { forceRefresh });
     if (res && res.success) {
       this._faqsCache = res;
       this._faqsCacheTime = Date.now();
@@ -962,15 +988,9 @@ const ApiService = {
   _settingsCacheTime: 0,
   async getSettings(forceRefresh = false) {
     if (!forceRefresh && this._settingsCache && (Date.now() - this._settingsCacheTime < 10 * 60 * 1000)) {
-      request('/settings').then(res => {
-        if (res && res.success) {
-          this._settingsCache = res;
-          this._settingsCacheTime = Date.now();
-        }
-      }).catch(() => {});
       return this._settingsCache;
     }
-    const res = await request('/settings', { silent: true }).catch(() => ({ success: true, data: {} }));
+    const res = await request('/settings', { forceRefresh });
     if (res && res.success) {
       this._settingsCache = res;
       this._settingsCacheTime = Date.now();
@@ -1318,9 +1338,9 @@ const ApiService = {
   },
 
   // ─── Blog Endpoints ────────────────────────────────────────────────────────
-  async getBlogs(params = {}) {
+  async getBlogs(params = {}, forceRefresh = false) {
     const query = new URLSearchParams(params).toString();
-    return await request(`/blogs?${query}`);
+    return await request(`/blogs${query ? `?${query}` : ''}`, { forceRefresh });
   },
 
   async getBlogBySlug(slug) {

@@ -46,46 +46,22 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   const navigate = useNavigate();
   const settings = siteSettings || {};
 
-  // Dynamic Content with Fallbacks
-  const heroTitleLine1 = "നിങ്ങളെ നിങ്ങളായി മനസ്സിലാക്കാൻ ഒരു ഇടം.";
-  const heroTitleLine2 = "നിങ്ങൾക്ക് വേണ്ടത് ഒന്ന് തുറന്നു സംസാരിക്കാൻ ഒരാളാണ്.";
-  const heroSub = settings.adHeroSub || "Qualified psychologists – നൊപ്പം,ഒന്ന് തുറന്നു സംസാരിക്കാം.";
-  const heroPrice = Number(settings.adHeroPrice) || 899;
-  const heroBtnText = "Book My Session";
-  const heroImg = settings.adHeroImage || clinicImage;
+  const heroTitle = settings.adHeroTitle || '';
+  const heroSub = settings.adHeroSub || '';
+  const heroPrice = Number(settings.adHeroPrice) || null;
+  const heroBtnText = settings.adHeroBtnText || '';
 
   // Reflection Section Content
-  const reflectionTitle = "ഇങ്ങനെ നിങ്ങൾക്കും അനുഭവപ്പെട്ടിട്ടുണ്ടോ?";
-  const reflectionSub = "Does this feel familiar?";
-  const reflectionClosing = "ഇത് weakness അല്ല. ഇത് ഒന്ന് സംസാരിക്കേണ്ട സമയമാണ്.";
+  const reflectionTitle = settings.adReflectionTitle || '';
+  const reflectionSub = settings.adReflectionSub || '';
+  const reflectionClosing = settings.adReflectionClosing || '';
 
   // Psychologists Showcase Content
-  const psychologistHeading = "നിങ്ങളോടൊപ്പം ഇവരുണ്ട്.";
-  const psychologistIntro = "Qualified. Experienced. Judgment-free. നിങ്ങളുടെ concern-ന് ചേരുന്ന ഒരാളെ തിരഞ്ഞെടുക്കൂ.";
+  const psychologistHeading = settings.adPsychologistTitle || '';
+  const psychologistIntro = settings.adPsychologistSub || '';
 
   // FAQ Content
-  const faqs = [
-    {
-      q: "ഇത് confidential ആണോ?",
-      a: "100%. നിങ്ങളുടെ വിവരങ്ങൾ ആരുമായും share ചെയ്യില്ല. എല്ലാ സെഷനുകളും പൂർണ്ണമായും സ്വകാര്യവും പ്രൊഫഷണൽ എത്തിക്സ് പ്രകാരം സുരക്ഷിതവുമാണ്."
-    },
-    {
-      q: "Session reschedule/cancel ചെയ്യാൻ പറ്റുമോ?",
-      a: "Yes, 4 hours മുൻപ് notice തന്നാൽ reschedule ചെയ്യാം."
-    },
-    {
-      q: "Payment കഴിഞ്ഞാൽ എന്ത് സംഭവിക്കും?",
-      a: "Booking confirm ആയി, session link WhatsApp/Email വഴി ലഭിക്കും."
-    },
-    {
-      q: "എനിക്ക് ഇഷ്ടമുള്ള psychologist-നെ choose ചെയ്യാൻ പറ്റുമോ?",
-      a: "തീർച്ചയായും. Concern-ന് അനുസരിച്ച് ആളെ select ചെയ്യാം."
-    },
-    {
-      q: "Sessions Malayalam-ൽ മാത്രമേ ഉള്ളൂവോ?",
-      a: "ഇല്ല, Malayalam-ലും English-ലും sessions ലഭ്യമാണ്."
-    }
-  ];
+  const faqs = Array.isArray(settings.adFaqs) ? settings.adFaqs.filter((faq) => faq.q && faq.a) : [];
 
   // Counsellor list state
   const [advisors, setAdvisors] = useState([]);
@@ -215,67 +191,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Sequential dual-popup state
-  const [activePopup, setActivePopup] = useState(null); // null | 1 | 2
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [popupDismissed, setPopupDismissed] = useState(false);
-
-  const popups = [
-    {
-      id: 1,
-      label: 'A Gentle Reminder',
-      message: 'You deserve better sleep.',
-      icon: Moon,
-    },
-    {
-      id: 2,
-      label: 'Just for You',
-      message: 'You deserve a better smile.',
-      icon: Smile,
-    }
-  ];
-
-  // Sequential popup orchestration: popup 1 at 4s, popup 2 at 11s
-  useEffect(() => {
-    if (popupDismissed) return;
-
-    // Popup 1: appear at 4s, auto-hide at 9s
-    const show1 = setTimeout(() => {
-      setActivePopup(1);
-      setPopupVisible(true);
-    }, 4000);
-
-    const hide1 = setTimeout(() => {
-      setPopupVisible(false);
-      setTimeout(() => setActivePopup(null), 400);
-    }, 9000);
-
-    // Popup 2: appear at 11s, auto-hide at 16s
-    const show2 = setTimeout(() => {
-      setActivePopup(2);
-      setPopupVisible(true);
-    }, 11000);
-
-    const hide2 = setTimeout(() => {
-      setPopupVisible(false);
-      setTimeout(() => setActivePopup(null), 400);
-    }, 16000);
-
-    return () => {
-      clearTimeout(show1);
-      clearTimeout(hide1);
-      clearTimeout(show2);
-      clearTimeout(hide2);
-    };
-  }, [popupDismissed]);
-
-  const handleDismissPopup = () => {
-    setPopupVisible(false);
-    setTimeout(() => setActivePopup(null), 400);
-    setPopupDismissed(true);
-  };
-
-
   useEffect(() => {
     trackViewContent({
       content_name: 'Ad Landing Page - Malayalam Psychological Counselling',
@@ -293,99 +208,46 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
             const rawHoursVal = (c.hours !== undefined && c.hours !== null && c.hours !== '') ? Number(c.hours) : (typeof c.experience === 'number' ? c.experience : (parseInt(c.experience, 10) || 0));
             const expData = formatExperience(rawHoursVal);
-            const customTitle = c.title || (c.designation && c.designation.toLowerCase() !== 'counsellor' ? c.designation : null) || (c.role && c.role.toLowerCase() !== 'counsellor' ? c.role : null) || 'Consultant Psychologist';
+            const customTitle = c.title || (c.designation && c.designation.toLowerCase() !== 'counsellor' ? c.designation : null) || (c.role && c.role.toLowerCase() !== 'counsellor' ? c.role : null) || '';
 
             return {
               id: c.id || c._id,
-              name: c.name || c.user?.name || c.fullName || 'Consultant Psychologist',
+              name: c.name || c.user?.name || c.fullName || '',
               title: customTitle,
               designation: customTitle,
-              fee: Number(c.fee || c.price || heroPrice),
-              halfSessionPrice: Number(c.halfSessionPrice || Math.round((c.fee || c.price || heroPrice) * 0.5)),
+              fee: Number(c.fee || c.price) || null,
+              halfSessionPrice: Number(c.halfSessionPrice) || null,
               hours: expData.rawHours,
               expYears: expData.years,
-              bio: c.bio || 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
-              specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : ['Anxiety & Stress', 'Depression', 'Personal Growth']),
+              bio: c.bio || '',
+              specialties: Array.isArray(c.specialties) ? c.specialties : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : []),
               photo: hasValidPhoto ? rawPhoto : null,
-              languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || 'Malayalam, English'))),
+              languages: Array.isArray(c.lang) ? c.lang.join(', ') : (c.lang || (Array.isArray(c.languages) ? c.languages.join(', ') : (c.languages || c.language || ''))),
               availability: c.availability || c.availabilitySlots || null,
               bookedSlots: c.bookedSlots || [],
               rank: Number(c.rank || 0),
-              isHighlighted: Boolean(c.isHighlighted || c.isTopFive)
+              isHighlighted: Boolean(c.isHighlighted || c.isTopFive),
+              rating: Number(c.rating) || null,
+              reviewCount: Number(c.reviewCount) || 0
             };
-          });
+          })
+            .filter((advisor) => advisor.id && advisor.name);
           
           list.sort((a, b) => b.rank - a.rank);
           setAdvisors(list);
         } else {
-          setAdvisors([
-            {
-              id: 'c1',
-              name: 'Dr. Sarah Thomas',
-              title: 'Senior Clinical Psychologist',
-              designation: 'Senior Clinical Psychologist',
-              fee: heroPrice,
-              halfSessionPrice: 499,
-              hours: 1200,
-              expYears: '1,200+ Hours Consulted',
-              bio: 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
-              specialties: ['Anxiety & Stress', 'Depression', 'Self Esteem'],
-              photo: null,
-              languages: 'Malayalam, English'
-            },
-            {
-              id: 'c2',
-              name: 'Dr. Rahul Varma',
-              title: 'Counselling Psychologist & Mentor',
-              designation: 'Counselling Psychologist & Mentor',
-              fee: heroPrice,
-              halfSessionPrice: 499,
-              hours: 950,
-              expYears: '950+ Hours Consulted',
-              bio: 'Specializing in emotional resilience, burnout recovery, and personalized roadmap creation.',
-              specialties: ['Career Stress', 'Relationship Guidance', 'Burnout'],
-              photo: null,
-              languages: 'Malayalam, English'
-            },
-            {
-              id: 'c3',
-              name: 'Dr. Ananya Nair',
-              title: 'Child & Adolescent Specialist',
-              designation: 'Child & Adolescent Specialist',
-              fee: heroPrice,
-              halfSessionPrice: 499,
-              hours: 1500,
-              expYears: '1,500+ Hours Consulted',
-              bio: 'Dedicated to helping individuals discover clarity, build self-worth, and thrive.',
-              specialties: ['Emotional Resilience', 'Identity Concerns', 'Mindfulness'],
-              photo: null,
-              languages: 'Malayalam, English'
-            }
-          ]);
+          setAdvisors([]);
         }
       } catch (e) {
         console.warn('Failed to load advisors for ad landing page', e);
-        setAdvisors([
-          {
-            id: 'c1',
-            name: 'Dr. Sarah Thomas',
-            title: 'Senior Clinical Psychologist',
-            fee: heroPrice,
-            halfSessionPrice: 499,
-            hours: 1200,
-            bio: 'Specializing in compassionate psychological counselling, stress management, and mental wellbeing.',
-            specialties: ['Anxiety & Stress', 'Depression', 'Self Esteem'],
-            photo: null,
-            languages: 'Malayalam, English'
-          }
-        ]);
+        setAdvisors([]);
       } finally {
         setLoadingAdvisors(false);
       }
     };
 
     fetchAdvisors();
-  }, [heroPrice]);
+  }, []);
 
   const handleBook = (advisorId = null) => {
     trackInitiateCheckout({
@@ -435,7 +297,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
     },
     {
       title: "3. സുരക്ഷിതമായി ബുക്ക് ചെയ്യുക",
-      desc: `വെറും ₹499-ന് ബുക്കിംഗ് പൂർത്തിയാക്കൂ. ലിങ്ക് WhatsApp/Email വഴി ഉടൻ ലഭിക്കും.`,
+      desc: `സുരക്ഷിതമായി ബുക്ക് ചെയ്യൂ. സ്ഥിരീകരണ വിശദാംശങ്ങൾ നിങ്ങളുടെ രജിസ്റ്റർ ചെയ്ത കോൺടാക്റ്റിലേക്ക് ലഭിക്കും.`,
       badge: "Step 3"
     }
   ];
@@ -443,7 +305,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
   return (
     <div className="min-h-screen bg-mesh-gradient text-[#0f172a] font-sans antialiased overflow-x-hidden flex flex-col justify-between">
       <SEO
-        title={`BEHOLD | ${heroTitleLine1} - Confidential Online Counselling`}
+        title={`${settings.siteName || 'BEHOLD'} | ${heroTitle || heroSub}`}
         description={heroSub}
         canonicalUrl="https://www.behold.co.in/bookmysession"
       />
@@ -588,7 +450,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
 
@@ -609,18 +470,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           {/* RIGHT: High-Converting Headline, Subtitle, & Primary CTA Button */}
           <div className="lg:col-span-7 space-y-6 text-left order-1 lg:order-2">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#3a0ca3] bg-[#00e5ff]/10 px-3.5 py-1 rounded-md border border-[#00e5ff]/25 shadow-2xs">
+              {settings.adHeroBadge && <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#3a0ca3] bg-[#00e5ff]/10 px-3.5 py-1 rounded-md border border-[#00e5ff]/25 shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-[#00e5ff] animate-pulse"></span>
-                <span>Special Introductory Session • ₹499</span>
-              </div>
+                <span>{settings.adHeroBadge}</span>
+              </div>}
 
               <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-slate-950 tracking-tight leading-[1.3] space-y-2">
-                <span className="block text-slate-900 font-extrabold">
-                  {heroTitleLine1}
-                </span>
-                <span className="block text-[#3a0ca3] font-extrabold">
-                  {heroTitleLine2}
-                </span>
+                {heroTitle}
               </h1>
 
               <p className="text-sm sm:text-base lg:text-lg text-slate-700 leading-relaxed font-medium pt-1 max-w-xl">
@@ -827,7 +683,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               className="flex gap-6 overflow-x-auto py-4 px-1 scrollbar-none snap-x snap-mandatory scroll-smooth"
             >
               {advisors.map((advisor) => {
-                const cardTitle = advisor.title || advisor.designation || 'Consultant Psychologist';
+                const cardTitle = advisor.title || advisor.designation;
                 const minFee = advisor.fee || heroPrice;
                 const nextAvail = calculateNextAvailable(advisor.availability, advisor.bookedSlots || []);
                 const isAvailToday = nextAvail === 'Available Today';
@@ -851,13 +707,13 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                           </h3>
                           <ShieldCheck className="w-4 h-4 text-[#3a0ca3] shrink-0" title="Verified Professional" />
                         </div>
-                        <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
+                        {cardTitle && <p className="text-[11px] sm:text-xs font-semibold text-slate-700 tracking-wide line-clamp-1">
                           {cardTitle}
-                        </p>
+                        </p>}
                         <div className="flex items-center gap-1.5 pt-1">
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/80 text-[#3a0ca3] shadow-2xs">
-                            ★ 4.9 Rating
-                          </span>
+                          {advisor.rating && <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/80 text-[#3a0ca3] shadow-2xs">
+                            ★ {advisor.rating}{advisor.reviewCount > 0 ? ` · ${advisor.reviewCount}` : ''}
+                          </span>}
                         </div>
                       </div>
 
@@ -903,9 +759,9 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                         </div>
                       </div>
 
-                      <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
+                      {advisor.bio && <div className="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3 shadow-2xs">
                         <p className={`text-xs text-slate-700 font-normal leading-relaxed ${expandedBios[advisor.id] ? 'max-h-[90px] overflow-y-auto pr-1' : 'line-clamp-2'}`}>
-                          "{advisor.bio || 'Specializing in compassionate psychological counselling and mental wellbeing.'}"
+                          "{advisor.bio}"
                         </p>
                         {advisor.bio && advisor.bio.length > 50 && (
                           <button
@@ -916,23 +772,23 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                             {expandedBios[advisor.id] ? 'Read Less ▲' : 'Read More ▼'}
                           </button>
                         )}
-                      </div>
+                      </div>}
 
                       <div className="grid grid-cols-3 gap-1.5 shrink-0">
                         <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
                           <span className="text-xs font-semibold text-slate-900 block leading-none">
-                            {advisor.hours ? `${advisor.hours.toLocaleString()}+` : '500+'}
+                            {advisor.hours ? advisor.hours.toLocaleString() : '—'}
                           </span>
                           <span className="text-[9px] font-medium text-slate-500 block mt-1">Consult Hours</span>
                         </div>
                         <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left min-w-0" title={advisor.languages}>
                           <span className="text-xs font-semibold text-slate-900 block leading-tight truncate">
-                            {advisor.languages}
+                            {advisor.languages || '—'}
                           </span>
                           <span className="text-[9px] font-medium text-slate-500 block mt-1">Languages</span>
                         </div>
                         <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-2 text-left">
-                          <span className="text-xs font-semibold text-slate-900 block leading-none">₹{minFee}</span>
+                          <span className="text-xs font-semibold text-slate-900 block leading-none">{minFee ? `₹${minFee}` : '—'}</span>
                           <span className="text-[9px] font-medium text-slate-500 block mt-1">Fee per session</span>
                         </div>
                       </div>
@@ -1008,24 +864,25 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
             ))}
           </div>
 
-          {/* Instant Action CTA Card */}
+          {/* Render the offer only when its price and copy are configured in Admin settings. */}
+          {heroPrice !== null && settings.adOfferText && (
           <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 text-white shadow-xl border border-slate-800 space-y-4 mt-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <span className="text-[10px] uppercase font-bold tracking-widest text-[#00e5ff] block">
-                  Special Introductory Offer
+                  {settings.adOfferEyebrow || ''}
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
-                  Ready to start your first session?
+                  {settings.adOfferTitle || ''}
                 </h3>
                 <p className="text-xs text-slate-300 mt-0.5">
-                  Get full personalized psychological consultation starting at ₹499.
+                  {settings.adOfferText}
                 </p>
               </div>
 
               <div className="text-left sm:text-right shrink-0">
-                <span className="text-2xl font-extrabold text-[#00e5ff]">₹499</span>
-                <span className="text-[10px] text-slate-400 block uppercase tracking-wider">Introductory Session</span>
+                <span className="text-2xl font-extrabold text-[#00e5ff]">₹{heroPrice}</span>
+                <span className="text-[10px] text-slate-400 block uppercase tracking-wider">{settings.adOfferSessionLabel || ''}</span>
               </div>
             </div>
 
@@ -1045,6 +902,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               </button>
             </div>
           </div>
+          )}
 
         </div>
       </section>
@@ -1143,45 +1001,6 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
           </div>
         </div>
       </footer>
-
-      {/* ── SEQUENTIAL DUAL POPUP (bottom-right, auto-dismissed) ── */}
-      {activePopup !== null && (() => {
-        const popup = popups.find(p => p.id === activePopup);
-        const Icon = popup?.icon;
-        return (
-          <aside
-            aria-live="polite"
-            aria-label={popup?.label}
-            className={`fixed bottom-20 sm:bottom-8 right-4 sm:right-6 z-40 max-w-[300px] sm:max-w-[320px] pointer-events-auto transition-all duration-400 ${popupVisible
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-4 pointer-events-none'
-              }`}
-          >
-            <div className="bg-white rounded-2xl p-4 shadow-2xl border border-slate-200/80 ring-1 ring-slate-900/5 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#00e5ff]/10 border border-[#00e5ff]/25 flex items-center justify-center shrink-0 mt-0.5">
-                {Icon && <Icon className="w-4.5 h-4.5 text-[#3a0ca3]" />}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#3a0ca3] block">
-                  {popup?.label}
-                </span>
-                <p className="text-sm font-semibold text-slate-900 leading-snug mt-0.5">
-                  {popup?.message}
-                </p>
-              </div>
-
-              <button
-                onClick={handleDismissPopup}
-                className="text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer border-none bg-transparent shrink-0 transition-colors"
-                aria-label="Dismiss"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </aside>
-        );
-      })()}
 
       {/* ── STICKY BOTTOM MOBILE CTA BAR (appears only after scrolling past hero) ── */}
       <nav

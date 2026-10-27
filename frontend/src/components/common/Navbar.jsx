@@ -36,7 +36,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   useEffect(() => {
     if (location.pathname !== '/') return;
 
-    const sectionIds = ['home', 'services', 'experts', 'cdat', 'faqs', 'blog', 'inquiry'];
+    const sectionIds = ['home', 'how-it-works', 'experts', 'why-behold', 'faqs-blogs', 'inquiry'];
     const handleScrollSection = () => {
       const scrollPos = window.scrollY + 140;
       for (const id of sectionIds) {
@@ -45,8 +45,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
           const top = el.offsetTop;
           const height = el.offsetHeight;
           if (scrollPos >= top && scrollPos < top + height) {
-            if (id === 'inquiry') setActiveSection('contact');
-            else if (id === 'experts') setActiveSection('services');
+            if (id === 'faqs-blogs') setActiveSection('faqs-blogs');
             else setActiveSection(id);
             break;
           }
@@ -101,19 +100,27 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     return 'https://wa.link/4jpzfq';
   })();
 
-  const navLinks = [
-    { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
-    { label: 'Services', action: () => goTo('services'), sectionId: 'services', path: '/booking' },
-    { label: 'About Us', action: () => goTo('/about'), sectionId: 'about', path: '/about' },
-    { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
-  ].filter(Boolean);
+  const navLinks = location.pathname === '/'
+    ? [
+      { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
+      { label: 'How it works', action: () => goTo('how-it-works'), sectionId: 'how-it-works', path: '/' },
+      { label: 'Find a psychologist', action: () => goTo('experts'), sectionId: 'experts', path: '/' },
+      { label: 'Our approach', action: () => goTo('why-behold'), sectionId: 'why-behold', path: '/' },
+      { label: 'FAQs & articles', action: () => goTo('faqs-blogs'), sectionId: 'faqs-blogs', path: '/' },
+    ]
+    : [
+      { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
+      { label: 'Services', action: () => goTo('services'), sectionId: 'services', path: '/booking' },
+      { label: 'About Us', action: () => goTo('/about'), sectionId: 'about', path: '/about' },
+      { label: 'Blog', action: () => goTo('/blog'), sectionId: 'blog', path: '/blog' },
+    ];
  
   const navRefs = useRef([]);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
-  const activeIndex = navLinks.findIndex(({ sectionId, path }) =>
-    location.pathname === path || (location.pathname === '/' && activeSection === sectionId)
-  );
+  const activeIndex = navLinks.findIndex(({ sectionId, path }) => (
+    location.pathname === '/' ? activeSection === sectionId : location.pathname === path
+  ));
 
   useEffect(() => { //
     const targetEl = navRefs.current[activeIndex >= 0 ? activeIndex : 0];
@@ -156,7 +163,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
 
         return (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHomeTop
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${location.pathname === '/' ? 'bh-home-nav' : ''} ${isHomeTop
               ? 'bg-transparent border-none shadow-none text-slate-900'
               : 'bg-white/90 backdrop-blur-md border-b border-slate-200/60 shadow-sm text-slate-900'
               }`}

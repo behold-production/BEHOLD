@@ -348,9 +348,9 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[120] bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
-      <div className="fixed inset-0 z-[125] flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="relative w-full max-w-full sm:max-w-md bg-white rounded-t-[28px] sm:rounded-2xl shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-slate-100 flex flex-col max-h-[88vh] sm:max-h-[85vh] pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
+      <div className="bh-booking-auth-backdrop fixed inset-0 z-[120] bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
+      <div className="bh-booking-auth-overlay fixed inset-0 z-[125] flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
+        <div className="bh-booking-auth-dialog relative w-full max-w-full sm:max-w-md bg-white rounded-t-[28px] sm:rounded-2xl shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-slate-100 flex flex-col max-h-[88vh] sm:max-h-[85vh] pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
 
           {/* Mobile Bottom Sheet Pull Indicator */}
           <div className="w-12 h-1.5 bg-slate-300/80 rounded-full mx-auto mt-3 mb-0 sm:hidden shrink-0" />

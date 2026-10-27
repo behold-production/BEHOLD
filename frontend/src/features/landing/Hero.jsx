@@ -1,134 +1,147 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import headerBg from "../../assets/header.svg";
-import SEO from "../../components/common/SEO";
+import React from 'react';
+import { ArrowRight, MessageCircleHeart, ShieldCheck } from 'lucide-react';
+import SEO from '../../components/common/SEO';
+
+const getFirstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
+
+const DEFAULT_HERO_PHOTO = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=85';
+
+const CONCERN_TAGS = ['Anxiety', 'Relationships', 'Stress', 'Self-esteem', 'Life changes'];
 
 export default function Hero({ siteSettings, navigateToSection, onOpenBooking }) {
   const settings = siteSettings || {};
+  const eyebrow = getFirstText(settings.heroEyebrow, 'A softer place to begin');
+  const title = getFirstText(settings.heroTitle, 'You don’t have to figure it all out on your own.');
+  const description = getFirstText(
+    settings.heroSub,
+    'Meet a psychologist who listens without judgment and helps you find your way forward, one conversation at a time.'
+  );
+  const buttonText = getFirstText(settings.heroBtnText, 'Find your psychologist');
+  const heroImage = getFirstText(settings.heroArtImage, settings.heroBgImage) || DEFAULT_HERO_PHOTO;
 
-  const displayEyebrow = settings.heroEyebrow || "Whatever you feel,";
-  const eyebrowLine1 = displayEyebrow.includes(",") ? displayEyebrow : "It's Okay to be";
-  const displayTitle = settings.heroTitle || "not okay";
-  const subtitleText = settings.heroSub || "A personal development and mentoring ecosystem — combining psychological care, self-discovery, and career guidance to help you grow with confidence and peace of mind.";
-  const btnText = settings.heroBtnText || "Book a Session";
-
-  const navigate = useNavigate();
-
-  const handleConnectClick = () => {
-    if (onOpenBooking) {
-      onOpenBooking();
-    } else {
-      navigate('/booking');
+  const scrollToExperts = (concern) => {
+    if (concern && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('behold:filter_specialty', { detail: { specialty: concern } }));
     }
-  };
-
-  const homeSchema = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://www.behold.co.in/#organization",
-        "name": "BEHOLD",
-        "url": "https://www.behold.co.in",
-        "logo": "https://www.behold.co.in/favicon.png",
-        "description": "A personal development and psychological counselling ecosystem providing compassionate online therapy and career guidance.",
-        "sameAs": [
-          "https://www.instagram.com/behold.wellbeing",
-          "https://www.linkedin.com/company/behold-aspire"
-        ]
-      },
-      {
-        "@type": "MedicalBusiness",
-        "@id": "https://www.behold.co.in/#medicalbusiness",
-        "name": "BEHOLD Psychological Counselling & Therapy",
-        "url": "https://www.behold.co.in",
-        "image": "https://www.behold.co.in/og-image.png",
-        "description": "A safe space for psychological counselling, emotional resilience, and mental wellbeing with certified psychologists.",
-        "medicalSpecialty": "Psychiatric",
-        "priceRange": "$$",
-        "availableService": {
-          "@type": "MedicalTherapy",
-          "name": "Online Psychological Counselling",
-          "description": "Evidence-based mental health counselling and therapy sessions."
-        }
-      }
-    ]
+    if (navigateToSection) navigateToSection('experts');
+    else document.getElementById('experts')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
-      <SEO 
-        title="BEHOLD | Professional Online Therapy & Psychological Counselling" 
-        description="A safe space for psychological counselling and mental wellbeing. Professional online therapy that helps you better understand yourself, navigate challenges, and grow with confidence. Mental Wellbeing Begins With Feeling Understood." 
+      <SEO
+        title={`${settings.siteName || 'BEHOLD'} | ${title}`}
+        description={description}
         canonicalUrl="https://www.behold.co.in/"
-        schema={homeSchema}
       />
-      <section
-      id="home"
-      className="relative min-h-[calc(100svh-0px)] w-full overflow-hidden flex items-center justify-center pt-24 pb-16 px-5 sm:px-10 lg:px-16 bg-transparent transition-opacity duration-500"
-    >
-      {/* Hero Background SVG/Image with Floating & Ambient Pulse Animations */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
-        {/* Soft Ambient Radial Glow behind Hero */}
-        <div className="absolute w-[45rem] h-[45rem] bg-[#00e5ff]/20 rounded-full blur-[140px] animate-hero-pulse pointer-events-none" />
+      <section className="bh-hero" id="home" aria-labelledby="bh-hero-title">
+        <div className="bh-hero-content bh-section-shell">
+          {/* Left Column: Copy & Actions */}
+          <div className="bh-hero-copy">
+            <span className="bh-eyebrow bh-hero-eyebrow">
+              <span className="bh-eyebrow-dot" aria-hidden="true" />
+              {eyebrow}
+            </span>
 
-        <img
-          src={settings.heroBgImage || headerBg?.src || headerBg}
-          alt="Hero Background"
-          className="w-full h-full object-cover object-center opacity-95 animate-hero-float pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/10 to-[#d4f8fc]/20 pointer-events-none" />
-      </div>
-
-      {/* Main Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 my-auto">
-
-        {/* COLUMN: Typography & Action Button */}
-        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left gap-6 max-w-2xl mx-auto lg:mx-0 transition-transform duration-500 animate-fade-scale">
-
-          {/* Main Title Block */}
-          <div className="relative leading-none flex flex-col items-center lg:items-start group">
-            {/* Line 1 - Slender, Elegant & Moderately Sized Headline */}
-            <h1 className="font-sans font-bold text-slate-900 text-2xl xs:text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight transition-all duration-300 animate-fade-down">
-              {eyebrowLine1}
+            <h1 id="bh-hero-title">
+              {settings.heroTitle ? (
+                settings.heroTitle.split('\n').map((line, i) => (
+                  <React.Fragment key={i}>
+                    {line}
+                    {i < settings.heroTitle.split('\n').length - 1 && <br />}
+                  </React.Fragment>
+                ))
+              ) : (
+                <>
+                  You don’t have<br />
+                  to figure it all <em>out</em><br />
+                  on your own.
+                </>
+              )}
             </h1>
 
-            {/* Accent Line 2 - Custom Cursive Font */}
-            <div className="relative inline-block mt-2 sm:mt-4">
-              <span className="font-rough text-[#00e5ff] text-[80px] xs:text-[86px] sm:text-[92px] lg:text-[98px] font-normal tracking-tight [word-spacing:6px] block leading-[0.92] drop-shadow-sm select-none animate-hero-pulse">
-                {displayTitle.toLowerCase()}
-              </span>
+            <p className="bh-hero-description">{description}</p>
 
-              {/* Turquoise Brush Underline Graphic */}
-              <svg
-                className="absolute -bottom-2 left-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 w-3/5 h-4 sm:h-5 text-[#00e5ff]/80 pointer-events-none animate-pulse transition-all duration-500"
-                viewBox="0 0 200 20"
-                fill="currentColor"
-                preserveAspectRatio="none"
+            <div className="bh-hero-actions">
+              <button
+                type="button"
+                className="bh-button bh-button-primary"
+                onClick={() => scrollToExperts()}
               >
-                <path d="M 0 10 Q 50 2, 100 10 T 200 8 Q 150 16, 80 12 Z" />
-              </svg>
+                {buttonText} <ArrowRight size={16} aria-hidden="true" />
+              </button>
+
+              <div className="bh-hero-trust">
+                <span className="bh-trust-mark" aria-hidden="true">
+                  <MessageCircleHeart size={18} />
+                </span>
+                <span>
+                  Care that meets you<br />where you are
+                </span>
+              </div>
+            </div>
+
+            <div className="bh-hero-assurance">
+              <span>
+                <ShieldCheck size={15} aria-hidden="true" />
+                Private, thoughtful, and always at your pace
+              </span>
             </div>
           </div>
 
-          {/* Subtitle Paragraph */}
-          <p className="font-sans text-center lg:text-left text-slate-600 text-[var(--text-base)] font-normal leading-relaxed max-w-lg animate-fade-scale delay-200">
-            {subtitleText}
-          </p>
+          {/* Right Column: Visual Frame & Stamps */}
+          <div className="bh-hero-art" aria-hidden="true">
+            <div className="bh-hero-photo-wrap">
+              <img
+                src={heroImage}
+                alt="A warm, sunlit, supportive therapy space"
+                className="bh-hero-photo"
+                loading="eager"
+              />
+              <div className="bh-photo-wash" />
+              <div className="bh-photo-caption">
+                <span className="bh-caption-icon">
+                  <MessageCircleHeart size={18} />
+                </span>
+                <div>
+                  <strong>A little more understood.</strong>
+                  <small>It starts with one conversation.</small>
+                </div>
+              </div>
+              <span className="bh-floating-leaf bh-leaf-one">✳</span>
+              <span className="bh-floating-leaf bh-leaf-two">✳</span>
+            </div>
 
-          {/* Action Button */}
-          <div className="flex justify-center lg:justify-start w-full animate-fade-scale delay-300">
-            <button
-              onClick={handleConnectClick}
-              className="bg-brand hover:bg-brand-dark hover-scale-btn transition-all duration-300 text-slate-900 font-sans text-base font-semibold px-8 py-3 min-h-[44px] rounded-2xl shadow-md hover:shadow-xl flex items-center justify-center border border-slate-900/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5ff] focus-visible:ring-offset-2"
-            >
-              {btnText}
-            </button>
+            <div className="bh-hero-side-note">
+              <span />
+              <span>MADE FOR YOUR<br />REAL, EVERYDAY LIFE</span>
+            </div>
+
+            <div className="bh-hero-stamp">
+              <span>ROOM<br />TO GROW</span>
+              <i>🌸</i>
+            </div>
           </div>
         </div>
 
-      </div>
-    </section>
+        {/* Bottom Line: Emotional Concern Tags */}
+        <div className="bh-hero-bottomline bh-section-shell">
+          <span>Support for the things that feel heavy</span>
+          <div className="bh-concern-tags">
+            {CONCERN_TAGS.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => scrollToExperts(tag)}
+                className="cursor-pointer transition-all hover:border-[#315c4e] hover:text-[#315c4e]"
+                title={`Find psychologists specializing in ${tag}`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   );
 }

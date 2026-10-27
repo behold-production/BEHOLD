@@ -26,7 +26,7 @@ import SEO from '../../components/common/SEO';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import { trackPurchase } from '../../utils/metaPixel';
-import { generateReceiptPDFDoc, buildGoogleMeetUrl } from '../student/utils/utils';
+import { generateReceiptPDFDoc } from '../student/utils/utils';
 import { toast } from 'react-hot-toast';
 
 export default function ThankYouPage() {
@@ -34,7 +34,7 @@ export default function ThankYouPage() {
   const [searchParams] = useSearchParams();
   const [copied, setCopied] = useState(false);
   const [copiedRef, setCopiedRef] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [bookingData, setBookingData] = useState(null);
 
   const isRescheduled = searchParams.get('type') === 'rescheduled';
@@ -50,29 +50,26 @@ export default function ThankYouPage() {
     const loadBooking = async () => {
       const paramId = searchParams.get('id') || searchParams.get('bookingId') || searchParams.get('appointmentId') || searchParams.get('orderId');
 
-      let details = null;
+      let storedDetails = null;
 
-      // 1. Try loading from sessionStorage first for immediate rendering
+      // Use session storage only to recover the booking ID, then verify details with the API.
       try {
         const stored = sessionStorage.getItem('last_booking_confirmation');
         if (stored) {
-          details = JSON.parse(stored);
+          storedDetails = JSON.parse(stored);
         }
       } catch (e) {
         console.warn('Could not parse last booking from session storage', e);
       }
 
-      // 2. If an ID exists, fetch live booking from backend
-      const targetId = paramId || details?.id;
+      const targetId = paramId || storedDetails?.id || storedDetails?._id;
+      let details = null;
       if (targetId) {
         try {
           setIsLoading(true);
           const res = await ApiService.getBookingConfirmation(targetId);
           if (res && res.success && res.data) {
-            details = {
-              ...details,
-              ...res.data
-            };
+            details = res.data;
           }
         } catch (err) {
           console.warn('Could not fetch backend confirmation', err);
@@ -81,42 +78,12 @@ export default function ThankYouPage() {
         }
       }
 
-      // 3. If still no details, use query params or friendly fallback
-      if (!details) {
-        const advisorName = searchParams.get('advisor') || searchParams.get('name') || 'Dr. Sarah Thomas';
-        const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
-        const time = searchParams.get('time') || '10:00 AM';
-        const amount = Number(searchParams.get('amount')) || 899;
-        const tempId = paramId || `BEH-${Date.now().toString().slice(-6)}`;
-        const meetParam = searchParams.get('meet');
-        const meetLink = (meetParam && !meetParam.includes('beh-olds-ess') && !meetParam.includes('meet.jit.si')) ? meetParam : buildGoogleMeetUrl(tempId);
-
-        details = {
-          id: tempId,
-          advisorName,
-          advisorRole: 'Senior Clinical Psychologist',
-          date,
-          time,
-          duration: '1 Hour',
-          service: 'Psychological Counselling',
-          mode: 'ONLINE',
-          amountPaid: amount,
-          meetLink,
-          userName: searchParams.get('userName') || searchParams.get('clientName') || 'Client',
-          userEmail: searchParams.get('email') || searchParams.get('clientEmail') || '',
-          userPhone: searchParams.get('phone') || searchParams.get('clientPhone') || '',
-          status: isRescheduled ? 'RESCHEDULE_REQUESTED' : 'CONFIRMED',
-          paymentStatus: isRescheduled ? 'PAID' : (amount === 0 ? 'FREE' : 'PAID')
-        };
-      }
-
       setBookingData(details);
 
-      // Meta Pixel Conversion Tracking (Purchase)
-      if (!isRescheduled) {
+      if (!isRescheduled && details && ['PAID', 'CONFIRMED'].includes(String(details.paymentStatus || '').toUpperCase())) {
         trackPurchase({
-          orderId: details?.id || 'BEH-SESSION',
-          value: details?.amountPaid || 899,
+          orderId: details.id || details._id,
+          value: Number(details.amountPaid) || 0,
           currency: 'INR',
           content_name: 'Psychological Counselling Session',
           content_type: 'product'
@@ -149,7 +116,7 @@ export default function ThankYouPage() {
     if (!bookingData) return;
     try {
       await generateReceiptPDFDoc({
-        id: bookingData.id || `BEH-${Date.now().toString().slice(-6)}`,
+        id: bookingData.id || bookingData._id,
         counsellor: { name: bookingData.advisorName, role: bookingData.advisorRole },
         date: bookingData.date,
         time: bookingData.time,
@@ -172,6 +139,23 @@ export default function ThankYouPage() {
     const clean = name.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.)\s+/i, '');
     return clean.charAt(0).toUpperCase();
   };
+
+  if (!isLoading && !bookingData) {
+    return (
+      <>
+        <SEO title="Booking details unavailable | BEHOLD" noIndex={true} />
+        <main className="min-h-screen bg-[#f8fafc] flex items-center justify-center px-4">
+          <div className="max-w-md text-center space-y-4">
+            <h1 className="text-2xl font-bold text-slate-900">Booking details unavailable</h1>
+            <p className="text-sm text-slate-600">We could not verify this booking with BEHOLD. Please check your booking link or contact support.</p>
+            <Link to="/" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white no-underline">
+              Return to home <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased flex flex-col justify-between relative overflow-x-hidden">
@@ -220,11 +204,11 @@ export default function ThankYouPage() {
 
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-semibold border border-emerald-200">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>{isRescheduled ? 'Reschedule Submitted' : '100% Confirmed & Paid'}</span>
+            <span>{isLoading ? 'Verifying booking' : (bookingData?.paymentStatus || bookingData?.status)}</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
-            {isRescheduled ? 'Reschedule Request Submitted!' : 'Booking Confirmed Successfully!'}
+            {isLoading ? 'Verifying your booking...' : (isRescheduled ? 'Reschedule Request Submitted' : 'Booking details')}
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed font-medium">
@@ -246,7 +230,7 @@ export default function ThankYouPage() {
             </div>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-xs font-semibold">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{bookingData?.status || 'Confirmed'}</span>
+              <span>{isLoading ? 'Verifying' : bookingData?.status}</span>
             </span>
           </div>
 
@@ -273,12 +257,12 @@ export default function ThankYouPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     <h3 className="font-semibold text-slate-900 text-sm sm:text-base truncate">
-                      {bookingData?.advisorName || 'Assigned Psychologist'}
+                      {bookingData?.advisorName}
                     </h3>
                     <ShieldCheck className="w-4 h-4 text-[#3a0ca3] shrink-0" title="Verified Professional" />
                   </div>
                   <p className="text-xs text-slate-600 font-medium truncate">
-                    {bookingData?.advisorRole || 'Consultant Psychologist'}
+                    {bookingData?.advisorRole}
                   </p>
                 </div>
               </div>
@@ -291,7 +275,7 @@ export default function ThankYouPage() {
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Date</span>
                   </div>
                   <p className="text-xs sm:text-sm font-semibold text-slate-900">
-                    {bookingData?.date ? formatDateString(bookingData.date) : 'Upcoming'}
+                    {bookingData?.date ? formatDateString(bookingData.date) : ''}
                   </p>
                 </div>
 
@@ -301,7 +285,7 @@ export default function ThankYouPage() {
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Time</span>
                   </div>
                   <p className="text-xs sm:text-sm font-semibold text-slate-900">
-                    {bookingData?.time || '10:00 AM'}
+                    {bookingData?.time}
                   </p>
                 </div>
 
@@ -311,7 +295,7 @@ export default function ThankYouPage() {
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Mode</span>
                   </div>
                   <p className="text-xs sm:text-sm font-semibold text-slate-900 truncate">
-                    {bookingData?.mode || '1-on-1 Online Video'}
+                    {bookingData?.mode}
                   </p>
                 </div>
               </div>
@@ -382,7 +366,9 @@ export default function ThankYouPage() {
               {/* Payment Summary */}
               <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
                 <span className="font-semibold text-slate-600">Amount Paid (Included GST):</span>
-                <span className="text-base font-semibold text-slate-950">₹{bookingData?.amountPaid ?? 899}</span>
+                <span className="text-base font-semibold text-slate-950">
+                  {bookingData?.amountPaid != null ? `₹${bookingData.amountPaid}` : '—'}
+                </span>
               </div>
             </>
           )}

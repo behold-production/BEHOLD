@@ -4,11 +4,10 @@ import { useCustomDialog } from '../../context/CustomDialogContext';
 import toast from 'react-hot-toast';
 import ApiService from '../../services/api';
 import { jsPDF } from 'jspdf';
-import { formatDateString, calculateNextAvailable, getScheduleForDay } from '../../utils/dateFormatter';
+import { formatDateString, calculateNextAvailable, getScheduleForDay, getSessionStartTimes, hasOverlappingBooking } from '../../utils/dateFormatter';
 import { sendLocalNotification } from '../../services/notificationHelper';
 import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../utils/validation';
 import { trackInitiateCheckout, trackPurchase, trackSchedule, getStoredCampaignData } from '../../utils/metaPixel';
-
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
 export const getHaversineDistance = (lat1, lon1, lat2, lon2) => {
@@ -28,19 +27,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const { user, updateUser } = useAuth();
   const { showAlert } = useCustomDialog();
 
-  const [siteSettings, setSiteSettings] = useState(() => {
-    try {
-      const stored = typeof window !== 'undefined' ? localStorage.getItem('behold_site_settings') : null;
-      return stored ? JSON.parse(stored) : {};
-    } catch { return {}; }
-  });
+  const [siteSettings, setSiteSettings] = useState({});
 
   useEffect(() => {
     ApiService.getSettings().then(res => {
-      if (res && res.success && res.data) {
-        setSiteSettings(res.data);
-        try { localStorage.setItem('behold_site_settings', JSON.stringify(res.data)); } catch {}
-      }
+      if (res?.success) setSiteSettings(res.data || {});
     }).catch(() => {});
   }, []);
 
@@ -99,7 +90,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
       } catch { }
     }
-    return (user && user.hasUsedIntroductory) ? 60 : 30; // 30 mins (Introductory ₹499) by default for new users, 60 mins (Standard ₹899)
+    return (user && user.hasUsedIntroductory) ? 60 : 30;
   });
   const [isIntroductoryEligible, setIsIntroductoryEligible] = useState(() => {
     if (user && user.hasUsedIntroductory) return false;
@@ -155,18 +146,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     return '';
   });
 
-  // Auto-fallback booking mode if selected mode is disabled
+  // Keep the selected booking mode aligned with the admin-managed mode settings.
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    let settings = {};
-    try {
-      const stored = localStorage.getItem('behold_site_settings');
-      if (stored) settings = JSON.parse(stored);
-    } catch { }
-
-    const isOnlineEnabled = settings.enableOnline !== false;
-    const isOfflineEnabled = settings.enableOffline !== false;
-    const isDoorstepEnabled = settings.enableDoorstep !== false;
+    const isOnlineEnabled = siteSettings.enableOnline !== false;
+    const isOfflineEnabled = siteSettings.enableOffline !== false;
+    const isDoorstepEnabled = siteSettings.enableDoorstep !== false;
 
     const timer = setTimeout(() => {
       if (bookingMode === 'ONLINE' && !isOnlineEnabled) {
@@ -181,7 +165,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       }
     }, 0);
     return () => clearTimeout(timer);
-  }, [bookingMode]);
+  }, [bookingMode, siteSettings]);
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
   const [advisorConfirmed, setAdvisorConfirmed] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -204,65 +188,69 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           return parsed
             .filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')
             .map(c => ({
-            id: c.id || c._id,
-            name: c.name,
-            role: c.title || c.role || 'Consultant Psychologist',
-            availability: calculateNextAvailable(c.availability, c.bookedSlots || []),
-            type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
-            defaultMeetLink: c.defaultMeetLink || '',
-            price: Number(c.price) || 899,
-            halfSessionPrice: Number(c.halfSessionPrice) || 499,
-            modes: Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP'],
-            availabilitySlots: c.availability || {},
-            bookedSlots: c.bookedSlots || [],
-            locationName: c.locationName || '',
-            latitude: Number(c.latitude) || 0,
-            longitude: Number(c.longitude) || 0,
-            profilePic: c.profilePic || c.image || '',
-            image: c.image || c.profilePic || '',
-            specialties: c.specialties || [],
-            bio: c.bio || '',
-            hours: c.hours || 0,
-            lang: c.lang || '',
-            rating: Number(c.rating) || 5.0,
-            reviewCount: Number(c.reviewCount) || 0
-          }));
+              id: c.id || c._id,
+              name: c.name || c.user?.name || '',
+              role: c.title || c.role || c.designation || 'Psychologist',
+              availability: calculateNextAvailable(c.availability, c.bookedSlots || []),
+              type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
+              defaultMeetLink: c.defaultMeetLink || '',
+              price: c.price === null || c.price === undefined || c.price === '' ? null : Number(c.price),
+              halfSessionPrice: c.halfSessionPrice === null || c.halfSessionPrice === undefined || c.halfSessionPrice === ''
+                ? null
+                : Number(c.halfSessionPrice),
+              modes: Array.isArray(c.modes) ? c.modes : [],
+              availabilitySlots: c.availability || {},
+              bookedSlots: c.bookedSlots || [],
+              locationName: c.locationName || '',
+              latitude: Number(c.latitude) || 0,
+              longitude: Number(c.longitude) || 0,
+              profilePic: c.profilePic || c.photo || c.avatar || '',
+              image: c.image || c.profilePic || c.photo || '',
+              specialties: c.specialties || c.tags || c.focus || [],
+              bio: c.bio || '',
+              hours: c.hours || 0,
+              lang: c.lang || c.languages || 'English',
+              rating: c.rating ? Number(c.rating) : null,
+              reviewCount: c.reviews || c.reviewCount || 0
+            }));
         }
       }
     } catch { }
     return [];
   });
+  const [isLoadingAdvisors, setIsLoadingAdvisors] = useState(() => advisors.length === 0);
+  const [advisorLoadError, setAdvisorLoadError] = useState('');
+  const [advisorReloadToken, setAdvisorReloadToken] = useState(0);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showNoCounsellorsModal, setShowNoCounsellorsModal] = useState(false);
   const [rescheduleSession, setRescheduleSession] = useState(null);
+  const retryLoadAdvisors = () => setAdvisorReloadToken((token) => token + 1);
 
   useEffect(() => {
     const initBookingData = async () => {
+      let resolved = [];
+      setIsLoadingAdvisors(true);
+      setAdvisorLoadError('');
       try {
-        let resolved = [];
         const res = await ApiService.getCounsellors({}, true);
-        if (res && res.success && res.data && Array.isArray(res.data) && res.data.length > 0) {
-          resolved = res.data
-            .filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')
-            .map(c => {
+        if (!res?.success || !Array.isArray(res.data)) {
+          throw new Error(res?.message || 'Unable to load psychologists. Please try again.');
+        }
+        resolved = res.data
+          .filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')
+          .map(c => {
             return {
               id: c.id || c._id,
               name: c.name,
-              role: c.title || c.role || 'Consultant Psychologist',
+              role: c.title || c.role || '',
               availability: calculateNextAvailable(c.availability, c.bookedSlots || []),
               type: c.type || (c.title?.toLowerCase().includes('career') || c.title?.toLowerCase().includes('mentor') ? 'career' : 'counselling'),
               defaultMeetLink: c.defaultMeetLink || '',
-              price: Number(c.price) || 899,
-              halfSessionPrice: c.halfSessionPrice !== undefined && Number(c.halfSessionPrice) > 0
-                ? Number(c.halfSessionPrice)
-                : (Number(c.price) <= 899 ? 499 : Number(c.price) >= 1200 ? 699 : Math.round((Number(c.price) || 899) * 0.5)),
-              modes: (Array.isArray(c.modes) ? c.modes : ['ONLINE', 'OFFLINE', 'DOOR_STEP']).filter(m => {
-                const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
-                if (m === 'ONLINE') return settings.enableOnline !== false;
-                if (m === 'OFFLINE') return settings.enableOffline !== false;
-                if (m === 'DOOR_STEP') return settings.enableDoorstep !== false;
-                return true;
-              }),
+              price: c.price === null || c.price === undefined || c.price === '' ? null : Number(c.price),
+              halfSessionPrice: c.halfSessionPrice === null || c.halfSessionPrice === undefined || c.halfSessionPrice === ''
+                ? null
+                : Number(c.halfSessionPrice),
+              modes: Array.isArray(c.modes) ? c.modes : [],
               availabilitySlots: c.availability || {},
               bookedSlots: c.bookedSlots || [],
               locationName: c.locationName || '',
@@ -274,18 +262,21 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               bio: c.bio || '',
               hours: c.hours || c.completedHours || 0,
               lang: c.lang || '',
-              rating: Number(c.rating) || 5.0,
+              rating: Number(c.rating) || null,
               reviewCount: Number(c.reviewCount) || 0
             };
           });
+        if (resolved.length > 0) {
           setAdvisors(resolved);
-
-          // Update cache with real database records
-          try {
-            localStorage.setItem('behold_counsellors_cache', JSON.stringify(res.data.filter(c => c && c.isActive !== false && c.isDeleted !== true && c.status !== 'REJECTED' && c.status !== 'DELETED')));
-          } catch { }
         }
+      } catch (err) {
+        console.warn('Backend psychologists notice, retaining verified directory:', err.message || err);
+        setAdvisorLoadError('');
+      } finally {
+        setIsLoadingAdvisors(false);
+      }
 
+      try {
         if (user) {
           await ApiService.getAppointments();
         }
@@ -297,7 +288,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           const sessionsRes = await ApiService.getSessions();
           if (sessionsRes.success && sessionsRes.data) {
             const actualSessionId = rescheduleId;
-            const foundSession = sessionsRes.data.find(s => s.id === actualSessionId || s.appointmentId === actualSessionId || s.id === 'mock_session_' + actualSessionId);
+            const foundSession = sessionsRes.data.find(s => s.id === actualSessionId || s.appointmentId === actualSessionId);
             if (foundSession) {
               setRescheduleSession(foundSession);
               setBookingService(foundSession.service || 'counselling');
@@ -311,9 +302,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               } else {
                 const tempAdvisor = {
                   id: foundSession.counsellorId,
-                  name: foundSession.counsellorName || foundSession.advisorName || 'Your Psychologist',
-                  role: foundSession.advisorRole || 'Consultant Psychologist',
-                  price: foundSession.amountPaid || 1200,
+                  name: foundSession.counsellorName || foundSession.advisorName || '',
+                  role: foundSession.advisorRole || '',
+                  price: foundSession.baseFee ?? null,
+                  halfSessionPrice: null,
                   modes: [foundSession.mode || 'ONLINE'],
                   availabilitySlots: {},
                   bookedSlots: []
@@ -330,7 +322,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     };
 
     initBookingData();
-  }, [user]);
+  }, [user, advisorReloadToken]);
 
   // Monitor introductory session eligibility for user or entered email/phone
   useEffect(() => {
@@ -418,20 +410,19 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   const sitePromoCodes = Array.isArray(siteSettings.promoCodes) ? siteSettings.promoCodes : [];
 
   const getDurationPrice = (advisor, duration) => {
-    const fullPrice = advisor ? (Number(advisor.price) || 899) : 899;
+    if (!advisor || advisor.price === null || advisor.price === undefined || advisor.price === '') return null;
+    const fullPrice = Number(advisor.price);
+    if (!Number.isFinite(fullPrice) || fullPrice < 0) return null;
     if (duration === 60) return fullPrice;
-    if (advisor && advisor.halfSessionPrice && Number(advisor.halfSessionPrice) > 0) {
-      return Number(advisor.halfSessionPrice);
-    }
-    if (fullPrice <= 899) return 499;
-    if (fullPrice >= 1200) return 699;
-    return Math.round(fullPrice * 0.5);
+    if (advisor.halfSessionPrice === null || advisor.halfSessionPrice === undefined || advisor.halfSessionPrice === '') return null;
+    const halfPrice = Number(advisor.halfSessionPrice);
+    return Number.isFinite(halfPrice) && halfPrice >= 0 ? halfPrice : null;
   };
 
-  const rawPrice = selectedAdvisor ? (selectedAdvisor.price || 899) : 899;
+  const rawPrice = selectedAdvisor?.price == null ? null : Number(selectedAdvisor.price);
   const baseFee = getDurationPrice(selectedAdvisor, bookingDuration);
-  const gstAmount = gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
-  const netTotal = Math.max(0, baseFee + gstAmount - appliedDiscount);
+  const gstAmount = baseFee !== null && gstEnabled && gstPercent > 0 ? Math.round(baseFee * (gstPercent / 100)) : 0;
+  const netTotal = baseFee === null ? null : Math.max(0, baseFee + gstAmount - appliedDiscount);
 
   const downloadPDFReceipt = async (bookingDetails) => {
     setDownloadingPdf(true);
@@ -627,21 +618,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       return [];
     }
 
-    const DEFAULT_SLOTS = [
-      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
-      '06:00 PM', '07:00 PM', '08:00 PM'
-    ];
-
     try {
       const [year, month, day] = dateStr.split('-').map(Number);
       const dayOfWeek = new Date(year, month - 1, day).getDay();
       const rawAvailability = advisor.availabilitySlots || advisor.availability || {};
       
-      const { isDayActive, slots, hasConfig } = getScheduleForDay(rawAvailability, dayOfWeek);
+      const { isDayActive, slots } = getScheduleForDay(rawAvailability, dayOfWeek);
       if (!isDayActive) return [];
 
-      const activeSlots = slots.length > 0 ? slots : (!hasConfig ? DEFAULT_SLOTS : []);
+      const activeSlots = getSessionStartTimes(slots, bookingDuration);
 
       const bookings = advisor.bookedSlots || [];
       const todayStr = getLocalTodayString();
@@ -671,7 +656,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           if (dateStr === todayStr && isSlotInPast(slot)) {
             return false;
           }
-          return !bookings.some(b => b.date === dateStr && b.time === slot);
+          return !hasOverlappingBooking(dateStr, slot, bookingDuration, bookings);
         })
         .sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
     } catch (e) {
@@ -684,28 +669,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     if (!dateStr) return [];
     const todayStr = getLocalTodayString();
     if (dateStr < todayStr) return [];
-
-    const isSlotInPast = (timeStr) => {
-      try {
-        const [time, modifier] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
-        if (modifier === 'PM' && hours < 12) hours += 12;
-        if (modifier === 'AM' && hours === 12) hours = 0;
-
-        const now = new Date();
-        const slotDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-        const leadTimeMs = 15 * 60 * 1000; // 15 minutes lead time
-        return (slotDate.getTime() - now.getTime()) < leadTimeMs;
-      } catch {
-        return false;
-      }
-    };
-
-    const DEFAULT_SLOTS = [
-      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
-      '06:00 PM', '07:00 PM', '08:00 PM'
-    ];
 
     const parseTimeToMinutes = (timeStr) => {
       const [time, meridiem] = timeStr.split(' ');
@@ -721,7 +684,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         return getAdvisorSlotsForDate(selectedAdvisor, dateStr);
       }
 
-      // Collect union of available slots across matching advisors or defaults
+      // Collect slots from matching psychologists only.
       const activeSlotsSet = new Set();
       const currentService = serviceType || bookingService;
       const matchingAdvisors = advisors.filter(a => {
@@ -734,11 +697,6 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         matchingAdvisors.forEach(advisor => {
           const slots = getAdvisorSlotsForDate(advisor, dateStr);
           slots.forEach(slot => activeSlotsSet.add(slot));
-        });
-      } else {
-        DEFAULT_SLOTS.forEach(slot => {
-          if (dateStr === todayStr && isSlotInPast(slot)) return;
-          activeSlotsSet.add(slot);
         });
       }
 
@@ -758,21 +716,15 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       return [];
     }
 
-    const DEFAULT_SLOTS = [
-      '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-      '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
-      '06:00 PM', '07:00 PM', '08:00 PM'
-    ];
-
     try {
       const [year, month, day] = dateStr.split('-').map(Number);
       const dayOfWeek = new Date(year, month - 1, day).getDay();
       const rawAvailability = advisor.availabilitySlots || advisor.availability || {};
       
-      const { isDayActive, slots, hasConfig } = getScheduleForDay(rawAvailability, dayOfWeek);
+      const { isDayActive, slots } = getScheduleForDay(rawAvailability, dayOfWeek);
       if (!isDayActive) return [];
 
-      const activeSlots = slots.length > 0 ? slots : (!hasConfig ? DEFAULT_SLOTS : []);
+      const activeSlots = getSessionStartTimes(slots, bookingDuration);
 
       const todayStr = getLocalTodayString();
       const isSlotInPast = (timeStr) => {
@@ -796,8 +748,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         return hours * 60 + minutes;
       };
 
+      const bookings = advisor.bookedSlots || [];
       return activeSlots
         .filter(slot => !(dateStr === todayStr && isSlotInPast(slot)))
+        .filter(slot => !hasOverlappingBooking(dateStr, slot, bookingDuration, bookings))
         .sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
     } catch (e) {
       console.error("Error checking all slots for advisor:", e);
@@ -932,21 +886,18 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
     const advisor = advisors.find(a => a.id === advisorId);
     if (!advisor) {
-      return 'Available';
+      return 'Unavailable';
     }
 
     try {
       const rawAvailability = advisor.availabilitySlots || advisor.availability || {};
-      const { isDayActive, slots, hasConfig } = getScheduleForDay(rawAvailability, dayOfWeek);
+      const { isDayActive, slots } = getScheduleForDay(rawAvailability, dayOfWeek);
       
-      const slotsForDay = slots.length > 0 ? slots : (!hasConfig ? [timeStr] : []);
+      const slotsForDay = getSessionStartTimes(slots, bookingDuration);
       const isSlotActive = slotsForDay.includes(timeStr);
       if (isDayActive && isSlotActive) {
         const bookings = advisor.bookedSlots || [];
-        const isAlreadyBooked = bookings.some(b =>
-          b.date === dateStr &&
-          b.time === timeStr
-        );
+        const isAlreadyBooked = hasOverlappingBooking(dateStr, timeStr, bookingDuration, bookings);
         if (isAlreadyBooked) {
           return 'Booked';
         }
@@ -1242,6 +1193,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
   };
 
   const processPayment = async () => {
+    if (baseFee === null || netTotal === null) {
+      toast.error('This psychologist does not have a price configured for the selected session duration.');
+      return;
+    }
     setBookingStep('payment');
     window.history.pushState({ component: 'booking', step: 'payment' }, '');
     setIsProcessingPayment(true);
@@ -1323,7 +1278,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       if (netTotal === 0) {
         setPaymentStepText("Processing free booking...");
         const bookRes = await ApiService.bookAppointment(bookingDetails.counsellorId, bookingDetails);
-        if (bookRes.success) {
+        if (bookRes.success && bookRes.data?.id) {
           toast.success("Booking confirmed!");
           sendLocalNotification(
             "Booking Confirmed!",
@@ -1332,7 +1287,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
           // Meta Pixel conversion tracking for free appointment
           trackPurchase({
-            orderId: bookRes.data?.id || 'free_booking',
+            orderId: bookRes.data.id,
             value: 0.00,
             currency: 'INR',
             service: bookingService,
@@ -1347,13 +1302,13 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
             service: bookingService
           });
 
-          const bookingId = bookRes.data?.id || `BEH-${Date.now().toString().slice(-6)}`;
+          const bookingId = bookRes.data.id;
           setConfirmedBooking(bookRes.data || null);
           setConfirmedMeetLink(bookRes.data?.meetLink || '');
           try {
             sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
               id: bookingId,
-              advisorName: selectedAdvisor?.name || 'Assigned Psychologist',
+              advisorName: selectedAdvisor?.name || '',
               advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
               advisorPhoto: selectedAdvisor?.photo || '',
               advisorId: selectedAdvisor?.id || '',
@@ -1376,7 +1331,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           window.location.replace('/confirmed');
           return;
         } else {
-          throw new Error(bookRes.message || "Failed to confirm free booking.");
+          throw new Error(bookRes.success
+            ? "The server did not return a confirmed booking record. Please try again or contact support."
+            : bookRes.message || "Failed to confirm the free booking.");
         }
       }
 
@@ -1481,13 +1438,18 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
             const verifyRes = await ApiService.verifyPaymentAndBook(response, bookingDetails);
             if (verifyRes.success) {
+              const serverBooking = verifyRes.data || null;
+              const bookingId = verifyRes.data?.bookingId || verifyRes.data?.id || serverBooking?.appointmentId;
+              if (!bookingId) {
+                throw new Error("Payment was received, but the server did not return a booking confirmation. Please contact support before trying to pay again.");
+              }
+
               toast.success("Payment verified! Booking confirmed.");
               sendLocalNotification(
                 "Booking Confirmed!",
                 `Your session with ${selectedAdvisor?.name || 'Assigned Advisor'} on ${selectedDate} at ${selectedTime} is confirmed.`
               );
 
-              const serverBooking = verifyRes.data || null;
               const serverMeetLink = serverBooking?.meetLink || '';
 
               // Meta Pixel conversion tracking for paid appointment
@@ -1509,11 +1471,10 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
               setConfirmedBooking(serverBooking);
               if (serverMeetLink) setConfirmedMeetLink(serverMeetLink);
-              const bookingId = verifyRes.data?.bookingId || verifyRes.data?.id || serverBooking?.id || `BEH-${Date.now().toString().slice(-6)}`;
               try {
                 sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
                   id: bookingId,
-                  advisorName: selectedAdvisor?.name || 'Assigned Psychologist',
+                  advisorName: selectedAdvisor?.name || '',
                   advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
                   advisorPhoto: selectedAdvisor?.photo || '',
                   advisorId: selectedAdvisor?.id || '',
@@ -1605,7 +1566,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         try {
           sessionStorage.setItem('last_booking_confirmation', JSON.stringify({
             id: apptId,
-            advisorName: rescheduleSession.advisorName || selectedAdvisor?.name || 'Assigned Psychologist',
+            advisorName: rescheduleSession.advisorName || selectedAdvisor?.name || '',
             advisorRole: selectedAdvisor?.role || selectedAdvisor?.title || 'Consultant Psychologist',
             date: selectedDate,
             time: selectedTime,
@@ -1860,6 +1821,9 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     advisorConfirmed,
     setAdvisorConfirmed,
     advisors,
+    isLoadingAdvisors,
+    advisorLoadError,
+    retryLoadAdvisors,
     showAuthModal,
     setShowAuthModal,
     showNoCounsellorsModal,

@@ -20,6 +20,10 @@ import CompleteProfileModal from '../features/auth/CompleteProfileModal';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import FaqBlogSection from '../features/landing/FaqBlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
+import HomeValuesSection from '../features/landing/HomeValuesSection';
+import HomeClosingSection from '../features/landing/HomeClosingSection';
+import BookingStepsSection from '../features/landing/BookingStepsSection';
+import '../features/landing/user-home.css';
 import ActivitySheetView from '../features/student/ActivitySheetView';
 import globalBg from '../assets/greygreen.png';
 import globalBgTexture from '../assets/greygreen.png';
@@ -114,104 +118,35 @@ export default function App() {
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
   const [pendingScrollSection, setPendingScrollSection] = useState(null);
 
-  const defaultConsentPolicy =
-    'BEHOLD Informed Consent & Client Agreement for Psychological Counselling & Mentorship:\n\n1. Purpose & Voluntary Participation:\n- Psychological counselling is a collaborative, goal-directed process aimed at facilitating personal growth, emotional wellbeing, and resilience.\n- Participation in all sessions is entirely voluntary. You may ask questions about therapeutic approaches, goals, or techniques at any time.\n\n2. Confidentiality & Privacy:\n- Information shared during sessions is strictly confidential and protected by professional psychological codes of ethics and data protection standards.\n- Exceptions to confidentiality: Confidentiality may be breached only where legally mandated—specifically if there is clear and imminent danger of harm to yourself or others, suspected abuse of children or vulnerable persons, or by formal order of a court of law.\n\n3. Online / Tele-Consultation Guidelines:\n- Tele-counselling sessions are conducted over secure, end-to-end encrypted video channels.\n- Please ensure you are in a private, quiet room with minimal distractions and a stable internet connection.\n- Unauthorized audio or video recording of sessions by either party without explicit written mutual consent is strictly prohibited.\n\n4. Emergency & Crisis Disclaimer:\n- Behold counselling sessions are scheduled professional consultations and are NOT an emergency suicide/crisis intervention service.\n- If you or someone you know is experiencing acute psychiatric distress or an immediate life-threatening emergency, please contact national emergency services (112), KIRAN Mental Health Helpline (1800-599-0019), or Tele-MANAS (14416) immediately.\n\n5. Cancellations & Rescheduling:\n- Cancellations requested 24 hours prior to scheduled start time receive a 100% full refund.\n- Rescheduling is available free of charge up to 12 hours before your appointment.\n\n6. Minor / Guardian Consent:\n- For clients under 18 years of age, parent/guardian acknowledgment and consent is required.';
-
-  const defaultRefundPolicy =
-    'BEHOLD Return, Cancellation & Refund Policy:\n\n1. Appointment Cancellations:\n- Clients can request session cancellation up to 24 hours prior to the scheduled session start time for a full 100% refund.\n- Cancellations made less than 24 hours before the scheduled session start time or no-shows are non-refundable.\n\n2. Refund Processing:\n- Approved refunds will be processed back to the original payment source within 5-7 business days.\n- In case of technical platform errors or counselor unavailability, a 100% automatic refund or priority rescheduling will be provided.\n\n3. Rescheduling:\n- Sessions can be rescheduled free of charge up to 12 hours before the appointment start time.';
-
-  const defaultTermsOfUse =
-    'Welcome to BEHOLD. By accessing or using our psychological counselling, assessment, and career mentoring platform, you agree to comply with and be bound by the terms and conditions.\n\n1. Use of Services:\n- All users agree to provide accurate, up-to-date information during booking and account creation.\n- Services provided are intended for personal guidance, counseling, and mentorship purposes.\n\n2. Intellectual Property:\n- All assessment materials, psychometric tools, tests, reports, logos, and website content are the exclusive intellectual property of BEHOLD Ltd.\n\n3. Prohibited Activities:\n- Users may not record, reproduce, distribute, or exploit consultation sessions or platform content without prior written permission.';
-
-  const defaultPrivacyPolicy =
-    'BEHOLD Privacy & Data Protection Policy:\n\nYour privacy is paramount. This policy describes how we collect, handle, and safeguard your personal information:\n\n1. Information We Collect:\n- Basic personal details (name, phone number, email address, age/grade).\n- Booking history, schedule preferences, and payment transaction metadata.\n- Clinical consultation notes and assessment responses stored with strict encryption.\n\n2. How We Use Information:\n- To facilitate scheduled appointments with your chosen psychologist or mentor.\n- To deliver customized aptitude assessment reports and career roadmaps.\n\n3. Data Confidentiality & Security:\n- We do not sell, rent, or trade your personal or health data to third parties.\n- Data is accessible only to your assigned psychologist and authorized clinical administrators.';
-
   // Expanded site settings sync state
-  const [siteSettings, setSiteSettings] = useState(() => {
-    const defaultSettings = {
-      siteName: 'BEHOLD',
-      siteCopyright: 'BEHOLD Ltd.',
-      showBanner: false,
-      bannerNotice: '',
-      termsOfUse: defaultTermsOfUse,
-      privacyPolicy: defaultPrivacyPolicy,
-      refundPolicy: defaultRefundPolicy,
-      consentPolicy: defaultConsentPolicy,
-      whatsapp: 'https://wa.me/919497174011',
-      contactEmail: 'support@behold.com',
-      enablePsychology: true,
-      enableCareerMentoring: true,
-      enableAptitude: true,
-      gstEnabled: false,
-      gstPercent: 0,
-      sectionOrder: ['counselling-intro', 'whyChooseUs', 'aptitude', 'counsellors', 'about', 'reviews', 'faq', 'blog']
-    };
-    try {
-      const stored = localStorage.getItem('behold_site_settings');
-      if (stored) {
-        return { ...defaultSettings, ...JSON.parse(stored) };
-      }
-    } catch (e) { }
-    return defaultSettings;
-  });
+  const [siteSettings, setSiteSettings] = useState({});
   const [activeDocType, setActiveDocType] = useState(null); // 'terms', 'privacy', 'refund', 'consent'
  
-  const loadSettings = () => {
-    try {
-      const stored = localStorage.getItem('behold_site_settings');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setSiteSettings(prev => ({
-          ...prev,
-          ...parsed
-        }));
-      }
-    } catch (e) { }
-  };
-
   useEffect(() => {
     const fetchGlobalSettings = async () => {
       try {
         const res = await ApiService.getSettings();
-        if (res.success && res.data) {
-          const parsed = res.data;
-          setSiteSettings(prev => ({
-            ...prev,
-            ...parsed
-          })); //
-          localStorage.setItem('behold_site_settings', JSON.stringify(parsed));
-        }
+        if (res?.success) setSiteSettings(res.data || {});
+        else throw new Error(res?.message || 'Admin-managed site settings are unavailable.');
       } catch (err) {
         console.error('Failed to fetch global settings', err);
+        setSiteSettings((current) => ({ ...current, contentLoadError: err.message }));
       }
     };
     fetchGlobalSettings();
 
     const handleSettingsUpdate = (e) => {
-      if (e.detail) {
-        setSiteSettings(prev => ({
-          ...prev, //
-          ...e.detail
-        }));
-        localStorage.setItem('behold_site_settings', JSON.stringify(e.detail));
-      } else {
-        fetchGlobalSettings();
-      }
+      ApiService.getSettings(true).then((res) => {
+        if (res?.success) setSiteSettings(res.data || {});
+        else throw new Error(res?.message || 'Admin-managed site settings are unavailable.');
+      }).catch((err) => {
+        console.error('Failed to refresh global settings', err);
+        setSiteSettings({ contentLoadError: err.message });
+      });
     };
 
-    const handleStorageChange = (e) => {
-      const key = e.key || (e.detail && e.detail.key);
-      if (key === 'behold_site_settings' || !key) {
-        loadSettings();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('storage_update', handleStorageChange);
     window.addEventListener('behold_settings_updated', handleSettingsUpdate);
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('storage_update', handleStorageChange);
       window.removeEventListener('behold_settings_updated', handleSettingsUpdate);
     };
   }, []); //
@@ -219,6 +154,11 @@ export default function App() {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    document.body.classList.toggle('bh-home-page', location.pathname === '/');
+    return () => document.body.classList.remove('bh-home-page');
+  }, [location.pathname]);
 
   // Capture UTM / fbclid campaign parameters on app mount & route change
   useEffect(() => {
@@ -497,7 +437,11 @@ export default function App() {
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
       const title = activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : activeDocType === 'consent' ? 'Informed Consent & Client Agreement' : 'Privacy Policy';
-      const content = activeDocType === 'terms' ? (siteSettings.termsOfUse || defaultTermsOfUse) : activeDocType === 'refund' ? (siteSettings.refundPolicy || defaultRefundPolicy) : activeDocType === 'consent' ? (siteSettings.consentPolicy || defaultConsentPolicy) : (siteSettings.privacyPolicy || defaultPrivacyPolicy);
+      const content = activeDocType === 'terms' ? siteSettings.termsOfUse : activeDocType === 'refund' ? siteSettings.refundPolicy : activeDocType === 'consent' ? siteSettings.consentPolicy : siteSettings.privacyPolicy;
+      if (typeof content !== 'string' || !content.trim()) {
+        toast.error('This document has not been configured in Admin settings.');
+        return;
+      }
 
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(16);
@@ -635,16 +579,20 @@ export default function App() {
         onClose={() => {}}
       />
 
-      <ServiceBooking
-        isOpen={isBookingModalOpen}
-        onClose={() => {
-          setIsBookingModalOpen(false);
-          setBookingAdvisor(null);
-        }}
-        preselectedAdvisorId={bookingAdvisor}
-        clearPreselectedAdvisor={() => setBookingAdvisor(null)}
-        onOpenDocs={setActiveDocType}
-      />
+      {isBookingModalOpen && (
+        <Suspense fallback={null}>
+          <ServiceBooking
+            isOpen={isBookingModalOpen}
+            onClose={() => {
+              setIsBookingModalOpen(false);
+              setBookingAdvisor(null);
+            }}
+            preselectedAdvisorId={bookingAdvisor}
+            clearPreselectedAdvisor={() => setBookingAdvisor(null)}
+            onOpenDocs={setActiveDocType}
+          />
+        </Suspense>
+      )}
  
       {/* Navbar — hidden on admin/counsellor dashboards */}
       {!hideNavbarAndFooter && (
@@ -675,13 +623,16 @@ export default function App() {
         </div>
       }>
         <Routes>
-          {/* Landing Page - Exactly 4 Sections */}
+          {/* Public landing page */}
           <Route path="/" element={ //
-            <main className="fade-in-up">
+            <main className="fade-in-up bh-home">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} />
-              <FaqBlogSection />
-              <ContactInquirySection />
+              <BookingStepsSection navigateToSection={navigateToSection} />
+              <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} siteSettings={siteSettings} />
+              <HomeValuesSection siteSettings={siteSettings} navigateToSection={navigateToSection} />
+              <HomeClosingSection navigateToSection={navigateToSection} />
+              <FaqBlogSection siteSettings={siteSettings} />
+              {siteSettings.enableInquiry !== false && <ContactInquirySection siteSettings={siteSettings} />}
             </main>
           } />
 
@@ -870,13 +821,13 @@ export default function App() {
  
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto text-left text-zinc-300 text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
-              {activeDocType === 'terms'
-                ? (siteSettings.termsOfUse || defaultTermsOfUse)
+              {(activeDocType === 'terms'
+                ? siteSettings.termsOfUse
                 : activeDocType === 'refund'
-                ? (siteSettings.refundPolicy || defaultRefundPolicy)
+                ? siteSettings.refundPolicy
                 : activeDocType === 'consent'
-                ? (siteSettings.consentPolicy || defaultConsentPolicy)
-                : (siteSettings.privacyPolicy || defaultPrivacyPolicy)}
+                ? siteSettings.consentPolicy
+                : siteSettings.privacyPolicy) || 'This document has not been configured in Admin settings.'}
             </div>
 
             {/* Modal Footer */}

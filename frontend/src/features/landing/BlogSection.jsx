@@ -6,18 +6,10 @@ import { ScrollDot } from '../../components/common/BrandDot';
 import { getImageUrl } from '../../utils/formatters';
 import defaultBlogImage from '../../assets/luxury_clinic_room.png';
 
-const BlogSection = () => {  const navigate = useNavigate();
-  const [blogs, setBlogs] = useState(() => {
-    try {
-      const cached = localStorage.getItem('behold_blogs_cache');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) { }
-    return [];
-  });
-  const [loading, setLoading] = useState(() => blogs.length === 0);
+const BlogSection = () => {
+  const navigate = useNavigate();
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const blogScrollRef = useRef(null);
   const itemsPerPage = 3;
@@ -25,13 +17,15 @@ const BlogSection = () => {  const navigate = useNavigate();
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        if (blogs.length === 0) setLoading(true);
         const res = await ApiService.getBlogs({ limit: 12 });
         if (res?.data && Array.isArray(res.data)) {
           setBlogs(res.data);
-          localStorage.setItem('behold_blogs_cache', JSON.stringify(res.data));
-        }      } catch (err) {
+        } else {
+          setBlogs([]);
+        }
+      } catch (err) {
         console.warn('Failed to fetch blogs for landing section:', err);
+        setBlogs([]);
       } finally {
         setLoading(false);
       }

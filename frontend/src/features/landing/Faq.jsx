@@ -4,28 +4,17 @@ import ApiService from '../../services/api';
 import greenTexture from '../../assets/greygreen.png';
 
 export default function Faq({ siteSettings }) {
-  const settings = siteSettings || JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const settings = siteSettings || {};
   const enableAptitude = settings.enableAptitude !== false;
   const [openIndex, setOpenIndex] = useState(null);
-  const [faqs, setFaqs] = useState(() => {
-    try {
-      const cached = localStorage.getItem('behold_faqs_cache');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) { }
-    return [];
-  });
-  const [loading, setLoading] = useState(() => faqs.length === 0);
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (faqs.length === 0) setLoading(true);
-    ApiService.getFaqs()
+    const loadFaqs = (forceRefresh = false) => ApiService.getFaqs(forceRefresh)
       .then((res) => {
-        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        if (res?.success && Array.isArray(res.data)) {
           setFaqs(res.data);
-          localStorage.setItem('behold_faqs_cache', JSON.stringify(res.data));
         } else {
           setFaqs([]);
         }
@@ -36,15 +25,8 @@ export default function Faq({ siteSettings }) {
       })
       .finally(() => setLoading(false));
 
-    const handler = async () => {
-      const res = await ApiService.getFaqs().catch(() => ({}));
-      if (res.success && Array.isArray(res.data)) {
-        setFaqs(res.data);
-        if (res.data.length > 0) {
-          localStorage.setItem('behold_faqs_cache', JSON.stringify(res.data));
-        }
-      }
-    };
+    loadFaqs(true);
+    const handler = () => loadFaqs(true);
     window.addEventListener('behold_faqs_updated', handler);
     return () => window.removeEventListener('behold_faqs_updated', handler);
   }, []);

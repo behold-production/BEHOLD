@@ -210,15 +210,15 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 z-[200] bg-zinc-900/80 backdrop-blur-md animate-backdrop-in" 
+        className="bh-profile-backdrop fixed inset-0 z-[200] bg-zinc-900/80 backdrop-blur-md animate-backdrop-in" 
         onClick={handleCloseModal}
         aria-hidden="true" 
       />
 
       {/* Modal Container */}
-      <div className="fixed inset-0 z-[210] flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain">
+      <div className="bh-profile-overlay fixed inset-0 z-[210] flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain">
         <div 
-          className="relative w-full max-w-md my-auto bg-white rounded-2xl shadow-2xl animate-modal-in border border-zinc-200 flex flex-col max-h-[92vh] overflow-hidden text-left"
+          className="bh-profile-dialog relative w-full max-w-md my-auto bg-white rounded-2xl shadow-2xl animate-modal-in border border-zinc-200 flex flex-col max-h-[92vh] overflow-hidden text-left"
           onClick={(e) => e.stopPropagation()}
         >
           

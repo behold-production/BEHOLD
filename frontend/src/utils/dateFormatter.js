@@ -99,6 +99,10 @@ export const getScheduleForDay = (availability, dayOfWeek) => {
   const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dayName = DAY_NAMES[dayOfWeek];
   const dayNameLower = dayName ? dayName.toLowerCase() : '';
+  const hasWeekdaySchedule = DAY_NAMES.some((name) => (
+    Object.prototype.hasOwnProperty.call(parsed, name)
+    || Object.prototype.hasOwnProperty.call(parsed, name.toLowerCase())
+  ));
 
   const activeDays = parsed.activeDays;
   const hasActiveDaysConfig = activeDays && typeof activeDays === 'object' && Object.keys(activeDays).length > 0;
@@ -114,6 +118,8 @@ export const getScheduleForDay = (availability, dayOfWeek) => {
   } else if (parsed[dayName] !== undefined || parsed[dayNameLower] !== undefined) {
     const direct = parsed[dayName] !== undefined ? parsed[dayName] : parsed[dayNameLower];
     isDayActive = Array.isArray(direct) ? direct.length > 0 : Boolean(direct);
+  } else if (hasWeekdaySchedule) {
+    isDayActive = false;
   }
 
   if (!isDayActive) {
@@ -136,9 +142,77 @@ export const getScheduleForDay = (availability, dayOfWeek) => {
     rawSlots = parsed.availableSlots;
   }
 
-  const hasConfig = Boolean(hasActiveDaysConfig) || Boolean(daySlots) || Boolean(parsed.availableSlots) || Boolean(parsed[dayName]) || Boolean(parsed[dayNameLower]);
+  const hasConfig = Boolean(hasActiveDaysConfig) || Boolean(daySlots) || Boolean(parsed.availableSlots) || hasWeekdaySchedule;
 
   return { isDayActive: true, slots: rawSlots, hasConfig };
+};
+
+const parseTimeToMinutes = (value) => {
+  if (typeof value !== 'string') return null;
+  const match = value.trim().match(/^(\d{1,2}):(\d{2})(?:\s*(AM|PM))?$/i);
+  if (!match) return null;
+  let hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  const period = match[3]?.toUpperCase();
+  if (minutes > 59 || hours > 24 || (hours === 24 && minutes !== 0)) return null;
+  if (period) {
+    if (hours < 1 || hours > 12) return null;
+    if (period === 'AM' && hours === 12) hours = 0;
+    if (period === 'PM' && hours !== 12) hours += 12;
+  }
+  return hours * 60 + minutes;
+};
+
+export const hasOverlappingBooking = (date, time, durationMinutes, bookings = []) => {
+  const requestedStart = parseTimeToMinutes(time);
+  if (requestedStart === null) return true;
+  const requestedDuration = Number(durationMinutes);
+  if (!Number.isFinite(requestedDuration) || requestedDuration <= 0) return true;
+
+  return bookings.some((booking) => {
+    if (!booking || booking.date !== date) return false;
+    const bookedStart = parseTimeToMinutes(booking.time);
+    if (bookedStart === null) return booking.time === time;
+    const bookedDuration = Number(booking.duration) === 30
+      || (typeof booking.duration === 'string' && /\b30\b/.test(booking.duration))
+      ? 30
+      : 60;
+    return requestedStart < bookedStart + bookedDuration
+      && bookedStart < requestedStart + requestedDuration;
+  });
+};
+
+export const getSessionStartTimes = (slots, durationMinutes = 60, stepMinutes = 30) => {
+  if (!Array.isArray(slots)) return [];
+
+  const formatMinutes = (totalMinutes) => {
+    const hours24 = Math.floor(totalMinutes / 60) % 24;
+    const minutes = totalMinutes % 60;
+    const period = hours24 >= 12 ? 'PM' : 'AM';
+    const hours12 = hours24 % 12 || 12;
+    return `${String(hours12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${period}`;
+  };
+  const duration = Number(durationMinutes);
+  const step = Number(stepMinutes);
+  if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(step) || step <= 0) return [];
+
+  const starts = new Set();
+  for (const slot of slots) {
+    if (typeof slot === 'string') {
+      const start = parseTimeToMinutes(slot);
+      if (start !== null) starts.add(formatMinutes(start));
+      continue;
+    }
+    if (!slot || typeof slot !== 'object') continue;
+    const start = parseTimeToMinutes(slot.start);
+    const end = parseTimeToMinutes(slot.end);
+    if (start === null || end === null || end <= start) continue;
+    for (let time = start; time + duration <= end; time += step) {
+      starts.add(formatMinutes(time));
+    }
+  }
+
+  return [...starts].sort((first, second) => parseTimeToMinutes(first) - parseTimeToMinutes(second));
 };
 
 export const calculateNextAvailable = (availability, bookedSlots) => {
@@ -215,28 +289,22 @@ export const calculateNextAvailable = (availability, bookedSlots) => {
     return 0;
   };
 
-  const DEFAULT_SLOTS = [
-    '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
-    '06:00 PM', '07:00 PM', '08:00 PM'
-  ];
-
   // Check next 30 days
   for (let i = 0; i < 30; i++) {
     const checkDate = new Date();
     checkDate.setDate(today.getDate() + i);
     
     const dayOfWeek = checkDate.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const { isDayActive, slots, hasConfig } = getScheduleForDay(parsed, dayOfWeek);
+    const { isDayActive, slots } = getScheduleForDay(parsed, dayOfWeek);
     
     if (isDayActive) {
       const dateStr = formatDateStringLocal(checkDate);
       const bookingsForDate = (bookedSlots || []).filter(b => b && b.date === dateStr);
       
-      const rawSlots = slots.length > 0 ? slots : (!hasConfig ? DEFAULT_SLOTS : []);
+      const rawSlots = getSessionStartTimes(slots, 60);
 
       const freeSlots = rawSlots.filter(slot => {
-        const isBooked = bookingsForDate.some(b => b.time === slot);
+        const isBooked = hasOverlappingBooking(dateStr, slot, 60, bookingsForDate);
         if (isBooked) return false;
         
         if (i === 0) {
@@ -284,5 +352,3 @@ export const formatTimeString = (timeInput) => {
   
   return clean;
 };
-
-

@@ -43,3 +43,6 @@ backend/uploads/*
 # Raw video recordings
 *.MOV
 *.mov
+
+# Reference / workspace backup folder
+behold/

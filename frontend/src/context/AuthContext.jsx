@@ -8,35 +8,46 @@ export function AuthProvider({ children }) {
  const [user, setUser] = useState(null);
  const [isLoading, setIsLoading] = useState(true);
 
- useEffect(() => {
+  useEffect(() => {
     const syncUserFromStorage = () => {
-      const savedUser = localStorage.getItem('behold_auth_user');
-      const savedToken = localStorage.getItem('behold_token');
-      if (savedUser && savedToken) {
-        try {
-          setUser(JSON.parse(savedUser));
-        } catch (e) {
-          console.error("Failed to parse saved user", e);
+      try {
+        const hasStorage = typeof window !== 'undefined' && 'localStorage' in window;
+        const savedUser = hasStorage ? window.localStorage.getItem('behold_auth_user') : null;
+        const savedToken = hasStorage ? window.localStorage.getItem('behold_token') : null;
+        if (savedUser && savedToken) {
+          try {
+            setUser(JSON.parse(savedUser));
+          } catch (e) {
+            console.error("Failed to parse saved user", e);
+            setUser(null);
+          }
+        } else {
+          setUser(null);
         }
-      } else {
+      } catch (err) {
+        console.warn("Storage sync error:", err);
         setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     syncUserFromStorage();
 
     // Fetch latest user data from database to ensure stored data is always fresh
     const fetchLatestProfileFromDB = async () => {
-      const savedToken = localStorage.getItem('behold_token');
-      if (!savedToken) return;
       try {
+        const hasStorage = typeof window !== 'undefined' && 'localStorage' in window;
+        const savedToken = hasStorage ? window.localStorage.getItem('behold_token') : null;
+        if (!savedToken) return;
         const res = await ApiService.getProfile();
         if (res && res.success && res.data) {
           const liveUser = res.data;
           setUser((prev) => {
             const merged = { ...(prev || {}), ...liveUser };
-            localStorage.setItem('behold_auth_user', JSON.stringify(merged));
+            try {
+              if (hasStorage) window.localStorage.setItem('behold_auth_user', JSON.stringify(merged));
+            } catch {}
             return merged;
           });
         }

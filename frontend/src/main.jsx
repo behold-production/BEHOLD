@@ -1,31 +1,45 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-// import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import App from './app/App.jsx'
 import Providers from './app/Providers.jsx'
 
-
-// Intercept localStorage.setItem to trigger custom event for same-tab updates
-const originalSetItem = localStorage.setItem;
-localStorage.setItem = function (key, value) {
-  originalSetItem.apply(this, arguments);
-  const event = new CustomEvent('storage_update', { detail: { key, value } });
-  window.dispatchEvent(event);
-};
+// Safely intercept localStorage.setItem to trigger custom event for same-tab updates
+try {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const originalSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function (key, value) {
+      try {
+        originalSetItem(key, value);
+      } catch (err) {
+        console.warn('Storage setItem failed:', err);
+      }
+      try {
+        const event = new CustomEvent('storage_update', { detail: { key, value } });
+        window.dispatchEvent(event);
+      } catch {}
+    };
+  }
+} catch (e) {
+  console.warn('LocalStorage setup note:', e);
+}
 
 // Fallback spaNavigate stub before React is fully mounted
 window.spaNavigate = function (path) {
-  window.location.pathname = path;
+  if (typeof window !== 'undefined') {
+    window.location.pathname = path;
+  }
 };
 
 // Suppress non-critical third-party analytics (e.g. Razorpay lumberjack / adblocker blocks) console errors
 window.addEventListener('unhandledrejection', (event) => {
-  const reasonStr = String(event.reason || '');
+  const reasonStr = String(event?.reason?.message || event?.reason || '');
   if (
     reasonStr.includes('lumberjack.razorpay') ||
     reasonStr.includes('ERR_BLOCKED_BY_CLIENT') ||
-    reasonStr.includes('otp-credentials')
+    reasonStr.includes('otp-credentials') ||
+    reasonStr.includes('Failed to fetch') ||
+    reasonStr.includes('NetworkError')
   ) {
     event.preventDefault();
   }
@@ -36,12 +50,11 @@ if (typeof window !== 'undefined') {
   let globalObserver = null;
 
   const getGlobalObserver = () => {
-    if (!globalObserver) {
+    if (!globalObserver && typeof IntersectionObserver !== 'undefined') {
       globalObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-revealed');
-            // Unobserve immediately after revealing to release GPU/RAM memory!
             globalObserver.unobserve(entry.target);
           }
         });
@@ -55,6 +68,7 @@ if (typeof window !== 'undefined') {
 
   const observeElements = () => {
     const obs = getGlobalObserver();
+    if (!obs) return;
     const elements = document.querySelectorAll('.reveal-on-scroll:not(.is-revealed), .reveal-scale-in:not(.is-revealed), .reveal-slide-left:not(.is-revealed), .reveal-slide-right:not(.is-revealed)');
     elements.forEach(el => obs.observe(el));
   };
@@ -71,34 +85,24 @@ if (typeof window !== 'undefined') {
     observeElements();
   }
 
-  // Observe node additions cleanly without duplicate Observers
-  const mutationObserver = new MutationObserver((mutations) => {
-    const hasAddedNodes = mutations.some(m => m.addedNodes.length > 0);
-    if (hasAddedNodes) {
-      debouncedObserve();
-    }
-  });
-  mutationObserver.observe(document.body, { childList: true, subtree: true });
+  if (typeof MutationObserver !== 'undefined' && document.body) {
+    const mutationObserver = new MutationObserver((mutations) => {
+      const hasAddedNodes = mutations.some(m => m.addedNodes.length > 0);
+      if (hasAddedNodes) {
+        debouncedObserve();
+      }
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+  }
 }
 
-// Global Error Catcher for Blank Screen Debugging
-window.addEventListener('error', (event) => {
-  const errorDiv = document.createElement('div');
-  errorDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:white; color:red; padding:20px; z-index:999999; font-family:monospace; overflow:auto;';
-  errorDiv.innerHTML = '<h2>🔴 Frontend Crash Detected</h2><p><b>Message:</b> ' + event.message + '</p><pre>' + (event.error && event.error.stack) + '</pre>';
-  document.body.appendChild(errorDiv);
-});
-window.addEventListener('unhandledrejection', (event) => {
-  const errorDiv = document.createElement('div');
-  errorDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:white; color:red; padding:20px; z-index:999999; font-family:monospace; overflow:auto;';
-  errorDiv.innerHTML = '<h2>🔴 Frontend Crash Detected (Promise Rejection)</h2><p><b>Message:</b> ' + event.reason + '</p><pre>' + (event.reason && event.reason.stack) + '</pre>';
-  document.body.appendChild(errorDiv);
-});
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Providers>
-      <App />
-    </Providers>
-  </StrictMode>,
-)
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  createRoot(rootElement).render(
+    <StrictMode>
+      <Providers>
+        <App />
+      </Providers>
+    </StrictMode>,
+  );
+}
