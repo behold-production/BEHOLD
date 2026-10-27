@@ -18,7 +18,15 @@ import SEO from '../../components/common/SEO';
 
 export default function About({ siteSettings, onOpenBooking }) {
   const navigate = useNavigate();
-  const settings = siteSettings || (typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('behold_site_settings') || '{}') : {});
+  const settings = siteSettings || (() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('behold_site_settings');
+        if (stored) return JSON.parse(stored);
+      }
+    } catch {}
+    return {};
+  })();
 
   const stats = [
     {
