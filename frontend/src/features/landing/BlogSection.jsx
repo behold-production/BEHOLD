@@ -88,6 +88,25 @@ export default function BlogSection({ siteSettings = {} }) {
     }
   };
 
+  const getAuthorName = (author) => {
+    if (!author) return 'BEHOLD Editorial';
+    if (typeof author === 'string') return author;
+    if (typeof author === 'object') return author.name || author.fullName || 'BEHOLD Editorial';
+    return 'BEHOLD Editorial';
+  };
+
+  const getAuthorInitial = (author) => {
+    const name = getAuthorName(author);
+    return (name || 'B').charAt(0).toUpperCase();
+  };
+
+  const getAuthorAvatar = (author) => {
+    if (author && typeof author === 'object' && author.avatar) {
+      return getImageUrl(author.avatar);
+    }
+    return null;
+  };
+
   return (
     <section
       id="blog"
@@ -226,11 +245,19 @@ export default function BlogSection({ siteSettings = {} }) {
 
                   <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-teal-100/70 text-teal-800 flex items-center justify-center text-xs font-bold uppercase">
-                        {(featuredPost.author || 'B').charAt(0)}
-                      </div>
+                      {getAuthorAvatar(featuredPost.author) ? (
+                        <img
+                          src={getAuthorAvatar(featuredPost.author)}
+                          alt={getAuthorName(featuredPost.author)}
+                          className="w-7 h-7 rounded-full object-cover border border-slate-200"
+                        />
+                      ) : (
+                        <div className="w-7 h-7 rounded-full bg-teal-100/70 text-teal-800 flex items-center justify-center text-xs font-bold uppercase">
+                          {getAuthorInitial(featuredPost.author)}
+                        </div>
+                      )}
                       <span className="text-xs font-semibold text-slate-800">
-                        {featuredPost.author || 'BEHOLD Editorial'}
+                        {getAuthorName(featuredPost.author)}
                       </span>
                     </div>
 
@@ -293,11 +320,19 @@ export default function BlogSection({ siteSettings = {} }) {
                     {/* Card Footer */}
                     <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold uppercase">
-                          {(post.author || 'B').charAt(0)}
-                        </div>
+                        {getAuthorAvatar(post.author) ? (
+                          <img
+                            src={getAuthorAvatar(post.author)}
+                            alt={getAuthorName(post.author)}
+                            className="w-6 h-6 rounded-full object-cover border border-slate-200"
+                          />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold uppercase">
+                            {getAuthorInitial(post.author)}
+                          </div>
+                        )}
                         <span className="text-xs text-slate-700 font-medium truncate max-w-[130px]">
-                          {post.author || 'BEHOLD Editorial'}
+                          {getAuthorName(post.author)}
                         </span>
                       </div>
 
