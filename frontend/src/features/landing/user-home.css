@@ -56,8 +56,15 @@
   background-color: #f7faf8;
 }
 
+.bh-home #home.bh-landscape-hero {
+  padding: 0;
+  background-color: transparent;
+}
+
 .bh-landscape-hero #bh-hero-title .font-script-hero {
-  font-family: 'Rough', 'Dancing Script', 'Caveat', 'Satisfy', cursive !important;
+  font-family: 'Caveat', 'Dancing Script', 'Rough', 'Satisfy', cursive !important;
+  word-spacing: normal !important;
+  font-weight: 700;
 }
 
 .bh-hero {

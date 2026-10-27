@@ -103,11 +103,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   const navLinks = location.pathname === '/'
     ? [
       { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
-      { label: 'How it works', action: () => goTo('how-it-works'), sectionId: 'how-it-works', path: '/' },
-      { label: 'Find a psychologist', action: () => goTo('experts'), sectionId: 'experts', path: '/' },
-      { label: 'Our approach', action: () => goTo('why-behold'), sectionId: 'why-behold', path: '/' },
-      { label: 'FAQs', action: () => goTo('faqs'), sectionId: 'faqs', path: '/' },
-      { label: 'Articles', action: () => goTo('blog'), sectionId: 'blog', path: '/' },
+      { label: 'Services', action: () => goTo('experts'), sectionId: 'services', path: '/' },
+      { label: 'About Us', action: () => goTo('/about'), sectionId: 'about', path: '/about' },
+      { label: 'Blog', action: () => goTo('blog'), sectionId: 'blog', path: '/' },
     ]
     : [
       { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
@@ -119,9 +117,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   const navRefs = useRef([]);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
-  const activeIndex = navLinks.findIndex(({ sectionId, path }) => (
-    location.pathname === '/' ? activeSection === sectionId : location.pathname === path
-  ));
+  const activeIndex = navLinks.findIndex(({ sectionId, path }) => {
+    if (location.pathname === '/') {
+      if (activeSection === 'home' || !activeSection) return sectionId === 'home';
+      if (activeSection === 'experts' || activeSection === 'services') return sectionId === 'services';
+      if (activeSection === 'about' || activeSection === 'why-behold') return sectionId === 'about';
+      if (activeSection === 'blog' || activeSection === 'articles' || activeSection === 'faqs') return sectionId === 'blog';
+      return activeSection === sectionId;
+    }
+    return location.pathname === path;
+  });
 
   useEffect(() => { //
     const targetEl = navRefs.current[activeIndex >= 0 ? activeIndex : 0];
