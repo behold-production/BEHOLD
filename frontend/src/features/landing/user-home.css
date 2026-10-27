@@ -446,21 +446,22 @@
 }
 
 .bh-booking-dialog {
-  width: min(840px, calc(100vw - 40px)) !important;
+  width: min(840px, calc(100vw - 32px)) !important;
   max-width: 840px !important;
-  height: min(90vh, 900px) !important;
-  height: min(90svh, 900px) !important;
-  background: var(--bh-paper) !important;
-  border: 1px solid rgba(255,255,255,.82);
-  border-radius: 22px !important;
-  box-shadow: 0 30px 100px rgba(15,35,32,.3) !important;
+  height: min(90vh, 880px) !important;
+  height: min(90svh, 880px) !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.16) !important;
 }
 
 .bh-booking-dialog > .sticky {
-  min-height: 72px;
-  padding-inline: 26px !important;
-  background: rgba(255,255,255,.97) !important;
-  border-color: var(--bh-line) !important;
+  min-height: 64px;
+  padding-inline: 22px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: #f1f5f9 !important;
+  border-radius: 12px 12px 0 0 !important;
 }
 
 .bh-booking-dialog > .sticky button[aria-label="Go Back"],
@@ -468,94 +469,118 @@
 .bh-booking-dialog > .sticky button[aria-label="Go Back"]:hover,
 .bh-booking-dialog > .sticky button[aria-label="Close Booking"]:hover { color: var(--bh-teal) !important; }
 .bh-booking-dialog > .sticky button[aria-label="Clear Booking Data"] { color: var(--bh-coral) !important; }
-.bh-booking-dialog .dot-active { box-shadow: 0 0 0 4px rgba(13,130,127,.15); }
+.bh-booking-dialog .dot-active { box-shadow: 0 0 0 3px rgba(13,130,127,.15); }
 .bh-booking-dialog [class*="bg-[#00e5ff]"] { background-color: var(--bh-teal) !important; }
 .bh-booking-dialog [class*="text-[#00e5ff]"] { color: var(--bh-teal) !important; }
 .bh-booking-dialog [class*="border-[#00e5ff]"] { border-color: var(--bh-teal) !important; }
 .bh-booking-dialog [class*="bg-emerald-50"] { background-color: #eff7f0 !important; }
 
 .bh-booking-content {
-  padding: 38px 34px 48px !important;
-  background: #f6f6f0 !important;
+  padding: 24px 22px 36px !important;
+  background: #f8fafc !important;
 }
 .bh-booking-content > div { max-width: 1000px; margin-inline: auto; }
 .bh-booking-content .bh-booking-step-card,
 .bh-booking-content #booking-console .bg-white.border,
 .bh-booking-content #booking-console .booking-card {
-  border-color: #e3e6dd !important;
-  border-radius: 15px !important;
-  box-shadow: 0 8px 24px rgba(29,49,40,.045) !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03) !important;
 }
 .bh-booking-content .bh-booking-step-card {
-  padding: 28px 30px !important;
+  padding: 22px 24px !important;
   background: #fff !important;
 }
-.bh-booking-content .bh-booking-step-card h3 { color: var(--bh-ink) !important; font-size: 23px !important; }
-.bh-booking-content .bh-booking-step-card > div:first-child { border-color: #edf0e9 !important; }
+.bh-booking-content .bh-booking-step-card h3 { color: var(--bh-ink) !important; font-size: 19px !important; }
+.bh-booking-content .bh-booking-step-card > div:first-child { border-color: #f1f5f9 !important; }
 .bh-booking-content .bh-booking-step-card > div:first-child > div:first-child > span:first-child {
-  width: 39px !important;
-  height: 39px !important;
+  width: 30px !important;
+  height: 30px !important;
   color: #fff !important;
-  background: var(--bh-ink) !important;
-  border-radius: 50% !important;
-  font-size: 14px !important;
+  background: #0f172a !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
 }
 .bh-booking-content .bh-booking-step-card > div:first-child > div:first-child > span:first-child::first-letter { color: #fff; }
-.bh-booking-content .bh-booking-step-card > div:first-child p { color: #75817b !important; font-size: 13px !important; line-height: 1.75; }
-.bh-booking-content .bh-booking-step-card > div:first-child > span:last-child { color: var(--bh-teal-dark) !important; background: #f1faf7 !important; border-color: #b8e5d8 !important; border-radius: 12px !important; }
+.bh-booking-content .bh-booking-step-card > div:first-child p { color: #64748b !important; font-size: 12px !important; line-height: 1.6; }
+.bh-booking-content .bh-booking-step-card > div:first-child > span:last-child {
+  color: var(--bh-teal) !important;
+  background: #f0fdfa !important;
+  border: 1px solid #ccfbf1 !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+}
 .bh-booking-content .bh-booking-step-card .text-\[\#00e5ff\],
 .bh-booking-content .bh-booking-step-card .text-teal-700,
 .bh-booking-content .bh-booking-step-card .text-teal-800 { color: var(--bh-teal) !important; }
 .bh-booking-content .bh-booking-step-card [class*="bg-teal-50"],
-.bh-booking-content .bh-booking-step-card [class*="bg-cyan-50"] { background-color: #f0faf8 !important; }
+.bh-booking-content .bh-booking-step-card [class*="bg-cyan-50"] { background-color: #f0fdfa !important; }
 .bh-booking-content .bh-booking-step-card [class*="border-[#00e5ff]"],
 .bh-booking-content .bh-booking-step-card [class*="ring-[#00e5ff]"] { border-color: var(--bh-teal) !important; }
 .bh-booking-content .bh-booking-step-card [class*="text-slate-500"][class*="uppercase"],
 .bh-booking-content .bh-booking-step-card label[class*="uppercase"] {
-  color: #74816f !important;
-  letter-spacing: .12em !important;
+  color: #64748b !important;
+  letter-spacing: .08em !important;
+  font-size: 11px !important;
 }
+
+/* Service Type & Session Mode buttons */
 .bh-booking-content .bh-booking-step-card .card-app-soft,
 .bh-booking-content .bh-booking-step-card .card-app-soft-active {
-  min-height: 76px;
+  min-height: 48px;
   color: var(--bh-ink) !important;
   background: #fff !important;
-  border: 1px solid #e0e5dc !important;
-  border-radius: 17px !important;
-  box-shadow: 0 3px 9px rgba(29,49,40,.035);
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transition: all 0.15s ease-in-out !important;
 }
 .bh-booking-content .bh-booking-step-card .card-app-soft-active {
   color: var(--bh-ink) !important;
-  background: #eefaf9 !important;
-  border: 2px solid var(--bh-teal) !important;
-  box-shadow: 0 7px 18px rgba(13,130,127,.1);
+  background: #f0fdfa !important;
+  border: 1.5px solid var(--bh-teal) !important;
+  box-shadow: 0 0 0 1px rgba(13,130,127,.25) !important;
 }
-.bh-booking-content .bh-booking-step-card .card-app-soft:hover,
-.bh-booking-content .bh-booking-step-card .card-app-soft-active:hover { border-color: var(--bh-teal) !important; }
-.bh-booking-content .bh-booking-step-card button[class*="border-2"] {
-  border-radius: 14px !important;
-  border-color: #e0e5dc !important;
+.bh-booking-content .bh-booking-step-card .card-app-soft:hover {
+  border-color: #cbd5e1 !important;
+  background: #f8fafc !important;
+}
+.bh-booking-content .bh-booking-step-card .card-app-soft-active:hover {
+  border-color: var(--bh-teal) !important;
+}
+
+/* Session Plan & selection buttons */
+.bh-booking-content .bh-booking-step-card button[class*="border-2"],
+.bh-booking-content .bh-booking-step-card div[class*="border-2"] {
+  border-width: 1px !important;
+  border-radius: 8px !important;
+  border-color: #e2e8f0 !important;
   box-shadow: none !important;
 }
-.bh-booking-content .bh-booking-step-card button[class*="border-[#00e5ff]"] {
-  background: #f0faf8 !important;
-  border-color: var(--bh-teal) !important;
-  box-shadow: 0 5px 14px rgba(13,130,127,.08) !important;
+.bh-booking-content .bh-booking-step-card button[class*="border-[#00e5ff]"],
+.bh-booking-content .bh-booking-step-card div[class*="border-[#00e5ff]"] {
+  background: #f0fdfa !important;
+  border: 1.5px solid var(--bh-teal) !important;
+  box-shadow: 0 0 0 1px rgba(13,130,127,.2) !important;
+  border-radius: 8px !important;
 }
 .bh-booking-content .bh-booking-step-card button[class*="bg-slate-900"],
 .bh-booking-dialog button[class*="bg-slate-900"],
 .bh-booking-dialog button[class*="bg-[#0f172a]"],
 .bh-booking-dialog button[class*="bg-surface-900"] {
   color: #fff !important;
-  background: var(--bh-ink) !important;
-  border-color: var(--bh-ink) !important;
+  background: #0f172a !important;
+  border-color: #0f172a !important;
   border-radius: 8px !important;
 }
 .bh-booking-content .bh-booking-step-card button[class*="bg-slate-900"]:hover,
 .bh-booking-dialog button[class*="bg-slate-900"]:hover,
-.bh-booking-dialog button[class*="bg-[#0f172a]"]:hover { background: var(--bh-teal-dark) !important; }
+.bh-booking-dialog button[class*="bg-[#0f172a]"]:hover { background: #1e293b !important; }
 .bh-booking-content .bh-booking-step-card [class*="border-slate-100"],
-.bh-booking-content .bh-booking-step-card [class*="border-slate-200"] { border-color: #e9ede5 !important; }
+.bh-booking-content .bh-booking-step-card [class*="border-slate-200"] { border-color: #e2e8f0 !important; }
 .bh-booking-dialog input,
 .bh-booking-dialog select,
 .bh-booking-dialog textarea,
@@ -658,21 +683,21 @@
     max-width: none !important;
     height: 94vh !important;
     height: 94svh !important;
-    border-radius: 22px 22px 0 0 !important;
+    border-radius: 12px 12px 0 0 !important;
   }
-  .bh-booking-dialog > .sticky { min-height: 62px; padding: 10px 17px !important; }
-  .bh-booking-content { padding: 22px 13px 30px !important; }
-  .bh-booking-content .bh-booking-step-card { padding: 19px 15px !important; }
-  .bh-booking-content .bh-booking-step-card h3 { font-size: 19px !important; }
+  .bh-booking-dialog > .sticky { min-height: 60px; padding: 10px 16px !important; }
+  .bh-booking-content { padding: 18px 12px 28px !important; }
+  .bh-booking-content .bh-booking-step-card { padding: 16px 14px !important; border-radius: 8px !important; }
+  .bh-booking-content .bh-booking-step-card h3 { font-size: 18px !important; }
   .bh-booking-content .bh-booking-step-card > div:first-child p { font-size: 11px !important; }
   .bh-booking-content .bh-booking-step-card .card-app-soft,
-  .bh-booking-content .bh-booking-step-card .card-app-soft-active { min-height: 61px; gap: 5px; }
+  .bh-booking-content .bh-booking-step-card .card-app-soft-active { min-height: 44px; gap: 8px; border-radius: 8px !important; }
   .bh-auth-overlay,
   .bh-booking-auth-overlay,
   .bh-profile-overlay { padding: 14px !important; }
   .bh-auth-dialog,
   .bh-booking-auth-dialog,
-  .bh-profile-dialog { max-height: calc(100svh - 28px) !important; border-radius: 16px !important; }
+  .bh-profile-dialog { max-height: calc(100svh - 28px) !important; border-radius: 12px !important; }
 }
 
 @media (max-width: 430px) {
