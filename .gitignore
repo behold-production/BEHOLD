@@ -26,6 +26,7 @@ backend/.env
 
 # Editor directories and files
 .vscode/*
+.behold/*
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -43,6 +44,3 @@ backend/uploads/*
 # Raw video recordings
 *.MOV
 *.mov
-
-# Reference / workspace backup folder
-behold/
