@@ -6,7 +6,7 @@ import { formatExperience } from '../../utils/formatters';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
 
 const getInitial = (name = '') => {
-  const cleanName = name.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
+  const cleanName = (typeof name === 'string' ? name : '').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
   return cleanName.charAt(0).toUpperCase() || 'P';
 };
 

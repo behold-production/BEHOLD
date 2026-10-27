@@ -28,28 +28,32 @@ export default function About({ siteSettings, onOpenBooking }) {
     return {};
   })();
 
+  const adminStats = Array.isArray(settings.aboutStats) && settings.aboutStats.length > 0
+    ? settings.aboutStats.filter(s => s && (s.value || s.label))
+    : null;
+
   const stats = [
     {
-      value: settings.aboutStat1Value || '1,500+',
-      label: settings.aboutStat1Label || 'Hours of dedicated clinical psychology & student mentorship sessions.',
+      value: adminStats?.[0]?.value || settings.aboutStat1Value || '1,500+',
+      label: adminStats?.[0]?.label || settings.aboutStat1Label || 'Hours of dedicated clinical psychology & student mentorship sessions.',
       icon: BrainCircuit,
       accent: 'teal'
     },
     {
-      value: settings.aboutStat2Value || '50+',
-      label: settings.aboutStat2Label || 'Licensed clinical psychologists & mentors providing guidance.',
+      value: adminStats?.[1]?.value || settings.aboutStat2Value || '50+',
+      label: adminStats?.[1]?.label || settings.aboutStat2Label || 'Licensed clinical psychologists & mentors providing guidance.',
       icon: Compass,
       accent: 'cyan'
     },
     {
-      value: settings.aboutStat3Value || '10k+',
-      label: settings.aboutStat3Label || 'Individuals and families supported toward emotional wellness.',
+      value: adminStats?.[2]?.value || settings.aboutStat3Value || '10k+',
+      label: adminStats?.[2]?.label || settings.aboutStat3Label || 'Individuals and families supported toward emotional wellness.',
       icon: Heart,
       accent: 'rose'
     },
     {
-      value: '100%',
-      label: 'Private, end-to-end encrypted and confidential care under strict ethical standards.',
+      value: adminStats?.[3]?.value || '100%',
+      label: adminStats?.[3]?.label || 'Private, end-to-end encrypted and confidential care under strict ethical standards.',
       icon: Lock,
       accent: 'emerald'
     }

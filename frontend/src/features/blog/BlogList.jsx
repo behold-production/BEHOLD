@@ -226,6 +226,9 @@ const BlogList = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 items-stretch">
                 {paginatedBlogs.map((post, idx) => {
                   const delayClass = idx === 0 ? 'reveal-delay-1' : idx === 1 ? 'reveal-delay-2' : idx === 2 ? 'reveal-delay-3' : 'reveal-delay-4';
+                  const authorName = (typeof post.author === 'object' ? post.author?.name : post.author) || 'BEHOLD Editorial';
+                  const authorRole = (typeof post.author === 'object' ? post.author?.role : null) || 'Senior Mentor';
+                  const authorAvatar = typeof post.author === 'object' ? post.author?.avatar : null;
                   return (
                     <article
                       key={post._id || post.slug}
@@ -267,18 +270,18 @@ const BlogList = () => {
                         <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                           <div className="flex items-center gap-2.5 min-w-0">
                             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00e5ff] flex items-center justify-center font-semibold text-xs overflow-hidden shrink-0">
-                              {post.author?.avatar ? (
-                                <img src={getImageUrl(post.author.avatar)} alt={post.author.name} className="w-full h-full object-cover" />
+                              {authorAvatar ? (
+                                <img src={getImageUrl(authorAvatar)} alt={authorName} className="w-full h-full object-cover" />
                               ) : (
-                                <span>{(post.author?.name || 'B')[0]}</span>
+                                <span>{authorName.charAt(0).toUpperCase() || 'B'}</span>
                               )}
                             </div>
                             <div className="min-w-0">
                               <h4 className="text-xs font-semibold text-slate-900 truncate leading-tight">
-                                {post.author?.name || 'BEHOLD Editorial'}
+                                {authorName}
                               </h4>
                               <p className="text-[10px] text-slate-400 font-semibold tracking-wider truncate">
-                                {post.author?.role || 'Senior Mentor'}
+                                {authorRole}
                               </p>
                             </div>
                           </div>

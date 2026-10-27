@@ -207,27 +207,34 @@ const BlogPostDetail = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 mb-10 border-b border-slate-200/80">
 
             {/* Author */}
-            <div className="flex items-center gap-3 shrink-0">
-              {post.author?.avatar ? (
-                <img
-                  src={getImageUrl(post.author.avatar)}
-                  alt={post.author?.name}
-                  className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0 shadow-sm"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00e5ff] flex items-center justify-center font-semibold text-sm shrink-0 shadow-sm">
-                  {(post.author?.name || 'B').charAt(0)}
+            {(() => {
+              const authorName = (typeof post.author === 'object' ? post.author?.name : post.author) || 'BEHOLD Editorial Team';
+              const authorRole = (typeof post.author === 'object' ? post.author?.role : null) || 'Senior Career Counsellor & Mentor';
+              const authorAvatar = typeof post.author === 'object' ? post.author?.avatar : null;
+              return (
+                <div className="flex items-center gap-3 shrink-0">
+                  {authorAvatar ? (
+                    <img
+                      src={getImageUrl(authorAvatar)}
+                      alt={authorName}
+                      className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0 shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#00e5ff] flex items-center justify-center font-semibold text-sm shrink-0 shadow-sm">
+                      {authorName.charAt(0).toUpperCase() || 'B'}
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-[13px] font-semibold text-slate-900 tracking-wide leading-tight">
+                      {authorName}
+                    </h3>
+                    <p className="text-[10px] text-slate-400 font-semibold tracking-widest uppercase mt-0.5">
+                      {authorRole}
+                    </p>
+                  </div>
                 </div>
-              )}
-              <div>
-                <h3 className="text-[13px] font-semibold text-slate-900 tracking-wide leading-tight">
-                  {post.author?.name || 'BEHOLD Editorial Team'}
-                </h3>
-                <p className="text-[10px] text-slate-400 font-semibold tracking-widest uppercase mt-0.5">
-                  {post.author?.role || 'Senior Career Counsellor & Mentor'}
-                </p>
-              </div>
-            </div>
+              );
+            })()}
 
             {/* Share Buttons — single row, no wrap */}
             <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto scrollbar-none pb-0.5">

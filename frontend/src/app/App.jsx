@@ -285,6 +285,12 @@ export default function App() {
         if (targetId === 'contact') targetId = 'inquiry';
         if (targetId === 'counselling-intro') targetId = 'services';
         if (targetId === 'faq') targetId = 'faqs';
+        if (targetId === 'articles' || targetId === 'blogs') targetId = 'blog';
+        if (targetId === 'faqs-blogs') {
+          const el = document.getElementById('blog') || document.getElementById('faqs');
+          if (el) targetId = el.id;
+        }
+        if (targetId === 'about-us') targetId = 'about';
         if (targetId === 'whyChooseUs') targetId = 'why-choose-us';
 
         const element = document.getElementById(targetId); //

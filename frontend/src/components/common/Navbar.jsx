@@ -36,17 +36,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   useEffect(() => {
     if (location.pathname !== '/') return;
 
-    const sectionIds = ['home', 'how-it-works', 'experts', 'why-behold', 'faqs-blogs', 'inquiry'];
+    const sectionIds = ['home', 'how-it-works', 'experts', 'about', 'faqs', 'blog', 'inquiry'];
     const handleScrollSection = () => {
-      const scrollPos = window.scrollY + 140;
+      const scrollPos = window.scrollY + 160;
       for (const id of sectionIds) {
         const el = document.getElementById(id);
         if (el) {
           const top = el.offsetTop;
           const height = el.offsetHeight;
           if (scrollPos >= top && scrollPos < top + height) {
-            if (id === 'faqs-blogs') setActiveSection('faqs-blogs');
-            else setActiveSection(id);
+            setActiveSection(id);
             break;
           }
         }
@@ -258,7 +257,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       {user.profilePic ? (
                         <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-xs font-semibold text-[#00e5ff] uppercase">{(user.name || user.email || 'U').charAt(0)}</span>
+                        <span className="text-xs font-semibold text-[#00e5ff] uppercase">{String(user.name || user.email || 'U').charAt(0)}</span>
                       )}
                     </div>
                     <div className="flex flex-col text-left leading-tight pr-1 hidden sm:flex">
@@ -289,7 +288,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       {user.profilePic ? (
                         <img src={user.profilePic} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span>{(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
+                        <span>{String(user.name || user.email || 'U').charAt(0).toUpperCase()}</span>
                       )}
                     </div>
                   </button>
