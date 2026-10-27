@@ -633,8 +633,7 @@ export default function App() {
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               <BookingStepsSection navigateToSection={navigateToSection} />
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} siteSettings={siteSettings} />
-              <HomeValuesSection siteSettings={siteSettings} navigateToSection={navigateToSection} />
-              <HomeClosingSection navigateToSection={navigateToSection} />
+              <About siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               {siteSettings.enableFaq !== false && <Faq siteSettings={siteSettings} />}
               {siteSettings.enableBlog !== false && <BlogSection siteSettings={siteSettings} />}
               {siteSettings.enableInquiry !== false && <ContactInquirySection siteSettings={siteSettings} />}

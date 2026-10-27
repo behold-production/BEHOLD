@@ -104,7 +104,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     ? [
       { label: 'Home', action: () => goTo('home'), sectionId: 'home', path: '/' },
       { label: 'Services', action: () => goTo('experts'), sectionId: 'services', path: '/' },
-      { label: 'About Us', action: () => goTo('/about'), sectionId: 'about', path: '/about' },
+      { label: 'About Us', action: () => goTo('about'), sectionId: 'about', path: '/' },
       { label: 'Blog', action: () => goTo('blog'), sectionId: 'blog', path: '/' },
     ]
     : [

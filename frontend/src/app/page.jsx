@@ -5,6 +5,7 @@ import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import Hero from '../features/landing/Hero';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
+import About from '../features/landing/About';
 import Faq from '../features/landing/Faq';
 import BlogSection from '../features/landing/BlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
@@ -115,6 +116,10 @@ export default function HomePage() {
         <TherapistSwipeSection
           onBookTherapist={handleBookTherapist}
           navigateToSection={navigateToSection}
+        />
+        <About
+          siteSettings={siteSettings}
+          onOpenBooking={() => setIsBookingModalOpen(true)}
         />
         <Faq siteSettings={siteSettings} />
         <BlogSection siteSettings={siteSettings} />
