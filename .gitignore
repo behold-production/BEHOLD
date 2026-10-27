@@ -27,6 +27,7 @@ backend/.env
 # Editor directories and files
 .vscode/*
 .behold/*
+behold/
 !.vscode/extensions.json
 .idea
 .DS_Store
