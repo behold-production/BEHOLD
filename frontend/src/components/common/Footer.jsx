@@ -198,27 +198,27 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
                 <li>
-                  <button onClick={() => goTo('home')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('home')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     Home
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/about')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('/about')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     Our Philosophy
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/psychologists')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('/psychologists')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     Clinical Psychologists
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/blog')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('/blog')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     Journal &amp; Insights
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/faqs')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('/faqs')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     FAQ Directory
                   </button>
                 </li>
@@ -232,22 +232,22 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
                 <li>
-                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     Psychological Counselling &amp; Emotional Support
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     C-DAT Career Aptitude &amp; Mentorship
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     Doorstep In-Home Therapy (Kerala)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
                     Secure Online Tele-Counselling
                   </button>
                 </li>
