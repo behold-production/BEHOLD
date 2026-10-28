@@ -1259,7 +1259,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                                 return (
                                                                     <React.Fragment>
-                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
                                                                         {advisorsToRender.map((advisor) => {
                                                                             const info = getAdvisorEarliestAvailableInfo(advisor);
                                                                             const isAvailable = info.available;
@@ -1327,15 +1327,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                                 )}
 
                                                                                                 {advisor.specialties?.length > 0 && (
-                                                                                                    <div className="flex flex-wrap gap-1 pt-1">
-                                                                                                        {advisor.specialties.slice(0, 3).map((spec, i) => (
-                                                                                                            <span key={i} className="px-2 py-0.5 bg-[#faf6ee] border border-[#ede7de] text-[#5c6b66] text-[10px] font-semibold rounded-md">
+                                                                                                    <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                                                                                                        {advisor.specialties.slice(0, 2).map((spec, i) => (
+                                                                                                            <span key={i} title={spec} className="max-w-[140px] truncate px-2 py-0.5 bg-[#faf6ee] border border-[#ede7de] text-[#5c6b66] text-[10px] font-semibold rounded-md">
                                                                                                                 {spec}
                                                                                                             </span>
                                                                                                         ))}
-                                                                                                        {advisor.specialties.length > 3 && (
-                                                                                                            <span className="px-2 py-0.5 bg-[#faf6ee] border border-[#ede7de] text-[#5c6b66] text-[10px] font-semibold rounded-md">
-                                                                                                                +{advisor.specialties.length - 3}
+                                                                                                        {advisor.specialties.length > 2 && (
+                                                                                                            <span className="shrink-0 px-2 py-0.5 bg-[#faf6ee] border border-[#ede7de] text-[#5c6b66] text-[10px] font-semibold rounded-md">
+                                                                                                                +{advisor.specialties.length - 2}
                                                                                                             </span>
                                                                                                         )}
                                                                                                     </div>

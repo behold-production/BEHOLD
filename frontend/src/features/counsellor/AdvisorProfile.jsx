@@ -362,25 +362,15 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         canonicalUrl={`https://www.behold.co.in/advisor/${advisor.id}`}
       />
 
-      {/* ── TOP HERO BANNER & OVERLAY NAVBAR (Mobile First Header) ── */}
-      <div className="relative w-full h-72 sm:h-80 md:h-96 bg-[#1c2826] overflow-hidden">
-        {advisor.profilePic ? (
-          <img 
-            src={advisor.profilePic} 
-            alt={advisor.name} 
-            className="w-full h-full object-cover object-top opacity-95 filter brightness-[0.92]" 
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#2b3a37] via-[#1c2826] to-[#16201d] flex items-center justify-center font-black text-7xl text-[#b85438]/40">
-            <span>{getInitials(advisor.name)}</span>
-          </div>
-        )}
-        
-        {/* Subtle Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40" />
+      {/* ── TOP HERO BANNER (decorative) + OVERLAY NAV ── */}
+      <div className="relative w-full h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#2b3a37] via-[#1c2826] to-[#16201d] overflow-hidden">
+        {/* Soft ambient terracotta accents */}
+        <div className="absolute -top-16 -right-10 w-64 h-64 rounded-full bg-[#b85438]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 left-1/4 w-72 h-72 rounded-full bg-[#b85438]/10 blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
         {/* Floating Top Nav Header */}
-        <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-4 sm:pt-6 max-w-5xl mx-auto flex items-center justify-between">
+        <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-4 sm:pt-6 max-w-4xl mx-auto flex items-center justify-between">
           <button
             type="button"
             onClick={handleBack}
@@ -425,7 +415,22 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
         {/* ── FLOATING PROFILE INFO CARD ── */}
         <div className="bg-white rounded-t-lg sm:rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-[#ede7de] p-6 sm:p-8 text-center space-y-4">
-          
+
+          {/* Circular Profile Avatar */}
+          <div className="flex justify-center">
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full ring-4 ring-white shadow-lg border border-[#ede7de] bg-[#1c2826] overflow-hidden flex items-center justify-center">
+              <span className="font-black text-3xl text-[#b85438]/70">{getInitials(advisor.name)}</span>
+              {advisor.profilePic && (
+                <img
+                  src={advisor.profilePic}
+                  alt={advisor.name}
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  className="absolute inset-0 w-full h-full object-cover object-top"
+                />
+              )}
+            </div>
+          </div>
+
           {/* Certified Member Badge */}
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-[#f6efe8] text-[#b85438] rounded-md font-bold text-xs border border-[#e3c4b7]/80 shadow-2xs mx-auto">
             <ShieldCheck className="w-4 h-4 fill-[#b85438] text-white shrink-0" />
@@ -648,7 +653,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
                       <div className="flex-1 h-2 bg-[#f4eee6] rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-[#faf5f0]0 rounded-full transition-all duration-500" 
+                          className="h-full bg-[#b85438] rounded-full transition-all duration-500" 
                           style={{ width: row.percent }} 
                         />
                       </div>
@@ -984,7 +989,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <span className="text-lg sm:text-2xl font-black text-[#1c2826]">
                   ₹{advisor.price.toLocaleString('en-IN')}
                 </span>
-                <span className="text-xs text-[#b85438] font-semibold hidden xs:inline">
+                <span className="text-xs text-[#b85438] font-semibold hidden sm:inline">
                   (Intro: ₹{advisor.halfSessionPrice || 499})
                 </span>
               </div>
