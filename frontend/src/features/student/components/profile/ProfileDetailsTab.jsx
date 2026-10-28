@@ -172,8 +172,8 @@ const ProfileDetailsTab = ({
  {/* Header */}
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
  <div>
- <h2 className="text-xl font-semibold text-surface-900 tracking-tight">My Profile</h2>
- <p className="text-sm text-surface-500 mt-0.5">Keep your details up to date.</p>
+ <h2 className="text-xl font-semibold text-[#1c2826] tracking-tight">My Profile</h2>
+ <p className="text-sm text-[#8a938f] mt-0.5">Keep your details up to date.</p>
  </div>
  </div>
 
@@ -183,17 +183,17 @@ const ProfileDetailsTab = ({
  return (
  <div
  key={sIdx}
- className="relative overflow-hidden rounded-2xl p-5 border border-surface-200 bg-white shadow-square-light"
+ className="relative overflow-hidden rounded-2xl p-5 border border-[#ede7de] bg-white shadow-square-light"
  >
  {/* Left accent border */}
  <div className="absolute left-0 top-4 bottom-4 w-1 rounded-xl" style={{ background: section.accentColor }} />
- <div className="flex items-center gap-3 mb-5 pb-3 border-b border-surface-100 pl-3">
+ <div className="flex items-center gap-3 mb-5 pb-3 border-b border-[#f4eee6] pl-3">
  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: section.accentBg, border: `1px solid ${section.accentColor}25` }}>
  <SIcon className="w-[18px] h-[18px]" style={{ color: section.accentColor }} />
  </div>
  <div>
- <h3 className="text-sm font-semibold text-surface-900">{section.title}</h3>
- <p className="text-xs text-surface-500 mt-0.5">{section.hint}</p>
+ <h3 className="text-sm font-semibold text-[#1c2826]">{section.title}</h3>
+ <p className="text-xs text-[#8a938f] mt-0.5">{section.hint}</p>
  </div>
  </div>
 
@@ -204,16 +204,16 @@ const ProfileDetailsTab = ({
  const hasValue = !!formData[field.name];
  return (
  <div key={field.name} className="space-y-1.5">
- <label htmlFor={`sp-${field.name}`} className="text-xs text-surface-700 font-semibold flex items-center justify-between">
+ <label htmlFor={`sp-${field.name}`} className="text-xs text-[#4c5b55] font-semibold flex items-center justify-between">
    <span className="flex items-center">
      <span>{field.label}</span>
      {field.required && <span className="text-rose-500 font-bold ml-1 text-sm leading-none">*</span>}
    </span>
-   {!field.required && <span className="text-[10px] text-surface-400 font-normal font-sans">(Optional)</span>}
+   {!field.required && <span className="text-[10px] text-[#a8a094] font-normal font-sans">(Optional)</span>}
  </label>
  <div className="relative">
  {FIcon && (
- <FIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${hasError ? 'text-rose-400' : hasValue ? 'text-surface-600' : 'text-surface-300'
+ <FIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${hasError ? 'text-rose-400' : hasValue ? 'text-[#5c6b66]' : 'text-[#e0d8cb]'
  }`} />
  )}
  {field.type === 'select' ? (
@@ -222,9 +222,9 @@ const ProfileDetailsTab = ({
  name={field.name}
  value={formData[field.name]}
  onChange={handleChange}
- className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 border text-sm text-surface-900 font-medium rounded-xl outline-none transition-all appearance-none cursor-pointer ${hasError
+ className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 border text-sm text-[#1c2826] font-medium rounded-xl outline-none transition-all appearance-none cursor-pointer ${hasError
  ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
- : 'bg-surface-50 border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white'
+ : 'bg-[#faf6ee] border-[#ede7de] focus:border-[#1c2826] focus:ring-0 focus:bg-white'
  }`}
  >
  {field.options.map((o, i) => (
@@ -240,8 +240,8 @@ const ProfileDetailsTab = ({
  placeholder={field.placeholder}
  rows={3}
  className={`w-full pl-10 pr-9 py-2.5 text-sm font-medium rounded-xl outline-none transition-all resize-none ${hasError
- ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-surface-900'
- : 'bg-surface-50 border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900'
+ ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-[#1c2826]'
+ : 'bg-[#faf6ee] border-[#ede7de] focus:border-[#1c2826] focus:ring-0 focus:bg-white text-[#1c2826]'
  }`}
  />
  ) : (
@@ -255,10 +255,10 @@ const ProfileDetailsTab = ({
  autoComplete={field.autoComplete}
  disabled={field.disabled}
  className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-xl outline-none transition-all ${field.disabled
- ? 'bg-surface-100 border-surface-200 text-surface-500 cursor-not-allowed'
+ ? 'bg-[#f4eee6] border-[#ede7de] text-[#8a938f] cursor-not-allowed'
  : hasError
- ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-surface-900'
- : 'bg-surface-50 border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900'
+ ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-[#1c2826]'
+ : 'bg-[#faf6ee] border-[#ede7de] focus:border-[#1c2826] focus:ring-0 focus:bg-white text-[#1c2826]'
  }`}
  />
  )}
@@ -278,7 +278,7 @@ const ProfileDetailsTab = ({
  <AlertCircle className="w-3 h-3" /> {errors[field.name]}
  </p>
  ) : (
- <p className="text-[10px] tracking-widest font-semibold text-surface-400">{field.required ? 'Required' : 'Optional'}</p>
+ <p className="text-[10px] tracking-widest font-semibold text-[#a8a094]">{field.required ? 'Required' : 'Optional'}</p>
  )}
  </div>
  );
@@ -290,25 +290,25 @@ const ProfileDetailsTab = ({
 
  {/* Home Location & Address Card */}
  <div
- className="relative overflow-hidden rounded-[10px] p-5 border border-surface-200 bg-white shadow-square-light"
+ className="relative overflow-hidden rounded-[10px] p-5 border border-[#ede7de] bg-white shadow-square-light"
  >
  {/* Left accent border */}
  <div className="absolute left-0 top-4 bottom-4 w-1 rounded-[10px] bg-amber-500" />
- <div className="flex items-center justify-between mb-5 pb-3 border-b border-surface-100 pl-3">
+ <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#f4eee6] pl-3">
  <div className="flex items-center gap-3">
  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-amber-55/20 border border-amber-200/25">
  <MapPin className="w-[18px] h-[18px] text-amber-600" />
  </div>
  <div>
- <h3 className="text-sm font-semibold text-surface-900">Home Location & Address</h3>
- <p className="text-xs text-surface-500 mt-0.5">Used for calculating doorstep session booking feasibility (10 km limit)</p>
+ <h3 className="text-sm font-semibold text-[#1c2826]">Home Location & Address</h3>
+ <p className="text-xs text-[#8a938f] mt-0.5">Used for calculating doorstep session booking feasibility (10 km limit)</p>
  </div>
  </div>
  <button
  type="button"
  onClick={handleDetectLocation}
  disabled={isLocating}
- className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-surface-900 hover:bg-surface-800 text-white rounded-xl tracking-widest text-[10px] font-semibold transition cursor-pointer border-none shadow-none disabled:opacity-50"
+ className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-[#1c2826] hover:bg-[#33413d] text-white rounded-xl tracking-widest text-[10px] font-semibold transition cursor-pointer border-none shadow-none disabled:opacity-50"
  >
  <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
  {isLocating ? 'Locating...' : 'Detect Location'}
@@ -318,19 +318,19 @@ const ProfileDetailsTab = ({
  <div className="space-y-4 animate-in fade-in duration-200">
  {/* Address Search Autocomplete Input */}
  <div className="space-y-1.5 text-left relative">
- <label htmlFor="student-location-search" className="text-[10px] tracking-widest text-surface-600 font-semibold flex items-center gap-1">
+ <label htmlFor="student-location-search" className="text-[10px] tracking-widest text-[#5c6b66] font-semibold flex items-center gap-1">
  Search Home Address
  </label>
  <div className="relative flex gap-2">
  <div className="relative flex-1">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#a8a094]" />
  <input
  id="student-location-search"
  type="text"
  placeholder="Type to search and select your address... (e.g. Kozhikode, Kerala)"
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
+ className="w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#faf6ee] border border-[#ede7de] focus:border-[#1c2826] focus:ring-0 focus:bg-white text-[#1c2826]"
  onKeyDown={(e) => {
  if (e.key === 'Enter') {
  e.preventDefault();
@@ -343,7 +343,7 @@ const ProfileDetailsTab = ({
  type="button"
  onClick={handleAddressSearch}
  disabled={isSearching}
- className="px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white text-[10px] tracking-widest font-semibold rounded-xl transition cursor-pointer border-none shadow-none"
+ className="px-4 py-2 bg-[#1c2826] hover:bg-[#33413d] text-white text-[10px] tracking-widest font-semibold rounded-xl transition cursor-pointer border-none shadow-none"
  >
  {isSearching ? 'Searching...' : 'Search'}
  </button>
@@ -351,7 +351,7 @@ const ProfileDetailsTab = ({
 
  {/* Autocomplete Dropdown */}
  {searchResults.length > 0 && (
- <div className="absolute left-0 right-0 mt-1 bg-white border border-surface-200 rounded-[10px] max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-surface-100">
+ <div className="absolute left-0 right-0 mt-1 bg-white border border-[#ede7de] rounded-[10px] max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-[#f4eee6]">
  {searchResults.map((res, index) => (
  <button
  key={index}
@@ -361,7 +361,7 @@ const ProfileDetailsTab = ({
  setSearchQuery(res.display_name);
  setSearchResults([]);
  }}
- className="w-full text-left px-3.5 py-2.5 text-xs text-surface-700 hover:text-surface-900 hover:bg-surface-50 transition-colors block truncate border-none cursor-pointer"
+ className="w-full text-left px-3.5 py-2.5 text-xs text-[#4c5b55] hover:text-[#1c2826] hover:bg-[#faf6ee] transition-colors block truncate border-none cursor-pointer"
  >
  {res.display_name}
  </button>
@@ -372,7 +372,7 @@ const ProfileDetailsTab = ({
 
  {/* Read/Write Coordinates Form Fields */}
  <div className="space-y-1.5">
- <label htmlFor="sp-locationName" className="text-[10px] tracking-widest text-surface-600 font-semibold">Selected / Current Address</label>
+ <label htmlFor="sp-locationName" className="text-[10px] tracking-widest text-[#5c6b66] font-semibold">Selected / Current Address</label>
  <input
  id="sp-locationName"
  type="text"
@@ -383,13 +383,13 @@ const ProfileDetailsTab = ({
  handleChange(e);
  setSearchQuery(e.target.value);
  }}
- className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
+ className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#faf6ee] border border-[#ede7de] focus:border-[#1c2826] focus:ring-0 focus:bg-white text-[#1c2826]"
  />
  </div>
 
  <div className="grid grid-cols-2 gap-4">
  <div className="space-y-1.5">
- <label htmlFor="sp-latitude" className="text-[10px] tracking-widest text-surface-600 font-semibold">Latitude</label>
+ <label htmlFor="sp-latitude" className="text-[10px] tracking-widest text-[#5c6b66] font-semibold">Latitude</label>
  <input
  id="sp-latitude"
  type="number"
@@ -398,11 +398,11 @@ const ProfileDetailsTab = ({
  placeholder="e.g., 11.2588"
  value={formData.latitude || ''}
  onChange={(e) => handleChange({ target: { name: 'latitude', value: parseFloat(e.target.value) || 0 } })}
- className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
+ className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#faf6ee] border border-[#ede7de] focus:border-[#1c2826] focus:ring-0 focus:bg-white text-[#1c2826]"
  />
  </div>
  <div className="space-y-1.5">
- <label htmlFor="sp-longitude" className="text-[10px] tracking-widest text-surface-600 font-semibold">Longitude</label>
+ <label htmlFor="sp-longitude" className="text-[10px] tracking-widest text-[#5c6b66] font-semibold">Longitude</label>
  <input
  id="sp-longitude"
  type="number"
@@ -411,7 +411,7 @@ const ProfileDetailsTab = ({
  placeholder="e.g., 75.7804"
  value={formData.longitude || ''}
  onChange={(e) => handleChange({ target: { name: 'longitude', value: parseFloat(e.target.value) || 0 } })}
- className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-surface-50 border border-surface-200 focus:border-surface-900 focus:ring-0 focus:bg-white text-surface-900"
+ className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#faf6ee] border border-[#ede7de] focus:border-[#1c2826] focus:ring-0 focus:bg-white text-[#1c2826]"
  />
  </div>
  </div>
@@ -419,18 +419,18 @@ const ProfileDetailsTab = ({
  </div>
 
  {/* Browser Notification Settings Widget */}
- <div className="bg-white border border-surface-200 shadow-square-light rounded-[10px] p-5 space-y-4">
- <div className="flex items-center gap-2.5 pb-3 border-b border-surface-100">
- <div className="w-8 h-8 rounded-[10px] bg-surface-100 flex items-center justify-center">
- <Bell className="w-4 h-4 text-surface-600" />
+ <div className="bg-white border border-[#ede7de] shadow-square-light rounded-[10px] p-5 space-y-4">
+ <div className="flex items-center gap-2.5 pb-3 border-b border-[#f4eee6]">
+ <div className="w-8 h-8 rounded-[10px] bg-[#f4eee6] flex items-center justify-center">
+ <Bell className="w-4 h-4 text-[#5c6b66]" />
  </div>
  <div>
- <h3 className="text-sm font-semibold text-surface-900">Desktop Alerts & Reminders</h3>
- <p className="text-xs text-surface-500">Receive real-time notifications for booking updates and messages</p>
+ <h3 className="text-sm font-semibold text-[#1c2826]">Desktop Alerts & Reminders</h3>
+ <p className="text-xs text-[#8a938f]">Receive real-time notifications for booking updates and messages</p>
  </div>
  </div>
 
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-50 p-4 rounded-[10px] border border-surface-200 text-left">
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#faf6ee] p-4 rounded-[10px] border border-[#ede7de] text-left">
  <div className="space-y-1">
  <div className="flex items-center gap-2">
  <span className={`w-2.5 h-2.5 rounded-[10px] ${
@@ -440,9 +440,9 @@ const ProfileDetailsTab = ({
  ? 'bg-emerald-500 animate-pulse'
  : permissionState === 'denied'
  ? 'bg-rose-500'
- : 'bg-surface-400'
+ : 'bg-[#a8a094]'
  }`} />
- <span className="text-[10px] font-semibold tracking-widest text-surface-700">
+ <span className="text-[10px] font-semibold tracking-widest text-[#4c5b55]">
  {!isNotificationSupported()
  ? 'Not Supported'
  : permissionState === 'granted'
@@ -452,7 +452,7 @@ const ProfileDetailsTab = ({
  : 'Disabled'}
  </span>
  </div>
- <p className="text-xs text-surface-500 font-medium leading-relaxed">
+ <p className="text-xs text-[#8a938f] font-medium leading-relaxed">
  {!isNotificationSupported()
  ? 'Your browser does not support native desktop alerts.'
  : permissionState === 'granted'
@@ -468,7 +468,7 @@ const ProfileDetailsTab = ({
  <button
  type="button"
  onClick={handleEnableNotifications}
- className="min-h-[36px] px-4 py-2 bg-surface-900 hover:bg-surface-800 text-white rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer border-none shadow-none"
+ className="min-h-[36px] px-4 py-2 bg-[#1c2826] hover:bg-[#33413d] text-white rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer border-none shadow-none"
  >
  Enable Notifications
  </button>
@@ -477,7 +477,7 @@ const ProfileDetailsTab = ({
  <button
  type="button"
  onClick={handleTestNotification}
- className="min-h-[36px] px-4 py-2 bg-surface-50 border border-surface-200 text-surface-900 hover:bg-surface-100 rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer shadow-none"
+ className="min-h-[36px] px-4 py-2 bg-[#faf6ee] border border-[#ede7de] text-[#1c2826] hover:bg-[#f4eee6] rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer shadow-none"
  >
  Test Alert Notification
  </button>
@@ -491,12 +491,12 @@ const ProfileDetailsTab = ({
  </div>
  </div>
 
- <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border-t border-surface-200 rounded-xl shadow-square-light">
+ <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border-t border-[#ede7de] rounded-xl shadow-square-light">
  <button
  type="button"
  onClick={handleDiscard}
  disabled={isSaving}
- className="min-h-[40px] px-4 py-2 border border-surface-200 hover:border-surface-300 rounded-xl text-[10px] tracking-widest font-semibold text-surface-900 hover:bg-surface-50 transition-colors bg-white shadow-none disabled:opacity-50"
+ className="min-h-[40px] px-4 py-2 border border-[#ede7de] hover:border-[#e0d8cb] rounded-xl text-[10px] tracking-widest font-semibold text-[#1c2826] hover:bg-[#faf6ee] transition-colors bg-white shadow-none disabled:opacity-50"
  >
  Discard
  </button>
@@ -504,7 +504,7 @@ const ProfileDetailsTab = ({
  type="submit"
  onClick={handleSave}
  disabled={isSaving}
- className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-surface-900 hover:bg-surface-800 disabled:bg-surface-500 text-white text-[10px] tracking-widest font-semibold rounded-xl shadow-none transition-colors border-none cursor-pointer"
+ className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-[#1c2826] hover:bg-[#33413d] disabled:bg-[#8a938f] text-white text-[10px] tracking-widest font-semibold rounded-xl shadow-none transition-colors border-none cursor-pointer"
  >
  {isSaving ? (
  <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>
@@ -516,7 +516,7 @@ const ProfileDetailsTab = ({
  </form>
 
  {isSaved && (
- <div className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-surface-900 text-white rounded-xl shadow-xl" role="status">
+ <div className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-[#1c2826] text-white rounded-xl shadow-xl" role="status">
  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
  <span className="text-[10px] tracking-widest font-semibold">Profile saved successfully!</span>
  </div>

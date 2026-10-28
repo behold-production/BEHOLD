@@ -403,9 +403,9 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 onClose();
               }}
               aria-label="Close dialog"
-              className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-md transition-colors cursor-pointer flex items-center justify-center border-none"
+              className="w-9 h-9 shrink-0 bg-[#f4eee6] hover:bg-[#ede7de] rounded-md transition-colors cursor-pointer flex items-center justify-center border-none"
             >
-              <X className="w-4 h-4 text-[#0f172a]" />
+              <X className="w-4 h-4 text-[#1c2826]" />
             </button>
           </div>
 

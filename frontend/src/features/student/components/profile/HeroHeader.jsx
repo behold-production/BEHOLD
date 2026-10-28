@@ -21,7 +21,7 @@ const HeroHeader = ({
   ];
 
   return (
-    <div className="bg-white text-[#0f172a] border border-slate-200 rounded-xl shadow-xs overflow-hidden relative">
+    <div className="bg-white text-[#1c2826] border border-[#ede7de] rounded-xl shadow-xs overflow-hidden relative">
       {/* Neon top accent bar */}
       <div className="h-1 bg-gradient-to-r from-[#b85438] via-[#e8a184] to-emerald-400 w-full" />
 
@@ -36,14 +36,14 @@ const HeroHeader = ({
                 <img
                   src={avatarUrl}
                   alt={displayName}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover border-2 border-white shadow-md ring-2 ring-slate-200/80"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover border-2 border-white shadow-md ring-2 ring-[#ede7de]/80"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-900 border-2 border-white shadow-md ring-2 ring-slate-200/80 flex items-center justify-center text-[#b85438] font-bold text-2xl sm:text-3xl uppercase">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-[#1c2826] border-2 border-white shadow-md ring-2 ring-[#ede7de]/80 flex items-center justify-center text-[#b85438] font-bold text-2xl sm:text-3xl uppercase">
                   {getInitials(profile.name, user?.name)}
                 </div>
               )}
-              <label className="absolute inset-0 rounded-xl bg-slate-950/75 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#b85438] gap-0.5">
+              <label className="absolute inset-0 rounded-xl bg-[#16201d]/75 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all text-[#b85438] gap-0.5">
                 <span className="text-[10px] font-bold uppercase tracking-widest">Update</span>
                 <input
                   type="file"
@@ -59,44 +59,44 @@ const HeroHeader = ({
               <p className="text-[11px] text-[#b85438] font-bold mb-1 tracking-widest uppercase flex items-center justify-center sm:justify-start gap-1.5">
                 {greeting}
               </p>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight truncate">
+              <h1 className="text-2xl sm:text-3xl font-bold text-[#1c2826] tracking-tight truncate">
                 {(displayName || '').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
               </h1>
 
               {/* Badges */}
               <div className="mt-2.5 flex flex-wrap items-center gap-2 justify-center sm:justify-start">
                 {profile.grade && (
-                  <span className="inline-block px-3 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold">
+                  <span className="inline-block px-3 py-1 rounded-lg bg-[#f4eee6] border border-[#ede7de] text-[#33413d] text-xs font-semibold">
                     Grade {profile.grade}
                   </span>
                 )}
                 {profile.schoolName && (
-                  <span className="inline-block px-3 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold max-w-[220px] truncate">
+                  <span className="inline-block px-3 py-1 rounded-lg bg-[#f4eee6] border border-[#ede7de] text-[#33413d] text-xs font-semibold max-w-[220px] truncate">
                     {profile.schoolName}
                   </span>
                 )}
-                <span className="inline-block px-3 py-1 rounded-lg bg-slate-900 text-[#b85438] text-xs font-bold border border-slate-800">
+                <span className="inline-block px-3 py-1 rounded-lg bg-[#1c2826] text-[#b85438] text-xs font-bold border border-[#33413d]">
                   Verified User
                 </span>
               </div>
 
               {/* Contact Info */}
-              <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:gap-3 justify-center sm:justify-start text-xs text-slate-600 font-medium">
-                <span className="truncate max-w-[240px] text-slate-800 font-semibold">{profile.email || user?.email || 'Add email'}</span>
+              <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:gap-3 justify-center sm:justify-start text-xs text-[#5c6b66] font-medium">
+                <span className="truncate max-w-[240px] text-[#33413d] font-semibold">{profile.email || user?.email || 'Add email'}</span>
                 {profile.phone && (
-                  <span className="text-slate-500 font-semibold">&middot; {profile.phone}</span>
+                  <span className="text-[#8a938f] font-semibold">&middot; {profile.phone}</span>
                 )}
               </div>
 
               {/* Profile Completion Bar */}
-              <div className="mt-4 max-w-sm mx-auto sm:mx-0 bg-[#faf6ee] border border-slate-200 rounded-xl p-3 sm:p-3.5">
+              <div className="mt-4 max-w-sm mx-auto sm:mx-0 bg-[#faf6ee] border border-[#ede7de] rounded-xl p-3 sm:p-3.5">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">
+                  <span className="text-[10px] text-[#8a938f] font-bold tracking-widest uppercase">
                     Profile Setup
                   </span>
-                  <span className="text-xs font-bold text-slate-900">{totalProgress}%</span>
+                  <span className="text-xs font-bold text-[#1c2826]">{totalProgress}%</span>
                 </div>
-                <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-[#ede7de] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-[#b85438] to-[#e8a184] rounded-full transition-all duration-700"
                     style={{ width: `${totalProgress}%` }}
@@ -109,9 +109,9 @@ const HeroHeader = ({
           {/* Right: Stats */}
           <div className="grid grid-cols-3 lg:flex lg:flex-col gap-2.5 shrink-0 w-full lg:w-44 mt-2 lg:mt-0">
             {statItems.map((s, i) => (
-              <div key={i} className="flex flex-col items-center justify-center p-3 sm:p-4 bg-[#faf6ee] border border-slate-200 rounded-xl text-center hover:bg-white hover:shadow-xs transition-all">
-                <p className="text-xl sm:text-2xl font-bold text-slate-900 leading-none">{s.value}</p>
-                <p className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1 leading-tight">{s.label}</p>
+              <div key={i} className="flex flex-col items-center justify-center p-3 sm:p-4 bg-[#faf6ee] border border-[#ede7de] rounded-xl text-center hover:bg-white hover:shadow-xs transition-all">
+                <p className="text-xl sm:text-2xl font-bold text-[#1c2826] leading-none">{s.value}</p>
+                <p className="text-[9px] sm:text-[10px] text-[#8a938f] font-bold uppercase tracking-widest mt-1 leading-tight">{s.label}</p>
               </div>
             ))}
           </div>

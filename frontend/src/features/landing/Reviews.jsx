@@ -4,57 +4,18 @@ import ApiService from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import naturePathImg from '../../assets/nature_path.jpg';
 
-const defaultTestimonials = [
-  {
-    id: 'story-1',
-    name: 'Ananya K.',
-    role: 'Product Specialist, Kochi',
-    tag: 'Anxiety & Panic Recovery',
-    quote: 'Finding BEHOLD was the turning point in my battle with workplace burnout and acute panic attacks. My psychologist offered a deeply compassionate, safe space and grounded me with practical cognitive tools that restored my inner calm.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-    rating: 5,
-  },
-  {
-    id: 'story-2',
-    name: 'Rahul Nair',
-    role: 'University Student, Calicut',
-    tag: 'C-DAT Career Mentorship',
-    quote: 'I was lost regarding my college stream and future path. Taking the C-DAT assessment and discussing the report with my mentor gave me unshakeable clarity and genuine motivation.',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-    rating: 5,
-  },
-  {
-    id: 'story-3',
-    name: 'Pooja & Harish S.',
-    role: 'Couples Care, Bengaluru',
-    tag: 'Relationship Harmony',
-    quote: 'We were struggling with communication breakdowns and unspoken stress. Our therapist helped us listen with authentic empathy and guided us toward rebuilding trust and mutual respect.',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80',
-    rating: 5,
-  },
-  {
-    id: 'story-4',
-    name: 'Arjun V.',
-    role: 'Software Architect, Ernakulam',
-    tag: 'Grief & Healing',
-    quote: 'Navigating deep grief after personal loss felt insurmountable. Having a steady, compassionate clinical presence each week provided the gentle scaffolding I needed to heal.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-    rating: 5,
-  },
-  {
-    id: 'story-5',
-    name: 'Meenakshi Menon',
-    role: 'Parent, Trivandrum',
-    tag: 'Adolescent Guidance',
-    quote: 'My teenager was feeling isolated under academic stress. BEHOLD’s counselor established an instant rapport with my daughter, helping our entire family reconnect with understanding.',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
-    rating: 5,
-  },
-];
+const getInitials = (name = '') => {
+  const clean = (typeof name === 'string' ? name : '').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
+  const parts = clean.split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'B';
+  return (parts[0].charAt(0) + (parts[1]?.charAt(0) || '')).toUpperCase();
+};
+
 
 export default function Reviews({ siteSettings = {} }) {
   const { user } = useAuth();
-  const [reviews, setReviews] = useState(defaultTestimonials);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: user?.name || '', role: '', rating: 5, comment: '' });
@@ -76,22 +37,23 @@ export default function Reviews({ siteSettings = {} }) {
               role: r.role || 'Client',
               tag: r.category || 'Therapy & Guidance',
               quote: r.comment || r.text || '',
-              avatar: defaultTestimonials[idx % defaultTestimonials.length].avatar,
+              avatar: typeof r.avatar === 'string' && r.avatar.trim() ? r.avatar : null,
               rating: Number(r.rating) || 5,
             })).filter(r => r.quote);
 
-            if (mapped.length > 0) {
-              setReviews(mapped);
-            }
+            setReviews(mapped);
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => { if (isMounted) setLoading(false); });
+    } else {
+      setLoading(false);
     }
 
     return () => { isMounted = false; };
   }, []);
 
-  const activeStory = reviews[activeIndex] || reviews[0] || defaultTestimonials[0];
+  const activeStory = reviews[activeIndex] || reviews[0] || null;
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -157,6 +119,13 @@ export default function Reviews({ siteSettings = {} }) {
         </div>
 
         {/* 5 Avatars Spotlight Row */}
+        {loading ? (
+          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="w-12 h-12 sm:w-14 sm:h-14 rounded-sm bg-[#f0eae1] animate-pulse" />
+            ))}
+          </div>
+        ) : reviews.length > 0 ? (
         <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
           {reviews.slice(0, 5).map((rev, idx) => {
             const isSelected = idx === activeIndex;
@@ -172,20 +141,39 @@ export default function Reviews({ siteSettings = {} }) {
                 }`}
                 title={`Read story from ${rev.name}`}
               >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-sm overflow-hidden bg-[#f4eee6]">
-                  <img
-                    src={rev.avatar}
-                    alt={rev.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-sm overflow-hidden bg-[#f4eee6] flex items-center justify-center">
+                  {rev.avatar ? (
+                    <img
+                      src={rev.avatar}
+                      alt={rev.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="text-sm font-bold text-[#b85438]">{getInitials(rev.name)}</span>
+                  )}
                 </div>
               </button>
             );
           })}
         </div>
+        ) : null}
 
         {/* Active Testimonial Card */}
+        {loading ? (
+          <div className="max-w-3xl mx-auto text-center px-4 py-6">
+            <div className="flex items-center justify-center gap-1 mb-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="w-4 h-4 rounded-full bg-[#f0eae1] animate-pulse" />
+              ))}
+            </div>
+            <div className="space-y-3 max-w-xl mx-auto">
+              <div className="h-5 w-full bg-[#f0eae1] rounded-sm animate-pulse mx-auto" />
+              <div className="h-5 w-4/5 bg-[#f0eae1] rounded-sm animate-pulse mx-auto" />
+              <div className="h-4 w-1/3 bg-[#f0eae1] rounded-sm animate-pulse mx-auto mt-5" />
+            </div>
+          </div>
+        ) : activeStory ? (
         <div className="max-w-3xl mx-auto text-center px-4">
           <div className="flex items-center justify-center gap-1 text-amber-500 mb-4">
             {Array.from({ length: activeStory.rating || 5 }).map((_, i) => (
@@ -217,13 +205,37 @@ export default function Reviews({ siteSettings = {} }) {
                   setShowForm(!showForm);
                 }
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-medium text-slate-700 bg-white hover:bg-[#f6f2ec] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-medium text-[#4c5b55] bg-white hover:bg-[#f6f2ec] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
             >
               <MessageSquarePlus className="w-3.5 h-3.5 text-[#b85438]" />
               <span>Share Your Experience</span>
             </button>
           </div>
         </div>
+        ) : (
+          <div className="max-w-2xl mx-auto text-center px-4 py-8">
+            <p className="font-serif-hero text-lg sm:text-xl text-[#5c6b66] italic mb-2">
+              A sanctuary of care, trusted by those who walk this path with us.
+            </p>
+            <p className="text-xs text-[#5c6b66] mb-6">
+              Personal reflections from our community will appear here. Would you like to share yours?
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                if (!user) {
+                  window.dispatchEvent(new CustomEvent('behold:open_auth'));
+                } else {
+                  setShowForm(!showForm);
+                }
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-medium text-[#4c5b55] bg-white hover:bg-[#f6f2ec] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
+            >
+              <MessageSquarePlus className="w-3.5 h-3.5 text-[#b85438]" />
+              <span>Share Your Experience</span>
+            </button>
+          </div>
+        )}
 
         {/* Review Form Modal / Slide */}
         {showForm && (
@@ -233,7 +245,7 @@ export default function Reviews({ siteSettings = {} }) {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="p-1 rounded-sm text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="p-1 rounded-sm text-[#a8a094] hover:text-[#4c5b55] cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -247,32 +259,32 @@ export default function Reviews({ siteSettings = {} }) {
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 {error && <div className="text-xs text-rose-600">{error}</div>}
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Your Name</label>
+                  <label className="block text-xs font-semibold text-[#4c5b55] mb-1">Your Name</label>
                   <input
                     type="text"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-md border border-slate-200 outline-none focus:border-[#b85438]"
+                    className="w-full px-3.5 py-2 text-sm rounded-md border border-[#ede7de] outline-none focus:border-[#b85438]"
                     placeholder="e.g. Maya S."
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Role or Area of Support</label>
+                  <label className="block text-xs font-semibold text-[#4c5b55] mb-1">Role or Area of Support</label>
                   <input
                     type="text"
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-md border border-slate-200 outline-none focus:border-[#b85438]"
+                    className="w-full px-3.5 py-2 text-sm rounded-md border border-[#ede7de] outline-none focus:border-[#b85438]"
                     placeholder="e.g. Student, Parent, Individual Therapy"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Your Reflection</label>
+                  <label className="block text-xs font-semibold text-[#4c5b55] mb-1">Your Reflection</label>
                   <textarea
                     rows={3}
                     value={form.comment}
                     onChange={(e) => setForm({ ...form, comment: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-md border border-slate-200 outline-none focus:border-[#b85438]"
+                    className="w-full px-3.5 py-2 text-sm rounded-md border border-[#ede7de] outline-none focus:border-[#b85438]"
                     placeholder="How did BEHOLD support your journey?"
                   />
                 </div>

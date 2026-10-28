@@ -88,18 +88,18 @@ export default function Inquiry({ testProfile, siteSettings }) {
   return (
     <>
       {/* Ready CTA Banner */}
-      <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#b85438]/30">
+      <section className="py-20 sm:py-28 bg-[#1c2826] text-white relative border-b border-[#b85438]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#b85438] tracking-widest uppercase mb-3">
             <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
             <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
           </span>
-          <h2 className="text-3xl sm:text-5xl font-sans font-semibold uppercase text-white mb-4 tracking-tight leading-none">
+          <h2 className="font-serif-hero text-3xl sm:text-5xl font-normal text-white mb-4 tracking-tight leading-[1.05]">
             {settings.inquirySectionTitle || 'Ready to Build Your Future'}
             <span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)]">.</span>
           </h2>
-          <p className="text-sm sm:text-base text-surface-300 font-normal max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="text-sm sm:text-base text-[#e0d8cb] font-normal max-w-xl mx-auto mb-10 leading-relaxed">
             {settings.inquirySectionDesc || 'Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.'}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
@@ -120,40 +120,40 @@ export default function Inquiry({ testProfile, siteSettings }) {
       </section>
 
       {/* Contact Form Section */}
-      <section id="inquiry" className="py-20 sm:py-28 bg-transparent text-surface-900 border-b border-surface-200">
+      <section id="inquiry" className="py-20 sm:py-28 bg-transparent text-[#1c2826] border-b border-[#ede7de]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
             {/* Form — 7 cols */}
-            <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-slate-200 shadow-xl shadow-slate-200/40">
+            <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-[#ede7de] shadow-xl shadow-[#ede7de]/40">
               <div className="mb-8">
                 <span className="text-xs font-semibold text-[#b85438] flex items-center gap-1.5 mb-2">
                   Get In Touch
                 </span>
-                <h2 id="inquiry-title" className="text-3xl font-sans font-semibold text-[#0f172a] mb-3 leading-tight">
+                <h2 id="inquiry-title" className="font-serif-hero text-3xl font-semibold text-[#1c2826] mb-3 leading-tight">
                   Want to Know More<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)]">.</span>
                 </h2>
-                <p className="text-sm text-surface-600 font-normal leading-relaxed">
+                <p className="text-sm text-[#5c6b66] font-normal leading-relaxed">
                   Submit your request and we'll match you with the right expert within 24 hours.
                 </p>
               </div>
 
               {testProfile && (
-                <div className="mb-6 p-4 bg-surface-50 border border-[#b85438]/40 rounded-xl text-[#0f172a] text-xs sm:text-sm font-semibold">
+                <div className="mb-6 p-4 bg-[#faf6ee] border border-[#b85438]/40 rounded-xl text-[#1c2826] text-xs sm:text-sm font-semibold">
                   ✓ Pre-filled with your aptitude test results ({testProfile.dominantDomain} profile).
                 </div>
               )}
 
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
-                  <div className="w-12 h-12 bg-[#0f172a] text-[#b85438] rounded-full flex items-center justify-center mx-auto mb-4 font-semibold text-lg border border-[#b85438]/40">
+                  <div className="w-12 h-12 bg-[#1c2826] text-[#b85438] rounded-full flex items-center justify-center mx-auto mb-4 font-semibold text-lg border border-[#b85438]/40">
                     ✓
                   </div>
-                  <h3 className="text-xl font-sans font-semibold text-[#0f172a] mb-2">Request Sent.</h3>
-                  <p className="text-surface-600 text-sm">Our coordinator will contact you shortly.</p>
+                  <h3 className="font-serif-hero text-xl font-semibold text-[#1c2826] mb-2">Request Sent.</h3>
+                  <p className="text-[#5c6b66] text-sm">Our coordinator will contact you shortly.</p>
                   <button
                     onClick={() => setSubmitStatus(null)}
-                    className="mt-6 px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs rounded-full transition-all border border-[#b85438]/30 cursor-pointer"
+                    className="mt-6 px-7 py-3 bg-[#1c2826] hover:bg-[#2b3a37] text-white font-semibold text-xs rounded-full transition-all border border-[#b85438]/30 cursor-pointer"
                   >
                     Send Another
                   </button>
@@ -162,34 +162,34 @@ export default function Inquiry({ testProfile, siteSettings }) {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name-input" className="block text-xs font-semibold text-[#0f172a] mb-1.5">Full Name *</label>
+                      <label htmlFor="name-input" className="block text-xs font-semibold text-[#1c2826] mb-1.5">Full Name *</label>
                       <input
                         type="text" name="name" id="name-input"
                         value={formData.name} onChange={handleChange}
                         placeholder="e.g. Priya Nair"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all ${formErrors.name ? 'border-rose-400' : 'border-surface-200'}`}
+                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all ${formErrors.name ? 'border-rose-400' : 'border-[#ede7de]'}`}
                       />
                       {formErrors.name && <p className="text-rose-600 text-xs mt-1 font-semibold">{formErrors.name}</p>}
                     </div>
                     <div>
-                      <label htmlFor="email-input" className="block text-xs font-semibold text-[#0f172a] mb-1.5">Email Address *</label>
+                      <label htmlFor="email-input" className="block text-xs font-semibold text-[#1c2826] mb-1.5">Email Address *</label>
                       <input
                         type="email" name="email" id="email-input"
                         value={formData.email} onChange={handleChange}
                         placeholder="name@email.com"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all ${formErrors.email ? 'border-rose-400' : 'border-surface-200'}`}
+                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all ${formErrors.email ? 'border-rose-400' : 'border-[#ede7de]'}`}
                       />
                       {formErrors.email && <p className="text-rose-600 text-xs mt-1 font-semibold">{formErrors.email}</p>}
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="message-textarea" className="block text-xs font-semibold text-[#0f172a] mb-1.5">Your Message</label>
+                    <label htmlFor="message-textarea" className="block text-xs font-semibold text-[#1c2826] mb-1.5">Your Message</label>
                     <textarea
                       rows={4} name="message" id="message-textarea"
                       value={formData.message} onChange={handleChange}
                       placeholder="Details regarding stream, class or queries..."
-                      className="w-full border border-surface-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all resize-none"
+                      className="w-full border border-[#ede7de] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all resize-none"
                     />
                   </div>
 
@@ -197,7 +197,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-[#b85438] font-semibold text-sm rounded-full transition-all border border-[#b85438]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-3.5 bg-[#1c2826] hover:bg-[#2b3a37] text-[#b85438] font-semibold text-sm rounded-full transition-all border border-[#b85438]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
                   >
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>
@@ -207,18 +207,18 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
             {/* Info — 5 cols */}
             <div className="lg:col-span-5 flex flex-col justify-center space-y-6">
-              <h3 className="text-2xl font-sans font-semibold uppercase text-[#0f172a]">
+              <h3 className="font-serif-hero text-2xl font-semibold text-[#1c2826]">
                 What Happens Next<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)]">.</span>
               </h3>
               <div className="space-y-6">
                 {steps.map((step, i) => (
                   <div key={i} className="flex gap-4 items-start">
-                    <div className="w-10 h-10 bg-[#0f172a] text-[#b85438] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs border border-[#b85438]/40">
+                    <div className="w-10 h-10 bg-[#1c2826] text-[#b85438] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs border border-[#b85438]/40">
                       {step.icon}
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold uppercase text-[#0f172a] mb-1 font-sans">{step.title}</h4>
-                      <p className="text-xs text-surface-600 font-normal leading-relaxed">{step.desc}</p>
+                      <h4 className="text-sm font-semibold uppercase text-[#1c2826] mb-1 font-sans">{step.title}</h4>
+                      <p className="text-xs text-[#5c6b66] font-normal leading-relaxed">{step.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -226,16 +226,16 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
               {/* Contact info */}
               {(settings.contactPhone || settings.contactEmail) && (
-                <div className="mt-8 p-6 bg-white rounded-xl border border-surface-200 shadow-xs">
-                  <h4 className="font-semibold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
+                <div className="mt-8 p-6 bg-white rounded-xl border border-[#ede7de] shadow-xs">
+                  <h4 className="font-semibold text-[#1c2826] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
-                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm mb-2 hover:underline">
+                    <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#1c2826] font-semibold text-sm mb-2 hover:underline">
                       <svg className="w-4 h-4 text-[#b85438]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
                       {settings.contactPhone}
                     </a>
                   )}
                   {settings.contactEmail && (
-                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm hover:underline">
+                    <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-[#1c2826] font-semibold text-sm hover:underline">
                       <svg className="w-4 h-4 text-[#b85438]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                       {settings.contactEmail}
                     </a>

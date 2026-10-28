@@ -436,7 +436,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 </p>
                 <div className="bg-white border border-rose-100 p-3 rounded-md">
                   <span className="text-[10px] font-semibold text-rose-600 tracking-wider block mb-1 uppercase">Reason for Rejection:</span>
-                  <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
+                  <p className="text-sm text-[#4c5b55] italic leading-relaxed">"{rejectionReason}"</p>
                 </div>
               </div>
               <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-md transition-all cursor-pointer border-none shadow-md">
@@ -458,11 +458,11 @@ export default function AuthModals({ isOpen, onClose }) {
 
               {/* Full Name */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 block">
+                <label className="text-xs font-semibold text-[#4c5b55] block">
                   Full Name <span className="text-[#b85438]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <User className="absolute left-3.5 w-4 h-4 text-slate-400" />
+                  <User className="absolute left-3.5 w-4 h-4 text-[#8a938f]" />
                   <input
                     type="text"
                     value={detailsForm.name}
@@ -484,11 +484,11 @@ export default function AuthModals({ isOpen, onClose }) {
 
               {/* Email Address */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 block">
+                <label className="text-xs font-semibold text-[#4c5b55] block">
                   Email Address <span className="text-[#b85438]">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <Mail className="absolute left-3.5 w-4 h-4 text-slate-400" />
+                  <Mail className="absolute left-3.5 w-4 h-4 text-[#8a938f]" />
                   <input
                     type="email"
                     value={detailsForm.email}
@@ -528,7 +528,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-[#5c6b66] block">WhatsApp Phone Number</label>
                   <div className="relative flex items-center">
-                    <Phone className="absolute left-4 w-4 h-4 text-slate-400" />
+                    <Phone className="absolute left-4 w-4 h-4 text-[#8a938f]" />
                     <span className="absolute left-10 text-sm font-semibold text-[#1c2826]">+91</span>
                     <input
                       type="tel"

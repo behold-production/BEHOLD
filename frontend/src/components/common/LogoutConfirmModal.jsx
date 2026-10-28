@@ -42,7 +42,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
     >
       {/* Premium Glassmorphic Backdrop */}
       <div
-        className="fixed inset-0 bg-[#0f172a]/60 backdrop-blur-md transition-opacity duration-300 animate-in fade-in z-[99999]"
+        className="fixed inset-0 bg-[#1c2826]/60 backdrop-blur-md transition-opacity duration-300 animate-in fade-in z-[99999]"
         onClick={handleClose}
         aria-hidden="true"
       />

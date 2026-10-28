@@ -36,7 +36,7 @@ export default function Process() {
             <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
           </span>
           <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-semibold text-[#0f172a] mb-4 tracking-tight leading-none">
-            Four Steps To Clarity<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(0,201,214,0.8)] font-semibold">.</span>
+            Four Steps To Clarity<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)] font-semibold">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 font-medium leading-relaxed">
             Zero cognitive friction. A clear, stress-free pathway from initial selection to ongoing mentorship.

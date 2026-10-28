@@ -170,12 +170,12 @@ export default function RazorpayCheckoutButton({
       disabled={loading}
       className={
         className ||
-        'w-full py-3 px-6 rounded-xl font-semibold text-slate-900 bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+        'w-full py-3 px-6 rounded-xl font-semibold text-[#1c2826] bg-emerald-400 hover:bg-emerald-300 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
       }
     >
       {loading ? (
         <>
-          <span className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"></span>
+          <span className="w-4 h-4 border-2 border-[#1c2826] border-t-transparent rounded-full animate-spin"></span>
           Processing...
         </>
       ) : (

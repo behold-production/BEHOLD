@@ -3,32 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Clock, Calendar } from 'lucide-react';
 import ApiService from '../../services/api';
 
-const defaultArticles = [
-  {
-    id: 'art-1',
-    slug: 'mindful-habits-anxiety-relief',
-    title: 'The Science of Calming Chronic Anxiety: Somatic Regulation & Cognitive Clarity',
-    category: 'Clinical Psychology',
-    excerpt: 'Discover evidence-based physiological techniques and cognitive reframing used by our psychologists to swiftly regulate vagal tone during episodes of acute overwhelm.',
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80',
-    date: 'Oct 26, 2026',
-    readTime: '5 min read',
-  },
-  {
-    id: 'art-2',
-    slug: 'navigating-career-crossroads-with-confidence',
-    title: 'C-DAT & Student Career Alignment: Moving Beyond Parental & Peer Pressure',
-    category: 'Student Mentorship & C-DAT',
-    excerpt: 'How scientific aptitude mapping, emotional temperament indexing, and personalized mentorship guide students toward fulfilling academic futures without burnout.',
-    image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80',
-    date: 'Oct 22, 2026',
-    readTime: '6 min read',
-  },
-];
 
 export default function BlogSection({ siteSettings = {} }) {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState(defaultArticles);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const showBlogs = siteSettings?.enableBlog !== false;
 
   useEffect(() => {
@@ -44,19 +23,25 @@ export default function BlogSection({ siteSettings = {} }) {
               title: b.title,
               category: b.category || 'Mindfulness & Care',
               excerpt: b.excerpt || b.summary || (typeof b.content === 'string' ? b.content.substring(0, 140) + '...' : ''),
-              image: b.coverImage || b.image || defaultArticles[idx % defaultArticles.length].image,
+              image: b.coverImage || b.image || null,
               date: b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent',
-              readTime: b.readTime || '5 min read',
+              readTime: b.readTime || null,
             }));
             setBlogs(mapped);
+          } else {
+            setBlogs([]);
           }
         })
-        .catch(() => {});
+        .catch(() => { if (isMounted) setBlogs([]); })
+        .finally(() => { if (isMounted) setLoading(false); });
+    } else {
+      setLoading(false);
     }
     return () => { isMounted = false; };
   }, [showBlogs]);
 
   if (!showBlogs) return null;
+  if (!loading && blogs.length === 0) return null;
 
   const handleOpenBlog = (slug) => {
     if (slug) navigate(`/blog/${slug}`);
@@ -94,6 +79,18 @@ export default function BlogSection({ siteSettings = {} }) {
         </div>
 
         {/* 2-Column Magazine Grid matching Mockup */}
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
+            {[1, 2].map((i) => (
+              <div key={i} className="flex flex-col space-y-4">
+                <div className="w-full h-56 sm:h-64 rounded-md bg-[#f0eae1] animate-pulse border border-[#ede7de]" />
+                <div className="h-3 w-1/4 bg-[#f0eae1] rounded-sm animate-pulse" />
+                <div className="h-5 w-5/6 bg-[#f0eae1] rounded-sm animate-pulse" />
+                <div className="h-3 w-full bg-[#f0eae1] rounded-sm animate-pulse" />
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
           {blogs.slice(0, 2).map((post) => (
             <article
@@ -104,12 +101,18 @@ export default function BlogSection({ siteSettings = {} }) {
               <div>
                 {/* Image */}
                 <div className="w-full h-56 sm:h-64 rounded-md overflow-hidden mb-4 sm:mb-5 bg-[#f4eee6] border border-[#ede7de]">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
+                  {post.image ? (
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f6f2ec] to-[#eee4d7]">
+                      <span className="font-serif-hero text-4xl text-[#b85438]/50">B</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Category & Meta */}
@@ -117,11 +120,15 @@ export default function BlogSection({ siteSettings = {} }) {
                   <span className="text-[10px] font-bold text-[#b85438] uppercase tracking-wider">
                     {post.category}
                   </span>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-[11px] text-[#5c6b66] flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{post.readTime}</span>
-                  </span>
+                  {post.readTime && (
+                    <>
+                      <span className="text-[#e0d8cb]">•</span>
+                      <span className="text-[11px] text-[#5c6b66] flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{post.readTime}</span>
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 {/* Title */}
@@ -130,9 +137,11 @@ export default function BlogSection({ siteSettings = {} }) {
                 </h3>
 
                 {/* Excerpt */}
-                <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed line-clamp-2">
-                  {post.excerpt}
-                </p>
+                {post.excerpt && (
+                  <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                )}
               </div>
 
               {/* Read More Link */}
@@ -146,6 +155,7 @@ export default function BlogSection({ siteSettings = {} }) {
             </article>
           ))}
         </div>
+        )}
 
         {/* View All Articles Button */}
         <div className="mt-12 text-center">

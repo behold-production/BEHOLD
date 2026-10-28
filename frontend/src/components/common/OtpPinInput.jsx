@@ -116,8 +116,8 @@ export default function OtpPinInput({ value = '', onChange, hasError, disabled =
             className={`w-9 h-11 xs:w-10 xs:h-12 sm:w-12 sm:h-14 text-center font-mono font-semibold text-base sm:text-xl rounded-md transition-all outline-none border ${
               disabled
                 ? isDark
-                  ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'
-                  : 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
+                  ? 'bg-[#1c2826] border-[#ede7de]/20 text-[#8a938f] cursor-not-allowed'
+                  : 'bg-[#f4eee6] border-[#ede7de] text-[#a8a094] cursor-not-allowed'
                 : hasError
                 ? isDark
                   ? 'bg-red-950/40 border-red-500/80 text-red-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'

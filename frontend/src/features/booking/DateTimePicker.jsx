@@ -185,18 +185,18 @@ export default function DateTimePicker({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden text-slate-900 animate-modal-in my-auto text-left"
+        className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-xl shadow-2xl border border-[#ede7de]/90 overflow-hidden text-[#1c2826] animate-modal-in my-auto text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center justify-between border-b border-slate-700">
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-[#1c2826] via-[#33413d] to-[#1c2826] text-white flex items-center justify-between border-b border-[#4c5b55]">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-[#b85438] shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#b85438]/20 border border-[#d69f86]/30 flex items-center justify-center text-[#b85438] shrink-0">
               <CalendarIcon className="w-5 h-5" />
             </div>
             <div className="min-w-0">
               <h3 className="font-bold text-base sm:text-lg text-white truncate">Choose Appointment Date</h3>
-              <p className="text-xs text-slate-300 truncate">
+              <p className="text-xs text-[#e0d8cb] truncate">
                 {selectedAdvisorName ? `Available Consultation Dates for ${selectedAdvisorName}` : 'Select a date with open session slots'}
               </p>
             </div>
@@ -214,7 +214,7 @@ export default function DateTimePicker({
         <div className="p-4 sm:p-6 space-y-5">
           {/* Quick Jump Chips */}
           <div className="space-y-1.5">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Quick Jump</span>
+            <span className="text-[11px] font-bold text-[#8a938f] uppercase tracking-wider block">Quick Jump</span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {quickJumpList.slice(0, 4).map(item => {
                 const meta = getDayMeta(item.dateStr, item.obj);
@@ -229,19 +229,19 @@ export default function DateTimePicker({
                     onClick={() => handleSelectDate(item.dateStr, item.obj)}
                     className={`py-2 px-2.5 rounded-xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
                       isSelected
-                        ? 'bg-slate-900 text-[#b85438] border-slate-900 shadow-sm ring-2 ring-[#b85438]/50'
+                        ? 'bg-[#1c2826] text-[#b85438] border-[#1c2826] shadow-sm ring-2 ring-[#b85438]/50'
                         : isDisabled
-                        ? 'bg-[#faf6ee] border-slate-200 text-slate-300 cursor-not-allowed opacity-50'
+                        ? 'bg-[#faf6ee] border-[#ede7de] text-[#e0d8cb] cursor-not-allowed opacity-50'
                         : item.isNext
-                        ? 'bg-teal-50 hover:bg-teal-100 border-teal-300 text-teal-900 cursor-pointer shadow-xs'
-                        : 'bg-white hover:bg-[#faf6ee] border-slate-200 text-slate-700 hover:border-slate-400 cursor-pointer'
+                        ? 'bg-[#faf5f0] hover:bg-[#f4eee6] border-[#e8c9bc] text-[#1c2826] cursor-pointer shadow-xs'
+                        : 'bg-white hover:bg-[#faf6ee] border-[#ede7de] text-[#4c5b55] hover:border-[#a8a094] cursor-pointer'
                     }`}
                   >
                     <div className="flex items-center gap-1">
                       {item.isNext && <Zap className="w-3 h-3 text-[#b85438]" />}
                       <span className="font-bold">{item.label}</span>
                     </div>
-                    <span className={`text-[10px] font-medium ${isDisabled ? 'text-slate-300' : isSelected ? 'text-teal-300' : 'text-emerald-700'}`}>
+                    <span className={`text-[10px] font-medium ${isDisabled ? 'text-[#e0d8cb]' : isSelected ? 'text-[#e8c9bc]' : 'text-emerald-700'}`}>
                       {isDisabled ? '0 slots' : `${meta.slotCount} ${meta.slotCount === 1 ? 'slot' : 'slots'}`}
                     </span>
                   </button>
@@ -251,9 +251,9 @@ export default function DateTimePicker({
           </div>
 
           {/* Month Navigation */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-2 border-t border-[#f4eee6]">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-base text-slate-900">
+              <span className="font-bold text-base text-[#1c2826]">
                 {MONTH_NAMES[currentMonth.getMonth()]} {currentMonth.getFullYear()}
               </span>
             </div>
@@ -263,7 +263,7 @@ export default function DateTimePicker({
                 disabled={isPrevMonthDisabled}
                 onClick={handlePrevMonth}
                 aria-label="Previous month"
-                className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-[#faf6ee] disabled:opacity-30 disabled:cursor-not-allowed text-slate-700 flex items-center justify-center transition cursor-pointer"
+                className="w-8 h-8 rounded-lg border border-[#ede7de] bg-white hover:bg-[#faf6ee] disabled:opacity-30 disabled:cursor-not-allowed text-[#4c5b55] flex items-center justify-center transition cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -272,7 +272,7 @@ export default function DateTimePicker({
                 disabled={isNextMonthDisabled}
                 onClick={handleNextMonth}
                 aria-label="Next month"
-                className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-[#faf6ee] disabled:opacity-30 disabled:cursor-not-allowed text-slate-700 flex items-center justify-center transition cursor-pointer"
+                className="w-8 h-8 rounded-lg border border-[#ede7de] bg-white hover:bg-[#faf6ee] disabled:opacity-30 disabled:cursor-not-allowed text-[#4c5b55] flex items-center justify-center transition cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -280,14 +280,14 @@ export default function DateTimePicker({
           </div>
 
           {/* Calendar Table */}
-          <div className="border border-slate-200 rounded-2xl p-3 bg-[#faf6ee]/50">
+          <div className="border border-[#ede7de] rounded-2xl p-3 bg-[#faf6ee]/50">
             {/* Weekday Row */}
             <div className="grid grid-cols-7 gap-1 text-center mb-2">
               {WEEKDAY_SHORT.map((day, idx) => (
                 <span
                   key={day}
                   className={`text-[10px] font-bold uppercase tracking-wider py-1 ${
-                    idx === 0 || idx === 6 ? 'text-teal-600' : 'text-slate-500'
+                    idx === 0 || idx === 6 ? 'text-[#a0462e]' : 'text-[#8a938f]'
                   }`}
                 >
                   {day}
@@ -312,12 +312,12 @@ export default function DateTimePicker({
                     onClick={() => handleSelectDate(dateStr, dateObj)}
                     className={`relative aspect-square p-1 rounded-xl flex flex-col items-center justify-center text-center transition-all ${
                       !isCurrentMonth
-                        ? 'text-slate-300 opacity-20 pointer-events-none'
+                        ? 'text-[#e0d8cb] opacity-20 pointer-events-none'
                         : isSelected
-                        ? 'bg-slate-900 text-white font-bold shadow-md ring-2 ring-[#b85438]'
+                        ? 'bg-[#1c2826] text-white font-bold shadow-md ring-2 ring-[#b85438]'
                         : isClickable
-                        ? 'bg-white hover:bg-teal-50 border border-slate-200/90 text-slate-900 font-semibold cursor-pointer hover:border-teal-500 hover:shadow-xs'
-                        : 'bg-slate-100/50 border border-slate-200/40 text-slate-400 opacity-40 cursor-not-allowed'
+                        ? 'bg-white hover:bg-[#faf5f0] border border-[#ede7de]/90 text-[#1c2826] font-semibold cursor-pointer hover:border-[#b85438] hover:shadow-xs'
+                        : 'bg-[#f4eee6]/50 border border-[#ede7de]/40 text-[#a8a094] opacity-40 cursor-not-allowed'
                     }`}
                   >
                     <span className={`text-xs ${isSelected ? 'text-white' : ''}`}>
@@ -327,7 +327,7 @@ export default function DateTimePicker({
                     {/* Today indicator */}
                     {isToday && isCurrentMonth && (
                       <span className={`text-[8px] font-extrabold uppercase leading-none tracking-tighter mt-0.5 ${
-                        isSelected ? 'text-[#b85438]' : 'text-teal-600'
+                        isSelected ? 'text-[#b85438]' : 'text-[#a0462e]'
                       }`}>
                         Today
                       </span>
@@ -336,7 +336,7 @@ export default function DateTimePicker({
                     {/* Available slot count pill */}
                     {isClickable && !isToday && (
                       <span className={`text-[8px] font-medium leading-none mt-0.5 ${
-                        isSelected ? 'text-slate-300' : 'text-emerald-700 font-bold'
+                        isSelected ? 'text-[#e0d8cb]' : 'text-emerald-700 font-bold'
                       }`}>
                         {meta.slotCount}
                       </span>
@@ -348,22 +348,22 @@ export default function DateTimePicker({
           </div>
 
           {/* Footer Guide & Legend */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500 pt-1">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-[#8a938f] pt-1">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Available Slots
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-[#b85438]" /> Selected
+                <span className="w-2.5 h-2.5 rounded-full bg-[#1c2826] border border-[#b85438]" /> Selected
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-300" /> Unavailable
+                <span className="w-2.5 h-2.5 rounded-full bg-[#e0d8cb]" /> Unavailable
               </span>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="font-semibold text-slate-700 hover:text-slate-900 hover:underline cursor-pointer bg-transparent border-none p-0"
+              className="font-semibold text-[#4c5b55] hover:text-[#1c2826] hover:underline cursor-pointer bg-transparent border-none p-0"
             >
               Cancel
             </button>

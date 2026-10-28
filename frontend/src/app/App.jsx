@@ -22,7 +22,6 @@ import BlogSection from '../features/landing/BlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
 import HomeValuesSection from '../features/landing/HomeValuesSection';
 import HomeClosingSection from '../features/landing/HomeClosingSection';
-import BookingStepsSection from '../features/landing/BookingStepsSection';
 import '../features/landing/user-home.css';
 import ActivitySheetView from '../features/student/ActivitySheetView';
 import globalBg from '../assets/greygreen.png';
@@ -436,11 +435,11 @@ export default function App() {
         <div className="flex flex-col items-center gap-4">
           <div className="relative flex items-center justify-center">
             <div className="w-14 h-14 rounded-full border-3 border-[#b85438]/20 border-t-[#b85438] animate-spin shadow-[0_0_15px_rgba(184,84,56,0.4)]" />
-            <span className="absolute font-sans font-semibold text-xs text-slate-900 tracking-widest uppercase">
+            <span className="absolute font-sans font-semibold text-xs text-[#1c2826] tracking-widest uppercase">
               B<span className="text-[#b85438]">.</span>
             </span>
           </div>
-          <span className="text-xs font-semibold uppercase tracking-widest text-slate-600 animate-pulse">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#5c6b66] animate-pulse">
             Loading...
           </span>
         </div>
@@ -527,7 +526,7 @@ export default function App() {
     location.pathname === '/cousellor';
 
   return (
-    <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-zinc-900 bg-zinc-50">
+    <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-[#1c2826] bg-[#faf6ee]">
 
       {/* Global Toast Notifications */}
       <Toaster
@@ -535,12 +534,12 @@ export default function App() {
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#18181b', // zinc-900
+            background: '#1c2826', // forest ink
             color: '#fff',
             fontSize: '14px',
             fontWeight: '600',
             borderRadius: '12px',
-            border: '1px solid #27272a', // zinc-800
+            border: '1px solid #2b3a37', // ink raised
           },
         }}
       />
@@ -549,7 +548,7 @@ export default function App() {
  
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
-        <div className="w-full bg-zinc-950 text-zinc-300 text-xs sm:text-xs font-semibold py-2.5 px-4 text-center border-b border-zinc-900 relative z-50 flex items-center justify-center gap-2 tracking-wide shadow-md animate-in slide-in-from-top duration-300">
+        <div className="w-full bg-[#16201d] text-[#e0d8cb] text-xs sm:text-xs font-semibold py-2.5 px-4 text-center border-b border-[#1c2826] relative z-50 flex items-center justify-center gap-2 tracking-wide shadow-md animate-in slide-in-from-top duration-300">
           <span className="inline-block w-2.5 h-2.5 rounded-full bg-brand animate-pulse" />
           <span>{siteSettings.bannerNotice}</span>
         </div>
@@ -635,8 +634,6 @@ export default function App() {
           <Route path="/" element={
             <main className="fade-in-up bh-home">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              <BookingStepsSection navigateToSection={navigateToSection} />
-              <About siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               <Reviews siteSettings={siteSettings} />
               {siteSettings.enableFaq !== false && <Faq siteSettings={siteSettings} />}
@@ -825,17 +822,17 @@ export default function App() {
       {/* Terms & Privacy Documents Modal */}
       {activeDocType && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-[#1c2826] border border-[#33413d] rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
 
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
+            <div className="px-6 py-4 border-b border-[#33413d] flex justify-between items-center bg-[#16201d]/40">
               <h3 className="text-sm font-semibold text-white font-header flex items-center gap-2">
                 <span>{activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : activeDocType === 'consent' ? 'Informed Consent & Client Agreement' : 'Privacy Policy'}</span> {/* */}
-                <span className="text-[7.5px] bg-zinc-800 border border-zinc-700 text-zinc-400 px-1.5 py-0.5 rounded font-semibold ">DOC</span>
+                <span className="text-[7.5px] bg-[#33413d] border border-[#4c5b55] text-[#a8a094] px-1.5 py-0.5 rounded font-semibold ">DOC</span>
               </h3>
               <button
                 onClick={() => setActiveDocType(null)}
-                className="p-1 bg-zinc-955 border border-zinc-850 hover:border-zinc-700 text-zinc-400 hover:text-white rounded-lg transition-all cursor-pointer border-none shadow-sm flex items-center justify-center"
+                className="p-1 bg-[#16201d] border border-[#22302d] hover:border-[#4c5b55] text-[#a8a094] hover:text-white rounded-lg transition-all cursor-pointer border-none shadow-sm flex items-center justify-center"
                 title="Close modal"
               >
                 <X className="w-4 h-4" />
@@ -843,7 +840,7 @@ export default function App() {
             </div>
  
             {/* Modal Body */}
-            <div className="p-6 overflow-y-auto text-left text-zinc-300 text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
+            <div className="p-6 overflow-y-auto text-left text-[#e0d8cb] text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
               {(activeDocType === 'terms'
                 ? siteSettings.termsOfUse
                 : activeDocType === 'refund'
@@ -854,17 +851,17 @@ export default function App() {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 border-t border-zinc-800 flex justify-end gap-3 bg-zinc-955">
+            <div className="px-6 py-4 border-t border-[#33413d] flex justify-end gap-3 bg-[#16201d]">
               <button
                 onClick={handleDownloadPDF}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-semibold text-xs rounded-xl cursor-pointer transition border border-zinc-700 shadow-md flex items-center gap-2"
+                className="px-5 py-2.5 bg-[#33413d] hover:bg-[#4c5b55] text-[#e0d8cb] hover:text-white font-semibold text-xs rounded-xl cursor-pointer transition border border-[#4c5b55] shadow-md flex items-center gap-2"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download PDF
               </button>
               <button
                 onClick={() => setActiveDocType(null)}
-                className="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-white hover:text-brand font-semibold text-xs rounded-lg cursor-pointer transition border-none shadow-md"
+                className="px-5 py-2.5 bg-[#33413d] hover:bg-[#33413d] text-white hover:text-brand font-semibold text-xs rounded-lg cursor-pointer transition border-none shadow-md"
               >
                 Close Document
               </button>
@@ -898,7 +895,7 @@ export default function App() {
             title="Chat with us on WhatsApp"
             aria-label="Chat with us on WhatsApp"
           >
-            <span className="absolute -top-10 right-0 bg-zinc-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-zinc-800">
+            <span className="absolute -top-10 right-0 bg-[#1c2826] text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#33413d]">
               Chat on WhatsApp
             </span>
             <svg className="w-7 h-7 sm:w-8 sm:h-8 fill-current text-white" viewBox="0 0 24 24">

@@ -44,7 +44,7 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-zinc-955 text-white flex flex-col items-center justify-center p-4 relative overflow-hidden select-none font-sans text-left">
+        <div className="min-h-screen bg-[#16201d] text-white flex flex-col items-center justify-center p-4 relative overflow-hidden select-none font-sans text-left">
           {/* Decorative glow elements */}
           <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-brand/10 rounded-full blur-3xl pointer-events-none mix-blend-screen" />
           <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none mix-blend-screen" />
@@ -58,15 +58,15 @@ export default class ErrorBoundary extends React.Component {
               <h1 className="text-3xl font-header font-semibold tracking-tight leading-none text-white ">
                 Interface Encounters An Issue
               </h1>
-              <p className="text-zinc-450 text-sm max-w-md mx-auto leading-relaxed mt-2">
+              <p className="text-[#a8a094] text-sm max-w-md mx-auto leading-relaxed mt-2">
                 A localized runtime exception was caught by the system guards. Try reloading the console or going back to safety.
               </p>
             </div>
 
             {/* Diagnostic Details card */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-[10px] shadow-2xl space-y-4">
+            <div className="bg-[#1c2826] border border-[#33413d] p-6 rounded-[10px] shadow-2xl space-y-4">
               <div>
-                <span className="text-xs tracking-widest text-zinc-500 font-semibold block mb-1">Error Diagnostics</span>
+                <span className="text-xs tracking-widest text-[#8a938f] font-semibold block mb-1">Error Diagnostics</span>
                 <p className="text-sm font-semibold text-rose-450 break-all leading-normal">
                   {this.state.error ? this.state.error.toString() : 'Unknown App Runtime Error'}
                 </p>
@@ -74,8 +74,8 @@ export default class ErrorBoundary extends React.Component {
 
               {this.state.errorInfo && (
                 <div className="space-y-1.5">
-                  <span className="text-xs tracking-widest text-zinc-500 font-semibold block">Component Callstack</span>
-                  <div className="max-h-[160px] overflow-y-auto pr-1 bg-zinc-950/60 border border-zinc-850 p-3 rounded-[10px] text-[10px] font-mono text-zinc-400 whitespace-pre-wrap leading-normal custom-scrollbar select-text">
+                  <span className="text-xs tracking-widest text-[#8a938f] font-semibold block">Component Callstack</span>
+                  <div className="max-h-[160px] overflow-y-auto pr-1 bg-[#16201d]/60 border border-[#22302d] p-3 rounded-[10px] text-[10px] font-mono text-[#a8a094] whitespace-pre-wrap leading-normal custom-scrollbar select-text">
                     {this.state.errorInfo.componentStack}
                   </div>
                 </div>
@@ -95,7 +95,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="px-8 py-3.5 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-xs tracking-widest rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 border border-zinc-700 w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="px-8 py-3.5 bg-[#33413d] hover:bg-[#4c5b55] text-white font-semibold text-xs tracking-widest rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 border border-[#4c5b55] w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
               >
                 <Home className="w-4 h-4" />
                 Go Back Home

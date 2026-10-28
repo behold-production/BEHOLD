@@ -110,7 +110,7 @@ const BlogList = () => {
         canonicalUrl="https://www.behold.co.in/blog"
         schema={blogListSchema}
       />
-      <div className="min-h-screen flex flex-col text-slate-900 pt-20 pb-16 relative overflow-hidden select-none">
+      <div className="min-h-screen flex flex-col bg-[#fbf9f5] text-[#1c2826] pt-20 pb-16 relative overflow-hidden select-none">
 
         {/* Background */}
         <div className="absolute inset-0 z-0 pointer-events-none">
@@ -131,28 +131,28 @@ const BlogList = () => {
               <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
             </span>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold tracking-tight text-slate-900 leading-[1.15] mb-4">
-              Understanding What Matters<span className="text-[#b85438] drop-shadow-[0_0_10px_rgba(0,201,214,0.5)]">.</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold tracking-tight text-[#1c2826] leading-[1.15] mb-4">
+              Understanding What Matters<span className="text-[#b85438] drop-shadow-[0_0_10px_rgba(184,84,56,0.5)]">.</span>
             </h1>
 
-            <p className="text-sm sm:text-base text-slate-500 max-w-2xl mx-auto leading-relaxed font-medium mb-7">
+            <p className="text-sm sm:text-base text-[#5c6b66] max-w-2xl mx-auto leading-relaxed font-medium mb-7">
               Evidence-informed insights on mental wellbeing, therapy, relationships, and personal growth — to help you understand yourself better.
             </p>
 
             {/* Search Bar */}
             <form onSubmit={handleSearchSubmit} className="max-w-xl mx-auto">
-              <div className="relative flex items-center bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl shadow-sm focus-within:border-[#b85438] focus-within:ring-2 focus-within:ring-[#b85438]/20 transition-all overflow-hidden">
-                <Search className="w-4 h-4 text-slate-400 absolute left-4 pointer-events-none shrink-0" />
+              <div className="relative flex items-center bg-white/95 backdrop-blur-md border border-[#ede7de] rounded-md shadow-sm focus-within:border-[#b85438] focus-within:ring-2 focus-within:ring-[#b85438]/20 transition-all overflow-hidden">
+                <Search className="w-4 h-4 text-[#8a938f] absolute left-4 pointer-events-none shrink-0" />
                 <input
                   type="text"
                   placeholder="Search articles or topics..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm font-medium outline-none"
+                  className="w-full pl-11 pr-4 py-3 bg-transparent text-[#1c2826] placeholder-[#a8a094] text-sm font-medium outline-none"
                 />
                 <button
                   type="submit"
-                  className="shrink-0 m-1.5 px-5 py-2 rounded-xl bg-[#0f172a] hover:bg-[#b85438] hover:text-slate-950 text-white font-semibold text-xs tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 hover-scale-btn"
+                  className="shrink-0 m-1.5 px-5 py-2 rounded-md bg-[#1c2826] hover:bg-[#b85438] hover:text-white text-white font-semibold text-xs tracking-wider transition-all cursor-pointer border-none flex items-center gap-1.5 hover-scale-btn"
                 >
                   Search
                 </button>
@@ -168,10 +168,10 @@ const BlogList = () => {
                     key={cat}
                     type="button"
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-1.5 rounded-xl text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border whitespace-nowrap shrink-0 ${
+                    className={`px-4 py-1.5 rounded-md text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer border whitespace-nowrap shrink-0 ${
                       active
-                        ? 'bg-[#0f172a] text-white border-[#0f172a] shadow-sm'
-                        : 'bg-white/90 text-slate-700 border-slate-200/90 hover:border-slate-400 hover:text-slate-900'
+                        ? 'bg-[#1c2826] text-white border-[#1c2826] shadow-sm'
+                        : 'bg-white/90 text-[#4c5b55] border-[#ede7de] hover:border-[#b85438] hover:text-[#1c2826]'
                     }`}
                   >
                     {cat}
@@ -184,7 +184,7 @@ const BlogList = () => {
 
         {/* Divider */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="border-t border-slate-200/70 mb-7" />
+          <div className="border-t border-[#ede7de] mb-7" />
         </div>
 
         {/* Blog Grid */}
@@ -192,7 +192,7 @@ const BlogList = () => {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col h-96">
+                <div key={i} className="bg-white border border-[#ede7de] rounded-md overflow-hidden shadow-sm flex flex-col h-96">
                   <div className="shimmer h-52 w-full shrink-0" />
                   <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-2">
@@ -200,7 +200,7 @@ const BlogList = () => {
                       <div className="shimmer h-3 w-full rounded-md" />
                       <div className="shimmer h-3 w-5/6 rounded-md" />
                     </div>
-                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div className="pt-4 border-t border-[#ede7de] flex items-center justify-between">
                       <div className="shimmer h-3 w-20 rounded-md" />
                       <div className="shimmer h-3 w-16 rounded-md" />
                     </div>
@@ -209,17 +209,17 @@ const BlogList = () => {
               ))}
             </div>
           ) : blogs.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-2xl border border-slate-200 shadow-sm max-w-lg mx-auto p-10 reveal-on-scroll">
-              <div className="w-14 h-14 bg-[#b85438]/10 text-[#007078] rounded-2xl flex items-center justify-center mx-auto mb-5 border border-[#b85438]/20">
+            <div className="text-center py-20 bg-white rounded-md border border-[#ede7de] shadow-sm max-w-lg mx-auto p-10 reveal-on-scroll">
+              <div className="w-14 h-14 bg-[#b85438]/10 text-[#b85438] rounded-md flex items-center justify-center mx-auto mb-5 border border-[#b85438]/20">
                 <BookOpen className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2 tracking-tight">No Articles Found</h3>
-              <p className="text-slate-500 font-medium text-sm">Try a different category or keyword to explore more articles.</p>
+              <h3 className="text-lg font-semibold text-[#1c2826] mb-2 tracking-tight">No Articles Found</h3>
+              <p className="text-[#5c6b66] font-medium text-sm">Try a different category or keyword to explore more articles.</p>
             </div>
           ) : (
             <>
               {/* Result info */}
-              <p className="text-[11px] font-semibold text-slate-400 tracking-wider uppercase mb-5">
+              <p className="text-[11px] font-semibold text-[#8a938f] tracking-wider uppercase mb-5">
                 {blogs.length} Article{blogs.length !== 1 ? 's' : ''} · Page {currentPage} of {totalPages || 1}
               </p>
 
@@ -233,24 +233,24 @@ const BlogList = () => {
                     <article
                       key={post._id || post.slug}
                       onClick={() => handleOpenBlog(post.slug)}
-                      className={`group bg-white border border-slate-200/80 hover:border-[#b85438]/60 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-sm hover:shadow-md h-full reveal-on-scroll reveal-scale-in ${delayClass}`}
+                      className={`group bg-white border border-[#ede7de] hover:border-[#b85438]/60 rounded-md overflow-hidden transition-all duration-300 flex flex-col cursor-pointer shadow-sm hover:shadow-md h-full reveal-on-scroll reveal-scale-in ${delayClass}`}
                     >
                       {/* Cover Image */}
-                      <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 shrink-0">
+                      <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#f4eee6] shrink-0">
                         <img
                           src={post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage)}
                           alt={post.title}
                           onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage?.src || defaultBlogImage; }}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-950/10 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#1c2826]/75 via-[#1c2826]/10 to-transparent" />
 
-                        <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-xl bg-[#0f172a]/90 backdrop-blur-sm text-white border border-white/10 text-[10px] font-semibold tracking-widest uppercase">
+                        <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-md bg-[#1c2826]/90 backdrop-blur-sm text-white border border-white/10 text-[10px] font-semibold tracking-widest uppercase">
                           {post.category || 'Career Guidance'}
                         </span>
 
-                        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1 text-[10px] font-semibold text-slate-900 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-xl shadow-sm">
-                          <Clock className="w-3 h-3 text-[#007078]" />
+                        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-1 text-[10px] font-semibold text-[#1c2826] bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-md shadow-sm">
+                          <Clock className="w-3 h-3 text-[#b85438]" />
                           <span>{post.readTime || '5 min'}</span>
                         </div>
                       </div>
@@ -258,18 +258,18 @@ const BlogList = () => {
                       {/* Content */}
                       <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between gap-4">
                         <div className="space-y-2">
-                          <h2 className="text-base sm:text-[17px] font-semibold text-slate-900 group-hover:text-[#007078] transition-colors leading-snug tracking-tight line-clamp-2">
+                          <h2 className="text-base sm:text-[17px] font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors leading-snug tracking-tight line-clamp-2">
                             {post.title}
                           </h2>
-                          <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed font-normal">
+                          <p className="text-xs sm:text-sm text-[#5c6b66] line-clamp-2 leading-relaxed font-normal">
                             {post.excerpt}
                           </p>
                         </div>
 
                         {/* Author & CTA */}
-                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                        <div className="pt-4 border-t border-[#ede7de] flex items-center justify-between gap-3">
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-[#b85438] flex items-center justify-center font-semibold text-xs overflow-hidden shrink-0">
+                            <div className="w-8 h-8 rounded-md bg-gradient-to-br from-[#1c2826] to-[#b85438] text-[#b85438] flex items-center justify-center font-semibold text-xs overflow-hidden shrink-0">
                               {authorAvatar ? (
                                 <img src={getImageUrl(authorAvatar)} alt={authorName} className="w-full h-full object-cover" />
                               ) : (
@@ -277,16 +277,16 @@ const BlogList = () => {
                               )}
                             </div>
                             <div className="min-w-0">
-                              <h4 className="text-xs font-semibold text-slate-900 truncate leading-tight">
+                              <h4 className="text-xs font-semibold text-[#1c2826] truncate leading-tight">
                                 {authorName}
                               </h4>
-                              <p className="text-[10px] text-slate-400 font-semibold tracking-wider truncate">
+                              <p className="text-[10px] text-[#8a938f] font-semibold tracking-wider truncate">
                                 {authorRole}
                               </p>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1 text-[11px] font-semibold text-[#007078] group-hover:text-[#b85438] group-hover:translate-x-0.5 transition-all shrink-0">
+                          <div className="flex items-center gap-1 text-[11px] font-semibold text-[#b85438] group-hover:text-[#b85438] group-hover:translate-x-0.5 transition-all shrink-0">
                             <span>Read</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </div>
@@ -304,10 +304,10 @@ const BlogList = () => {
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                     aria-label="Previous Page"
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center border font-semibold transition-all hover-scale-btn ${
+                    className={`w-9 h-9 rounded-md flex items-center justify-center border font-semibold transition-all hover-scale-btn ${
                       currentPage === 1
-                        ? 'border-slate-200 text-slate-300 bg-white cursor-not-allowed'
-                        : 'border-slate-200 bg-white text-slate-600 hover:bg-[#0f172a] hover:text-white hover:border-[#0f172a] cursor-pointer'
+                        ? 'border-[#ede7de] text-[#c2b8a8] bg-white cursor-not-allowed'
+                        : 'border-[#ede7de] bg-white text-[#5c6b66] hover:bg-[#b85438] hover:text-white hover:border-[#b85438] cursor-pointer'
                     }`}
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -317,10 +317,10 @@ const BlogList = () => {
                     <button
                       key={num}
                       onClick={() => goToPage(num)}
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center border text-xs font-semibold transition-all cursor-pointer hover-scale-btn ${
+                      className={`w-9 h-9 rounded-md flex items-center justify-center border text-xs font-semibold transition-all cursor-pointer hover-scale-btn ${
                         currentPage === num
-                          ? 'bg-[#0f172a] text-white border-[#0f172a] shadow-sm'
-                          : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
+                          ? 'bg-[#1c2826] text-white border-[#1c2826] shadow-sm'
+                          : 'bg-white text-[#5c6b66] border-[#ede7de] hover:border-[#b85438] hover:text-[#1c2826]'
                       }`}
                     >
                       {num}
@@ -329,10 +329,10 @@ const BlogList = () => {
 
                   {totalPages > 5 && currentPage < totalPages - 2 && (
                     <>
-                      <span className="w-9 h-9 flex items-center justify-center text-slate-400 text-xs font-semibold select-none">…</span>
+                      <span className="w-9 h-9 flex items-center justify-center text-[#8a938f] text-xs font-semibold select-none">…</span>
                       <button
                         onClick={() => goToPage(totalPages)}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center border text-xs font-semibold bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer hover-scale-btn"
+                        className="w-9 h-9 rounded-md flex items-center justify-center border text-xs font-semibold bg-white text-[#5c6b66] border-[#ede7de] hover:border-[#b85438] hover:text-[#1c2826] cursor-pointer hover-scale-btn"
                       >
                         {totalPages}
                       </button>
@@ -343,10 +343,10 @@ const BlogList = () => {
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     aria-label="Next Page"
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center border font-semibold transition-all hover-scale-btn ${
+                    className={`w-9 h-9 rounded-md flex items-center justify-center border font-semibold transition-all hover-scale-btn ${
                       currentPage === totalPages
-                        ? 'border-slate-200 text-slate-300 bg-white cursor-not-allowed'
-                        : 'border-slate-200 bg-white text-slate-600 hover:bg-[#0f172a] hover:text-white hover:border-[#0f172a] cursor-pointer'
+                        ? 'border-[#ede7de] text-[#c2b8a8] bg-white cursor-not-allowed'
+                        : 'border-[#ede7de] bg-white text-[#5c6b66] hover:bg-[#b85438] hover:text-white hover:border-[#b85438] cursor-pointer'
                     }`}
                   >
                     <ChevronRight className="w-4 h-4" />

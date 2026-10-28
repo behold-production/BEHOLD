@@ -340,7 +340,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
 
           {/* LEFT: Smartphone Mockup Video Player */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center order-2 lg:order-1">
-            <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(0,201,214,0.25)] border-[3px] border-slate-800 ring-1 ring-[#b85438]/40 transition-transform duration-300 hover:scale-[1.01]">
+            <div className="relative w-full max-w-[310px] sm:max-w-[330px] rounded-[36px] bg-slate-950 p-2.5 shadow-[0_25px_60px_-15px_rgba(184,84,56,0.25)] border-[3px] border-slate-800 ring-1 ring-[#b85438]/40 transition-transform duration-300 hover:scale-[1.01]">
 
               {/* Phone Top Island Bar */}
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-900/90 border border-slate-800 text-[10px] text-slate-300 font-semibold backdrop-blur-md">
@@ -384,7 +384,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
                   {!isPlaying ? (
                     <div className="flex flex-col items-center gap-2 pointer-events-auto transform transition-transform group-hover:scale-110">
-                      <div className="w-16 h-16 rounded-full bg-[#b85438] text-slate-950 flex items-center justify-center shadow-[0_0_30px_rgba(0,201,214,0.6)] ring-4 ring-[#b85438]/30">
+                      <div className="w-16 h-16 rounded-full bg-[#b85438] text-white flex items-center justify-center shadow-[0_0_30px_rgba(184,84,56,0.6)] ring-4 ring-[#b85438]/30">
                         {isEnded ? (
                           <RotateCcw className="w-7 h-7" />
                         ) : (
@@ -804,7 +804,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                         <button
                           type="button"
                           onClick={() => handleBook(advisor.id)}
-                          className="bg-[#b85438] hover:bg-[#3b82f6] active:bg-[#009baa] text-slate-950 font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-1"
+                          className="bg-[#b85438] hover:bg-[#a0462e] active:bg-[#8f3d28] text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-1"
                         >
                           Select Advisor
                         </button>
@@ -845,7 +845,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                     : 'bg-white/80 border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
                   }`}
               >
-                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#b85438] text-slate-950 shadow-xs' : 'bg-slate-100 text-slate-700'
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 ${activeStep === idx ? 'bg-[#b85438] text-white shadow-xs' : 'bg-slate-100 text-slate-700'
                   }`}>
                   {step.badge}
                 </span>
@@ -895,7 +895,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <button
                 type="button"
                 onClick={() => handleBook()}
-                className="w-full sm:w-auto bg-[#b85438] hover:bg-[#3b82f6] active:bg-[#009baa] text-slate-950 font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(0,201,214,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
+                className="w-full sm:w-auto bg-[#b85438] hover:bg-[#a0462e] active:bg-[#8f3d28] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(184,84,56,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
               >
                 <span>{heroBtnText}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -960,7 +960,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="pt-10 text-center space-y-3">
           <button
             onClick={() => handleBook()}
-            className="inline-flex items-center gap-2 px-8 py-4 min-h-[44px] rounded-2xl bg-[#b85438] hover:bg-[#3b82f6] text-slate-950 font-semibold text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 px-8 py-4 min-h-[44px] rounded-2xl bg-[#b85438] hover:bg-[#a0462e] text-white font-semibold text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-2"
           >
             <span>{heroBtnText}</span>
             <ArrowRight className="w-5 h-5" />
@@ -1013,7 +1013,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       >
         <button
           onClick={() => handleBook()}
-          className="w-full py-3.5 px-5 rounded-2xl bg-[#b85438] active:bg-[#3b82f6] text-slate-950 font-semibold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-2"
+          className="w-full py-3.5 px-5 rounded-2xl bg-[#b85438] active:bg-[#8f3d28] text-white font-semibold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-2"
         >
           <span>{heroBtnText}</span>
           <ArrowRight className="w-4 h-4" />

@@ -24,98 +24,6 @@ const getInitial = (name = '') => {
   return cleanName.charAt(0).toUpperCase() || 'P';
 };
 
-const fallbackPsychologists = [
-  {
-    id: 'athira-v',
-    name: 'Athira V',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Sc Counselling Psychology',
-    rating: '5.0',
-    reviews: 28,
-    years: 5,
-    mode: 'Online & Clinic',
-    specialties: ['Career', 'Adjustment & Emotional difficulties', 'Self-Esteem & Confidence'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-    bio: 'Experienced Consultant Psychologist specializing in career direction, emotional difficulties, and student guidance with compassionate therapeutic frameworks.',
-    modes: ['ONLINE', 'OFFLINE']
-  },
-  {
-    id: 'arya-k',
-    name: 'Arya K',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Phil Clinical Psychology',
-    rating: '5.0',
-    reviews: 34,
-    years: 6,
-    mode: 'Online & Doorstep',
-    specialties: ['Parent and Child Care', 'Anxiety issues', 'depression', 'Adjustment & Emotional difficulties'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1594824813576-9043328e930f?auto=format&fit=crop&w=600&q=80',
-    bio: 'Dedicated Consultant Psychologist focusing on parent and child counseling, depression management, and evidence-based anxiety interventions.',
-    modes: ['ONLINE', 'DOOR_STEP']
-  },
-  {
-    id: 'arushi-s',
-    name: 'ARUSHI S',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Sc Clinical Psychology',
-    rating: '5.0',
-    reviews: 26,
-    years: 5,
-    mode: 'Online & Clinic',
-    specialties: ['Anxiety', 'Relationship & Family Challenges', 'Career', 'Anxiety & Stress'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-    bio: 'Specializing in relational health, relationship conflict resolution, somatic anxiety alleviation, and personal goal alignment.',
-    modes: ['ONLINE', 'OFFLINE']
-  },
-  {
-    id: 'fathima-n',
-    name: 'Fathima N.',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Sc Applied Psychology',
-    rating: '5.0',
-    reviews: 22,
-    years: 7,
-    mode: 'Online Video',
-    specialties: ['Workplace Burnout', 'Self-Esteem & Confidence', 'Adjustment & Emotional difficulties'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80',
-    bio: 'Helping working professionals and university students conquer burnout, build healthy boundary habits, and recover emotional resilience.',
-    modes: ['ONLINE']
-  },
-  {
-    id: 'anand-m',
-    name: 'Anand M.',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Phil Clinical Psychology',
-    rating: '4.9',
-    reviews: 31,
-    years: 8,
-    mode: 'Clinic & Doorstep',
-    specialties: ['Relationship & Family Challenges', 'Adjustment & Emotional difficulties', 'Anxiety & Stress'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
-    bio: 'Guiding couples, youth, and families through active communication, cognitive behavioral interventions, and emotional reconciliation.',
-    modes: ['OFFLINE', 'DOOR_STEP']
-  },
-  {
-    id: 'divya-r',
-    name: 'Divya R.',
-    designation: 'Consultant Psychologist',
-    credential: 'Certified Psychological Counselor',
-    rating: '5.0',
-    reviews: 19,
-    years: 6,
-    mode: 'Online Video',
-    specialties: ['Anxiety & Stress', 'Mindfulness & Calm', 'Self-Esteem & Confidence'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
-    bio: 'Integrating mindfulness-based cognitive practices to soothe panic, calm chronic worry, and instill enduring emotional groundedness.',
-    modes: ['ONLINE']
-  }
-];
 
 function normalizeAdvisor(counsellor) {
   const rawPhoto = counsellor.profilePic || counsellor.photo || counsellor.avatar
@@ -143,12 +51,12 @@ function normalizeAdvisor(counsellor) {
     name: counsellor.name || counsellor.user?.name || counsellor.fullName || '',
     designation,
     credential: counsellor.credential || (designation.toLowerCase().includes('clinical') ? 'CLINICAL PSYCHOLOGIST' : 'COUNSELLING PSYCHOLOGIST'),
-    rating: counsellor.rating ? String(Number(counsellor.rating).toFixed(1)) : '5.0',
+    rating: counsellor.rating ? String(Number(counsellor.rating).toFixed(1)) : null,
     reviews: counsellor.reviews || counsellor.reviewCount || 0,
-    fee: Number.isFinite(fee) ? fee : 1299,
+    fee: Number.isFinite(fee) ? fee : null,
     halfSessionPrice: Number.isFinite(halfSessionPrice) ? halfSessionPrice : null,
     hours: experience.rawHours || (counsellor.years ? counsellor.years * 150 : 0),
-    years: counsellor.years || (typeof counsellor.experience === 'string' ? parseInt(counsellor.experience, 10) : 7),
+    years: Number.isFinite(counsellor.years) ? counsellor.years : (parseInt(counsellor.experience, 10) || 0),
     bio: counsellor.bio || '',
     photo: typeof rawPhoto === 'string' && rawPhoto.trim() && !rawPhoto.includes('via.placeholder') ? rawPhoto : null,
     specialties: rawSpecialties.filter((v) => typeof v === 'string' && v.trim()).slice(0, 5),
@@ -189,6 +97,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
   const navigate = useNavigate();
   const [advisors, setAdvisors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
@@ -202,13 +111,13 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
         if (!isMounted) return;
         if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
           const active = res.data.filter(isPublicAdvisor).map(normalizeAdvisor);
-          setAdvisors(active.length > 0 ? active : fallbackPsychologists);
+          setAdvisors(active);
         } else {
-          setAdvisors(fallbackPsychologists);
+          setAdvisors([]);
         }
       })
       .catch(() => {
-        if (isMounted) setAdvisors(fallbackPsychologists);
+        if (isMounted) { setAdvisors([]); setFetchError(true); }
       })
       .finally(() => {
         if (isMounted) setLoading(false);
@@ -219,8 +128,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
   const specialties = useMemo(() => {
     const set = new Set();
-    const list = advisors.length > 0 ? advisors : fallbackPsychologists;
-    list.forEach((a) => {
+    advisors.forEach((a) => {
       a.specialties.forEach((s) => {
         if (s && typeof s === 'string') set.add(s.trim());
       });
@@ -229,13 +137,11 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
   }, [advisors]);
 
   const availableModeLabels = useMemo(() => {
-    const list = advisors.length > 0 ? advisors : fallbackPsychologists;
-    return [...new Set(list.flatMap((a) => getModeLabels(a.modes, siteSettings)))];
+    return [...new Set(advisors.flatMap((a) => getModeLabels(a.modes, siteSettings)))];
   }, [advisors, siteSettings]);
 
   const filteredAdvisors = useMemo(() => {
-    const list = advisors.length > 0 ? advisors : fallbackPsychologists;
-    return list
+    return advisors
       .filter((advisor) => {
         if (selectedSpecialty !== 'All' && !advisor.specialties.some((s) => s.toLowerCase() === selectedSpecialty.toLowerCase())) {
           return false;
@@ -287,7 +193,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
               <Home className="w-3.5 h-3.5" />
               <span>Home</span>
             </Link>
-            <span className="text-slate-300">/</span>
+            <span className="text-[#c2b8a8]">/</span>
             <span className="text-[#1c2826] font-semibold">Clinical Psychologists</span>
           </nav>
 
@@ -310,19 +216,19 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 items-center">
               {/* Search */}
               <div className="lg:col-span-5 relative">
-                <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-4 h-4 text-[#8a938f] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by psychologist name, concern, or bio..."
-                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] placeholder-slate-400 outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
+                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] placeholder-[#a8a094] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 bg-transparent border-none cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8a938f] hover:text-[#5c6b66] p-0.5 bg-transparent border-none cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -342,12 +248,12 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                     <option key={mode} value={mode}>{mode}</option>
                   ))}
                 </select>
-                <ChevronDown className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-4 h-4 text-[#8a938f] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
 
               {/* Sort Selector */}
               <div className="lg:col-span-3 relative">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#8a938f] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
@@ -357,7 +263,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                   <option value="FEE_LOW">Fee: Low to High</option>
                   <option value="FEE_HIGH">Fee: High to Low</option>
                 </select>
-                <ChevronDown className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-4 h-4 text-[#8a938f] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
 
@@ -375,7 +281,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       className={`px-3.5 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0 border ${
                         active
                           ? 'bg-[#b85438] text-white border-[#b85438] shadow-xs'
-                          : 'bg-[#fbf9f5] hover:bg-white text-slate-700 border-[#ede7de] hover:text-[#1c2826]'
+                          : 'bg-[#fbf9f5] hover:bg-white text-[#4c5b55] border-[#ede7de] hover:text-[#1c2826]'
                       }`}
                     >
                       {cat}
@@ -419,13 +325,13 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
               {[1, 2, 3, 4, 5, 6].map((item) => (
                 <div key={item} className="bg-white rounded-md border border-[#ede7de] p-5 flex flex-col space-y-4 shadow-xs">
-                  <div className="h-52 w-full rounded-sm bg-slate-100 animate-pulse" />
+                  <div className="h-52 w-full rounded-sm bg-[#f4eee6] animate-pulse" />
                   <div className="space-y-2">
-                    <div className="h-4 w-1/3 bg-slate-100 rounded-sm animate-pulse" />
-                    <div className="h-6 w-3/4 bg-slate-100 rounded-sm animate-pulse" />
-                    <div className="h-3 w-1/2 bg-slate-100 rounded-sm animate-pulse" />
+                    <div className="h-4 w-1/3 bg-[#f4eee6] rounded-sm animate-pulse" />
+                    <div className="h-6 w-3/4 bg-[#f4eee6] rounded-sm animate-pulse" />
+                    <div className="h-3 w-1/2 bg-[#f4eee6] rounded-sm animate-pulse" />
                   </div>
-                  <div className="h-10 w-full bg-slate-100 rounded-sm mt-auto animate-pulse" />
+                  <div className="h-10 w-full bg-[#f4eee6] rounded-sm mt-auto animate-pulse" />
                 </div>
               ))}
             </div>
@@ -434,16 +340,20 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
               <div className="w-14 h-14 bg-[#faf5f0] text-[#b85438] rounded-sm flex items-center justify-center mx-auto mb-4 border border-[#eedfd0]">
                 <UserRound className="w-6 h-6" />
               </div>
-              <h3 className="font-serif-hero text-xl font-bold text-[#1c2826] mb-2">No Psychologists Found</h3>
+              <h3 className="font-serif-hero text-xl font-bold text-[#1c2826] mb-2">
+                {fetchError ? 'Unable to Load Specialists' : 'No Psychologists Found'}
+              </h3>
               <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed max-w-sm mx-auto mb-6">
-                Try adjusting your search query, specialty focus, or session format to discover available specialists.
+                {fetchError
+                  ? 'We could not reach our servers to fetch the specialist directory. Please check your connection and try again.'
+                  : 'Try adjusting your search query, specialty focus, or session format to discover available specialists.'}
               </p>
               <button
                 type="button"
-                onClick={handleClearFilters}
+                onClick={() => (fetchError ? window.location.reload() : handleClearFilters())}
                 className="px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-semibold rounded-md transition-all cursor-pointer border-none shadow-xs"
               >
-                Clear All Filters
+                {fetchError ? 'Try Again' : 'Clear All Filters'}
               </button>
             </div>
           ) : (
@@ -474,7 +384,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-[#1c2826] text-white">
                           <span className="font-serif-hero text-5xl font-bold">{getInitial(advisor.name)}</span>
-                          <span className="text-[10px] tracking-widest uppercase text-slate-300 mt-1 font-semibold">Clinical Care</span>
+                          <span className="text-[10px] tracking-widest uppercase text-[#c2b8a8] mt-1 font-semibold">Clinical Care</span>
                         </div>
                       )}
 
@@ -483,7 +393,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
                       {/* Next Available Pill (Top-Left) */}
                       <div className="absolute top-3.5 left-3.5 z-10">
-                        <span className="bg-white/95 backdrop-blur-md text-slate-800 text-[11px] font-semibold px-3 py-1 rounded-sm shadow-xs border border-white/80 flex items-center gap-1.5">
+                        <span className="bg-white/95 backdrop-blur-md text-[#1c2826] text-[11px] font-semibold px-3 py-1 rounded-sm shadow-xs border border-white/80 flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                           <span>{nextAvailable === 'Unavailable' ? 'Check slots' : `Next: ${nextAvailable}`}</span>
                         </span>
@@ -500,7 +410,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       {/* Rating on bottom right */}
                       {advisor.rating && (
                         <div className="absolute bottom-3 right-3.5 z-10">
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-white/95 text-slate-900 px-2.5 py-0.5 rounded-sm shadow-xs">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-white/95 text-[#1c2826] px-2.5 py-0.5 rounded-sm shadow-xs">
                             <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
                             <span>{advisor.rating}</span>
                           </span>
@@ -568,7 +478,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       {/* Pricing & Actions */}
                       <div className="pt-4 mt-4 border-t border-[#ede7de] flex items-center justify-between gap-3">
                         <div>
-                          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                          <span className="text-[10px] font-semibold text-[#8a938f] uppercase tracking-wider block">
                             Session Fee
                           </span>
                           <div className="text-sm font-bold text-[#1c2826] leading-tight">
@@ -588,7 +498,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                             type="button"
                             onClick={() => handleAdvisorClick(advisor.id)}
                             title="View clinical profile"
-                            className="px-3.5 py-2 rounded-md text-xs font-semibold text-slate-700 bg-[#fbf9f5] hover:bg-[#ede7de] transition-colors cursor-pointer border border-[#ede7de]"
+                            className="px-3.5 py-2 rounded-md text-xs font-semibold text-[#4c5b55] bg-[#fbf9f5] hover:bg-[#ede7de] transition-colors cursor-pointer border border-[#ede7de]"
                           >
                             Profile
                           </button>

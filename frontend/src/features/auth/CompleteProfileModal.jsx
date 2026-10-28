@@ -210,7 +210,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
     <>
       {/* Backdrop */}
       <div 
-        className="bh-profile-backdrop fixed inset-0 z-[200] bg-zinc-900/80 backdrop-blur-md animate-backdrop-in" 
+        className="bh-profile-backdrop fixed inset-0 z-[200] bg-[#1c2826]/80 backdrop-blur-md animate-backdrop-in" 
         onClick={handleCloseModal}
         aria-hidden="true" 
       />
@@ -432,7 +432,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                     value={formData.priorTherapyDetails}
                     onChange={handleInputChange}
                     placeholder="Tell us a little more about your prior therapy experience..."
-                    className="w-full p-3.5 bg-white border border-[#ede7de] rounded-2xl text-xs text-[#1c2826] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10 outline-none font-medium resize-none"
+                    className="w-full p-3.5 bg-white border border-[#ede7de] rounded-md text-xs text-[#1c2826] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10 outline-none font-medium resize-none"
                   />
                 </div>
               )}

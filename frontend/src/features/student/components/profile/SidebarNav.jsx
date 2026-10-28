@@ -23,7 +23,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  return (
  <>
  {/* Desktop sidebar */}
- <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-surface-200 rounded-xl shadow-xs sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
+ <nav className="hidden lg:flex flex-col gap-1.5 p-3 bg-white border border-[#ede7de] rounded-xl shadow-xs sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];
  const isActive = currentSection === tab.id;
@@ -37,11 +37,11 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  onClick={() => handleSectionChange(tab.id)}
  className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
  isActive
- ? 'bg-[#0f172a] text-white border-[#b85438]/40 shadow-xs scale-[1.01]'
- : 'text-surface-600 hover:bg-surface-100 hover:text-[#0f172a] border-transparent'
+ ? 'bg-[#1c2826] text-white border-[#b85438]/40 shadow-xs scale-[1.01]'
+ : 'text-[#5c6b66] hover:bg-[#f4eee6] hover:text-[#1c2826] border-transparent'
  }`}
  >
- {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#b85438]' : 'text-surface-500 group-hover:text-[#0f172a]'}`} />}
+ {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#b85438]' : 'text-[#8a938f] group-hover:text-[#1c2826]'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
  <span className={`text-[10px] font-semibold px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
@@ -49,7 +49,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  ? 'bg-[#b85438] text-white shadow-2xs'
  : tab.id === 'results' && !testProfile
  ? 'bg-amber-100 text-amber-800 animate-pulse'
- : 'bg-surface-100 text-[#0f172a]'
+ : 'bg-[#f4eee6] text-[#1c2826]'
  }`}>
  {badge}
  </span>
@@ -68,7 +68,7 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  </nav>
 
  {/* Mobile bottom tab bar */}
- <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white border-t border-surface-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] pb-[calc(env(safe-area-inset-bottom,0px)+2px)]">
+ <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white border-t border-[#ede7de] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] pb-[calc(env(safe-area-inset-bottom,0px)+2px)]">
  <div className="grid max-w-2xl mx-auto" style={{ gridTemplateColumns: `repeat(${visibleTabs.length + 1}, minmax(0, 1fr))` }}>
  {visibleTabs.map(tab => {
  const Icon = ICON_MAP[tab.iconName];
@@ -79,21 +79,21 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  key={tab.id}
  type="button"
  onClick={() => handleSectionChange(tab.id)}
- className={`relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors ${isActive ? 'text-surface-900' : 'text-surface-400'
+ className={`relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-2 px-1 transition-colors ${isActive ? 'text-[#1c2826]' : 'text-[#a8a094]'
 
  }`}
  >
  <div className="relative">
  {Icon && <Icon className="w-5 h-5" />}
  {badge !== null && badge > 0 && (
- <span className="absolute -top-1.5 -right-2 text-[10px] font-semibold px-1 min-w-[14px] h-3.5 rounded-[10px] bg-surface-900 text-white flex items-center justify-center">
+ <span className="absolute -top-1.5 -right-2 text-[10px] font-semibold px-1 min-w-[14px] h-3.5 rounded-[10px] bg-[#1c2826] text-white flex items-center justify-center">
  {badge}
  </span>
  )}
  </div>
  <span className="text-[10px] font-semibold tracking-widest truncate max-w-full">{tab.short}</span>
  {isActive && (
- <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-surface-900 rounded-[10px]" />
+ <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-[#1c2826] rounded-[10px]" />
  )}
  </button>
  );

@@ -9,80 +9,6 @@ const getInitial = (name = '') => {
   return cleanName.charAt(0).toUpperCase() || 'P';
 };
 
-const fallbackPsychologists = [
-  {
-    id: 'athira-v',
-    name: 'Athira V',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Sc Counselling Psychology',
-    rating: '5.0',
-    years: 5,
-    mode: 'Online & Clinic',
-    specialties: ['Career Mentoring', 'Adjustment Difficulties', 'Youth Care'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'arya-k',
-    name: 'Arya K',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Phil Clinical Psychology',
-    rating: '5.0',
-    years: 6,
-    mode: 'Online & Doorstep',
-    specialties: ['Parent and Child Care', 'Anxiety issues', 'Depression'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1594824813576-9043328e930f?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'arushi-s',
-    name: 'ARUSHI S',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Sc Clinical Psychology',
-    rating: '5.0',
-    years: 5,
-    mode: 'Online & Clinic',
-    specialties: ['Anxiety & Stress', 'Relationship Challenges', 'Career Guidance'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'fathima-n',
-    name: 'Fathima N.',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Sc Applied Psychology',
-    rating: '5.0',
-    years: 7,
-    mode: 'Online Video',
-    specialties: ['Workplace Burnout', 'Self-Esteem & Confidence', 'Stress Relief'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'anand-m',
-    name: 'Anand M.',
-    designation: 'Consultant Psychologist',
-    credential: 'M.Phil Clinical Psychology',
-    rating: '4.9',
-    years: 8,
-    mode: 'Clinic & Doorstep',
-    specialties: ['Family Dynamics', 'Adjustment & Emotional Difficulties', 'CBT Therapy'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'divya-r',
-    name: 'Divya R.',
-    designation: 'Consultant Psychologist',
-    credential: 'Certified Psychological Counselor',
-    rating: '5.0',
-    years: 6,
-    mode: 'Online Video',
-    specialties: ['Mindfulness & Calm', 'Anxiety & Stress', 'Emotional Healing'],
-    fee: 899,
-    photo: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80',
-  },
-];
 
 function normalizeAdvisor(counsellor) {
   const rawPhoto = counsellor.profilePic || counsellor.photo || counsellor.avatar
@@ -106,9 +32,9 @@ function normalizeAdvisor(counsellor) {
     name: counsellor.name || counsellor.user?.name || counsellor.fullName || '',
     designation,
     credential: counsellor.credential || 'Licensed Psychologist',
-    rating: counsellor.rating ? String(Number(counsellor.rating).toFixed(1)) : '5.0',
-    fee: Number.isFinite(fee) ? fee : 1299,
-    years: counsellor.years || (typeof counsellor.experience === 'string' ? parseInt(counsellor.experience, 10) : 7),
+    rating: counsellor.rating ? String(Number(counsellor.rating).toFixed(1)) : null,
+    fee: Number.isFinite(fee) ? fee : null,
+    years: Number.isFinite(counsellor.years) ? counsellor.years : (parseInt(counsellor.experience, 10) || 0),
     photo: typeof rawPhoto === 'string' && rawPhoto.trim() && !rawPhoto.includes('via.placeholder') ? rawPhoto : null,
     specialties: rawSpecialties.filter(v => typeof v === 'string' && v.trim()),
     mode: Array.isArray(counsellor.modes) && counsellor.modes.length > 0 ? counsellor.modes.join(' & ') : 'Online & Clinic',
@@ -130,6 +56,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
   const [activeCategory, setActiveCategory] = useState('All');
   const [advisors, setAdvisors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   const categories = [
     'All',
@@ -147,17 +74,13 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
         if (!isMounted) return;
         if (response?.success && Array.isArray(response.data) && response.data.length > 0) {
           const publicOnly = response.data.filter(isPublicAdvisor);
-          if (publicOnly.length > 0) {
-            setAdvisors(publicOnly.map(normalizeAdvisor));
-          } else {
-            setAdvisors(fallbackPsychologists);
-          }
+          setAdvisors(publicOnly.map(normalizeAdvisor));
         } else {
-          setAdvisors(fallbackPsychologists);
+          setAdvisors([]);
         }
       })
       .catch(() => {
-        if (isMounted) setAdvisors(fallbackPsychologists);
+        if (isMounted) { setAdvisors([]); setFetchError(true); }
       })
       .finally(() => {
         if (isMounted) setLoading(false);
@@ -167,7 +90,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
   }, []);
 
   const displayList = useMemo(() => {
-    const list = advisors.length > 0 ? advisors : fallbackPsychologists;
+    const list = advisors;
     if (activeCategory === 'All') return list.slice(0, 6);
     return list.filter((a) => {
       const matchSpecialty = a.specialties?.some(s => s.toLowerCase().includes(activeCategory.toLowerCase()));
@@ -224,7 +147,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
                 className={`px-4 sm:px-5 py-2 rounded-md text-xs font-medium tracking-wide transition-all duration-200 shrink-0 cursor-pointer border ${
                   isActive
                     ? 'bg-[#b85438] text-white border-[#b85438] shadow-xs'
-                    : 'bg-white text-slate-700 hover:text-[#1c2826] hover:bg-[#f6f2ec] border-[#ede7de]'
+                    : 'bg-white text-[#4c5b55] hover:text-[#1c2826] hover:bg-[#f6f2ec] border-[#ede7de]'
                 }`}
               >
                 {cat}
@@ -234,77 +157,121 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
         </div>
 
         {/* Stack of Horizontal Rows matching modern professional layout */}
-        <div className="flex flex-col gap-2.5 sm:gap-3">
-          {displayList.map((psychologist) => (
-            <div
-              key={psychologist.id}
-              className="group bg-white rounded-md px-5 py-3.5 sm:py-3.5 border border-[#ede7de] hover:border-[#b85438]/50 shadow-2xs hover:shadow-xs transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
-            >
-              {/* Left Column: Format & Session Type */}
-              <div className="sm:w-1/4">
-                <span className="text-[11px] font-bold text-[#b85438] uppercase tracking-wider block">
-                  {psychologist.mode || 'Online & Clinic'}
-                </span>
-                <span className="text-xs text-[#5c6b66] font-medium block">
-                  {psychologist.years > 0 ? `${psychologist.years}+ Years Experience` : 'Accredited Specialist'}
-                </span>
-              </div>
-
-              {/* Middle Column: Primary Focus / Credentials */}
-              <div className="sm:w-1/3">
-                <span className="text-xs font-medium text-slate-800 line-clamp-1">
-                  {psychologist.specialties?.slice(0, 2).join(' • ') || psychologist.credential}
-                </span>
-                <span className="text-[11px] text-[#5c6b66]">
-                  {psychologist.designation}
-                </span>
-              </div>
-
-              {/* Middle-Right Column: Avatar & Doctor Name */}
-              <div
-                onClick={() => handleAdvisorClick(psychologist.id)}
-                className="flex items-center gap-3 sm:w-1/3 cursor-pointer"
-              >
-                <div className="w-10 h-10 rounded-sm overflow-hidden shrink-0 bg-[#f4eee6] border border-[#ede7de]">
-                  {psychologist.photo ? (
-                    <img
-                      src={psychologist.photo}
-                      alt={psychologist.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-xs font-bold text-[#b85438]">
-                      {getInitial(psychologist.name)}
-                    </div>
-                  )}
+        {loading ? (
+          <div className="flex flex-col gap-2.5 sm:gap-3">
+            {[1, 2, 3, 4, 5].map((item) => (
+              <div key={item} className="bg-white rounded-md px-5 py-4 border border-[#ede7de] flex items-center justify-between gap-4">
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 w-1/3 bg-[#f0eae1] rounded-sm animate-pulse" />
+                  <div className="h-3 w-1/2 bg-[#f0eae1] rounded-sm animate-pulse" />
                 </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors truncate">
-                    {psychologist.name}
-                  </div>
-                  <div className="flex items-center gap-1 text-[11px] text-amber-600 font-medium">
-                    <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
-                    <span>{psychologist.rating || '5.0'}</span>
-                    <span className="text-slate-400">·</span>
-                    <span className="text-slate-600 font-normal">₹{psychologist.fee}</span>
-                  </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-sm bg-[#f0eae1] animate-pulse shrink-0" />
+                  <div className="h-3 w-24 bg-[#f0eae1] rounded-sm animate-pulse" />
                 </div>
+                <div className="h-8 w-24 bg-[#f0eae1] rounded-md animate-pulse shrink-0" />
               </div>
-
-              {/* Right Column: Book Button */}
-              <div className="sm:w-auto shrink-0 flex items-center justify-end">
-                <button
-                  type="button"
-                  onClick={() => onBookTherapist?.(psychologist.id)}
-                  className="w-full sm:w-auto px-5 py-2 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors duration-200 shadow-2xs cursor-pointer border-none"
-                >
-                  Book Session
-                </button>
-              </div>
+            ))}
+          </div>
+        ) : displayList.length === 0 ? (
+          <div className="text-center py-14 bg-white rounded-md border border-[#ede7de]">
+            <div className="w-12 h-12 bg-[#faf5f0] text-[#b85438] rounded-sm flex items-center justify-center mx-auto mb-3 border border-[#eedfd0]">
+              <UserRound className="w-5 h-5" />
             </div>
-          ))}
-        </div>
+            <p className="font-serif-hero text-lg text-[#1c2826] mb-1">
+              {fetchError ? 'Unable to Load Specialists' : 'No Specialists in This Focus Yet'}
+            </p>
+            <p className="text-xs text-[#5c6b66] max-w-sm mx-auto">
+              {fetchError
+                ? 'We could not reach our servers right now. Please check your connection and try again shortly.'
+                : 'Please try a different focus area above, or browse the full directory of our clinical psychologists.'}
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2.5 sm:gap-3">
+            {displayList.map((psychologist) => (
+              <div
+                key={psychologist.id}
+                className="group bg-white rounded-md px-5 py-3.5 sm:py-3.5 border border-[#ede7de] hover:border-[#b85438]/50 shadow-2xs hover:shadow-xs transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
+              >
+                {/* Left Column: Format & Session Type */}
+                <div className="sm:w-1/4">
+                  <span className="text-[11px] font-bold text-[#b85438] uppercase tracking-wider block">
+                    {psychologist.mode || 'Online & Clinic'}
+                  </span>
+                  <span className="text-xs text-[#5c6b66] font-medium block">
+                    {psychologist.years > 0 ? `${psychologist.years}+ Years Experience` : 'Accredited Specialist'}
+                  </span>
+                </div>
+
+                {/* Middle Column: Primary Focus / Credentials */}
+                <div className="sm:w-1/3">
+                  <span className="text-xs font-medium text-[#33413d] line-clamp-1">
+                    {psychologist.specialties?.slice(0, 2).join(' • ') || psychologist.credential}
+                  </span>
+                  <span className="text-[11px] text-[#5c6b66]">
+                    {psychologist.designation}
+                  </span>
+                </div>
+
+                {/* Middle-Right Column: Avatar & Doctor Name */}
+                <div
+                  onClick={() => handleAdvisorClick(psychologist.id)}
+                  className="flex items-center gap-3 sm:w-1/3 cursor-pointer"
+                >
+                  <div className="w-10 h-10 rounded-sm overflow-hidden shrink-0 bg-[#f4eee6] border border-[#ede7de]">
+                    {psychologist.photo ? (
+                      <img
+                        src={psychologist.photo}
+                        alt={psychologist.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xs font-bold text-[#b85438]">
+                        {getInitial(psychologist.name)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors truncate">
+                      {psychologist.name}
+                    </div>
+                    <div className="flex items-center gap-1 text-[11px] text-amber-600 font-medium">
+                      {psychologist.rating ? (
+                        <>
+                          <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
+                          <span>{psychologist.rating}</span>
+                          {psychologist.fee != null && (
+                            <>
+                              <span className="text-[#a8a094]">·</span>
+                              <span className="text-[#5c6b66] font-normal">₹{psychologist.fee}</span>
+                            </>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-[#8a938f] font-normal">
+                          {psychologist.fee != null ? `₹${psychologist.fee} / session` : 'Newly listed specialist'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Book Button */}
+                <div className="sm:w-auto shrink-0 flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={() => onBookTherapist?.(psychologist.id)}
+                    className="w-full sm:w-auto px-5 py-2 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors duration-200 shadow-2xs cursor-pointer border-none"
+                  >
+                    Book Session
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Centered Button linking to /psychologists */}
         <div className="mt-10 sm:mt-12 flex flex-col items-center justify-center text-center">
