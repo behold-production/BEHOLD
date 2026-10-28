@@ -9,32 +9,37 @@ const DEFAULT_FAQS = [
   {
     category: 'Therapy & Sessions',
     question: "How does BEHOLD's therapy work?",
-    answer: "BEHOLD connects you with certified psychologists and mental health experts for online video consultations, offline clinic visits, or doorstep sessions based on your preferences. You can choose an expert, pick a convenient time, and get personalized support."
+    answer: "BEHOLD connects you with certified clinical and counselling psychologists for online video consultations, clinic visits, or doorstep home sessions. You can choose a psychologist, pick a convenient time slot, and receive confidential, evidence-based care."
+  },
+  {
+    category: 'Pricing & Booking',
+    question: 'What are the consultation fees and session durations?',
+    answer: 'We provide an Introductory Consultation (30 minutes) at ₹499 for first-time clients to understand your needs and match the right approach, and a Standard Clinical Session (60 minutes) at ₹899 for deep therapeutic work. Specialized assessments like C-DAT include comprehensive profiling.'
+  },
+  {
+    category: 'Cancellation & Rescheduling',
+    question: 'What is your cancellation and refund policy?',
+    answer: 'Cancellations made at least 24 hours prior to the scheduled session time receive a 100% full refund directly to your original payment method. You can also reschedule your session free of charge up to 12 hours before the appointment time.'
   },
   {
     category: 'Services',
-    question: 'What kind of support does BEHOLD provide?',
-    answer: 'We offer individual psychological counselling, career guidance, anxiety & stress management, depression support, aptitude assessment, and relationship wellbeing sessions.'
+    question: 'What is the C-DAT Career Aptitude Assessment?',
+    answer: 'C-DAT is our scientifically structured Career Diagnostic and Aptitude Tool designed for students and young professionals. It evaluates cognitive strengths, interests, and emotional temperament to provide clear, actionable academic and career paths without societal pressure.'
   },
   {
-    category: 'General',
-    question: "Who can use BEHOLD's services?",
-    answer: 'Our services are designed for students, young professionals, adults, and families seeking professional guidance, emotional support, or personal development.'
-  },
-  {
-    category: 'General',
-    question: 'What is BEHOLD?',
-    answer: 'BEHOLD is a holistic mental health and career aptitude platform committed to providing accessible, empathetic, and confidential psychological support.'
+    category: 'Services',
+    question: 'How do Doorstep In-Home therapy sessions work?',
+    answer: 'For clients in Kerala seeking in-person support where travel is difficult, our certified psychologists can visit your residence for personalized, respectful care. Doorstep sessions are coordinated with safety, professionalism, and full privacy.'
   },
   {
     category: 'Privacy',
-    question: 'Are my therapy sessions private and confidential?',
-    answer: 'Yes, absolutely. All sessions and personal data are strictly confidential and protected by professional psychological ethics and secure data standards.'
+    question: 'Are my sessions and personal information strictly confidential?',
+    answer: 'Yes, absolutely. All sessions adhere to the Code of Ethics of the Rehabilitation Council of India (RCI) and American Psychological Association (APA). Your personal details, session notes, and payment info are encrypted and never disclosed to any third party.'
   },
   {
-    category: 'Therapy & Sessions',
-    question: 'How do I book a session with a psychologist?',
-    answer: 'Simply click "Meet Our Experts", select a psychologist whose specialization matches your needs, pick an available date & time slot, and complete your booking in under 2 minutes.'
+    category: 'General',
+    question: 'How do I reach the BEHOLD care team directly?',
+    answer: 'You can contact our support helpline at +91 92070 75151, reach out via WhatsApp at +91 94971 74011, or email us at beholdoffice@gmail.com. Our support team is active 7 days a week.'
   }
 ];
 

@@ -616,15 +616,15 @@ export default function App() {
  
 
       <Suspense fallback={
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md transition-all duration-300">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#fbf9f5]/80 backdrop-blur-md transition-all duration-300">
           <div className="flex flex-col items-center gap-4">
             <div className="relative flex items-center justify-center">
-              <div className="w-14 h-14 rounded-full border-3 border-[#00e5ff]/20 border-t-[#00e5ff] animate-spin shadow-[0_0_15px_rgba(0,229,255,0.4)]" />
-              <span className="absolute font-sans font-semibold text-xs text-slate-900 tracking-widest uppercase">
-                B<span className="text-[#00e5ff]">.</span>
+              <div className="w-12 h-12 rounded-full border-2 border-[#ede7de] border-t-[#b85438] animate-spin" />
+              <span className="absolute font-sans font-bold text-xs text-[#1c2826] tracking-widest uppercase">
+                B<span className="text-[#b85438]">.</span>
               </span>
             </div>
-            <span className="text-xs font-semibold uppercase tracking-widest text-slate-600 animate-pulse">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-[#7d8b85]">
               Loading...
             </span>
           </div>

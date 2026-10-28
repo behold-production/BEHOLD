@@ -4,8 +4,9 @@ import heroLandscapeBg from '../../assets/header_landscape.jpg';
 
 export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, siteSettings }) {
   const settings = siteSettings || {};
-  const emailAddr = settings.contactEmail?.trim() || 'support@behold.co.in';
-  const phoneVal = settings.contactPhone?.trim() || '+91 98460 00000';
+  const emailAddr = settings.contactEmail?.trim() || 'beholdoffice@gmail.com';
+  const phoneVal = settings.contactPhone?.trim() || '+91 92070 75151';
+  const whatsappUrl = 'https://wa.me/919497174011';
 
   const goTo = (section) => {
     if (section.startsWith('/')) {
@@ -91,11 +92,20 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   </a>
                 )}
                 {phoneVal && (
-                  <a href={`tel:${phoneVal}`} className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2">
+                  <a href={`tel:${phoneVal.replace(/\s+/g, '')}`} className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2">
                     <Phone className="w-3.5 h-3.5 text-[#b85438]" />
                     <span>Helpline: {phoneVal}</span>
                   </a>
                 )}
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2 text-xs"
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                  <span>WhatsApp: +91 94971 74011</span>
+                </a>
               </div>
             </div>
 
@@ -141,22 +151,22 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
               <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
                 <li>
                   <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Mindfulness &amp; Anxiety Relief
+                    Psychological Counselling &amp; Emotional Support
                   </button>
                 </li>
                 <li>
                   <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Deep Emotional &amp; Trauma Healing
+                    C-DAT Career Aptitude &amp; Mentorship
                   </button>
                 </li>
                 <li>
                   <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Adolescent &amp; Career Clarity
+                    Doorstep In-Home Therapy (Kerala)
                   </button>
                 </li>
                 <li>
                   <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Online Remote Video Sessions
+                    Secure Online Tele-Counselling
                   </button>
                 </li>
               </ul>

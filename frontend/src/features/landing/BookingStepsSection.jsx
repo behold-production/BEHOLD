@@ -3,32 +3,32 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 
 const programs = [
   {
-    id: 'mindfulness',
-    title: 'Mindfulness & Anxiety Relief',
-    description: 'Evidence-based cognitive and somatic techniques to alleviate panic, chronic stress, and restore grounded nervous system balance.',
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
-    tag: 'Individual Care',
-  },
-  {
-    id: 'emotional-healing',
-    title: 'Deep Emotional & Trauma Healing',
-    description: 'A compassionate, confidential sanctuary to gently process grief, navigate difficult relationship transitions, and rebuild self-worth.',
-    image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=600&q=80',
-    tag: 'Therapy & Healing',
-  },
-  {
-    id: 'career-clarity',
-    title: 'Adolescent & Career Clarity',
-    description: 'Scientific psychological profiling and empathetic mentorship helping youth and students navigate academic direction and career purpose.',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80',
-    tag: 'Youth & Career',
-  },
-  {
-    id: 'online-sessions',
-    title: 'Online Remote Therapy Sessions',
-    description: 'Secure, end-to-end encrypted video sessions connecting you directly with accredited clinical psychologists from anywhere in the world.',
+    id: 'counselling',
+    title: 'Psychological Counselling & Emotional Support',
+    description: 'When anxiety, self-doubt, or life pressure feels overwhelming, our licensed psychologists provide a safe, confidential space to heal, reflect, and rebuild resilience.',
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-    tag: 'Remote Access',
+    tag: 'Emotional Wellbeing',
+  },
+  {
+    id: 'career-cdat',
+    title: 'C-DAT Career Aptitude & Student Mentorship',
+    description: 'Whether choosing an academic stream, preparing for university, or navigating career crossroads, our scientific assessments and mentors provide authentic clarity and purpose.',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80',
+    tag: 'Career Mentoring',
+  },
+  {
+    id: 'doorstep-care',
+    title: 'Doorstep & In-Home Family Sessions',
+    description: 'Qualified at-home consultations providing comfortable, discreet psychological support for adolescents, seniors, and families within eligible service zones.',
+    image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=600&q=80',
+    tag: 'At-Home Care',
+  },
+  {
+    id: 'online-teletherapy',
+    title: 'Secure Online Tele-Counselling',
+    description: 'Connect from any location through end-to-end encrypted video appointments with certified clinical psychologists, complete with calendar links and post-session notes.',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
+    tag: 'Virtual Sanctuary',
   },
 ];
 

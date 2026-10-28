@@ -27,12 +27,12 @@ const defaultFaqs = [
   {
     id: 'faq-5',
     question: 'Can I reschedule or cancel my booked appointment?',
-    answer: 'Yes, you can easily reschedule or cancel your appointment directly through your account or WhatsApp support up to 6 hours prior to your scheduled slot.',
+    answer: 'Yes. You can cancel your appointment up to 24 hours prior to the scheduled start time for a 100% full refund. Rescheduling is completely free of charge up to 12 hours before your session directly through your account or WhatsApp support.',
   },
   {
     id: 'faq-6',
     question: 'What is the duration and fee structure of a session?',
-    answer: 'Standard clinical psychology sessions run for 50 minutes. Fees vary based on the specialist and format, and are clearly displayed transparently before booking with no hidden charges.',
+    answer: 'We offer an Introductory Consultation (30 Minutes, ₹499) for first-time assessment and rapport building, and a Standard Comprehensive Session (60 Minutes, ₹899) for in-depth therapeutic interventions with no hidden fees.',
   },
 ];
 
