@@ -12,8 +12,21 @@ const BRAND_PATHS = {
   youtube: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z',
 };
 
+// Map common admin-entered variants / abbreviations to a canonical BRAND_PATHS key
+const SOCIAL_ALIASES = {
+  fb: 'facebook',
+  insta: 'instagram',
+  ig: 'instagram',
+  tw: 'twitter',
+  x: 'twitter',
+  li: 'linkedin',
+  yt: 'youtube',
+};
+
 function SocialIcon({ name, className }) {
-  const path = BRAND_PATHS[String(name).toLowerCase().trim()];
+  const key = String(name || '').toLowerCase().replace(/[^a-z]/g, '');
+  const resolved = SOCIAL_ALIASES[key] || key;
+  const path = BRAND_PATHS[resolved];
   if (!path) return <Globe className={className} />;
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -180,7 +193,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
             {/* Navigation Column */}
             <div className="col-span-1 md:col-span-3">
-              <h4 className="text-[#1c2826] font-semibold uppercase text-[11px] tracking-widest mb-3.5">
+              <h4 className="text-[#b85438] font-bold uppercase text-[11px] tracking-[0.18em] mb-4">
                 Navigation
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
@@ -214,7 +227,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
 
             {/* Care Services Column */}
             <div className="col-span-1 md:col-span-4">
-              <h4 className="text-[#1c2826] font-semibold uppercase text-[11px] tracking-widest mb-3.5">
+              <h4 className="text-[#b85438] font-bold uppercase text-[11px] tracking-[0.18em] mb-4">
                 Care Services
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
