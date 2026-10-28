@@ -1,176 +1,153 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, ArrowUpRight, HelpCircle } from 'lucide-react';
+import { Plus, Minus, ArrowRight } from 'lucide-react';
 import ApiService from '../../services/api';
-import greyGreenBg from '../../assets/greygreen.png';
+
+const defaultFaqs = [
+  {
+    id: 'faq-1',
+    question: 'How do I know which clinical psychologist is right for me?',
+    answer: 'You can explore our team by their focus areas—such as anxiety, depression, trauma, career guidance, or adolescent support. You can also book a general consultation and our team will thoughtfully match you with the specialist best suited to your needs.',
+  },
+  {
+    id: 'faq-2',
+    question: 'Are online therapy sessions as effective as in-person visits?',
+    answer: 'Yes. Extensive clinical research demonstrates that online cognitive and psychological counseling achieves identical therapeutic outcomes to in-person sessions, with added privacy and convenience.',
+  },
+  {
+    id: 'faq-3',
+    question: 'How is client privacy and confidentiality protected?',
+    answer: 'BEHOLD adheres to strict clinical psychology ethical guidelines and data protection protocols. All sessions, notes, and records are 100% confidential and end-to-end encrypted.',
+  },
+  {
+    id: 'faq-4',
+    question: 'What happens during my very first consultation session?',
+    answer: 'Your first session is a gentle, pressure-free sanctuary to share what brings you to therapy. Your psychologist will listen attentively, understand your goals, and formulate a collaborative care plan at your pace.',
+  },
+  {
+    id: 'faq-5',
+    question: 'Can I reschedule or cancel my booked appointment?',
+    answer: 'Yes, you can easily reschedule or cancel your appointment directly through your account or WhatsApp support up to 6 hours prior to your scheduled slot.',
+  },
+  {
+    id: 'faq-6',
+    question: 'What is the duration and fee structure of a session?',
+    answer: 'Standard clinical psychology sessions run for 50 minutes. Fees vary based on the specialist and format, and are clearly displayed transparently before booking with no hidden charges.',
+  },
+];
 
 export default function Faq({ siteSettings }) {
   const navigate = useNavigate();
   const settings = siteSettings || {};
   const showFaqs = settings.enableFaq !== false;
-  const enableAptitude = settings.enableAptitude !== false;
-  const [openIndex, setOpenIndex] = useState(null);
-  const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [faqError, setFaqError] = useState('');
+  const [openIndex, setOpenIndex] = useState(0); // first item open by default like in mockup
+  const [faqs, setFaqs] = useState(defaultFaqs);
 
   useEffect(() => {
     let isMounted = true;
-    const loadFaqs = (forceRefresh = false) => {
-      setLoading(true);
-      return ApiService.getFaqs(forceRefresh)
+    if (showFaqs) {
+      ApiService.getFaqs()
         .then((res) => {
-          if (res?.success && Array.isArray(res.data)) {
-            if (isMounted) {
-              setFaqs(res.data);
-              setFaqError('');
-            }
-          } else {
-            if (isMounted) setFaqs([]);
+          if (!isMounted) return;
+          if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+            setFaqs(res.data);
           }
         })
-        .catch((err) => {
-          console.error('Failed to load FAQs', err);
-          if (isMounted) setFaqError('FAQs are temporarily unavailable.');
-        })
-        .finally(() => {
-          if (isMounted) setLoading(false);
-        });
-    };
-
-    if (showFaqs) {
-      loadFaqs(true);
-    } else {
-      setLoading(false);
+        .catch(() => {});
     }
-
-    const handler = () => loadFaqs(true);
-    window.addEventListener('behold_faqs_updated', handler);
-    return () => {
-      isMounted = false;
-      window.removeEventListener('behold_faqs_updated', handler);
-    };
+    return () => { isMounted = false; };
   }, [showFaqs]);
 
   if (!showFaqs) return null;
 
-  const displayFaqs = (enableAptitude
-    ? faqs
-    : faqs.filter(f => !f.question?.toLowerCase().includes('c-dat') && !f.question?.toLowerCase().includes('aptitude'))
-  ).slice(0, 6);
+  const toggleIndex = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
   return (
-    <section id="faqs" aria-labelledby="faq-title" className="relative py-20 sm:py-28 bg-[#fffefa] text-slate-900 border-b border-slate-200/80 overflow-hidden">
-      {/* Soft background fade */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <img
-          src={greyGreenBg?.src || greyGreenBg}
-          alt=""
-          className="w-full h-full object-cover object-center opacity-35 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
-        />
-      </div>
-
+    <section
+      id="faqs"
+      aria-labelledby="bh-faq-heading"
+      className="relative py-20 sm:py-28 bg-[#fbf9f5] text-[#1c2826] overflow-hidden scroll-mt-20 border-t border-[#ece6dc]"
+    >
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header: Left terracotta eyebrow, Right serif heading */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-12 pb-4 border-b border-[#ece6dc]">
+          <div>
+            <span className="text-[#b85438] text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase block">
+              FAQ
+            </span>
+          </div>
+          <div>
+            <h2
+              id="bh-faq-heading"
+              className="font-serif-hero text-2xl sm:text-3xl md:text-4xl font-normal text-[#1c2826] tracking-tight leading-snug"
+            >
+              Frequently Asked Questions
+            </h2>
+          </div>
+        </div>
 
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="inline-flex items-center gap-2 text-[11px] font-bold text-teal-700 tracking-widest uppercase mb-3">
-            <span className="w-5 h-px bg-teal-600/40 inline-block" />
-            {settings.faqSectionSub || 'Frequently Asked Questions'}
-            <span className="w-5 h-px bg-teal-600/40 inline-block" />
-          </span>
-          <h2 id="faq-title" className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-slate-900 mb-4 tracking-tight leading-tight">
-            {settings.faqSectionTitle || 'Everything You Need to Know'}<span className="text-[#0d827f]">.</span>
-          </h2>
-          <p className="text-sm sm:text-base text-slate-600 font-normal max-w-xl mx-auto leading-relaxed mb-6">
-            {settings.faqSectionDesc || "Whatever’s on your mind, we’re here to help you understand what comes next."}
-          </p>
+        {/* Accordion Stack matching mockup */}
+        <div className="flex flex-col gap-3 sm:gap-3.5">
+          {faqs.slice(0, 7).map((item, idx) => {
+            const isOpen = openIndex === idx;
+            return (
+              <div
+                key={item._id || item.id || idx}
+                className={`rounded-2xl transition-all duration-200 border ${
+                  isOpen
+                    ? 'bg-white border-[#b85438]/30 shadow-xs'
+                    : 'bg-white/80 hover:bg-white border-[#ede7de]'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleIndex(idx)}
+                  className="w-full px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 text-left cursor-pointer border-none bg-transparent"
+                >
+                  <span className="font-serif-hero text-base sm:text-lg font-medium text-[#1c2826] pr-2">
+                    {item.question}
+                  </span>
+                  <div
+                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                      isOpen
+                        ? 'bg-[#b85438] text-white'
+                        : 'bg-[#f6f2ec] text-[#1c2826] group-hover:bg-[#ede7de]'
+                    }`}
+                  >
+                    {isOpen ? (
+                      <Minus className="w-3.5 h-3.5 stroke-[2.5]" />
+                    ) : (
+                      <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                    )}
+                  </div>
+                </button>
+
+                {isOpen && (
+                  <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-xs sm:text-sm text-[#5c6b66] leading-relaxed border-t border-[#f4ede4] pt-3">
+                    {item.answer}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Directory Link */}
+        <div className="mt-8 text-center">
           <button
             type="button"
             onClick={() => {
               navigate('/faqs');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="px-6 py-2.5 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs tracking-wider rounded-lg transition-all border border-slate-200 hover:border-slate-300 cursor-pointer shadow-2xs inline-flex items-center gap-2"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#b85438] hover:text-[#9e432c] transition-colors cursor-pointer bg-transparent border-none p-0"
           >
-            <span>Browse Full FAQ Directory</span>
-            <ArrowUpRight className="w-3.5 h-3.5 text-teal-700" />
+            <span>Have more questions? Browse all FAQs</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
-
-        {/* Accordion list */}
-        {loading ? (
-          <div className="space-y-3.5">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="rounded-lg border border-slate-200 bg-white/90 px-6 py-5 flex items-center justify-between gap-4 shadow-2xs">
-                <div className="shimmer h-4 w-3/4 rounded-md" />
-                <div className="shimmer w-7 h-7 rounded-md shrink-0" />
-              </div>
-            ))}
-          </div>
-        ) : displayFaqs.length === 0 ? (
-          <div className="text-center py-12 bg-white/90 rounded-lg border border-dashed border-slate-200 p-8 space-y-3 max-w-md mx-auto">
-            <div className="w-12 h-12 rounded-full bg-teal-50 text-teal-700 border border-teal-200 flex items-center justify-center mx-auto">
-              <HelpCircle className="w-5 h-5" />
-            </div>
-            <h3 className="text-base font-bold text-slate-900">No Questions Listed</h3>
-            <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
-              Have questions? Reach out directly to our team below.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {displayFaqs.map((faq, idx) => {
-              const isOpen = openIndex === idx;
-              return (
-                <div
-                  key={faq._id || idx}
-                  className={`rounded-lg border transition-all duration-200 overflow-hidden bg-white/95 backdrop-blur-xs ${
-                    isOpen
-                      ? 'border-[#0d827f] shadow-xs ring-1 ring-[#0d827f]/20'
-                      : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setOpenIndex(isOpen ? null : idx)}
-                    className="w-full text-left px-5 sm:px-6 py-4.5 flex items-center justify-between gap-4 cursor-pointer bg-transparent border-none focus-visible:outline-none"
-                  >
-                    <span className={`font-semibold text-sm sm:text-base leading-snug transition-colors ${isOpen ? 'text-[#0d827f]' : 'text-slate-900'}`}>
-                      {faq.question}
-                    </span>
-                    <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'bg-teal-50 text-teal-800 rotate-180 border border-teal-200' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
-                  </button>
-                  {isOpen && (
-                    <div className="px-5 sm:px-6 pb-5 text-slate-600 leading-relaxed text-xs sm:text-sm border-t border-slate-100 pt-3.5 font-normal">
-                      {faq.answer || faq.text}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Bottom CTA */}
-        <div className="mt-12 text-center">
-          <p className="text-slate-500 mb-3 text-xs sm:text-sm font-normal">Still have a specific question?</p>
-          <button
-            type="button"
-            onClick={() => {
-              const el = document.getElementById('inquiry');
-              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-            className="px-6 py-2.5 bg-slate-900 hover:bg-black text-white font-semibold text-xs tracking-wider rounded-lg transition-all border border-slate-900 cursor-pointer shadow-xs inline-flex items-center gap-1.5"
-          >
-            Contact Our Team
-          </button>
-        </div>
-
       </div>
     </section>
   );

@@ -7,32 +7,17 @@ const getFirstText = (...values) => values.find((value) => typeof value === 'str
 export default function Hero({ siteSettings, navigateToSection, onOpenBooking }) {
   const settings = siteSettings || {};
 
-  // Content defaults matching reference design exactly, with live dynamic siteSettings support
-  const description = getFirstText(
-    settings.heroSub,
-    'Professional psychological counseling, aptitude assessment, and career mentorship designed to help individuals thrive with confidence and purpose.'
+  const headline = getFirstText(
+    settings.heroTitle,
+    'Where Mental Wellbeing Meets Mindful Living'
   );
 
-  const buttonText = getFirstText(settings.heroBtnText, "Let's Connect");
+  const description = getFirstText(
+    settings.heroSub,
+    'Personalized psychological counselling, emotional healing, and career mentorship tailored to your personal journey.'
+  );
 
-  // Determine split for "It's Okay to be" and cursive cyan "not okay"
-  let mainTitle = "It's Okay to be";
-  let scriptHighlight = "not okay";
-
-  if (settings.heroTitle) {
-    if (settings.heroTitle.toLowerCase().includes('not okay')) {
-      const parts = settings.heroTitle.split(/not okay/i);
-      mainTitle = parts[0]?.trim() || "It's Okay to be";
-      scriptHighlight = "not okay";
-    } else if (settings.heroTitle.includes('\n')) {
-      const lines = settings.heroTitle.split('\n');
-      mainTitle = lines.slice(0, -1).join(' ') || lines[0];
-      scriptHighlight = lines[lines.length - 1];
-    } else {
-      mainTitle = settings.heroTitle;
-      scriptHighlight = '';
-    }
-  }
+  const buttonText = getFirstText(settings.heroBtnText, 'Begin Your Journey');
 
   const handleConnectClick = () => {
     if (typeof onOpenBooking === 'function') {
@@ -47,65 +32,61 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
   return (
     <>
       <SEO
-        title={`${settings.siteName || 'BEHOLD'} | ${mainTitle} ${scriptHighlight}`.trim()}
+        title={`${settings.siteName || 'BEHOLD'} | ${headline}`}
         description={description}
         canonicalUrl="https://www.behold.co.in/"
       />
+
       <section
-        className="bh-landscape-hero relative w-full min-h-[580px] sm:min-h-[640px] md:min-h-[720px] lg:min-h-[820px] xl:min-h-[880px] flex items-center overflow-hidden"
         id="home"
         aria-labelledby="bh-hero-title"
-        style={{
-          backgroundImage: `url(${heroLandscapeBg})`,
-          backgroundPosition: 'center bottom',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat'
-        }}
+        className="relative w-full pt-28 sm:pt-36 pb-0 bg-[#fbf9f5] overflow-hidden"
       >
-        {/* Soft upper gradient to ensure navbar links and logo remain crystal clear */}
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/35 via-white/10 to-transparent pointer-events-none" />
+        {/* Centered Editorial Text Container */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-10 sm:mb-14">
+          <h1
+            id="bh-hero-title"
+            className="font-serif-hero text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-medium text-[#1c2826] tracking-tight leading-[1.12] mb-5 sm:mb-6"
+          >
+            {headline}
+          </h1>
 
-        {/* Hero Content Shell */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 lg:pb-28">
-          <div className="max-w-xl lg:max-w-2xl text-left">
-            <h1
-              id="bh-hero-title"
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[62px] font-extrabold text-[#0f172a] tracking-tight leading-[1.08] font-sans"
+          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-[#5c6b66] font-normal leading-relaxed mb-7 sm:mb-9">
+            {description}
+          </p>
+
+          <div className="flex items-center justify-center">
+            <button
+              type="button"
+              onClick={handleConnectClick}
+              className="inline-flex items-center justify-center px-8 sm:px-9 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide bg-[#1c2826] hover:bg-[#b85438] text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer active:scale-95 border-none"
             >
-              <span>{mainTitle}</span>
-              {scriptHighlight && (
-                <span className="block mt-1 sm:mt-2 text-[#00E5FF] font-normal text-5xl sm:text-6xl md:text-7xl lg:text-[78px] xl:text-[84px] font-script-hero leading-tight select-none relative inline-block">
-                  {scriptHighlight}
-                  {/* Delicate watercolor flourish underline stroke */}
-                  <svg
-                    className="w-full h-3 sm:h-4 text-[#00E5FF]/70 absolute -bottom-1 sm:-bottom-2 left-0 pointer-events-none"
-                    viewBox="0 0 200 12"
-                    fill="none"
-                    preserveAspectRatio="none"
-                  >
-                    <path
-                      d="M2 8 C 45 2, 95 10, 198 5"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
-              )}
-            </h1>
+              {buttonText}
+            </button>
+          </div>
+        </div>
 
-            <p className="mt-5 sm:mt-6 text-sm sm:text-base md:text-[17px] text-slate-700 font-normal leading-relaxed max-w-lg">
-              {description}
-            </p>
+        {/* Panoramic Watercolor Landscape Illustration with Organic Wave Transition */}
+        <div className="relative w-full max-w-6xl mx-auto px-2 sm:px-4">
+          <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs border border-[#eee7dc]/80">
+            <img
+              src={heroLandscapeBg}
+              alt="Where Mental Wellbeing Meets Mindful Living"
+              className="w-full h-auto max-h-[480px] sm:max-h-[560px] md:max-h-[640px] object-cover object-bottom block"
+              loading="eager"
+            />
 
-            <div className="mt-7 sm:mt-9 flex items-center gap-4">
-              <button
-                type="button"
-                onClick={handleConnectClick}
-                className="inline-flex items-center justify-center px-8 py-3.5 sm:px-9 sm:py-4 rounded-xl text-sm sm:text-base font-bold bg-[#00E5FF] hover:bg-[#00cbe2] text-slate-950 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98] border-none"
+            {/* Organic Deckled / Torn Wave Bottom Edge blending into page */}
+            <div className="absolute inset-x-0 bottom-0 pointer-events-none">
+              <svg
+                viewBox="0 0 1440 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="none"
+                className="w-full h-10 sm:h-16 md:h-20 text-[#fbf9f5] fill-current"
               >
-                {buttonText}
-              </button>
+                <path d="M0,60 C160,85 280,30 460,65 C640,95 780,35 960,60 C1140,85 1280,30 1440,65 L1440,100 L0,100 Z" />
+              </svg>
             </div>
           </div>
         </div>

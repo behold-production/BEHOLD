@@ -1,133 +1,107 @@
 import React from 'react';
-import { ArrowDown, CalendarDays, HeartHandshake, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react';
-import greyGreenBg from '../../assets/greygreen.png';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
-const bookingSteps = [
+const programs = [
   {
-    number: '01',
-    eyebrow: 'Care Matching',
-    title: 'Find Your Psychologist',
-    description: 'Browse licensed clinical psychologists by focus area, session style, and background that resonates with your personal needs.',
-    Icon: HeartHandshake,
-    accent: 'teal',
+    id: 'mindfulness',
+    title: 'Mindfulness & Anxiety Relief',
+    description: 'Evidence-based cognitive and somatic techniques to alleviate panic, chronic stress, and restore grounded nervous system balance.',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
+    tag: 'Individual Care',
   },
   {
-    number: '02',
-    eyebrow: 'Flexible Booking',
-    title: 'Choose Time & Format',
-    description: 'Pick a day, a time, and a way to meet that fits into your life—convenient Online video, private Clinic visits, or supportive Doorstep sessions.',
-    Icon: CalendarDays,
-    accent: 'cyan',
+    id: 'emotional-healing',
+    title: 'Deep Emotional & Trauma Healing',
+    description: 'A compassionate, confidential sanctuary to gently process grief, navigate difficult relationship transitions, and rebuild self-worth.',
+    image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=600&q=80',
+    tag: 'Therapy & Healing',
   },
   {
-    number: '03',
-    eyebrow: 'Confidential Care',
-    title: 'Begin in a Safe Space',
-    description: 'Show up as you are. This is your safe, 100% private and confidential space, and your healing journey moves at your own pace.',
-    Icon: Sparkles,
-    accent: 'emerald',
+    id: 'career-clarity',
+    title: 'Adolescent & Career Clarity',
+    description: 'Scientific psychological profiling and empathetic mentorship helping youth and students navigate academic direction and career purpose.',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80',
+    tag: 'Youth & Career',
+  },
+  {
+    id: 'online-sessions',
+    title: 'Online Remote Therapy Sessions',
+    description: 'Secure, end-to-end encrypted video sessions connecting you directly with accredited clinical psychologists from anywhere in the world.',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+    tag: 'Remote Access',
   },
 ];
 
 export default function BookingStepsSection({ navigateToSection }) {
-  const handleScrollToExperts = () => {
+  const handleClick = () => {
     if (navigateToSection) {
-      navigateToSection('experts');
+      navigateToSection('services');
     } else {
-      document.getElementById('experts')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
     <section
       id="how-it-works"
-      className="relative py-20 sm:py-28 bg-[#fafaf7]/90 text-slate-900 border-b border-slate-200/80 overflow-hidden scroll-mt-20"
-      aria-labelledby="bh-steps-title"
+      className="relative py-16 sm:py-24 bg-[#fbf9f5] text-[#1c2826] overflow-hidden scroll-mt-20"
+      aria-labelledby="bh-programs-heading"
     >
-      {/* Soft background texture matching About and FAQ */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-35">
-        <img
-          src={greyGreenBg?.src || greyGreenBg}
-          alt=""
-          className="w-full h-full object-cover object-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]"
-        />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
-          <span className="inline-flex items-center gap-2 text-[11px] font-bold text-teal-700 tracking-widest uppercase mb-3">
-            <span className="w-5 h-px bg-teal-600/40 inline-block" />
-            Simple & Thoughtful By Design
-            <span className="w-5 h-px bg-teal-600/40 inline-block" />
-          </span>
-          <h2
-            id="bh-steps-title"
-            className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-slate-900 mb-4 tracking-tight leading-tight"
-          >
-            Starting Can Be the Hardest Part<span className="text-[#00e5ff]">.</span>
-          </h2>
-          <p className="text-sm sm:text-base text-slate-600 font-normal max-w-xl mx-auto leading-relaxed">
-            We make the next steps simple, transparent, and respectful of your pace.
-          </p>
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Top Header matching reference layout: Left terracotta eyebrow, Right serif title */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#ece6dc]">
+          <div>
+            <span className="text-[#b85438] text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase block">
+              Specialized Care
+            </span>
+          </div>
+          <div>
+            <h2
+              id="bh-programs-heading"
+              className="font-serif-hero text-2xl sm:text-3xl md:text-4xl font-normal text-[#1c2826] tracking-tight leading-snug"
+            >
+              Explore Tailored Programs
+            </h2>
+          </div>
         </div>
 
-        {/* 3 Step Bento Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-          {bookingSteps.map(({ number, eyebrow, title, description, Icon }, idx) => (
+        {/* 4 Vertical Stacked Program Cards */}
+        <div className="flex flex-col gap-4 sm:gap-5">
+          {programs.map((program) => (
             <article
-              key={number}
-              className="group bg-white/95 backdrop-blur-xs rounded-2xl border border-slate-200/90 hover:border-[#00e5ff]/70 p-7 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+              key={program.id}
+              onClick={handleClick}
+              className="group bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-[#ede7de] hover:border-[#b85438]/40 shadow-xs hover:shadow-md transition-all duration-300 flex items-center gap-4 sm:gap-6 cursor-pointer"
             >
-              {/* Subtle accent border line on hover */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {/* Thumbnail Image */}
+              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-xl sm:rounded-2xl overflow-hidden shrink-0 bg-[#f4eee6]">
+                <img
+                  src={program.image}
+                  alt={program.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
 
-              <div>
-                {/* Step Top Meta Row */}
-                <div className="flex items-center justify-between gap-3 mb-6">
-                  <span className="px-3 py-1 rounded-full bg-slate-900 text-[#00e5ff] text-[11px] font-mono font-bold tracking-wider shadow-xs">
-                    STEP {number}
-                  </span>
-
-                  <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-800 flex items-center justify-center border border-teal-100/80 group-hover:bg-[#00e5ff]/15 group-hover:text-teal-950 transition-colors shrink-0">
-                    <Icon className="w-5 h-5 stroke-[1.8]" />
-                  </div>
-                </div>
-
-                <span className="text-[10px] font-bold text-teal-700 uppercase tracking-widest block mb-1.5">
-                  {eyebrow}
+              {/* Content */}
+              <div className="flex-1 min-w-0 pr-2">
+                <span className="text-[10px] font-bold text-[#b85438] uppercase tracking-wider block mb-1">
+                  {program.tag}
                 </span>
-
-                <h3 className="text-xl sm:text-[22px] font-bold text-slate-900 tracking-tight leading-snug group-hover:text-teal-950 transition-colors">
-                  {title}
+                <h3 className="font-serif-hero text-lg sm:text-xl font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors leading-snug mb-1 sm:mb-1.5 truncate sm:whitespace-normal">
+                  {program.title}
                 </h3>
-
-                <p className="text-sm text-slate-600 mt-3 leading-relaxed font-normal">
-                  {description}
+                <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed line-clamp-2">
+                  {program.description}
                 </p>
               </div>
 
-              {/* Card Footer Progress Micro-Indicator */}
-              <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-400 group-hover:text-teal-800 transition-colors">
-                <span className="text-[11px] uppercase tracking-wider">Phase {idx + 1} of 3</span>
-                <span className="text-[11px] inline-flex items-center gap-1 text-teal-700 font-bold group-hover:translate-x-0.5 transition-transform">
-                  Learn more <ArrowRight className="w-3.5 h-3.5" />
-                </span>
+              {/* Arrow Indicator */}
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#fbf9f5] group-hover:bg-[#b85438] text-[#1c2826] group-hover:text-white flex items-center justify-center shrink-0 transition-colors duration-300 border border-[#ede7de]">
+                <ArrowRight className="w-4 h-4 stroke-[2]" />
               </div>
             </article>
           ))}
-        </div>
-
-        {/* Bottom CTA to Action */}
-        <div className="mt-14 sm:mt-16 text-center">
-          <button
-            type="button"
-            onClick={handleScrollToExperts}
-            className="px-8 py-3.5 rounded-full bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-semibold tracking-wider transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer inline-flex items-center gap-2.5 border-none hover-scale-btn"
-          >
-            <span>Explore Licensed Psychologists</span>
-            <ArrowDown className="w-4 h-4 text-[#00e5ff] animate-bounce" />
-          </button>
         </div>
       </div>
     </section>

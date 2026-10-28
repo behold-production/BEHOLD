@@ -1,62 +1,60 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, ArrowRight, ArrowUpRight, BookOpen, User, Calendar, Sparkles } from 'lucide-react';
+import { ArrowRight, Clock, Calendar } from 'lucide-react';
 import ApiService from '../../services/api';
-import { getImageUrl } from '../../utils/formatters';
-import defaultBlogImage from '../../assets/luxury_clinic_room.png';
+
+const defaultArticles = [
+  {
+    id: 'art-1',
+    slug: 'mindful-habits-anxiety-relief',
+    title: 'Mindful Breathing: Regulating Your Nervous System in Minutes',
+    category: 'Mindfulness & Care',
+    excerpt: 'Discover the physiological connection between breathwork and vagus nerve activation to swiftly ease sudden panic and chronic overwhelm.',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80',
+    date: 'Oct 24, 2026',
+    readTime: '5 min read',
+  },
+  {
+    id: 'art-2',
+    slug: 'navigating-career-crossroads-with-confidence',
+    title: 'Navigating Career Transitions: Aligning Purpose With Capability',
+    category: 'Career Guidance',
+    excerpt: 'How psychological profiling and self-discovery unlock authentic motivation when you feel stagnant in your professional life.',
+    image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80',
+    date: 'Oct 20, 2026',
+    readTime: '6 min read',
+  },
+];
 
 export default function BlogSection({ siteSettings = {} }) {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-
+  const [blogs, setBlogs] = useState(defaultArticles);
   const showBlogs = siteSettings?.enableBlog !== false;
 
   useEffect(() => {
     let isMounted = true;
-    const fetchBlogs = async (forceRefresh = false) => {
-      try {
-        const res = await ApiService.getBlogs({ limit: 12 }, forceRefresh);
-        if (res?.data && Array.isArray(res.data)) {
-          if (isMounted) setBlogs(res.data.filter((b) => b?.title));
-        } else {
-          if (isMounted) setBlogs([]);
-        }
-      } catch (err) {
-        console.warn('Failed to fetch blogs for landing section:', err);
-        if (isMounted) setBlogs([]);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
     if (showBlogs) {
-      fetchBlogs(true);
-    } else {
-      setLoading(false);
+      ApiService.getBlogs({ limit: 6 })
+        .then((res) => {
+          if (!isMounted) return;
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            const mapped = res.data.map((b, idx) => ({
+              id: b._id || b.id || `blog-${idx}`,
+              slug: b.slug || b._id,
+              title: b.title,
+              category: b.category || 'Mindfulness & Care',
+              excerpt: b.excerpt || b.summary || (typeof b.content === 'string' ? b.content.substring(0, 140) + '...' : ''),
+              image: b.coverImage || b.image || defaultArticles[idx % defaultArticles.length].image,
+              date: b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent',
+              readTime: b.readTime || '5 min read',
+            }));
+            setBlogs(mapped);
+          }
+        })
+        .catch(() => {});
     }
-
-    const handleUpdate = () => fetchBlogs(true);
-    window.addEventListener('behold_blogs_updated', handleUpdate);
-    return () => {
-      isMounted = false;
-      window.removeEventListener('behold_blogs_updated', handleUpdate);
-    };
+    return () => { isMounted = false; };
   }, [showBlogs]);
-
-  const categories = useMemo(() => {
-    const set = new Set();
-    blogs.forEach((b) => {
-      if (b.category && typeof b.category === 'string') set.add(b.category.trim());
-    });
-    return ['All', ...Array.from(set)];
-  }, [blogs]);
-
-  const filteredBlogs = useMemo(() => {
-    if (selectedCategory === 'All') return blogs;
-    return blogs.filter((b) => b.category?.toLowerCase() === selectedCategory.toLowerCase());
-  }, [blogs, selectedCategory]);
 
   if (!showBlogs) return null;
 
@@ -66,289 +64,100 @@ export default function BlogSection({ siteSettings = {} }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleOpenAllBlogs = () => {
+  const handleOpenAll = () => {
     navigate('/blog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const heading = siteSettings?.blogSectionTitle || 'Guidance for Your Journey';
-  const subtitle = siteSettings?.blogSectionDesc || 'Research-backed articles, mental health insights, and therapeutic resources from our clinical team.';
-  const tag = siteSettings?.blogSectionSub || 'Latest Insights & Articles';
-
-  const featuredPost = filteredBlogs[0];
-  const secondaryPosts = filteredBlogs.slice(1, 7);
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '';
-    try {
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    } catch {
-      return '';
-    }
-  };
-
-  const getAuthorName = (author) => {
-    if (!author) return 'BEHOLD Editorial';
-    if (typeof author === 'string') return author;
-    if (typeof author === 'object') return author.name || author.fullName || 'BEHOLD Editorial';
-    return 'BEHOLD Editorial';
-  };
-
-  const getAuthorInitial = (author) => {
-    const name = getAuthorName(author);
-    return (name || 'B').charAt(0).toUpperCase();
-  };
-
-  const getAuthorAvatar = (author) => {
-    if (author && typeof author === 'object' && author.avatar) {
-      return getImageUrl(author.avatar);
-    }
-    return null;
   };
 
   return (
     <section
       id="blog"
-      aria-labelledby="bh-home-blog-title"
-      className="py-16 sm:py-24 bg-[#faf9f5] border-b border-slate-200/80 scroll-mt-20 select-none"
+      aria-labelledby="bh-journal-heading"
+      className="relative py-20 sm:py-28 bg-[#fbf9f5] text-[#1c2826] overflow-hidden scroll-mt-20 border-t border-[#ece6dc]"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-14">
-          <div className="max-w-2xl text-left">
-            <span className="inline-flex items-center gap-2 text-[11px] font-bold text-teal-700 tracking-widest uppercase mb-3">
-              <span className="w-5 h-px bg-teal-600/40 inline-block" />
-              {tag}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header: Left terracotta eyebrow, Right serif heading */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#ece6dc]">
+          <div>
+            <span className="text-[#b85438] text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase block">
+              Journal &amp; Insights
             </span>
-            <h2
-              id="bh-home-blog-title"
-              className="text-3xl sm:text-4xl md:text-5xl font-sans font-semibold text-slate-900 tracking-tight leading-tight"
-            >
-              {heading}<span className="text-[#0d827f]">.</span>
-            </h2>
-            <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
-              {subtitle}
-            </p>
           </div>
-
-          <div className="flex items-center gap-3 shrink-0">
-            <button
-              type="button"
-              onClick={handleOpenAllBlogs}
-              className="px-5 py-2.5 bg-white hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-xs tracking-wider rounded-lg transition-all border border-slate-300 shadow-2xs inline-flex items-center gap-2 cursor-pointer"
+          <div>
+            <h2
+              id="bh-journal-heading"
+              className="font-serif-hero text-2xl sm:text-3xl md:text-4xl font-normal text-[#1c2826] tracking-tight leading-snug"
             >
-              <span>Explore All Articles</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-teal-600" />
-            </button>
+              A Journal for Mindful Living
+            </h2>
           </div>
         </div>
 
-        {/* Category Filter Chips */}
-        {categories.length > 2 && (
-          <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 scrollbar-none text-left">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer border ${
-                  selectedCategory === cat
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
-                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Content Loading State */}
-        {loading ? (
-          <div className="space-y-6">
-            <div className="h-72 w-full rounded-xl bg-slate-200 animate-pulse" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-80 rounded-xl bg-slate-200 animate-pulse" />
-              ))}
-            </div>
-          </div>
-        ) : filteredBlogs.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-xl border border-dashed border-slate-200 p-8 space-y-3">
-            <div className="w-12 h-12 rounded-full bg-teal-50 text-teal-700 border border-teal-200 flex items-center justify-center mx-auto">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">No Articles In This Category</h3>
-            <p className="text-slate-500 text-xs leading-relaxed max-w-xs mx-auto">
-              Please check back soon or switch categories to explore other clinical publications.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-8">
-
-            {/* Featured Article Spotlight Card */}
-            {featuredPost && (
-              <article
-                onClick={() => handleOpenBlog(featuredPost.slug || featuredPost._id)}
-                className="group relative bg-white border border-slate-200 hover:border-teal-500/60 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 cursor-pointer text-left"
-              >
-                {/* Featured Cover Image */}
-                <div className="lg:col-span-7 relative h-64 sm:h-80 lg:h-full min-h-[260px] overflow-hidden bg-slate-100">
+        {/* 2-Column Magazine Grid matching Mockup */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
+          {blogs.slice(0, 2).map((post) => (
+            <article
+              key={post.id}
+              onClick={() => handleOpenBlog(post.slug)}
+              className="group cursor-pointer flex flex-col justify-between"
+            >
+              <div>
+                {/* Image */}
+                <div className="w-full h-56 sm:h-64 rounded-2xl sm:rounded-3xl overflow-hidden mb-4 sm:mb-5 bg-[#f4eee6] border border-[#ede7de]">
                   <img
-                    src={featuredPost.coverImage ? getImageUrl(featuredPost.coverImage) : (defaultBlogImage?.src || defaultBlogImage)}
-                    alt={featuredPost.title}
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
-                    onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage?.src || defaultBlogImage; }}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
+                </div>
 
-                  {/* Spotlight Badge */}
-                  <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-900/90 backdrop-blur-xs text-white text-[11px] font-bold tracking-wider border border-white/20 shadow-xs">
-                    <Sparkles className="w-3 h-3 text-[#00e5ff]" />
-                    Featured Editorial
+                {/* Category & Meta */}
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-[10px] font-bold text-[#b85438] uppercase tracking-wider">
+                    {post.category}
                   </span>
-
-                  {featuredPost.category && (
-                    <span className="absolute bottom-4 left-4 px-2.5 py-1 rounded-md bg-white/95 backdrop-blur-xs text-slate-900 text-[10px] font-bold tracking-wider border border-slate-200">
-                      {featuredPost.category}
-                    </span>
-                  )}
+                  <span className="text-slate-300">•</span>
+                  <span className="text-[11px] text-[#5c6b66] flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    <span>{post.readTime}</span>
+                  </span>
                 </div>
 
-                {/* Featured Text Content */}
-                <div className="lg:col-span-5 p-6 sm:p-8 md:p-10 flex flex-col justify-between bg-white">
-                  <div>
-                    <div className="flex items-center gap-3 text-xs text-slate-500 mb-3 font-medium">
-                      {featuredPost.createdAt && (
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3.5 h-3.5 text-teal-600" />
-                          {formatDate(featuredPost.createdAt)}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-teal-600" />
-                        {featuredPost.readTime || '5 min read'}
-                      </span>
-                    </div>
+                {/* Title */}
+                <h3 className="font-serif-hero text-xl sm:text-2xl font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors leading-snug mb-2 sm:mb-3">
+                  {post.title}
+                </h3>
 
-                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-slate-900 group-hover:text-teal-700 transition-colors leading-snug line-clamp-3">
-                      {featuredPost.title}
-                    </h3>
-
-                    <p className="mt-4 text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3 font-normal">
-                      {featuredPost.excerpt}
-                    </p>
-                  </div>
-
-                  <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      {getAuthorAvatar(featuredPost.author) ? (
-                        <img
-                          src={getAuthorAvatar(featuredPost.author)}
-                          alt={getAuthorName(featuredPost.author)}
-                          className="w-7 h-7 rounded-full object-cover border border-slate-200"
-                        />
-                      ) : (
-                        <div className="w-7 h-7 rounded-full bg-teal-100/70 text-teal-800 flex items-center justify-center text-xs font-bold uppercase">
-                          {getAuthorInitial(featuredPost.author)}
-                        </div>
-                      )}
-                      <span className="text-xs font-semibold text-slate-800">
-                        {getAuthorName(featuredPost.author)}
-                      </span>
-                    </div>
-
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 group-hover:text-teal-900 transition-colors">
-                      Read Article
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </div>
-                </div>
-              </article>
-            )}
-
-            {/* Remaining Articles 3-Column Magazine Grid */}
-            {secondaryPosts.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-                {secondaryPosts.map((post) => (
-                  <article
-                    key={post._id || post.slug}
-                    onClick={() => handleOpenBlog(post.slug || post._id)}
-                    className="group bg-white border border-slate-200 hover:border-teal-500/50 rounded-xl overflow-hidden shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between cursor-pointer text-left"
-                  >
-                    <div>
-                      {/* Card Cover Image */}
-                      <div className="relative h-48 w-full overflow-hidden bg-slate-100">
-                        <img
-                          src={post.coverImage ? getImageUrl(post.coverImage) : (defaultBlogImage?.src || defaultBlogImage)}
-                          alt={post.title}
-                          loading="lazy"
-                          onError={(e) => { e.target.onerror = null; e.target.src = defaultBlogImage?.src || defaultBlogImage; }}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent opacity-60 group-hover:opacity-20 transition-opacity" />
-
-                        {post.category && (
-                          <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-md bg-white/95 backdrop-blur-xs text-slate-900 text-[10px] font-bold tracking-wider border border-slate-200">
-                            {post.category}
-                          </span>
-                        )}
-
-                        <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/95 backdrop-blur-xs text-slate-800 text-[10px] font-semibold border border-slate-200">
-                          <Clock className="w-3 h-3 text-teal-600" />
-                          {post.readTime || '4 min'}
-                        </span>
-                      </div>
-
-                      {/* Card Body */}
-                      <div className="p-5 sm:p-6 space-y-2.5">
-                        <span className="text-[11px] text-slate-400 font-medium block">
-                          {formatDate(post.createdAt)}
-                        </span>
-                        <h4 className="text-base sm:text-lg font-semibold text-slate-900 group-hover:text-teal-700 transition-colors line-clamp-2 leading-snug">
-                          {post.title}
-                        </h4>
-                        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-normal">
-                          {post.excerpt}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Card Footer */}
-                    <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        {getAuthorAvatar(post.author) ? (
-                          <img
-                            src={getAuthorAvatar(post.author)}
-                            alt={getAuthorName(post.author)}
-                            className="w-6 h-6 rounded-full object-cover border border-slate-200"
-                          />
-                        ) : (
-                          <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[10px] font-bold uppercase">
-                            {getAuthorInitial(post.author)}
-                          </div>
-                        )}
-                        <span className="text-xs text-slate-700 font-medium truncate max-w-[130px]">
-                          {getAuthorName(post.author)}
-                        </span>
-                      </div>
-
-                      <span className="text-xs font-bold text-teal-700 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                        Read
-                        <ArrowRight className="w-3 h-3" />
-                      </span>
-                    </div>
-                  </article>
-                ))}
+                {/* Excerpt */}
+                <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed line-clamp-2">
+                  {post.excerpt}
+                </p>
               </div>
-            )}
 
-          </div>
-        )}
+              {/* Read More Link */}
+              <div className="pt-4 mt-4 border-t border-[#ede7de] flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors inline-flex items-center gap-1.5">
+                  <span>Read Article</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <span className="text-[11px] text-[#5c6b66]">{post.date}</span>
+              </div>
+            </article>
+          ))}
+        </div>
 
+        {/* View All Articles Pill */}
+        <div className="mt-12 text-center">
+          <button
+            type="button"
+            onClick={handleOpenAll}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold bg-white hover:bg-[#f6f2ec] text-[#1c2826] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
+          >
+            <span>Explore All Journal Entries</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
     </section>
   );

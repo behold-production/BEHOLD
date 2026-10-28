@@ -1,10 +1,11 @@
 import React from 'react';
-import { Mail, Phone } from 'lucide-react';
+import { Mail, Phone, ArrowRight } from 'lucide-react';
+import heroLandscapeBg from '../../assets/header_landscape.jpg';
 
 export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, siteSettings }) {
   const settings = siteSettings || {};
-  const emailAddr = settings.contactEmail?.trim() || '';
-  const phoneVal = settings.contactPhone?.trim() || '';
+  const emailAddr = settings.contactEmail?.trim() || 'support@behold.co.in';
+  const phoneVal = settings.contactPhone?.trim() || '+91 98460 00000';
 
   const goTo = (section) => {
     if (section.startsWith('/')) {
@@ -15,143 +16,186 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
     }
   };
 
+  const handleBookingCTA = () => {
+    if (navigateToSection) {
+      navigateToSection('services');
+    } else {
+      window.location.href = '/booking';
+    }
+  };
+
   const socialList = Array.isArray(settings.socialLinks)
     ? settings.socialLinks.filter((social) => social?.name && social?.url && social.url !== '#')
     : [];
 
   return (
-    <footer className="relative z-10 bg-[#0f172a] text-white pt-10 sm:pt-12 pb-20 lg:pb-6 border-t border-[#00e5ff]/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 items-start">
-
-          {/* Brand Column */}
-          <div className="col-span-1 md:col-span-6 lg:col-span-5 w-full space-y-3 flex flex-col items-start text-left">
-            <button
-              id="footer-brand"
-              onClick={() => navigateToSection?.('top')}
-              className="text-2xl sm:text-3xl font-sans font-black text-white uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
+    <>
+      {/* SECTION 9: Pre-Footer CTA Banner matching Mockup */}
+      <section className="relative w-full py-20 sm:py-28 bg-[#fbf9f5] overflow-hidden border-t border-[#ece6dc]">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-3xl overflow-hidden shadow-sm border border-[#ede7de]">
+            {/* Watercolor Mountain Landscape Background */}
+            <div
+              className="w-full min-h-[300px] sm:min-h-[360px] bg-cover bg-center flex items-center justify-center p-8 sm:p-12 relative"
+              style={{ backgroundImage: `url(${heroLandscapeBg})` }}
             >
-              <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-black">.</span></span>
-            </button>
-            {(settings.footerDescription || settings.aboutSub) && <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed font-normal max-w-md">
-              {settings.footerDescription || settings.aboutSub}
-            </p>}
-            <div className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 text-xs font-medium pt-0.5">
-              {emailAddr && (
-                <a href={`mailto:${emailAddr}`} className="flex items-center gap-2 text-slate-300 hover:text-[#00e5ff] transition-colors">
-                  <Mail className="w-3.5 h-3.5 shrink-0 text-[#00e5ff]" />
-                  <span>{emailAddr}</span>
-                </a>
-              )}
-              {phoneVal && (
-                <a href={`tel:${phoneVal}`} className="flex items-center gap-2 text-slate-300 hover:text-[#00e5ff] transition-colors">
-                  <Phone className="w-3.5 h-3.5 shrink-0 text-[#00e5ff]" />
-                  <span>{phoneVal}</span>
-                </a>
-              )}
-            </div>
+              {/* Soft Ambient Overlay for crystal clear typography */}
+              <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px] pointer-events-none" />
 
-            {/* Social Links */}
-            {socialList.length > 0 && <div className="pt-1.5 flex flex-wrap items-center justify-start gap-2 text-slate-400 text-xs">
-              <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider shrink-0">Social:</span>
-              <div className="flex flex-wrap items-center justify-start gap-2">
-                {socialList.map((social, idx) => (
-                  social.url ? (
-                    <React.Fragment key={idx}>
-                      <a 
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-[#00e5ff] transition-colors text-xs font-medium text-slate-300"
-                        title={social.name}
-                      >
-                        {social.name}
-                      </a>
-                      {idx < socialList.length - 1 && <span className="text-slate-600 px-0.5">•</span>}
-                    </React.Fragment>
-                  ) : null
-                ))}
+              {/* Centered CTA Content */}
+              <div className="relative z-10 max-w-xl text-center">
+                <h2 className="font-serif-hero text-3xl sm:text-4xl md:text-5xl font-medium text-[#1c2826] tracking-tight leading-tight mb-4">
+                  Begin Your Journey to Better Balance
+                </h2>
+                <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed mb-6 sm:mb-8">
+                  Connect with licensed clinical psychologists and student mentors dedicated to your emotional health and lifelong clarity.
+                </p>
+                <div className="flex justify-center">
+                  <button
+                    type="button"
+                    onClick={handleBookingCTA}
+                    className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-xs sm:text-sm font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer active:scale-95 border-none"
+                  >
+                    <span>Schedule Consultation</span>
+                    <ArrowRight className="w-4 h-4 stroke-[2]" />
+                  </button>
+                </div>
               </div>
-            </div>}
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Links Grid: 2 Columns on Mobile, 2 Columns on Tablet/Desktop */}
-          <div className="col-span-1 md:col-span-6 lg:col-span-7 grid grid-cols-2 gap-6 sm:gap-8 md:pl-4 lg:pl-8 text-left">
-            {/* Services Column */}
-            <div>
-              <h4 className="text-white font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
-                Services
+      {/* SECTION 10: Clean Minimalist Warm Footer matching Mockup */}
+      <footer className="relative z-10 bg-[#f7f4ee] text-[#1c2826] pt-12 sm:pt-16 pb-12 border-t border-[#ece6dc]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 pb-10 border-b border-[#ede7de]">
+            {/* Brand Column */}
+            <div className="col-span-1 md:col-span-5 space-y-3">
+              <button
+                id="footer-brand"
+                onClick={() => navigateToSection?.('top')}
+                className="text-2xl sm:text-3xl font-black font-sans text-[#1c2826] uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
+              >
+                <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}</span>
+                <span className="text-[#b85438] font-black">.</span>
+              </button>
+              <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed max-w-sm">
+                {settings.footerDescription || 'A dedicated clinical sanctuary integrating compassionate psychological counseling, emotional regulation, and student career mentorship.'}
+              </p>
+              <div className="flex flex-col gap-1.5 pt-2 text-xs text-[#5c6b66]">
+                {emailAddr && (
+                  <a href={`mailto:${emailAddr}`} className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2">
+                    <Mail className="w-3.5 h-3.5 text-[#b85438]" />
+                    <span>{emailAddr}</span>
+                  </a>
+                )}
+                {phoneVal && (
+                  <a href={`tel:${phoneVal}`} className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2">
+                    <Phone className="w-3.5 h-3.5 text-[#b85438]" />
+                    <span>Helpline: {phoneVal}</span>
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Navigation Column */}
+            <div className="col-span-1 md:col-span-3">
+              <h4 className="text-[#1c2826] font-semibold uppercase text-[11px] tracking-widest mb-3.5">
+                Navigation
               </h4>
-              <ul className="space-y-2.5 text-xs sm:text-[13px] font-normal">
-                {[
-                  { label: 'Psychological Counselling', action: () => goTo('services') },
-                  { label: 'Career Guidance', action: () => goTo('services') },
-                ].map(({ label, action }) => (
-                  <li key={label}>
-                    <button
-                      onClick={action}
-                      className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
-                    >
-                      {label}
-                    </button>
-                  </li>
-                ))}
+              <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
+                <li>
+                  <button onClick={() => goTo('home')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Home
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('/about')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Our Philosophy
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('/psychologists')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Clinical Psychologists
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('/blog')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Journal &amp; Insights
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('/faqs')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    FAQ Directory
+                  </button>
+                </li>
               </ul>
             </div>
 
-            {/* Company Column */}
-            <div>
-              <h4 className="text-white font-sans font-semibold uppercase text-[11px] tracking-widest mb-3">
-                Company
+            {/* Care Services Column */}
+            <div className="col-span-1 md:col-span-4">
+              <h4 className="text-[#1c2826] font-semibold uppercase text-[11px] tracking-widest mb-3.5">
+                Care Services
               </h4>
-              <ul className="space-y-2.5 text-xs sm:text-[13px] font-normal">
-                {[
-                  { label: 'About BEHOLD', action: () => goTo('/about') },
-                  { label: 'Articles & Insights', action: () => goTo('/blog') },
-                  { label: 'FAQs', action: () => goTo('/faqs') },
-                  { label: 'Contact Us', action: () => goTo('inquiry') },
-                ].map(({ label, action }) => (
-                  <li key={label}>
-                    <button
-                      onClick={action}
-                      className="text-slate-300 hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-left text-xs sm:text-[13px] font-normal"
-                    >
-                      {label}
-                    </button>
-                  </li>
-                ))}
+              <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
+                <li>
+                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Mindfulness &amp; Anxiety Relief
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Deep Emotional &amp; Trauma Healing
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Adolescent &amp; Career Clarity
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('services')} className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    Online Remote Video Sessions
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
 
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="mt-8 pt-5 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 text-center sm:text-left">
-          <div className="text-center sm:text-left w-full sm:w-auto">
-            {(() => {
-              const year = new Date().getFullYear();
-              if (!siteCopyright) return `© ${year} ${siteName || 'BEHOLD'}.`;
-              let clean = String(siteCopyright)
-                .replace(/^©\s*/, '')
-                .replace(/\.?\s*All rights reserved\.?$/i, '')
-                .replace(/,?\s*\d{4}\.?$/, '')
-                .trim()
-                .replace(/\.+$/, '');
-              if (!clean) clean = 'BEHOLD Ltd';
-              return `© ${year} ${clean}. All rights reserved.`;
-            })()}
+          {/* Bottom Bar: Copyright & Policy Links */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#7d8b85]">
+            <div>
+              &copy; {new Date().getFullYear()} {siteName || 'BEHOLD'}. All rights reserved.
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => onOpenDocs?.('privacy')}
+                className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer text-xs text-[#7d8b85]"
+              >
+                Privacy Policy
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={() => onOpenDocs?.('terms')}
+                className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer text-xs text-[#7d8b85]"
+              >
+                Terms of Use
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={() => onOpenDocs?.('refund')}
+                className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer text-xs text-[#7d8b85]"
+              >
+                Refund Policy
+              </button>
+            </div>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center w-full sm:w-auto">
-            <button onClick={() => onOpenDocs?.('privacy')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Privacy Policy</button>
-            <span className="text-slate-600 px-0.5">•</span>
-            <button onClick={() => onOpenDocs?.('terms')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Terms & Conditions</button>
-            <span className="text-slate-600 px-0.5">•</span>
-            <button onClick={() => onOpenDocs?.('refund')} className="hover:text-[#00e5ff] transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-slate-400">Refund & Cancellation Policy</button>
-          </div>
         </div>
-
-      </div>
-    </footer>
+      </footer>
+    </>
   );
 }

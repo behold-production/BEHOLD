@@ -555,20 +555,11 @@ export default function App() {
         </div>
       )}
 
-      {/* Global Fixed Background Image Layer for all sections */} {/* */}
+      {/* Global Fixed Background Image Layer for all sections */}
       {!hideNavbarAndFooter && (
         <div
-          className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none"
-        >
-          <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none opacity-50"
-            style={{
-              backgroundImage: `url(${globalBgTexture})`,
-            }}
-          />
-          {/* Subtle Ambient Light Overlay */} {/* */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4f8fc]/5 to-transparent pointer-events-none" />
-        </div>
+          className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none bg-[#fbf9f5]"
+        />
       )}
 
       <AuthModals isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
@@ -641,15 +632,15 @@ export default function App() {
       }>
         <Routes>
           {/* Public landing page */}
-          <Route path="/" element={ //
+          <Route path="/" element={
             <main className="fade-in-up bh-home">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               <BookingStepsSection navigateToSection={navigateToSection} />
-              <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} siteSettings={siteSettings} />
               <About siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} siteSettings={siteSettings} />
+              <Reviews siteSettings={siteSettings} />
               {siteSettings.enableFaq !== false && <Faq siteSettings={siteSettings} />}
               {siteSettings.enableBlog !== false && <BlogSection siteSettings={siteSettings} />}
-              {siteSettings.enableInquiry !== false && <ContactInquirySection siteSettings={siteSettings} />}
             </main>
           } />
 
