@@ -120,6 +120,12 @@ export default function App() {
   // Expanded site settings sync state
   const [siteSettings, setSiteSettings] = useState({});
   const [activeDocType, setActiveDocType] = useState(null); // 'terms', 'privacy', 'refund', 'consent'
+
+  useEffect(() => {
+    const handleOpenAuth = () => setIsAuthModalOpen(true);
+    window.addEventListener('behold:open_auth', handleOpenAuth);
+    return () => window.removeEventListener('behold:open_auth', handleOpenAuth);
+  }, []);
  
   useEffect(() => {
     const fetchGlobalSettings = async () => {
@@ -776,6 +782,12 @@ export default function App() {
 
           {/* Advisor Public Profile */}
           <Route path="/advisor/:id" element={ //
+            <AdvisorProfileWrapper
+              handleBookTherapist={handleBookTherapist}
+              setPendingScrollSection={setPendingScrollSection}
+            />
+          } />
+          <Route path="/counsellor/:id" element={
             <AdvisorProfileWrapper
               handleBookTherapist={handleBookTherapist}
               setPendingScrollSection={setPendingScrollSection}

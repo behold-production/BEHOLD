@@ -78,7 +78,7 @@ export default function About({ siteSettings, onOpenBooking }) {
       <section
         id="about"
         aria-labelledby="bh-about-heading"
-        className="relative py-16 sm:py-24 text-slate-900 select-none overflow-hidden bg-[#faf9f5]/60 border-b border-slate-200/80 scroll-mt-20"
+        className="relative py-16 sm:py-24 text-slate-900 overflow-hidden bg-[#faf9f5]/60 border-b border-slate-200/80 scroll-mt-20"
       >
         {/* Subtle Background Layer */}
         <div className="absolute inset-0 z-0 pointer-events-none opacity-40">

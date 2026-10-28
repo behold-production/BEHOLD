@@ -91,12 +91,16 @@ function SubmitReviewForm({ onSubmitSuccess }) {
         <p className="text-gray-500 text-sm mb-6 max-w-xs font-medium leading-relaxed">
           You must be logged in to share your experience with the BEHOLD community.
         </p>
-        <a href="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold text-sm rounded-full hover:bg-black hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent('behold:open_auth'))}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold text-sm rounded-full hover:bg-black hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer border-none"
+        >
           Login or Register
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
           </svg>
-        </a>
+        </button>
       </div>
     );
   }

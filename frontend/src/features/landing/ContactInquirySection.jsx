@@ -53,7 +53,7 @@ export default function ContactInquirySection({ siteSettings = {} }) {
   return (
     <section
       id="inquiry"
-      className="relative w-full flex items-center justify-center py-20 sm:py-28 px-4 sm:px-8"
+      className="relative w-full flex items-center justify-center py-20 sm:py-28 px-4 sm:px-8 scroll-mt-20"
     >
       {/* Background Image with smooth mask-image fade (no cutout lines) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -67,10 +67,10 @@ export default function ContactInquirySection({ siteSettings = {} }) {
 
         {/* Section Header */}
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00e5ff] tracking-widest uppercase mb-2">
-            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold text-teal-700 tracking-widest uppercase mb-2">
+            <span className="w-5 h-px bg-teal-600/40 inline-block" />
             {siteSettings.inquirySectionSub || 'Get In Touch'}
-            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
+            <span className="w-5 h-px bg-teal-600/40 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 font-sans">
             {siteSettings.inquirySectionTitle || 'Want to Know More'}<span className="text-[#00e5ff]">.</span>
