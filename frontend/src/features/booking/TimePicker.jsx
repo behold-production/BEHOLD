@@ -243,6 +243,10 @@ export default function TimePicker({
         </span>
       </div>
 
+      {/* Two-column on large screens: compact calendar (left) + time slots (right); stacked on mobile */}
+      <div className="space-y-5 lg:grid lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-8 lg:items-start">
+        {/* LEFT COLUMN — Calendar */}
+        <div className="space-y-5">
       {/* Date Header + Toggle for Calendar View */}
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -347,7 +351,7 @@ export default function TimePicker({
 
             {/* Inline Footer / Legend */}
             <div className="flex items-center justify-between pt-2 border-t border-[#ede7de] text-[11px] text-[#8a938f]">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" /> Open Slots
                 </span>
@@ -407,6 +411,11 @@ export default function TimePicker({
         </div>
       </div>
 
+        </div>
+        {/* /LEFT COLUMN */}
+
+        {/* RIGHT COLUMN — Time Slots */}
+        <div className="space-y-4">
       {/* Available Slots Section */}
       <div ref={slotsContainerRef}>
         {totalSlotCount > 0 ? (
@@ -556,6 +565,10 @@ export default function TimePicker({
           </span>
         </div>
       )}
+        </div>
+        {/* /RIGHT COLUMN */}
+      </div>
+      {/* /GRID WRAPPER */}
 
       {errors.time && (
         <div className="flex items-center gap-1.5 text-xs text-rose-500 font-medium">
