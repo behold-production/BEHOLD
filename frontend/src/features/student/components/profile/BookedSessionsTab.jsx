@@ -301,7 +301,7 @@ const BookedSessionsTab = ({
                                       href={validMeetLink}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-surface-900 hover:bg-brand-dark rounded-[10px] text-[10px] font-bold tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
+                                      className="min-h-[36px] inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand text-white hover:bg-brand-dark rounded-[10px] text-[10px] font-bold tracking-widest transition-all duration-300 shadow-none border-none cursor-pointer text-decoration-none"
                                       title="Join Google Meet Video Consultation Room"
                                     >
                                       <Video className="w-3.5 h-3.5" /> Join Google Meet

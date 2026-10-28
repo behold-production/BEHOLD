@@ -88,16 +88,16 @@ export default function Inquiry({ testProfile, siteSettings }) {
   return (
     <>
       {/* Ready CTA Banner */}
-      <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#00e5ff]/30">
+      <section className="py-20 sm:py-28 bg-[#0f172a] text-white relative border-b border-[#b85438]/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#00e5ff] tracking-widest uppercase mb-3">
-            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#b85438] tracking-widest uppercase mb-3">
+            <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
             {settings.inquirySectionSub || 'START YOUR JOURNEY'}
-            <span className="w-5 h-px bg-[#00e5ff]/60 inline-block" />
+            <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
           </span>
           <h2 className="text-3xl sm:text-5xl font-sans font-semibold uppercase text-white mb-4 tracking-tight leading-none">
             {settings.inquirySectionTitle || 'Ready to Build Your Future'}
-            <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
+            <span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)]">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-300 font-normal max-w-xl mx-auto mb-10 leading-relaxed">
             {settings.inquirySectionDesc || 'Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.'}
@@ -105,7 +105,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => { const el = document.getElementById('inquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-[#00e5ff] hover:bg-[#00cce6] text-[#0f172a] font-semibold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
+              className="px-8 py-3.5 bg-[#b85438] hover:bg-[#a0462e] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
             >
               Book Your Consultation
             </button>
@@ -127,11 +127,11 @@ export default function Inquiry({ testProfile, siteSettings }) {
             {/* Form — 7 cols */}
             <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-10 border border-slate-200 shadow-xl shadow-slate-200/40">
               <div className="mb-8">
-                <span className="text-xs font-semibold text-[#00e5ff] flex items-center gap-1.5 mb-2">
+                <span className="text-xs font-semibold text-[#b85438] flex items-center gap-1.5 mb-2">
                   Get In Touch
                 </span>
                 <h2 id="inquiry-title" className="text-3xl font-sans font-semibold text-[#0f172a] mb-3 leading-tight">
-                  Want to Know More<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
+                  Want to Know More<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)]">.</span>
                 </h2>
                 <p className="text-sm text-surface-600 font-normal leading-relaxed">
                   Submit your request and we'll match you with the right expert within 24 hours.
@@ -139,21 +139,21 @@ export default function Inquiry({ testProfile, siteSettings }) {
               </div>
 
               {testProfile && (
-                <div className="mb-6 p-4 bg-surface-50 border border-[#00e5ff]/40 rounded-xl text-[#0f172a] text-xs sm:text-sm font-semibold">
+                <div className="mb-6 p-4 bg-surface-50 border border-[#b85438]/40 rounded-xl text-[#0f172a] text-xs sm:text-sm font-semibold">
                   ✓ Pre-filled with your aptitude test results ({testProfile.dominantDomain} profile).
                 </div>
               )}
 
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
-                  <div className="w-12 h-12 bg-[#0f172a] text-[#00e5ff] rounded-full flex items-center justify-center mx-auto mb-4 font-semibold text-lg border border-[#00e5ff]/40">
+                  <div className="w-12 h-12 bg-[#0f172a] text-[#b85438] rounded-full flex items-center justify-center mx-auto mb-4 font-semibold text-lg border border-[#b85438]/40">
                     ✓
                   </div>
                   <h3 className="text-xl font-sans font-semibold text-[#0f172a] mb-2">Request Sent.</h3>
                   <p className="text-surface-600 text-sm">Our coordinator will contact you shortly.</p>
                   <button
                     onClick={() => setSubmitStatus(null)}
-                    className="mt-6 px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer"
+                    className="mt-6 px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs rounded-full transition-all border border-[#b85438]/30 cursor-pointer"
                   >
                     Send Another
                   </button>
@@ -167,7 +167,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                         type="text" name="name" id="name-input"
                         value={formData.name} onChange={handleChange}
                         placeholder="e.g. Priya Nair"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff] transition-all ${formErrors.name ? 'border-rose-400' : 'border-surface-200'}`}
+                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all ${formErrors.name ? 'border-rose-400' : 'border-surface-200'}`}
                       />
                       {formErrors.name && <p className="text-rose-600 text-xs mt-1 font-semibold">{formErrors.name}</p>}
                     </div>
@@ -177,7 +177,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                         type="email" name="email" id="email-input"
                         value={formData.email} onChange={handleChange}
                         placeholder="name@email.com"
-                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff] transition-all ${formErrors.email ? 'border-rose-400' : 'border-surface-200'}`}
+                        className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all ${formErrors.email ? 'border-rose-400' : 'border-surface-200'}`}
                       />
                       {formErrors.email && <p className="text-rose-600 text-xs mt-1 font-semibold">{formErrors.email}</p>}
                     </div>
@@ -189,7 +189,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
                       rows={4} name="message" id="message-textarea"
                       value={formData.message} onChange={handleChange}
                       placeholder="Details regarding stream, class or queries..."
-                      className="w-full border border-surface-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] focus:ring-1 focus:ring-[#00e5ff] transition-all resize-none"
+                      className="w-full border border-surface-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] focus:ring-1 focus:ring-[#b85438] transition-all resize-none"
                     />
                   </div>
 
@@ -197,7 +197,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-[#00e5ff] font-semibold text-sm rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-[#b85438] font-semibold text-sm rounded-full transition-all border border-[#b85438]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
                   >
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>
@@ -208,12 +208,12 @@ export default function Inquiry({ testProfile, siteSettings }) {
             {/* Info — 5 cols */}
             <div className="lg:col-span-5 flex flex-col justify-center space-y-6">
               <h3 className="text-2xl font-sans font-semibold uppercase text-[#0f172a]">
-                What Happens Next<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">.</span>
+                What Happens Next<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)]">.</span>
               </h3>
               <div className="space-y-6">
                 {steps.map((step, i) => (
                   <div key={i} className="flex gap-4 items-start">
-                    <div className="w-10 h-10 bg-[#0f172a] text-[#00e5ff] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs border border-[#00e5ff]/40">
+                    <div className="w-10 h-10 bg-[#0f172a] text-[#b85438] rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs border border-[#b85438]/40">
                       {step.icon}
                     </div>
                     <div>
@@ -230,13 +230,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
                   <h4 className="font-semibold text-[#0f172a] mb-3 text-xs uppercase tracking-widest">Reach Us Directly</h4>
                   {settings.contactPhone && (
                     <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm mb-2 hover:underline">
-                      <svg className="w-4 h-4 text-[#00e5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
+                      <svg className="w-4 h-4 text-[#b85438]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.83h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.76-.76a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 17z" /></svg>
                       {settings.contactPhone}
                     </a>
                   )}
                   {settings.contactEmail && (
                     <a href={`mailto:${settings.contactEmail}`} className="flex items-center gap-2 text-[#0f172a] font-semibold text-sm hover:underline">
-                      <svg className="w-4 h-4 text-[#00e5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                      <svg className="w-4 h-4 text-[#b85438]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                       {settings.contactEmail}
                     </a>
                   )}

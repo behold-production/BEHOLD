@@ -142,7 +142,7 @@ export default function StackSlider({
               onClick={() => {
                 if (!isAnimating.current) setCurrentIndex(idx);
               }}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${idx === currentIndex ? 'bg-[#00E5FF] w-6' : 'bg-gray-300 hover:bg-gray-400'}`}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${idx === currentIndex ? 'bg-[#B85438] w-6' : 'bg-gray-300 hover:bg-gray-400'}`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}

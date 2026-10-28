@@ -135,7 +135,7 @@ export default function RazorpayCheckoutButton({
           contact: cleanContact
         },
         theme: {
-          color: '#00E5FF'
+          color: '#B85438'
         },
         modal: {
           ondismiss: function () {

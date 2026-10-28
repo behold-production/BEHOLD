@@ -547,7 +547,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
       // 3. Discount (if applied)
       if (detailsDiscount > 0) {
-        doc.setTextColor(0, 229, 255); // neon blue
+        doc.setTextColor(184, 84, 56); // classic terracotta
         doc.text(`Promo Discount Code`, 24, tableY);
         doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
         tableY += 8;
@@ -1506,7 +1506,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           }
         },
         theme: {
-          color: "#00E5FF"
+          color: "#B85438"
         },
         modal: {
           ondismiss: function () {

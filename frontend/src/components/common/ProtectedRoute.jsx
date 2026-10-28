@@ -18,7 +18,7 @@ export default function ProtectedRoute({ children, allowedRoles, fallbackPath = 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-[#00e5ff] border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-2 border-[#b85438] border-t-transparent rounded-full"></div>
       </div>
     );
   }

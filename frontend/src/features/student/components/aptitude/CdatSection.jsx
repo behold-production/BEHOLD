@@ -57,7 +57,7 @@ export default function CdatSection({ setView, siteSettings }) {
           {/* Left: Info (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
             <div>
-              <span className="text-xs font-semibold tracking-widest uppercase text-[#00e5ff] flex items-center gap-1.5 mb-2">
+              <span className="text-xs font-semibold tracking-widest uppercase text-[#b85438] flex items-center gap-1.5 mb-2">
 
                 {sectionSub}
               </span>
@@ -82,7 +82,7 @@ export default function CdatSection({ setView, siteSettings }) {
             <div className="space-y-4 pt-2">
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-4">
-                  <div className="w-9 h-9 bg-[#0f172a] text-[#00e5ff] border border-[#00e5ff]/30 rounded-xl flex items-center justify-center font-semibold text-xs shrink-0 mt-0.5 shadow-xs">
+                  <div className="w-9 h-9 bg-[#0f172a] text-[#b85438] border border-[#b85438]/30 rounded-xl flex items-center justify-center font-semibold text-xs shrink-0 mt-0.5 shadow-xs">
                     {step.num}
                   </div>
                   <div>
@@ -96,7 +96,7 @@ export default function CdatSection({ setView, siteSettings }) {
             <div className="pt-2">
               <button
                 onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs inline-flex items-center justify-center"
+                className="px-7 py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all border border-[#b85438]/30 cursor-pointer shadow-xs inline-flex items-center justify-center"
               >
                 Try a Free Sample Test
               </button>
@@ -106,7 +106,7 @@ export default function CdatSection({ setView, siteSettings }) {
           {/* Right: Registration Form (5 cols) */}
           <div className="lg:col-span-5 bg-white rounded-xl p-6 sm:p-10 shadow-md border border-surface-200">
             <h3 className="text-xl sm:text-2xl font-sans font-semibold uppercase text-[#0f172a] mb-2">
-              Register for the C-DAT<span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-semibold">.</span>
+              Register for the C-DAT<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)] font-semibold">.</span>
             </h3>
             <p className="text-xs sm:text-sm text-surface-600 mb-6 font-normal">Fill in your details to generate your registration group code.</p>
 
@@ -117,7 +117,7 @@ export default function CdatSection({ setView, siteSettings }) {
                   <input
                     type="text" placeholder="e.g. Devika S. Kumar"
                     value={groupRegName} onChange={e => setGroupRegName(e.target.value)}
-                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] transition-all ${errors.name ? 'border-rose-400' : 'border-surface-200'}`}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] transition-all ${errors.name ? 'border-rose-400' : 'border-surface-200'}`}
                   />
                   {errors.name && <p className="text-rose-600 text-xs mt-1 font-semibold">{errors.name}</p>}
                 </div>
@@ -126,7 +126,7 @@ export default function CdatSection({ setView, siteSettings }) {
                   <input
                     type="tel" placeholder="+91 00000 00000"
                     value={groupRegPhone} onChange={e => setGroupRegPhone(e.target.value)}
-                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] transition-all ${errors.phone ? 'border-rose-400' : 'border-surface-200'}`}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] transition-all ${errors.phone ? 'border-rose-400' : 'border-surface-200'}`}
                   />
                   {errors.phone && <p className="text-rose-600 text-xs mt-1 font-semibold">{errors.phone}</p>}
                 </div>
@@ -135,11 +135,11 @@ export default function CdatSection({ setView, siteSettings }) {
                   <input
                     type="email" placeholder="you@example.com"
                     value={groupRegEmail} onChange={e => setGroupRegEmail(e.target.value)}
-                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00e5ff] transition-all ${errors.email ? 'border-rose-400' : 'border-surface-200'}`}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#b85438] transition-all ${errors.email ? 'border-rose-400' : 'border-surface-200'}`}
                   />
                   {errors.email && <p className="text-rose-600 text-xs mt-1 font-semibold">{errors.email}</p>}
                 </div>
-                <button type="submit" className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#00e5ff]/30 cursor-pointer shadow-xs mt-2">
+                <button type="submit" className="w-full py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all border border-[#b85438]/30 cursor-pointer shadow-xs mt-2">
                   Generate Group Code
                 </button>
                 <div className="relative flex items-center my-3">
@@ -163,13 +163,13 @@ export default function CdatSection({ setView, siteSettings }) {
                 </div>
                 <button
                   onClick={copyCode}
-                  className={`w-full py-2.5 rounded-full font-semibold transition text-sm border cursor-pointer ${copied ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-white border-surface-200 hover:border-[#00e5ff] text-[#0f172a]'}`}
+                  className={`w-full py-2.5 rounded-full font-semibold transition text-sm border cursor-pointer ${copied ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-white border-surface-200 hover:border-[#b85438] text-[#0f172a]'}`}
                 >
                   {copied ? '✓ Copied to Clipboard!' : 'Copy Code'}
                 </button>
                 <button
                   onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0 }); }}
-                  className="w-full py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold rounded-full transition text-sm border border-[#00e5ff]/30 cursor-pointer shadow-sm flex items-center justify-center"
+                  className="w-full py-3 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold rounded-full transition text-sm border border-[#b85438]/30 cursor-pointer shadow-sm flex items-center justify-center"
                 >
                   Proceed with Code
                 </button>

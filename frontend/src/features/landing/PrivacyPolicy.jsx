@@ -19,7 +19,7 @@ const PrivacyPolicy = () => {
       <div className="h-20 lg:h-24 bg-[#F5F5F5] w-full" />
       
       {/* Header Section */}
-      <section className="bg-brand text-zinc-950 py-16 md:py-24 px-6 relative overflow-hidden">
+      <section className="bg-brand text-white py-16 md:py-24 px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
             Privacy Policy

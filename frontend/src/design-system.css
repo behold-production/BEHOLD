@@ -1,36 +1,40 @@
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   BEHOLD Global Design System — Alignment, Cards, Inputs, Badges
+   BEHOLD Global Design System — Classic Editorial Edition
+   Cream paper · Terracotta accent · Deep forest ink · Serif headings
    Applies consistently across: Landing, Profile, Booking, Advisor pages
 ═══════════════════════════════════════════════════════════════════════ */
 
-/* Section Cards */
+/* Section Cards — flat parchment panels with a fine rule, no glass */
 .section-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px 24px;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
-  transition: box-shadow 0.2s ease;
+  background: #fdfbf7;
+  border: 1px solid #e5ddd0;
+  border-radius: 6px;
+  padding: 22px 26px;
+  box-shadow: 0 1px 2px rgba(28, 40, 38, 0.05);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
-.section-card:hover { box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07); }
+.section-card:hover {
+  box-shadow: 0 6px 18px rgba(28, 40, 38, 0.08);
+  border-color: #d8cdba;
+}
 
 .section-card-sm {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  background: #fdfbf7;
+  border: 1px solid #e5ddd0;
+  border-radius: 6px;
   padding: 14px 18px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 1px 2px rgba(28, 40, 38, 0.04);
 }
 
 /* Form Controls */
 .form-label {
   font-size: 0.6875rem;
-  font-weight: 700;
-  color: #64748b;
+  font-weight: 600;
+  color: #5c6b66;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   display: block;
   margin-bottom: 6px;
 }
@@ -40,55 +44,119 @@
   padding: 10px 14px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #0f172a;
+  color: #1c2826;
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
+  border: 1px solid #ddd4c4;
+  border-radius: 6px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
 }
-.form-input:focus { border-color: #00e5ff; box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12); }
-.form-input::placeholder { color: #94a3b8; font-weight: 400; }
+.form-input:focus {
+  border-color: #b85438;
+  box-shadow: 0 0 0 3px rgba(184, 84, 56, 0.12);
+}
+.form-input::placeholder { color: #a8a094; font-weight: 400; }
 
-/* Badges */
-.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 8px; font-size: 0.6875rem; font-weight: 600; white-space: nowrap; }
-.badge-neutral { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
-.badge-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-.badge-warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-.badge-danger  { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
-.badge-brand   { background: #f0fbff; color: #0e7490; border: 1px solid #a5f3fc; }
-.badge-dark    { background: #0f172a; color: #00e5ff; border: 1px solid rgba(0,229,255,0.2); }
+/* Badges — muted, warm, letterpress feel */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 4px;
+  font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: 0.02em; white-space: nowrap;
+}
+.badge-neutral { background: #f3efe7; color: #5c6b66; border: 1px solid #e5ddd0; }
+.badge-success { background: #eef4ec; color: #3d5c46; border: 1px solid #cfdccb; }
+.badge-warning { background: #faf3e3; color: #8a6a2f; border: 1px solid #ecdcb8; }
+.badge-danger  { background: #f9ecea; color: #96382a; border: 1px solid #eccbc2; }
+.badge-brand   { background: #f6e8e2; color: #a0462e; border: 1px solid #e3c4b7; }
+.badge-dark    { background: #1c2826; color: #f2e9d8; border: 1px solid #1c2826; }
 
-/* Primary / Secondary Buttons */
+/* Primary / Secondary Buttons — classic rectangles, restrained motion */
 .btn-primary {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px 22px; background: #00e5ff; color: #0f172a;
-  font-size: 0.8125rem; font-weight: 700; border-radius: 10px; border: none;
+  padding: 10px 24px; background: #b85438; color: #ffffff;
+  font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em;
+  border-radius: 6px; border: none;
   cursor: pointer; white-space: nowrap; font-family: 'Poppins', sans-serif;
   transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 2px 8px rgba(0, 229, 255, 0.25); text-decoration: none;
+  box-shadow: 0 1px 3px rgba(28, 40, 38, 0.12); text-decoration: none;
 }
-.btn-primary:hover { background: #00ccee; box-shadow: 0 4px 16px rgba(0, 229, 255, 0.35); transform: translateY(-1px); }
-.btn-primary:active { transform: scale(0.97); }
+.btn-primary:hover { background: #a0462e; box-shadow: 0 4px 12px rgba(160, 70, 46, 0.25); transform: translateY(-1px); }
+.btn-primary:active { transform: scale(0.98); }
 
 .btn-secondary {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px 22px; background: #0f172a; color: #ffffff;
-  font-size: 0.8125rem; font-weight: 700; border-radius: 10px; border: none;
+  padding: 10px 24px; background: #1c2826; color: #f7f3ea;
+  font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em;
+  border-radius: 6px; border: none;
   cursor: pointer; white-space: nowrap; font-family: 'Poppins', sans-serif;
   transition: background 0.2s ease, transform 0.15s ease; text-decoration: none;
 }
-.btn-secondary:hover { background: #1e293b; transform: translateY(-1px); }
-.btn-secondary:active { transform: scale(0.97); }
+.btn-secondary:hover { background: #2b3a37; transform: translateY(-1px); }
+.btn-secondary:active { transform: scale(0.98); }
+
+/* Outline button — quiet editorial alternative */
+.btn-outline-classic {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 23px; background: transparent; color: #1c2826;
+  font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em;
+  border-radius: 6px; border: 1px solid #c9bfae;
+  cursor: pointer; white-space: nowrap; font-family: 'Poppins', sans-serif;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  text-decoration: none;
+}
+.btn-outline-classic:hover { border-color: #b85438; color: #b85438; background: rgba(184, 84, 56, 0.05); }
 
 /* Session Card */
 .session-card {
-  background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;
-  padding: 18px 20px; transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  background: #fdfbf7; border: 1px solid #e5ddd0; border-radius: 6px;
+  padding: 18px 20px; transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
-.session-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06); }
+.session-card:hover { border-color: #cbbfa8; box-shadow: 0 6px 18px rgba(28, 40, 38, 0.07); }
 
-/* Divider */
-.divider { width: 100%; height: 1px; background: #e2e8f0; margin: 16px 0; }
+/* Divider — hairline with a touch of warmth */
+.divider { width: 100%; height: 1px; background: #e5ddd0; margin: 16px 0; }
+.divider-ornament {
+  display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #cbbfa8;
+}
+.divider-ornament::before, .divider-ornament::after {
+  content: ''; flex: 1; height: 1px; background: #e5ddd0;
+}
+.divider-ornament span { font-size: 0.75rem; letter-spacing: 0.2em; }
+
+/* Classic serif display heading helper — use on any h1/h2 for editorial voice */
+.heading-classic {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  color: #1c2826;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+/* Eyebrow label — small caps kicker above section titles */
+.eyebrow-classic {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #b85438;
+  margin-bottom: 10px;
+}
+
+/* Responsive comfort — keep the classic rhythm on small screens */
+@media (max-width: 640px) {
+  .section-card { padding: 16px 16px; border-radius: 6px; }
+  .section-card-sm { padding: 12px 14px; }
+  .session-card { padding: 14px 15px; }
+  .btn-primary, .btn-secondary, .btn-outline-classic { padding: 11px 20px; }
+  .heading-classic { line-height: 1.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-card, .session-card, .btn-primary, .btn-secondary, .btn-outline-classic {
+    transition: none;
+  }
+}

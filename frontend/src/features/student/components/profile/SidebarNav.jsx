@@ -37,16 +37,16 @@ const SidebarNav = ({ currentSection, handleSectionChange, bookedSessions, testP
  onClick={() => handleSectionChange(tab.id)}
  className={`relative flex items-center gap-3 px-4 min-h-[46px] rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 group cursor-pointer border ${
  isActive
- ? 'bg-[#0f172a] text-white border-[#00e5ff]/40 shadow-xs scale-[1.01]'
+ ? 'bg-[#0f172a] text-white border-[#b85438]/40 shadow-xs scale-[1.01]'
  : 'text-surface-600 hover:bg-surface-100 hover:text-[#0f172a] border-transparent'
  }`}
  >
- {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#00e5ff]' : 'text-surface-500 group-hover:text-[#0f172a]'}`} />}
+ {Icon && <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#b85438]' : 'text-surface-500 group-hover:text-[#0f172a]'}`} />}
  <span className="flex-1 text-left">{tab.label}</span>
  {badge !== null && badge !== 0 && (
  <span className={`text-[10px] font-semibold px-2 min-w-[20px] h-5 rounded-full flex items-center justify-center ${
  isActive
- ? 'bg-[#00e5ff] text-[#0f172a] shadow-2xs'
+ ? 'bg-[#b85438] text-white shadow-2xs'
  : tab.id === 'results' && !testProfile
  ? 'bg-amber-100 text-amber-800 animate-pulse'
  : 'bg-surface-100 text-[#0f172a]'

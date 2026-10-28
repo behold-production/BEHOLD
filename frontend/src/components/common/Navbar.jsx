@@ -145,7 +145,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
       {/* Top Text-Only Announcement Bar - Only shows when Admin enables & assigns details */}
       {siteSettings?.showBanner && siteSettings?.bannerNotice && (
         <div className="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 font-medium flex items-center justify-center gap-3 relative z-50">
-          <span className="inline-block text-cyan-400 bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-semibold border border-slate-700">
+          <span className="inline-block text-[#e8b79c] bg-slate-800 px-2.5 py-0.5 rounded-md text-[11px] font-semibold border border-slate-700">
             {siteSettings.bannerNotice}
           </span>
           {siteSettings?.contactPhone && (

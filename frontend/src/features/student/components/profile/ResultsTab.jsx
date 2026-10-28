@@ -187,7 +187,7 @@ const ResultsTab = ({
  <button
  type="submit"
  disabled={isCigiUploading}
- className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-500 text-white rounded-xl text-xs font-bold transition-all border-none shadow-xs cursor-pointer hover-scale-btn"
+ className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-[#faf6ee]0 text-white rounded-xl text-xs font-bold transition-all border-none shadow-xs cursor-pointer hover-scale-btn"
  >
  {isCigiUploading ? (
  <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading...</>
@@ -212,7 +212,7 @@ const ResultsTab = ({
  <div key={result.id} className="p-3 bg-white border border-surface-200 rounded-[10px] flex items-center justify-between gap-3 text-left">
  <div className="min-w-0 flex-1">
  <div className="flex items-center gap-1.5 flex-wrap">
- <span className={`text-[10px] px-1.5 py-0.5 rounded-[10px] font-semibold ${result.fileType === 'pdf' ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}`}>
+ <span className={`text-[10px] px-1.5 py-0.5 rounded-[10px] font-semibold ${result.fileType === 'pdf' ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-[#a0462e]'}`}>
  {result.fileType}
  </span>
  {(result.testDate || result.testTime) && (

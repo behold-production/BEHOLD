@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * ScrollDot
- * Renders a clean, normal typographical period (.) in neon blue (#00F0FF) right next to the text.
+ * Renders a clean, normal typographical period (.) in classic terracotta (#B85438) right next to the text.
  * Clicking it scrolls to `nextId` smoothly.
  */
 export function ScrollDot({
@@ -65,8 +65,8 @@ export function BrandDot({ size = 'md', pulse = false, float = false, className 
 export function DotEyebrow({ children, className = '' }) {
   return (
     <div className={`inline-flex items-center gap-1.5 ${className}`}>
-      <span className="w-2 h-2 rounded-full bg-[#00F0FF] inline-block shadow-[0_0_6px_rgba(0,240,255,0.8)]" />
-      <span className="text-sm font-semibold tracking-widest uppercase text-[#00A8FF]">
+      <span className="w-2 h-2 rounded-full bg-[#b85438] inline-block" />
+      <span className="text-sm font-semibold tracking-widest uppercase text-[#a0462e]">
         {children}
       </span>
     </div>
@@ -86,8 +86,8 @@ export function DotDivider({ count = 5, className = '' }) {
           style={{
             width: i === Math.floor(count / 2) ? '6px' : '4px',
             height: i === Math.floor(count / 2) ? '6px' : '4px',
-            background: i === Math.floor(count / 2) ? '#00F0FF' : '#00A8FF',
-            boxShadow: i === Math.floor(count / 2) ? '0 0 6px rgba(0, 240, 255, 0.7)' : 'none',
+            background: i === Math.floor(count / 2) ? '#b85438' : '#cbbfa8',
+            boxShadow: 'none',
           }}
           aria-hidden="true"
         />

@@ -426,7 +426,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <div className="bg-white rounded-t-lg sm:rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-slate-100 p-6 sm:p-8 text-center space-y-4">
           
           {/* Certified Member Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-blue-50 text-blue-600 rounded-md font-bold text-xs border border-blue-100/80 shadow-2xs mx-auto">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-[#f6efe8] text-[#b85438] rounded-md font-bold text-xs border border-[#e3c4b7]/80 shadow-2xs mx-auto">
             <ShieldCheck className="w-4 h-4 fill-blue-600 text-white shrink-0" />
             <span>Certified Member</span>
           </div>
@@ -462,10 +462,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {advisor.modes && advisor.modes.map((mode, idx) => (
               <span 
                 key={idx}
-                className="px-3 py-1 rounded-md bg-slate-50 border border-slate-200/80 text-[11px] font-bold text-slate-700 flex items-center gap-1"
+                className="px-3 py-1 rounded-md bg-[#faf6ee] border border-slate-200/80 text-[11px] font-bold text-slate-700 flex items-center gap-1"
               >
                 {mode === 'ONLINE' && <Video className="w-3 h-3 text-teal-600" />}
-                {mode === 'OFFLINE' && <MapPin className="w-3 h-3 text-blue-600" />}
+                {mode === 'OFFLINE' && <MapPin className="w-3 h-3 text-[#b85438]" />}
                 {mode === 'DOOR_STEP' && <UserCheck className="w-3 h-3 text-emerald-600" />}
                 <span>{mode === 'ONLINE' ? 'Online Video' : mode === 'OFFLINE' ? 'Clinic Visit' : 'Doorstep Visit'}</span>
               </span>
@@ -528,7 +528,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Specialties & Focus Areas</h4>
                   <div className="flex flex-wrap gap-2">
                     {advisor.specs.map((spec, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-slate-50 border border-slate-200/90 rounded-md text-xs font-semibold text-slate-700">
+                      <span key={i} className="px-3 py-1.5 bg-[#faf6ee] border border-slate-200/90 rounded-md text-xs font-semibold text-slate-700">
                         {spec}
                       </span>
                     ))}
@@ -705,7 +705,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       className={`px-4 py-2 rounded-md text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
                         selectedFilter === tag
                           ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-[#faf6ee]'
                       }`}
                     >
                       {tag}
@@ -822,7 +822,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
                       {/* Verified Review Badge */}
                       {rev.isVerified && (
-                        <div className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 pt-1">
+                        <div className="inline-flex items-center gap-1 text-[11px] font-bold text-[#b85438] pt-1">
                           <ShieldCheck className="w-3.5 h-3.5 fill-blue-600 text-white" />
                           <span>Verified Review</span>
                         </div>
@@ -914,7 +914,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <select
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-semibold text-slate-900 outline-none"
+                  className="w-full px-3 py-2.5 bg-[#faf6ee] border border-slate-200 rounded-md text-xs font-semibold text-slate-900 outline-none"
                 >
                   <option value="Skill">Skill & Expertise</option>
                   <option value="Conversation">Conversation & Empathy</option>
@@ -931,7 +931,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Amazingly Insightful & Helpful!"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-900 outline-none focus:border-teal-500"
+                  className="w-full px-3.5 py-2.5 bg-[#faf6ee] border border-slate-200 rounded-md text-xs text-slate-900 outline-none focus:border-teal-500"
                 />
               </div>
 
@@ -943,7 +943,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Share your experience during the consultation..."
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-900 outline-none focus:border-teal-500 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-[#faf6ee] border border-slate-200 rounded-md text-xs text-slate-900 outline-none focus:border-teal-500 resize-none"
                 />
               </div>
 

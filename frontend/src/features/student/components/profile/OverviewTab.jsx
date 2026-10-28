@@ -37,7 +37,7 @@ export default function OverviewTab({
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-block px-5 py-2.5 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
+            className="inline-block px-5 py-2.5 bg-[#b85438] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
           >
             Book Consultation
           </button>
@@ -60,10 +60,10 @@ export default function OverviewTab({
                 {nextSession.advisorRole || 'Consultant Psychologist'}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-2.5 text-xs sm:text-sm font-semibold text-slate-700">
-                <span className="bg-slate-50 px-3 py-1 rounded-lg border border-slate-200">
+                <span className="bg-[#faf6ee] px-3 py-1 rounded-lg border border-slate-200">
                   {formatDateString(nextSession.date)}
                 </span>
-                <span className="bg-slate-50 px-3 py-1 rounded-lg border border-slate-200">
+                <span className="bg-[#faf6ee] px-3 py-1 rounded-lg border border-slate-200">
                   {formatTimeString(nextSession.time)}
                 </span>
               </div>
@@ -85,7 +85,7 @@ export default function OverviewTab({
               <button
                 type="button"
                 onClick={() => downloadPDFReceiptForSession(nextSession)}
-                className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5"
+                className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-slate-200 bg-[#faf6ee] hover:bg-slate-100 text-slate-700 flex items-center gap-1.5"
                 title="Download Booking Receipt PDF"
               >
                 <Download className="w-4 h-4 text-slate-600" />
@@ -107,7 +107,7 @@ export default function OverviewTab({
               })}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5 no-underline"
+              className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-slate-200 bg-[#faf6ee] hover:bg-slate-100 text-slate-700 flex items-center gap-1.5 no-underline"
               title="Add to Google Calendar"
             >
               <Calendar className="w-4 h-4 text-teal-600" />
@@ -123,7 +123,7 @@ export default function OverviewTab({
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-brand hover:bg-brand-dark text-slate-950 shadow-xs text-center no-underline flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border-none bg-brand hover:bg-brand-dark text-white shadow-xs text-center no-underline flex items-center gap-1.5"
                 title="Join Google Meet Video Consultation"
               >
                 <Video className="w-4 h-4" />
@@ -133,7 +133,7 @@ export default function OverviewTab({
               <button
                 type="button"
                 onClick={() => { handleSectionChange('booked'); setSessionSubTab('upcoming'); }}
-                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-slate-50 text-slate-800"
+                className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer border border-slate-300 bg-white hover:bg-[#faf6ee] text-slate-800"
               >
                 View Details
               </button>
@@ -141,7 +141,7 @@ export default function OverviewTab({
           </div>
         </div>
       ) : (
-        <div className="rounded-xl p-8 text-center border border-dashed border-slate-200 bg-slate-50/50">
+        <div className="rounded-xl p-8 text-center border border-dashed border-slate-200 bg-[#faf6ee]/50">
           <p className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">No upcoming sessions booked</p>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto leading-relaxed font-medium">
             Schedule a 1-on-1 session with a certified clinical psychologist or career mentor for personal guidance.
@@ -153,7 +153,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="mt-5 inline-block px-6 py-2.5 bg-[#00e5ff] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
+              className="mt-5 inline-block px-6 py-2.5 bg-[#b85438] hover:bg-[#00b2be] text-slate-950 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer border-none hover-scale-btn"
             >
               Schedule Consultation Now
             </button>
@@ -182,7 +182,7 @@ export default function OverviewTab({
                 if (onOpenBooking) onOpenBooking();
                 else navigate('/booking');
               }}
-              className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs sm:text-sm transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
+              className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs sm:text-sm transition-colors border border-[#b85438]/30 cursor-pointer shadow-2xs"
             >
               Book Now
             </button>
@@ -212,7 +212,7 @@ export default function OverviewTab({
                     navigate('/sample-test');
                   }
                 }}
-                className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs sm:text-sm transition-colors border border-[#00e5ff]/30 cursor-pointer shadow-2xs"
+                className="px-5 py-2.5 bg-[#0f172a] hover:bg-[#1e293b] text-white rounded-xl font-bold text-xs sm:text-sm transition-colors border border-[#b85438]/30 cursor-pointer shadow-2xs"
               >
                 {testProfile ? 'View Report' : 'Take Assessment'}
               </button>
@@ -230,7 +230,7 @@ export default function OverviewTab({
             <button
               type="button"
               onClick={() => { handleSectionChange('booked'); setSessionSubTab('history'); }}
-              className="text-xs sm:text-sm text-surface-500 hover:text-[#00e5ff] font-semibold cursor-pointer border-0 bg-transparent tracking-wide"
+              className="text-xs sm:text-sm text-surface-500 hover:text-[#b85438] font-semibold cursor-pointer border-0 bg-transparent tracking-wide"
             >
               View All
             </button>
@@ -281,7 +281,7 @@ export default function OverviewTab({
                   {a.label}
                 </span>
                 {a.done ? (
-                  <span className="text-[10px] sm:text-xs font-bold text-[#00e5ff] bg-slate-900 px-2.5 py-0.5 rounded-md shadow-2xs border border-[#00e5ff]/30">Done</span>
+                  <span className="text-[10px] sm:text-xs font-bold text-[#b85438] bg-slate-900 px-2.5 py-0.5 rounded-md shadow-2xs border border-[#b85438]/30">Done</span>
                 ) : (
                   <span className="text-[10px] sm:text-xs font-bold text-surface-500 bg-surface-100 px-2.5 py-0.5 rounded-md border border-surface-200">Pending</span>
                 )}

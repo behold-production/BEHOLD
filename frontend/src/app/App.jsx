@@ -435,9 +435,9 @@ export default function App() {
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md transition-all duration-300">
         <div className="flex flex-col items-center gap-4">
           <div className="relative flex items-center justify-center">
-            <div className="w-14 h-14 rounded-full border-3 border-[#00e5ff]/20 border-t-[#00e5ff] animate-spin shadow-[0_0_15px_rgba(0,229,255,0.4)]" />
+            <div className="w-14 h-14 rounded-full border-3 border-[#b85438]/20 border-t-[#b85438] animate-spin shadow-[0_0_15px_rgba(184,84,56,0.4)]" />
             <span className="absolute font-sans font-semibold text-xs text-slate-900 tracking-widest uppercase">
-              B<span className="text-[#00e5ff]">.</span>
+              B<span className="text-[#b85438]">.</span>
             </span>
           </div>
           <span className="text-xs font-semibold uppercase tracking-widest text-slate-600 animate-pulse">

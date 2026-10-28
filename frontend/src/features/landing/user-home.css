@@ -209,7 +209,7 @@
 
 .bh-steps-section {
   padding: clamp(72px, 9vw, 122px) 24px;
-  background: #f7f7f1;
+  background: #fbf9f5;
 }
 
 .bh-steps-inner {
@@ -407,7 +407,7 @@
 
 .bh-experts {
   padding: 100px 0 94px;
-  background: #fbfaf6;
+  background: #fbf9f5;
   scroll-margin-top: 84px;
 }
 
@@ -1030,7 +1030,7 @@
   padding-top: 88px;
   padding-bottom: 88px;
   color: var(--bh-ink);
-  background: #fbfaf6;
+  background: #fbf9f5;
 }
 
 .bh-home #faqs-blogs>div:last-child>div {
@@ -1059,7 +1059,7 @@
   box-shadow: 0 5px 20px rgba(31, 53, 43, .035);
 }
 
-.bh-home #faqs-blogs [class*="text-[#00e5ff]"] {
+.bh-home #faqs-blogs [class*="text-[#b85438]"] {
   color: var(--bh-teal);
 }
 
@@ -1132,13 +1132,13 @@
 .bh-profile-dialog,
 .bh-booking-alert,
 .bh-consent-dialog {
-  --bh-ink: #182b2b;
-  --bh-muted: #637170;
-  --bh-teal: #0d827f;
-  --bh-teal-dark: #075f61;
-  --bh-coral: #cf846c;
-  --bh-paper: #fbfaf6;
-  --bh-line: #e5e5dd;
+  --bh-ink: #1c2826;
+  --bh-muted: #5c6b66;
+  --bh-teal: #b85438;
+  --bh-teal-dark: #a0462e;
+  --bh-coral: #d98a67;
+  --bh-paper: #fbf9f5;
+  --bh-line: #ede7de;
   color: var(--bh-ink) !important;
   font-family: "Poppins", "Noto Sans Malayalam", sans-serif !important;
 }
@@ -1180,15 +1180,15 @@
   box-shadow: 0 0 0 3px rgba(13, 130, 127, .15);
 }
 
-.bh-booking-dialog [class*="bg-[#00e5ff]"] {
+.bh-booking-dialog [class*="bg-[#b85438]"] {
   background-color: var(--bh-teal) !important;
 }
 
-.bh-booking-dialog [class*="text-[#00e5ff]"] {
+.bh-booking-dialog [class*="text-[#b85438]"] {
   color: var(--bh-teal) !important;
 }
 
-.bh-booking-dialog [class*="border-[#00e5ff]"] {
+.bh-booking-dialog [class*="border-[#b85438]"] {
   border-color: var(--bh-teal) !important;
 }
 
@@ -1243,7 +1243,7 @@
 }
 
 .bh-booking-content .bh-booking-step-card>div:first-child p {
-  color: #64748b !important;
+  color: #5c6b66 !important;
   font-size: 12px !important;
   line-height: 1.6;
 }
@@ -1258,25 +1258,25 @@
   padding: 3px 8px !important;
 }
 
-.bh-booking-content .bh-booking-step-card .text-\[\#00e5ff\],
+.bh-booking-content .bh-booking-step-card .text-\[\#b85438\],
 .bh-booking-content .bh-booking-step-card .text-teal-700,
 .bh-booking-content .bh-booking-step-card .text-teal-800 {
   color: var(--bh-teal) !important;
 }
 
 .bh-booking-content .bh-booking-step-card [class*="bg-teal-50"],
-.bh-booking-content .bh-booking-step-card [class*="bg-cyan-50"] {
+.bh-booking-content .bh-booking-step-card [class*="bg-[#f6efe8]"] {
   background-color: #f0fdfa !important;
 }
 
-.bh-booking-content .bh-booking-step-card [class*="border-[#00e5ff]"],
-.bh-booking-content .bh-booking-step-card [class*="ring-[#00e5ff]"] {
+.bh-booking-content .bh-booking-step-card [class*="border-[#b85438]"],
+.bh-booking-content .bh-booking-step-card [class*="ring-[#b85438]"] {
   border-color: var(--bh-teal) !important;
 }
 
 .bh-booking-content .bh-booking-step-card [class*="text-slate-500"][class*="uppercase"],
 .bh-booking-content .bh-booking-step-card label[class*="uppercase"] {
-  color: #64748b !important;
+  color: #5c6b66 !important;
   letter-spacing: .08em !important;
   font-size: 11px !important;
 }
@@ -1318,8 +1318,8 @@
   box-shadow: none !important;
 }
 
-.bh-booking-content .bh-booking-step-card button[class*="border-[#00e5ff]"],
-.bh-booking-content .bh-booking-step-card div[class*="border-[#00e5ff]"] {
+.bh-booking-content .bh-booking-step-card button[class*="border-[#b85438]"],
+.bh-booking-content .bh-booking-step-card div[class*="border-[#b85438]"] {
   background: #f0fdfa !important;
   border: 1.5px solid var(--bh-teal) !important;
   box-shadow: 0 0 0 1px rgba(13, 130, 127, .2) !important;
@@ -1451,7 +1451,7 @@
   background: var(--bh-ink) !important;
 }
 
-.bh-profile-dialog [class*="bg-[#0f172a]"][class*="text-[#00e5ff]"] {
+.bh-profile-dialog [class*="bg-[#0f172a]"][class*="text-[#b85438]"] {
   color: #fff !important;
 }
 
@@ -1901,7 +1901,7 @@ header.bh-home-nav {
   background: rgba(247, 247, 241, .96) !important;
   border-bottom: 1px solid #e5e7df !important;
   box-shadow: 0 3px 18px rgba(41, 56, 47, .045) !important;
-  color: #29382f !important;
+  color: #1c2826 !important;
   backdrop-filter: blur(14px);
 }
 
@@ -1912,16 +1912,16 @@ header.bh-home-nav>div {
 }
 
 header.bh-home-nav button>span {
-  color: #29382f !important;
+  color: #1c2826 !important;
 }
 
 header.bh-home-nav button>span>span {
-  color: #d89578 !important;
+  color: #b85438 !important;
   text-shadow: none !important;
 }
 
 header.bh-home-nav nav>span {
-  background: #315c4e !important;
+  background: #b85438 !important;
   box-shadow: none !important;
 }
 
@@ -1931,25 +1931,25 @@ header.bh-home-nav nav button {
 }
 
 header.bh-home-nav nav button:hover,
-header.bh-home-nav nav button[class*="text-[#00e5ff]"] {
-  color: #315c4e !important;
+header.bh-home-nav nav button[class*="text-[#b85438]"] {
+  color: #b85438 !important;
 }
 
 header.bh-home-nav nav+div>button:first-child {
   color: #fff !important;
-  background: #315c4e !important;
-  border-color: #315c4e !important;
+  background: #b85438 !important;
+  border-color: #b85438 !important;
   border-radius: 3px !important;
   box-shadow: none !important;
   font-size: 11px !important;
 }
 
 header.bh-home-nav nav+div>button:first-child:hover {
-  background: #244b3e !important;
+  background: #a0462e !important;
 }
 
 header.bh-home-nav nav+div>button:last-child {
-  color: #315c4e !important;
+  color: #b85438 !important;
   background: transparent !important;
   border-color: #d5ddd3 !important;
   border-radius: 3px !important;
@@ -1962,36 +1962,36 @@ header.bh-home-nav nav+div>button:last-child:hover {
 
 header.bh-home-nav>div>div button[aria-label="Open Navigation Drawer"] {
   background: #e9eee5 !important;
-  color: #29382f !important;
+  color: #1c2826 !important;
 }
 
 header.bh-home-nav>div>div button[aria-label="Open Navigation Drawer"] svg {
-  color: #29382f !important;
+  color: #1c2826 !important;
 }
 
 header.bh-home-nav>div>div:last-child>button {
   color: #fff !important;
-  background: #315c4e !important;
-  border: 1px solid #315c4e !important;
+  background: #b85438 !important;
+  border: 1px solid #b85438 !important;
   border-radius: 3px !important;
   box-shadow: none !important;
 }
 
 header.bh-home-nav>div>div:last-child>button:hover {
-  background: #244b3e !important;
+  background: #a0462e !important;
 }
 
 .bh-home {
-  --bh-ink: #29382f;
-  --bh-muted: #6d7b72;
-  --bh-teal: #315c4e;
-  --bh-teal-dark: #244b3e;
-  --bh-coral: #d89578;
-  --bh-paper: #f7f7f1;
-  --bh-line: #e3e7de;
-  --bh-sage: #e4e9d9;
+  --bh-ink: #1c2826;
+  --bh-muted: #5c6b66;
+  --bh-teal: #b85438;
+  --bh-teal-dark: #a0462e;
+  --bh-coral: #b85438;
+  --bh-paper: #fbf9f5;
+  --bh-line: #ede7de;
+  --bh-sage: #f2ede4;
   overflow: hidden;
-  background: #f7f7f1;
+  background: #fbf9f5;
 }
 
 .bh-home .bh-eyebrow {
@@ -2001,7 +2001,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-eyebrow-dot {
-  background: #d89578;
+  background: #b85438;
 }
 
 .bh-section-shell {
@@ -2014,7 +2014,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   padding: 76px 32px 0;
   overflow: visible;
   color: var(--bh-ink);
-  background: #f7f7f1;
+  background: #fbf9f5;
 }
 
 .bh-home .bh-hero-content {
@@ -2039,7 +2039,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-home .bh-hero h1 {
   max-width: 620px;
   margin: 20px 0 18px;
-  color: #29382f;
+  color: #1c2826;
   font-family: "Poppins", sans-serif;
   font-size: clamp(46px, 5.2vw, 68px);
   font-weight: 600;
@@ -2050,7 +2050,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-hero h1 em {
-  color: #315c4e;
+  color: #b85438;
   font-family: "Cormorant Garamond", Georgia, serif;
   font-weight: 600;
 }
@@ -2074,11 +2074,11 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-button-primary {
-  background: #315c4e;
+  background: #b85438;
 }
 
 .bh-home .bh-button-primary:hover {
-  background: #244b3e;
+  background: #a0462e;
 }
 
 .bh-home .bh-hero-trust {
@@ -2095,8 +2095,8 @@ header.bh-home-nav>div>div:last-child>button:hover {
   height: 35px;
   display: grid;
   place-items: center;
-  color: #315c4e;
-  background: #e4e9d9;
+  color: #b85438;
+  background: #f2ede4;
   border-radius: 50%;
 }
 
@@ -2153,7 +2153,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   align-items: center;
   gap: 10px;
   padding: 13px 16px;
-  color: #29382f;
+  color: #1c2826;
   background: #fffefa;
   box-shadow: 0 9px 26px rgba(41, 56, 47, .12);
 }
@@ -2163,8 +2163,8 @@ header.bh-home-nav>div>div:last-child>button:hover {
   height: 34px;
   display: grid;
   place-items: center;
-  color: #315c4e;
-  background: #e4e9d9;
+  color: #b85438;
+  background: #f2ede4;
   border-radius: 50%;
 }
 
@@ -2188,7 +2188,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-floating-leaf {
   position: absolute;
   z-index: 2;
-  color: #d89578;
+  color: #b85438;
 }
 
 .bh-leaf-one {
@@ -2235,8 +2235,8 @@ header.bh-home-nav>div>div:last-child>button:hover {
   place-items: center;
   transform: translate(8px, 5px) rotate(9deg);
   border-radius: 50%;
-  color: #29382f;
-  background: #e4e9d9;
+  color: #1c2826;
+  background: #f2ede4;
   font-size: 8px;
   font-weight: 800;
   letter-spacing: .1em;
@@ -2261,7 +2261,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   align-items: center;
   gap: 5px;
   padding: 7px 0;
-  color: #315c4e;
+  color: #b85438;
   background: transparent;
   border: 0;
   cursor: pointer;
@@ -2281,7 +2281,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   display: flex;
   align-items: center;
   gap: 27px;
-  border-top: 1px solid #e3e7de;
+  border-top: 1px solid #ede7de;
   color: #66776b;
   font-size: 10px;
   font-weight: 700;
@@ -2316,7 +2316,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-home .bh-approach-heading h2,
 .bh-home .bh-values-copy h2 {
   margin-top: 14px;
-  color: #29382f;
+  color: #1c2826;
   font-family: "Poppins", sans-serif;
   font-size: clamp(38px, 4.4vw, 56px);
   font-weight: 600;
@@ -2327,7 +2327,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-home .bh-section-heading h2 em,
 .bh-home .bh-approach-heading h2 em,
 .bh-home .bh-values-copy h2 em {
-  color: #315c4e;
+  color: #b85438;
   font-family: "Cormorant Garamond", Georgia, serif;
 }
 
@@ -2367,7 +2367,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   width: 100%;
   min-width: 0;
   appearance: none;
-  color: #29382f;
+  color: #1c2826;
   background: transparent;
   border: 0;
   outline: 0;
@@ -2446,7 +2446,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   max-width: calc(100% - 24px);
   padding: 7px 10px;
   overflow: hidden;
-  color: #315c4e;
+  color: #b85438;
   background: rgba(255, 255, 255, .94);
   border-radius: 4px;
   font-size: 8px;
@@ -2482,7 +2482,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-home .bh-expert-heading h3 {
   margin: 7px 0 4px;
-  color: #29382f;
+  color: #1c2826;
   font-family: "Poppins", sans-serif;
   font-size: 17px;
   font-weight: 600;
@@ -2650,12 +2650,12 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-button-dark {
-  color: #29382f;
+  color: #1c2826;
   background: #f5f4e9;
 }
 
 .bh-home .bh-button-dark:hover {
-  color: #29382f;
+  color: #1c2826;
   background: #fff;
 }
 
@@ -2692,7 +2692,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   align-items: center;
   gap: 7px;
   padding: 11px 13px;
-  color: #315c4e;
+  color: #b85438;
   background: #fffefa;
   border-radius: 4px;
   font-size: 9px;
@@ -2700,7 +2700,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-values-art-label svg {
-  color: #d89578;
+  color: #b85438;
 }
 
 .bh-values-copy h2 {
@@ -2710,7 +2710,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-values-copy>p {
   max-width: 450px;
-  color: #6d7b72;
+  color: #5c6b66;
   font-size: 11px;
   line-height: 1.9;
 }
@@ -2736,7 +2736,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-value-points strong {
-  color: #29382f;
+  color: #1c2826;
   font-size: 10px;
 }
 
@@ -2747,7 +2747,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-text-button {
-  color: #315c4e;
+  color: #b85438;
   font-size: 10px !important;
 }
 
@@ -2760,7 +2760,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   overflow: hidden;
   padding: 70px 20px 75px;
   color: #fff;
-  background: #315c4e;
+  background: #b85438;
   text-align: center;
 }
 
@@ -2799,12 +2799,12 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-home .bh-button-cream {
   min-height: 43px;
-  color: #315c4e;
+  color: #b85438;
   background: #f5f4e9;
 }
 
 .bh-home .bh-button-cream:hover {
-  color: #244b3e;
+  color: #a0462e;
   background: #fff;
 }
 
@@ -2836,18 +2836,18 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-home #inquiry button[type="submit"] {
   color: #fff !important;
-  background: #315c4e !important;
+  background: #b85438 !important;
 }
 
 .bh-home #inquiry button[type="submit"]:hover {
-  background: #244b3e !important;
+  background: #a0462e !important;
 }
 
 body.bh-home-page #root footer {
   padding: 30px 0 20px !important;
-  color: #29382f !important;
-  background: #f7f7f1 !important;
-  border-top: 1px solid #e3e7de !important;
+  color: #1c2826 !important;
+  background: #fbf9f5 !important;
+  border-top: 1px solid #ede7de !important;
 }
 
 body.bh-home-page #root footer>div {
@@ -2862,17 +2862,17 @@ body.bh-home-page #root footer [class*="text-slate-500"] {
 }
 
 body.bh-home-page #root footer [class*="border-slate-800"] {
-  border-color: #e3e7de !important;
+  border-color: #ede7de !important;
 }
 
-body.bh-home-page #root footer [class*="text-[#00e5ff]"] {
-  color: #d89578 !important;
+body.bh-home-page #root footer [class*="text-[#b85438]"] {
+  color: #b85438 !important;
   text-shadow: none !important;
 }
 
 body.bh-home-page #root footer a:hover,
 body.bh-home-page #root footer button:hover {
-  color: #315c4e !important;
+  color: #b85438 !important;
 }
 
 @media (max-width: 1023px) {
@@ -3146,7 +3146,7 @@ body.bh-home-page #root footer button:hover {
   background:
     radial-gradient(ellipse at 12% 18%, rgba(216, 149, 120, .09), transparent 31%),
     radial-gradient(ellipse at 90% 86%, rgba(49, 92, 78, .08), transparent 34%),
-    #f7f7f1;
+    #fbf9f5;
 }
 
 .bh-home .bh-hero-empty .bh-hero-content {
@@ -3167,9 +3167,9 @@ body.bh-home-page #root footer button:hover {
   grid-template-columns: 48px minmax(0, 1fr);
   gap: 18px;
   padding: clamp(24px, 5vw, 42px);
-  color: #29382f;
+  color: #1c2826;
   background: rgba(255, 254, 250, .88);
-  border: 1px solid #e3e7de;
+  border: 1px solid #ede7de;
   box-shadow: 0 20px 55px rgba(41, 56, 47, .07);
 }
 
@@ -3178,8 +3178,8 @@ body.bh-home-page #root footer button:hover {
   height: 46px;
   display: grid;
   place-items: center;
-  color: #315c4e;
-  background: #e4e9d9;
+  color: #b85438;
+  background: #f2ede4;
   border-radius: 50%;
 }
 
@@ -3192,7 +3192,7 @@ body.bh-home-page #root footer button:hover {
 
 .bh-content-status h1 {
   margin: 8px 0 9px !important;
-  color: #29382f !important;
+  color: #1c2826 !important;
   font-family: "Poppins", sans-serif !important;
   font-size: clamp(25px, 4vw, 38px) !important;
   font-weight: 600 !important;
@@ -3658,7 +3658,7 @@ header.bh-home-nav button {
   min-width: 0;
   padding: clamp(18px, 2.5vw, 30px);
   background: rgba(255, 255, 255, .82);
-  border: 1px solid #e3e7de;
+  border: 1px solid #ede7de;
   border-radius: 8px;
   box-shadow: 0 12px 35px rgba(41, 56, 47, .045);
 }
@@ -3769,7 +3769,7 @@ body.bh-home-page #root footer>div>div:last-child {
 }
 
 body.bh-home-page #root footer [class*="text-white"] {
-  color: #f7f7f1 !important;
+  color: #fbf9f5 !important;
 }
 
 body.bh-home-page #root footer [class*="text-slate-300"],
@@ -3782,7 +3782,7 @@ body.bh-home-page #root footer [class*="border-slate-800"] {
   border-color: rgba(255, 255, 255, .16) !important;
 }
 
-body.bh-home-page #root footer [class*="text-[#00e5ff]"] {
+body.bh-home-page #root footer [class*="text-[#b85438]"] {
   color: #e6a58c !important;
   text-shadow: none !important;
 }
@@ -3927,7 +3927,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
     min-width: 0;
     padding: clamp(20px, 3vw, 34px);
     background: rgba(255, 255, 255, .82);
-    border: 1px solid #e3e7de;
+    border: 1px solid #ede7de;
     border-radius: 8px;
     box-shadow: 0 12px 35px rgba(41, 56, 47, .045);
   }
@@ -3952,7 +3952,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
     min-height: 190px;
     overflow: hidden;
     background: #fff;
-    border: 1px solid #e3e7de;
+    border: 1px solid #ede7de;
     border-radius: 7px;
     padding: 0;
     font: inherit;

@@ -10,7 +10,7 @@ export default function BookingPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#faf6ee] flex flex-col justify-between">
       <Navbar currentView="/booking" />
       <ServiceBooking
         isOpen={true}

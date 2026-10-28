@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * BrandIcon component for BEHOLD
- * Renders the iconic "B." with crisp White B and glowing Neon Blue Dot (#00E5FF).
+ * Renders the iconic "B." with crisp White B and glowing Neon Blue Dot (#B85438).
  * 
  * Props:
  * - variant: 'icon' (badge only), 'full' (icon + BEHOLD text), 'textOnly' (BEHOLD. text)

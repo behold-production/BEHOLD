@@ -219,7 +219,7 @@ export default function TimePicker({
       {/* Step Header */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#00e5ff] text-xs flex items-center justify-center font-extrabold shadow-xs">
+          <span className="w-7 h-7 rounded-xl bg-slate-900 text-[#b85438] text-xs flex items-center justify-center font-extrabold shadow-xs">
             3
           </span>
           <div>
@@ -247,7 +247,7 @@ export default function TimePicker({
         </div>
 
         {/* Interactive Month Calendar */}
-        <div className="border border-slate-200 rounded-lg p-3 sm:p-4 bg-slate-50/50 space-y-3 animate-step-in">
+        <div className="border border-slate-200 rounded-lg p-3 sm:p-4 bg-[#faf6ee]/50 space-y-3 animate-step-in">
             {/* Month Navigation */}
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <span className="font-bold text-sm sm:text-base text-slate-900">
@@ -358,7 +358,7 @@ export default function TimePicker({
       </div>
 
       {/* Selected Date Indicator & Earliest Jump Pill */}
-      <div className="flex flex-wrap items-center justify-between gap-2 py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-lg">
+      <div className="flex flex-wrap items-center justify-between gap-2 py-2.5 px-3 bg-[#faf6ee] border border-slate-200 rounded-lg">
         <div className="flex items-center gap-2">
           {isToday ? (
             <span className="px-2 py-0.5 bg-teal-50 text-teal-700 border border-teal-200 text-[10px] font-extrabold uppercase tracking-wider rounded-md flex items-center gap-1">
@@ -478,7 +478,7 @@ export default function TimePicker({
         </div>
       ) : (
         /* Empty State with Automatic Next-Date Action */
-        <div className="p-8 sm:p-10 border border-dashed border-slate-200 rounded-lg bg-slate-50/80 text-center space-y-4">
+        <div className="p-8 sm:p-10 border border-dashed border-slate-200 rounded-lg bg-[#faf6ee]/80 text-center space-y-4">
           <div className="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center mx-auto text-slate-400">
             <Clock className="w-6 h-6" />
           </div>
@@ -503,7 +503,7 @@ export default function TimePicker({
                 onClick={() => onDateChange && onDateChange(earliestAvailableDateStr)}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm hover:scale-105"
               >
-                <Zap className="w-4 h-4 text-[#00e5ff]" />
+                <Zap className="w-4 h-4 text-[#b85438]" />
                 <span>Jump to {formatDateString(earliestAvailableDateStr)}</span>
               </button>
             )}
@@ -522,7 +522,7 @@ export default function TimePicker({
               }}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-xl transition-all cursor-pointer border border-slate-200 shadow-xs"
             >
-              <CalendarIcon className="w-4 h-4 text-[#3a0ca3]" />
+              <CalendarIcon className="w-4 h-4 text-[#b85438]" />
               <span>Browse Full Month</span>
             </button>
           </div>
