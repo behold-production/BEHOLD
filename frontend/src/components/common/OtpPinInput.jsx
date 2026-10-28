@@ -124,11 +124,11 @@ export default function OtpPinInput({ value = '', onChange, hasError, disabled =
                   : 'bg-rose-50/50 border-rose-400 text-rose-900 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
                 : isFilled
                 ? isDark
-                  ? 'bg-[#050811] border-[#00E5FF] text-white shadow-sm ring-2 ring-[#00E5FF]/25'
-                  : 'bg-white border-[#00e5ff] text-zinc-900 shadow-sm ring-2 ring-[#00e5ff]/15'
+                  ? 'bg-[#1c2826] border-[#b85438] text-white shadow-sm ring-2 ring-[#b85438]/25'
+                  : 'bg-white border-[#b85438] text-[#1c2826] shadow-sm ring-2 ring-[#b85438]/15'
                 : isDark
-                ? 'bg-[#050811] border-slate-800 text-white focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20'
-                : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus:bg-white focus:border-[#00e5ff] focus:ring-2 focus:ring-[#00e5ff]/20'
+                ? 'bg-[#1c2826] border-[#ede7de]/20 text-white focus:border-[#b85438] focus:ring-2 focus:ring-[#b85438]/20'
+                : 'bg-white border-[#ede7de] text-[#1c2826] focus:border-[#b85438] focus:ring-2 focus:ring-[#b85438]/20'
             }`}
           />
         );

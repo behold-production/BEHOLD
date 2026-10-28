@@ -28,15 +28,15 @@ export default function BrandIcon({
   if (variant === 'icon') {
     return (
       <div
-        className={`relative flex items-center justify-center shrink-0 rounded-xl font-sans font-semibold select-none transition-all duration-300 ${currentSize.icon} ${
+        className={`relative flex items-center justify-center shrink-0 rounded-full font-serif font-bold select-none transition-all duration-300 ${currentSize.icon} ${
           darkBg
-            ? 'bg-[#070b14] border border-slate-800/80 shadow-md shadow-black/40 text-white'
-            : 'bg-slate-900 border border-slate-700 text-white shadow-sm'
+            ? 'bg-[#1c2826] border border-[#ede7de]/20 text-white'
+            : 'bg-[#1c2826] text-white shadow-sm'
         } ${className}`}
       >
         <span className="tracking-tighter flex items-baseline">
-          <span className="text-white font-semibold leading-none drop-shadow-xs">B</span>
-          <span className="inline-block rounded-full bg-[#00E5FF] shadow-[0_0_10px_#00E5FF] ml-[1px] w-[6px] h-[6px]" />
+          <span className="text-white font-serif font-bold leading-none">B</span>
+          <span className="inline-block rounded-full bg-[#b85438] ml-[1px] w-[5px] h-[5px]" />
         </span>
       </div>
     );
@@ -44,24 +44,24 @@ export default function BrandIcon({
 
   if (variant === 'full') {
     return (
-      <div className={`flex items-center gap-2.5 font-sans font-semibold select-none ${className}`}>
+      <div className={`flex items-center gap-2.5 font-serif font-bold select-none ${className}`}>
         {/* Emblem Icon */}
         <div
-          className={`relative flex items-center justify-center shrink-0 rounded-xl font-sans font-semibold ${currentSize.icon} ${
+          className={`relative flex items-center justify-center shrink-0 rounded-full font-serif font-bold ${currentSize.icon} ${
             darkBg
-              ? 'bg-[#070b14] border border-slate-800/80 shadow-md shadow-black/40 text-white'
-              : 'bg-slate-900 border border-slate-700 text-white shadow-sm'
+              ? 'bg-[#1c2826] border border-[#ede7de]/20 text-white'
+              : 'bg-[#1c2826] text-white shadow-sm'
           }`}
         >
           <span className="tracking-tighter flex items-baseline">
-            <span className="text-white font-semibold leading-none">B</span>
-            <span className="inline-block rounded-full bg-[#00E5FF] shadow-[0_0_10px_#00E5FF] ml-[1px] w-[6px] h-[6px]" />
+            <span className="text-white font-serif font-bold leading-none">B</span>
+            <span className="inline-block rounded-full bg-[#b85438] ml-[1px] w-[5px] h-[5px]" />
           </span>
         </div>
 
         {/* Wordmark */}
-        <span className={`tracking-tight uppercase font-extrabold ${currentSize.text} ${darkBg ? 'text-white' : 'text-slate-900'}`}>
-          BEHOLD<span className="text-[#00E5FF] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)] font-semibold">.</span>
+        <span className={`tracking-tight uppercase font-serif font-bold ${currentSize.text} ${darkBg ? 'text-white' : 'text-[#1c2826]'}`}>
+          BEHOLD<span className="text-[#b85438] font-serif font-bold">.</span>
         </span>
       </div>
     );
@@ -69,8 +69,8 @@ export default function BrandIcon({
 
   // textOnly
   return (
-    <span className={`font-sans font-semibold tracking-tight uppercase ${currentSize.text} ${darkBg ? 'text-white' : 'text-slate-900'} ${className}`}>
-      BEHOLD<span className="text-[#00E5FF] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)] font-semibold">.</span>
+    <span className={`font-serif font-bold tracking-tight uppercase ${currentSize.text} ${darkBg ? 'text-white' : 'text-[#1c2826]'} ${className}`}>
+      BEHOLD<span className="text-[#b85438] font-serif font-bold">.</span>
     </span>
   );
 }

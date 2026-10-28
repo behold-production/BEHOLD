@@ -1,12 +1,12 @@
 .bh-home {
-  --bh-ink: #29382f;
-  --bh-muted: #6d7b72;
-  --bh-teal: #315c4e;
-  --bh-teal-dark: #244b3e;
-  --bh-coral: #d89578;
-  --bh-paper: #f7f7f1;
-  --bh-line: #e3e7de;
-  --bh-sage: #e4e9d9;
+  --bh-ink: #1c2826;
+  --bh-muted: #5c6b66;
+  --bh-teal: #b85438;
+  --bh-teal-dark: #a0462e;
+  --bh-coral: #b85438;
+  --bh-paper: #fbf9f5;
+  --bh-line: #ede7de;
+  --bh-sage: #f2ede4;
   color: var(--bh-ink);
   background: var(--bh-paper);
   font-family: "Poppins", "Noto Sans Malayalam", sans-serif;
@@ -157,21 +157,21 @@
 
 .bh-button {
   min-height: 48px;
-  padding: 0 18px;
+  padding: 0 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 9999px;
   cursor: pointer;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 
 .bh-button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .bh-button-primary {
@@ -181,7 +181,7 @@
 
 .bh-button-primary:hover {
   color: #fff;
-  background: #096e6d;
+  background: var(--bh-teal-dark);
 }
 
 .bh-button-quiet {
@@ -204,7 +204,7 @@
 
 .bh-button-dark:hover {
   color: #fff;
-  background: var(--bh-teal-dark);
+  background: var(--bh-teal);
 }
 
 .bh-steps-section {

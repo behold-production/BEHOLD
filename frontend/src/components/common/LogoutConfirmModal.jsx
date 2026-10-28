@@ -49,13 +49,9 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
 
       {/* Modal Card */}
       <div
-        className="relative z-[100000] w-full max-w-sm rounded-[24px] animate-in zoom-in-95 duration-300 ease-out bg-white/95 backdrop-blur-2xl border border-white/60 text-[#0f172a] overflow-hidden shadow-[0_24px_48px_-12px_rgba(15,23,42,0.3)]"
+        className="relative z-[100000] w-full max-w-sm rounded-3xl animate-in zoom-in-95 duration-300 ease-out bg-[#fbf9f5] border border-[#ede7de] text-[#1c2826] overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Decorative background accent */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#00e5ff]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-
         {/* Close button - Optimized for Touch & Mobile Tap Target */}
         <button
           type="button"
@@ -65,47 +61,47 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             handleClose(e);
           }}
           aria-label="Close sign out confirmation"
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-600 hover:text-slate-900 transition-all cursor-pointer border-none z-30 touch-manipulation active:scale-95 shadow-2xs"
+          className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-[#ede7de] text-[#5c6b66] hover:text-[#1c2826] transition-colors cursor-pointer border border-[#ede7de] z-30"
         >
-          <X className="w-5 h-5 pointer-events-none" />
+          <X className="w-4 h-4 pointer-events-none" />
         </button>
 
         <div className="p-8 text-center space-y-6 relative z-10">
           {/* Animated warning icon */}
-          <div className="relative mx-auto w-16 h-16 flex items-center justify-center group">
-            <div className="absolute inset-0 bg-[#0f172a] rounded-2xl rotate-3 transition-transform duration-300 group-hover:rotate-6 shadow-lg shadow-[#0f172a]/20" />
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-2xl -rotate-3 transition-transform duration-300 group-hover:rotate-0" />
-            <AlertTriangle className="w-7 h-7 text-[#00e5ff] relative z-10 drop-shadow-[0_0_10px_rgba(0,229,255,0.6)] animate-pulse" />
+          <div className="mx-auto w-16 h-16 rounded-full bg-[#b85438]/10 border border-[#b85438]/20 flex items-center justify-center text-[#b85438]">
+            <AlertTriangle className="w-7 h-7" />
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#b85438] block">
+              Session Security
+            </span>
             <h3
               id="logout-confirm-title"
-              className="text-2xl font-semibold text-[#0f172a] font-sans"
+              className="text-2xl sm:text-3xl font-serif font-bold text-[#1c2826]"
             >
               Sign Out
             </h3>
-            <p className="text-sm text-surface-500 font-medium leading-relaxed px-1">
-              You are about to end your current session. You will need to sign in again to access your dashboard.
+            <p className="text-xs text-[#5c6b66] font-normal leading-relaxed px-1">
+              You are about to end your current session. You can sign back in anytime with your phone number.
             </p>
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-col gap-3 pt-4">
+          <div className="flex flex-col gap-3 pt-2">
             <button
               type="button"
               onClick={handleConfirm}
-              className="group relative w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#0f172a] hover:bg-[#1e293b] text-white font-semibold text-sm rounded-xl transition-all cursor-pointer border-none shadow-lg shadow-[#0f172a]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0f172a]/30 overflow-hidden"
+              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#1c2826] hover:bg-rose-700 text-white font-medium text-sm rounded-full transition-all cursor-pointer border-none shadow-md"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-              <LogOut className="w-4 h-4 text-[#00e5ff]" />
+              <LogOut className="w-4 h-4 text-white" />
               <span>Yes, Sign Out</span>
             </button>
 
             <button
               type="button"
               onClick={handleClose}
-              className="w-full py-3.5 bg-surface-100 hover:bg-surface-200 text-[#0f172a] font-semibold text-sm rounded-xl transition-all border-none cursor-pointer"
+              className="w-full py-3.5 bg-white hover:bg-[#ede7de]/50 text-[#1c2826] font-medium text-sm rounded-full transition-all border border-[#ede7de] cursor-pointer"
             >
               Stay Signed In
             </button>

@@ -218,55 +218,58 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
       {/* Modal Container */}
       <div className="bh-profile-overlay fixed inset-0 z-[210] flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain">
         <div 
-          className="bh-profile-dialog relative w-full max-w-md my-auto bg-white rounded-2xl shadow-2xl animate-modal-in border border-zinc-200 flex flex-col max-h-[92vh] overflow-hidden text-left"
+          className="bh-profile-dialog relative w-full max-w-md my-auto bg-[#fbf9f5] rounded-3xl shadow-2xl animate-modal-in border border-[#ede7de] flex flex-col max-h-[92vh] overflow-hidden text-left"
           onClick={(e) => e.stopPropagation()}
         >
           
           {/* Header */}
-          <div className="relative p-5 sm:p-6 border-b border-surface-200 text-center bg-gradient-to-b from-slate-50 to-white shrink-0">
+          <div className="relative p-6 sm:p-7 border-b border-[#ede7de] text-center bg-[#fbf9f5] shrink-0">
             <button
               type="button"
               onClick={handleCloseModal}
               aria-label="Close profile modal"
-              className="absolute right-3.5 top-3.5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition-colors flex items-center justify-center border-none cursor-pointer"
+              className="absolute right-4 top-4 w-9 h-9 rounded-full bg-white/80 hover:bg-[#ede7de] text-[#1c2826] transition-colors flex items-center justify-center border border-[#ede7de] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <h2 className="text-lg sm:text-xl font-sans font-bold tracking-tight text-[#0f172a] uppercase pr-6">
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-[#b85438] mb-1.5 block">
+              Personalized Care
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-[#1c2826]">
               Complete Your Profile
             </h2>
-            <p className="text-xs text-surface-500 font-normal mt-1.5 leading-relaxed max-w-xs mx-auto">
+            <p className="text-xs text-[#5c6b66] font-normal mt-1.5 leading-relaxed max-w-xs mx-auto">
               Please enter your details to personalize your experience and confirm your sessions.
             </p>
-            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-0.5 bg-amber-50 border border-amber-200/60 rounded-full text-[11px] text-amber-800 font-medium">
-              <span className="text-rose-500 font-bold text-xs">*</span>
-              <span>Fields marked with red star are mandatory</span>
+            <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-[#ede7de]/60 rounded-full text-[11px] text-[#5c6b66] font-medium">
+              <span className="text-[#b85438] font-bold text-xs">*</span>
+              <span>Fields marked with star are mandatory</span>
             </div>
           </div>
 
           {/* Form with clean internal scrolling */}
           <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
-            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1 bg-[#fbf9f5]">
             
             {/* Full Name - MANDATORY */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-zinc-700 flex items-center">
+              <label className="text-xs font-semibold text-[#1c2826] flex items-center">
                 <span>Full Name</span>
-                <span className="text-rose-500 font-bold ml-1 text-sm leading-none">*</span>
+                <span className="text-[#b85438] font-bold ml-1 text-sm leading-none">*</span>
               </label>
               <div className="relative">
-                <User className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${errors.name ? 'text-rose-400' : 'text-zinc-400'}`} />
+                <User className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${errors.name ? 'text-rose-400' : 'text-[#5c6b66]'}`} />
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="e.g. Rahul Sharma"
-                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-11 pr-4 py-3 bg-white border rounded-full text-sm text-[#1c2826] outline-none transition-all font-medium ${
                     errors.name 
-                      ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
-                      : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
+                      ? 'border-rose-300 ring-2 ring-rose-200 bg-rose-50/20 focus:border-rose-500' 
+                      : 'border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
                   }`}
                 />
               </div>
@@ -280,22 +283,22 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
 
             {/* Email Address - MANDATORY */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-zinc-700 flex items-center">
+              <label className="text-xs font-semibold text-[#1c2826] flex items-center">
                 <span>Email Address</span>
-                <span className="text-rose-500 font-bold ml-1 text-sm leading-none">*</span>
+                <span className="text-[#b85438] font-bold ml-1 text-sm leading-none">*</span>
               </label>
               <div className="relative">
-                <Mail className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${errors.email ? 'text-rose-400' : 'text-zinc-400'}`} />
+                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${errors.email ? 'text-rose-400' : 'text-[#5c6b66]'}`} />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="you@example.com"
-                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-11 pr-4 py-3 bg-white border rounded-full text-sm text-[#1c2826] outline-none transition-all font-medium ${
                     errors.email 
-                      ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
-                      : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
+                      ? 'border-rose-300 ring-2 ring-rose-200 bg-rose-50/20 focus:border-rose-500' 
+                      : 'border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
                   }`}
                 />
               </div>
@@ -305,18 +308,18 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                   <span>{errors.email}</span>
                 </p>
               ) : (
-                <p className="text-[11px] text-zinc-400">Used for session links, Google Meet invites and booking receipts.</p>
+                <p className="text-[11px] text-[#5c6b66]">Used for session links, calendar invites and booking receipts.</p>
               )}
             </div>
 
             {/* Age - OPTIONAL */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-zinc-700 flex items-center justify-between">
+              <label className="text-xs font-semibold text-[#1c2826] flex items-center justify-between">
                 <span>Age</span>
-                <span className="text-[11px] font-normal text-zinc-400 font-sans">(Optional)</span>
+                <span className="text-[11px] font-normal text-[#5c6b66]">(Optional)</span>
               </label>
               <div className="relative">
-                <Calendar className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${errors.age ? 'text-rose-400' : 'text-zinc-400'}`} />
+                <Calendar className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${errors.age ? 'text-rose-400' : 'text-[#5c6b66]'}`} />
                 <input
                   type="number"
                   name="age"
@@ -325,10 +328,10 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                   placeholder="e.g. 24"
                   min="5"
                   max="120"
-                  className={`w-full pl-10 pr-4 py-2.5 sm:py-3 bg-zinc-50 border rounded-xl text-sm text-zinc-900 focus:bg-white focus:ring-2 outline-none transition-all font-medium ${
+                  className={`w-full pl-11 pr-4 py-3 bg-white border rounded-full text-sm text-[#1c2826] outline-none transition-all font-medium ${
                     errors.age 
-                      ? 'border-rose-300 ring-1 ring-rose-200 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-200' 
-                      : 'border-zinc-200 focus:border-brand focus:ring-brand/20'
+                      ? 'border-rose-300 ring-2 ring-rose-200 bg-rose-50/20 focus:border-rose-500' 
+                      : 'border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
                   }`}
                 />
               </div>
@@ -342,13 +345,13 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
 
             {/* How have you been feeling lately? - OPTIONAL */}
             <div className="space-y-2 pt-1">
-              <label className="text-xs font-semibold text-zinc-700 flex items-center justify-between">
+              <label className="text-xs font-semibold text-[#1c2826] flex items-center justify-between">
                 <span>How have you been feeling lately?</span>
-                <span className="text-[11px] font-normal text-zinc-400 font-sans">(Optional)</span>
+                <span className="text-[11px] font-normal text-[#5c6b66]">(Optional)</span>
               </label>
               
               {/* Quick Select Pills */}
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {FEELING_OPTIONS.map((opt) => {
                   const selected = formData.feelingLately === opt;
                   return (
@@ -356,10 +359,10 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                       key={opt}
                       type="button"
                       onClick={() => handleSelectFeeling(selected ? '' : opt)}
-                      className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all cursor-pointer ${
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer ${
                         selected
-                          ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff]'
-                          : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                          ? 'bg-[#b85438] text-white border-[#b85438] shadow-sm'
+                          : 'bg-white text-[#1c2826] border-[#ede7de] hover:border-[#b85438]'
                       }`}
                     >
                       {opt}
@@ -370,33 +373,33 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
 
               {/* Custom Input */}
               <div className="relative pt-1">
-                <Heart className="absolute left-3 top-3.5 w-4 h-4 text-zinc-400" />
+                <Heart className="absolute left-4 top-4 w-4 h-4 text-[#5c6b66]" />
                 <input
                   type="text"
                   name="feelingLately"
                   value={formData.feelingLately}
                   onChange={handleInputChange}
                   placeholder="Or describe briefly in your own words..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:bg-white focus:border-brand outline-none font-medium"
+                  className="w-full pl-11 pr-4 py-2.5 bg-white border border-[#ede7de] rounded-full text-xs text-[#1c2826] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10 outline-none font-medium"
                 />
               </div>
             </div>
 
             {/* Prior Therapy Experience - OPTIONAL */}
-            <div className="pt-3 border-t border-zinc-100 space-y-3">
+            <div className="pt-3 border-t border-[#ede7de] space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-zinc-800 uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-[#1c2826] uppercase tracking-wider">
                   Prior Therapy Experience
                 </h3>
-                <span className="text-[11px] font-normal text-zinc-400 font-sans">(Optional)</span>
+                <span className="text-[11px] font-normal text-[#5c6b66]">(Optional)</span>
               </div>
 
               {/* 1. Have you had any prior therapy experience? */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-600 block">
+                <label className="text-xs font-medium text-[#5c6b66] block">
                   1. Have you had any prior therapy experience?
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-2.5">
                   {['Yes', 'No'].map((opt) => {
                     const selected = formData.hadPriorTherapy === opt;
                     return (
@@ -404,10 +407,10 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                         key={opt}
                         type="button"
                         onClick={() => handleSelectPriorTherapy(opt)}
-                        className={`flex-1 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                        className={`flex-1 py-2.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
                           selected
-                            ? 'bg-[#0f172a] text-[#00e5ff] border-[#00e5ff] shadow-sm'
-                            : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                            ? 'bg-[#1c2826] text-white border-[#1c2826] shadow-sm'
+                            : 'bg-white text-[#1c2826] border-[#ede7de] hover:border-[#1c2826]'
                         }`}
                       >
                         {opt}
@@ -420,7 +423,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
               {/* 2. If yes, please tell us more about it */}
               {formData.hadPriorTherapy === 'Yes' && (
                 <div className="space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
-                  <label className="text-xs font-medium text-zinc-600 block">
+                  <label className="text-xs font-medium text-[#5c6b66] block">
                     2. If yes, please tell us more about it
                   </label>
                   <textarea
@@ -429,7 +432,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
                     value={formData.priorTherapyDetails}
                     onChange={handleInputChange}
                     placeholder="Tell us a little more about your prior therapy experience..."
-                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-900 focus:bg-white focus:border-brand outline-none font-medium resize-none"
+                    className="w-full p-3.5 bg-white border border-[#ede7de] rounded-2xl text-xs text-[#1c2826] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10 outline-none font-medium resize-none"
                   />
                 </div>
               )}
@@ -438,11 +441,11 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
             </div>
 
             {/* Submit & Dismiss Row */}
-            <div className="p-4 sm:p-5 border-t border-zinc-100 bg-white shrink-0 space-y-2">
+            <div className="p-5 border-t border-[#ede7de] bg-[#fbf9f5] shrink-0 space-y-2.5">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 sm:py-3.5 min-h-[46px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold hover-scale-btn text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-medium text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save & Continue'}
               </button>
@@ -450,7 +453,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
               <button
                 type="button"
                 onClick={handleCloseModal}
-                className="w-full py-2 text-xs font-medium text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer bg-transparent border-none text-center"
+                className="w-full py-2 text-xs font-medium text-[#5c6b66] hover:text-[#1c2826] transition-colors cursor-pointer bg-transparent border-none text-center"
               >
                 Skip for now & continue
               </button>

@@ -348,35 +348,36 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
   return createPortal(
     <>
-      <div className="bh-booking-auth-backdrop fixed inset-0 z-[120] bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
+      <div className="bh-booking-auth-backdrop fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm animate-in fade-in duration-200" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
       <div className="bh-booking-auth-overlay fixed inset-0 z-[125] flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="bh-booking-auth-dialog relative w-full max-w-full sm:max-w-md bg-white rounded-t-[28px] sm:rounded-2xl shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-slate-100 flex flex-col max-h-[88vh] sm:max-h-[85vh] pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
+        <div className="bh-booking-auth-dialog relative w-full max-w-full sm:max-w-md bg-[#fbf9f5] rounded-t-[32px] sm:rounded-3xl shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-[#ede7de] flex flex-col max-h-[88vh] sm:max-h-[85vh] pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
 
           {/* Mobile Bottom Sheet Pull Indicator */}
-          <div className="w-12 h-1.5 bg-slate-300/80 rounded-full mx-auto mt-3 mb-0 sm:hidden shrink-0" />
+          <div className="w-12 h-1.5 bg-[#ede7de] rounded-full mx-auto mt-3 mb-0 sm:hidden shrink-0" />
 
           {/* Header */}
-          <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-surface-200">
+          <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-[#ede7de]">
             <div className="flex items-center gap-3 min-w-0">
               {authStep === 'otp' && (
                 <button
                   type="button"
                   onClick={handleModalBack}
-                  className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 text-[#0f172a] rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
+                  className="w-9 h-9 shrink-0 bg-white hover:bg-[#ede7de] text-[#1c2826] rounded-full transition-colors cursor-pointer flex items-center justify-center border border-[#ede7de]"
                   aria-label="Back"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
               )}
               <div className="min-w-0">
-                <h2 id="booking-auth-modal-title" className="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-[#0f172a]">
+                <h2 id="booking-auth-modal-title" className="font-serif-hero text-2xl sm:text-3xl font-bold tracking-tight text-[#1c2826]">
                   {authStep === 'details'
                     ? 'Enter Your Details'
                     : authStep === 'otp'
                     ? 'Verify OTP'
                     : 'Verify WhatsApp'}
+                  <span className="text-[#b85438]">.</span>
                 </h2>
-                <p className="text-xs text-surface-500 font-normal mt-1">
+                <p className="text-xs text-[#5c6b66] font-normal mt-1 leading-relaxed">
                   {authStep === 'details'
                     ? 'Please enter your name and email to link and confirm your booking.'
                     : authStep === 'otp'
@@ -411,23 +412,23 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           {authStep === 'details' ? (
             /* Step 3: Mandatory Details Entry */
             <form onSubmit={handleDetailsSubmit} className="p-6 space-y-4">
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0">
+              <div className="bg-[#f0ebe1] border border-[#ede7de] rounded-2xl p-3.5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#b85438]/10 flex items-center justify-center text-[#b85438] shrink-0">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-slate-900">Phone Verified: +91 {parseIndianPhone(otpPhone).phone10 || otpPhone}</p>
-                  <p className="text-[11px] text-slate-500">Only the details you enter will be saved for this booking.</p>
+                  <p className="text-xs font-semibold text-[#1c2826]">Phone Verified: +91 {parseIndianPhone(otpPhone).phone10 || otpPhone}</p>
+                  <p className="text-[11px] text-[#5c6b66]">Only the details you enter will be saved for this booking.</p>
                 </div>
               </div>
 
               {/* Full Name */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-700 block">
+                <label className="text-xs font-semibold text-[#1c2826] block">
                   Full Name <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <User className="absolute left-3.5 w-4 h-4 text-zinc-400" />
+                  <User className="absolute left-4 w-4 h-4 text-[#5c6b66]" />
                   <input
                     type="text"
                     value={detailsForm.name}
@@ -437,10 +438,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     }}
                     placeholder="e.g. Rahul Sharma"
                     autoFocus
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium text-zinc-900 outline-none transition border ${
+                    className={`w-full pl-11 pr-4 py-3 rounded-full text-sm font-medium text-[#1c2826] outline-none transition border ${
                       fieldErrors.name
                         ? 'bg-rose-50/40 border-rose-400'
-                        : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'
+                        : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
                     }`}
                   />
                 </div>
@@ -449,11 +450,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
               {/* Email Address */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-700 block">
+                <label className="text-xs font-semibold text-[#1c2826] block">
                   Email Address <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <Mail className="absolute left-3.5 w-4 h-4 text-zinc-400" />
+                  <Mail className="absolute left-4 w-4 h-4 text-[#5c6b66]" />
                   <input
                     type="email"
                     value={detailsForm.email}
@@ -462,15 +463,15 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: null }));
                     }}
                     placeholder="you@example.com"
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium text-zinc-900 outline-none transition border ${
+                    className={`w-full pl-11 pr-4 py-3 rounded-full text-sm font-medium text-[#1c2826] outline-none transition border ${
                       fieldErrors.email
                         ? 'bg-rose-50/40 border-rose-400'
-                        : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'
+                        : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
                     }`}
                   />
                 </div>
                 {fieldErrors.email && <p className="text-xs font-medium text-rose-500">{fieldErrors.email}</p>}
-                <p className="text-[11px] text-zinc-400">Used for session calendar invites & confirmation receipts.</p>
+                <p className="text-[11px] text-[#5c6b66]">Used for session calendar invites & confirmation receipts.</p>
               </div>
 
               {/* Submit button */}
@@ -478,7 +479,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm"
+                  className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Save Details & Continue to Booking</span>}
                 </button>
@@ -491,10 +492,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               {/* Phone input */}
               {authStep === 'phone' && (
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-zinc-500 block">WhatsApp Phone Number</label>
+                  <label className="text-xs font-semibold text-[#1c2826] block">WhatsApp Phone Number</label>
                   <div className="relative flex items-center">
-                    <Phone className="absolute left-3 w-4 h-4 text-zinc-400" />
-                    <span className="absolute left-9 text-sm font-semibold text-zinc-700">+91</span>
+                    <Phone className="absolute left-4 w-4 h-4 text-[#5c6b66]" />
+                    <span className="absolute left-10 text-sm font-semibold text-[#1c2826]">+91</span>
                     <input
                       type="tel"
                       value={otpPhone}
@@ -510,7 +511,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       maxLength={10}
                       placeholder="10-digit number"
                       autoFocus
-                      className={`w-full pl-16 pr-4 py-3 rounded-lg text-sm text-zinc-900 outline-none transition-all border ${fieldErrors.otpPhone ? 'bg-rose-50/40 border-rose-400' : 'bg-zinc-50 border-zinc-200 focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/20'}`}
+                      className={`w-full pl-18 pr-4 py-3 rounded-full text-sm text-[#1c2826] outline-none transition-all border ${fieldErrors.otpPhone ? 'bg-rose-50/40 border-rose-400' : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'}`}
                     />
                   </div>
                   {fieldErrors.otpPhone && <p className="text-xs font-medium text-rose-500">{fieldErrors.otpPhone}</p>}
@@ -521,7 +522,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               {authStep === 'otp' && (
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-zinc-500 block">6-Digit Verification Code</label>
+                    <label className="text-xs font-semibold text-[#1c2826] block">6-Digit Verification Code</label>
                     <OtpPinInput
                       value={otpCode}
                       onChange={(code) => {
@@ -536,29 +537,29 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
                   {/* Resend row */}
                   <div className="flex items-center justify-between px-0.5">
-                    <span className="text-xs text-zinc-400">Didn't receive the code?</span>
+                    <span className="text-xs text-[#5c6b66]">Didn't receive the code?</span>
                     {canResend ? (
                       <button
                         type="button"
                         onClick={handleResend}
                         disabled={isResending}
-                        className="flex items-center gap-1.5 text-xs font-semibold text-brand hover:text-brand/80 transition-colors cursor-pointer border-none bg-transparent disabled:opacity-50"
+                        className="flex items-center gap-1.5 text-xs font-semibold text-[#b85438] hover:text-[#a0462e] transition-colors cursor-pointer border-none bg-transparent disabled:opacity-50"
                       >
                         <RefreshCw className={`w-3.5 h-3.5 ${isResending ? 'animate-spin' : ''}`} />
                         Resend OTP
                       </button>
                     ) : (
-                      <span className="text-xs font-semibold text-zinc-500 tabular-nums">
+                      <span className="text-xs font-semibold text-[#5c6b66] tabular-nums">
                         Resend in{' '}
-                        <span className="text-brand font-semibold">{formatTimer(resendTimer)}</span>
+                        <span className="text-[#b85438] font-semibold">{formatTimer(resendTimer)}</span>
                       </span>
                     )}
                   </div>
 
                   {/* Progress bar */}
-                  <div className="w-full h-0.5 bg-zinc-100 rounded-full overflow-hidden">
+                  <div className="w-full h-1 bg-[#ede7de] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-brand rounded-full transition-all duration-1000 ease-linear"
+                      className="h-full bg-[#b85438] rounded-full transition-all duration-1000 ease-linear"
                       style={{ width: `${(resendTimer / OTP_RESEND_SECONDS) * 100}%` }}
                     />
                   </div>
@@ -567,7 +568,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
               {/* Submit button */}
               <div className="pt-2">
-                <button type="submit" disabled={isLoading} className="w-full py-3.5 min-h-[48px] bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-sm">
+                <button type="submit" disabled={isLoading} className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md">
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
@@ -587,7 +588,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       clearInterval(timerRef.current);
                       setResendTimer(0);
                     }}
-                    className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer bg-transparent border-none"
+                    className="text-xs text-[#5c6b66] hover:text-[#1c2826] transition-colors cursor-pointer bg-transparent border-none"
                   >
                     ← Change phone number
                   </button>

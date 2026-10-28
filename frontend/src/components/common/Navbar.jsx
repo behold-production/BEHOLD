@@ -329,14 +329,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
             }`}
           >
             <div>
-              <div className="flex items-center justify-between pb-6 border-b border-slate-200">
-                <span className="text-xl font-black font-sans text-slate-900 tracking-tight">
+              <div className="flex items-center justify-between pb-6 border-b border-[#ede7de]">
+                <span className="text-2xl font-serif font-bold text-[#1c2826] tracking-tight">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
-                  <span className="text-[#00e5ff] font-black">.</span>
+                  <span className="text-[#b85438] font-bold">.</span>
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-slate-500 hover:text-slate-900 transition rounded-full hover:bg-slate-100 border-none bg-transparent cursor-pointer"
+                  className="p-2 text-[#5c6b66] hover:text-[#1c2826] transition rounded-full hover:bg-[#ede7de]/50 border-none bg-transparent cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -347,7 +347,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                   <button
                     key={label}
                     onClick={action}
-                    className="text-left py-3 px-4 rounded-xl text-sm font-semibold text-slate-700 hover:text-[#00e5ff] hover:bg-slate-50 transition border-none bg-transparent cursor-pointer"
+                    className="text-left py-3 px-4 rounded-full text-sm font-medium text-[#1c2826] hover:text-[#b85438] hover:bg-[#ede7de]/40 transition border-none bg-transparent cursor-pointer"
                   >
                     {label}
                   </button>
@@ -355,21 +355,21 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-200 flex flex-col gap-3">
+            <div className="pt-6 border-t border-[#ede7de] flex flex-col gap-3">
               {user && (
                 <button
                   onClick={handleProfileClick}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-xl transition-all border border-[#00e5ff]/40 cursor-pointer shadow-xs text-center flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-medium text-sm rounded-full transition-all cursor-pointer shadow-md text-center flex items-center justify-center gap-2 border-none"
                 >
-                  <User className="w-4 h-4 text-[#00e5ff]" />
+                  <User className="w-4 h-4 text-white" />
                   <span>My Profile / Dashboard</span>
                 </button>
               )}
               <button
                 onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
-                className={`w-full py-3 font-semibold text-sm rounded-xl transition-all cursor-pointer text-center ${user
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200'
-                  : 'bg-[#00e5ff] hover:bg-[#00b2be] text-slate-900 border border-transparent shadow-xs'
+                className={`w-full py-3.5 font-medium text-sm rounded-full transition-all cursor-pointer text-center border-none shadow-md ${user
+                  ? 'bg-white hover:bg-[#ede7de]/40 text-[#1c2826] border border-[#ede7de]'
+                  : 'bg-[#b85438] hover:bg-[#a0462e] text-white'
                   }`}
               >
                 Book Session
@@ -377,7 +377,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {user ? (
                 <button
                   onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                  className="w-full py-2.5 border border-rose-200 text-rose-600 font-semibold text-sm rounded-xl transition bg-white hover:bg-rose-50 text-center cursor-pointer"
+                  className="w-full py-3 border border-rose-200 text-rose-600 font-medium text-sm rounded-full transition bg-white hover:bg-rose-50 text-center cursor-pointer"
                 >
                   Sign Out
                 </button>
