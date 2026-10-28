@@ -56,6 +56,7 @@ const ResetPassword = lazyWithRetry(() => import('../features/auth/ResetPassword
 const BlogList = lazyWithRetry(() => import('../features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('../features/blog/BlogPostDetail'));
 const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
+const PsychologistsPage = lazyWithRetry(() => import('../features/counsellor/PsychologistsPage'));
 const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingPage'));
 const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
@@ -747,9 +748,18 @@ export default function App() {
           <Route path="/services" element={<Navigate to="/booking" replace />} />
           <Route path="/service" element={<Navigate to="/booking" replace />} />
           <Route path="/counselling" element={<Navigate to="/booking" replace />} />
-          <Route path="/counsellors" element={<Navigate to="/booking" replace />} />
-          <Route path="/therapists" element={<Navigate to="/booking" replace />} />
-          <Route path="/advisors" element={<Navigate to="/booking" replace />} />
+
+          {/* Dedicated Psychologists & Counsellors Full Grid Directory */}
+          <Route path="/psychologists" element={
+            <PsychologistsPage
+              onBookTherapist={handleBookTherapist}
+              siteSettings={siteSettings}
+            />
+          } />
+          <Route path="/counsellors" element={<Navigate to="/psychologists" replace />} />
+          <Route path="/therapists" element={<Navigate to="/psychologists" replace />} />
+          <Route path="/advisors" element={<Navigate to="/psychologists" replace />} />
+          <Route path="/experts" element={<Navigate to="/psychologists" replace />} />
 
 
 
