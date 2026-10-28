@@ -66,15 +66,15 @@ export default function BookingStepsSection({ navigateToSection }) {
         </div>
 
         {/* 4 Vertical Stacked Program Cards */}
-        <div className="flex flex-col gap-4 sm:gap-5">
+        <div className="flex flex-col gap-3.5 sm:gap-4">
           {programs.map((program) => (
             <article
               key={program.id}
               onClick={handleClick}
-              className="group bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-[#ede7de] hover:border-[#b85438]/40 shadow-xs hover:shadow-md transition-all duration-300 flex items-center gap-4 sm:gap-6 cursor-pointer"
+              className="group bg-white rounded-md p-4 sm:p-5 border border-[#ede7de] hover:border-[#b85438]/50 shadow-xs hover:shadow-sm transition-all duration-300 flex items-center gap-4 sm:gap-6 cursor-pointer"
             >
               {/* Thumbnail Image */}
-              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-xl sm:rounded-2xl overflow-hidden shrink-0 bg-[#f4eee6]">
+              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-sm overflow-hidden shrink-0 bg-[#f4eee6]">
                 <img
                   src={program.image}
                   alt={program.title}
@@ -97,7 +97,7 @@ export default function BookingStepsSection({ navigateToSection }) {
               </div>
 
               {/* Arrow Indicator */}
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#fbf9f5] group-hover:bg-[#b85438] text-[#1c2826] group-hover:text-white flex items-center justify-center shrink-0 transition-colors duration-300 border border-[#ede7de]">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-md bg-[#fbf9f5] group-hover:bg-[#1c2826] text-[#1c2826] group-hover:text-white flex items-center justify-center shrink-0 transition-colors duration-300 border border-[#ede7de]">
                 <ArrowRight className="w-4 h-4 stroke-[2]" />
               </div>
             </article>

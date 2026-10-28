@@ -304,8 +304,8 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
             </p>
           </div>
 
-          {/* Interactive Toolbar matching mockup */}
-          <div className="bg-white rounded-3xl border border-[#ede7de] shadow-xs p-5 sm:p-6 mb-8">
+          {/* Interactive Toolbar matching modern professional layout */}
+          <div className="bg-white rounded-md border border-[#ede7de] shadow-xs p-5 sm:p-6 mb-8">
             {/* Top Row: Search & Dropdowns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 items-center">
               {/* Search */}
@@ -316,7 +316,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by psychologist name, concern, or bio..."
-                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-full pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] placeholder-slate-400 outline-none focus:border-[#b85438] focus:bg-white focus:ring-4 focus:ring-[#b85438]/10 transition-all font-medium"
+                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] placeholder-slate-400 outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
                 />
                 {searchQuery && (
                   <button
@@ -335,7 +335,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                 <select
                   value={selectedMode}
                   onChange={(e) => setSelectedMode(e.target.value)}
-                  className="w-full appearance-none bg-[#fbf9f5] border border-[#ede7de] rounded-full pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] outline-none focus:border-[#b85438] focus:bg-white focus:ring-4 focus:ring-[#b85438]/10 transition-all font-medium cursor-pointer"
+                  className="w-full appearance-none bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium cursor-pointer"
                 >
                   <option value="">Any Consultation Mode</option>
                   {availableModeLabels.map((mode) => (
@@ -351,7 +351,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full appearance-none bg-[#fbf9f5] border border-[#ede7de] rounded-full pl-10 pr-8 py-2.5 text-xs sm:text-sm text-[#1c2826] outline-none focus:border-[#b85438] focus:bg-white focus:ring-4 focus:ring-[#b85438]/10 transition-all font-medium cursor-pointer"
+                  className="w-full appearance-none bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-8 py-2.5 text-xs sm:text-sm text-[#1c2826] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium cursor-pointer"
                 >
                   <option value="RECOMMENDED">Sort: Recommended</option>
                   <option value="FEE_LOW">Fee: Low to High</option>
@@ -372,7 +372,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       key={cat}
                       type="button"
                       onClick={() => setSelectedSpecialty(cat)}
-                      className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0 border ${
+                      className={`px-3.5 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0 border ${
                         active
                           ? 'bg-[#b85438] text-white border-[#b85438] shadow-xs'
                           : 'bg-[#fbf9f5] hover:bg-white text-slate-700 border-[#ede7de] hover:text-[#1c2826]'
@@ -418,20 +418,20 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
               {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="bg-white rounded-3xl border border-[#ede7de] p-5 flex flex-col space-y-4 shadow-xs">
-                  <div className="h-52 w-full rounded-2xl bg-slate-100 animate-pulse" />
+                <div key={item} className="bg-white rounded-md border border-[#ede7de] p-5 flex flex-col space-y-4 shadow-xs">
+                  <div className="h-52 w-full rounded-sm bg-slate-100 animate-pulse" />
                   <div className="space-y-2">
-                    <div className="h-4 w-1/3 bg-slate-100 rounded-full animate-pulse" />
-                    <div className="h-6 w-3/4 bg-slate-100 rounded-full animate-pulse" />
-                    <div className="h-3 w-1/2 bg-slate-100 rounded-full animate-pulse" />
+                    <div className="h-4 w-1/3 bg-slate-100 rounded-sm animate-pulse" />
+                    <div className="h-6 w-3/4 bg-slate-100 rounded-sm animate-pulse" />
+                    <div className="h-3 w-1/2 bg-slate-100 rounded-sm animate-pulse" />
                   </div>
-                  <div className="h-10 w-full bg-slate-100 rounded-full mt-auto animate-pulse" />
+                  <div className="h-10 w-full bg-slate-100 rounded-sm mt-auto animate-pulse" />
                 </div>
               ))}
             </div>
           ) : filteredAdvisors.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-[#ede7de] shadow-xs max-w-lg mx-auto p-10">
-              <div className="w-14 h-14 bg-[#faf5f0] text-[#b85438] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#eedfd0]">
+            <div className="text-center py-20 bg-white rounded-md border border-[#ede7de] shadow-xs max-w-lg mx-auto p-10">
+              <div className="w-14 h-14 bg-[#faf5f0] text-[#b85438] rounded-sm flex items-center justify-center mx-auto mb-4 border border-[#eedfd0]">
                 <UserRound className="w-6 h-6" />
               </div>
               <h3 className="font-serif-hero text-xl font-bold text-[#1c2826] mb-2">No Psychologists Found</h3>
@@ -441,7 +441,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
               <button
                 type="button"
                 onClick={handleClearFilters}
-                className="px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-semibold rounded-full transition-all cursor-pointer border-none shadow-xs"
+                className="px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-semibold rounded-md transition-all cursor-pointer border-none shadow-xs"
               >
                 Clear All Filters
               </button>
@@ -456,7 +456,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                 return (
                   <article
                     key={advisor.id}
-                    className="group bg-white rounded-3xl border border-[#ede7de] hover:border-[#b85438]/40 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden h-full relative"
+                    className="group bg-white rounded-md border border-[#ede7de] hover:border-[#b85438]/40 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden h-full relative"
                   >
                     {/* Photo Header */}
                     <div
@@ -483,7 +483,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
                       {/* Next Available Pill (Top-Left) */}
                       <div className="absolute top-3.5 left-3.5 z-10">
-                        <span className="bg-white/95 backdrop-blur-md text-slate-800 text-[11px] font-semibold px-3 py-1 rounded-full shadow-xs border border-white/80 flex items-center gap-1.5">
+                        <span className="bg-white/95 backdrop-blur-md text-slate-800 text-[11px] font-semibold px-3 py-1 rounded-sm shadow-xs border border-white/80 flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                           <span>{nextAvailable === 'Unavailable' ? 'Check slots' : `Next: ${nextAvailable}`}</span>
                         </span>
@@ -491,7 +491,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
                       {/* Verified Badge (Top-Right) */}
                       <div className="absolute top-3.5 right-3.5 z-10">
-                        <span className="bg-[#1c2826]/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                        <span className="bg-[#1c2826]/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-wider flex items-center gap-1 shadow-xs">
                           <BadgeCheck className="w-3.5 h-3.5 text-[#b85438]" />
                           <span>Verified</span>
                         </span>
@@ -500,7 +500,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       {/* Rating on bottom right */}
                       {advisor.rating && (
                         <div className="absolute bottom-3 right-3.5 z-10">
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-white/95 text-slate-900 px-2.5 py-0.5 rounded-full shadow-xs">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-white/95 text-slate-900 px-2.5 py-0.5 rounded-sm shadow-xs">
                             <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
                             <span>{advisor.rating}</span>
                           </span>
@@ -535,7 +535,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                             {advisor.specialties.slice(0, 3).map((specialty) => (
                               <span
                                 key={specialty}
-                                className="text-[11px] font-medium text-[#5c6b66] bg-[#fbf9f5] border border-[#ede7de] px-2.5 py-0.5 rounded-full"
+                                className="text-[11px] font-medium text-[#5c6b66] bg-[#fbf9f5] border border-[#ede7de] px-2.5 py-0.5 rounded-sm"
                               >
                                 {specialty}
                               </span>
@@ -588,14 +588,14 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                             type="button"
                             onClick={() => handleAdvisorClick(advisor.id)}
                             title="View clinical profile"
-                            className="px-3.5 py-2 rounded-full text-xs font-semibold text-slate-700 bg-[#fbf9f5] hover:bg-[#ede7de] transition-colors cursor-pointer border border-[#ede7de]"
+                            className="px-3.5 py-2 rounded-md text-xs font-semibold text-slate-700 bg-[#fbf9f5] hover:bg-[#ede7de] transition-colors cursor-pointer border border-[#ede7de]"
                           >
                             Profile
                           </button>
                           <button
                             type="button"
                             onClick={() => onBookTherapist?.(advisor.id)}
-                            className="px-4.5 py-2 rounded-full text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-all duration-200 cursor-pointer border-none shadow-2xs inline-flex items-center gap-1.5"
+                            className="px-4.5 py-2 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-all duration-200 cursor-pointer border-none shadow-2xs inline-flex items-center gap-1.5"
                           >
                             <span>Book Session</span>
                             <ArrowRight className="w-3.5 h-3.5" />

@@ -367,7 +367,7 @@ export default function AuthModals({ isOpen, onClose }) {
     <>
       <div className="bh-auth-backdrop fixed inset-0 z-[110] bg-black/40 backdrop-blur-sm animate-backdrop-in" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
       <div className="bh-auth-overlay fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="bh-auth-dialog relative w-full max-w-md bg-[#fbf9f5] rounded-3xl shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-[#ede7de] m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="bh-auth-dialog relative w-full max-w-md bg-[#fbf9f5] rounded-md shadow-2xl max-h-full overflow-y-auto animate-modal-in border border-[#ede7de] m-auto flex flex-col" onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}
           <div className="flex justify-between items-start gap-4 p-6 sm:p-7 border-b border-[#ede7de]">
@@ -376,7 +376,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={handleModalBack}
-                  className="w-9 h-9 shrink-0 bg-white hover:bg-[#ede7de] text-[#1c2826] rounded-full transition-colors cursor-pointer flex items-center justify-center border border-[#ede7de]"
+                  className="w-9 h-9 shrink-0 bg-white hover:bg-[#ede7de] text-[#1c2826] rounded-md transition-colors cursor-pointer flex items-center justify-center border border-[#ede7de]"
                   aria-label="Back"
                 >
                   <ArrowLeft className="w-4 h-4" />
@@ -421,7 +421,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 onClose();
               }}
               aria-label="Close dialog"
-              className="w-9 h-9 shrink-0 bg-white hover:bg-[#ede7de] rounded-full transition-colors cursor-pointer flex items-center justify-center border border-[#ede7de]"
+              className="w-9 h-9 shrink-0 bg-white hover:bg-[#ede7de] rounded-md transition-colors cursor-pointer flex items-center justify-center border border-[#ede7de]"
             >
               <X className="w-4 h-4 text-[#1c2826]" />
             </button>
@@ -430,24 +430,24 @@ export default function AuthModals({ isOpen, onClose }) {
           {/* Rejection state */}
           {rejectionReason ? (
             <div className="p-6 space-y-4">
-              <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl space-y-3">
+              <div className="bg-rose-50 border border-rose-200 p-4 rounded-md space-y-3">
                 <p className="text-sm text-[#1c2826] leading-relaxed font-medium">
                   We regret to inform you that your professional counsellor application has been rejected by the system administrator.
                 </p>
-                <div className="bg-white border border-rose-100 p-3 rounded-xl">
+                <div className="bg-white border border-rose-100 p-3 rounded-md">
                   <span className="text-[10px] font-semibold text-rose-600 tracking-wider block mb-1 uppercase">Reason for Rejection:</span>
                   <p className="text-sm text-zinc-800 italic leading-relaxed">"{rejectionReason}"</p>
                 </div>
               </div>
-              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-full transition-all cursor-pointer border-none shadow-md">
+              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-md transition-all cursor-pointer border-none shadow-md">
                 Return to Login
               </button>
             </div>
           ) : authStep === 'details' ? (
             /* Step 3: Mandatory Profile Details Entry */
             <form onSubmit={handleDetailsSubmit} className="p-6 space-y-4">
-              <div className="bg-white border border-[#ede7de] rounded-2xl p-3.5 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#faf5f0] flex items-center justify-center text-[#b85438] shrink-0 border border-[#eedfd0]">
+              <div className="bg-white border border-[#ede7de] rounded-md p-3.5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-sm bg-[#faf5f0] flex items-center justify-center text-[#b85438] shrink-0 border border-[#eedfd0]">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
@@ -472,7 +472,7 @@ export default function AuthModals({ isOpen, onClose }) {
                     }}
                     placeholder="e.g. Rahul Sharma"
                     autoFocus
-                    className={`w-full pl-10 pr-4 py-3 rounded-full text-sm font-medium text-[#1c2826] outline-none transition border ${
+                    className={`w-full pl-10 pr-4 py-3 rounded-md text-sm font-medium text-[#1c2826] outline-none transition border ${
                       fieldErrors.name
                         ? 'bg-rose-50/40 border-rose-400'
                         : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
@@ -497,7 +497,7 @@ export default function AuthModals({ isOpen, onClose }) {
                       if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: null }));
                     }}
                     placeholder="e.g. rahul@gmail.com"
-                    className={`w-full pl-10 pr-4 py-3 rounded-full text-sm font-medium text-[#1c2826] outline-none transition border ${
+                    className={`w-full pl-10 pr-4 py-3 rounded-md text-sm font-medium text-[#1c2826] outline-none transition border ${
                       fieldErrors.email
                         ? 'bg-rose-50/40 border-rose-400'
                         : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
@@ -513,7 +513,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
+                  className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Save Details &amp; Proceed to Home</span>}
                 </button>
@@ -546,7 +546,7 @@ export default function AuthModals({ isOpen, onClose }) {
                       placeholder="10-digit number"
                       maxLength={10}
                       autoFocus
-                      className="w-full pl-18 pr-4 py-3 bg-white border border-[#ede7de] rounded-full text-sm text-[#1c2826] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10 outline-none transition-all font-medium"
+                      className="w-full pl-18 pr-4 py-3 bg-white border border-[#ede7de] rounded-md text-sm text-[#1c2826] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10 outline-none transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -600,7 +600,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
+                  className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
                 >
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

@@ -103,7 +103,7 @@ export default function BlogSection({ siteSettings = {} }) {
             >
               <div>
                 {/* Image */}
-                <div className="w-full h-56 sm:h-64 rounded-2xl sm:rounded-3xl overflow-hidden mb-4 sm:mb-5 bg-[#f4eee6] border border-[#ede7de]">
+                <div className="w-full h-56 sm:h-64 rounded-md overflow-hidden mb-4 sm:mb-5 bg-[#f4eee6] border border-[#ede7de]">
                   <img
                     src={post.image}
                     alt={post.title}
@@ -147,12 +147,12 @@ export default function BlogSection({ siteSettings = {} }) {
           ))}
         </div>
 
-        {/* View All Articles Pill */}
+        {/* View All Articles Button */}
         <div className="mt-12 text-center">
           <button
             type="button"
             onClick={handleOpenAll}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold bg-white hover:bg-[#f6f2ec] text-[#1c2826] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-md text-xs font-semibold bg-white hover:bg-[#f6f2ec] text-[#1c2826] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
           >
             <span>Explore All Journal Entries</span>
             <ArrowRight className="w-3.5 h-3.5" />

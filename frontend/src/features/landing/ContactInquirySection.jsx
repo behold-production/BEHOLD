@@ -71,11 +71,11 @@ export default function ContactInquirySection({ siteSettings = {} }) {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-3xl border border-[#ede7de] shadow-sm p-6 sm:p-10">
+        <div className="bg-white rounded-md border border-[#ede7de] shadow-sm p-6 sm:p-10">
 
           {submitted ? (
             <div className="flex flex-col items-center text-center gap-4 py-8">
-              <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center text-emerald-600 shadow-xs">
+              <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-center text-emerald-600 shadow-xs">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
               <h3 className="font-serif-hero text-2xl font-medium text-[#1c2826]">Message Received</h3>
@@ -84,7 +84,7 @@ export default function ContactInquirySection({ siteSettings = {} }) {
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                className="mt-3 bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-xs px-6 py-3 rounded-full transition-all cursor-pointer shadow-xs border-none"
+                className="mt-3 bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-xs px-6 py-3 rounded-md transition-all cursor-pointer shadow-xs border-none"
               >
                 Send Another Message
               </button>
@@ -102,7 +102,7 @@ export default function ContactInquirySection({ siteSettings = {} }) {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Your full name"
-                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-xl px-4 py-3 text-sm text-[#1c2826] placeholder-[#9ca8a4] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
+                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-md px-4 py-3 text-sm text-[#1c2826] placeholder-[#9ca8a4] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
                   disabled={loading}
                   required
                 />
@@ -118,7 +118,7 @@ export default function ContactInquirySection({ siteSettings = {} }) {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="your@email.com"
-                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-xl px-4 py-3 text-sm text-[#1c2826] placeholder-[#9ca8a4] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
+                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-md px-4 py-3 text-sm text-[#1c2826] placeholder-[#9ca8a4] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
                   disabled={loading}
                   required
                 />
@@ -134,7 +134,7 @@ export default function ContactInquirySection({ siteSettings = {} }) {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="How can we assist you with psychological care or student mentorship?"
-                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-xl px-4 py-3 text-sm text-[#1c2826] placeholder-[#9ca8a4] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all resize-none font-medium"
+                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-md px-4 py-3 text-sm text-[#1c2826] placeholder-[#9ca8a4] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all resize-none font-medium"
                   disabled={loading}
                   required
                 />
@@ -144,7 +144,7 @@ export default function ContactInquirySection({ siteSettings = {} }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-xs sm:text-sm py-3.5 rounded-full shadow-md transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 border-none mt-2"
+                className="w-full bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-xs sm:text-sm py-3.5 rounded-md shadow-md transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 border-none mt-2"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

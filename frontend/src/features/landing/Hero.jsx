@@ -59,7 +59,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             <button
               type="button"
               onClick={handleConnectClick}
-              className="inline-flex items-center justify-center px-8 sm:px-9 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide bg-[#1c2826] hover:bg-[#b85438] text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer active:scale-95 border-none"
+              className="inline-flex items-center justify-center px-8 sm:px-9 py-3 sm:py-3.5 rounded-md text-xs sm:text-sm font-semibold tracking-wide bg-[#1c2826] hover:bg-[#b85438] text-white shadow-sm hover:shadow transition-all duration-300 cursor-pointer active:scale-95 border-none"
             >
               {buttonText}
             </button>
@@ -68,7 +68,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
         {/* Panoramic Watercolor Landscape Illustration with Organic Wave Transition */}
         <div className="relative w-full max-w-6xl mx-auto px-2 sm:px-4">
-          <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs border border-[#eee7dc]/80">
+          <div className="relative w-full rounded-md overflow-hidden shadow-xs border border-[#eee7dc]/80">
             <img
               src={heroLandscapeBg}
               alt="Where Mental Wellbeing Meets Mindful Living"

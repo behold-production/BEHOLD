@@ -34,7 +34,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
       {/* SECTION 9: Pre-Footer CTA Banner matching Mockup */}
       <section className="relative w-full py-20 sm:py-28 bg-[#fbf9f5] overflow-hidden border-t border-[#ece6dc]">
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl overflow-hidden shadow-sm border border-[#ede7de]">
+          <div className="relative rounded-md overflow-hidden shadow-sm border border-[#ede7de]">
             {/* Watercolor Mountain Landscape Background */}
             <div
               className="w-full min-h-[300px] sm:min-h-[360px] bg-cover bg-center flex items-center justify-center p-8 sm:p-12 relative"
@@ -55,7 +55,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
                   <button
                     type="button"
                     onClick={handleBookingCTA}
-                    className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-xs sm:text-sm font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer active:scale-95 border-none"
+                    className="inline-flex items-center gap-2 px-8 py-3.5 rounded-md text-xs sm:text-sm font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white shadow-sm hover:shadow transition-all duration-300 cursor-pointer active:scale-95 border-none"
                   >
                     <span>Schedule Consultation</span>
                     <ArrowRight className="w-4 h-4 stroke-[2]" />

@@ -148,7 +148,7 @@ export default function ThankYouPage() {
           <div className="max-w-md text-center space-y-4">
             <h1 className="text-2xl font-bold text-slate-900">Booking details unavailable</h1>
             <p className="text-sm text-slate-600">We could not verify this booking with BEHOLD. Please check your booking link or contact support.</p>
-            <Link to="/" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white no-underline">
+            <Link to="/" className="inline-flex items-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white no-underline">
               Return to home <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -180,7 +180,7 @@ export default function ThankYouPage() {
               href="https://wa.me/919400898011?text=Hi%20BEHOLD%2C%20I%20have%20a%20question%20regarding%20my%20session%20booking"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer no-underline"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer no-underline"
             >
               <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
               <span className="hidden xs:inline">WhatsApp Support</span>
@@ -198,11 +198,11 @@ export default function ThankYouPage() {
 
         {/* Animated Checkmark & Success Banner */}
         <div className="text-center space-y-3">
-          <div className="w-20 h-20 bg-emerald-50 border-2 border-emerald-300 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-lg shadow-emerald-500/10 animate-pulse-gentle">
+          <div className="w-20 h-20 bg-emerald-50 border-2 border-emerald-300 rounded-md flex items-center justify-center mx-auto text-emerald-600 shadow-lg shadow-emerald-500/10 animate-pulse-gentle">
             <CheckCircle2 className="w-11 h-11" />
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-semibold border border-emerald-200">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-md bg-emerald-100/80 text-emerald-800 text-xs font-semibold border border-emerald-200">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span>{isLoading ? 'Verifying booking' : (bookingData?.paymentStatus || bookingData?.status)}</span>
           </div>
@@ -219,7 +219,7 @@ export default function ThankYouPage() {
         </div>
 
         {/* Booking Details Card */}
-        <div className="bg-white rounded-xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6 text-left">
+        <div className="bg-white rounded-md border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6 text-left">
 
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
@@ -228,7 +228,7 @@ export default function ThankYouPage() {
                 Private Consultation Session
               </p>
             </div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-xs font-semibold">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-md text-xs font-semibold">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
               <span>{isLoading ? 'Verifying' : bookingData?.status}</span>
             </span>
@@ -242,15 +242,15 @@ export default function ThankYouPage() {
           ) : (
             <>
               {/* Psychologist info */}
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#bcf4f8]/30 to-[#d7f9fb]/20 border border-[#bcf4f8]/60">
+              <div className="flex items-center gap-4 p-4 rounded-md bg-gradient-to-r from-[#bcf4f8]/30 to-[#d7f9fb]/20 border border-[#bcf4f8]/60">
                 {bookingData?.advisorPhoto ? (
                   <img
                     src={bookingData.advisorPhoto}
                     alt={bookingData.advisorName}
-                    className="w-12 h-12 rounded-2xl object-cover object-top shadow-sm border-2 border-white shrink-0"
+                    className="w-12 h-12 rounded-md object-cover object-top shadow-sm border-2 border-white shrink-0"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-2xl bg-[#00e5ff] text-slate-950 flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
+                  <div className="w-12 h-12 rounded-md bg-[#00e5ff] text-slate-950 flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
                     {getInitials(bookingData?.advisorName)}
                   </div>
                 )}
@@ -269,7 +269,7 @@ export default function ThankYouPage() {
 
               {/* Schedule grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-left">
+                <div className="p-3.5 bg-slate-50 rounded-md border border-slate-200/80 text-left">
                   <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                     <Calendar className="w-3.5 h-3.5 text-[#3a0ca3]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Date</span>
@@ -279,7 +279,7 @@ export default function ThankYouPage() {
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-left">
+                <div className="p-3.5 bg-slate-50 rounded-md border border-slate-200/80 text-left">
                   <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                     <Clock className="w-3.5 h-3.5 text-[#3a0ca3]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Time</span>
@@ -289,7 +289,7 @@ export default function ThankYouPage() {
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-left col-span-2 sm:col-span-1">
+                <div className="p-3.5 bg-slate-50 rounded-md border border-slate-200/80 text-left col-span-2 sm:col-span-1">
                   <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                     <Video className="w-3.5 h-3.5 text-[#3a0ca3]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Mode</span>
@@ -302,7 +302,7 @@ export default function ThankYouPage() {
 
               {/* Consultation Room Box */}
               {bookingData?.meetLink && (
-                <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200/80 space-y-2.5">
+                <div className="p-4 rounded-md bg-teal-50/70 border border-teal-200/80 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Video className="w-4 h-4 text-teal-600" />
@@ -313,14 +313,14 @@ export default function ThankYouPage() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-teal-100">
+                  <div className="flex items-center gap-2 bg-white p-2 rounded-md border border-teal-100">
                     <span className="text-xs text-slate-600 font-mono truncate flex-1 pl-1">
                       {bookingData.meetLink}
                     </span>
                     <button
                       type="button"
                       onClick={handleCopyLink}
-                      className="px-2.5 py-1 text-xs font-semibold text-teal-800 hover:text-teal-950 bg-teal-50 hover:bg-teal-100 rounded-lg flex items-center gap-1 cursor-pointer transition border-none"
+                      className="px-2.5 py-1 text-xs font-semibold text-teal-800 hover:text-teal-950 bg-teal-50 hover:bg-teal-100 rounded-md flex items-center gap-1 cursor-pointer transition border-none"
                     >
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copied ? 'Copied' : 'Copy Link'}</span>
@@ -331,7 +331,7 @@ export default function ThankYouPage() {
                     href={bookingData.meetLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-slate-900 hover:bg-black text-[#00e5ff] text-xs font-bold rounded-xl transition shadow-sm no-underline"
+                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-slate-900 hover:bg-black text-[#00e5ff] text-xs font-bold rounded-md transition shadow-sm no-underline"
                     title="Join Google Meet Video Consultation Room"
                   >
                     <Video className="w-3.5 h-3.5" />
@@ -342,7 +342,7 @@ export default function ThankYouPage() {
               )}
 
               {/* What happens next instructions */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              <div className="p-4 rounded-md bg-slate-50 border border-slate-200/80 space-y-3">
                 <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
                   What Happens Next
                 </h3>
@@ -364,7 +364,7 @@ export default function ThankYouPage() {
               </div>
 
               {/* Payment Summary */}
-              <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
+              <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-md border border-slate-200 text-xs">
                 <span className="font-semibold text-slate-600">Amount Paid (Included GST):</span>
                 <span className="text-base font-semibold text-slate-950">
                   {bookingData?.amountPaid != null ? `₹${bookingData.amountPaid}` : '—'}
@@ -387,7 +387,7 @@ export default function ThankYouPage() {
                 })}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:flex-1 py-3.5 px-4 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 border border-[#00e5ff]/40 text-teal-950 font-semibold text-sm rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
+                className="w-full sm:flex-1 py-3.5 px-4 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 border border-[#00e5ff]/40 text-teal-950 font-semibold text-sm rounded-md transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
               >
                 <Calendar className="w-4 h-4 text-teal-700 shrink-0" />
                 <span>Add to Calendar</span>
@@ -396,7 +396,7 @@ export default function ThankYouPage() {
 
             <button
               onClick={handleDownloadReceipt}
-              className="w-full sm:flex-1 py-3.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+              className="w-full sm:flex-1 py-3.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-sm rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
             >
               <Download className="w-4 h-4 text-[#00e5ff] shrink-0" />
               <span>Download Receipt</span>
@@ -404,7 +404,7 @@ export default function ThankYouPage() {
 
             <button
               onClick={() => navigate('/')}
-              className="w-full sm:w-auto py-3.5 px-6 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-semibold text-sm rounded-2xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+              className="w-full sm:w-auto py-3.5 px-6 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
             >
               <Home className="w-4 h-4 shrink-0" />
               <span>Return Home</span>

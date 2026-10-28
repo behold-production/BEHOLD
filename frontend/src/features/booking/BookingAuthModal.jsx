@@ -350,7 +350,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     <>
       <div className="bh-booking-auth-backdrop fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm animate-in fade-in duration-200" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
       <div className="bh-booking-auth-overlay fixed inset-0 z-[125] flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="bh-booking-auth-dialog relative w-full max-w-full sm:max-w-md bg-[#fbf9f5] rounded-t-[32px] sm:rounded-3xl shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-[#ede7de] flex flex-col max-h-[88vh] sm:max-h-[85vh] pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
+        <div className="bh-booking-auth-dialog relative w-full max-w-full sm:max-w-md bg-[#fbf9f5] rounded-t-lg sm:rounded-md shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-[#ede7de] flex flex-col max-h-[88vh] sm:max-h-[85vh] pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
 
           {/* Mobile Bottom Sheet Pull Indicator */}
           <div className="w-12 h-1.5 bg-[#ede7de] rounded-full mx-auto mt-3 mb-0 sm:hidden shrink-0" />
@@ -362,7 +362,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 <button
                   type="button"
                   onClick={handleModalBack}
-                  className="w-9 h-9 shrink-0 bg-white hover:bg-[#ede7de] text-[#1c2826] rounded-full transition-colors cursor-pointer flex items-center justify-center border border-[#ede7de]"
+                  className="w-9 h-9 shrink-0 bg-white hover:bg-[#ede7de] text-[#1c2826] rounded-md transition-colors cursor-pointer flex items-center justify-center border border-[#ede7de]"
                   aria-label="Back"
                 >
                   <ArrowLeft className="w-4 h-4" />
@@ -403,7 +403,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 onClose();
               }}
               aria-label="Close dialog"
-              className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-full transition-colors cursor-pointer flex items-center justify-center border-none"
+              className="w-9 h-9 shrink-0 bg-surface-100 hover:bg-surface-200 rounded-md transition-colors cursor-pointer flex items-center justify-center border-none"
             >
               <X className="w-4 h-4 text-[#0f172a]" />
             </button>
@@ -412,8 +412,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
           {authStep === 'details' ? (
             /* Step 3: Mandatory Details Entry */
             <form onSubmit={handleDetailsSubmit} className="p-6 space-y-4">
-              <div className="bg-[#f0ebe1] border border-[#ede7de] rounded-2xl p-3.5 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#b85438]/10 flex items-center justify-center text-[#b85438] shrink-0">
+              <div className="bg-[#f0ebe1] border border-[#ede7de] rounded-md p-3.5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-sm bg-[#b85438]/10 flex items-center justify-center text-[#b85438] shrink-0">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
@@ -438,7 +438,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                     }}
                     placeholder="e.g. Rahul Sharma"
                     autoFocus
-                    className={`w-full pl-11 pr-4 py-3 rounded-full text-sm font-medium text-[#1c2826] outline-none transition border ${
+                    className={`w-full pl-11 pr-4 py-3 rounded-md text-sm font-medium text-[#1c2826] outline-none transition border ${
                       fieldErrors.name
                         ? 'bg-rose-50/40 border-rose-400'
                         : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
@@ -463,7 +463,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: null }));
                     }}
                     placeholder="you@example.com"
-                    className={`w-full pl-11 pr-4 py-3 rounded-full text-sm font-medium text-[#1c2826] outline-none transition border ${
+                    className={`w-full pl-11 pr-4 py-3 rounded-md text-sm font-medium text-[#1c2826] outline-none transition border ${
                       fieldErrors.email
                         ? 'bg-rose-50/40 border-rose-400'
                         : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'
@@ -479,7 +479,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
+                  className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Save Details & Continue to Booking</span>}
                 </button>
@@ -511,7 +511,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
                       maxLength={10}
                       placeholder="10-digit number"
                       autoFocus
-                      className={`w-full pl-18 pr-4 py-3 rounded-full text-sm text-[#1c2826] outline-none transition-all border ${fieldErrors.otpPhone ? 'bg-rose-50/40 border-rose-400' : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'}`}
+                      className={`w-full pl-18 pr-4 py-3 rounded-md text-sm text-[#1c2826] outline-none transition-all border ${fieldErrors.otpPhone ? 'bg-rose-50/40 border-rose-400' : 'bg-white border-[#ede7de] focus:border-[#b85438] focus:ring-4 focus:ring-[#b85438]/10'}`}
                     />
                   </div>
                   {fieldErrors.otpPhone && <p className="text-xs font-medium text-rose-500">{fieldErrors.otpPhone}</p>}
@@ -568,7 +568,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
 
               {/* Submit button */}
               <div className="pt-2">
-                <button type="submit" disabled={isLoading} className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md">
+                <button type="submit" disabled={isLoading} className="w-full py-3.5 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md">
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (

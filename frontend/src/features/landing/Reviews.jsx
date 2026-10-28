@@ -115,7 +115,7 @@ export default function Reviews({ siteSettings = {} }) {
     <section id="reviews" className="relative bg-[#fbf9f5] text-[#1c2826] overflow-hidden scroll-mt-20">
       {/* SECTION 5: Nature Path Quote Banner */}
       <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16">
-        <div className="relative rounded-3xl overflow-hidden shadow-sm border border-[#ede7de]">
+        <div className="relative rounded-md overflow-hidden shadow-sm border border-[#ede7de]">
           {/* Nature Path Visual Asset */}
           <div
             className="w-full min-h-[340px] sm:min-h-[420px] bg-cover bg-center flex items-center justify-center p-6 sm:p-12 relative"
@@ -125,7 +125,7 @@ export default function Reviews({ siteSettings = {} }) {
             <div className="absolute inset-0 bg-black/25 pointer-events-none" />
 
             {/* Centered Floating Quote Card */}
-            <div className="relative z-10 max-w-2xl bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-7 sm:p-10 border border-white/80 shadow-xl text-center">
+            <div className="relative z-10 max-w-2xl bg-white/95 backdrop-blur-md rounded-md p-7 sm:p-10 border border-white/80 shadow-md text-center">
               <span className="text-[10px] font-bold text-[#b85438] uppercase tracking-[0.2em] block mb-3">
                 Words of Sanctuary
               </span>
@@ -157,7 +157,7 @@ export default function Reviews({ siteSettings = {} }) {
         </div>
 
         {/* 5 Avatars Spotlight Row */}
-        <div className="flex items-center justify-center gap-3 sm:gap-5 mb-8 sm:mb-10">
+        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
           {reviews.slice(0, 5).map((rev, idx) => {
             const isSelected = idx === activeIndex;
             return (
@@ -165,14 +165,14 @@ export default function Reviews({ siteSettings = {} }) {
                 key={rev.id || idx}
                 type="button"
                 onClick={() => setActiveIndex(idx)}
-                className={`relative rounded-full transition-all duration-300 cursor-pointer p-0.5 border-2 ${
+                className={`relative rounded-sm transition-all duration-300 cursor-pointer p-0.5 border-2 ${
                   isSelected
-                    ? 'border-[#b85438] scale-110 shadow-md ring-4 ring-[#b85438]/15'
+                    ? 'border-[#b85438] scale-105 shadow-sm ring-2 ring-[#b85438]/20'
                     : 'border-transparent opacity-70 hover:opacity-100 hover:scale-105'
                 }`}
                 title={`Read story from ${rev.name}`}
               >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-[#f4eee6]">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-sm overflow-hidden bg-[#f4eee6]">
                   <img
                     src={rev.avatar}
                     alt={rev.name}
@@ -217,7 +217,7 @@ export default function Reviews({ siteSettings = {} }) {
                   setShowForm(!showForm);
                 }
               }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-medium text-slate-700 bg-white hover:bg-[#f6f2ec] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-medium text-slate-700 bg-white hover:bg-[#f6f2ec] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
             >
               <MessageSquarePlus className="w-3.5 h-3.5 text-[#b85438]" />
               <span>Share Your Experience</span>
@@ -227,13 +227,13 @@ export default function Reviews({ siteSettings = {} }) {
 
         {/* Review Form Modal / Slide */}
         {showForm && (
-          <div className="mt-8 max-w-lg mx-auto bg-white rounded-2xl p-6 sm:p-8 border border-[#ede7de] shadow-md">
+          <div className="mt-8 max-w-lg mx-auto bg-white rounded-md p-6 sm:p-8 border border-[#ede7de] shadow-md">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif-hero text-xl font-semibold text-[#1c2826]">Share Your Story</h3>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="p-1 rounded-full text-slate-400 hover:text-slate-700"
+                className="p-1 rounded-sm text-slate-400 hover:text-slate-700 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -252,7 +252,7 @@ export default function Reviews({ siteSettings = {} }) {
                     type="text"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-200 outline-none focus:border-[#b85438]"
+                    className="w-full px-3.5 py-2 text-sm rounded-md border border-slate-200 outline-none focus:border-[#b85438]"
                     placeholder="e.g. Maya S."
                   />
                 </div>
@@ -262,7 +262,7 @@ export default function Reviews({ siteSettings = {} }) {
                     type="text"
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-200 outline-none focus:border-[#b85438]"
+                    className="w-full px-3.5 py-2 text-sm rounded-md border border-slate-200 outline-none focus:border-[#b85438]"
                     placeholder="e.g. Student, Parent, Individual Therapy"
                   />
                 </div>
@@ -272,14 +272,14 @@ export default function Reviews({ siteSettings = {} }) {
                     rows={3}
                     value={form.comment}
                     onChange={(e) => setForm({ ...form, comment: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-200 outline-none focus:border-[#b85438]"
+                    className="w-full px-3.5 py-2 text-sm rounded-md border border-slate-200 outline-none focus:border-[#b85438]"
                     placeholder="How did BEHOLD support your journey?"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-2.5 rounded-full text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors cursor-pointer disabled:opacity-50"
+                  className="w-full py-2.5 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors cursor-pointer disabled:opacity-50"
                 >
                   {submitting ? 'Submitting...' : 'Submit Reflection'}
                 </button>

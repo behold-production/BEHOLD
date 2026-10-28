@@ -89,15 +89,15 @@ export default function Faq({ siteSettings }) {
         </div>
 
         {/* Accordion Stack matching mockup */}
-        <div className="flex flex-col gap-3 sm:gap-3.5">
+        <div className="flex flex-col gap-2.5 sm:gap-3">
           {faqs.slice(0, 7).map((item, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={item._id || item.id || idx}
-                className={`rounded-2xl transition-all duration-200 border ${
+                className={`rounded-md transition-all duration-200 border ${
                   isOpen
-                    ? 'bg-white border-[#b85438]/30 shadow-xs'
+                    ? 'bg-white border-[#b85438]/40 shadow-xs'
                     : 'bg-white/80 hover:bg-white border-[#ede7de]'
                 }`}
               >
@@ -110,7 +110,7 @@ export default function Faq({ siteSettings }) {
                     {item.question}
                   </span>
                   <div
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-sm flex items-center justify-center shrink-0 transition-colors duration-200 ${
                       isOpen
                         ? 'bg-[#b85438] text-white'
                         : 'bg-[#f6f2ec] text-[#1c2826] group-hover:bg-[#ede7de]'

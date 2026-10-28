@@ -113,7 +113,7 @@ export default function OtpPinInput({ value = '', onChange, hasError, disabled =
             disabled={disabled}
             onChange={(e) => handleChange(e, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
-            className={`w-9 h-11 xs:w-10 xs:h-12 sm:w-12 sm:h-14 text-center font-mono font-semibold text-base sm:text-xl rounded-xl transition-all outline-none border ${
+            className={`w-9 h-11 xs:w-10 xs:h-12 sm:w-12 sm:h-14 text-center font-mono font-semibold text-base sm:text-xl rounded-md transition-all outline-none border ${
               disabled
                 ? isDark
                   ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'

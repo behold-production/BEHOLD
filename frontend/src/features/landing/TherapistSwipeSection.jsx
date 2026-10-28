@@ -221,7 +221,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
                 key={cat}
                 type="button"
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 sm:px-5 py-2 rounded-full text-xs font-medium tracking-wide transition-all duration-200 shrink-0 cursor-pointer border ${
+                className={`px-4 sm:px-5 py-2 rounded-md text-xs font-medium tracking-wide transition-all duration-200 shrink-0 cursor-pointer border ${
                   isActive
                     ? 'bg-[#b85438] text-white border-[#b85438] shadow-xs'
                     : 'bg-white text-slate-700 hover:text-[#1c2826] hover:bg-[#f6f2ec] border-[#ede7de]'
@@ -233,12 +233,12 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
           })}
         </div>
 
-        {/* Stack of Horizontal Capsule Rows matching the Mockup */}
-        <div className="flex flex-col gap-3 sm:gap-4">
+        {/* Stack of Horizontal Rows matching modern professional layout */}
+        <div className="flex flex-col gap-2.5 sm:gap-3">
           {displayList.map((psychologist) => (
             <div
               key={psychologist.id}
-              className="group bg-white rounded-2xl sm:rounded-full px-5 py-3.5 sm:py-3 border border-[#ede7de] hover:border-[#b85438]/40 shadow-2xs hover:shadow-sm transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
+              className="group bg-white rounded-md px-5 py-3.5 sm:py-3.5 border border-[#ede7de] hover:border-[#b85438]/50 shadow-2xs hover:shadow-xs transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
             >
               {/* Left Column: Format & Session Type */}
               <div className="sm:w-1/4">
@@ -265,7 +265,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
                 onClick={() => handleAdvisorClick(psychologist.id)}
                 className="flex items-center gap-3 sm:w-1/3 cursor-pointer"
               >
-                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#f4eee6] border border-[#ede7de]">
+                <div className="w-10 h-10 rounded-sm overflow-hidden shrink-0 bg-[#f4eee6] border border-[#ede7de]">
                   {psychologist.photo ? (
                     <img
                       src={psychologist.photo}
@@ -297,7 +297,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
                 <button
                   type="button"
                   onClick={() => onBookTherapist?.(psychologist.id)}
-                  className="w-full sm:w-auto px-5 py-2 rounded-full text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors duration-200 shadow-2xs cursor-pointer border-none"
+                  className="w-full sm:w-auto px-5 py-2 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors duration-200 shadow-2xs cursor-pointer border-none"
                 >
                   Book Session
                 </button>
@@ -306,7 +306,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
           ))}
         </div>
 
-        {/* Centered Dark Pill "View All Psychologists" Button linking to /psychologists */}
+        {/* Centered Button linking to /psychologists */}
         <div className="mt-10 sm:mt-12 flex flex-col items-center justify-center text-center">
           <p className="text-xs text-[#5c6b66] mb-3">
             Showing top clinical psychologists ready to support your mental wellness.
@@ -314,7 +314,7 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
           <button
             type="button"
             onClick={handleShowAll}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer active:scale-95 border-none"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-md text-xs sm:text-sm font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white shadow-sm hover:shadow transition-all duration-300 cursor-pointer active:scale-95 border-none"
           >
             <span>View All Psychologists</span>
             <ArrowRight className="w-4 h-4 stroke-[2]" />

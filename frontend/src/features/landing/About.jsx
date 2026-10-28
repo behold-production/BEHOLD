@@ -73,7 +73,7 @@ export default function About({ siteSettings, onOpenBooking }) {
           </div>
 
           {/* Forest Backdrop Container with 3 Floating Cards */}
-          <div className="relative rounded-3xl overflow-hidden p-6 sm:p-10 md:p-12 shadow-sm border border-[#ede7de]">
+          <div className="relative rounded-md overflow-hidden p-6 sm:p-10 md:p-12 shadow-sm border border-[#ede7de]">
             {/* Background Image: Serene Pine Trees / Forest Mist */}
             <div
               className="absolute inset-0 bg-cover bg-center pointer-events-none"
@@ -92,14 +92,14 @@ export default function About({ siteSettings, onOpenBooking }) {
                 return (
                   <article
                     key={pillar.number}
-                    className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/60 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                    className="bg-white/95 backdrop-blur-md rounded-md p-6 sm:p-8 border border-white/60 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-6">
                         <span className="text-xs font-mono font-bold text-[#b85438] tracking-widest">
                           {pillar.number}
                         </span>
-                        <div className="w-10 h-10 rounded-full bg-[#faf5f0] text-[#b85438] flex items-center justify-center border border-[#eedfd0]">
+                        <div className="w-10 h-10 rounded-sm bg-[#faf5f0] text-[#b85438] flex items-center justify-center border border-[#eedfd0]">
                           <IconComponent className="w-4 h-4 stroke-[2]" />
                         </div>
                       </div>

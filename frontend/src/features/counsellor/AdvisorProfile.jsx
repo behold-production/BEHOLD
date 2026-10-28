@@ -337,7 +337,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   if (!advisor) {
     return (
       <div className="min-h-screen pt-28 pb-16 bg-[#F8FAFC] text-center px-4 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
+        <div className="w-16 h-16 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center mb-4">
           <UserCheck className="w-8 h-8 text-slate-400" />
         </div>
         <h2 className="text-2xl font-black mb-2 text-slate-900 tracking-tight">Specialist Profile Not Found</h2>
@@ -345,7 +345,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         <button
           type="button"
           onClick={handleBack}
-          className="min-h-[44px] px-6 py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm cursor-pointer"
+          className="min-h-[44px] px-6 py-2.5 bg-slate-900 hover:bg-black text-white rounded-md font-bold text-xs uppercase tracking-widest transition-all shadow-sm cursor-pointer"
         >
           Go Back to Directory
         </button>
@@ -383,7 +383,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <button
             type="button"
             onClick={handleBack}
-            className="w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
+            className="w-10 h-10 rounded-md bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
             title="Go Back"
           >
             <ChevronLeft className="w-5 h-5 pr-0.5" />
@@ -397,7 +397,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <button
               type="button"
               onClick={handleBookmarkToggle}
-              className={`w-10 h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border ${
+              className={`w-10 h-10 rounded-md backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border ${
                 isBookmarked 
                   ? 'bg-amber-400 text-slate-950 border-amber-300' 
                   : 'bg-white/80 hover:bg-white text-slate-900 border-white/40'
@@ -410,7 +410,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <button
               type="button"
               onClick={handleShare}
-              className="w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40 hidden sm:flex"
+              className="w-10 h-10 rounded-md bg-white/80 hover:bg-white text-slate-900 backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40 hidden sm:flex"
               title="Share Profile"
             >
               <Share2 className="w-4 h-4" />
@@ -423,10 +423,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 -mt-12 sm:-mt-16">
 
         {/* ── FLOATING PROFILE INFO CARD ── */}
-        <div className="bg-white rounded-t-[32px] sm:rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-slate-100 p-6 sm:p-8 text-center space-y-4">
+        <div className="bg-white rounded-t-lg sm:rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-slate-100 p-6 sm:p-8 text-center space-y-4">
           
           {/* Certified Member Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-blue-50 text-blue-600 rounded-full font-bold text-xs border border-blue-100/80 shadow-2xs mx-auto">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-blue-50 text-blue-600 rounded-md font-bold text-xs border border-blue-100/80 shadow-2xs mx-auto">
             <ShieldCheck className="w-4 h-4 fill-blue-600 text-white shrink-0" />
             <span>Certified Member</span>
           </div>
@@ -462,7 +462,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {advisor.modes && advisor.modes.map((mode, idx) => (
               <span 
                 key={idx}
-                className="px-3 py-1 rounded-full bg-slate-50 border border-slate-200/80 text-[11px] font-bold text-slate-700 flex items-center gap-1"
+                className="px-3 py-1 rounded-md bg-slate-50 border border-slate-200/80 text-[11px] font-bold text-slate-700 flex items-center gap-1"
               >
                 {mode === 'ONLINE' && <Video className="w-3 h-3 text-teal-600" />}
                 {mode === 'OFFLINE' && <MapPin className="w-3 h-3 text-blue-600" />}
@@ -475,11 +475,11 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         </div>
 
         {/* ── SEGMENTED TAB NAVIGATION SWITCHER ── */}
-        <div className="my-6 bg-slate-200/60 p-1.5 rounded-2xl flex items-center justify-center gap-2 border border-slate-200">
+        <div className="my-6 bg-slate-200/60 p-1.5 rounded-md flex items-center justify-center gap-2 border border-slate-200">
           <button
             type="button"
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all cursor-pointer border-none ${
+            className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-md transition-all cursor-pointer border-none ${
               activeTab === 'overview'
                 ? 'bg-white text-slate-900 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900 bg-transparent'
@@ -490,7 +490,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <button
             type="button"
             onClick={() => setActiveTab('review')}
-            className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all cursor-pointer border-none ${
+            className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-md transition-all cursor-pointer border-none ${
               activeTab === 'review'
                 ? 'bg-white text-slate-900 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900 bg-transparent'
@@ -507,9 +507,9 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <div className="space-y-6 animate-in fade-in duration-300">
             
             {/* About Card */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+            <div className="bg-white p-6 sm:p-8 rounded-md border border-slate-200/90 shadow-xs space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
                   <UserCheck className="w-5 h-5" />
                 </div>
                 <div>
@@ -528,7 +528,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Specialties & Focus Areas</h4>
                   <div className="flex flex-wrap gap-2">
                     {advisor.specs.map((spec, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-slate-50 border border-slate-200/90 rounded-xl text-xs font-semibold text-slate-700">
+                      <span key={i} className="px-3 py-1.5 bg-slate-50 border border-slate-200/90 rounded-md text-xs font-semibold text-slate-700">
                         {spec}
                       </span>
                     ))}
@@ -540,7 +540,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Qualifications & Experience Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+              <div className="bg-white p-5 rounded-md border border-slate-200/90 shadow-xs space-y-1">
                 <div className="flex items-center gap-2 text-teal-600 mb-2">
                   <Clock className="w-4 h-4" />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Experience</span>
@@ -549,7 +549,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <p className="text-xs text-slate-500 font-medium">{advisor.expYears}+ Years Clinical Practice</p>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+              <div className="bg-white p-5 rounded-md border border-slate-200/90 shadow-xs space-y-1">
                 <div className="flex items-center gap-2 text-teal-600 mb-2">
                   <Globe className="w-4 h-4" />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Languages</span>
@@ -558,7 +558,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <p className="text-xs text-slate-500 font-medium">Fluent Consultations</p>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-1">
+              <div className="bg-white p-5 rounded-md border border-slate-200/90 shadow-xs space-y-1">
                 <div className="flex items-center gap-2 text-teal-600 mb-2">
                   <GraduationCap className="w-4 h-4" />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Education</span>
@@ -570,7 +570,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             </div>
 
             {/* Fee & Booking Breakdown Banner */}
-            <div className="bg-gradient-to-br from-slate-900 to-teal-950 p-6 rounded-2xl text-white space-y-4 shadow-lg">
+            <div className="bg-gradient-to-br from-slate-900 to-teal-950 p-6 rounded-md text-white space-y-4 shadow-lg">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
                   <span className="text-[11px] font-bold uppercase tracking-widest text-teal-400">Session Fees</span>
@@ -613,7 +613,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             </div>
 
             {/* ── RATING BREAKDOWN CONTAINER CARD ── */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/90 shadow-xs space-y-6">
+            <div className="bg-white p-6 sm:p-8 rounded-md border border-slate-200/90 shadow-xs space-y-6">
               
               {/* Top Rating & Bar Chart Grid */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-slate-100 pb-6">
@@ -659,7 +659,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               {/* Patient Satisfaction Highlights */}
               <div className="space-y-4 pt-2">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
                     <Star className="w-4 h-4 text-teal-600" />
                   </div>
                   <div>
@@ -669,7 +669,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
                     <Clock className="w-4 h-4 text-teal-600" />
                   </div>
                   <div>
@@ -679,7 +679,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
                     <ThumbsUp className="w-4 h-4 text-teal-600" />
                   </div>
                   <div>
@@ -702,7 +702,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       key={tag}
                       type="button"
                       onClick={() => setSelectedFilter(tag)}
-                      className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
+                      className={`px-4 py-2 rounded-md text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
                         selectedFilter === tag
                           ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                           : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
@@ -722,7 +722,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search for a review..."
-                  className="w-full pl-11 pr-10 py-3 bg-white border border-slate-200/90 rounded-2xl text-xs sm:text-sm text-slate-900 outline-none focus:border-teal-500 transition-all shadow-2xs"
+                  className="w-full pl-11 pr-10 py-3 bg-white border border-slate-200/90 rounded-md text-xs sm:text-sm text-slate-900 outline-none focus:border-teal-500 transition-all shadow-2xs"
                 />
                 {searchQuery && (
                   <button
@@ -747,7 +747,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
                   if (isReported) {
                     return (
-                      <div key={rev.id} className="p-4 bg-slate-100 rounded-2xl text-xs text-slate-400 text-center italic border border-slate-200">
+                      <div key={rev.id} className="p-4 bg-slate-100 rounded-md text-xs text-slate-400 text-center italic border border-slate-200">
                         This review has been reported and is hidden for review.
                       </div>
                     );
@@ -756,15 +756,15 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   return (
                     <div 
                       key={rev.id} 
-                      className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-3 relative"
+                      className="bg-white p-5 sm:p-6 rounded-md border border-slate-200/90 shadow-2xs space-y-3 relative"
                     >
                       {/* Review Header: User avatar, Name, Date, 3-dots */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 min-w-0">
                           {rev.avatar ? (
-                            <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-200" />
+                            <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-md object-cover shrink-0 border border-slate-200" />
                           ) : (
-                            <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">
+                            <div className="w-10 h-10 rounded-md bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">
                               {getInitials(rev.author)}
                             </div>
                           )}
@@ -791,17 +791,17 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                           <button
                             type="button"
                             onClick={() => setActiveMenuId(activeMenuId === rev.id ? null : rev.id)}
-                            className="p-2 text-slate-400 hover:text-slate-700 rounded-full cursor-pointer bg-transparent border-none"
+                            className="p-2 text-slate-400 hover:text-slate-700 rounded-md cursor-pointer bg-transparent border-none"
                           >
                             <MoreVertical className="w-4 h-4" />
                           </button>
                           
                           {activeMenuId === rev.id && (
-                            <div className="absolute right-0 top-8 bg-white border border-slate-200 rounded-xl shadow-lg p-1 z-20 min-w-[120px]">
+                            <div className="absolute right-0 top-8 bg-white border border-slate-200 rounded-md shadow-lg p-1 z-20 min-w-[120px]">
                               <button
                                 type="button"
                                 onClick={() => { handleReport(rev.id); setActiveMenuId(null); }}
-                                className="w-full text-left px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-lg flex items-center gap-1.5 font-semibold cursor-pointer border-none"
+                                className="w-full text-left px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-md flex items-center gap-1.5 font-semibold cursor-pointer border-none"
                               >
                                 <Flag className="w-3.5 h-3.5" /> Report Review
                               </button>
@@ -861,7 +861,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   );
                 })
               ) : (
-                <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-500 text-xs font-medium">
+                <div className="p-8 text-center bg-white rounded-md border border-slate-200 text-slate-500 text-xs font-medium">
                   No matching reviews found for "{searchQuery || selectedFilter}".
                 </div>
               )}
@@ -875,14 +875,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       {/* ── WRITE REVIEW MODAL ── */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-md max-w-md w-full p-6 space-y-5 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200">
             
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-lg font-bold text-slate-900">Write a Verified Review</h3>
               <button
                 type="button"
                 onClick={() => setShowReviewModal(false)}
-                className="p-1 text-slate-400 hover:text-slate-600 rounded-full cursor-pointer bg-transparent border-none"
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-md cursor-pointer bg-transparent border-none"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -914,7 +914,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <select
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-semibold text-slate-900 outline-none"
                 >
                   <option value="Skill">Skill & Expertise</option>
                   <option value="Conversation">Conversation & Empathy</option>
@@ -931,7 +931,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Amazingly Insightful & Helpful!"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:border-teal-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-900 outline-none focus:border-teal-500"
                 />
               </div>
 
@@ -943,7 +943,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Share your experience during the consultation..."
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:border-teal-500 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-900 outline-none focus:border-teal-500 resize-none"
                 />
               </div>
 
@@ -951,14 +951,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <button
                   type="button"
                   onClick={() => setShowReviewModal(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer border-none bg-transparent"
+                  className="px-4 py-2.5 rounded-md text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer border-none bg-transparent"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingReview}
-                  className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer border-none flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-xs font-bold transition shadow-sm cursor-pointer border-none flex items-center gap-1.5"
                 >
                   {submittingReview ? 'Submitting...' : 'Submit Review'}
                 </button>
@@ -991,7 +991,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <button
               type="button"
               onClick={() => onBook?.(advisor)}
-              className="px-6 sm:px-8 py-3.5 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-lg shadow-teal-500/25 transition-all transform active:scale-95 cursor-pointer border-none flex items-center gap-2"
+              className="px-6 sm:px-8 py-3.5 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-bold text-xs sm:text-sm rounded-md shadow-lg shadow-teal-500/25 transition-all transform active:scale-95 cursor-pointer border-none flex items-center gap-2"
             >
               <span>Book Consultation</span>
               <Plus className="w-4 h-4 text-white" />

@@ -49,7 +49,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
 
       {/* Modal Card */}
       <div
-        className="relative z-[100000] w-full max-w-sm rounded-3xl animate-in zoom-in-95 duration-300 ease-out bg-[#fbf9f5] border border-[#ede7de] text-[#1c2826] overflow-hidden shadow-2xl"
+        className="relative z-[100000] w-full max-w-sm rounded-md animate-in zoom-in-95 duration-300 ease-out bg-[#fbf9f5] border border-[#ede7de] text-[#1c2826] overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button - Optimized for Touch & Mobile Tap Target */}
@@ -61,14 +61,14 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             handleClose(e);
           }}
           aria-label="Close sign out confirmation"
-          className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-[#ede7de] text-[#5c6b66] hover:text-[#1c2826] transition-colors cursor-pointer border border-[#ede7de] z-30"
+          className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-md bg-white/80 hover:bg-[#ede7de] text-[#5c6b66] hover:text-[#1c2826] transition-colors cursor-pointer border border-[#ede7de] z-30"
         >
           <X className="w-4 h-4 pointer-events-none" />
         </button>
 
         <div className="p-8 text-center space-y-6 relative z-10">
           {/* Animated warning icon */}
-          <div className="mx-auto w-16 h-16 rounded-full bg-[#b85438]/10 border border-[#b85438]/20 flex items-center justify-center text-[#b85438]">
+          <div className="mx-auto w-16 h-16 rounded-md bg-[#b85438]/10 border border-[#b85438]/20 flex items-center justify-center text-[#b85438]">
             <AlertTriangle className="w-7 h-7" />
           </div>
 
@@ -92,7 +92,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             <button
               type="button"
               onClick={handleConfirm}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#1c2826] hover:bg-rose-700 text-white font-medium text-sm rounded-full transition-all cursor-pointer border-none shadow-md"
+              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#1c2826] hover:bg-rose-700 text-white font-medium text-sm rounded-md transition-all cursor-pointer border-none shadow-md"
             >
               <LogOut className="w-4 h-4 text-white" />
               <span>Yes, Sign Out</span>
@@ -101,7 +101,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             <button
               type="button"
               onClick={handleClose}
-              className="w-full py-3.5 bg-white hover:bg-[#ede7de]/50 text-[#1c2826] font-medium text-sm rounded-full transition-all border border-[#ede7de] cursor-pointer"
+              className="w-full py-3.5 bg-white hover:bg-[#ede7de]/50 text-[#1c2826] font-medium text-sm rounded-md transition-all border border-[#ede7de] cursor-pointer"
             >
               Stay Signed In
             </button>
