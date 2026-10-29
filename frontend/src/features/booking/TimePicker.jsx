@@ -9,18 +9,14 @@ import {
   Moon,
   ChevronLeft,
   ChevronRight,
-  Zap,
-  CalendarDays,
-  Sparkles
+  Zap
 } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import {
   toLocalDateString,
   getLocalTodayString,
-  parseTimeToMinutes,
   getTimeBucket,
-  getTimeIntervalLabel,
-  getSmartWeekdayDate
+  getTimeIntervalLabel
 } from '../../utils/calendarUtils';
 
 const BUCKET_META = {
@@ -219,6 +215,18 @@ export default function TimePicker({
 
   const totalSlotCount = availableSlots.length;
 
+  // Range label for the confirmation strip — never repeat the start time twice.
+  const selectedRangeLabel = selectedTime
+    ? getTimeIntervalLabel(selectedTime, bookingDuration) || selectedTime
+    : '';
+
+  // Cards already show the start time, so only the end time is rendered under it.
+  const getEndTimeLabel = (timeStr) => {
+    const range = getTimeIntervalLabel(timeStr, bookingDuration);
+    const [, end] = String(range).split(' - ');
+    return end || '';
+  };
+
   return (
     <div className="bg-white border border-[#e6dfd0]/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
       {/* Step Header */}
@@ -243,20 +251,23 @@ export default function TimePicker({
         </span>
       </div>
 
-      {/* Two-column on large screens: compact calendar (left) + time slots (right); stacked on mobile */}
-      <div className="space-y-5 lg:grid lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-8 lg:items-start">
+      {/* Calendar + slot split follows the panel width (container query) — the
+          booking dialog is only ~672px wide, so viewport breakpoints misjudge it.
+          The @container wrapper must be a separate parent: an element cannot query
+          its own container. Inside the lg dialog this box is ~556px wide, so @lg
+          (512px) is the largest threshold that actually fires. */}
+      <div className="@container space-y-4">
+      <div className="space-y-5 @lg:grid @lg:grid-cols-[minmax(0,284px)_minmax(0,1fr)] @lg:items-start @lg:gap-4">
         {/* LEFT COLUMN — Calendar */}
-        <div className="space-y-5">
+        <div className="mx-auto w-full max-w-[26rem] space-y-5 @lg:mx-0 @lg:max-w-none">
       {/* Date Header + Toggle for Calendar View */}
       <div className="space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <span className="text-[11px] font-bold text-[#7c8785] uppercase tracking-wider">
-            Choose Appointment Date
-          </span>
-        </div>
+        <span className="block text-[11px] font-bold text-[#7c8785] uppercase tracking-wider">
+          Choose Appointment Date
+        </span>
 
         {/* Interactive Month Calendar */}
-        <div className="border border-[#e6dfd0] rounded-lg p-3 sm:p-4 bg-[#f6f1e6]/50 space-y-3 animate-step-in">
+        <div className="border border-[#e6dfd0] rounded-lg p-2.5 sm:p-4 bg-[#f6f1e6]/50 space-y-3 animate-step-in">
             {/* Month Navigation */}
             <div className="flex items-center justify-between pb-2 border-b border-[#e6dfd0]">
               <span className="font-bold text-sm sm:text-base text-[#0e1111]">
@@ -413,11 +424,14 @@ export default function TimePicker({
         {/* /LEFT COLUMN */}
 
         {/* RIGHT COLUMN — Time Slots */}
-        <div className="space-y-4">
+        <div className="space-y-3">
+          <span className="block text-[11px] font-bold text-[#7c8785] uppercase tracking-wider">
+            Available Time Slots
+          </span>
       {/* Available Slots Section */}
       <div ref={slotsContainerRef}>
         {totalSlotCount > 0 ? (
-        <div className="space-y-4 pt-1">
+        <div className="space-y-5 pt-1">
           {['morning', 'afternoon', 'evening'].map(bucket => {
             const items = groupedSlots[bucket];
             if (!items || items.length === 0) return null;
@@ -425,27 +439,26 @@ export default function TimePicker({
             const IconComp = meta.icon;
 
             return (
-              <div key={bucket} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className={`flex items-center gap-1 px-2.5 py-1 rounded-md border text-[11px] font-bold ${meta.badgeBg}`}>
-                      <IconComp className="w-3.5 h-3.5" />
-                      <span>{meta.label}</span>
-                    </div>
-                    <span className="text-[11px] font-medium text-[#9aa29f]">
-                      {meta.periodText}
-                    </span>
+              <div key={bucket} className="space-y-2 @container">
+                {/* Badge + window only: adding the per-bucket count made this row
+                    a hair too wide for the split column and wrapped mid-phrase. */}
+                <div className="flex items-center gap-2">
+                  <div className={`flex shrink-0 items-center gap-1 px-2.5 py-1 rounded-md border text-[11px] font-bold ${meta.badgeBg}`}>
+                    <IconComp className="w-3.5 h-3.5" />
+                    <span>{meta.label}</span>
                   </div>
-                  <span className="text-[11px] font-semibold text-[#7c8785]">
-                    {items.length} {items.length === 1 ? 'slot' : 'slots'}
+                  <span className="truncate text-[11px] font-medium tabular-nums text-[#9aa29f]">
+                    {meta.periodText}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                {/* Columns follow the panel width (container query), not the
+                    viewport — the booking modal is narrow even on big screens. */}
+                <div className="grid grid-cols-2 gap-2 @sm:grid-cols-3 @lg:grid-cols-4">
                   {items.map(time => {
                     const isSelected = selectedTime === time;
                     const isBooked = bookedSlots && bookedSlots.includes(time);
-                    const intervalText = getTimeIntervalLabel(time, bookingDuration);
+                    const endTimeLabel = getEndTimeLabel(time);
 
                     return (
                       <button
@@ -456,7 +469,7 @@ export default function TimePicker({
                           if (isBooked) return;
                           onTimeChange(time);
                         }}
-                        className={`p-2.5 rounded-lg font-semibold transition-all duration-150 text-center flex flex-col items-center justify-center gap-0.5 border min-h-[54px] relative overflow-hidden active:scale-95 ${
+                        className={`relative flex min-h-[64px] flex-col items-center justify-center gap-1 rounded-lg border px-2 py-2.5 text-center transition-all duration-150 overflow-hidden active:scale-95 ${
                           isSelected
                             ? 'bg-[#0e7490] text-white border-[#0e7490] shadow-xs ring-1 ring-[#0b5c73]'
                             : isBooked
@@ -464,20 +477,23 @@ export default function TimePicker({
                             : 'bg-white hover:bg-[#f7f2e7]/60 border-[#e6dfd0] text-[#243033] hover:border-[#d5cdbb] hover:shadow-xs cursor-pointer'
                         }`}
                       >
-                        <div className="flex items-center justify-center gap-1">
-                          {isSelected && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
-                          <span className={`text-xs sm:text-sm font-extrabold ${isSelected ? 'text-white' : 'text-[#0e1111]'}`}>
-                            {time}
+                        {isSelected && (
+                          <span className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white/25">
+                            <Check className="h-2.5 w-2.5 text-white stroke-[3.5]" />
                           </span>
-                        </div>
+                        )}
 
-                        <span className={`text-[10.5px] font-medium leading-tight ${isSelected ? 'text-white/75' : 'text-[#7c8785]'}`}>
-                          {intervalText}
+                        <span className={`whitespace-nowrap text-[13px] font-extrabold leading-none tabular-nums ${isSelected ? 'text-white' : 'text-[#0e1111]'}`}>
+                          {time}
                         </span>
 
-                        {isBooked && (
-                          <span className="text-[9px] font-extrabold text-rose-500 uppercase tracking-wider mt-0.5">
+                        {isBooked ? (
+                          <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider leading-none text-rose-500">
                             Booked
+                          </span>
+                        ) : (
+                          <span className={`whitespace-nowrap text-[10px] font-medium leading-none tabular-nums ${isSelected ? 'text-white/75' : 'text-[#7c8785]'}`}>
+                            {endTimeLabel ? `– ${endTimeLabel}` : `${bookingDuration} min`}
                           </span>
                         )}
                       </button>
@@ -542,31 +558,35 @@ export default function TimePicker({
       )}
       </div>
 
-      {/* Selected Slot Summary Badge */}
-      {selectedTime && totalSlotCount > 0 && (
-        <div className="p-3 bg-[#f7f2e7]/70 border border-[#bfe3ec]/90 rounded-xl flex items-center justify-between text-xs animate-step-in">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="w-6 h-6 rounded-lg bg-[#0b5c73] text-white flex items-center justify-center shrink-0">
-              <Check className="w-3.5 h-3.5 stroke-[3]" />
-            </div>
-            <div className="min-w-0">
-              <p className="font-bold text-[#0e1111] truncate">
-                {selectedTime} ({getTimeIntervalLabel(selectedTime, bookingDuration)})
-              </p>
-              <p className="text-[11px] text-[#55605f] truncate">
-                {formatDateString(selectedDate)} • {selectedAdvisor?.name || 'Selected Advisor'}
-              </p>
-            </div>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#0b5c73] bg-[#edf5f7] border border-[#bfe3ec] px-2 py-0.5 rounded shrink-0">
-            Slot Ready
-          </span>
-        </div>
-      )}
         </div>
         {/* /RIGHT COLUMN */}
       </div>
       {/* /GRID WRAPPER */}
+
+      {/* Selection confirmation — sits full width below the split so the range
+          never truncates inside the narrow slot column. */}
+      {selectedTime && totalSlotCount > 0 && (
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-[#bfe3ec]/90 bg-[#f7f2e7]/70 px-3.5 py-3 animate-step-in">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0b5c73] text-white">
+              <Check className="h-4 w-4 stroke-[3]" />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-[13px] font-bold tabular-nums leading-tight text-[#0e1111]">
+                {selectedRangeLabel}
+              </p>
+              <p className="mt-0.5 truncate text-[11px] leading-tight text-[#55605f]">
+                {formatDateString(selectedDate)}
+              </p>
+            </div>
+          </div>
+          <span className="shrink-0 rounded border border-[#bfe3ec] bg-[#edf5f7] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#0b5c73]">
+            Slot Ready
+          </span>
+        </div>
+      )}
+      </div>
+      {/* /@container */}
 
       {errors.time && (
         <div className="flex items-center gap-1.5 text-xs text-rose-500 font-medium">

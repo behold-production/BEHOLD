@@ -4,7 +4,7 @@ import { useBookingViewModel, BOOKING_DRAFT_KEY } from './useBookingViewModel';
 
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon, Trash2, Video as VideoIcon } from 'lucide-react';
+import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon, Trash2, Video as VideoIcon, Star } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import { buildGoogleMeetUrl } from '../student/utils/utils';
@@ -1184,13 +1184,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 {/* STEP 1 — SELECT PSYCHOLOGIST */}
                                                 {wizardStep === 1 && !isAdvisorLocked && (
-                                                    <div ref={stepAdvisorRef} className="bh-booking-step-card bg-white border border-[#e6dfd0] rounded-lg p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
-                                                        <div className="flex items-center justify-between border-b border-[#f1eadc] pb-3">
-                                                            <div className="flex items-center gap-2.5">
-                                                                <span className="w-6 h-6 rounded-md bg-[#0e7490] text-white text-xs flex items-center justify-center font-extrabold shadow-xs">
+                                                    <div ref={stepAdvisorRef} className="bh-booking-step-card @container bg-white border border-[#e6dfd0] rounded-lg p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
+                                                        <div className="flex items-center justify-between gap-3 border-b border-[#f1eadc] pb-3">
+                                                            <div className="flex min-w-0 items-center gap-2.5">
+                                                                <span className="w-6 h-6 shrink-0 rounded-md bg-[#0e7490] text-white text-xs flex items-center justify-center font-extrabold shadow-xs">
                                                                     1
                                                                 </span>
-                                                                <div>
+                                                                <div className="min-w-0">
                                                                     <h3 className="font-bold text-base sm:text-lg text-[#0e1111] leading-tight">
                                                                         Select Psychologist
                                                                     </h3>
@@ -1199,18 +1199,24 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <span className="text-[10px] font-extrabold text-[#3c4747] bg-[#f7f2e7] border border-[#e6dfd0] px-2.5 py-0.5 rounded-md uppercase tracking-wider hidden sm:inline-block">
+                                                            <span className="shrink-0 whitespace-nowrap text-[10px] font-extrabold text-[#3c4747] bg-[#f7f2e7] border border-[#e6dfd0] px-2.5 py-0.5 rounded-md uppercase tracking-wider hidden sm:inline-block">
                                                                 Step 1
                                                             </span>
                                                         </div>
 
                                                         {selectedAdvisor && (
                                                             <div className="p-3 bg-[#f7f2e7] border border-[#e6dfd0] rounded-lg flex items-center justify-between gap-3 text-xs">
-                                                                <div className="flex items-center gap-2 min-w-0">
+                                                                <div className="flex min-w-0 items-center gap-2">
                                                                     <span className="w-2 h-2 rounded-full bg-[#0e7490] animate-pulse shrink-0" />
-                                                                    <span className="font-bold text-[#0e1111] truncate">
-                                                                        Selected: <strong className="text-[#0e1111]">{selectedAdvisor.name}</strong> • {bookingDuration === 30 ? selectedAdvisor.halfSessionPrice : selectedAdvisor.price} ({bookingDuration === 30 ? '30m Plan' : '1h Plan'})
-                                                                    </span>
+                                                                    {/* Two short lines instead of one long truncated one on phones */}
+                                                                    <div className="min-w-0">
+                                                                        <p className="truncate text-xs font-bold text-[#0e1111]">
+                                                                            Selected: {selectedAdvisor.name}
+                                                                        </p>
+                                                                        <p className="mt-0.5 truncate text-[10.5px] font-medium text-[#7c8785]">
+                                                                            ₹{bookingDuration === 30 ? selectedAdvisor.halfSessionPrice : selectedAdvisor.price} • {bookingDuration === 30 ? '30 min plan' : '1 hour plan'}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                                 <button
                                                                     type="button"
@@ -1279,7 +1285,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                                 return (
                                                                     <React.Fragment>
-                                                                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
+                                                                        {/* Columns follow the panel width, not the viewport: this dialog maxes out
+                                                                            at 672px, so xl:grid-cols-3 used to squeeze cards to ~165px. */}
+                                                                        <div className="grid grid-cols-1 gap-3 @md:grid-cols-2 @min-[46rem]:grid-cols-3 items-stretch">
                                                                         {advisorsToRender.map((advisor) => {
                                                                             const info = getAdvisorEarliestAvailableInfo(advisor);
                                                                             const isAvailable = info.available;
@@ -1307,99 +1315,108 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
                                                                                         setWizardStep(2);
                                                                                     }}
-                                                                                    className={`group flex flex-col p-4 sm:p-5 border bg-white rounded-xl relative shadow-xs cursor-pointer booking-card transition-all ${isSelected
+                                                                                    className={`group flex min-w-0 flex-col p-4 sm:p-5 border bg-white rounded-xl relative shadow-xs cursor-pointer booking-card transition-all ${isSelected
                                                                                             ? 'border-[#0e7490] ring-2 ring-[#0e7490]/20 bg-[#f7f2e7]/40 shadow-sm'
                                                                                             : isAvailable
                                                                                                 ? 'border-[#e6dfd0] hover:border-[#0e7490]/50 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
                                                                                                 : 'border-[#f1eadc] opacity-60 hover:opacity-90'
                                                                                         }`}
                                                                                 >
-                                                                                    <div className="flex flex-col gap-3 flex-1">
-                                                                                        <div className="flex items-start gap-3 min-w-0">
-                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg shrink-0 flex items-center justify-center border bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#0e7490]' : 'border-[#e6dfd0] group-hover:border-[#d5cdbb]'}`}>
+                                                                                    <div className="flex flex-col flex-1">
+                                                                                        {/* Identity row — the role sits on its own line so long names never truncate */}
+                                                                                        <div className="flex items-start gap-3">
+                                                                                            <div className="relative shrink-0">
+                                                                                                <div className={`flex h-13 w-13 items-center justify-center overflow-hidden rounded-lg border bg-[#f6f1e6] shadow-xs transition-colors ${isSelected ? 'border-[#0e7490]' : 'border-[#e6dfd0] group-hover:border-[#d5cdbb]'}`}>
+                                                                                                    {advisor.profilePic || advisor.image ? (
+                                                                                                        <img
+                                                                                                            src={advisor.profilePic || advisor.image}
+                                                                                                            alt={advisor.name}
+                                                                                                            className="h-full w-full object-cover"
+                                                                                                        />
+                                                                                                    ) : (
+                                                                                                        <span className="text-xl font-bold text-[#0c6b83]">
+                                                                                                            {getInitials(advisor.name)}
+                                                                                                        </span>
+                                                                                                    )}
+                                                                                                </div>
+                                                                                                {/* Corner star keeps the rating signal without covering the photo */}
                                                                                                 {(advisor.isHighlighted || advisor.isTopFive) && (
-                                                                                                    <div className="absolute top-0 left-0 right-0 bg-[#0e7490] text-white text-[8px] font-bold text-center py-0.5 z-10 tracking-widest uppercase">
-                                                                                                        Top Rated
-                                                                                                    </div>
-                                                                                                )}
-                                                                                                {advisor.profilePic || advisor.image ? (
-                                                                                                    <img
-                                                                                                        src={advisor.profilePic || advisor.image}
-                                                                                                        alt={advisor.name}
-                                                                                                        className="w-full h-full object-cover"
-                                                                                                    />
-                                                                                                ) : (
-                                                                                                    <span className="font-bold text-xl text-[#0c6b83]">
-                                                                                                        {getInitials(advisor.name)}
+                                                                                                    <span
+                                                                                                        title="Top rated psychologist"
+                                                                                                        aria-label="Top rated psychologist"
+                                                                                                        className="absolute -right-1.5 -top-1.5 z-10 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#0e7490] text-white shadow-sm ring-2 ring-white"
+                                                                                                    >
+                                                                                                        <Star className="h-2.5 w-2.5 fill-current" strokeWidth={0} />
                                                                                                     </span>
                                                                                                 )}
                                                                                             </div>
 
-                                                                                            <div className="space-y-1 min-w-0 flex-1">
-                                                                                                <div className="flex items-center gap-2 flex-wrap">
-                                                                                                    <h4 className={`font-bold text-base sm:text-lg transition-colors truncate ${isSelected ? 'text-[#050707] font-extrabold' : 'text-[#0e1111] group-hover:text-[#3c4747]'}`}>
-                                                                                                        {advisor.name}
-                                                                                                    </h4>
-                                                                                                    <span className="text-xs text-[#55605f] font-semibold">
-                                                                                                        • {advisor.role || 'Consultant Psychologist'}
-                                                                                                    </span>
-                                                                                                </div>
-
-                                                                                                {advisor.bio && (
-                                                                                                    <p className="text-xs text-[#55605f] line-clamp-2 leading-relaxed">
-                                                                                                        {advisor.bio}
-                                                                                                    </p>
-                                                                                                )}
-
-                                                                                                {advisor.specialties?.length > 0 && (
-                                                                                                    <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                                                                                                        {advisor.specialties.slice(0, 2).map((spec, i) => (
-                                                                                                            <span key={i} title={spec} className="max-w-[140px] truncate px-2 py-0.5 bg-[#f6f1e6] border border-[#e6dfd0] text-[#55605f] text-[10px] font-semibold rounded-md">
-                                                                                                                {spec}
-                                                                                                            </span>
-                                                                                                        ))}
-                                                                                                        {advisor.specialties.length > 2 && (
-                                                                                                            <span className="shrink-0 px-2 py-0.5 bg-[#f6f1e6] border border-[#e6dfd0] text-[#55605f] text-[10px] font-semibold rounded-md">
-                                                                                                                +{advisor.specialties.length - 2}
-                                                                                                            </span>
-                                                                                                        )}
-                                                                                                    </div>
-                                                                                                )}
-
-                                                                                                {isAvailable ? (
-                                                                                                    <span className="text-xs text-emerald-700 font-bold mt-1 inline-flex items-center gap-1.5">
-                                                                                                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                                                                                        {info.label}
-                                                                                                    </span>
-                                                                                                ) : (
-                                                                                                    <span className="text-xs text-rose-500 font-medium mt-1 inline-block">
-                                                                                                        No upcoming slots
-                                                                                                    </span>
-                                                                                                )}
+                                                                                            <div className="min-w-0 flex-1">
+                                                                                                <h4 title={advisor.name} className={`truncate text-[15px] font-bold leading-snug transition-colors ${isSelected ? 'text-[#050707]' : 'text-[#0e1111] group-hover:text-[#3c4747]'}`}>
+                                                                                                    {advisor.name}
+                                                                                                </h4>
+                                                                                                {/* Wraps instead of truncating: "Consultant Psychologist" is cut in every card otherwise */}
+                                                                                                <p className="mt-0.5 line-clamp-2 text-[10.5px] font-medium leading-snug text-[#7c8785]">
+                                                                                                    {advisor.role || 'Consultant Psychologist'}
+                                                                                                </p>
                                                                                             </div>
                                                                                         </div>
 
-                                                                                        <div className="flex items-center justify-between gap-2 shrink-0 border-t border-[#f1eadc] pt-3 mt-auto">
-                                                                                            <div className="text-left">
-                                                                                                <span className="font-extrabold text-xl sm:text-2xl text-[#0e1111] block leading-none">
-                                                                                                    {bookingDuration === 30 ? advisor.halfSessionPrice : advisor.price}
+                                                                                        {advisor.bio && (
+                                                                                            <p className="mt-2.5 line-clamp-2 text-[11.5px] leading-relaxed text-[#55605f]">
+                                                                                                {advisor.bio}
+                                                                                            </p>
+                                                                                        )}
+
+                                                                                        {/* One chip + counter: two long chips got cut mid-word. */}
+                                                                                        {advisor.specialties?.length > 0 && (
+                                                                                            <div className="mt-2 flex items-center gap-1 overflow-hidden">
+                                                                                                <span title={advisor.specialties[0]} className="min-w-0 truncate rounded-md border border-[#e6dfd0] bg-[#f6f1e6] px-2 py-0.5 text-[10px] font-semibold text-[#55605f]">
+                                                                                                    {advisor.specialties[0]}
                                                                                                 </span>
-                                                                                                <span className="text-[10px] font-bold text-[#55605f] uppercase tracking-wider mt-0.5 block">
+                                                                                                {advisor.specialties.length > 1 && (
+                                                                                                    <span title={advisor.specialties.slice(1).join(', ')} className="shrink-0 rounded-md border border-[#e6dfd0] bg-[#f6f1e6] px-2 py-0.5 text-[10px] font-semibold text-[#55605f]">
+                                                                                                        +{advisor.specialties.length - 1}
+                                                                                                    </span>
+                                                                                                )}
+                                                                                            </div>
+                                                                                        )}
+
+                                                                                        {/* Availability reads as a chip so every card keeps the same rhythm */}
+                                                                                        {isAvailable ? (
+                                                                                            <span className="mt-2 inline-flex w-fit max-w-full items-center gap-1.5 rounded-md border border-emerald-200/80 bg-emerald-50 px-2 py-1 text-[10.5px] font-bold text-emerald-700">
+                                                                                                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                                                                                                <span className="truncate">{info.label}</span>
+                                                                                            </span>
+                                                                                        ) : (
+                                                                                            <span className="mt-2 inline-flex w-fit max-w-full items-center gap-1.5 rounded-md border border-rose-200/80 bg-rose-50 px-2 py-1 text-[10.5px] font-semibold text-rose-600">
+                                                                                                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400" />
+                                                                                                No upcoming slots
+                                                                                            </span>
+                                                                                        )}
+
+                                                                                        <div className="flex items-center justify-between gap-2 shrink-0 border-t border-[#f1eadc] pt-3 mt-auto">
+                                                                                            <div className="min-w-0 text-left">
+                                                                                                <span className="font-extrabold text-xl text-[#0e1111] block leading-none tabular-nums">
+                                                                                                    ₹{bookingDuration === 30 ? advisor.halfSessionPrice : advisor.price}
+                                                                                                </span>
+                                                                                                <span className="text-[9.5px] font-bold text-[#7c8785] uppercase tracking-wider mt-1 block">
                                                                                                     {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
                                                                                                 </span>
                                                                                             </div>
 
                                                                                             {isSelected ? (
-                                                                                                <div className="px-3.5 py-1.5 bg-[#0e7490] text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 shadow-xs">
-                                                                                                    <span>✓ Selected</span>
+                                                                                                <div className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-[#0e7490] px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition-all">
+                                                                                                    <CheckCircle2 className="h-3.5 w-3.5" />
+                                                                                                    <span>Selected</span>
                                                                                                 </div>
                                                                                             ) : isAvailable ? (
-                                                                                                <div className="px-3.5 py-1.5 bg-[#0e1111] text-white text-xs font-bold rounded-lg group-hover:bg-[#0e7490] transition-all flex items-center gap-1 shadow-xs">
+                                                                                                <div className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-[#0e1111] px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition-all group-hover:bg-[#0e7490]">
                                                                                                     <span>Select</span>
-                                                                                                    <ArrowRight className="w-3.5 h-3.5" />
+                                                                                                    <ArrowRight className="h-3.5 w-3.5" />
                                                                                                 </div>
                                                                                             ) : (
-                                                                                                <span className="text-xs font-semibold text-[#7c8785] bg-[#f1eadc] px-3 py-1.5 rounded-md">
+                                                                                                <span className="shrink-0 whitespace-nowrap rounded-md bg-[#f1eadc] px-2.5 py-1.5 text-[10.5px] font-semibold text-[#7c8785]">
                                                                                                     Unavailable
                                                                                                 </span>
                                                                                             )}
