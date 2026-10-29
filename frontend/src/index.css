@@ -37,19 +37,27 @@
   word-spacing: 10px;
 }
 
+/* Handwriting accent for eyebrows — needs !important to beat the global
+   Poppins rule above, and keeps natural word spacing. */
+.font-hand {
+  font-family: 'Caveat', 'Dancing Script', cursive !important;
+  word-spacing: normal;
+  letter-spacing: 0.01em;
+}
+
 @theme {
   --color-neon-blue-deep: #060e20;
   --color-neon-blue-mid: #0c1a36;
   --color-neon-blue-soft: #152b52;
-  --color-paper: #FBF9F5;
-  --color-paper-alt: #F3EFE7;
+  --color-paper: #FBF8F1;
+  --color-paper-alt: #F6F1E6;
   --color-teal: #4A7C74;
-  --color-gold: #B85438;
-  --color-gold-soft: #A0462E;
-  --color-ink: #1C2826;
-  --color-ink-soft: #5C6B66;
-  --color-line: #E5DDD0;
-  --color-line-strong: #CBBFA8;
+  --color-gold: #0E7490;
+  --color-gold-soft: #0B5C73;
+  --color-ink: #0E1111;
+  --color-ink-soft: #55605F;
+  --color-line: #DDD6C6;
+  --color-line-strong: #C9C0AD;
 
   --font-serif: 'Poppins', 'Noto Sans Malayalam', sans-serif;
   --font-sans: 'Poppins', 'Noto Sans Malayalam', sans-serif;
@@ -67,10 +75,10 @@
   --color-zinc-900: var(--color-slate-900);
   --color-zinc-800: var(--color-slate-800);
   --color-zinc-700: var(--color-slate-700);
-  --color-brand: #b85438;
-  --color-brand-dark: #1c2826;
-  --color-brand-light: #faf6ee;
-  --color-brand-accent: #c97b5e;
+  --color-brand: #0E7490;
+  --color-brand-dark: #0B5C73;
+  --color-brand-light: #EDF5F7;
+  --color-brand-accent: #0891B2;
 
   --color-surface-50: #F8FAFC;
   --color-surface-100: #F1F5F9;
@@ -83,8 +91,8 @@
   --color-surface-800: #1E293B;
   --color-surface-900: #0F172A;
 
-  --shadow-square: 0 4px 20px rgba(184, 84, 56, 0.08);
-  --shadow-square-hover: 0 12px 40px rgba(184, 84, 56, 0.15);
+  --shadow-square: 0 4px 20px rgba(14, 116, 144, 0.08);
+  --shadow-square-hover: 0 12px 40px rgba(14, 116, 144, 0.15);
   --shadow-square-dark: 0 8px 24px rgba(15, 23, 42, 0.18);
   --shadow-square-light: 0 4px 12px rgba(226, 232, 240, 0.8);
 
@@ -218,8 +226,8 @@ html,
 body {
   max-width: 100%;
   overflow-x: clip;
-  background-color: #faf6ee;
-  color: #1c2826;
+  background-color: #fbf8f1;
+  color: #0e1111;
   font-family: 'Poppins', 'Noto Sans Malayalam', sans-serif;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: default;
@@ -305,12 +313,12 @@ html {
   0%,
   100% {
     opacity: 0.85;
-    filter: drop-shadow(0 0 15px rgba(184, 84, 56, 0.08));
+    filter: drop-shadow(0 0 15px rgba(14, 116, 144, 0.08));
   }
 
   50% {
     opacity: 1;
-    filter: drop-shadow(0 0 35px rgba(184, 84, 56, 0.18));
+    filter: drop-shadow(0 0 35px rgba(14, 116, 144, 0.18));
   }
 }
 
@@ -324,7 +332,7 @@ html {
 
 body {
   background-color: transparent;
-  color: #1c2826;
+  color: #0e1111;
   font-family: 'Poppins', sans-serif;
   font-size: 15px;
   line-height: 1.6;
@@ -492,6 +500,7 @@ body.no-scroll {
   --color-brand-dark: #3a0ca3;
   --color-brand-light: #f0f4ff;
   --color-brand-accent: #4cc9f0;
+  --focus-ring: rgba(0, 229, 255, 0.18);
 }
 
 .admin-console-theme ::-webkit-scrollbar,
@@ -523,6 +532,11 @@ body.no-scroll {
   background: #B85438 !important; /* Premium brand neon blue hover */
 }
 
+/* User-section custom scrollbars (dialogs, policy sheets) stay cyan */
+.custom-scrollbar:not(.admin-console-theme *):not(.counsellor-console-theme *)::-webkit-scrollbar-thumb:hover {
+  background: #0e7490 !important;
+}
+
 .admin-console-theme *,
 .counsellor-console-theme *,
 .custom-scrollbar {
@@ -551,9 +565,9 @@ body.no-scroll {
 }
 
 @utility card-app-soft-active {
-  background: #f6efe8; /* warm parchment selected hint */
-  border: 1.5px solid var(--color-brand);
-  box-shadow: 0 4px 15px rgba(184, 84, 56, 0.10);
+  background: #edf5f7; /* soft cyan selected hint */
+  border: 1.5px solid #0e7490;
+  box-shadow: 0 4px 15px rgba(14, 116, 144, 0.10);
   border-radius: 10px;
 }
 
@@ -625,7 +639,7 @@ body.no-scroll {
 
 
 @utility bg-mesh-gradient {
-  background-color: #faf6ee;
+  background-color: #fbf8f1;
   background-image: 
     radial-gradient(at 0% 0%, hsla(253,16%,7%,0.05) 0, transparent 50%), 
     radial-gradient(at 50% 0%, hsla(225,39%,30%,0.05) 0, transparent 50%), 
@@ -735,7 +749,7 @@ body.no-scroll {
 
 .hover-scale-card:hover {
   transform: translateY(-6px) !important;
-  box-shadow: 0 16px 32px -12px rgba(184, 84, 56, 0.16), 0 8px 16px -6px rgba(28, 40, 38, 0.10) !important;
+  box-shadow: 0 16px 32px -12px rgba(14, 116, 144, 0.16), 0 8px 16px -6px rgba(14, 17, 17, 0.10) !important;
 }
 
 .hover-scale-btn {
@@ -744,7 +758,7 @@ body.no-scroll {
 
 .hover-scale-btn:hover {
   transform: translateY(-1px) !important;
-  box-shadow: 0 6px 16px -4px rgba(184, 84, 56, 0.28) !important;
+  box-shadow: 0 6px 16px -4px rgba(14, 116, 144, 0.28) !important;
 }
 
 .hover-scale-btn:active {
@@ -828,9 +842,9 @@ body.no-scroll {
 
 /* 6. Time slot selected flash */
 @keyframes slotSelectFlash {
-  0%   { background-color: #f6efe8; box-shadow: 0 0 0 0 rgba(184,84,56,0.6); }
-  50%  { background-color: #f0e3da; box-shadow: 0 0 0 8px rgba(184,84,56,0); }
-  100% { background-color: #f6efe8; box-shadow: 0 0 0 0 rgba(184,84,56,0); }
+  0%   { background-color: #edf5f7; box-shadow: 0 0 0 0 rgba(14,116,144,0.55); }
+  50%  { background-color: #dceff4; box-shadow: 0 0 0 8px rgba(14,116,144,0); }
+  100% { background-color: #edf5f7; box-shadow: 0 0 0 0 rgba(14,116,144,0); }
 }
 
 .animate-slot-select {
@@ -910,8 +924,8 @@ body.no-scroll {
 
 /* 10. Progress dots pulse for active step */
 @keyframes dotPulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184,84,56,0.5); }
-  50%       { transform: scale(1.3); box-shadow: 0 0 0 4px rgba(184,84,56,0); }
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14,116,144,0.5); }
+  50%       { transform: scale(1.3); box-shadow: 0 0 0 4px rgba(14,116,144,0); }
 }
 
 .dot-active {
@@ -1018,10 +1032,10 @@ body.no-scroll {
 
 @keyframes pulseGlowBox {
   0% {
-    box-shadow: 0 0 12px rgba(184, 84, 56, 0.10);
+    box-shadow: 0 0 12px rgba(14, 116, 144, 0.10);
   }
   100% {
-    box-shadow: 0 0 26px rgba(184, 84, 56, 0.28);
+    box-shadow: 0 0 26px rgba(14, 116, 144, 0.28);
   }
 }
 
@@ -1201,7 +1215,7 @@ select:focus,
 textarea:focus {
   border-color: var(--color-brand) !important;
   outline: none !important;
-  box-shadow: 0 0 0 3px rgba(184, 84, 56, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring, rgba(14, 116, 144, 0.16)), inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 @utility shadow-deep-blue {
@@ -1302,7 +1316,7 @@ textarea:focus {
 }
 
 @utility logo-dot {
-  color: #B85438;
+  color: #0E7490;
   font-size: inherit;
   line-height: inherit;
   margin-left: 1px;

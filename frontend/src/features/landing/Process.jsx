@@ -30,13 +30,13 @@ export default function Process() {
 
         {/* Header */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#b85438] tracking-widest uppercase mb-3">
-            <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#0e7490] tracking-widest uppercase mb-3">
+            <span className="w-5 h-px bg-[#0e7490]/60 inline-block" />
             How It Works
-            <span className="w-5 h-px bg-[#b85438]/60 inline-block" />
+            <span className="w-5 h-px bg-[#0e7490]/60 inline-block" />
           </span>
-          <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-semibold text-[#0f172a] mb-4 tracking-tight leading-none">
-            Four Steps To Clarity<span className="text-[#b85438] drop-shadow-[0_0_8px_rgba(184,84,56,0.8)] font-semibold">.</span>
+          <h2 id="process-title" className="text-3xl sm:text-5xl font-sans font-semibold text-[#0e1111] mb-4 tracking-tight leading-none">
+            Four Steps To Clarity<span className="text-[#0e7490] drop-shadow-[0_0_8px_rgba(14,116,144,0.8)] font-semibold">.</span>
           </h2>
           <p className="text-sm sm:text-base text-surface-600 font-medium leading-relaxed">
             Zero cognitive friction. A clear, stress-free pathway from initial selection to ongoing mentorship.
@@ -50,24 +50,24 @@ export default function Process() {
             return (
               <div
                 key={idx}
-                className={`flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#b85438] transition-all duration-300 min-h-[220px] shadow-xs group reveal-on-scroll reveal-scale-in ${delayClass}`}
+                className={`flex flex-col justify-between p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#0e7490] transition-all duration-300 min-h-[220px] shadow-xs group reveal-on-scroll reveal-scale-in ${delayClass}`}
               >
               <div>
                 <div className="flex items-center justify-between w-full mb-6">
-                  <span className="text-4xl font-semibold text-[#0f172a] font-sans group-hover:text-[#b85438] transition-colors">
+                  <span className="text-4xl font-semibold text-[#0e1111] font-sans group-hover:text-[#0e7490] transition-colors">
                     {step.num}
                   </span>
-                  <span className="w-2 h-2 rounded-full bg-[#b85438] shadow-[0_0_6px_#b85438]" />
+                  <span className="w-2 h-2 rounded-full bg-[#0e7490] shadow-[0_0_6px_#0e7490]" />
                 </div>
 
-                <h3 className="text-base font-semibold text-[#0f172a] mb-2 font-sans">{step.title}</h3>
+                <h3 className="text-base font-semibold text-[#0e1111] mb-2 font-sans">{step.title}</h3>
                 <p className="text-surface-600 text-xs leading-relaxed font-normal">
                   {step.desc}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-surface-100 mt-4">
-                <span className="text-[10px] font-semibold tracking-widest text-[#007078]">Step {step.num}</span>
+                <span className="text-[10px] font-semibold tracking-widest text-[#0e7490]">Step {step.num}</span>
               </div>
             </div>
             );
@@ -78,10 +78,10 @@ export default function Process() {
         <div className="mt-14 text-center">
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-8 py-3.5 bg-[#0f172a] hover:bg-[#b85438] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
+            className="px-8 py-3.5 bg-[#0e1111] hover:bg-[#0e7490] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
           >
             <span>Start Your Session Today</span>
-            <span className="text-xs text-[#b85438]">›</span>
+            <span className="text-xs text-[#0e7490]">›</span>
           </button>
         </div>
       </div>

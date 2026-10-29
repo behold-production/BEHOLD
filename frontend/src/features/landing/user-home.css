@@ -1,12 +1,12 @@
 .bh-home {
-  --bh-ink: #1c2826;
-  --bh-muted: #5c6b66;
-  --bh-teal: #b85438;
-  --bh-teal-dark: #a0462e;
-  --bh-coral: #b85438;
-  --bh-paper: #fbf9f5;
-  --bh-line: #ede7de;
-  --bh-sage: #f2ede4;
+  --bh-ink: #0e1111;
+  --bh-muted: #55605f;
+  --bh-teal: #0e7490;
+  --bh-teal-dark: #0b5c73;
+  --bh-coral: #0891b2;
+  --bh-paper: #fbf8f1;
+  --bh-line: #e6dfd0;
+  --bh-sage: #f6f1e6;
   color: var(--bh-ink);
   background: var(--bh-paper);
   font-family: "Poppins", "Noto Sans Malayalam", sans-serif;
@@ -24,7 +24,7 @@
 .bh-home input:focus-visible,
 .bh-home select:focus-visible,
 .bh-home textarea:focus-visible {
-  outline: 3px solid rgba(13, 130, 127, .48);
+  outline: 3px solid rgba(14, 116, 144, .48);
   outline-offset: 3px;
 }
 
@@ -75,7 +75,7 @@
   overflow: hidden;
   color: #fff;
   isolation: isolate;
-  background: #243d3a;
+  background: #123039;
 }
 
 .bh-hero-image,
@@ -209,7 +209,7 @@
 
 .bh-steps-section {
   padding: clamp(72px, 9vw, 122px) 24px;
-  background: #fbf9f5;
+  background: #fbf8f1;
 }
 
 .bh-steps-inner {
@@ -407,7 +407,7 @@
 
 .bh-experts {
   padding: 100px 0 94px;
-  background: #fbf9f5;
+  background: #fbf8f1;
   scroll-margin-top: 84px;
 }
 
@@ -463,7 +463,7 @@
   padding: 0 14px;
   color: #74807b;
   background: #fff;
-  border: 1px solid #e5e6dd;
+  border: 1px solid #e6dfd0;
 }
 
 .bh-search:focus-within {
@@ -531,7 +531,7 @@
   padding: 0 12px;
   color: #708078;
   background: #fff;
-  border: 1px solid #e5e6dd;
+  border: 1px solid #e6dfd0;
   position: relative;
 }
 
@@ -557,7 +557,7 @@
   padding: 10px 13px;
   margin: -8px 0 20px;
   color: #725b32;
-  background: #f9f2df;
+  background: #f6f1e6;
   border: 1px solid #eadbb6;
   font-size: 11px;
 }
@@ -709,7 +709,7 @@
   display: grid;
   gap: 9px;
   padding: 12px 0;
-  border-top: 1px solid #eef0e9;
+  border-top: 1px solid #f1eadc;
 }
 
 .bh-expert-facts span {
@@ -736,7 +736,7 @@
   justify-content: space-between;
   gap: 8px;
   padding: 9px 0;
-  border-top: 1px solid #eef0e9;
+  border-top: 1px solid #f1eadc;
   color: #63746c;
   font-size: 9px;
 }
@@ -764,7 +764,7 @@
   gap: 7px;
   padding-top: 13px;
   margin-top: auto;
-  border-top: 1px solid #eef0e9;
+  border-top: 1px solid #f1eadc;
 }
 
 .bh-expert-price span,
@@ -911,7 +911,7 @@
   display: block;
   margin: 14px 0;
   border-radius: 2px;
-  background: linear-gradient(90deg, #f0f1eb, #e5e9e1, #f0f1eb);
+  background: linear-gradient(90deg, #f1ece0, #e5e9e1, #f1ece0);
   background-size: 200% 100%;
   animation: bh-shimmer 1.4s linear infinite;
 }
@@ -935,7 +935,7 @@
 .bh-approach {
   padding: 91px 0 82px;
   color: var(--bh-ink);
-  background: #edf1e9;
+  background: #f0eadc;
 }
 
 .bh-approach-heading {
@@ -1030,7 +1030,7 @@
   padding-top: 88px;
   padding-bottom: 88px;
   color: var(--bh-ink);
-  background: #fbf9f5;
+  background: #fbf8f1;
 }
 
 .bh-home #faqs-blogs>div:last-child>div {
@@ -1059,14 +1059,14 @@
   box-shadow: 0 5px 20px rgba(31, 53, 43, .035);
 }
 
-.bh-home #faqs-blogs [class*="text-[#b85438]"] {
+.bh-home #faqs-blogs [class*="text-[#0e7490]"] {
   color: var(--bh-teal);
 }
 
 .bh-home #inquiry {
   padding-top: 82px;
   padding-bottom: 88px;
-  background: #edf1e9;
+  background: #f0eadc;
   scroll-margin-top: 75px;
 }
 
@@ -1132,13 +1132,13 @@
 .bh-profile-dialog,
 .bh-booking-alert,
 .bh-consent-dialog {
-  --bh-ink: #1c2826;
-  --bh-muted: #5c6b66;
-  --bh-teal: #b85438;
-  --bh-teal-dark: #a0462e;
-  --bh-coral: #d98a67;
-  --bh-paper: #fbf9f5;
-  --bh-line: #ede7de;
+  --bh-ink: #0e1111;
+  --bh-muted: #55605f;
+  --bh-teal: #0e7490;
+  --bh-teal-dark: #0b5c73;
+  --bh-coral: #0891b2;
+  --bh-paper: #fbf8f1;
+  --bh-line: #e6dfd0;
   color: var(--bh-ink) !important;
   font-family: "Poppins", "Noto Sans Malayalam", sans-serif !important;
 }
@@ -1149,17 +1149,17 @@
   height: min(90vh, 880px) !important;
   height: min(90svh, 880px) !important;
   background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 6px !important;
-  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.16) !important;
+  border: 1px solid #e6dfd0 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 60px rgba(14, 17, 17, 0.18) !important;
 }
 
 .bh-booking-dialog>.sticky {
   min-height: 64px;
   padding-inline: 22px !important;
   background: rgba(255, 255, 255, 0.98) !important;
-  border-color: #f1f5f9 !important;
-  border-radius: 6px 6px 0 0 !important;
+  border-color: #f1eadc !important;
+  border-radius: 18px 18px 0 0 !important;
 }
 
 .bh-booking-dialog>.sticky button[aria-label="Go Back"],
@@ -1180,15 +1180,16 @@
   box-shadow: 0 0 0 3px rgba(13, 130, 127, .15);
 }
 
-.bh-booking-dialog [class*="bg-[#b85438]"] {
+/* Exact token matching avoids catching hover:/40-opacity variants that share the prefix */
+.bh-booking-dialog [class~="bg-[#0e7490]"] {
   background-color: var(--bh-teal) !important;
 }
 
-.bh-booking-dialog [class*="text-[#b85438]"] {
+.bh-booking-dialog [class~="text-[#0e7490]"] {
   color: var(--bh-teal) !important;
 }
 
-.bh-booking-dialog [class*="border-[#b85438]"] {
+.bh-booking-dialog [class~="border-[#0e7490]"] {
   border-color: var(--bh-teal) !important;
 }
 
@@ -1198,7 +1199,7 @@
 
 .bh-booking-content {
   padding: 24px 22px 36px !important;
-  background: #f8fafc !important;
+  background: #fbf8f1 !important;
 }
 
 .bh-booking-content>div {
@@ -1209,9 +1210,9 @@
 .bh-booking-content .bh-booking-step-card,
 .bh-booking-content #booking-console .bg-white.border,
 .bh-booking-content #booking-console .booking-card {
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03) !important;
+  border: 1px solid #e6dfd0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 8px rgba(14, 17, 17, 0.04) !important;
 }
 
 .bh-booking-content .bh-booking-step-card {
@@ -1225,15 +1226,15 @@
 }
 
 .bh-booking-content .bh-booking-step-card>div:first-child {
-  border-color: #f1f5f9 !important;
+  border-color: #f1eadc !important;
 }
 
 .bh-booking-content .bh-booking-step-card>div:first-child>div:first-child>span:first-child {
   width: 30px !important;
   height: 30px !important;
   color: #fff !important;
-  background: #0f172a !important;
-  border-radius: 6px !important;
+  background: #0e7490 !important;
+  border-radius: 8px !important;
   font-size: 12px !important;
   font-weight: 700 !important;
 }
@@ -1243,22 +1244,22 @@
 }
 
 .bh-booking-content .bh-booking-step-card>div:first-child p {
-  color: #5c6b66 !important;
+  color: #55605f !important;
   font-size: 12px !important;
   line-height: 1.6;
 }
 
 .bh-booking-content .bh-booking-step-card>div:first-child>span:last-child {
   color: var(--bh-teal) !important;
-  background: #f0fdfa !important;
-  border: 1px solid #ccfbf1 !important;
+  background: #edf5f7 !important;
+  border: 1px solid #bfe3ec !important;
   border-radius: 6px !important;
   font-size: 10px !important;
   font-weight: 700 !important;
   padding: 3px 8px !important;
 }
 
-.bh-booking-content .bh-booking-step-card .text-\[\#b85438\],
+.bh-booking-content .bh-booking-step-card .text-\[\#0e7490\],
 .bh-booking-content .bh-booking-step-card .text-teal-700,
 .bh-booking-content .bh-booking-step-card .text-teal-800 {
   color: var(--bh-teal) !important;
@@ -1266,17 +1267,18 @@
 
 .bh-booking-content .bh-booking-step-card [class*="bg-teal-50"],
 .bh-booking-content .bh-booking-step-card [class*="bg-[#f6efe8]"] {
-  background-color: #f0fdfa !important;
+  background-color: #edf5f7 !important;
 }
 
-.bh-booking-content .bh-booking-step-card [class*="border-[#b85438]"],
-.bh-booking-content .bh-booking-step-card [class*="ring-[#b85438]"] {
+.bh-booking-content .bh-booking-step-card [class~="border-[#0e7490]"],
+.bh-booking-content .bh-booking-step-card [class~="ring-[#0e7490]"],
+.bh-booking-content .bh-booking-step-card [class~="ring-[#0e7490]/30"] {
   border-color: var(--bh-teal) !important;
 }
 
 .bh-booking-content .bh-booking-step-card [class*="text-slate-500"][class*="uppercase"],
 .bh-booking-content .bh-booking-step-card label[class*="uppercase"] {
-  color: #5c6b66 !important;
+  color: #55605f !important;
   letter-spacing: .08em !important;
   font-size: 11px !important;
 }
@@ -1287,22 +1289,22 @@
   min-height: 48px;
   color: var(--bh-ink) !important;
   background: #fff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 8px !important;
+  border: 1px solid #e6dfd0 !important;
+  border-radius: 10px !important;
   box-shadow: none !important;
   transition: all 0.15s ease-in-out !important;
 }
 
 .bh-booking-content .bh-booking-step-card .card-app-soft-active {
   color: var(--bh-ink) !important;
-  background: #f0fdfa !important;
+  background: #edf5f7 !important;
   border: 1.5px solid var(--bh-teal) !important;
-  box-shadow: 0 0 0 1px rgba(13, 130, 127, .25) !important;
+  box-shadow: 0 0 0 1px rgba(14, 116, 144, .25) !important;
 }
 
 .bh-booking-content .bh-booking-step-card .card-app-soft:hover {
-  border-color: #cbd5e1 !important;
-  background: #f8fafc !important;
+  border-color: #d5cdbb !important;
+  background: #f6f1e6 !important;
 }
 
 .bh-booking-content .bh-booking-step-card .card-app-soft-active:hover {
@@ -1313,38 +1315,38 @@
 .bh-booking-content .bh-booking-step-card button[class*="border-2"],
 .bh-booking-content .bh-booking-step-card div[class*="border-2"] {
   border-width: 1px !important;
-  border-radius: 8px !important;
-  border-color: #e2e8f0 !important;
+  border-radius: 10px !important;
+  border-color: #e6dfd0 !important;
   box-shadow: none !important;
 }
 
-.bh-booking-content .bh-booking-step-card button[class*="border-[#b85438]"],
-.bh-booking-content .bh-booking-step-card div[class*="border-[#b85438]"] {
-  background: #f0fdfa !important;
+.bh-booking-content .bh-booking-step-card button[class~="border-[#0e7490]"]:not(.btn-booking-primary),
+.bh-booking-content .bh-booking-step-card div[class~="border-[#0e7490]"] {
+  background: #edf5f7 !important;
   border: 1.5px solid var(--bh-teal) !important;
-  box-shadow: 0 0 0 1px rgba(13, 130, 127, .2) !important;
-  border-radius: 8px !important;
+  box-shadow: 0 0 0 1px rgba(14, 116, 144, .2) !important;
+  border-radius: 10px !important;
 }
 
 .bh-booking-content .bh-booking-step-card button[class*="bg-slate-900"],
 .bh-booking-dialog button[class*="bg-slate-900"],
-.bh-booking-dialog button[class*="bg-[#0f172a]"],
+.bh-booking-dialog button[class*="bg-[#0e1111]"],
 .bh-booking-dialog button[class*="bg-surface-900"] {
   color: #fff !important;
-  background: #0f172a !important;
-  border-color: #0f172a !important;
-  border-radius: 8px !important;
+  background: #0e7490 !important;
+  border-color: #0e7490 !important;
+  border-radius: 10px !important;
 }
 
 .bh-booking-content .bh-booking-step-card button[class*="bg-slate-900"]:hover,
 .bh-booking-dialog button[class*="bg-slate-900"]:hover,
-.bh-booking-dialog button[class*="bg-[#0f172a]"]:hover {
-  background: #1e293b !important;
+.bh-booking-dialog button[class*="bg-[#0e1111]"]:hover {
+  background: #0b5c73 !important;
 }
 
 .bh-booking-content .bh-booking-step-card [class*="border-slate-100"],
 .bh-booking-content .bh-booking-step-card [class*="border-slate-200"] {
-  border-color: #e2e8f0 !important;
+  border-color: #e6dfd0 !important;
 }
 
 .bh-booking-dialog input,
@@ -1355,8 +1357,8 @@
 .bh-profile-dialog input,
 .bh-profile-dialog textarea,
 .bh-profile-dialog select {
-  border-radius: 8px !important;
-  border-color: #dfe4db !important;
+  border-radius: 10px !important;
+  border-color: #ddd6c6 !important;
 }
 
 .bh-booking-dialog input:focus,
@@ -1390,7 +1392,7 @@
 .bh-booking-auth-dialog>div:nth-child(2),
 .bh-profile-dialog>div:first-child {
   padding: 24px 25px !important;
-  background: #f7f8f2 !important;
+  background: #f7f3ea !important;
   border-color: var(--bh-line) !important;
 }
 
@@ -1416,11 +1418,11 @@
 .bh-profile-dialog textarea {
   min-height: 44px;
   color: var(--bh-ink) !important;
-  background: #fbfcf9 !important;
+  background: #fbf8f1 !important;
 }
 
-.bh-auth-dialog button[class*="bg-[#0f172a]"],
-.bh-booking-auth-dialog button[class*="bg-[#0f172a]"],
+.bh-auth-dialog button[class*="bg-[#0e1111]"],
+.bh-booking-auth-dialog button[class*="bg-[#0e1111]"],
 .bh-profile-dialog button[type="submit"] {
   min-height: 46px;
   color: #fff !important;
@@ -1429,8 +1431,8 @@
   border-radius: 7px !important;
 }
 
-.bh-auth-dialog button[class*="bg-[#0f172a]"]:hover,
-.bh-booking-auth-dialog button[class*="bg-[#0f172a]"]:hover,
+.bh-auth-dialog button[class*="bg-[#0e1111]"]:hover,
+.bh-booking-auth-dialog button[class*="bg-[#0e1111]"]:hover,
 .bh-profile-dialog button[type="submit"]:hover {
   background: var(--bh-teal-dark) !important;
 }
@@ -1447,11 +1449,11 @@
   color: var(--bh-teal) !important;
 }
 
-.bh-profile-dialog [class*="bg-[#0f172a]"] {
+.bh-profile-dialog [class*="bg-[#0e1111]"] {
   background: var(--bh-ink) !important;
 }
 
-.bh-profile-dialog [class*="bg-[#0f172a]"][class*="text-[#b85438]"] {
+.bh-profile-dialog [class*="bg-[#0e1111]"][class*="text-[#0e7490]"] {
   color: #fff !important;
 }
 
@@ -1490,7 +1492,7 @@
 }
 
 .bh-consent-dialog>div:first-child {
-  background: #f7f8f2 !important;
+  background: #f7f3ea !important;
   border-color: var(--bh-line) !important;
 }
 
@@ -1898,100 +1900,104 @@
 
 /* Public home refresh based on the editorial reference layout. */
 header.bh-home-nav {
-  background: rgba(247, 247, 241, .96) !important;
-  border-bottom: 1px solid #e5e7df !important;
-  box-shadow: 0 3px 18px rgba(41, 56, 47, .045) !important;
-  color: #1c2826 !important;
+  background: rgba(251, 248, 241, .96) !important;
+  border-bottom: 1px solid #e6dfd0 !important;
+  box-shadow: 0 3px 18px rgba(14, 17, 17, .05) !important;
+  color: #0e1111 !important;
   backdrop-filter: blur(14px);
 }
 
 header.bh-home-nav>div {
-  max-width: 1110px;
+  /* Matches the max-w-6xl (72rem) used by every landing section so the
+     brand, section copy and footer all share one vertical edge. */
+  max-width: 1152px;
   padding-top: 13px !important;
   padding-bottom: 13px !important;
 }
 
 header.bh-home-nav button>span {
-  color: #1c2826 !important;
+  color: #0e1111 !important;
 }
 
 header.bh-home-nav button>span>span {
-  color: #b85438 !important;
+  color: #0e7490 !important;
   text-shadow: none !important;
 }
 
 header.bh-home-nav nav>span {
-  background: #b85438 !important;
+  background: #0e7490 !important;
   box-shadow: none !important;
 }
 
 header.bh-home-nav nav button {
-  color: #65746a !important;
   font-size: 12px !important;
 }
 
-header.bh-home-nav nav button:hover,
-header.bh-home-nav nav button[class*="text-[#b85438]"] {
-  color: #b85438 !important;
+header.bh-home-nav nav button:hover {
+  color: #0e7490 !important;
+}
+
+header.bh-home-nav nav button[class*="font-semibold"] {
+  color: #0e7490 !important;
 }
 
 header.bh-home-nav nav+div>button:first-child {
   color: #fff !important;
-  background: #b85438 !important;
-  border-color: #b85438 !important;
-  border-radius: 3px !important;
+  background: #0e7490 !important;
+  border-color: #0e7490 !important;
+  border-radius: 8px !important;
   box-shadow: none !important;
   font-size: 11px !important;
 }
 
 header.bh-home-nav nav+div>button:first-child:hover {
-  background: #a0462e !important;
+  background: #0b5c73 !important;
 }
 
 header.bh-home-nav nav+div>button:last-child {
-  color: #b85438 !important;
+  color: #0b5c73 !important;
   background: transparent !important;
-  border-color: #d5ddd3 !important;
-  border-radius: 3px !important;
+  border-color: #ddd6c6 !important;
+  border-radius: 8px !important;
   font-size: 11px !important;
 }
 
 header.bh-home-nav nav+div>button:last-child:hover {
-  background: #e9eee5 !important;
+  background: #f1eadc !important;
 }
 
 header.bh-home-nav>div>div button[aria-label="Open Navigation Drawer"] {
-  background: #e9eee5 !important;
-  color: #1c2826 !important;
+  background: #f1eadc !important;
+  color: #0e1111 !important;
 }
 
 header.bh-home-nav>div>div button[aria-label="Open Navigation Drawer"] svg {
-  color: #1c2826 !important;
+  color: #0e1111 !important;
 }
 
 header.bh-home-nav>div>div:last-child>button {
   color: #fff !important;
-  background: #b85438 !important;
-  border: 1px solid #b85438 !important;
-  border-radius: 3px !important;
+  background: #0e7490 !important;
+  border: 1px solid #0e7490 !important;
+  border-radius: 8px !important;
   box-shadow: none !important;
 }
 
 header.bh-home-nav>div>div:last-child>button:hover {
-  background: #a0462e !important;
+  background: #0b5c73 !important;
 }
 
 .bh-home {
-  --bh-ink: #1c2826;
-  --bh-muted: #5c6b66;
-  --bh-teal: #b85438;
-  --bh-teal-dark: #a0462e;
-  --bh-coral: #b85438;
-  --bh-paper: #fbf9f5;
-  --bh-line: #ede7de;
-  --bh-sage: #f2ede4;
+  --bh-ink: #0e1111;
+  --bh-muted: #55605f;
+  --bh-teal: #0e7490;
+  --bh-teal-dark: #0b5c73;
+  --bh-coral: #0891b2;
+  --bh-paper: #fbf8f1;
+  --bh-line: #e6dfd0;
+  --bh-sage: #f6f1e6;
   overflow: hidden;
-  background: #fbf9f5;
+  background: #fbf8f1;
 }
 
 .bh-home .bh-eyebrow {
@@ -2001,7 +2007,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-eyebrow-dot {
-  background: #b85438;
+  background: #0e7490;
 }
 
 .bh-section-shell {
@@ -2014,7 +2020,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   padding: 76px 32px 0;
   overflow: visible;
   color: var(--bh-ink);
-  background: #fbf9f5;
+  background: #fbf8f1;
 }
 
 .bh-home .bh-hero-content {
@@ -2033,13 +2039,13 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-hero-eyebrow {
-  color: #718175;
+  color: #6e7b7c;
 }
 
 .bh-home .bh-hero h1 {
   max-width: 620px;
   margin: 20px 0 18px;
-  color: #1c2826;
+  color: #0e1111;
   font-family: "Poppins", sans-serif;
   font-size: clamp(46px, 5.2vw, 68px);
   font-weight: 600;
@@ -2050,14 +2056,14 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-hero h1 em {
-  color: #b85438;
+  color: #0e7490;
   font-family: "Cormorant Garamond", Georgia, serif;
   font-weight: 600;
 }
 
 .bh-home .bh-hero-description {
   max-width: 465px;
-  color: #718076;
+  color: #6e7b7c;
   font-size: 13px;
   line-height: 1.9;
 }
@@ -2074,11 +2080,11 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-button-primary {
-  background: #b85438;
+  background: #0e7490;
 }
 
 .bh-home .bh-button-primary:hover {
-  background: #a0462e;
+  background: #0b5c73;
 }
 
 .bh-home .bh-hero-trust {
@@ -2095,8 +2101,8 @@ header.bh-home-nav>div>div:last-child>button:hover {
   height: 35px;
   display: grid;
   place-items: center;
-  color: #b85438;
-  background: #f2ede4;
+  color: #0e7490;
+  background: #f6f1e6;
   border-radius: 50%;
 }
 
@@ -2153,8 +2159,8 @@ header.bh-home-nav>div>div:last-child>button:hover {
   align-items: center;
   gap: 10px;
   padding: 13px 16px;
-  color: #1c2826;
-  background: #fffefa;
+  color: #0e1111;
+  background: #fffdf8;
   box-shadow: 0 9px 26px rgba(41, 56, 47, .12);
 }
 
@@ -2163,8 +2169,8 @@ header.bh-home-nav>div>div:last-child>button:hover {
   height: 34px;
   display: grid;
   place-items: center;
-  color: #b85438;
-  background: #f2ede4;
+  color: #0e7490;
+  background: #f6f1e6;
   border-radius: 50%;
 }
 
@@ -2188,7 +2194,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-floating-leaf {
   position: absolute;
   z-index: 2;
-  color: #b85438;
+  color: #0e7490;
 }
 
 .bh-leaf-one {
@@ -2211,7 +2217,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #718175;
+  color: #6e7b7c;
   font-size: 8px;
   font-weight: 700;
   letter-spacing: .09em;
@@ -2235,8 +2241,8 @@ header.bh-home-nav>div>div:last-child>button:hover {
   place-items: center;
   transform: translate(8px, 5px) rotate(9deg);
   border-radius: 50%;
-  color: #1c2826;
-  background: #f2ede4;
+  color: #0e1111;
+  background: #f6f1e6;
   font-size: 8px;
   font-weight: 800;
   letter-spacing: .1em;
@@ -2261,7 +2267,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   align-items: center;
   gap: 5px;
   padding: 7px 0;
-  color: #b85438;
+  color: #0e7490;
   background: transparent;
   border: 0;
   cursor: pointer;
@@ -2270,7 +2276,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-hero-book-link:hover {
-  color: #d07f60;
+  color: #0891b2;
 }
 
 .bh-home .bh-hero-bottomline {
@@ -2281,7 +2287,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   display: flex;
   align-items: center;
   gap: 27px;
-  border-top: 1px solid #ede7de;
+  border-top: 1px solid #e6dfd0;
   color: #66776b;
   font-size: 10px;
   font-weight: 700;
@@ -2304,7 +2310,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-home .bh-experts {
   padding: 86px 0 79px;
-  background: #fffefa;
+  background: #fffdf8;
 }
 
 .bh-home .bh-section-heading {
@@ -2316,7 +2322,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-home .bh-approach-heading h2,
 .bh-home .bh-values-copy h2 {
   margin-top: 14px;
-  color: #1c2826;
+  color: #0e1111;
   font-family: "Poppins", sans-serif;
   font-size: clamp(38px, 4.4vw, 56px);
   font-weight: 600;
@@ -2327,13 +2333,13 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-home .bh-section-heading h2 em,
 .bh-home .bh-approach-heading h2 em,
 .bh-home .bh-values-copy h2 em {
-  color: #b85438;
+  color: #0e7490;
   font-family: "Cormorant Garamond", Georgia, serif;
 }
 
 .bh-home .bh-section-heading>p {
   max-width: 390px;
-  color: #718076;
+  color: #6e7b7c;
   font-size: 12px;
 }
 
@@ -2358,7 +2364,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   position: relative;
   color: #87948a;
   background: #fff;
-  border: 1px solid #e8ebe4;
+  border: 1px solid #e6dfd0;
 }
 
 .bh-home .bh-search input,
@@ -2367,7 +2373,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   width: 100%;
   min-width: 0;
   appearance: none;
-  color: #1c2826;
+  color: #0e1111;
   background: transparent;
   border: 0;
   outline: 0;
@@ -2401,7 +2407,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-home .bh-expert-card {
   padding: 0;
   overflow: hidden;
-  border-color: #e8ebe4;
+  border-color: #e6dfd0;
   border-radius: 5px;
 }
 
@@ -2446,7 +2452,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   max-width: calc(100% - 24px);
   padding: 7px 10px;
   overflow: hidden;
-  color: #b85438;
+  color: #0e7490;
   background: rgba(255, 255, 255, .94);
   border-radius: 4px;
   font-size: 8px;
@@ -2476,13 +2482,13 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-role-label {
-  color: #829087;
+  color: #7c8785;
   font-size: 8px;
 }
 
 .bh-home .bh-expert-heading h3 {
   margin: 7px 0 4px;
-  color: #1c2826;
+  color: #0e1111;
   font-family: "Poppins", sans-serif;
   font-size: 17px;
   font-weight: 600;
@@ -2507,7 +2513,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 .bh-home .bh-expert-bio {
   min-height: 53px;
   margin: 5px 0 11px;
-  color: #718076;
+  color: #6e7b7c;
   font-size: 9px;
   line-height: 1.7;
 }
@@ -2595,7 +2601,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-approach-heading .bh-eyebrow {
-  color: #bdcfc0;
+  color: #cfd8d8;
 }
 
 .bh-home .bh-approach-heading h2 {
@@ -2640,28 +2646,28 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-step p {
-  color: #b7c8bd;
+  color: #cfd8d8;
   font-size: 10px;
 }
 
 .bh-home .bh-approach-cta {
   border-color: rgba(255, 255, 255, .15);
-  color: #b7c8bd;
+  color: #cfd8d8;
 }
 
 .bh-home .bh-button-dark {
-  color: #1c2826;
-  background: #f5f4e9;
+  color: #0e1111;
+  background: #f6f1e6;
 }
 
 .bh-home .bh-button-dark:hover {
-  color: #1c2826;
+  color: #0e1111;
   background: #fff;
 }
 
 .bh-home .bh-values {
   padding: 88px 0;
-  background: #f1f2e9;
+  background: #f1eadc;
 }
 
 .bh-values-grid {
@@ -2692,15 +2698,15 @@ header.bh-home-nav>div>div:last-child>button:hover {
   align-items: center;
   gap: 7px;
   padding: 11px 13px;
-  color: #b85438;
-  background: #fffefa;
+  color: #0e7490;
+  background: #fffdf8;
   border-radius: 4px;
   font-size: 9px;
   font-weight: 700;
 }
 
 .bh-values-art-label svg {
-  color: #b85438;
+  color: #0e7490;
 }
 
 .bh-values-copy h2 {
@@ -2710,7 +2716,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-values-copy>p {
   max-width: 450px;
-  color: #5c6b66;
+  color: #55605f;
   font-size: 11px;
   line-height: 1.9;
 }
@@ -2736,23 +2742,23 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-value-points strong {
-  color: #1c2826;
+  color: #0e1111;
   font-size: 10px;
 }
 
 .bh-value-points small {
   margin-top: 4px;
-  color: #829087;
+  color: #7c8785;
   font-size: 9px;
 }
 
 .bh-home .bh-text-button {
-  color: #b85438;
+  color: #0e7490;
   font-size: 10px !important;
 }
 
 .bh-home .bh-text-button:hover {
-  color: #d07f60;
+  color: #0891b2;
 }
 
 .bh-home .bh-closing {
@@ -2760,7 +2766,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
   overflow: hidden;
   padding: 70px 20px 75px;
   color: #fff;
-  background: #b85438;
+  background: #0e7490;
   text-align: center;
 }
 
@@ -2771,7 +2777,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-eyebrow-light {
-  color: #bdcfc0 !important;
+  color: #cfd8d8 !important;
 }
 
 .bh-closing-spark {
@@ -2799,12 +2805,12 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-home .bh-button-cream {
   min-height: 43px;
-  color: #b85438;
-  background: #f5f4e9;
+  color: #0e7490;
+  background: #f6f1e6;
 }
 
 .bh-home .bh-button-cream:hover {
-  color: #a0462e;
+  color: #0b5c73;
   background: #fff;
 }
 
@@ -2816,18 +2822,18 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home #faqs-blogs {
-  background: #fffefa;
+  background: #fffdf8;
 }
 
 .bh-home .bh-faq-description {
   margin: -11px 0 18px;
-  color: #718076;
+  color: #6e7b7c;
   font-size: 10px;
   line-height: 1.7;
 }
 
 .bh-home #inquiry {
-  background: #f1f2e9;
+  background: #f1eadc;
 }
 
 .bh-home #inquiry h2 {
@@ -2836,43 +2842,22 @@ header.bh-home-nav>div>div:last-child>button:hover {
 
 .bh-home #inquiry button[type="submit"] {
   color: #fff !important;
-  background: #b85438 !important;
+  background: #0e7490 !important;
 }
 
 .bh-home #inquiry button[type="submit"]:hover {
-  background: #a0462e !important;
+  background: #0b5c73 !important;
 }
 
 body.bh-home-page #root footer {
   padding: 30px 0 20px !important;
-  color: #1c2826 !important;
-  background: #fbf9f5 !important;
-  border-top: 1px solid #ede7de !important;
+  color: #0e1111 !important;
+  background: #f7f3ea !important;
+  border-top: 1px solid #e6dfd0 !important;
 }
 
 body.bh-home-page #root footer>div {
   max-width: 1110px;
-}
-
-body.bh-home-page #root footer [class*="text-white"],
-body.bh-home-page #root footer [class*="text-slate-300"],
-body.bh-home-page #root footer [class*="text-slate-400"],
-body.bh-home-page #root footer [class*="text-slate-500"] {
-  color: #718076 !important;
-}
-
-body.bh-home-page #root footer [class*="border-slate-800"] {
-  border-color: #ede7de !important;
-}
-
-body.bh-home-page #root footer [class*="text-[#b85438]"] {
-  color: #b85438 !important;
-  text-shadow: none !important;
-}
-
-body.bh-home-page #root footer a:hover,
-body.bh-home-page #root footer button:hover {
-  color: #b85438 !important;
 }
 
 @media (max-width: 1023px) {
@@ -3146,7 +3131,7 @@ body.bh-home-page #root footer button:hover {
   background:
     radial-gradient(ellipse at 12% 18%, rgba(216, 149, 120, .09), transparent 31%),
     radial-gradient(ellipse at 90% 86%, rgba(49, 92, 78, .08), transparent 34%),
-    #fbf9f5;
+    #fbf8f1;
 }
 
 .bh-home .bh-hero-empty .bh-hero-content {
@@ -3167,9 +3152,9 @@ body.bh-home-page #root footer button:hover {
   grid-template-columns: 48px minmax(0, 1fr);
   gap: 18px;
   padding: clamp(24px, 5vw, 42px);
-  color: #1c2826;
+  color: #0e1111;
   background: rgba(255, 254, 250, .88);
-  border: 1px solid #ede7de;
+  border: 1px solid #e6dfd0;
   box-shadow: 0 20px 55px rgba(41, 56, 47, .07);
 }
 
@@ -3178,8 +3163,8 @@ body.bh-home-page #root footer button:hover {
   height: 46px;
   display: grid;
   place-items: center;
-  color: #b85438;
-  background: #f2ede4;
+  color: #0e7490;
+  background: #f6f1e6;
   border-radius: 50%;
 }
 
@@ -3192,7 +3177,7 @@ body.bh-home-page #root footer button:hover {
 
 .bh-content-status h1 {
   margin: 8px 0 9px !important;
-  color: #1c2826 !important;
+  color: #0e1111 !important;
   font-family: "Poppins", sans-serif !important;
   font-size: clamp(25px, 4vw, 38px) !important;
   font-weight: 600 !important;
@@ -3203,7 +3188,7 @@ body.bh-home-page #root footer button:hover {
 .bh-content-status p {
   max-width: 540px;
   margin: 0;
-  color: #718076;
+  color: #6e7b7c;
   font-size: 12px;
   line-height: 1.8;
 }
@@ -3216,7 +3201,7 @@ body.bh-home-page #root footer button:hover {
   max-width: 760px;
   margin: 15px auto 0;
   padding: 0 5px;
-  color: #718076;
+  color: #6e7b7c;
 }
 
 @media (max-width: 680px) {
@@ -3658,7 +3643,7 @@ header.bh-home-nav button {
   min-width: 0;
   padding: clamp(18px, 2.5vw, 30px);
   background: rgba(255, 255, 255, .82);
-  border: 1px solid #ede7de;
+  border: 1px solid #e6dfd0;
   border-radius: 8px;
   box-shadow: 0 12px 35px rgba(41, 56, 47, .045);
 }
@@ -3740,8 +3725,9 @@ header.bh-home-nav button {
 
 body.bh-home-page #root footer {
   padding: 52px 0 24px !important;
-  background: #293d34 !important;
-  border-top: 0 !important;
+  background: #f7f3ea !important;
+  border-top: 1px solid #e6dfd0 !important;
+  color: #0e1111 !important;
 }
 
 body.bh-home-page #root footer>div {
@@ -3765,31 +3751,7 @@ body.bh-home-page #root footer button {
 }
 
 body.bh-home-page #root footer>div>div:last-child {
-  border-color: rgba(255, 255, 255, .16) !important;
-}
-
-body.bh-home-page #root footer [class*="text-white"] {
-  color: #fbf9f5 !important;
-}
-
-body.bh-home-page #root footer [class*="text-slate-300"],
-body.bh-home-page #root footer [class*="text-slate-400"],
-body.bh-home-page #root footer [class*="text-slate-500"] {
-  color: #c4d0c7 !important;
-}
-
-body.bh-home-page #root footer [class*="border-slate-800"] {
-  border-color: rgba(255, 255, 255, .16) !important;
-}
-
-body.bh-home-page #root footer [class*="text-[#b85438]"] {
-  color: #e6a58c !important;
-  text-shadow: none !important;
-}
-
-body.bh-home-page #root footer a:hover,
-body.bh-home-page #root footer button:hover {
-  color: #f3c7b5 !important;
+  border-color: #e6dfd0 !important;
 }
 
 body.bh-home-page #root footer>div>div:last-child>div:last-child {
@@ -3927,7 +3889,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
     min-width: 0;
     padding: clamp(20px, 3vw, 34px);
     background: rgba(255, 255, 255, .82);
-    border: 1px solid #ede7de;
+    border: 1px solid #e6dfd0;
     border-radius: 8px;
     box-shadow: 0 12px 35px rgba(41, 56, 47, .045);
   }
@@ -3952,7 +3914,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
     min-height: 190px;
     overflow: hidden;
     background: #fff;
-    border: 1px solid #ede7de;
+    border: 1px solid #e6dfd0;
     border-radius: 7px;
     padding: 0;
     font: inherit;
@@ -4006,7 +3968,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
 
   .bh-home .bh-home-blog-card h3 {
     margin: 0;
-    color: #293d34;
+    color: #0e1111;
     font-size: clamp(16px, 1.7vw, 20px);
     font-weight: 650;
     line-height: 1.35;
@@ -4038,7 +4000,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
   }
 
   .bh-home .bh-home-blog-link:hover {
-    color: #293d34;
+    color: #0e1111;
   }
 
   @media (max-width: 760px) {
@@ -4335,7 +4297,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
   min-height: max(580px, min(780px, calc(100svh - 72px)));
   padding: 0;
   justify-content: stretch;
-  background: #243d3a;
+  background: #123039;
 }
 
 .bh-home .bh-hero-image {
@@ -4401,7 +4363,7 @@ body.bh-home-page #root footer>div>div:last-child>div:last-child {
 
 .bh-home .bh-hero-empty {
   padding: 0;
-  background: #243d3a;
+  background: #123039;
 }
 
 .bh-home .bh-hero-empty .bh-hero-content {

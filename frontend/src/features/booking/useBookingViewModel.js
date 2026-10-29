@@ -10,6 +10,11 @@ import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../util
 import { trackInitiateCheckout, trackPurchase, trackSchedule, getStoredCampaignData } from '../../utils/metaPixel';
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
+// A confirmed booking must not leave a resumable draft behind
+const clearBookingDraft = () => {
+  try { sessionStorage.removeItem(BOOKING_DRAFT_KEY); } catch { /* ignore */ }
+};
+
 export const getHaversineDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371; // Radius of the Earth in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -547,7 +552,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
 
       // 3. Discount (if applied)
       if (detailsDiscount > 0) {
-        doc.setTextColor(184, 84, 56); // classic terracotta
+        doc.setTextColor(14, 116, 144); // classic terracotta
         doc.text(`Promo Discount Code`, 24, tableY);
         doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
         tableY += 8;
@@ -1328,6 +1333,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           } catch (e) {}
           setIsProcessingPayment(true);
           setPaymentStepText("Booking confirmed! Loading confirmation...");
+          clearBookingDraft();
           window.location.replace('/confirmed');
           return;
         } else {
@@ -1494,6 +1500,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
               } catch (e) {}
               setIsProcessingPayment(true);
               setPaymentStepText("Payment verified! Loading your session confirmation...");
+              clearBookingDraft();
               window.location.replace('/confirmed');
               return;
             } else {
@@ -1506,7 +1513,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
           }
         },
         theme: {
-          color: "#B85438"
+          color: "#0e7490"
         },
         modal: {
           ondismiss: function () {
@@ -1580,6 +1587,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         } catch (e) {}
         setIsProcessingPayment(true);
         setPaymentStepText("Reschedule submitted! Loading confirmation...");
+        clearBookingDraft();
         window.location.replace('/confirmed?type=rescheduled');
         return;
       } else {

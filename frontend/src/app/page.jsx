@@ -55,14 +55,14 @@ export default function HomePage() {
   const bgImageSrc = globalBgTexture?.src || globalBgTexture;
 
   return (
-    <div className="relative min-h-screen bg-[#fbf9f5] text-[#1c2826] flex flex-col justify-between selection:bg-[#b85438] selection:text-white font-sans">
+    <div className="relative min-h-screen bg-[#fbf8f1] text-[#0e1111] flex flex-col justify-between selection:bg-[#0e7490] selection:text-white font-sans">
       {/* Background Texture */}
       <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none">
         <div
           className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none opacity-40"
           style={{ backgroundImage: `url(${bgImageSrc})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#f3e7df]/10 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#e9f5f8]/10 to-transparent pointer-events-none" />
       </div>
 
       <Navbar

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * ScrollDot
- * Renders a clean, normal typographical period (.) in classic terracotta (#B85438) right next to the text.
+ * Renders a clean, normal typographical period (.) in classic terracotta (#0e7490) right next to the text.
  * Clicking it scrolls to `nextId` smoothly.
  */
 export function ScrollDot({
@@ -38,7 +38,7 @@ export function ScrollDot({
       ref={dotRef}
       onClick={handleClick}
       title={label}
-      className={`text-[#b85438] font-bold cursor-pointer inline transition-transform duration-200 hover:scale-125 ${className}`}
+      className={`text-[#0e7490] font-bold cursor-pointer inline transition-transform duration-200 hover:scale-125 ${className}`}
     >
       .
     </span>
@@ -51,7 +51,7 @@ export function ScrollDot({
 export function BrandDot({ size = 'md', pulse = false, float = false, className = '' }) {
   return (
     <span
-      className={`text-[#b85438] font-bold inline ${className}`}
+      className={`text-[#0e7490] font-bold inline ${className}`}
       aria-hidden="true"
     >
       .
@@ -65,8 +65,8 @@ export function BrandDot({ size = 'md', pulse = false, float = false, className 
 export function DotEyebrow({ children, className = '' }) {
   return (
     <div className={`inline-flex items-center gap-1.5 ${className}`}>
-      <span className="w-2 h-2 rounded-full bg-[#b85438] inline-block" />
-      <span className="text-sm font-semibold tracking-widest uppercase text-[#a0462e]">
+      <span className="w-2 h-2 rounded-full bg-[#0e7490] inline-block" />
+      <span className="text-sm font-semibold tracking-widest uppercase text-[#0b5c73]">
         {children}
       </span>
     </div>
@@ -86,7 +86,7 @@ export function DotDivider({ count = 5, className = '' }) {
           style={{
             width: i === Math.floor(count / 2) ? '6px' : '4px',
             height: i === Math.floor(count / 2) ? '6px' : '4px',
-            background: i === Math.floor(count / 2) ? '#b85438' : '#cbbfa8',
+            background: i === Math.floor(count / 2) ? '#0e7490' : '#c9c0ad',
             boxShadow: 'none',
           }}
           aria-hidden="true"

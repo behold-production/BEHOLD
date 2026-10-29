@@ -116,19 +116,19 @@ export default function OtpPinInput({ value = '', onChange, hasError, disabled =
             className={`w-10 h-12 sm:w-12 sm:h-14 text-center font-mono font-semibold text-base sm:text-xl rounded-md transition-all outline-none border ${
               disabled
                 ? isDark
-                  ? 'bg-[#1c2826] border-[#ede7de]/20 text-[#8a938f] cursor-not-allowed'
-                  : 'bg-[#f4eee6] border-[#ede7de] text-[#a8a094] cursor-not-allowed'
+                  ? 'bg-[#0e1111] border-[#e6dfd0]/20 text-[#7c8785] cursor-not-allowed'
+                  : 'bg-[#f1eadc] border-[#e6dfd0] text-[#9aa29f] cursor-not-allowed'
                 : hasError
                 ? isDark
                   ? 'bg-red-950/40 border-red-500/80 text-red-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
                   : 'bg-rose-50/50 border-rose-400 text-rose-900 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
                 : isFilled
                 ? isDark
-                  ? 'bg-[#1c2826] border-[#b85438] text-white shadow-sm ring-2 ring-[#b85438]/25'
-                  : 'bg-white border-[#b85438] text-[#1c2826] shadow-sm ring-2 ring-[#b85438]/15'
+                  ? 'bg-[#0e1111] border-[#0e7490] text-white shadow-sm ring-2 ring-[#0e7490]/25'
+                  : 'bg-white border-[#0e7490] text-[#0e1111] shadow-sm ring-2 ring-[#0e7490]/15'
                 : isDark
-                ? 'bg-[#1c2826] border-[#ede7de]/20 text-white focus:border-[#b85438] focus:ring-2 focus:ring-[#b85438]/20'
-                : 'bg-white border-[#ede7de] text-[#1c2826] focus:border-[#b85438] focus:ring-2 focus:ring-[#b85438]/20'
+                ? 'bg-[#0e1111] border-[#e6dfd0]/20 text-white focus:border-[#0e7490] focus:ring-2 focus:ring-[#0e7490]/20'
+                : 'bg-white border-[#e6dfd0] text-[#0e1111] focus:border-[#0e7490] focus:ring-2 focus:ring-[#0e7490]/20'
             }`}
           />
         );

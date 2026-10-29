@@ -185,50 +185,50 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
         canonicalUrl="https://www.behold.co.in/psychologists"
       />
 
-      <div className="min-h-screen bg-[#fbf9f5] text-[#1c2826] pt-24 sm:pt-28 pb-20 relative">
+      <div className="min-h-screen bg-[#fbf8f1] text-[#0e1111] pt-24 sm:pt-28 pb-20 relative">
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb Navigation */}
-          <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs font-medium text-[#5c6b66]">
-            <Link to="/" className="hover:text-[#b85438] transition-colors inline-flex items-center gap-1">
+          <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs font-medium text-[#55605f]">
+            <Link to="/" className="hover:text-[#0e7490] transition-colors inline-flex items-center gap-1">
               <Home className="w-3.5 h-3.5" />
               <span>Home</span>
             </Link>
-            <span className="text-[#c2b8a8]">/</span>
-            <span className="text-[#1c2826] font-semibold">Clinical Psychologists</span>
+            <span className="text-[#7c8785]">/</span>
+            <span className="text-[#0e1111] font-semibold">Clinical Psychologists</span>
           </nav>
 
           {/* Page Header matching mockup */}
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-            <span className="text-[#b85438] text-[11px] font-bold tracking-[0.2em] uppercase block mb-3">
+            <span className="text-[#0e7490] text-[11px] font-bold tracking-[0.2em] uppercase block mb-3">
               All Licensed Specialists
             </span>
-            <h1 className="font-serif-hero text-3xl sm:text-4xl md:text-5xl font-normal text-[#1c2826] mb-4 tracking-tight leading-tight">
-              Our Clinical Psychologists<span className="text-[#b85438]">.</span>
+            <h1 className="font-serif-hero text-3xl sm:text-4xl md:text-5xl font-normal text-[#0e1111] mb-4 tracking-tight leading-tight">
+              Our Clinical Psychologists<span className="text-[#0e7490]">.</span>
             </h1>
-            <p className="text-xs sm:text-sm md:text-base text-[#5c6b66] font-normal max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-[#55605f] font-normal max-w-2xl mx-auto leading-relaxed">
               Explore our full directory of certified, compassionate mental health professionals. Filter by focus areas, session formats, and connect with the right specialist for your journey.
             </p>
           </div>
 
           {/* Interactive Toolbar matching modern professional layout */}
-          <div className="bg-white rounded-md border border-[#ede7de] shadow-xs p-5 sm:p-6 mb-8">
+          <div className="bg-white rounded-md border border-[#e6dfd0] shadow-xs p-5 sm:p-6 mb-8">
             {/* Top Row: Search & Dropdowns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 items-center">
               {/* Search */}
               <div className="lg:col-span-5 relative">
-                <Search className="w-4 h-4 text-[#8a938f] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-4 h-4 text-[#7c8785] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by psychologist name, concern, or bio..."
-                  className="w-full bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] placeholder-[#a8a094] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium"
+                  className="w-full bg-[#fbf8f1] border border-[#e6dfd0] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#0e1111] placeholder-[#9aa29f] outline-none focus:border-[#0e7490] focus:bg-white focus:ring-2 focus:ring-[#0e7490]/10 transition-all font-medium"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8a938f] hover:text-[#5c6b66] p-0.5 bg-transparent border-none cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#7c8785] hover:text-[#55605f] p-0.5 bg-transparent border-none cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -237,40 +237,40 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
               {/* Session Mode Selector */}
               <div className="lg:col-span-4 relative">
-                <Camera className="w-4 h-4 text-[#b85438] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Camera className="w-4 h-4 text-[#0e7490] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <select
                   value={selectedMode}
                   onChange={(e) => setSelectedMode(e.target.value)}
-                  className="w-full appearance-none bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#1c2826] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium cursor-pointer"
+                  className="w-full appearance-none bg-[#fbf8f1] border border-[#e6dfd0] rounded-md pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#0e1111] outline-none focus:border-[#0e7490] focus:bg-white focus:ring-2 focus:ring-[#0e7490]/10 transition-all font-medium cursor-pointer"
                 >
                   <option value="">Any Consultation Mode</option>
                   {availableModeLabels.map((mode) => (
                     <option key={mode} value={mode}>{mode}</option>
                   ))}
                 </select>
-                <ChevronDown className="w-4 h-4 text-[#8a938f] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-4 h-4 text-[#7c8785] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
 
               {/* Sort Selector */}
               <div className="lg:col-span-3 relative">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-[#8a938f] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#7c8785] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full appearance-none bg-[#fbf9f5] border border-[#ede7de] rounded-md pl-10 pr-8 py-2.5 text-xs sm:text-sm text-[#1c2826] outline-none focus:border-[#b85438] focus:bg-white focus:ring-2 focus:ring-[#b85438]/10 transition-all font-medium cursor-pointer"
+                  className="w-full appearance-none bg-[#fbf8f1] border border-[#e6dfd0] rounded-md pl-10 pr-8 py-2.5 text-xs sm:text-sm text-[#0e1111] outline-none focus:border-[#0e7490] focus:bg-white focus:ring-2 focus:ring-[#0e7490]/10 transition-all font-medium cursor-pointer"
                 >
                   <option value="RECOMMENDED">Sort: Recommended</option>
                   <option value="FEE_LOW">Fee: Low to High</option>
                   <option value="FEE_HIGH">Fee: High to Low</option>
                 </select>
-                <ChevronDown className="w-4 h-4 text-[#8a938f] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-4 h-4 text-[#7c8785] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
 
             {/* Specialty Horizontal Chips Row */}
-            <div className="mt-4 pt-4 border-t border-[#ede7de]">
+            <div className="mt-4 pt-4 border-t border-[#e6dfd0]">
               <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
-                <span className="text-[10px] font-bold text-[#b85438] uppercase tracking-wider mr-1 shrink-0">Focus Area:</span>
+                <span className="text-[10px] font-bold text-[#0e7490] uppercase tracking-wider mr-1 shrink-0">Focus Area:</span>
                 {specialties.map((cat) => {
                   const active = selectedSpecialty === cat;
                   return (
@@ -280,8 +280,8 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       onClick={() => setSelectedSpecialty(cat)}
                       className={`px-3.5 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0 border ${
                         active
-                          ? 'bg-[#b85438] text-white border-[#b85438] shadow-xs'
-                          : 'bg-[#fbf9f5] hover:bg-white text-[#4c5b55] border-[#ede7de] hover:text-[#1c2826]'
+                          ? 'bg-[#0e7490] text-white border-[#0e7490] shadow-xs'
+                          : 'bg-[#fbf8f1] hover:bg-white text-[#3c4747] border-[#e6dfd0] hover:text-[#0e1111]'
                       }`}
                     >
                       {cat}
@@ -293,14 +293,14 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
             {/* Active Filters Clear Row */}
             {hasActiveFilters && (
-              <div className="mt-3 pt-3 border-t border-[#ede7de] flex items-center justify-between">
-                <span className="text-xs font-medium text-[#5c6b66]">
+              <div className="mt-3 pt-3 border-t border-[#e6dfd0] flex items-center justify-between">
+                <span className="text-xs font-medium text-[#55605f]">
                   Filters applied
                 </span>
                 <button
                   type="button"
                   onClick={handleClearFilters}
-                  className="text-xs font-semibold text-[#b85438] hover:text-[#9e432c] bg-transparent border-none cursor-pointer inline-flex items-center gap-1"
+                  className="text-xs font-semibold text-[#0e7490] hover:text-[#0c6b83] bg-transparent border-none cursor-pointer inline-flex items-center gap-1"
                 >
                   <X className="w-3.5 h-3.5" />
                   <span>Reset All Filters</span>
@@ -311,11 +311,11 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
           {/* Results Summary Bar */}
           <div className="flex items-center justify-between gap-4 mb-6 px-1">
-            <p className="text-xs sm:text-sm font-semibold text-[#1c2826]">
-              Showing <span className="font-bold text-[#b85438]">{filteredAdvisors.length}</span> verified psychologist{filteredAdvisors.length !== 1 ? 's' : ''}
+            <p className="text-xs sm:text-sm font-semibold text-[#0e1111]">
+              Showing <span className="font-bold text-[#0e7490]">{filteredAdvisors.length}</span> verified psychologist{filteredAdvisors.length !== 1 ? 's' : ''}
             </p>
-            <span className="text-xs font-semibold text-[#2d4a3e] hidden sm:inline-flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#2d4a3e]" />
+            <span className="text-xs font-semibold text-[#14414d] hidden sm:inline-flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-[#14414d]" />
               100% Confidential &amp; Encrypted Sessions
             </span>
           </div>
@@ -324,26 +324,26 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
               {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="bg-white rounded-md border border-[#ede7de] p-5 flex flex-col space-y-4 shadow-xs">
-                  <div className="h-52 w-full rounded-sm bg-[#f4eee6] animate-pulse" />
+                <div key={item} className="bg-white rounded-md border border-[#e6dfd0] p-5 flex flex-col space-y-4 shadow-xs">
+                  <div className="h-52 w-full rounded-sm bg-[#f1eadc] animate-pulse" />
                   <div className="space-y-2">
-                    <div className="h-4 w-1/3 bg-[#f4eee6] rounded-sm animate-pulse" />
-                    <div className="h-6 w-3/4 bg-[#f4eee6] rounded-sm animate-pulse" />
-                    <div className="h-3 w-1/2 bg-[#f4eee6] rounded-sm animate-pulse" />
+                    <div className="h-4 w-1/3 bg-[#f1eadc] rounded-sm animate-pulse" />
+                    <div className="h-6 w-3/4 bg-[#f1eadc] rounded-sm animate-pulse" />
+                    <div className="h-3 w-1/2 bg-[#f1eadc] rounded-sm animate-pulse" />
                   </div>
-                  <div className="h-10 w-full bg-[#f4eee6] rounded-sm mt-auto animate-pulse" />
+                  <div className="h-10 w-full bg-[#f1eadc] rounded-sm mt-auto animate-pulse" />
                 </div>
               ))}
             </div>
           ) : filteredAdvisors.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-md border border-[#ede7de] shadow-xs max-w-lg mx-auto p-10">
-              <div className="w-14 h-14 bg-[#faf5f0] text-[#b85438] rounded-sm flex items-center justify-center mx-auto mb-4 border border-[#eedfd0]">
+            <div className="text-center py-20 bg-white rounded-md border border-[#e6dfd0] shadow-xs max-w-lg mx-auto p-10">
+              <div className="w-14 h-14 bg-[#f7f2e7] text-[#0e7490] rounded-sm flex items-center justify-center mx-auto mb-4 border border-[#cbe9f1]">
                 <UserRound className="w-6 h-6" />
               </div>
-              <h3 className="font-serif-hero text-xl font-bold text-[#1c2826] mb-2">
+              <h3 className="font-serif-hero text-xl font-bold text-[#0e1111] mb-2">
                 {fetchError ? 'Unable to Load Specialists' : 'No Psychologists Found'}
               </h3>
-              <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed max-w-sm mx-auto mb-6">
+              <p className="text-xs sm:text-sm text-[#55605f] leading-relaxed max-w-sm mx-auto mb-6">
                 {fetchError
                   ? 'We could not reach our servers to fetch the specialist directory. Please check your connection and try again.'
                   : 'Try adjusting your search query, specialty focus, or session format to discover available specialists.'}
@@ -351,7 +351,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
               <button
                 type="button"
                 onClick={() => (fetchError ? window.location.reload() : handleClearFilters())}
-                className="px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-semibold rounded-md transition-all cursor-pointer border-none shadow-xs"
+                className="px-6 py-2.5 bg-[#0e1111] hover:bg-[#0e7490] text-white text-xs font-semibold rounded-md transition-all cursor-pointer border-none shadow-xs"
               >
                 {fetchError ? 'Try Again' : 'Clear All Filters'}
               </button>
@@ -366,12 +366,12 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                 return (
                   <article
                     key={advisor.id}
-                    className="group bg-white rounded-md border border-[#ede7de] hover:border-[#b85438]/40 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden h-full relative"
+                    className="group bg-white rounded-md border border-[#e6dfd0] hover:border-[#0e7490]/40 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden h-full relative"
                   >
                     {/* Photo Header */}
                     <div
                       onClick={() => handleAdvisorClick(advisor.id)}
-                      className="relative aspect-[4/3] w-full overflow-hidden bg-[#f4eee6] cursor-pointer shrink-0"
+                      className="relative aspect-[4/3] w-full overflow-hidden bg-[#f1eadc] cursor-pointer shrink-0"
                     >
                       {advisor.photo ? (
                         <img
@@ -382,9 +382,9 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                           className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-[#1c2826] text-white">
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-[#0e1111] text-white">
                           <span className="font-serif-hero text-5xl font-bold">{getInitial(advisor.name)}</span>
-                          <span className="text-[10px] tracking-widest uppercase text-[#c2b8a8] mt-1 font-semibold">Clinical Care</span>
+                          <span className="text-[10px] tracking-widest uppercase text-[#9aa29f] mt-1 font-semibold">Clinical Care</span>
                         </div>
                       )}
 
@@ -393,7 +393,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
                       {/* Next Available Pill (Top-Left) */}
                       <div className="absolute top-3.5 left-3.5 z-10">
-                        <span className="bg-white/95 backdrop-blur-md text-[#1c2826] text-[11px] font-semibold px-3 py-1 rounded-sm shadow-xs border border-white/80 flex items-center gap-1.5">
+                        <span className="bg-white/95 backdrop-blur-md text-[#0e1111] text-[11px] font-semibold px-3 py-1 rounded-sm shadow-xs border border-white/80 flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                           <span>{nextAvailable === 'Unavailable' ? 'Check slots' : `Next: ${nextAvailable}`}</span>
                         </span>
@@ -401,8 +401,8 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
                       {/* Verified Badge (Top-Right) */}
                       <div className="absolute top-3.5 right-3.5 z-10">
-                        <span className="bg-[#1c2826]/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-wider flex items-center gap-1 shadow-xs">
-                          <BadgeCheck className="w-3.5 h-3.5 text-[#b85438]" />
+                        <span className="bg-[#0e1111]/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                          <BadgeCheck className="w-3.5 h-3.5 text-[#0e7490]" />
                           <span>Verified</span>
                         </span>
                       </div>
@@ -410,7 +410,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                       {/* Rating on bottom right */}
                       {advisor.rating && (
                         <div className="absolute bottom-3 right-3.5 z-10">
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-white/95 text-[#1c2826] px-2.5 py-0.5 rounded-sm shadow-xs">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-white/95 text-[#0e1111] px-2.5 py-0.5 rounded-sm shadow-xs">
                             <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
                             <span>{advisor.rating}</span>
                           </span>
@@ -422,7 +422,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                     <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
                       <div>
                         {/* Credential line */}
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#b85438] block mb-1">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#0e7490] block mb-1">
                           {advisor.credential || 'CLINICAL PSYCHOLOGIST'}
                         </span>
 
@@ -430,11 +430,11 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                         <div className="mb-3">
                           <h3
                             onClick={() => handleAdvisorClick(advisor.id)}
-                            className="font-serif-hero text-xl font-bold text-[#1c2826] group-hover:text-[#b85438] transition-colors leading-tight cursor-pointer inline-block"
+                            className="font-serif-hero text-xl font-bold text-[#0e1111] group-hover:text-[#0e7490] transition-colors leading-tight cursor-pointer inline-block"
                           >
                             {advisor.name}
                           </h3>
-                          <p className="text-xs text-[#5c6b66] font-medium mt-1 leading-snug">
+                          <p className="text-xs text-[#55605f] font-medium mt-1 leading-snug">
                             {advisor.designation}
                           </p>
                         </div>
@@ -445,7 +445,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                             {advisor.specialties.slice(0, 3).map((specialty) => (
                               <span
                                 key={specialty}
-                                className="text-[11px] font-medium text-[#5c6b66] bg-[#fbf9f5] border border-[#ede7de] px-2.5 py-0.5 rounded-sm"
+                                className="text-[11px] font-medium text-[#55605f] bg-[#fbf8f1] border border-[#e6dfd0] px-2.5 py-0.5 rounded-sm"
                               >
                                 {specialty}
                               </span>
@@ -455,40 +455,40 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
 
                         {/* Bio snippet */}
                         {advisor.bio && (
-                          <p className="text-xs text-[#5c6b66] line-clamp-2 leading-relaxed font-normal mb-3">
+                          <p className="text-xs text-[#55605f] line-clamp-2 leading-relaxed font-normal mb-3">
                             {advisor.bio}
                           </p>
                         )}
 
                         {/* Facts: Experience & Format */}
-                        <div className="pt-2.5 border-t border-[#ede7de] flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs font-medium text-[#5c6b66]">
+                        <div className="pt-2.5 border-t border-[#e6dfd0] flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs font-medium text-[#55605f]">
                           {advisor.years > 0 && (
                             <span className="inline-flex items-center gap-1.5">
-                              <BriefcaseBusiness className="w-3.5 h-3.5 text-[#b85438]" />
+                              <BriefcaseBusiness className="w-3.5 h-3.5 text-[#0e7490]" />
                               <span>{advisor.years} yrs experience</span>
                             </span>
                           )}
                           <span className="inline-flex items-center gap-1.5">
-                            <Camera className="w-3.5 h-3.5 text-[#b85438]" />
+                            <Camera className="w-3.5 h-3.5 text-[#0e7490]" />
                             <span>{modeSummaryText}</span>
                           </span>
                         </div>
                       </div>
 
                       {/* Pricing & Actions */}
-                      <div className="pt-4 mt-4 border-t border-[#ede7de] flex items-center justify-between gap-3">
+                      <div className="pt-4 mt-4 border-t border-[#e6dfd0] flex items-center justify-between gap-3">
                         <div>
-                          <span className="text-[10px] font-semibold text-[#8a938f] uppercase tracking-wider block">
+                          <span className="text-[10px] font-semibold text-[#7c8785] uppercase tracking-wider block">
                             Session Fee
                           </span>
-                          <div className="text-sm font-bold text-[#1c2826] leading-tight">
+                          <div className="text-sm font-bold text-[#0e1111] leading-tight">
                             {advisor.fee !== null ? (
                               <>
                                 ₹{advisor.fee.toLocaleString('en-IN')}
-                                <span className="text-[11px] text-[#5c6b66] font-normal ml-0.5">/ session</span>
+                                <span className="text-[11px] text-[#55605f] font-normal ml-0.5">/ session</span>
                               </>
                             ) : (
-                              <span className="text-xs font-semibold text-[#1c2826]">Standard rate</span>
+                              <span className="text-xs font-semibold text-[#0e1111]">Standard rate</span>
                             )}
                           </div>
                         </div>
@@ -498,14 +498,14 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
                             type="button"
                             onClick={() => handleAdvisorClick(advisor.id)}
                             title="View clinical profile"
-                            className="px-3.5 py-2 rounded-md text-xs font-semibold text-[#4c5b55] bg-[#fbf9f5] hover:bg-[#ede7de] transition-colors cursor-pointer border border-[#ede7de]"
+                            className="px-3.5 py-2 rounded-md text-xs font-semibold text-[#3c4747] bg-[#fbf8f1] hover:bg-[#e6dfd0] transition-colors cursor-pointer border border-[#e6dfd0]"
                           >
                             Profile
                           </button>
                           <button
                             type="button"
                             onClick={() => onBookTherapist?.(advisor.id)}
-                            className="px-4.5 py-2 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-all duration-200 cursor-pointer border-none shadow-2xs inline-flex items-center gap-1.5"
+                            className="px-4.5 py-2 rounded-md text-xs font-semibold bg-[#0e1111] hover:bg-[#0e7490] text-white transition-all duration-200 cursor-pointer border-none shadow-2xs inline-flex items-center gap-1.5"
                           >
                             <span>Book Session</span>
                             <ArrowRight className="w-3.5 h-3.5" />

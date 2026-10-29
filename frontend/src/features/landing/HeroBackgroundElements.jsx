@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
-const FloatingSphere = ({ className, delay = 0, size = 100, color1 = '#00D1D1', color2 = '#0ea5e9' }) => (
+const FloatingSphere = ({ className, delay = 0, size = 100, color1 = '#06b6d4', color2 = '#06b6d4' }) => (
     <motion.div
         className={`absolute pointer-events-none z-0 ${className}`}
         animate={{
@@ -24,7 +24,7 @@ const FloatingSphere = ({ className, delay = 0, size = 100, color1 = '#00D1D1', 
     </motion.div>
 );
 
-const FloatingRing = ({ className, delay = 0, size = 120, color1 = '#00D1D1' }) => (
+const FloatingRing = ({ className, delay = 0, size = 120, color1 = '#06b6d4' }) => (
     <motion.div
         className={`absolute pointer-events-none z-0 ${className}`}
         animate={{
@@ -47,7 +47,7 @@ const FloatingRing = ({ className, delay = 0, size = 120, color1 = '#00D1D1' }) 
     </motion.div>
 );
 
-const FloatingDiamond = ({ className, delay = 0, size = 90, color1 = '#0ea5e9' }) => (
+const FloatingDiamond = ({ className, delay = 0, size = 90, color1 = '#06b6d4' }) => (
     <motion.div
         className={`absolute pointer-events-none z-0 ${className}`}
         animate={{
@@ -62,7 +62,7 @@ const FloatingDiamond = ({ className, delay = 0, size = 90, color1 = '#0ea5e9' }
                 <linearGradient id={`diamondGrad-${delay}`} x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
                     <stop offset="50%" stopColor={color1} />
-                    <stop offset="100%" stopColor="#0f172a" />
+                    <stop offset="100%" stopColor="#0e1111" />
                 </linearGradient>
             </defs>
             <polygon points="50,5 95,50 50,95 5,50" fill={`url(#diamondGrad-${delay})`} rx="5" />
@@ -70,7 +70,7 @@ const FloatingDiamond = ({ className, delay = 0, size = 90, color1 = '#0ea5e9' }
     </motion.div>
 );
 
-const FloatingPill = ({ className, delay = 0, size = 150, color1 = '#0ea5e9' }) => (
+const FloatingPill = ({ className, delay = 0, size = 150, color1 = '#06b6d4' }) => (
     <motion.div
         className={`absolute pointer-events-none z-0 ${className}`}
         animate={{
@@ -85,7 +85,7 @@ const FloatingPill = ({ className, delay = 0, size = 150, color1 = '#0ea5e9' }) 
                 <linearGradient id={`pillGrad-${delay}`} x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
                     <stop offset="50%" stopColor={color1} />
-                    <stop offset="100%" stopColor="#020617" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#050707" stopOpacity="0.8" />
                 </linearGradient>
             </defs>
             <rect x="10" y="20" width="180" height="60" rx="30" fill={`url(#pillGrad-${delay})`} />
@@ -108,7 +108,7 @@ const DecorativeParticles = () => {
             {PARTICLE_DATA.map((p) => (
                 <motion.div
                     key={`particle-${p.id}`}
-                    className="absolute w-2 h-2 bg-brand rounded-full"
+                    className="absolute w-2 h-2 bg-[#0e7490] rounded-full"
                     style={{
                         top: p.top,
                         left: p.left,
@@ -137,13 +137,13 @@ export default function HeroBackgroundElements() {
             <DecorativeParticles />
 
             {/* 3D Objects Scattered for depth - Removed CSS blurs and drop-shadows for 60fps performance */}
-            <FloatingSphere className="top-[15%] left-[5%] lg:left-[10%] opacity-70" size={120} delay={0} color1="#00D1D1" color2="#0284c7" />
-            <FloatingRing className="top-[60%] left-[-2%] lg:left-[8%] opacity-50" size={160} delay={1.5} color1="#0ea5e9" />
+            <FloatingSphere className="top-[15%] left-[5%] lg:left-[10%] opacity-70" size={120} delay={0} color1="#06b6d4" color2="#0891b2" />
+            <FloatingRing className="top-[60%] left-[-2%] lg:left-[8%] opacity-50" size={160} delay={1.5} color1="#06b6d4" />
 
-            <FloatingDiamond className="top-[20%] right-[5%] lg:right-[15%] opacity-60" size={100} delay={0.5} color1="#00D1D1" />
-            <FloatingSphere className="top-[65%] right-[2%] lg:right-[12%] opacity-80" size={140} delay={2} color1="#0ea5e9" color2="#0369a1" />
+            <FloatingDiamond className="top-[20%] right-[5%] lg:right-[15%] opacity-60" size={100} delay={0.5} color1="#06b6d4" />
+            <FloatingSphere className="top-[65%] right-[2%] lg:right-[12%] opacity-80" size={140} delay={2} color1="#06b6d4" color2="#0e7490" />
 
-            <FloatingPill className="top-[25%] left-[5%] lg:left-[15%] opacity-30" size={120} delay={1.5} color1="#00D1D1" />
+            <FloatingPill className="top-[25%] left-[5%] lg:left-[15%] opacity-30" size={120} delay={1.5} color1="#06b6d4" />
         </div>
     );
 }

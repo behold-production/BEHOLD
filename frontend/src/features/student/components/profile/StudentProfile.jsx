@@ -135,38 +135,38 @@ export default function StudentProfile({ onOpenBooking }) {
   const nextSession = bookedSessions[0];
 
  return (
- <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-transparent text-[#1c2826] font-sans text-left relative overflow-hidden">
+ <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-transparent text-[#0e1111] font-sans text-left relative overflow-hidden">
  <SEO title="Student Profile | BEHOLD." noindex={true} />
  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
  {(isLoading || authLoading) ? (
  <div className="animate-pulse space-y-5 sm:space-y-6">
- <div className="bg-white rounded-[10px] p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-[#ede7de]">
- <div className="w-20 h-20 rounded-[10px] bg-[#ede7de] shrink-0"></div>
+ <div className="bg-white rounded-[10px] p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-[#e6dfd0]">
+ <div className="w-20 h-20 rounded-[10px] bg-[#e6dfd0] shrink-0"></div>
  <div className="flex-1 w-full space-y-3">
- <div className="h-6 bg-[#ede7de] rounded-[10px] w-1/3"></div>
- <div className="h-4 bg-[#ede7de] rounded-[10px] w-1/4"></div>
+ <div className="h-6 bg-[#e6dfd0] rounded-[10px] w-1/3"></div>
+ <div className="h-4 bg-[#e6dfd0] rounded-[10px] w-1/4"></div>
  <div className="flex gap-4 mt-4">
- <div className="h-4 bg-[#ede7de] rounded-[10px] w-24"></div>
- <div className="h-4 bg-[#ede7de] rounded-[10px] w-24"></div>
+ <div className="h-4 bg-[#e6dfd0] rounded-[10px] w-24"></div>
+ <div className="h-4 bg-[#e6dfd0] rounded-[10px] w-24"></div>
  </div>
  </div>
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
  <aside className="lg:col-span-3">
- <div className="bg-white border border-[#ede7de] rounded-[10px] p-3 space-y-2">
- <div className="h-10 bg-[#ede7de] rounded-[10px] w-full"></div>
- <div className="h-10 bg-[#ede7de] rounded-[10px] w-full"></div>
- <div className="h-10 bg-[#ede7de] rounded-[10px] w-full"></div>
- <div className="h-10 bg-[#ede7de] rounded-[10px] w-full"></div>
+ <div className="bg-white border border-[#e6dfd0] rounded-[10px] p-3 space-y-2">
+ <div className="h-10 bg-[#e6dfd0] rounded-[10px] w-full"></div>
+ <div className="h-10 bg-[#e6dfd0] rounded-[10px] w-full"></div>
+ <div className="h-10 bg-[#e6dfd0] rounded-[10px] w-full"></div>
+ <div className="h-10 bg-[#e6dfd0] rounded-[10px] w-full"></div>
  </div>
  </aside>
  <main className="lg:col-span-9 space-y-5">
- <div className="h-8 bg-[#ede7de] rounded-[10px] w-1/4 mb-4"></div>
- <div className="h-32 bg-[#ede7de] rounded-[10px] w-full"></div>
+ <div className="h-8 bg-[#e6dfd0] rounded-[10px] w-1/4 mb-4"></div>
+ <div className="h-32 bg-[#e6dfd0] rounded-[10px] w-full"></div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div className="h-24 bg-[#ede7de] rounded-[10px] w-full"></div>
- <div className="h-24 bg-[#ede7de] rounded-[10px] w-full"></div>
+ <div className="h-24 bg-[#e6dfd0] rounded-[10px] w-full"></div>
+ <div className="h-24 bg-[#e6dfd0] rounded-[10px] w-full"></div>
  </div>
  </main>
  </div>

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Star, MessageSquarePlus, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ChevronLeft, ChevronRight, MessageSquarePlus, Quote, Star, X } from 'lucide-react';
 import ApiService from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import naturePathImg from '../../assets/nature_path.jpg';
+import SectionHeading from './SectionHeading';
 
 const getInitials = (name = '') => {
   const clean = (typeof name === 'string' ? name : '').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
@@ -11,12 +11,13 @@ const getInitials = (name = '') => {
   return (parts[0].charAt(0) + (parts[1]?.charAt(0) || '')).toUpperCase();
 };
 
+const PAGE_SIZE = 4;
 
 export default function Reviews({ siteSettings = {} }) {
   const { user } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [startIndex, setStartIndex] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: user?.name || '', role: '', rating: 5, comment: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -39,8 +40,7 @@ export default function Reviews({ siteSettings = {} }) {
               quote: r.comment || r.text || '',
               avatar: typeof r.avatar === 'string' && r.avatar.trim() ? r.avatar : null,
               rating: Number(r.rating) || 5,
-            })).filter(r => r.quote);
-
+            })).filter((r) => r.quote);
             setReviews(mapped);
           }
         })
@@ -53,7 +53,24 @@ export default function Reviews({ siteSettings = {} }) {
     return () => { isMounted = false; };
   }, []);
 
-  const activeStory = reviews[activeIndex] || reviews[0] || null;
+  const visibleReviews = useMemo(() => {
+    if (reviews.length <= PAGE_SIZE) return reviews;
+    const windowed = [];
+    for (let i = 0; i < PAGE_SIZE; i += 1) {
+      windowed.push(reviews[(startIndex + i) % reviews.length]);
+    }
+    return windowed;
+  }, [reviews, startIndex]);
+
+  const totalPages = Math.ceil(reviews.length / PAGE_SIZE);
+
+  const openShareForm = () => {
+    if (!user) {
+      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('behold:open_auth'));
+      return;
+    }
+    setShowForm((prev) => !prev);
+  };
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -74,224 +91,184 @@ export default function Reviews({ siteSettings = {} }) {
   };
 
   return (
-    <section id="reviews" className="relative bg-[#fbf9f5] text-[#1c2826] overflow-hidden scroll-mt-20">
-      {/* SECTION 5: Nature Path Quote Banner */}
-      <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16">
-        <div className="relative rounded-md overflow-hidden shadow-sm border border-[#ede7de]">
-          {/* Nature Path Visual Asset */}
-          <div
-            className="w-full min-h-[340px] sm:min-h-[420px] bg-cover bg-center flex items-center justify-center p-6 sm:p-12 relative"
-            style={{ backgroundImage: `url(${naturePathImg})` }}
-          >
-            {/* Soft Ambient Overlay */}
-            <div className="absolute inset-0 bg-black/25 pointer-events-none" />
+    <section
+      id="reviews"
+      aria-labelledby="bh-reviews-heading"
+      className="relative w-full overflow-hidden bg-[#FBF8F1] py-16 sm:py-20 lg:py-24"
+    >
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Testimonials"
+          title={siteSettings.reviewsSectionTitle || 'What Our Clients Say'}
+          description={siteSettings.reviewsSectionSub || undefined}
+        />
 
-            {/* Centered Floating Quote Card */}
-            <div className="relative z-10 max-w-2xl bg-white/95 backdrop-blur-md rounded-md p-7 sm:p-10 border border-white/80 shadow-md text-center">
-              <span className="text-[10px] font-bold text-[#b85438] uppercase tracking-[0.2em] block mb-3">
-                Words of Sanctuary
-              </span>
-              <p className="font-serif-hero text-lg sm:text-2xl font-normal text-[#1c2826] leading-relaxed italic mb-4">
-                &ldquo;Peace comes from within. Do not seek it without. Our compassionate team provides the sanctuary and guidance you need to rediscover harmony.&rdquo;
-              </p>
-              <span className="text-xs text-[#5c6b66] font-medium tracking-wide">
-                — BEHOLD Clinical Sanctuary
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 6: Testimonials / Client Stories */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        {/* Header: Left terracotta eyebrow, Right serif heading */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 sm:mb-14 pb-4 border-b border-[#ece6dc]">
-          <div>
-            <span className="text-[#b85438] text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase block">
-              Testimonials
-            </span>
-          </div>
-          <div>
-            <h2 className="font-serif-hero text-2xl sm:text-3xl md:text-4xl font-normal text-[#1c2826] tracking-tight leading-snug">
-              Real Stories of Renewal &amp; Hope
-            </h2>
-          </div>
-        </div>
-
-        {/* 5 Avatars Spotlight Row */}
         {loading ? (
-          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="w-12 h-12 sm:w-14 sm:h-14 rounded-sm bg-[#f0eae1] animate-pulse" />
+          <div className="mt-9 grid grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 lg:grid-cols-4">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="rounded-xl border border-[#E6DFD0] bg-white p-5">
+                <div className="h-3 w-20 animate-pulse rounded bg-[#F1EAD9]" />
+                <div className="mt-4 space-y-2">
+                  <div className="h-2.5 w-full animate-pulse rounded bg-[#F1EAD9]" />
+                  <div className="h-2.5 w-5/6 animate-pulse rounded bg-[#F1EAD9]" />
+                  <div className="h-2.5 w-2/3 animate-pulse rounded bg-[#F1EAD9]" />
+                </div>
+                <div className="mt-5 flex items-center gap-2.5">
+                  <div className="h-8 w-8 animate-pulse rounded-full bg-[#F1EAD9]" />
+                  <div className="h-2.5 w-24 animate-pulse rounded bg-[#F1EAD9]" />
+                </div>
+              </div>
             ))}
           </div>
-        ) : reviews.length > 0 ? (
-        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
-          {reviews.slice(0, 5).map((rev, idx) => {
-            const isSelected = idx === activeIndex;
-            return (
-              <button
-                key={rev.id || idx}
-                type="button"
-                onClick={() => setActiveIndex(idx)}
-                className={`relative rounded-sm transition-all duration-300 cursor-pointer p-0.5 border-2 ${
-                  isSelected
-                    ? 'border-[#b85438] scale-105 shadow-sm ring-2 ring-[#b85438]/20'
-                    : 'border-transparent opacity-70 hover:opacity-100 hover:scale-105'
-                }`}
-                title={`Read story from ${rev.name}`}
-              >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-sm overflow-hidden bg-[#f4eee6] flex items-center justify-center">
-                  {rev.avatar ? (
-                    <img
-                      src={rev.avatar}
-                      alt={rev.name}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span className="text-sm font-bold text-[#b85438]">{getInitials(rev.name)}</span>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-        ) : null}
+        ) : reviews.length === 0 ? (
+          <div className="mx-auto mt-10 max-w-lg rounded-xl border border-[#E6DFD0] bg-white px-6 py-12 text-center">
+            <span className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF4F7] text-[#0E7490]">
+              <MessageSquarePlus className="h-5 w-5" />
+            </span>
+            <p className="text-base font-semibold text-[#0E1111]">Be the first to share your experience</p>
+            <p className="mt-1.5 text-xs leading-relaxed text-[#55605F]">
+              Reflections shared by our clients appear here after review.
+            </p>
+            <button
+              type="button"
+              onClick={openShareForm}
+              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#0E7490] px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#0B5C73] cursor-pointer border-none"
+            >
+              <MessageSquarePlus className="h-3.5 w-3.5" />
+              Share Your Experience
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="mt-9 flex flex-wrap justify-center gap-4 sm:mt-12">
+              {visibleReviews.map((review, idx) => (
+                <article
+                  key={`${review.id}-${idx}`}
+                  className="group relative flex w-full flex-col rounded-xl border border-[#E6DFD0] bg-white p-5 transition-all duration-200 hover:border-[#0E7490]/40 hover:shadow-[0_18px_36px_-28px_rgba(14,17,17,0.5)] sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)]"
+                >
+                  <Quote aria-hidden="true" className="h-5 w-5 text-[#0E7490]/25" />
 
-        {/* Active Testimonial Card */}
-        {loading ? (
-          <div className="max-w-3xl mx-auto text-center px-4 py-6">
-            <div className="flex items-center justify-center gap-1 mb-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-4 h-4 rounded-full bg-[#f0eae1] animate-pulse" />
+                  <div className="mt-2 flex items-center gap-0.5">
+                    {Array.from({ length: Math.min(review.rating, 5) }).map((_, i) => (
+                      <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-500" />
+                    ))}
+                  </div>
+
+                  <p className="mt-3 line-clamp-6 flex-1 text-[12.5px] leading-relaxed text-[#4A5555]">
+                    {review.quote}
+                  </p>
+
+                  <div className="mt-5 flex items-center gap-2.5 border-t border-[#F0EBDF] pt-4">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#EAF4F7] text-[11px] font-semibold text-[#0E7490]">
+                      {review.avatar ? (
+                        <img src={review.avatar} alt={review.name} loading="lazy" className="h-full w-full object-cover" />
+                      ) : (
+                        getInitials(review.name)
+                      )}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[12px] font-semibold text-[#0E1111]">{review.name}</span>
+                      <span className="block truncate text-[10.5px] text-[#6B7674]">
+                        {[review.role, review.tag].filter(Boolean).join(' • ')}
+                      </span>
+                    </span>
+                  </div>
+                </article>
               ))}
             </div>
-            <div className="space-y-3 max-w-xl mx-auto">
-              <div className="h-5 w-full bg-[#f0eae1] rounded-sm animate-pulse mx-auto" />
-              <div className="h-5 w-4/5 bg-[#f0eae1] rounded-sm animate-pulse mx-auto" />
-              <div className="h-4 w-1/3 bg-[#f0eae1] rounded-sm animate-pulse mx-auto mt-5" />
+
+            <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <button
+                type="button"
+                onClick={openShareForm}
+                className="inline-flex items-center gap-2 rounded-lg border border-[#DED8C9] bg-white px-4 py-2.5 text-[11.5px] font-semibold text-[#0E1111] transition-colors hover:border-[#0E7490] hover:text-[#0B5C73] cursor-pointer"
+              >
+                <MessageSquarePlus className="h-3.5 w-3.5 text-[#0E7490]" />
+                Share Your Experience
+              </button>
+
+              {totalPages > 1 && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setStartIndex((prev) => (prev - 1 + reviews.length) % reviews.length)}
+                    aria-label="Previous testimonials"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DED8C9] bg-white text-[#0E1111] transition-colors hover:border-[#0E7490] hover:text-[#0E7490] cursor-pointer"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <span className="text-[11px] font-medium text-[#6B7674]">
+                    {reviews.length} reviews
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setStartIndex((prev) => (prev + 1) % reviews.length)}
+                    aria-label="Next testimonials"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DED8C9] bg-white text-[#0E1111] transition-colors hover:border-[#0E7490] hover:text-[#0E7490] cursor-pointer"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
-        ) : activeStory ? (
-        <div className="max-w-3xl mx-auto text-center px-4">
-          <div className="flex items-center justify-center gap-1 text-amber-500 mb-4">
-            {Array.from({ length: activeStory.rating || 5 }).map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-500" />
-            ))}
-          </div>
-
-          <p className="font-serif-hero text-xl sm:text-2xl md:text-3xl font-normal text-[#1c2826] leading-relaxed mb-6 italic">
-            &ldquo;{activeStory.quote}&rdquo;
-          </p>
-
-          <div className="flex flex-col items-center justify-center">
-            <span className="text-sm font-semibold text-[#1c2826]">
-              {activeStory.name}
-            </span>
-            <span className="text-xs text-[#5c6b66] mt-0.5">
-              {activeStory.role} {activeStory.tag ? `• ${activeStory.tag}` : ''}
-            </span>
-          </div>
-
-          {/* Optional Action to Share Story */}
-          <div className="mt-8 flex justify-center">
-            <button
-              type="button"
-              onClick={() => {
-                if (!user) {
-                  window.dispatchEvent(new CustomEvent('behold:open_auth'));
-                } else {
-                  setShowForm(!showForm);
-                }
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-medium text-[#4c5b55] bg-white hover:bg-[#f6f2ec] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
-            >
-              <MessageSquarePlus className="w-3.5 h-3.5 text-[#b85438]" />
-              <span>Share Your Experience</span>
-            </button>
-          </div>
-        </div>
-        ) : (
-          <div className="max-w-2xl mx-auto text-center px-4 py-8">
-            <p className="font-serif-hero text-lg sm:text-xl text-[#5c6b66] italic mb-2">
-              A sanctuary of care, trusted by those who walk this path with us.
-            </p>
-            <p className="text-xs text-[#5c6b66] mb-6">
-              Personal reflections from our community will appear here. Would you like to share yours?
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                if (!user) {
-                  window.dispatchEvent(new CustomEvent('behold:open_auth'));
-                } else {
-                  setShowForm(!showForm);
-                }
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-medium text-[#4c5b55] bg-white hover:bg-[#f6f2ec] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
-            >
-              <MessageSquarePlus className="w-3.5 h-3.5 text-[#b85438]" />
-              <span>Share Your Experience</span>
-            </button>
-          </div>
+          </>
         )}
 
-        {/* Review Form Modal / Slide */}
         {showForm && (
-          <div className="mt-8 max-w-lg mx-auto bg-white rounded-md p-6 sm:p-8 border border-[#ede7de] shadow-md">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-serif-hero text-xl font-semibold text-[#1c2826]">Share Your Story</h3>
+          <div className="mx-auto mt-8 max-w-lg rounded-xl border border-[#E6DFD0] bg-white p-6 sm:p-8">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-[#0E1111]">Share Your Story</h3>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="p-1 rounded-sm text-[#a8a094] hover:text-[#4c5b55] cursor-pointer"
+                aria-label="Close review form"
+                className="rounded-md p-1 text-[#9AA29F] transition-colors hover:text-[#0E1111] cursor-pointer bg-transparent border-none"
               >
-                <X className="w-4 h-4" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
             {submitted ? (
-              <div className="text-center py-6">
-                <span className="text-emerald-600 font-semibold text-sm">Thank you! Your reflection has been received.</span>
+              <div className="py-6 text-center">
+                <span className="text-sm font-semibold text-emerald-600">Thank you! Your reflection has been received.</span>
               </div>
             ) : (
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 {error && <div className="text-xs text-rose-600">{error}</div>}
                 <div>
-                  <label className="block text-xs font-semibold text-[#4c5b55] mb-1">Your Name</label>
+                  <label className="mb-1 block text-[11px] font-semibold text-[#3C4747]">Your Name</label>
                   <input
                     type="text"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-md border border-[#ede7de] outline-none focus:border-[#b85438]"
-                    placeholder="e.g. Maya S."
+                    className="w-full rounded-lg border border-[#E6DFD0] bg-[#FBF8F1] px-3.5 py-2.5 text-[13px] outline-none transition-colors focus:border-[#0E7490] focus:bg-white"
+                    placeholder="Your full name"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#4c5b55] mb-1">Role or Area of Support</label>
+                  <label className="mb-1 block text-[11px] font-semibold text-[#3C4747]">Role or Area of Support</label>
                   <input
                     type="text"
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-md border border-[#ede7de] outline-none focus:border-[#b85438]"
-                    placeholder="e.g. Student, Parent, Individual Therapy"
+                    className="w-full rounded-lg border border-[#E6DFD0] bg-[#FBF8F1] px-3.5 py-2.5 text-[13px] outline-none transition-colors focus:border-[#0E7490] focus:bg-white"
+                    placeholder="Student, Parent, Individual Therapy"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#4c5b55] mb-1">Your Reflection</label>
+                  <label className="mb-1 block text-[11px] font-semibold text-[#3C4747]">Your Reflection</label>
                   <textarea
                     rows={3}
                     value={form.comment}
                     onChange={(e) => setForm({ ...form, comment: e.target.value })}
-                    className="w-full px-3.5 py-2 text-sm rounded-md border border-[#ede7de] outline-none focus:border-[#b85438]"
-                    placeholder="How did BEHOLD support your journey?"
+                    className="w-full resize-none rounded-lg border border-[#E6DFD0] bg-[#FBF8F1] px-3.5 py-2.5 text-[13px] outline-none transition-colors focus:border-[#0E7490] focus:bg-white"
+                    placeholder="How did your sessions support your journey?"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-2.5 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors cursor-pointer disabled:opacity-50"
+                  className="w-full rounded-lg bg-[#0E1111] py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#0E7490] disabled:opacity-50 cursor-pointer border-none"
                 >
                   {submitting ? 'Submitting...' : 'Submit Reflection'}
                 </button>

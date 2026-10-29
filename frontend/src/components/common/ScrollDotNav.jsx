@@ -87,10 +87,10 @@ export default function ScrollDotNav() {
           /* Sphere shading: highlight top-left, deep core, shadow bottom-right */
           background: radial-gradient(
             circle at 38% 32%,
-            #93c5fd 0%,
+            #a5e4f0 0%,
             #3b82f6 42%,
-            #1d4ed8 72%,
-            #1e3a8a 100%
+            #0891b2 72%,
+            #0b5c73 100%
           );
           box-shadow:
             /* depth shadow */
@@ -139,7 +139,7 @@ export default function ScrollDotNav() {
           width: 5px;
           height: 5px;
           border-radius: 50%;
-          background: #cbd5e1;
+          background: #cfd8d8;
           transition: background 0.3s, transform 0.3s;
           cursor: pointer;
         }
@@ -149,7 +149,7 @@ export default function ScrollDotNav() {
           box-shadow: 0 0 6px rgba(59,130,246,0.5);
         }
         .sdnav-marker:hover {
-          background: #93c5fd;
+          background: #a5e4f0;
           transform: translateX(-50%) scale(1.3);
         }
 
@@ -200,7 +200,7 @@ export default function ScrollDotNav() {
           top: 0,
           bottom: 0,
           width: '1.5px',
-          background: '#e2e8f0',
+          background: '#e2e8e8',
           borderRadius: '99px',
         }} />
 
@@ -212,7 +212,7 @@ export default function ScrollDotNav() {
           top: 0,
           height: `${dotTop + HALF}px`,
           width: '1.5px',
-          background: 'linear-gradient(to bottom, #93c5fd, #3b82f6)',
+          background: 'linear-gradient(to bottom, #a5e4f0, #3b82f6)',
           borderRadius: '99px',
           transition: 'height 0.1s ease-out',
         }} />

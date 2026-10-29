@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * BrandIcon component for BEHOLD
- * Renders the iconic "B." with crisp White B and glowing Neon Blue Dot (#B85438).
+ * Renders the iconic "B." with crisp White B and glowing Neon Blue Dot (#0e7490).
  * 
  * Props:
  * - variant: 'icon' (badge only), 'full' (icon + BEHOLD text), 'textOnly' (BEHOLD. text)
@@ -30,13 +30,13 @@ export default function BrandIcon({
       <div
         className={`relative flex items-center justify-center shrink-0 rounded-full font-serif font-bold select-none transition-all duration-300 ${currentSize.icon} ${
           darkBg
-            ? 'bg-[#1c2826] border border-[#ede7de]/20 text-white'
-            : 'bg-[#1c2826] text-white shadow-sm'
+            ? 'bg-[#0e1111] border border-[#e6dfd0]/20 text-white'
+            : 'bg-[#0e1111] text-white shadow-sm'
         } ${className}`}
       >
         <span className="tracking-tighter flex items-baseline">
           <span className="text-white font-serif font-bold leading-none">B</span>
-          <span className="inline-block rounded-full bg-[#b85438] ml-[1px] w-[5px] h-[5px]" />
+          <span className="inline-block rounded-full bg-[#0e7490] ml-[1px] w-[5px] h-[5px]" />
         </span>
       </div>
     );
@@ -49,19 +49,19 @@ export default function BrandIcon({
         <div
           className={`relative flex items-center justify-center shrink-0 rounded-full font-serif font-bold ${currentSize.icon} ${
             darkBg
-              ? 'bg-[#1c2826] border border-[#ede7de]/20 text-white'
-              : 'bg-[#1c2826] text-white shadow-sm'
+              ? 'bg-[#0e1111] border border-[#e6dfd0]/20 text-white'
+              : 'bg-[#0e1111] text-white shadow-sm'
           }`}
         >
           <span className="tracking-tighter flex items-baseline">
             <span className="text-white font-serif font-bold leading-none">B</span>
-            <span className="inline-block rounded-full bg-[#b85438] ml-[1px] w-[5px] h-[5px]" />
+            <span className="inline-block rounded-full bg-[#0e7490] ml-[1px] w-[5px] h-[5px]" />
           </span>
         </div>
 
         {/* Wordmark */}
-        <span className={`tracking-tight uppercase font-serif font-bold ${currentSize.text} ${darkBg ? 'text-white' : 'text-[#1c2826]'}`}>
-          BEHOLD<span className="text-[#b85438] font-serif font-bold">.</span>
+        <span className={`tracking-tight uppercase font-serif font-bold ${currentSize.text} ${darkBg ? 'text-white' : 'text-[#0e1111]'}`}>
+          BEHOLD<span className="text-[#0e7490] font-serif font-bold">.</span>
         </span>
       </div>
     );
@@ -69,8 +69,8 @@ export default function BrandIcon({
 
   // textOnly
   return (
-    <span className={`font-serif font-bold tracking-tight uppercase ${currentSize.text} ${darkBg ? 'text-white' : 'text-[#1c2826]'} ${className}`}>
-      BEHOLD<span className="text-[#b85438] font-serif font-bold">.</span>
+    <span className={`font-serif font-bold tracking-tight uppercase ${currentSize.text} ${darkBg ? 'text-white' : 'text-[#0e1111]'} ${className}`}>
+      BEHOLD<span className="text-[#0e7490] font-serif font-bold">.</span>
     </span>
   );
 }

@@ -35,15 +35,15 @@ const BUCKET_META = {
     label: 'Afternoon',
     periodText: '12:00 PM - 5:00 PM',
     icon: CloudSun,
-    color: 'text-[#a0462e]',
-    badgeBg: 'bg-[#faf6ee] text-[#9e432c] border-[#e0d8cb]'
+    color: 'text-[#0b5c73]',
+    badgeBg: 'bg-[#f6f1e6] text-[#0c6b83] border-[#d5cdbb]'
   },
   evening: {
     label: 'Evening',
     periodText: '5:00 PM - 9:00 PM',
     icon: Moon,
-    color: 'text-[#a0462e]',
-    badgeBg: 'bg-[#faf6ee] text-[#9e432c] border-[#e0d8cb]'
+    color: 'text-[#0b5c73]',
+    badgeBg: 'bg-[#f6f1e6] text-[#0c6b83] border-[#d5cdbb]'
   }
 };
 
@@ -220,25 +220,25 @@ export default function TimePicker({
   const totalSlotCount = availableSlots.length;
 
   return (
-    <div className="bg-white border border-[#ede7de]/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
+    <div className="bg-white border border-[#e6dfd0]/90 rounded-xl p-4 sm:p-6 shadow-xs space-y-5 text-left">
       {/* Step Header */}
-      <div className="flex items-center justify-between border-b border-[#f4eee6] pb-3">
+      <div className="flex items-center justify-between border-b border-[#f1eadc] pb-3">
         <div className="flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-xl bg-[#1c2826] text-[#b85438] text-xs flex items-center justify-center font-extrabold shadow-xs">
+          <span className="w-7 h-7 rounded-xl bg-[#0e7490] text-white text-xs flex items-center justify-center font-extrabold shadow-xs">
             3
           </span>
           <div>
-            <h3 className="font-bold text-base sm:text-lg text-[#1c2826] leading-tight">
+            <h3 className="font-bold text-base sm:text-lg text-[#0e1111] leading-tight">
               Select Date & Time Slot
             </h3>
-            <p className="text-xs text-[#8a938f] font-medium">
+            <p className="text-xs text-[#7c8785] font-medium">
               {selectedAdvisor
                 ? `Booking with ${selectedAdvisor.name} (${bookingDuration === 30 ? '30-Min Intro' : '60-Min Standard'})`
                 : 'Pick a consultation time that fits your daily routine'}
             </p>
           </div>
         </div>
-        <span className="text-[10px] font-extrabold text-[#9e432c] bg-[#faf5f0] border border-[#eadfd0]/60 px-2.5 py-1 rounded-lg uppercase tracking-wider hidden sm:inline-block">
+        <span className="text-[10px] font-extrabold text-[#0b5c73] bg-[#edf5f7] border border-[#bfe3ec] px-2.5 py-1 rounded-lg uppercase tracking-wider hidden sm:inline-block">
           Step 3 of 4
         </span>
       </div>
@@ -250,16 +250,16 @@ export default function TimePicker({
       {/* Date Header + Toggle for Calendar View */}
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <span className="text-[11px] font-bold text-[#8a938f] uppercase tracking-wider">
+          <span className="text-[11px] font-bold text-[#7c8785] uppercase tracking-wider">
             Choose Appointment Date
           </span>
         </div>
 
         {/* Interactive Month Calendar */}
-        <div className="border border-[#ede7de] rounded-lg p-3 sm:p-4 bg-[#faf6ee]/50 space-y-3 animate-step-in">
+        <div className="border border-[#e6dfd0] rounded-lg p-3 sm:p-4 bg-[#f6f1e6]/50 space-y-3 animate-step-in">
             {/* Month Navigation */}
-            <div className="flex items-center justify-between pb-2 border-b border-[#ede7de]">
-              <span className="font-bold text-sm sm:text-base text-[#1c2826]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#e6dfd0]">
+              <span className="font-bold text-sm sm:text-base text-[#0e1111]">
                 {MONTH_NAMES[currentMonth.getMonth()]} {currentMonth.getFullYear()}
               </span>
               <div className="flex items-center gap-1.5">
@@ -268,7 +268,7 @@ export default function TimePicker({
                   disabled={isPrevMonthDisabled}
                   onClick={handlePrevMonth}
                   aria-label="Previous month"
-                  className="w-7 h-7 rounded-md border border-[#ede7de] bg-white hover:bg-[#f4eee6] disabled:opacity-30 disabled:cursor-not-allowed text-[#4c5b55] flex items-center justify-center transition cursor-pointer"
+                  className="w-7 h-7 rounded-md border border-[#e6dfd0] bg-white hover:bg-[#f1eadc] disabled:opacity-30 disabled:cursor-not-allowed text-[#3c4747] flex items-center justify-center transition cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -276,7 +276,7 @@ export default function TimePicker({
                   type="button"
                   onClick={handleNextMonth}
                   aria-label="Next month"
-                  className="w-7 h-7 rounded-md border border-[#ede7de] bg-white hover:bg-[#f4eee6] text-[#4c5b55] flex items-center justify-center transition cursor-pointer"
+                  className="w-7 h-7 rounded-md border border-[#e6dfd0] bg-white hover:bg-[#f1eadc] text-[#3c4747] flex items-center justify-center transition cursor-pointer"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -289,7 +289,7 @@ export default function TimePicker({
                 <span
                   key={day}
                   className={`text-[10px] font-bold uppercase tracking-wider py-0.5 ${
-                    idx === 0 || idx === 6 ? 'text-[#a0462e]' : 'text-[#8a938f]'
+                    idx === 0 || idx === 6 ? 'text-[#0b5c73]' : 'text-[#7c8785]'
                   }`}
                 >
                   {day}
@@ -317,12 +317,12 @@ export default function TimePicker({
                     }}
                     className={`relative aspect-square p-1 rounded-md flex flex-col items-center justify-center text-center transition-all ${
                       !isCurrentMonth
-                        ? 'text-[#e0d8cb] opacity-20 pointer-events-none'
+                        ? 'text-[#d5cdbb] opacity-20 pointer-events-none'
                         : isSelected
-                        ? 'bg-[#1c2826] text-white font-bold shadow-xs ring-1 ring-[#b85438]'
+                        ? 'bg-[#0e7490] text-white font-bold shadow-xs ring-1 ring-[#0b5c73]'
                         : isClickable
-                        ? 'bg-white hover:bg-[#faf5f0] border border-[#ede7de] text-[#1c2826] font-semibold cursor-pointer hover:border-[#e0d8cb] hover:shadow-xs'
-                        : 'bg-[#f4eee6]/50 border border-[#ede7de]/40 text-[#e0d8cb] opacity-40 cursor-not-allowed'
+                        ? 'bg-white hover:bg-[#f7f2e7] border border-[#e6dfd0] text-[#0e1111] font-semibold cursor-pointer hover:border-[#d5cdbb] hover:shadow-xs'
+                        : 'bg-[#f1eadc]/50 border border-[#e6dfd0]/40 text-[#d5cdbb] opacity-40 cursor-not-allowed'
                     }`}
                   >
                     <span className={`text-xs ${isSelected ? 'text-white' : ''}`}>
@@ -330,16 +330,14 @@ export default function TimePicker({
                     </span>
 
                     {isTodayCell && isCurrentMonth && (
-                      <span className={`text-[8px] font-extrabold uppercase leading-none tracking-tighter mt-0.5 ${
-                        isSelected ? 'text-[#e8c9bc]' : 'text-[#a0462e]'
-                      }`}>
+                      <span className={`text-[8px] font-extrabold uppercase leading-none tracking-tighter mt-0.5 ${isSelected ? 'text-white/80' : 'text-[#0b5c73]'}`}>
                         Today
                       </span>
                     )}
 
                     {isClickable && !isTodayCell && (
                       <span className={`text-[8px] font-bold leading-none mt-0.5 ${
-                        isSelected ? 'text-[#e0d8cb]' : 'text-emerald-700'
+                        isSelected ? 'text-white/80' : 'text-emerald-700'
                       }`}>
                         {info.slotCount}
                       </span>
@@ -350,16 +348,16 @@ export default function TimePicker({
             </div>
 
             {/* Inline Footer / Legend */}
-            <div className="flex items-center justify-between pt-2 border-t border-[#ede7de] text-[11px] text-[#8a938f]">
+            <div className="flex items-center justify-between pt-2 border-t border-[#e6dfd0] text-[11px] text-[#7c8785]">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" /> Open Slots
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-[#1c2826] border border-[#b85438]" /> Selected
+                  <span className="w-2 h-2 rounded-full bg-[#0e7490]" /> Selected
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-[#e0d8cb]" /> Fully Booked / Off
+                  <span className="w-2 h-2 rounded-full bg-[#d5cdbb]" /> Fully Booked / Off
                 </span>
               </div>
             </div>
@@ -367,20 +365,20 @@ export default function TimePicker({
       </div>
 
       {/* Selected Date Indicator & Earliest Jump Pill */}
-      <div className="flex flex-wrap items-center justify-between gap-2 py-2.5 px-3 bg-[#faf6ee] border border-[#ede7de] rounded-lg">
+      <div className="flex flex-wrap items-center justify-between gap-2 py-2.5 px-3 bg-[#f6f1e6] border border-[#e6dfd0] rounded-lg">
         <div className="flex items-center gap-2">
           {isToday ? (
-            <span className="px-2 py-0.5 bg-[#faf5f0] text-[#9e432c] border border-[#eadfd0] text-[10px] font-extrabold uppercase tracking-wider rounded-md flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#b85438] animate-pulse" />
+            <span className="px-2 py-0.5 bg-[#f7f2e7] text-[#0c6b83] border border-[#bfe3ec] text-[10px] font-extrabold uppercase tracking-wider rounded-md flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0e7490] animate-pulse" />
               Today
             </span>
           ) : (
-            <span className="px-2 py-0.5 bg-white text-[#4c5b55] border border-[#ede7de] text-[10px] font-bold uppercase tracking-wider rounded-md flex items-center gap-1">
-              <CalendarIcon className="w-3 h-3 text-[#8a938f]" />
+            <span className="px-2 py-0.5 bg-white text-[#3c4747] border border-[#e6dfd0] text-[10px] font-bold uppercase tracking-wider rounded-md flex items-center gap-1">
+              <CalendarIcon className="w-3 h-3 text-[#7c8785]" />
               Selected
             </span>
           )}
-          <span className="font-bold text-xs sm:text-sm text-[#1c2826]">
+          <span className="font-bold text-xs sm:text-sm text-[#0e1111]">
             {selectedDate ? formatDateString(selectedDate) : 'Select a date'}
           </span>
         </div>
@@ -390,7 +388,7 @@ export default function TimePicker({
             {totalSlotCount > 0 ? (
               <span className="text-emerald-700 font-bold flex items-center gap-1">
                 <span>✓ {totalSlotCount} {totalSlotCount === 1 ? 'Slot' : 'Slots'} Available</span>
-                <span className="text-[#a8a094] font-normal">({bookingDuration === 30 ? '30m' : '60m'})</span>
+                <span className="text-[#9aa29f] font-normal">({bookingDuration === 30 ? '30m' : '60m'})</span>
               </span>
             ) : (
               <span className="text-rose-500 font-medium">0 Slots Available</span>
@@ -402,9 +400,9 @@ export default function TimePicker({
             <button
               type="button"
               onClick={() => onDateChange && onDateChange(earliestAvailableDateStr)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#faf5f0] hover:bg-[#f4eee6] text-[#1c2826] border border-[#eadfd0] rounded-md text-xs font-bold transition cursor-pointer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#f7f2e7] hover:bg-[#f1eadc] text-[#0e1111] border border-[#bfe3ec] rounded-md text-xs font-bold transition cursor-pointer"
             >
-              <Zap className="w-3 h-3 text-[#9e432c]" />
+              <Zap className="w-3 h-3 text-[#0c6b83]" />
               <span>Next Free: {formatDateString(earliestAvailableDateStr)}</span>
             </button>
           )}
@@ -434,11 +432,11 @@ export default function TimePicker({
                       <IconComp className="w-3.5 h-3.5" />
                       <span>{meta.label}</span>
                     </div>
-                    <span className="text-[11px] font-medium text-[#a8a094]">
+                    <span className="text-[11px] font-medium text-[#9aa29f]">
                       {meta.periodText}
                     </span>
                   </div>
-                  <span className="text-[11px] font-semibold text-[#8a938f]">
+                  <span className="text-[11px] font-semibold text-[#7c8785]">
                     {items.length} {items.length === 1 ? 'slot' : 'slots'}
                   </span>
                 </div>
@@ -460,20 +458,20 @@ export default function TimePicker({
                         }}
                         className={`p-2.5 rounded-lg font-semibold transition-all duration-150 text-center flex flex-col items-center justify-center gap-0.5 border min-h-[54px] relative overflow-hidden active:scale-95 ${
                           isSelected
-                            ? 'bg-[#1c2826] text-white border-[#1c2826] shadow-xs ring-1 ring-[#b85438]'
+                            ? 'bg-[#0e7490] text-white border-[#0e7490] shadow-xs ring-1 ring-[#0b5c73]'
                             : isBooked
-                            ? 'bg-[#f4eee6]/70 border-[#ede7de] text-[#a8a094] opacity-50 cursor-not-allowed'
-                            : 'bg-white hover:bg-[#faf5f0]/60 border-[#ede7de] text-[#33413d] hover:border-[#e0d8cb] hover:shadow-xs cursor-pointer'
+                            ? 'bg-[#f1eadc]/70 border-[#e6dfd0] text-[#9aa29f] opacity-50 cursor-not-allowed'
+                            : 'bg-white hover:bg-[#f7f2e7]/60 border-[#e6dfd0] text-[#243033] hover:border-[#d5cdbb] hover:shadow-xs cursor-pointer'
                         }`}
                       >
                         <div className="flex items-center justify-center gap-1">
-                          {isSelected && <Check className="w-3.5 h-3.5 text-[#e8c9bc] stroke-[3]" />}
-                          <span className={`text-xs sm:text-sm font-extrabold ${isSelected ? 'text-[#e8c9bc]' : 'text-[#1c2826]'}`}>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
+                          <span className={`text-xs sm:text-sm font-extrabold ${isSelected ? 'text-white' : 'text-[#0e1111]'}`}>
                             {time}
                           </span>
                         </div>
 
-                        <span className={`text-[10.5px] font-medium leading-tight ${isSelected ? 'text-[#e0d8cb]' : 'text-[#8a938f]'}`}>
+                        <span className={`text-[10.5px] font-medium leading-tight ${isSelected ? 'text-white/75' : 'text-[#7c8785]'}`}>
                           {intervalText}
                         </span>
 
@@ -492,18 +490,18 @@ export default function TimePicker({
         </div>
       ) : (
         /* Empty State with Automatic Next-Date Action */
-        <div className="p-8 sm:p-10 border border-dashed border-[#ede7de] rounded-lg bg-[#faf6ee]/80 text-center space-y-4">
-          <div className="w-12 h-12 rounded-full bg-[#f4eee6] border border-[#ede7de] flex items-center justify-center mx-auto text-[#a8a094]">
+        <div className="p-8 sm:p-10 border border-dashed border-[#e6dfd0] rounded-lg bg-[#f6f1e6]/80 text-center space-y-4">
+          <div className="w-12 h-12 rounded-full bg-[#f1eadc] border border-[#e6dfd0] flex items-center justify-center mx-auto text-[#9aa29f]">
             <Clock className="w-6 h-6" />
           </div>
 
           <div className="space-y-1">
-            <h5 className="font-bold text-sm sm:text-base text-[#33413d]">
+            <h5 className="font-bold text-sm sm:text-base text-[#243033]">
               {isToday
                 ? 'No consultation slots available today.'
                 : 'No slots available on this date.'}
             </h5>
-            <p className="text-xs text-[#8a938f] max-w-md mx-auto">
+            <p className="text-xs text-[#7c8785] max-w-md mx-auto">
               {earliestAvailableDateStr && earliestAvailableDateStr !== selectedDate
                 ? `${selectedAdvisor?.name || 'The psychologist'} has upcoming consultation slots starting on ${formatDateString(earliestAvailableDateStr)}.`
                 : 'All slots for this date have been booked or expired. Please browse the calendar to select another day.'}
@@ -515,9 +513,9 @@ export default function TimePicker({
               <button
                 type="button"
                 onClick={() => onDateChange && onDateChange(earliestAvailableDateStr)}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1c2826] hover:bg-black text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm hover:scale-105"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)]"
               >
-                <Zap className="w-4 h-4 text-[#b85438]" />
+                <Zap className="w-4 h-4 text-white" />
                 <span>Jump to {formatDateString(earliestAvailableDateStr)}</span>
               </button>
             )}
@@ -534,9 +532,9 @@ export default function TimePicker({
                   }
                 }
               }}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-[#f4eee6] text-[#33413d] text-xs font-bold rounded-xl transition-all cursor-pointer border border-[#ede7de] shadow-xs"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white hover:bg-[#f1eadc] text-[#243033] text-xs font-bold rounded-xl transition-all cursor-pointer border border-[#e6dfd0] shadow-xs"
             >
-              <CalendarIcon className="w-4 h-4 text-[#b85438]" />
+              <CalendarIcon className="w-4 h-4 text-[#0e7490]" />
               <span>Browse Full Month</span>
             </button>
           </div>
@@ -546,21 +544,21 @@ export default function TimePicker({
 
       {/* Selected Slot Summary Badge */}
       {selectedTime && totalSlotCount > 0 && (
-        <div className="p-3 bg-[#faf5f0]/70 border border-[#eadfd0]/90 rounded-xl flex items-center justify-between text-xs animate-step-in">
+        <div className="p-3 bg-[#f7f2e7]/70 border border-[#bfe3ec]/90 rounded-xl flex items-center justify-between text-xs animate-step-in">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-6 h-6 rounded-lg bg-[#a0462e] text-white flex items-center justify-center shrink-0">
+            <div className="w-6 h-6 rounded-lg bg-[#0b5c73] text-white flex items-center justify-center shrink-0">
               <Check className="w-3.5 h-3.5 stroke-[3]" />
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-[#1c2826] truncate">
+              <p className="font-bold text-[#0e1111] truncate">
                 {selectedTime} ({getTimeIntervalLabel(selectedTime, bookingDuration)})
               </p>
-              <p className="text-[11px] text-[#5c6b66] truncate">
+              <p className="text-[11px] text-[#55605f] truncate">
                 {formatDateString(selectedDate)} • {selectedAdvisor?.name || 'Selected Advisor'}
               </p>
             </div>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#7d3522] bg-[#f4eee6]/80 px-2 py-0.5 rounded shrink-0">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#0b5c73] bg-[#edf5f7] border border-[#bfe3ec] px-2 py-0.5 rounded shrink-0">
             Slot Ready
           </span>
         </div>

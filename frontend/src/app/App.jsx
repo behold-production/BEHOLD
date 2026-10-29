@@ -20,6 +20,9 @@ import CompleteProfileModal from '../features/auth/CompleteProfileModal';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import BlogSection from '../features/landing/BlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
+import WhyChooseSection from '../features/landing/WhyChooseSection';
+import ServicesShowcase from '../features/landing/ServicesShowcase';
+import HomeOfferSection from '../features/landing/HomeOfferSection';
 import HomeValuesSection from '../features/landing/HomeValuesSection';
 import HomeClosingSection from '../features/landing/HomeClosingSection';
 import '../features/landing/user-home.css';
@@ -159,11 +162,6 @@ export default function App() {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    document.body.classList.toggle('bh-home-page', location.pathname === '/');
-    return () => document.body.classList.remove('bh-home-page');
-  }, [location.pathname]);
 
   // Capture UTM / fbclid campaign parameters on app mount & route change
   useEffect(() => {
@@ -434,12 +432,12 @@ export default function App() {
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md transition-all duration-300">
         <div className="flex flex-col items-center gap-4">
           <div className="relative flex items-center justify-center">
-            <div className="w-14 h-14 rounded-full border-3 border-[#b85438]/20 border-t-[#b85438] animate-spin shadow-[0_0_15px_rgba(184,84,56,0.4)]" />
-            <span className="absolute font-sans font-semibold text-xs text-[#1c2826] tracking-widest uppercase">
-              B<span className="text-[#b85438]">.</span>
+            <div className="w-14 h-14 rounded-full border-3 border-[#0e7490]/20 border-t-[#0e7490] animate-spin shadow-[0_0_15px_rgba(14,116,144,0.4)]" />
+            <span className="absolute font-sans font-semibold text-xs text-[#0e1111] tracking-widest uppercase">
+              B<span className="text-[#0e7490]">.</span>
             </span>
           </div>
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#5c6b66] animate-pulse">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#55605f] animate-pulse">
             Loading...
           </span>
         </div>
@@ -526,7 +524,7 @@ export default function App() {
     location.pathname === '/cousellor';
 
   return (
-    <div className="font-sans antialiased selection:bg-brand/30 min-h-screen relative text-[#1c2826] bg-[#faf6ee]">
+    <div className="font-sans antialiased selection:bg-[#0e7490]/30 min-h-screen relative text-[#0e1111] bg-[#f6f1e6]">
 
       {/* Global Toast Notifications */}
       <Toaster
@@ -534,12 +532,12 @@ export default function App() {
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#1c2826', // forest ink
+            background: '#0e1111', // forest ink
             color: '#fff',
             fontSize: '14px',
             fontWeight: '600',
             borderRadius: '12px',
-            border: '1px solid #2b3a37', // ink raised
+            border: '1px solid #123039', // ink raised
           },
         }}
       />
@@ -548,8 +546,8 @@ export default function App() {
  
       {/* Top Banner Notice Alert */}
       {!hideNavbarAndFooter && siteSettings.showBanner && siteSettings.bannerNotice && (
-        <div className="w-full bg-[#16201d] text-[#e0d8cb] text-xs sm:text-xs font-semibold py-2.5 px-4 text-center border-b border-[#1c2826] relative z-50 flex items-center justify-center gap-2 tracking-wide shadow-md animate-in slide-in-from-top duration-300">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-brand animate-pulse" />
+        <div className="w-full bg-[#050707] text-[#d5cdbb] text-xs sm:text-xs font-semibold py-2.5 px-4 text-center border-b border-[#0e1111] relative z-50 flex items-center justify-center gap-2 tracking-wide shadow-md animate-in slide-in-from-top duration-300">
+          <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#0e7490] animate-pulse" />
           <span>{siteSettings.bannerNotice}</span>
         </div>
       )}
@@ -557,7 +555,7 @@ export default function App() {
       {/* Global Fixed Background Image Layer for all sections */}
       {!hideNavbarAndFooter && (
         <div
-          className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none bg-[#fbf9f5]"
+          className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden select-none bg-[#fbf8f1]"
         />
       )}
 
@@ -615,15 +613,15 @@ export default function App() {
  
 
       <Suspense fallback={
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#fbf9f5]/80 backdrop-blur-md transition-all duration-300">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#fbf8f1]/80 backdrop-blur-md transition-all duration-300">
           <div className="flex flex-col items-center gap-4">
             <div className="relative flex items-center justify-center">
-              <div className="w-12 h-12 rounded-full border-2 border-[#ede7de] border-t-[#b85438] animate-spin" />
-              <span className="absolute font-sans font-bold text-xs text-[#1c2826] tracking-widest uppercase">
-                B<span className="text-[#b85438]">.</span>
+              <div className="w-12 h-12 rounded-full border-2 border-[#e6dfd0] border-t-[#0e7490] animate-spin" />
+              <span className="absolute font-sans font-bold text-xs text-[#0e1111] tracking-widest uppercase">
+                B<span className="text-[#0e7490]">.</span>
               </span>
             </div>
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-[#7d8b85]">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-[#6e7b7c]">
               Loading...
             </span>
           </div>
@@ -632,12 +630,18 @@ export default function App() {
         <Routes>
           {/* Public landing page */}
           <Route path="/" element={
-            <main className="fade-in-up bh-home">
+            <main className="fade-in-up bg-[#FBF8F1] text-[#0E1111]">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              <TherapistSwipeSection onBookTherapist={handleBookTherapist} navigateToSection={navigateToSection} siteSettings={siteSettings} />
+              <WhyChooseSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              <ServicesShowcase siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
               <Reviews siteSettings={siteSettings} />
-              {siteSettings.enableFaq !== false && <Faq siteSettings={siteSettings} />}
-              {siteSettings.enableBlog !== false && <BlogSection siteSettings={siteSettings} />}
+              <BlogSection siteSettings={siteSettings} />
+              <HomeOfferSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              <Faq siteSettings={siteSettings} />
+              {siteSettings.enableInquiry !== false && (
+                <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              )}
             </main>
           } />
 
@@ -652,7 +656,7 @@ export default function App() {
           {/* Contact Page Route */}
           <Route path="/contact" element={
             <main className="fade-in-up pt-16 sm:pt-20 bg-transparent min-h-screen">
-              <ContactInquirySection />
+              <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
             </main>
           } />
 
@@ -815,6 +819,7 @@ export default function App() {
           enablePsychology={siteSettings.enablePsychology !== false}
           enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
           siteSettings={siteSettings}
+          hideCta={location.pathname === '/'}
           onOpenBooking={handleOpenGeneralBooking}
         />
       )}
@@ -822,17 +827,17 @@ export default function App() {
       {/* Terms & Privacy Documents Modal */}
       {activeDocType && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-[#1c2826] border border-[#33413d] rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-[#0e1111] border border-[#243033] rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
 
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-[#33413d] flex justify-between items-center bg-[#16201d]/40">
+            <div className="px-6 py-4 border-b border-[#243033] flex justify-between items-center bg-[#050707]/40">
               <h3 className="text-sm font-semibold text-white font-header flex items-center gap-2">
                 <span>{activeDocType === 'terms' ? 'Terms & Conditions' : activeDocType === 'refund' ? 'Return & Refund Policy' : activeDocType === 'consent' ? 'Informed Consent & Client Agreement' : 'Privacy Policy'}</span> {/* */}
-                <span className="text-[7.5px] bg-[#33413d] border border-[#4c5b55] text-[#a8a094] px-1.5 py-0.5 rounded font-semibold ">DOC</span>
+                <span className="text-[7.5px] bg-[#243033] border border-[#3c4747] text-[#9aa29f] px-1.5 py-0.5 rounded font-semibold ">DOC</span>
               </h3>
               <button
                 onClick={() => setActiveDocType(null)}
-                className="p-1 bg-[#16201d] border border-[#22302d] hover:border-[#4c5b55] text-[#a8a094] hover:text-white rounded-lg transition-all cursor-pointer border-none shadow-sm flex items-center justify-center"
+                className="p-1 bg-[#050707] border border-[#0f2a32] hover:border-[#3c4747] text-[#9aa29f] hover:text-white rounded-lg transition-all cursor-pointer border-none shadow-sm flex items-center justify-center"
                 title="Close modal"
               >
                 <X className="w-4 h-4" />
@@ -840,7 +845,7 @@ export default function App() {
             </div>
  
             {/* Modal Body */}
-            <div className="p-6 overflow-y-auto text-left text-[#e0d8cb] text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
+            <div className="p-6 overflow-y-auto text-left text-[#d5cdbb] text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
               {(activeDocType === 'terms'
                 ? siteSettings.termsOfUse
                 : activeDocType === 'refund'
@@ -851,17 +856,17 @@ export default function App() {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 border-t border-[#33413d] flex justify-end gap-3 bg-[#16201d]">
+            <div className="px-6 py-4 border-t border-[#243033] flex justify-end gap-3 bg-[#050707]">
               <button
                 onClick={handleDownloadPDF}
-                className="px-5 py-2.5 bg-[#33413d] hover:bg-[#4c5b55] text-[#e0d8cb] hover:text-white font-semibold text-xs rounded-xl cursor-pointer transition border border-[#4c5b55] shadow-md flex items-center gap-2"
+                className="px-5 py-2.5 bg-[#243033] hover:bg-[#3c4747] text-[#d5cdbb] hover:text-white font-semibold text-xs rounded-xl cursor-pointer transition border border-[#3c4747] shadow-md flex items-center gap-2"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download PDF
               </button>
               <button
                 onClick={() => setActiveDocType(null)}
-                className="px-5 py-2.5 bg-[#33413d] hover:bg-[#33413d] text-white hover:text-brand font-semibold text-xs rounded-lg cursor-pointer transition border-none shadow-md"
+                className="px-5 py-2.5 bg-[#243033] hover:bg-[#243033] text-white hover:text-[#0e7490] font-semibold text-xs rounded-lg cursor-pointer transition border-none shadow-md"
               >
                 Close Document
               </button>
@@ -895,7 +900,7 @@ export default function App() {
             title="Chat with us on WhatsApp"
             aria-label="Chat with us on WhatsApp"
           >
-            <span className="absolute -top-10 right-0 bg-[#1c2826] text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#33413d]">
+            <span className="absolute -top-10 right-0 bg-[#0e1111] text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#243033]">
               Chat on WhatsApp
             </span>
             <svg className="w-7 h-7 sm:w-8 sm:h-8 fill-current text-white" viewBox="0 0 24 24">

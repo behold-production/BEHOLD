@@ -144,11 +144,11 @@ export default function ThankYouPage() {
     return (
       <>
         <SEO title="Booking details unavailable | BEHOLD" noIndex={true} />
-        <main className="min-h-screen bg-[#fbf9f5] flex items-center justify-center px-4">
+        <main className="min-h-screen bg-[#fbf8f1] flex items-center justify-center px-4">
           <div className="max-w-md text-center space-y-4">
-            <h1 className="font-serif-hero text-2xl font-semibold text-[#1c2826]">Booking details unavailable</h1>
-            <p className="text-sm text-[#5c6b66]">We could not verify this booking with BEHOLD. Please check your booking link or contact support.</p>
-            <Link to="/" className="inline-flex items-center gap-2 rounded-md bg-[#1c2826] px-5 py-3 text-sm font-semibold text-white no-underline">
+            <h1 className="font-serif-hero text-2xl font-semibold text-[#0e1111]">Booking details unavailable</h1>
+            <p className="text-sm text-[#55605f]">We could not verify this booking with BEHOLD. Please check your booking link or contact support.</p>
+            <Link to="/" className="inline-flex items-center gap-2 rounded-md bg-[#0e1111] px-5 py-3 text-sm font-semibold text-white no-underline">
               Return to home <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -158,7 +158,7 @@ export default function ThankYouPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbf9f5] text-[#1c2826] antialiased flex flex-col justify-between relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#fbf8f1] text-[#0e1111] antialiased flex flex-col justify-between relative overflow-x-hidden">
       <SEO
         title="Booking Confirmed | BEHOLD Psychological Counselling"
         description="Your confidential psychological counselling session is confirmed. We look forward to meeting you."
@@ -167,11 +167,11 @@ export default function ThankYouPage() {
       />
 
       {/* ── TOP FOCUSED BRAND BAR ── */}
-      <header className="w-full bg-white/95 backdrop-blur-md border-b border-[#ede7de] sticky top-0 z-40 shadow-2xs">
+      <header className="w-full bg-white/95 backdrop-blur-md border-b border-[#e6dfd0] sticky top-0 z-40 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1.5 no-underline text-inherit">
-            <span className="text-xl sm:text-2xl font-bold text-[#1c2826] uppercase tracking-tight flex items-baseline">
-              BEHOLD<span className="text-[#b85438] font-bold text-2xl leading-none">.</span>
+            <span className="text-xl sm:text-2xl font-bold text-[#0e1111] uppercase tracking-tight flex items-baseline">
+              BEHOLD<span className="text-[#0e7490] font-bold text-2xl leading-none">.</span>
             </span>
           </Link>
 
@@ -180,7 +180,7 @@ export default function ThankYouPage() {
               href="https://wa.me/919400898011?text=Hi%20BEHOLD%2C%20I%20have%20a%20question%20regarding%20my%20session%20booking"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-[#1c2826] bg-white hover:bg-[#f6f2ec] border border-[#ede7de] transition-all cursor-pointer no-underline"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-[#0e1111] bg-white hover:bg-[#f5f0e5] border border-[#e6dfd0] transition-all cursor-pointer no-underline"
             >
               <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
               <span className="hidden sm:inline">WhatsApp Support</span>
@@ -191,7 +191,7 @@ export default function ThankYouPage() {
       </header>
 
       {/* Ambient background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[35rem] h-[35rem] bg-[#b85438]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[35rem] h-[35rem] bg-[#0e7490]/10 rounded-full blur-[140px] pointer-events-none" />
 
       {/* ── MAIN CONTENT CONTAINER ── */}
       <main className="relative z-10 w-full max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-6 flex-1">
@@ -207,11 +207,11 @@ export default function ThankYouPage() {
             <span>{isLoading ? 'Verifying booking' : (bookingData?.paymentStatus || bookingData?.status)}</span>
           </div>
 
-          <h1 className="font-serif-hero text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#1c2826] tracking-tight">
+          <h1 className="font-serif-hero text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#0e1111] tracking-tight">
             {isLoading ? 'Verifying your booking...' : (isRescheduled ? 'Reschedule Request Submitted' : 'Booking details')}
           </h1>
 
-          <p className="text-xs sm:text-sm text-[#5c6b66] max-w-md mx-auto leading-relaxed font-medium">
+          <p className="text-xs sm:text-sm text-[#55605f] max-w-md mx-auto leading-relaxed font-medium">
             {isRescheduled 
               ? 'Your requested time slot has been submitted for counselor confirmation. Review your appointment details below.'
               : 'Your confidential psychological counselling session is confirmed. Review your appointment details below.'}
@@ -219,12 +219,12 @@ export default function ThankYouPage() {
         </div>
 
         {/* Booking Details Card */}
-        <div className="bg-white rounded-md border border-[#ede7de] shadow-lg shadow-[#1c2826]/5 p-6 sm:p-8 space-y-6 text-left">
+        <div className="bg-white rounded-md border border-[#e6dfd0] shadow-lg shadow-[#0e1111]/5 p-6 sm:p-8 space-y-6 text-left">
 
-          <div className="flex items-center justify-between border-b border-[#ede7de] pb-4">
+          <div className="flex items-center justify-between border-b border-[#e6dfd0] pb-4">
             <div>
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a938f] block">Appointment Summary</span>
-              <p className="text-xs sm:text-sm font-semibold text-[#1c2826] mt-0.5">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#7c8785] block">Appointment Summary</span>
+              <p className="text-xs sm:text-sm font-semibold text-[#0e1111] mt-0.5">
                 Private Consultation Session
               </p>
             </div>
@@ -235,14 +235,14 @@ export default function ThankYouPage() {
           </div>
 
           {isLoading ? (
-            <div className="py-12 text-center text-[#8a938f] space-y-2">
-              <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#b85438]" />
+            <div className="py-12 text-center text-[#7c8785] space-y-2">
+              <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#0e7490]" />
               <p className="text-xs font-semibold">Loading booking details...</p>
             </div>
           ) : (
             <>
               {/* Psychologist info */}
-              <div className="flex items-center gap-4 p-4 rounded-md bg-[#faf5f0] border border-[#eadfd0]">
+              <div className="flex items-center gap-4 p-4 rounded-md bg-[#f7f2e7] border border-[#bfe3ec]">
                 {bookingData?.advisorPhoto ? (
                   <img
                     src={bookingData.advisorPhoto}
@@ -250,18 +250,18 @@ export default function ThankYouPage() {
                     className="w-12 h-12 rounded-md object-cover object-top shadow-sm border-2 border-white shrink-0"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-md bg-[#b85438] text-white flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
+                  <div className="w-12 h-12 rounded-md bg-[#0e7490] text-white flex items-center justify-center font-semibold text-lg shrink-0 shadow-sm">
                     {getInitials(bookingData?.advisorName)}
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
-                    <h3 className="font-semibold text-[#1c2826] text-sm sm:text-base truncate">
+                    <h3 className="font-semibold text-[#0e1111] text-sm sm:text-base truncate">
                       {bookingData?.advisorName}
                     </h3>
-                    <ShieldCheck className="w-4 h-4 text-[#b85438] shrink-0" title="Verified Professional" />
+                    <ShieldCheck className="w-4 h-4 text-[#0e7490] shrink-0" title="Verified Professional" />
                   </div>
-                  <p className="text-xs text-[#5c6b66] font-medium truncate">
+                  <p className="text-xs text-[#55605f] font-medium truncate">
                     {bookingData?.advisorRole}
                   </p>
                 </div>
@@ -269,32 +269,32 @@ export default function ThankYouPage() {
 
               {/* Schedule grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 bg-[#faf6ee] rounded-md border border-[#ede7de] text-left">
-                  <div className="flex items-center gap-1.5 text-[#8a938f] mb-1">
-                    <Calendar className="w-3.5 h-3.5 text-[#b85438]" />
+                <div className="p-3.5 bg-[#f6f1e6] rounded-md border border-[#e6dfd0] text-left">
+                  <div className="flex items-center gap-1.5 text-[#7c8785] mb-1">
+                    <Calendar className="w-3.5 h-3.5 text-[#0e7490]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Date</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-[#1c2826]">
+                  <p className="text-xs sm:text-sm font-semibold text-[#0e1111]">
                     {bookingData?.date ? formatDateString(bookingData.date) : ''}
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#faf6ee] rounded-md border border-[#ede7de] text-left">
-                  <div className="flex items-center gap-1.5 text-[#8a938f] mb-1">
-                    <Clock className="w-3.5 h-3.5 text-[#b85438]" />
+                <div className="p-3.5 bg-[#f6f1e6] rounded-md border border-[#e6dfd0] text-left">
+                  <div className="flex items-center gap-1.5 text-[#7c8785] mb-1">
+                    <Clock className="w-3.5 h-3.5 text-[#0e7490]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Time</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-[#1c2826]">
+                  <p className="text-xs sm:text-sm font-semibold text-[#0e1111]">
                     {bookingData?.time}
                   </p>
                 </div>
 
-                <div className="p-3.5 bg-[#faf6ee] rounded-md border border-[#ede7de] text-left col-span-2 sm:col-span-1">
-                  <div className="flex items-center gap-1.5 text-[#8a938f] mb-1">
-                    <Video className="w-3.5 h-3.5 text-[#b85438]" />
+                <div className="p-3.5 bg-[#f6f1e6] rounded-md border border-[#e6dfd0] text-left col-span-2 sm:col-span-1">
+                  <div className="flex items-center gap-1.5 text-[#7c8785] mb-1">
+                    <Video className="w-3.5 h-3.5 text-[#0e7490]" />
                     <span className="text-[10px] font-semibold uppercase tracking-wider">Mode</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-[#1c2826] truncate">
+                  <p className="text-xs sm:text-sm font-semibold text-[#0e1111] truncate">
                     {bookingData?.mode}
                   </p>
                 </div>
@@ -302,25 +302,25 @@ export default function ThankYouPage() {
 
               {/* Consultation Room Box */}
               {bookingData?.meetLink && (
-                <div className="p-4 rounded-md bg-[#faf5f0] border border-[#eadfd0] space-y-2.5">
+                <div className="p-4 rounded-md bg-[#f7f2e7] border border-[#bfe3ec] space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Video className="w-4 h-4 text-[#b85438]" />
-                      <span className="text-xs font-semibold text-[#1c2826]">Private Video Consultation Room</span>
+                      <Video className="w-4 h-4 text-[#0e7490]" />
+                      <span className="text-xs font-semibold text-[#0e1111]">Private Video Consultation Room</span>
                     </div>
                     <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                       Direct Join · Encrypted
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-white p-2 rounded-md border border-[#eadfd0]">
-                    <span className="text-xs text-[#5c6b66] font-mono truncate flex-1 pl-1">
+                  <div className="flex items-center gap-2 bg-white p-2 rounded-md border border-[#bfe3ec]">
+                    <span className="text-xs text-[#55605f] font-mono truncate flex-1 pl-1">
                       {bookingData.meetLink}
                     </span>
                     <button
                       type="button"
                       onClick={handleCopyLink}
-                      className="px-2.5 py-1 text-xs font-semibold text-[#b85438] hover:text-white bg-white hover:bg-[#b85438] rounded-md flex items-center gap-1 cursor-pointer transition border border-[#eadfd0]"
+                      className="px-2.5 py-1 text-xs font-semibold text-[#0e7490] hover:text-white bg-white hover:bg-[#0e7490] rounded-md flex items-center gap-1 cursor-pointer transition border border-[#bfe3ec]"
                     >
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copied ? 'Copied' : 'Copy Link'}</span>
@@ -331,7 +331,7 @@ export default function ThankYouPage() {
                     href={bookingData.meetLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-bold rounded-md transition shadow-sm no-underline"
+                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-[#0e1111] hover:bg-[#0e7490] text-white text-xs font-bold rounded-md transition shadow-sm no-underline"
                     title="Join Google Meet Video Consultation Room"
                   >
                     <Video className="w-3.5 h-3.5" />
@@ -342,12 +342,12 @@ export default function ThankYouPage() {
               )}
 
               {/* What happens next instructions */}
-              <div className="p-4 rounded-md bg-[#faf6ee] border border-[#ede7de] space-y-3">
-                <h3 className="text-xs font-semibold text-[#1c2826] uppercase tracking-wider">
+              <div className="p-4 rounded-md bg-[#f6f1e6] border border-[#e6dfd0] space-y-3">
+                <h3 className="text-xs font-semibold text-[#0e1111] uppercase tracking-wider">
                   What Happens Next
                 </h3>
 
-                <div className="space-y-2.5 text-sm text-[#5c6b66]">
+                <div className="space-y-2.5 text-sm text-[#55605f]">
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <span>Your booking confirmation and session room link have been sent to your WhatsApp & Email.</span>
@@ -364,9 +364,9 @@ export default function ThankYouPage() {
               </div>
 
               {/* Payment Summary */}
-              <div className="flex items-center justify-between p-3.5 bg-[#faf6ee] rounded-md border border-[#ede7de] text-xs">
-                <span className="font-semibold text-[#5c6b66]">Amount Paid (Included GST):</span>
-                <span className="text-base font-semibold text-[#1c2826]">
+              <div className="flex items-center justify-between p-3.5 bg-[#f6f1e6] rounded-md border border-[#e6dfd0] text-xs">
+                <span className="font-semibold text-[#55605f]">Amount Paid (Included GST):</span>
+                <span className="text-base font-semibold text-[#0e1111]">
                   {bookingData?.amountPaid != null ? `₹${bookingData.amountPaid}` : '—'}
                 </span>
               </div>
@@ -387,16 +387,16 @@ export default function ThankYouPage() {
                 })}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:flex-1 py-3.5 px-4 bg-[#faf5f0] hover:bg-[#f6e8e2] border border-[#eadfd0] text-[#1c2826] font-semibold text-sm rounded-md transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
+                className="w-full sm:flex-1 py-3.5 px-4 bg-[#f7f2e7] hover:bg-[#eaf7fa] border border-[#bfe3ec] text-[#0e1111] font-semibold text-sm rounded-md transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
               >
-                <Calendar className="w-4 h-4 text-[#b85438] shrink-0" />
+                <Calendar className="w-4 h-4 text-[#0e7490] shrink-0" />
                 <span>Add to Calendar</span>
               </a>
             )}
 
             <button
               onClick={handleDownloadReceipt}
-              className="w-full sm:flex-1 py-3.5 px-4 bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-sm rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1c2826] focus-visible:ring-offset-2"
+              className="w-full sm:flex-1 py-3.5 px-4 bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-sm rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e1111] focus-visible:ring-offset-2"
             >
               <Download className="w-4 h-4 text-white shrink-0" />
               <span>Download Receipt</span>
@@ -404,7 +404,7 @@ export default function ThankYouPage() {
 
             <button
               onClick={() => navigate('/')}
-              className="w-full sm:w-auto py-3.5 px-6 bg-white hover:bg-[#f6f2ec] text-[#1c2826] font-semibold text-sm rounded-md border border-[#ede7de] transition-all flex items-center justify-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-2"
+              className="w-full sm:w-auto py-3.5 px-6 bg-white hover:bg-[#f5f0e5] text-[#0e1111] font-semibold text-sm rounded-md border border-[#e6dfd0] transition-all flex items-center justify-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
             >
               <Home className="w-4 h-4 shrink-0" />
               <span>Return Home</span>
@@ -414,9 +414,9 @@ export default function ThankYouPage() {
         </div>
 
         {/* Support note */}
-        <p className="text-[13px] text-[#5c6b66] text-center leading-relaxed">
+        <p className="text-[13px] text-[#55605f] text-center leading-relaxed">
           Questions or need help?{' '}
-          <a href="mailto:support@behold.co.in" className="text-[#b85438] font-semibold underline underline-offset-2 hover:text-[#b85438] transition-colors">
+          <a href="mailto:support@behold.co.in" className="text-[#0e7490] font-semibold underline underline-offset-2 hover:text-[#0e7490] transition-colors">
             support@behold.co.in
           </a>
         </p>
@@ -424,7 +424,7 @@ export default function ThankYouPage() {
       </main>
 
       {/* ── MINIMAL COMPACT FOOTER ── */}
-      <footer className="py-4 text-[#8a938f] text-xs text-center border-t border-[#ede7de] bg-white/50">
+      <footer className="py-4 text-[#7c8785] text-xs text-center border-t border-[#e6dfd0] bg-white/50">
         <p>© {new Date().getFullYear()} BEHOLD. All rights reserved. Confidential Psychological Care.</p>
       </footer>
 

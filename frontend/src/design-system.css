@@ -54,8 +54,8 @@
   box-sizing: border-box;
 }
 .form-input:focus {
-  border-color: #b85438;
-  box-shadow: 0 0 0 3px rgba(184, 84, 56, 0.12);
+  border-color: #0e7490;
+  box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.14);
 }
 .form-input::placeholder { color: #a8a094; font-weight: 400; }
 
@@ -70,44 +70,44 @@
 .badge-success { background: #eef4ec; color: #3d5c46; border: 1px solid #cfdccb; }
 .badge-warning { background: #faf3e3; color: #8a6a2f; border: 1px solid #ecdcb8; }
 .badge-danger  { background: #f9ecea; color: #96382a; border: 1px solid #eccbc2; }
-.badge-brand   { background: #f6e8e2; color: #a0462e; border: 1px solid #e3c4b7; }
-.badge-dark    { background: #1c2826; color: #f2e9d8; border: 1px solid #1c2826; }
+.badge-brand   { background: #edf5f7; color: #0b5c73; border: 1px solid #bfe3ec; }
+.badge-dark    { background: #0e1111; color: #f7f3ea; border: 1px solid #0e1111; }
 
 /* Primary / Secondary Buttons — classic rectangles, restrained motion */
 .btn-primary {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px 24px; background: #b85438; color: #ffffff;
+  padding: 10px 24px; background: #0e7490; color: #ffffff;
   font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em;
   border-radius: 6px; border: none;
   cursor: pointer; white-space: nowrap; font-family: 'Poppins', sans-serif;
   transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 1px 3px rgba(28, 40, 38, 0.12); text-decoration: none;
+  box-shadow: 0 1px 3px rgba(14, 17, 17, 0.12); text-decoration: none;
 }
-.btn-primary:hover { background: #a0462e; box-shadow: 0 4px 12px rgba(160, 70, 46, 0.25); transform: translateY(-1px); }
+.btn-primary:hover { background: #0b5c73; box-shadow: 0 4px 12px rgba(11, 92, 115, 0.25); transform: translateY(-1px); }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-secondary {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px 24px; background: #1c2826; color: #f7f3ea;
+  padding: 10px 24px; background: #0e1111; color: #f7f3ea;
   font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em;
   border-radius: 6px; border: none;
   cursor: pointer; white-space: nowrap; font-family: 'Poppins', sans-serif;
   transition: background 0.2s ease, transform 0.15s ease; text-decoration: none;
 }
-.btn-secondary:hover { background: #2b3a37; transform: translateY(-1px); }
+.btn-secondary:hover { background: #243033; transform: translateY(-1px); }
 .btn-secondary:active { transform: scale(0.98); }
 
 /* Outline button — quiet editorial alternative */
 .btn-outline-classic {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 9px 23px; background: transparent; color: #1c2826;
+  padding: 9px 23px; background: transparent; color: #0e1111;
   font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em;
   border-radius: 6px; border: 1px solid #c9bfae;
   cursor: pointer; white-space: nowrap; font-family: 'Poppins', sans-serif;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
   text-decoration: none;
 }
-.btn-outline-classic:hover { border-color: #b85438; color: #b85438; background: rgba(184, 84, 56, 0.05); }
+.btn-outline-classic:hover { border-color: #0e7490; color: #0e7490; background: rgba(14, 116, 144, 0.05); }
 
 /* Session Card */
 .session-card {
@@ -130,7 +130,7 @@
 .heading-classic {
   font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   font-weight: 600;
-  color: #1c2826;
+  color: #0e1111;
   letter-spacing: -0.01em;
   line-height: 1.15;
 }
@@ -142,7 +142,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: #b85438;
+  color: #0b5c73;
   margin-bottom: 10px;
 }
 

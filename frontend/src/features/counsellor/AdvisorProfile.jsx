@@ -326,10 +326,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-[#fbf9f5] flex items-center justify-center px-4">
+      <div className="min-h-screen pt-24 pb-16 bg-[#fbf8f1] flex items-center justify-center px-4">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-[#b85438] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[#5c6b66] font-bold tracking-wide">Loading verified specialist details...</p>
+          <div className="w-10 h-10 border-4 border-[#0e7490] border-t-transparent rounded-full animate-spin" />
+          <p className="text-[#55605f] font-bold tracking-wide">Loading verified specialist details...</p>
         </div>
       </div>
     );
@@ -337,16 +337,16 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   if (!advisor) {
     return (
-      <div className="min-h-screen pt-28 pb-16 bg-[#fbf9f5] text-center px-4 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 rounded-md bg-[#f4eee6] border border-[#ede7de] flex items-center justify-center mb-4">
-          <UserCheck className="w-8 h-8 text-[#8a938f]" />
+      <div className="min-h-screen pt-28 pb-16 bg-[#fbf8f1] text-center px-4 flex flex-col items-center justify-center">
+        <div className="w-16 h-16 rounded-md bg-[#f1eadc] border border-[#e6dfd0] flex items-center justify-center mb-4">
+          <UserCheck className="w-8 h-8 text-[#7c8785]" />
         </div>
-        <h2 className="text-2xl font-black mb-2 text-[#1c2826] tracking-tight">Specialist Profile Not Found</h2>
-        <p className="text-sm text-[#5c6b66] max-w-sm mb-6">We could not retrieve the details for this counselor. Please check back or choose another expert from our directory.</p>
+        <h2 className="text-2xl font-black mb-2 text-[#0e1111] tracking-tight">Specialist Profile Not Found</h2>
+        <p className="text-sm text-[#55605f] max-w-sm mb-6">We could not retrieve the details for this counselor. Please check back or choose another expert from our directory.</p>
         <button
           type="button"
           onClick={handleBack}
-          className="min-h-[44px] px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white rounded-md font-bold text-xs uppercase tracking-widest transition-all shadow-sm cursor-pointer"
+          className="min-h-[44px] px-6 py-2.5 bg-[#0e1111] hover:bg-[#0e7490] text-white rounded-md font-bold text-xs uppercase tracking-widest transition-all shadow-sm cursor-pointer"
         >
           Go Back to Directory
         </button>
@@ -355,7 +355,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbf9f5] text-[#1c2826] pb-32 pt-0 animate-in fade-in duration-300 relative">
+    <div className="min-h-screen bg-[#fbf8f1] text-[#0e1111] pb-32 pt-0 animate-in fade-in duration-300 relative">
       <SEO 
         title={`${advisor.name} | Doctor Details`}
         description={`Book an online session with ${advisor.name}, ${advisor.role}. ${advisor.about ? advisor.about.substring(0, 100) + '...' : ''}`}
@@ -363,10 +363,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       />
 
       {/* ── TOP HERO BANNER (decorative) + OVERLAY NAV ── */}
-      <div className="relative w-full h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#2b3a37] via-[#1c2826] to-[#16201d] overflow-hidden">
+      <div className="relative w-full h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#123039] via-[#0e1111] to-[#050707] overflow-hidden">
         {/* Soft ambient terracotta accents */}
-        <div className="absolute -top-16 -right-10 w-64 h-64 rounded-full bg-[#b85438]/20 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 left-1/4 w-72 h-72 rounded-full bg-[#b85438]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -top-16 -right-10 w-64 h-64 rounded-full bg-[#0e7490]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 left-1/4 w-72 h-72 rounded-full bg-[#0e7490]/10 blur-3xl pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
         {/* Floating Top Nav Header */}
@@ -374,7 +374,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <button
             type="button"
             onClick={handleBack}
-            className="w-10 h-10 rounded-md bg-white/80 hover:bg-white text-[#1c2826] backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
+            className="w-10 h-10 rounded-md bg-white/80 hover:bg-white text-[#0e1111] backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40"
             title="Go Back"
           >
             <ChevronLeft className="w-5 h-5 pr-0.5" />
@@ -390,18 +390,18 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               onClick={handleBookmarkToggle}
               className={`w-10 h-10 rounded-md backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border ${
                 isBookmarked 
-                  ? 'bg-amber-400 text-[#1c2826] border-amber-300' 
-                  : 'bg-white/80 hover:bg-white text-[#1c2826] border-white/40'
+                  ? 'bg-amber-400 text-[#0e1111] border-amber-300' 
+                  : 'bg-white/80 hover:bg-white text-[#0e1111] border-white/40'
               }`}
               title="Bookmark Specialist"
             >
-              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-[#1c2826]' : ''}`} />
+              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-[#0e1111]' : ''}`} />
             </button>
 
             <button
               type="button"
               onClick={handleShare}
-              className="w-10 h-10 rounded-md bg-white/80 hover:bg-white text-[#1c2826] backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40 hidden sm:flex"
+              className="w-10 h-10 rounded-md bg-white/80 hover:bg-white text-[#0e1111] backdrop-blur-md flex items-center justify-center transition-all cursor-pointer shadow-md border border-white/40 hidden sm:flex"
               title="Share Profile"
             >
               <Share2 className="w-4 h-4" />
@@ -414,12 +414,12 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 -mt-12 sm:-mt-16">
 
         {/* ── FLOATING PROFILE INFO CARD ── */}
-        <div className="bg-white rounded-t-lg sm:rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-[#ede7de] p-6 sm:p-8 text-center space-y-4">
+        <div className="bg-white rounded-t-lg sm:rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-[#e6dfd0] p-6 sm:p-8 text-center space-y-4">
 
           {/* Circular Profile Avatar */}
           <div className="flex justify-center">
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full ring-4 ring-white shadow-lg border border-[#ede7de] bg-[#1c2826] overflow-hidden flex items-center justify-center">
-              <span className="font-black text-3xl text-[#b85438]/70">{getInitials(advisor.name)}</span>
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full ring-4 ring-white shadow-lg border border-[#e6dfd0] bg-[#0e1111] overflow-hidden flex items-center justify-center">
+              <span className="font-black text-3xl text-[#0e7490]/70">{getInitials(advisor.name)}</span>
               {advisor.profilePic && (
                 <img
                   src={advisor.profilePic}
@@ -432,39 +432,39 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           </div>
 
           {/* Certified Member Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-[#f6efe8] text-[#b85438] rounded-md font-bold text-xs border border-[#e3c4b7]/80 shadow-2xs mx-auto">
-            <ShieldCheck className="w-4 h-4 fill-[#b85438] text-white shrink-0" />
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-[#edf5f7] text-[#0e7490] rounded-md font-bold text-xs border border-[#c7e9f0]/80 shadow-2xs mx-auto">
+            <ShieldCheck className="w-4 h-4 fill-[#0e7490] text-white shrink-0" />
             <span>Certified Member</span>
           </div>
 
           {/* Doctor Name */}
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#1c2826] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0e1111] tracking-tight">
               {advisor.name}
             </h1>
-            <p className="text-sm sm:text-base font-semibold text-[#5c6b66] mt-1">
+            <p className="text-sm sm:text-base font-semibold text-[#55605f] mt-1">
               {advisor.role}
             </p>
           </div>
 
           {/* Rating & Primary Specialty Row */}
-          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-[#4c5b55] flex-wrap pt-1">
-            <span className="flex items-center gap-1 text-[#1c2826]">
+          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm font-bold text-[#3c4747] flex-wrap pt-1">
+            <span className="flex items-center gap-1 text-[#0e1111]">
               {avgRatingDisplay ? (
                 <>
                   <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
                   <span>{avgRatingDisplay}</span>
-                  <span className="text-[#8a938f] font-normal">({totalReviewsCount})</span>
+                  <span className="text-[#7c8785] font-normal">({totalReviewsCount})</span>
                 </>
               ) : (
-                <span className="text-[#5c6b66] font-medium">Newly listed specialist</span>
+                <span className="text-[#55605f] font-medium">Newly listed specialist</span>
               )}
             </span>
 
-            <span className="text-[#c2b8a8]">•</span>
+            <span className="text-[#bdb6a6]">•</span>
 
-            <span className="flex items-center gap-1.5 text-[#5c6b66]">
-              <MessageSquare className="w-4 h-4 text-[#b85438]" />
+            <span className="flex items-center gap-1.5 text-[#55605f]">
+              <MessageSquare className="w-4 h-4 text-[#0e7490]" />
               <span>Psychologist</span>
             </span>
           </div>
@@ -474,10 +474,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {advisor.modes && advisor.modes.map((mode, idx) => (
               <span 
                 key={idx}
-                className="px-3 py-1 rounded-md bg-[#faf6ee] border border-[#ede7de] text-[11px] font-bold text-[#4c5b55] flex items-center gap-1"
+                className="px-3 py-1 rounded-md bg-[#f6f1e6] border border-[#e6dfd0] text-[11px] font-bold text-[#3c4747] flex items-center gap-1"
               >
-                {mode === 'ONLINE' && <Video className="w-3 h-3 text-[#b85438]" />}
-                {mode === 'OFFLINE' && <MapPin className="w-3 h-3 text-[#b85438]" />}
+                {mode === 'ONLINE' && <Video className="w-3 h-3 text-[#0e7490]" />}
+                {mode === 'OFFLINE' && <MapPin className="w-3 h-3 text-[#0e7490]" />}
                 {mode === 'DOOR_STEP' && <UserCheck className="w-3 h-3 text-emerald-600" />}
                 <span>{mode === 'ONLINE' ? 'Online Video' : mode === 'OFFLINE' ? 'Clinic Visit' : 'Doorstep Visit'}</span>
               </span>
@@ -487,14 +487,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         </div>
 
         {/* ── SEGMENTED TAB NAVIGATION SWITCHER ── */}
-        <div className="my-6 bg-[#f1ece3] p-1.5 rounded-md flex items-center justify-center gap-2 border border-[#ede7de]">
+        <div className="my-6 bg-[#f0e9dc] p-1.5 rounded-md flex items-center justify-center gap-2 border border-[#e6dfd0]">
           <button
             type="button"
             onClick={() => setActiveTab('overview')}
             className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-md transition-all cursor-pointer border-none ${
               activeTab === 'overview'
-                ? 'bg-white text-[#1c2826] shadow-sm'
-                : 'text-[#5c6b66] hover:text-[#1c2826] bg-transparent'
+                ? 'bg-white text-[#0e1111] shadow-sm'
+                : 'text-[#55605f] hover:text-[#0e1111] bg-transparent'
             }`}
           >
             Overview
@@ -504,8 +504,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             onClick={() => setActiveTab('review')}
             className={`flex-1 py-3 text-xs sm:text-sm font-bold rounded-md transition-all cursor-pointer border-none ${
               activeTab === 'review'
-                ? 'bg-white text-[#1c2826] shadow-sm'
-                : 'text-[#5c6b66] hover:text-[#1c2826] bg-transparent'
+                ? 'bg-white text-[#0e1111] shadow-sm'
+                : 'text-[#55605f] hover:text-[#0e1111] bg-transparent'
             }`}
           >
             Review ({totalReviewsCount})
@@ -519,28 +519,28 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           <div className="space-y-6 animate-in fade-in duration-300">
             
             {/* About Card */}
-            <div className="bg-white p-6 sm:p-8 rounded-md border border-[#ede7de] shadow-xs space-y-4">
+            <div className="bg-white p-6 sm:p-8 rounded-md border border-[#e6dfd0] shadow-xs space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-md bg-[#faf5f0] text-[#b85438] flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-md bg-[#f7f2e7] text-[#0e7490] flex items-center justify-center font-bold">
                   <UserCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#1c2826]">About {advisor.name}</h3>
-                  <p className="text-xs text-[#5c6b66]">Professional background & therapeutic approach</p>
+                  <h3 className="text-lg font-bold text-[#0e1111]">About {advisor.name}</h3>
+                  <p className="text-xs text-[#55605f]">Professional background & therapeutic approach</p>
                 </div>
               </div>
               
-              <p className="text-xs sm:text-sm text-[#4c5b55] leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-[#3c4747] leading-relaxed font-normal">
                 {advisor.about}
               </p>
 
               {/* Specialties Tags */}
               {advisor.specs && advisor.specs.length > 0 && (
-                <div className="pt-4 border-t border-[#ede7de]">
-                  <h4 className="text-xs font-bold text-[#1c2826] uppercase tracking-wider mb-3">Specialties & Focus Areas</h4>
+                <div className="pt-4 border-t border-[#e6dfd0]">
+                  <h4 className="text-xs font-bold text-[#0e1111] uppercase tracking-wider mb-3">Specialties & Focus Areas</h4>
                   <div className="flex flex-wrap gap-2">
                     {advisor.specs.map((spec, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-[#faf6ee] border border-[#ede7de] rounded-md text-xs font-semibold text-[#4c5b55]">
+                      <span key={i} className="px-3 py-1.5 bg-[#f6f1e6] border border-[#e6dfd0] rounded-md text-xs font-semibold text-[#3c4747]">
                         {spec}
                       </span>
                     ))}
@@ -552,40 +552,40 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             {/* Qualifications & Experience Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               
-              <div className="bg-white p-5 rounded-md border border-[#ede7de] shadow-xs space-y-1">
-                <div className="flex items-center gap-2 text-[#b85438] mb-2">
+              <div className="bg-white p-5 rounded-md border border-[#e6dfd0] shadow-xs space-y-1">
+                <div className="flex items-center gap-2 text-[#0e7490] mb-2">
                   <Clock className="w-4 h-4" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#8a938f]">Experience</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#7c8785]">Experience</span>
                 </div>
-                <p className="text-sm font-bold text-[#1c2826]">{advisor.hoursText}</p>
-                <p className="text-xs text-[#5c6b66] font-medium">{advisor.expYears}+ Years Clinical Practice</p>
+                <p className="text-sm font-bold text-[#0e1111]">{advisor.hoursText}</p>
+                <p className="text-xs text-[#55605f] font-medium">{advisor.expYears}+ Years Clinical Practice</p>
               </div>
 
-              <div className="bg-white p-5 rounded-md border border-[#ede7de] shadow-xs space-y-1">
-                <div className="flex items-center gap-2 text-[#b85438] mb-2">
+              <div className="bg-white p-5 rounded-md border border-[#e6dfd0] shadow-xs space-y-1">
+                <div className="flex items-center gap-2 text-[#0e7490] mb-2">
                   <Globe className="w-4 h-4" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#8a938f]">Languages</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#7c8785]">Languages</span>
                 </div>
-                <p className="text-sm font-bold text-[#1c2826]">{advisor.lang}</p>
-                <p className="text-xs text-[#5c6b66] font-medium">Fluent Consultations</p>
+                <p className="text-sm font-bold text-[#0e1111]">{advisor.lang}</p>
+                <p className="text-xs text-[#55605f] font-medium">Fluent Consultations</p>
               </div>
 
-              <div className="bg-white p-5 rounded-md border border-[#ede7de] shadow-xs space-y-1">
-                <div className="flex items-center gap-2 text-[#b85438] mb-2">
+              <div className="bg-white p-5 rounded-md border border-[#e6dfd0] shadow-xs space-y-1">
+                <div className="flex items-center gap-2 text-[#0e7490] mb-2">
                   <GraduationCap className="w-4 h-4" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#8a938f]">Education</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#7c8785]">Education</span>
                 </div>
-                <p className="text-sm font-bold text-[#1c2826] truncate">{advisor.education}</p>
-                <p className="text-xs text-[#5c6b66] font-medium">Verified Credentials</p>
+                <p className="text-sm font-bold text-[#0e1111] truncate">{advisor.education}</p>
+                <p className="text-xs text-[#55605f] font-medium">Verified Credentials</p>
               </div>
 
             </div>
 
             {/* Fee & Booking Breakdown Banner */}
-            <div className="bg-[#1c2826] p-6 rounded-md text-white space-y-4 shadow-lg">
+            <div className="bg-[#0e1111] p-6 rounded-md text-white space-y-4 shadow-lg">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-[#e0a48f]">Session Fees</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-[#9adce8]">Session Fees</span>
                   <h4 className="text-xl font-bold mt-0.5 font-serif-hero">Transparent & Affordable Care</h4>
                 </div>
                 <div className="text-left sm:text-right">
@@ -595,8 +595,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               </div>
 
               <div className="flex items-center justify-between text-xs text-white/80 font-medium">
-                <span className="flex items-center gap-1.5 text-[#e8c9bc]">
-                  <CheckCircle2 className="w-4 h-4 text-[#e0a48f]" />
+                <span className="flex items-center gap-1.5 text-[#bfe8f1]">
+                  <CheckCircle2 className="w-4 h-4 text-[#9adce8]" />
                   <span>Introductory 30-min Session: ₹{advisor.halfSessionPrice || 499}</span>
                 </span>
                 <span className="hidden sm:inline-block text-white/60">100% Confidential</span>
@@ -612,33 +612,33 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             
             {/* Header Title with Write Review Action */}
             <div className="flex items-center justify-between">
-              <h3 className="text-lg sm:text-xl font-bold text-[#1c2826]">
+              <h3 className="text-lg sm:text-xl font-bold text-[#0e1111]">
                 Review Summary
               </h3>
               <button
                 type="button"
                 onClick={() => setShowReviewModal(true)}
-                className="text-xs font-bold text-[#b85438] hover:text-[#9e432c] hover:underline cursor-pointer bg-transparent border-none p-0 flex items-center gap-1"
+                className="text-xs font-bold text-[#0e7490] hover:text-[#0c6b83] hover:underline cursor-pointer bg-transparent border-none p-0 flex items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5" /> Write Review
               </button>
             </div>
 
             {/* ── RATING BREAKDOWN CONTAINER CARD ── */}
-            <div className="bg-white p-6 sm:p-8 rounded-md border border-[#ede7de] shadow-xs space-y-6">
+            <div className="bg-white p-6 sm:p-8 rounded-md border border-[#e6dfd0] shadow-xs space-y-6">
               
               {/* Top Rating & Bar Chart Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-[#ede7de] pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-[#e6dfd0] pb-6">
                 
                 {/* Left Rating Box */}
-                <div className="md:col-span-4 text-center md:text-left space-y-1 border-b md:border-b-0 md:border-r border-[#ede7de] pb-4 md:pb-0 md:pr-6">
-                  <h2 className="text-5xl font-black text-[#1c2826] tracking-tight">
+                <div className="md:col-span-4 text-center md:text-left space-y-1 border-b md:border-b-0 md:border-r border-[#e6dfd0] pb-4 md:pb-0 md:pr-6">
+                  <h2 className="text-5xl font-black text-[#0e1111] tracking-tight">
                     {avgRatingDisplay ?? '—'}
                   </h2>
-                  <p className="text-xs font-bold text-[#5c6b66]">
+                  <p className="text-xs font-bold text-[#55605f]">
                     {avgRatingDisplay ? 'Average Rating' : 'Not yet rated'}
                   </p>
-                  <p className="text-[11px] text-[#8a938f] font-medium">
+                  <p className="text-[11px] text-[#7c8785] font-medium">
                     {totalReviewsCount > 0
                       ? `${totalReviewsCount.toLocaleString()} client${totalReviewsCount === 1 ? '' : 's'} rated`
                       : 'No client ratings yet'}
@@ -648,16 +648,16 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 {/* Right Star Breakdown Bars */}
                 <div className="md:col-span-8 space-y-2">
                   {ratingDistribution.map((row) => (
-                    <div key={row.stars} className="flex items-center gap-2 text-xs font-bold text-[#5c6b66]">
+                    <div key={row.stars} className="flex items-center gap-2 text-xs font-bold text-[#55605f]">
                       <span className="w-3 text-right">{row.stars}</span>
                       <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
-                      <div className="flex-1 h-2 bg-[#f4eee6] rounded-full overflow-hidden">
+                      <div className="flex-1 h-2 bg-[#f1eadc] rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-[#b85438] rounded-full transition-all duration-500" 
+                          className="h-full bg-[#0e7490] rounded-full transition-all duration-500" 
                           style={{ width: row.percent }} 
                         />
                       </div>
-                      <span className="w-8 text-right text-[11px] font-normal text-[#8a938f]">{row.count}</span>
+                      <span className="w-8 text-right text-[11px] font-normal text-[#7c8785]">{row.count}</span>
                     </div>
                   ))}
                 </div>
@@ -669,29 +669,29 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <div className="space-y-4 pt-2">
                   {recommendPct != null && (
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-md bg-[#faf5f0] text-[#b85438] flex items-center justify-center shrink-0 mt-0.5">
-                        <Star className="w-4 h-4 text-[#b85438]" />
+                      <div className="w-8 h-8 rounded-md bg-[#f7f2e7] text-[#0e7490] flex items-center justify-center shrink-0 mt-0.5">
+                        <Star className="w-4 h-4 text-[#0e7490]" />
                       </div>
                       <div>
-                        <h5 className="text-xs sm:text-sm font-bold text-[#1c2826]">Recommended by clients</h5>
-                        <p className="text-xs text-[#5c6b66]">{recommendPct}% of reviewers rated this specialist 4 or 5 stars</p>
+                        <h5 className="text-xs sm:text-sm font-bold text-[#0e1111]">Recommended by clients</h5>
+                        <p className="text-xs text-[#55605f]">{recommendPct}% of reviewers rated this specialist 4 or 5 stars</p>
                       </div>
                     </div>
                   )}
 
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-md bg-[#faf5f0] text-[#b85438] flex items-center justify-center shrink-0 mt-0.5">
-                      <MessageSquare className="w-4 h-4 text-[#b85438]" />
+                    <div className="w-8 h-8 rounded-md bg-[#f7f2e7] text-[#0e7490] flex items-center justify-center shrink-0 mt-0.5">
+                      <MessageSquare className="w-4 h-4 text-[#0e7490]" />
                     </div>
                     <div>
-                      <h5 className="text-xs sm:text-sm font-bold text-[#1c2826]">Verified experiences</h5>
-                      <p className="text-xs text-[#5c6b66]">{totalReviewsCount} authentic client {totalReviewsCount === 1 ? 'review' : 'reviews'} shared after their sessions</p>
+                      <h5 className="text-xs sm:text-sm font-bold text-[#0e1111]">Verified experiences</h5>
+                      <p className="text-xs text-[#55605f]">{totalReviewsCount} authentic client {totalReviewsCount === 1 ? 'review' : 'reviews'} shared after their sessions</p>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="pt-2">
-                  <p className="text-xs text-[#5c6b66]">
+                  <p className="text-xs text-[#55605f]">
                     This specialist has no reviews yet. If you have completed a session, be the first to share your experience.
                   </p>
                 </div>
@@ -712,8 +712,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       onClick={() => setSelectedFilter(tag)}
                       className={`px-4 py-2 rounded-md text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
                         selectedFilter === tag
-                          ? 'bg-[#1c2826] text-white border-[#1c2826] shadow-xs'
-                          : 'bg-white text-[#4c5b55] border-[#ede7de] hover:bg-[#faf6ee]'
+                          ? 'bg-[#0e1111] text-white border-[#0e1111] shadow-xs'
+                          : 'bg-white text-[#3c4747] border-[#e6dfd0] hover:bg-[#f6f1e6]'
                       }`}
                     >
                       {tag}
@@ -724,19 +724,19 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
               {/* Search Bar Input */}
               <div className="relative w-full">
-                <Search className="w-4 h-4 text-[#8a938f] absolute left-4 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[#7c8785] absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search for a review..."
-                  className="w-full pl-11 pr-10 py-3 bg-white border border-[#ede7de] rounded-md text-xs sm:text-sm text-[#1c2826] outline-none focus:border-[#b85438] transition-all shadow-2xs"
+                  className="w-full pl-11 pr-10 py-3 bg-white border border-[#e6dfd0] rounded-md text-xs sm:text-sm text-[#0e1111] outline-none focus:border-[#0e7490] transition-all shadow-2xs"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8a938f] hover:text-[#5c6b66] bg-transparent border-none cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#7c8785] hover:text-[#55605f] bg-transparent border-none cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -755,7 +755,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
                   if (isReported) {
                     return (
-                      <div key={rev.id} className="p-4 bg-[#f4eee6] rounded-md text-xs text-[#8a938f] text-center italic border border-[#ede7de]">
+                      <div key={rev.id} className="p-4 bg-[#f1eadc] rounded-md text-xs text-[#7c8785] text-center italic border border-[#e6dfd0]">
                         This review has been reported and is hidden for review.
                       </div>
                     );
@@ -764,32 +764,32 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   return (
                     <div 
                       key={rev.id} 
-                      className="bg-white p-5 sm:p-6 rounded-md border border-[#ede7de] shadow-2xs space-y-3 relative"
+                      className="bg-white p-5 sm:p-6 rounded-md border border-[#e6dfd0] shadow-2xs space-y-3 relative"
                     >
                       {/* Review Header: User avatar, Name, Date, 3-dots */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 min-w-0">
                           {rev.avatar ? (
-                            <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-md object-cover shrink-0 border border-[#ede7de]" />
+                            <img src={rev.avatar} alt={rev.author} className="w-10 h-10 rounded-md object-cover shrink-0 border border-[#e6dfd0]" />
                           ) : (
-                            <div className="w-10 h-10 rounded-md bg-[#f4eee6] text-[#4c5b55] font-bold text-xs flex items-center justify-center shrink-0 border border-[#ede7de]">
+                            <div className="w-10 h-10 rounded-md bg-[#f1eadc] text-[#3c4747] font-bold text-xs flex items-center justify-center shrink-0 border border-[#e6dfd0]">
                               {getInitials(rev.author)}
                             </div>
                           )}
                           <div className="min-w-0">
-                            <h4 className="text-xs sm:text-sm font-bold text-[#1c2826] truncate">
-                              {rev.author} <span className="text-[#8a938f] font-normal">· {rev.date}</span>
+                            <h4 className="text-xs sm:text-sm font-bold text-[#0e1111] truncate">
+                              {rev.author} <span className="text-[#7c8785] font-normal">· {rev.date}</span>
                             </h4>
                             <div className="flex items-center gap-1.5 mt-0.5">
                               <span className="flex items-center gap-0.5">
                                 {[...Array(5)].map((_, i) => (
                                   <Star 
                                     key={i} 
-                                    className={`w-3.5 h-3.5 ${i < rev.rating ? 'text-amber-400 fill-amber-400' : 'text-[#e0d8cb]'}`} 
+                                    className={`w-3.5 h-3.5 ${i < rev.rating ? 'text-amber-400 fill-amber-400' : 'text-[#d5cdbb]'}`} 
                                   />
                                 ))}
                               </span>
-                              <span className="text-xs font-bold text-[#4c5b55] ml-1">{rev.rating}</span>
+                              <span className="text-xs font-bold text-[#3c4747] ml-1">{rev.rating}</span>
                             </div>
                           </div>
                         </div>
@@ -799,13 +799,13 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                           <button
                             type="button"
                             onClick={() => setActiveMenuId(activeMenuId === rev.id ? null : rev.id)}
-                            className="p-2 text-[#8a938f] hover:text-[#4c5b55] rounded-md cursor-pointer bg-transparent border-none"
+                            className="p-2 text-[#7c8785] hover:text-[#3c4747] rounded-md cursor-pointer bg-transparent border-none"
                           >
                             <MoreVertical className="w-4 h-4" />
                           </button>
                           
                           {activeMenuId === rev.id && (
-                            <div className="absolute right-0 top-8 bg-white border border-[#ede7de] rounded-md shadow-lg p-1 z-20 min-w-[120px]">
+                            <div className="absolute right-0 top-8 bg-white border border-[#e6dfd0] rounded-md shadow-lg p-1 z-20 min-w-[120px]">
                               <button
                                 type="button"
                                 onClick={() => { handleReport(rev.id); setActiveMenuId(null); }}
@@ -819,29 +819,29 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       </div>
 
                       {/* Review Title */}
-                      <h5 className="text-sm font-bold text-[#1c2826] pt-1">
+                      <h5 className="text-sm font-bold text-[#0e1111] pt-1">
                         {rev.title}
                       </h5>
 
                       {/* Review Text */}
-                      <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed font-normal">
+                      <p className="text-xs sm:text-sm text-[#55605f] leading-relaxed font-normal">
                         {rev.content}
                       </p>
 
                       {/* Verified Review Badge */}
                       {rev.isVerified && (
-                        <div className="inline-flex items-center gap-1 text-[11px] font-bold text-[#b85438] pt-1">
-                          <ShieldCheck className="w-3.5 h-3.5 fill-[#b85438] text-white" />
+                        <div className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0e7490] pt-1">
+                          <ShieldCheck className="w-3.5 h-3.5 fill-[#0e7490] text-white" />
                           <span>Verified Review</span>
                         </div>
                       )}
 
                       {/* Actions Footer: Like, Dislike, Report */}
-                      <div className="flex items-center gap-4 pt-2 border-t border-[#ede7de] text-xs font-semibold text-[#5c6b66]">
+                      <div className="flex items-center gap-4 pt-2 border-t border-[#e6dfd0] text-xs font-semibold text-[#55605f]">
                         <button
                           type="button"
                           onClick={() => handleLike(rev.id)}
-                          className="flex items-center gap-1.5 hover:text-[#b85438] transition-colors cursor-pointer bg-transparent border-none p-0"
+                          className="flex items-center gap-1.5 hover:text-[#0e7490] transition-colors cursor-pointer bg-transparent border-none p-0"
                         >
                           <ThumbsUp className="w-3.5 h-3.5" />
                           <span>Like {likesCount > 0 ? `(${likesCount})` : ''}</span>
@@ -850,7 +850,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                         <button
                           type="button"
                           onClick={() => handleDislike(rev.id)}
-                          className="flex items-center gap-1.5 hover:text-[#1c2826] transition-colors cursor-pointer bg-transparent border-none p-0"
+                          className="flex items-center gap-1.5 hover:text-[#0e1111] transition-colors cursor-pointer bg-transparent border-none p-0"
                         >
                           <ThumbsDown className="w-3.5 h-3.5" />
                           <span>Dislike {dislikesCount > 0 ? `(${dislikesCount})` : ''}</span>
@@ -869,7 +869,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   );
                 })
               ) : (
-                <div className="p-8 text-center bg-white rounded-md border border-[#ede7de] text-[#5c6b66] text-xs font-medium">
+                <div className="p-8 text-center bg-white rounded-md border border-[#e6dfd0] text-[#55605f] text-xs font-medium">
                   No matching reviews found for "{searchQuery || selectedFilter}".
                 </div>
               )}
@@ -883,14 +883,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       {/* ── WRITE REVIEW MODAL ── */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-md max-w-md w-full p-6 space-y-5 shadow-2xl border border-[#ede7de] animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-md max-w-md w-full p-6 space-y-5 shadow-2xl border border-[#e6dfd0] animate-in zoom-in-95 duration-200">
             
-            <div className="flex items-center justify-between border-b border-[#ede7de] pb-3">
-              <h3 className="text-lg font-bold text-[#1c2826]">Write a Verified Review</h3>
+            <div className="flex items-center justify-between border-b border-[#e6dfd0] pb-3">
+              <h3 className="text-lg font-bold text-[#0e1111]">Write a Verified Review</h3>
               <button
                 type="button"
                 onClick={() => setShowReviewModal(false)}
-                className="p-1 text-[#8a938f] hover:text-[#5c6b66] rounded-md cursor-pointer bg-transparent border-none"
+                className="p-1 text-[#7c8785] hover:text-[#55605f] rounded-md cursor-pointer bg-transparent border-none"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -900,7 +900,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               
               {/* Star Rating Select */}
               <div>
-                <label className="text-xs font-bold text-[#4c5b55] block mb-1">Your Rating</label>
+                <label className="text-xs font-bold text-[#3c4747] block mb-1">Your Rating</label>
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <button
@@ -909,20 +909,20 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                       onClick={() => setNewRating(s)}
                       className="p-1 cursor-pointer bg-transparent border-none"
                     >
-                      <Star className={`w-6 h-6 ${s <= newRating ? 'text-amber-400 fill-amber-400' : 'text-[#e0d8cb]'}`} />
+                      <Star className={`w-6 h-6 ${s <= newRating ? 'text-amber-400 fill-amber-400' : 'text-[#d5cdbb]'}`} />
                     </button>
                   ))}
-                  <span className="text-sm font-bold text-[#1c2826] ml-2">{newRating} / 5</span>
+                  <span className="text-sm font-bold text-[#0e1111] ml-2">{newRating} / 5</span>
                 </div>
               </div>
 
               {/* Tag Category */}
               <div>
-                <label className="text-xs font-bold text-[#4c5b55] block mb-1">Primary Feedback Category</label>
+                <label className="text-xs font-bold text-[#3c4747] block mb-1">Primary Feedback Category</label>
                 <select
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-[#faf6ee] border border-[#ede7de] rounded-md text-xs font-semibold text-[#1c2826] outline-none"
+                  className="w-full px-3 py-2.5 bg-[#f6f1e6] border border-[#e6dfd0] rounded-md text-xs font-semibold text-[#0e1111] outline-none"
                 >
                   <option value="Skill">Skill & Expertise</option>
                   <option value="Conversation">Conversation & Empathy</option>
@@ -933,25 +933,25 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
               {/* Title Input */}
               <div>
-                <label className="text-xs font-bold text-[#4c5b55] block mb-1">Review Title</label>
+                <label className="text-xs font-bold text-[#3c4747] block mb-1">Review Title</label>
                 <input
                   type="text"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Amazingly Insightful & Helpful!"
-                  className="w-full px-3.5 py-2.5 bg-[#faf6ee] border border-[#ede7de] rounded-md text-xs text-[#1c2826] outline-none focus:border-[#b85438]"
+                  className="w-full px-3.5 py-2.5 bg-[#f6f1e6] border border-[#e6dfd0] rounded-md text-xs text-[#0e1111] outline-none focus:border-[#0e7490]"
                 />
               </div>
 
               {/* Text Message */}
               <div>
-                <label className="text-xs font-bold text-[#4c5b55] block mb-1">Review Details</label>
+                <label className="text-xs font-bold text-[#3c4747] block mb-1">Review Details</label>
                 <textarea
                   rows={3}
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Share your experience during the consultation..."
-                  className="w-full px-3.5 py-2.5 bg-[#faf6ee] border border-[#ede7de] rounded-md text-xs text-[#1c2826] outline-none focus:border-[#b85438] resize-none"
+                  className="w-full px-3.5 py-2.5 bg-[#f6f1e6] border border-[#e6dfd0] rounded-md text-xs text-[#0e1111] outline-none focus:border-[#0e7490] resize-none"
                 />
               </div>
 
@@ -959,14 +959,14 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                 <button
                   type="button"
                   onClick={() => setShowReviewModal(false)}
-                  className="px-4 py-2.5 rounded-md text-xs font-bold text-[#5c6b66] hover:bg-[#f4eee6] cursor-pointer border-none bg-transparent"
+                  className="px-4 py-2.5 rounded-md text-xs font-bold text-[#55605f] hover:bg-[#f1eadc] cursor-pointer border-none bg-transparent"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingReview}
-                  className="px-5 py-2.5 bg-[#b85438] hover:bg-[#9e432c] text-white rounded-md text-xs font-bold transition shadow-sm cursor-pointer border-none flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-[#0e7490] hover:bg-[#0c6b83] text-white rounded-md text-xs font-bold transition shadow-sm cursor-pointer border-none flex items-center gap-1.5"
                 >
                   {submittingReview ? 'Submitting...' : 'Submit Review'}
                 </button>
@@ -979,17 +979,17 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
       {/* ── STICKY BOTTOM BOOKING CTA BAR (Fixed on Mobile, Desktop Responsive) ── */}
       {enableBooking && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-[#ede7de] px-4 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-[#e6dfd0] px-4 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
             
             {/* Fee summary left side */}
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8a938f] block">Consultation Fee</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#7c8785] block">Consultation Fee</span>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-lg sm:text-2xl font-black text-[#1c2826]">
+                <span className="text-lg sm:text-2xl font-black text-[#0e1111]">
                   ₹{advisor.price.toLocaleString('en-IN')}
                 </span>
-                <span className="text-xs text-[#b85438] font-semibold hidden sm:inline">
+                <span className="text-xs text-[#0e7490] font-semibold hidden sm:inline">
                   (Intro: ₹{advisor.halfSessionPrice || 499})
                 </span>
               </div>
@@ -999,7 +999,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <button
               type="button"
               onClick={() => onBook?.(advisor)}
-              className="px-6 sm:px-8 py-3.5 bg-[#b85438] hover:bg-[#9e432c] text-white font-bold text-xs sm:text-sm rounded-md shadow-lg shadow-[#b85438]/25 transition-all transform active:scale-95 cursor-pointer border-none flex items-center gap-2"
+              className="px-6 sm:px-8 py-3.5 bg-[#0e7490] hover:bg-[#0c6b83] text-white font-bold text-xs sm:text-sm rounded-md shadow-lg shadow-[#0e7490]/25 transition-all transform active:scale-95 cursor-pointer border-none flex items-center gap-2"
             >
               <span>Book Consultation</span>
               <Plus className="w-4 h-4 text-white" />

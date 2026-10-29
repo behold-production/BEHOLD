@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, ArrowRight, Globe } from 'lucide-react';
+import { ArrowRight, Globe, Mail, MapPin, Phone } from 'lucide-react';
 import heroLandscapeBg from '../../assets/header_landscape.jpg';
 
 // Inline brand SVGs (lucide-react dropped brand icons in this version)
@@ -35,11 +35,19 @@ function SocialIcon({ name, className }) {
   );
 }
 
-export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, onOpenBooking, siteSettings }) {
+export default function Footer({
+  navigateToSection,
+  siteName,
+  siteCopyright,
+  onOpenDocs,
+  onOpenBooking,
+  siteSettings,
+  hideCta = false,
+}) {
   const settings = siteSettings || {};
   const ctaBg = (typeof settings.heroBgImage === 'string' && settings.heroBgImage.trim()) || heroLandscapeBg;
-  const emailAddr = settings.contactEmail?.trim() || 'beholdoffice@gmail.com';
-  const phoneVal = settings.contactPhone?.trim() || '+91 92070 75151';
+  const emailAddr = settings.contactEmail?.trim() || '';
+  const phoneVal = settings.contactPhone?.trim() || '';
 
   // Normalize WhatsApp from admin settings (accepts a raw number or a full wa.me URL); hide when disabled
   const whatsappHref = (() => {
@@ -52,26 +60,20 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
     if (digits.length > 10) return `https://wa.me/${digits}`;
     return null;
   })();
-  const whatsappDisplay = (() => {
-    if (!whatsappHref) return null;
-    let digits = (whatsappHref.match(/(\d+)\s*$/)?.[1]) || '';
-    if (!digits) return null;
-    let cc = '';
-    if (digits.length > 10) {
-      cc = digits.slice(0, digits.length - 10);
-      digits = digits.slice(-10);
-    }
-    const body = `${digits.slice(0, 5)} ${digits.slice(5)}`;
-    return `+${cc || '91'} ${body}`;
-  })();
 
   const goTo = (section) => {
     if (section.startsWith('/')) {
       window.spaNavigate?.(section);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      navigateToSection?.(section);
+      return;
     }
+    const el = typeof document !== 'undefined' ? document.getElementById(section) : null;
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 84;
+      window.scrollTo({ top, behavior: 'smooth' });
+      return;
+    }
+    navigateToSection?.(section);
   };
 
   const handleBookingCTA = () => {
@@ -83,205 +85,242 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
       navigateToSection('services');
       return;
     }
-    if (window.spaNavigate) window.spaNavigate('/booking');
-    else window.location.href = '/booking';
+    window.spaNavigate?.('/booking');
   };
 
   const socialList = Array.isArray(settings.socialLinks)
     ? settings.socialLinks.filter((social) => social?.name && social?.url && social.url !== '#')
     : [];
 
+  // Care services come from the admin service copy — never hardcoded.
+  const careLinks = [
+    settings.enablePsychology !== false && settings.counselTitle && {
+      label: settings.counselTitle,
+      onClick: handleBookingCTA,
+    },
+    settings.enableCareerMentoring !== false && settings.careerTitle && {
+      label: settings.careerTitle,
+      onClick: handleBookingCTA,
+    },
+    settings.enableAptitude !== false && settings.aptitudeSectionTitle && {
+      label: settings.aptitudeSectionTitle,
+      onClick: () => { window.spaNavigate?.('/aptitude'); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+    },
+  ].filter(Boolean);
+
+  const ctaHeading = settings.counselSubtitle?.trim() || 'You Don’t Have to Face It Alone.';
+  const ctaDescription = settings.counselDesc?.trim()
+    || 'Connect with licensed clinical psychologists and student mentors dedicated to your emotional health and lifelong clarity.';
+  const ctaButton = settings.heroBtnText?.trim() || settings.counselBtnText?.trim() || 'Book a Session';
+
   return (
     <>
-      {/* SECTION 9: Pre-Footer CTA Banner matching Mockup */}
-      <section className="relative w-full py-20 sm:py-28 bg-[#fbf9f5] overflow-hidden border-t border-[#ece6dc]">
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-md overflow-hidden shadow-sm border border-[#ede7de]">
-            {/* Watercolor Mountain Landscape Background */}
+      {!hideCta && (
+        <section className="relative w-full bg-[#FBF8F1] px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-2xl border border-[#D8E8EC]">
             <div
-              className="w-full min-h-[300px] sm:min-h-[360px] bg-cover bg-center flex items-center justify-center p-8 sm:p-12 relative"
+              aria-hidden="true"
+              className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${ctaBg})` }}
-            >
-              {/* Soft Ambient Overlay for crystal clear typography */}
-              <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px] pointer-events-none" />
+            />
+            <div aria-hidden="true" className="absolute inset-0 bg-[#0E1111]/72" />
+            <div aria-hidden="true" className="absolute -right-16 -top-20 h-[260px] w-[260px] rounded-full bg-[#0E7490]/40 blur-3xl" />
 
-              {/* Centered CTA Content */}
-              <div className="relative z-10 max-w-xl text-center">
-                <h2 className="font-serif-hero text-3xl sm:text-4xl md:text-5xl font-medium text-[#1c2826] tracking-tight leading-tight mb-4">
-                  Begin Your Journey to Better Balance
+            <div className="relative flex flex-col items-start gap-6 px-6 py-10 sm:px-10 sm:py-12 lg:flex-row lg:items-center lg:justify-between">
+              <div className="max-w-xl">
+                <h2 className="text-[22px] font-semibold leading-snug tracking-tight text-white sm:text-[28px]">
+                  {ctaHeading}
                 </h2>
-                <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed mb-6 sm:mb-8">
-                  Connect with licensed clinical psychologists and student mentors dedicated to your emotional health and lifelong clarity.
+                <p className="mt-2.5 text-[12.5px] leading-relaxed text-white/75 sm:text-[13.5px]">
+                  {ctaDescription}
                 </p>
-                <div className="flex justify-center">
-                  <button
-                    type="button"
-                    onClick={handleBookingCTA}
-                    className="inline-flex items-center gap-2 px-8 py-3.5 rounded-md text-xs sm:text-sm font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white shadow-sm hover:shadow transition-all duration-300 cursor-pointer active:scale-95 border-none"
-                  >
-                    <span>Schedule Consultation</span>
-                    <ArrowRight className="w-4 h-4 stroke-[2]" />
-                  </button>
-                </div>
               </div>
+
+              <button
+                type="button"
+                onClick={handleBookingCTA}
+                className="group inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#0B5C73] cursor-pointer border-none sm:text-[13px]"
+              >
+                {ctaButton}
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </button>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* SECTION 10: Clean Minimalist Warm Footer matching Mockup */}
-      <footer className="relative z-10 bg-[#f7f4ee] text-[#1c2826] pt-12 sm:pt-16 pb-12 border-t border-[#ece6dc]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 pb-10 border-b border-[#ede7de]">
-            {/* Brand Column */}
-            <div className="col-span-1 md:col-span-5 space-y-3">
+      <footer className="relative z-10 border-t border-[#E6DFD0] bg-[#FBF8F1] pb-8 pt-12 sm:pt-14">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-9 pb-9 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+            {/* Brand */}
+            <div className="sm:col-span-2 lg:col-span-5">
               <button
-                id="footer-brand"
                 onClick={() => navigateToSection?.('top')}
-                className="text-2xl sm:text-3xl font-black font-sans text-[#1c2826] uppercase tracking-tight bg-transparent border-none cursor-pointer p-0 flex items-baseline gap-0.5"
+                className="flex items-baseline bg-transparent p-0 text-left text-2xl font-black uppercase tracking-tight text-[#0E1111] cursor-pointer border-none sm:text-3xl"
               >
                 <span>{(siteName || 'BEHOLD').replace(/\.$/, '')}</span>
-                <span className="text-[#b85438] font-black">.</span>
+                <span className="text-[#0E7490]">.</span>
               </button>
-              <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed max-w-sm">
-                {settings.footerDescription || 'A dedicated clinical sanctuary integrating compassionate psychological counseling, emotional regulation, and student career mentorship.'}
+
+              <p className="mt-3 max-w-sm text-[12.5px] leading-relaxed text-[#55605F]">
+                {settings.footerDescription
+                  || 'Compassionate psychological counselling and career mentorship, delivered by licensed professionals in complete confidence.'}
               </p>
-              <div className="flex flex-col gap-1.5 pt-2 text-xs text-[#5c6b66]">
-                {emailAddr && (
-                  <a href={`mailto:${emailAddr}`} className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2">
-                    <Mail className="w-3.5 h-3.5 text-[#b85438]" />
-                    <span>{emailAddr}</span>
+
+              <div className="mt-4 flex flex-col gap-2 text-[12px] text-[#55605F]">
+                {phoneVal && (
+                  <a
+                    href={`tel:${phoneVal.replace(/[^\d+]/g, '')}`}
+                    className="inline-flex items-center gap-2 no-underline transition-colors hover:text-[#0E7490]"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-[#0E7490]" />
+                    {phoneVal}
                   </a>
                 )}
-                <a
-                  href={`tel:${phoneVal.replace(/\s+/g, '')}`}
-                  className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2"
-                >
-                  <Phone className="w-3.5 h-3.5 text-[#b85438]" />
-                  <span>Helpline: {phoneVal}</span>
-                </a>
+                {emailAddr && (
+                  <a
+                    href={`mailto:${emailAddr}`}
+                    className="inline-flex items-center gap-2 no-underline transition-colors hover:text-[#0E7490]"
+                  >
+                    <Mail className="h-3.5 w-3.5 text-[#0E7490]" />
+                    {emailAddr}
+                  </a>
+                )}
                 {whatsappHref && (
                   <a
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#b85438] transition-colors inline-flex items-center gap-2 text-xs"
+                    className="inline-flex items-center gap-2 no-underline transition-colors hover:text-[#0E7490]"
                   >
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-                    <span>WhatsApp: {whatsappDisplay}</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    WhatsApp support
                   </a>
+                )}
+                {settings.openHours && (
+                  <span className="inline-flex items-start gap-2">
+                    <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0E7490]" />
+                    {settings.openHours}
+                  </span>
                 )}
               </div>
 
               {socialList.length > 0 && (
-                <div className="flex items-center gap-2.5 pt-1">
+                <div className="mt-4 flex items-center gap-2">
                   {socialList.map((social, idx) => (
-                      <a
-                        key={idx}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={social.name}
-                        title={social.name}
-                        className="w-8 h-8 rounded-md border border-[#e5ddd0] bg-white text-[#5c6b66] hover:text-white hover:bg-[#b85438] hover:border-[#b85438] transition-colors flex items-center justify-center"
-                      >
-                        <SocialIcon name={social.name} className="w-4 h-4" />
-                      </a>
+                    <a
+                      key={idx}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.name}
+                      title={social.name}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E2DCCC] bg-white text-[#55605F] transition-colors hover:border-[#0E7490] hover:bg-[#0E7490] hover:text-white"
+                    >
+                      <SocialIcon name={social.name} className="h-3.5 w-3.5" />
+                    </a>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Navigation Column */}
-            <div className="col-span-1 md:col-span-3">
-              <h4 className="text-[#b85438] font-bold uppercase text-[11px] tracking-[0.18em] mb-4">
-                Navigation
+            {/* Main links */}
+            <div className="lg:col-span-3">
+              <h4 className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#0E1111]">
+                Main Links
               </h4>
-              <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
+              <ul className="mt-3.5 space-y-2 text-[12.5px] text-[#55605F]">
                 <li>
-                  <button onClick={() => goTo('home')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
+                  <button onClick={() => goTo('home')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
                     Home
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/about')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Our Philosophy
+                  <button onClick={() => goTo('services')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                    Services
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/psychologists')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Clinical Psychologists
+                  <button onClick={() => goTo('/psychologists')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                    Psychologists
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/blog')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Journal &amp; Insights
+                  <button onClick={() => goTo('/about')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                    About Us
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('/faqs')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    FAQ Directory
+                  <button onClick={() => goTo('/blog')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                    Blog
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => goTo('/contact')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                    Contact
                   </button>
                 </li>
               </ul>
             </div>
 
-            {/* Care Services Column */}
-            <div className="col-span-1 md:col-span-4">
-              <h4 className="text-[#b85438] font-bold uppercase text-[11px] tracking-[0.18em] mb-4">
+            {/* Contact / care */}
+            <div className="lg:col-span-4">
+              <h4 className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#0E1111]">
                 Care Services
               </h4>
-              <ul className="space-y-2 text-xs sm:text-sm text-[#5c6b66]">
+              <ul className="mt-3.5 space-y-2 text-[12.5px] text-[#55605F]">
+                {careLinks.map((link, idx) => (
+                  <li key={`${link.label}-${idx}`}>
+                    <button onClick={link.onClick} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
                 <li>
-                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Psychological Counselling &amp; Emotional Support
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    C-DAT Career Aptitude &amp; Mentorship
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Doorstep In-Home Therapy (Kerala)
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => goTo('services')} className="text-left hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer">
-                    Secure Online Tele-Counselling
+                  <button onClick={() => goTo('/faqs')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                    Frequently Asked Questions
                   </button>
                 </li>
               </ul>
+
+              {phoneVal && (
+                <a
+                  href={`tel:${phoneVal.replace(/[^\d+]/g, '')}`}
+                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#0E7490] px-4 py-2.5 text-[11.5px] font-semibold text-white no-underline transition-colors hover:bg-[#0B5C73]"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  Call Now
+                </a>
+              )}
             </div>
           </div>
 
-          {/* Bottom Bar: Copyright & Policy Links */}
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#7d8b85]">
+          {/* Bottom bar */}
+          <div className="flex flex-col items-center justify-between gap-3 border-t border-[#E6DFD0] pt-6 text-[11.5px] text-[#6B7674] sm:flex-row">
             <div>
               {siteCopyright?.trim() || `\u00a9 ${new Date().getFullYear()} ${siteName || 'BEHOLD'}. All rights reserved.`}
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <button
                 type="button"
                 onClick={() => onOpenDocs?.('privacy')}
-                className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer text-xs text-[#7d8b85]"
+                className="cursor-pointer border-none bg-transparent p-0 text-[11.5px] text-[#6B7674] transition-colors hover:text-[#0E7490]"
               >
                 Privacy Policy
               </button>
-              <span>•</span>
+              <span aria-hidden="true">•</span>
               <button
                 type="button"
                 onClick={() => onOpenDocs?.('terms')}
-                className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer text-xs text-[#7d8b85]"
+                className="cursor-pointer border-none bg-transparent p-0 text-[11.5px] text-[#6B7674] transition-colors hover:text-[#0E7490]"
               >
                 Terms of Use
               </button>
-              <span>•</span>
+              <span aria-hidden="true">•</span>
               <button
                 type="button"
                 onClick={() => onOpenDocs?.('refund')}
-                className="hover:text-[#b85438] transition-colors bg-transparent border-none p-0 cursor-pointer text-xs text-[#7d8b85]"
+                className="cursor-pointer border-none bg-transparent p-0 text-[11.5px] text-[#6B7674] transition-colors hover:text-[#0E7490]"
               >
                 Refund Policy
               </button>

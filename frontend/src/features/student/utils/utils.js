@@ -244,7 +244,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
 
     // 3. Discount (if applied)
     if (detailsDiscount > 0) {
-      doc.setTextColor(184, 84, 56); // classic terracotta
+      doc.setTextColor(14, 116, 144); // classic terracotta
       doc.text(`Promo / Coupon Discount`, 24, tableY);
       doc.text(`-Rs. ${detailsDiscount.toFixed(2)}`, 160, tableY);
       tableY += 8;

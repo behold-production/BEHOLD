@@ -17,8 +17,8 @@ export default function ProtectedRoute({ children, allowedRoles, fallbackPath = 
   // Show nothing or a loader while auth state is resolving
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#16201d] flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-[#b85438] border-t-transparent rounded-full"></div>
+      <div className="min-h-screen bg-[#050707] flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-2 border-[#0e7490] border-t-transparent rounded-full"></div>
       </div>
     );
   }

@@ -79,7 +79,7 @@ export default function FaqBlogSection({ siteSettings = {} }) {
   return (
     <section
       id="faqs-blogs"
-      className="relative w-full flex items-center justify-center py-20 sm:py-24 px-5 sm:px-10 lg:px-16 overflow-hidden text-[#0f172a]"
+      className="relative w-full flex items-center justify-center py-20 sm:py-24 px-5 sm:px-10 lg:px-16 overflow-hidden text-[#0e1111]"
     >
       {/* Background Image with smooth mask-image fade (no cutout lines) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -99,12 +99,12 @@ export default function FaqBlogSection({ siteSettings = {} }) {
             <div className="min-w-0">
               {siteSettings.faqSectionSub && <span className="mb-1 block text-[9px] font-bold uppercase tracking-[.14em] text-teal-700">{siteSettings.faqSectionSub}</span>}
               <h2 id="bh-home-faq-title" className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900">
-                {siteSettings.faqSectionTitle || 'FAQs'}<span className="text-[#b85438]">.</span>
+                {siteSettings.faqSectionTitle || 'FAQs'}<span className="text-[#0e7490]">.</span>
               </h2>
             </div>
             <button
               onClick={() => navigate('/faqs')}
-              className="text-xs text-slate-700 hover:text-[#b85438] font-semibold flex items-center gap-1 transition cursor-pointer"
+              className="text-xs text-slate-700 hover:text-[#0e7490] font-semibold flex items-center gap-1 transition cursor-pointer"
             >
               <span>View All FAQs</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -116,7 +116,7 @@ export default function FaqBlogSection({ siteSettings = {} }) {
           <div className="flex flex-col gap-4 flex-1 justify-between">
             {faqError ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-2xl p-8 bg-white/60 flex flex-col items-center justify-center text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-[#b85438]/10 text-[#b85438] flex items-center justify-center"><HelpCircle className="w-6 h-6" /></div>
+                <div className="w-12 h-12 rounded-full bg-[#0e7490]/10 text-[#0e7490] flex items-center justify-center"><HelpCircle className="w-6 h-6" /></div>
                 <h3 className="text-base font-semibold text-slate-900">FAQs unavailable</h3>
                 <p className="text-xs text-slate-600 max-w-xs">{faqError}</p>
                 <button type="button" onClick={() => ApiService.getFaqs(true).then((res) => {
@@ -138,7 +138,7 @@ export default function FaqBlogSection({ siteSettings = {} }) {
               ))
             ) : faqs.length === 0 ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-2xl p-8 bg-white/60 backdrop-blur-xs flex flex-col items-center justify-center text-center space-y-3 shadow-xs">
-                <div className="w-12 h-12 rounded-full bg-[#b85438]/10 text-[#b85438] flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-[#0e7490]/10 text-[#0e7490] flex items-center justify-center">
                   <HelpCircle className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 font-sans">No FAQs Listed</h3>
@@ -153,15 +153,15 @@ export default function FaqBlogSection({ siteSettings = {} }) {
                   <div
                     key={idx}
                     onClick={() => setExpandedIndex(isExpanded ? null : idx)}
-                    className={`w-full border border-slate-200/90 hover:border-[#b85438] rounded-2xl p-5 sm:p-6 bg-white/80 backdrop-blur-md transition-all duration-200 cursor-pointer flex flex-col justify-center group shadow-xs flex-1 ${
-                      isExpanded ? 'bg-white border-[#b85438]/80 ring-2 ring-[#b85438]/10' : ''
+                    className={`w-full border border-slate-200/90 hover:border-[#0e7490] rounded-2xl p-5 sm:p-6 bg-white/80 backdrop-blur-md transition-all duration-200 cursor-pointer flex flex-col justify-center group shadow-xs flex-1 ${
+                      isExpanded ? 'bg-white border-[#0e7490]/80 ring-2 ring-[#0e7490]/10' : ''
                     }`}
                   >
                     <div className="flex items-center justify-between gap-4">
-                      <h3 className="text-base sm:text-lg font-semibold font-sans text-slate-900 group-hover:text-[#b85438] transition-colors leading-snug">
+                      <h3 className="text-base sm:text-lg font-semibold font-sans text-slate-900 group-hover:text-[#0e7490] transition-colors leading-snug">
                         {faq.question}
                       </h3>
-                      <div className={`w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-[#b85438]/10 text-[#b85438]' : ''}`}>
+                      <div className={`w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-[#0e7490]/10 text-[#0e7490]' : ''}`}>
                         <ChevronDown className="w-4 h-4" />
                       </div>
                     </div>
@@ -183,12 +183,12 @@ export default function FaqBlogSection({ siteSettings = {} }) {
             <div className="min-w-0">
               {siteSettings.blogSectionSub && <span className="mb-1 block text-[9px] font-bold uppercase tracking-[.14em] text-teal-700">{siteSettings.blogSectionSub}</span>}
               <h2 id="bh-home-blog-title" className="text-2xl sm:text-3xl font-semibold tracking-tight font-sans text-slate-900">
-                {siteSettings.blogSectionTitle || 'Blogs'}<span className="text-[#b85438]">.</span>
+                {siteSettings.blogSectionTitle || 'Blogs'}<span className="text-[#0e7490]">.</span>
               </h2>
             </div>
             <button
               onClick={() => navigate('/blog')}
-              className="text-xs text-slate-700 hover:text-[#b85438] font-semibold flex items-center gap-1 transition cursor-pointer"
+              className="text-xs text-slate-700 hover:text-[#0e7490] font-semibold flex items-center gap-1 transition cursor-pointer"
             >
               <span>Explore Blogs</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -199,7 +199,7 @@ export default function FaqBlogSection({ siteSettings = {} }) {
           <div className="flex flex-col gap-4 flex-1 justify-between">
             {blogError ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-2xl p-8 bg-white/60 flex flex-col items-center justify-center text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-[#b85438]/10 text-[#b85438] flex items-center justify-center"><FileText className="w-6 h-6" /></div>
+                <div className="w-12 h-12 rounded-full bg-[#0e7490]/10 text-[#0e7490] flex items-center justify-center"><FileText className="w-6 h-6" /></div>
                 <h3 className="text-base font-semibold text-slate-900">Articles unavailable</h3>
                 <p className="text-xs text-slate-600 max-w-xs">{blogError}</p>
                 <button type="button" onClick={() => ApiService.getBlogs({ limit: 4 }, true).then((res) => {
@@ -223,7 +223,7 @@ export default function FaqBlogSection({ siteSettings = {} }) {
               ))
             ) : blogs.length === 0 ? (
               <div className="w-full flex-1 min-h-[260px] border border-dashed border-slate-300 rounded-2xl p-8 bg-white/60 backdrop-blur-xs flex flex-col items-center justify-center text-center space-y-3 shadow-xs">
-                <div className="w-12 h-12 rounded-full bg-[#b85438]/10 text-[#b85438] flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-[#0e7490]/10 text-[#0e7490] flex items-center justify-center">
                   <FileText className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 font-sans">No Articles Published</h3>

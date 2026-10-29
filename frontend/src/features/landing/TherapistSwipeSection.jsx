@@ -2,13 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, BadgeCheck, Star, UserRound } from 'lucide-react';
 import ApiService from '../../services/api';
+import SectionHeading from './SectionHeading';
 import { formatExperience } from '../../utils/formatters';
 
 const getInitial = (name = '') => {
   const cleanName = (typeof name === 'string' ? name : '').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
   return cleanName.charAt(0).toUpperCase() || 'P';
 };
-
 
 function normalizeAdvisor(counsellor) {
   const rawPhoto = counsellor.profilePic || counsellor.photo || counsellor.avatar
@@ -34,9 +34,9 @@ function normalizeAdvisor(counsellor) {
     credential: counsellor.credential || 'Licensed Psychologist',
     rating: counsellor.rating ? String(Number(counsellor.rating).toFixed(1)) : null,
     fee: Number.isFinite(fee) ? fee : null,
-    years: Number.isFinite(counsellor.years) ? counsellor.years : (parseInt(counsellor.experience, 10) || 0),
+    hoursLabel: experience.hours,
     photo: typeof rawPhoto === 'string' && rawPhoto.trim() && !rawPhoto.includes('via.placeholder') ? rawPhoto : null,
-    specialties: rawSpecialties.filter(v => typeof v === 'string' && v.trim()),
+    specialties: rawSpecialties.filter((v) => typeof v === 'string' && v.trim()),
     mode: Array.isArray(counsellor.modes) && counsellor.modes.length > 0 ? counsellor.modes.join(' & ') : 'Online & Clinic',
   };
 }
@@ -51,21 +51,12 @@ function isPublicAdvisor(advisor) {
     && !['REJECTED', 'DELETED', 'PAUSED'].includes(status);
 }
 
-export default function TherapistSwipeSection({ onBookTherapist, siteSettings = {} }) {
+export default function TherapistSwipeSection({ onBookTherapist }) {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeFilter, setActiveFilter] = useState('All');
   const [advisors, setAdvisors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
-
-  const categories = [
-    'All',
-    'Clinical Psychology',
-    'Career Guidance',
-    'Anxiety & Stress',
-    'Adolescent Care',
-    'Couples & Family',
-  ];
 
   useEffect(() => {
     let isMounted = true;
@@ -73,14 +64,16 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
       .then((response) => {
         if (!isMounted) return;
         if (response?.success && Array.isArray(response.data) && response.data.length > 0) {
-          const publicOnly = response.data.filter(isPublicAdvisor);
-          setAdvisors(publicOnly.map(normalizeAdvisor));
+          setAdvisors(response.data.filter(isPublicAdvisor).map(normalizeAdvisor));
         } else {
           setAdvisors([]);
         }
       })
       .catch(() => {
-        if (isMounted) { setAdvisors([]); setFetchError(true); }
+        if (isMounted) {
+          setAdvisors([]);
+          setFetchError(true);
+        }
       })
       .finally(() => {
         if (isMounted) setLoading(false);
@@ -89,15 +82,32 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
     return () => { isMounted = false; };
   }, []);
 
+  // Filter chips are derived from the focus areas the admin assigned to
+  // each psychologist, so nothing is hardcoded on the public side.
+  const filters = useMemo(() => {
+    const counts = new Map();
+    advisors.forEach((advisor) => {
+      advisor.specialties.slice(0, 3).forEach((specialty) => {
+        const label = specialty.trim();
+        if (!label) return;
+        counts.set(label, (counts.get(label) || 0) + 1);
+      });
+    });
+    const top = [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([label]) => label);
+    return ['All', ...top];
+  }, [advisors]);
+
   const displayList = useMemo(() => {
-    const list = advisors;
-    if (activeCategory === 'All') return list.slice(0, 6);
-    return list.filter((a) => {
-      const matchSpecialty = a.specialties?.some(s => s.toLowerCase().includes(activeCategory.toLowerCase()));
-      const matchDesignation = a.designation?.toLowerCase().includes(activeCategory.toLowerCase());
-      return matchSpecialty || matchDesignation;
-    }).slice(0, 6);
-  }, [advisors, activeCategory]);
+    if (activeFilter === 'All') return advisors.slice(0, 8);
+    const filtered = advisors.filter((advisor) =>
+      advisor.specialties.some((specialty) => specialty.toLowerCase().includes(activeFilter.toLowerCase()))
+      || advisor.designation.toLowerCase().includes(activeFilter.toLowerCase())
+    );
+    return (filtered.length > 0 ? filtered : advisors).slice(0, 8);
+  }, [advisors, activeFilter]);
 
   const handleShowAll = () => {
     navigate('/psychologists');
@@ -105,186 +115,152 @@ export default function TherapistSwipeSection({ onBookTherapist, siteSettings = 
   };
 
   const handleAdvisorClick = (advisorId) => {
-    if (advisorId) {
-      navigate(`/advisor/${advisorId}`);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    if (!advisorId) return;
+    navigate(`/advisor/${advisorId}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <section
       id="experts"
       aria-labelledby="bh-specialists-heading"
-      className="relative py-20 sm:py-28 bg-[#fbf9f5] text-[#1c2826] overflow-hidden scroll-mt-20 border-t border-[#ece6dc]"
+      className="relative w-full overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
     >
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header: Left terracotta eyebrow, Right serif heading */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10 pb-4 border-b border-[#ece6dc]">
-          <div>
-            <span className="text-[#b85438] text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase block">
-              Our Specialists
-            </span>
-          </div>
-          <div>
-            <h2
-              id="bh-specialists-heading"
-              className="font-serif-hero text-2xl sm:text-3xl md:text-4xl font-normal text-[#1c2826] tracking-tight leading-snug"
-            >
-              Meet Your Dedicated Psychologists
-            </h2>
-          </div>
-        </div>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Our Team"
+          title="Meet Our Team"
+        />
 
-        {/* Category Filter Pills Row */}
-        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-8 no-scrollbar">
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setActiveCategory(cat)}
-                className={`px-4 sm:px-5 py-2 rounded-md text-xs font-medium tracking-wide transition-all duration-200 shrink-0 cursor-pointer border ${
-                  isActive
-                    ? 'bg-[#b85438] text-white border-[#b85438] shadow-xs'
-                    : 'bg-white text-[#4c5b55] hover:text-[#1c2826] hover:bg-[#f6f2ec] border-[#ede7de]'
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
+        {filters.length > 1 && (
+          <div className="no-scrollbar mt-8 flex items-center justify-start gap-2 overflow-x-auto pb-1 sm:mt-10 sm:justify-center">
+            {filters.map((filter) => {
+              const isActive = activeFilter === filter;
+              return (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => setActiveFilter(filter)}
+                  className={`shrink-0 rounded-full border px-4 py-1.5 text-[11.5px] font-medium transition-colors duration-200 cursor-pointer ${
+                    isActive
+                      ? 'border-[#0E7490] bg-[#0E7490] text-white'
+                      : 'border-[#E6DFD0] bg-white text-[#55605F] hover:border-[#0E7490]/40 hover:text-[#0B5C73]'
+                  }`}
+                >
+                  {filter}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
-        {/* Stack of Horizontal Rows matching modern professional layout */}
         {loading ? (
-          <div className="flex flex-col gap-2.5 sm:gap-3">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div key={item} className="bg-white rounded-md px-5 py-4 border border-[#ede7de] flex items-center justify-between gap-4">
-                <div className="flex-1 space-y-2">
-                  <div className="h-3 w-1/3 bg-[#f0eae1] rounded-sm animate-pulse" />
-                  <div className="h-3 w-1/2 bg-[#f0eae1] rounded-sm animate-pulse" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-sm bg-[#f0eae1] animate-pulse shrink-0" />
-                  <div className="h-3 w-24 bg-[#f0eae1] rounded-sm animate-pulse" />
-                </div>
-                <div className="h-8 w-24 bg-[#f0eae1] rounded-md animate-pulse shrink-0" />
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+              <div key={item} className="rounded-xl border border-[#EFE9DC] bg-white p-3">
+                <div className="aspect-[4/5] w-full animate-pulse rounded-lg bg-[#F1EAD9]" />
+                <div className="mt-3 h-3 w-3/4 animate-pulse rounded bg-[#F1EAD9]" />
+                <div className="mt-2 h-2.5 w-1/2 animate-pulse rounded bg-[#F1EAD9]" />
               </div>
             ))}
           </div>
         ) : displayList.length === 0 ? (
-          <div className="text-center py-14 bg-white rounded-md border border-[#ede7de]">
-            <div className="w-12 h-12 bg-[#faf5f0] text-[#b85438] rounded-sm flex items-center justify-center mx-auto mb-3 border border-[#eedfd0]">
-              <UserRound className="w-5 h-5" />
+          <div className="mt-10 rounded-xl border border-[#E6DFD0] bg-[#FBF8F1] px-6 py-14 text-center">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#0E7490]">
+              <UserRound className="h-5 w-5" />
             </div>
-            <p className="font-serif-hero text-lg text-[#1c2826] mb-1">
-              {fetchError ? 'Unable to Load Specialists' : 'No Specialists in This Focus Yet'}
+            <p className="text-base font-semibold text-[#0E1111]">
+              {fetchError ? 'Unable to load our team right now' : 'Our team listing is being updated'}
             </p>
-            <p className="text-xs text-[#5c6b66] max-w-sm mx-auto">
+            <p className="mx-auto mt-1.5 max-w-sm text-xs leading-relaxed text-[#55605F]">
               {fetchError
-                ? 'We could not reach our servers right now. Please check your connection and try again shortly.'
-                : 'Please try a different focus area above, or browse the full directory of our clinical psychologists.'}
+                ? 'We could not reach our servers. Please check your connection and try again shortly.'
+                : 'Psychologists added from the admin panel will appear here automatically.'}
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-2.5 sm:gap-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-4 sm:mt-10 sm:gap-5">
             {displayList.map((psychologist) => (
-              <div
+              <article
                 key={psychologist.id}
-                className="group bg-white rounded-md px-5 py-3.5 sm:py-3.5 border border-[#ede7de] hover:border-[#b85438]/50 shadow-2xs hover:shadow-xs transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
+                className="group flex w-[calc(50%-0.5rem)] flex-col overflow-hidden rounded-xl border border-[#E6DFD0] bg-[#FBF8F1] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#0E7490]/45 hover:shadow-[0_18px_36px_-26px_rgba(14,17,17,0.5)] sm:w-[calc(33.333%-0.834rem)] lg:w-[calc(25%-0.9375rem)]"
               >
-                {/* Left Column: Format & Session Type */}
-                <div className="sm:w-1/4">
-                  <span className="text-[11px] font-bold text-[#b85438] uppercase tracking-wider block">
-                    {psychologist.mode || 'Online & Clinic'}
-                  </span>
-                  <span className="text-xs text-[#5c6b66] font-medium block">
-                    {psychologist.years > 0 ? `${psychologist.years}+ Years Experience` : 'Accredited Specialist'}
-                  </span>
-                </div>
-
-                {/* Middle Column: Primary Focus / Credentials */}
-                <div className="sm:w-1/3">
-                  <span className="text-xs font-medium text-[#33413d] line-clamp-1">
-                    {psychologist.specialties?.slice(0, 2).join(' • ') || psychologist.credential}
-                  </span>
-                  <span className="text-[11px] text-[#5c6b66]">
-                    {psychologist.designation}
-                  </span>
-                </div>
-
-                {/* Middle-Right Column: Avatar & Doctor Name */}
-                <div
+                <button
+                  type="button"
                   onClick={() => handleAdvisorClick(psychologist.id)}
-                  className="flex items-center gap-3 sm:w-1/3 cursor-pointer"
+                  className="relative aspect-[4/5] w-full overflow-hidden bg-[#EDF5F7] cursor-pointer border-none"
+                  aria-label={`View profile of ${psychologist.name}`}
                 >
-                  <div className="w-10 h-10 rounded-sm overflow-hidden shrink-0 bg-[#f4eee6] border border-[#ede7de]">
-                    {psychologist.photo ? (
-                      <img
-                        src={psychologist.photo}
-                        alt={psychologist.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs font-bold text-[#b85438]">
-                        {getInitial(psychologist.name)}
-                      </div>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors truncate">
-                      {psychologist.name}
-                    </div>
-                    <div className="flex items-center gap-1 text-[11px] text-amber-600 font-medium">
-                      {psychologist.rating ? (
-                        <>
-                          <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
-                          <span>{psychologist.rating}</span>
-                          {psychologist.fee != null && (
-                            <>
-                              <span className="text-[#a8a094]">·</span>
-                              <span className="text-[#5c6b66] font-normal">₹{psychologist.fee}</span>
-                            </>
-                          )}
-                        </>
-                      ) : (
-                        <span className="text-[#8a938f] font-normal">
-                          {psychologist.fee != null ? `₹${psychologist.fee} / session` : 'Newly listed specialist'}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                  {psychologist.photo ? (
+                    <img
+                      src={psychologist.photo}
+                      alt={psychologist.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <span className="flex h-full w-full items-center justify-center text-4xl font-semibold text-[#0E7490]/50">
+                      {getInitial(psychologist.name)}
+                    </span>
+                  )}
+                </button>
 
-                {/* Right Column: Book Button */}
-                <div className="sm:w-auto shrink-0 flex items-center justify-end">
+                <div className="flex flex-1 flex-col p-3.5 sm:p-4">
                   <button
                     type="button"
-                    onClick={() => onBookTherapist?.(psychologist.id)}
-                    className="w-full sm:w-auto px-5 py-2 rounded-md text-xs font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white transition-colors duration-200 shadow-2xs cursor-pointer border-none"
+                    onClick={() => handleAdvisorClick(psychologist.id)}
+                    className="text-left text-[13px] font-semibold leading-snug text-[#0E1111] transition-colors group-hover:text-[#0E7490] cursor-pointer bg-transparent border-none p-0"
                   >
-                    Book Session
+                    {psychologist.name}
                   </button>
+
+                  <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-[#55605F]">
+                    <BadgeCheck className="h-3 w-3 text-[#0E7490]" />
+                    {psychologist.designation}
+                  </span>
+
+                  {psychologist.specialties.length > 0 && (
+                    <span className="mt-2 line-clamp-1 text-[10.5px] font-medium uppercase tracking-[0.06em] text-[#0B5C73]">
+                      {psychologist.specialties.slice(0, 2).join(' • ')}
+                    </span>
+                  )}
+
+                  <div className="mt-2 flex items-center gap-2 text-[11px] text-[#6B7674]">
+                    {psychologist.rating && (
+                      <span className="inline-flex items-center gap-1 font-medium text-amber-600">
+                        <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
+                        {psychologist.rating}
+                      </span>
+                    )}
+                    {psychologist.fee != null && (
+                      <span className="font-medium">₹{psychologist.fee}</span>
+                    )}
+                  </div>
+
+                  <div className="mt-auto pt-3">
+                    <button
+                      type="button"
+                      onClick={() => onBookTherapist?.(psychologist.id)}
+                      className="w-full rounded-lg bg-[#0E1111] px-3 py-2 text-[11.5px] font-semibold text-white transition-colors duration-200 hover:bg-[#0E7490] cursor-pointer border-none"
+                    >
+                      Book Session
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         )}
 
-        {/* Centered Button linking to /psychologists */}
-        <div className="mt-10 sm:mt-12 flex flex-col items-center justify-center text-center">
-          <p className="text-xs text-[#5c6b66] mb-3">
-            Showing top clinical psychologists ready to support your mental wellness.
-          </p>
+        <div className="mt-10 flex flex-col items-center text-center sm:mt-12">
           <button
             type="button"
             onClick={handleShowAll}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-md text-xs sm:text-sm font-semibold bg-[#1c2826] hover:bg-[#b85438] text-white shadow-sm hover:shadow transition-all duration-300 cursor-pointer active:scale-95 border-none"
+            className="group inline-flex items-center gap-2 rounded-xl border border-[#DED8C9] bg-white px-6 py-3 text-xs font-semibold text-[#0E1111] transition-all duration-200 hover:border-[#0E7490] hover:text-[#0B5C73] cursor-pointer sm:text-sm"
           >
-            <span>View All Psychologists</span>
-            <ArrowRight className="w-4 h-4 stroke-[2]" />
+            View All Psychologists
+            <ArrowRight className="h-4 w-4 text-[#0E7490] transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
         </div>
       </div>

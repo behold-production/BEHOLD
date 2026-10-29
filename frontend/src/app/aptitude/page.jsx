@@ -7,7 +7,7 @@ import Footer from '../../components/common/Footer';
 
 export default function AptitudePage() {
   return (
-    <div className="min-h-screen bg-[#faf6ee] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#f6f1e6] flex flex-col justify-between">
       <Navbar currentView="/aptitude" />
       <AptitudeLanding />
       <Footer />

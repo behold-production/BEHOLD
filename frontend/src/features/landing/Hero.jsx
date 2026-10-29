@@ -1,116 +1,220 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, ArrowUpRight, Phone, Video, MapPin, Home as HomeIcon, UserRound } from 'lucide-react';
 import SEO from '../../components/common/SEO';
-import { ArrowRight, Users } from 'lucide-react';
-import heroLandscapeBg from '../../assets/header_landscape.jpg';
+import { useAuth } from '../../context/AuthContext';
+import heroFallbackImage from '../../assets/hero-watercolor.jpg';
 
 const getFirstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
 
 export default function Hero({ siteSettings, navigateToSection, onOpenBooking }) {
   const settings = siteSettings || {};
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const headline = getFirstText(
     settings.heroTitle,
-    'Where Mental Wellbeing Meets Mindful Living'
-  );
+    'Your Mental Wellness, From the Comfort of Your Home'
+  )
+    .replace(/\\n/g, '\n')
+    .replace(/[{}]/g, '');
 
   const description = getFirstText(
     settings.heroSub,
-    'Personalized psychological counselling, emotional healing, and career mentorship tailored to your personal journey.'
+    'Professional online counselling tailored to your needs — accessible, compassionate, and confidential.'
   );
 
-  const buttonText = getFirstText(settings.heroBtnText, 'Begin Your Journey');
-  const eyebrow = getFirstText(settings.heroEyebrow, 'Clinical Care & Mentorship');
-  const heroBg = getFirstText(settings.heroBgImage) || heroLandscapeBg;
-  const cleanHeadline = headline.replace(/\\n/g, '\n').replace(/[{}]/g, '');
+  const buttonText = getFirstText(settings.heroBtnText, 'Book an Appointment');
+  const eyebrow = getFirstText(settings.heroEyebrow, 'Licensed Clinical Psychologists').replace(/\s+/g, ' ');
+  const heroImage = getFirstText(settings.heroBgImage) || heroFallbackImage;
+  const phone = getFirstText(settings.contactPhone);
+  const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
 
-  const handleConnectClick = () => {
-    if (typeof onOpenBooking === 'function') {
-      onOpenBooking();
-    } else if (navigateToSection) {
-      navigateToSection('services');
-    } else {
-      document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+  const stats = Array.isArray(settings.heroStats)
+    ? settings.heroStats.filter((stat) => stat && (stat.num || stat.label)).slice(0, 3)
+    : [];
+
+  // The bar is built from however many stats the admin saved plus an optional
+  // phone cell — the column count follows the cell count so no empty cell
+  // (the beige gap colour) ever shows up.
+  const statCells = stats.length + (phoneHref ? 1 : 0);
+  const statsDesktopCols = statCells >= 4
+    ? 'lg:grid-cols-4'
+    : statCells === 3
+      ? 'lg:grid-cols-3'
+      : statCells === 2
+        ? 'lg:grid-cols-2'
+        : 'lg:grid-cols-1';
+  const statCellSpan = statCells % 2 === 1 ? 'col-span-2 lg:col-span-1' : '';
+  // Only the trailing cell widens on the 2-column mobile grid when the count is odd.
+  const lastStatSpan = (idx) =>
+    !phoneHref && statCells % 2 === 1 && idx === stats.length - 1 ? statCellSpan : '';
+
+  // Consultation modes come straight from the admin settings — never hardcoded.
+  const modes = [
+    settings.enableOnline !== false && { key: 'online', label: 'Online sessions', Icon: Video },
+    settings.enableOffline !== false && { key: 'centre', label: 'In-centre sessions', Icon: MapPin },
+    settings.enableDoorstep !== false && { key: 'doorstep', label: 'Doorstep visits', Icon: HomeIcon },
+  ].filter(Boolean);
+
+  const scrollToSection = (id) => {
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById(id);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 84;
+        window.scrollTo({ top, behavior: 'smooth' });
+        return;
+      }
     }
+    navigateToSection?.(id);
   };
 
-  const handleExploreClick = () => {
-    if (window.spaNavigate) window.spaNavigate('/psychologists');
-    else window.location.href = '/psychologists';
+  const handleBookClick = () => {
+    if (typeof onOpenBooking === 'function') onOpenBooking();
+    else scrollToSection('services');
+  };
+
+  const handleAccountClick = () => {
+    if (user) {
+      navigate('/profile');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('behold:open_auth'));
+    }
   };
 
   return (
     <>
       <SEO
-        title={`${settings.siteName || 'BEHOLD'} | ${headline}`}
+        title={`${settings.siteName || 'BEHOLD'} | ${headline.replace(/\n/g, ' ')}`}
         description={description}
         canonicalUrl="https://www.behold.co.in/"
       />
 
-      <section
-        id="home"
-        aria-labelledby="bh-hero-title"
-        className="relative w-full min-h-[88vh] sm:min-h-[94vh] flex items-end overflow-hidden bg-[#fbf9f5]"
-      >
-        {/* Full-bleed watercolor landscape background */}
+      <section id="home" aria-labelledby="bh-hero-title" className="relative isolate w-full overflow-hidden bg-[#FBF8F1]">
+        {/* Admin background image, edge to edge */}
         <img
-          src={heroBg}
-          alt="Serene watercolor landscape"
+          src={heroImage}
+          alt=""
+          aria-hidden="true"
           fetchPriority="high"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover object-[center_22%] pointer-events-none select-none"
+          className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-[center_58%]"
         />
 
-        {/* Legibility + seamless blend into the page */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#fbf9f5]/40 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-[62%] bg-gradient-to-t from-[#fbf9f5] via-[#fbf9f5]/85 to-transparent pointer-events-none" />
-        {/* Soft radial halo directly behind the headline for crisp contrast */}
-        <div className="absolute inset-0 flex items-end justify-center pointer-events-none">
-          <div className="w-[80%] max-w-3xl h-[52%] translate-y-6 rounded-full bg-[#fbf9f5]/55 blur-3xl" />
-        </div>
+        {/* Legibility veils — strong cream behind the copy, artwork left clear on desktop */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-b from-[#FBF8F1]/92 via-[#FBF8F1]/74 to-[#FBF8F1]/38 lg:bg-gradient-to-r lg:from-[#FBF8F1] lg:via-[#FBF8F1]/72 lg:to-transparent"
+        />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#FBF8F1]/85 to-transparent" />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#FBF8F1] via-[#FBF8F1]/70 to-transparent" />
 
-        {/* Content */}
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-28 pt-32 sm:pt-40 text-center">
-          <span className="inline-flex items-center gap-2 mb-5 sm:mb-6 px-3.5 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#e5ddd0] text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b85438] shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#b85438] animate-pulse" />
-            {eyebrow}
-          </span>
+        <div className="relative mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 pb-10 pt-24 sm:min-h-[560px] sm:px-6 sm:pt-28 lg:min-h-[600px] lg:px-8 lg:pt-32">
+          <div className="mx-auto max-w-[36rem] text-center lg:mx-0 lg:text-left">
+            {eyebrow && (
+              <p className="font-hand text-[26px] leading-none text-[#0B5C73] sm:text-[31px]">
+                {eyebrow}
+              </p>
+            )}
 
-          <h1
-            id="bh-hero-title"
-            className="font-serif-hero whitespace-pre-line text-[2.5rem] sm:text-6xl md:text-7xl lg:text-[76px] font-medium text-[#1c2826] tracking-tight leading-[1.08] mb-5 sm:mb-6"
-          >
-            {cleanHeadline}
-          </h1>
-
-          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-[#4c5b55] font-normal leading-relaxed mb-8 sm:mb-10">
-            {description}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <button
-              type="button"
-              onClick={handleConnectClick}
-              className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 sm:px-9 py-3.5 rounded-md text-sm font-semibold tracking-wide bg-[#1c2826] hover:bg-[#b85438] text-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer active:scale-[0.98] border-none"
+            <h1
+              id="bh-hero-title"
+              className="mt-3 whitespace-pre-line text-[2.1rem] font-semibold leading-[1.08] tracking-tight text-[#0E1111] sm:mt-4 sm:text-[3rem] lg:text-[3.45rem]"
             >
-              {buttonText}
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
-            <button
-              type="button"
-              onClick={handleExploreClick}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 sm:px-9 py-3.5 rounded-md text-sm font-semibold tracking-wide bg-white/70 hover:bg-white backdrop-blur-sm text-[#1c2826] border border-[#e5ddd0] hover:border-[#b85438]/40 shadow-sm transition-all duration-300 cursor-pointer active:scale-[0.98]"
-            >
-              <Users className="w-4 h-4 text-[#b85438]" />
-              Meet Our Psychologists
-            </button>
+              {headline}
+            </h1>
+
+            <p className="mx-auto mt-5 max-w-xl text-[13.5px] leading-[1.8] text-[#3F4A49] sm:text-[15px] lg:mx-0">
+              {description}
+            </p>
+
+            <div className="mt-7 flex flex-col items-stretch gap-2.5 sm:mt-8 sm:flex-row sm:items-center sm:justify-center lg:justify-start">
+              <button
+                type="button"
+                onClick={handleBookClick}
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3 text-[13px] font-semibold text-white shadow-[0_14px_30px_-16px_rgba(14,116,144,0.95)] transition-all duration-200 hover:bg-[#0B5C73] active:scale-[0.99] cursor-pointer border-none sm:px-7"
+              >
+                {buttonText}
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleAccountClick}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#D8D2C3] bg-white/85 px-5 py-3 text-[13px] font-semibold text-[#0E1111] backdrop-blur-sm transition-all duration-200 hover:border-[#0E7490]/45 hover:text-[#0B5C73] active:scale-[0.99] cursor-pointer sm:px-6"
+              >
+                <UserRound className="h-4 w-4 text-[#0E7490]" />
+                {user ? 'My Account' : 'Login / Register'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => scrollToSection('services')}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-transparent px-2 py-3 text-[13px] font-semibold text-[#0B5C73] underline decoration-[#0E7490]/30 decoration-1 underline-offset-4 transition-colors duration-200 hover:text-[#0E7490] hover:decoration-[#0E7490] cursor-pointer bg-transparent"
+              >
+                Explore Our Services
+                <ArrowUpRight className="h-4 w-4" />
+              </button>
+            </div>
+
+            {modes.length > 0 && (
+              <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 lg:justify-start">
+                {modes.map(({ key, label, Icon }) => (
+                  <li key={key} className="inline-flex items-center gap-2 text-[11.5px] font-medium text-[#3F4A49] sm:text-xs">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-[#0E7490] shadow-[0_1px_3px_rgba(14,17,17,0.08)]">
+                      <Icon className="h-3.5 w-3.5" />
+                    </span>
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
-        {/* Scroll cue */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:flex flex-col items-center gap-1.5 pointer-events-none">
-          <span className="text-[10px] uppercase tracking-[0.22em] text-[#8a938e] font-semibold">Scroll</span>
-          <span className="w-px h-8 bg-gradient-to-b from-[#b85438]/60 to-transparent" />
-        </div>
+        {/* Admin trust stats bar, sitting on the artwork */}
+        {(stats.length > 0 || phoneHref) && (
+          <div className="relative mx-auto max-w-6xl px-4 pb-12 sm:px-6 lg:px-8">
+            <dl className={`grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/70 bg-[#E3DCCB] shadow-[0_26px_56px_-38px_rgba(14,17,17,0.55)] ${statsDesktopCols}`}>
+              {stats.map((stat, idx) => (
+                <div
+                  key={`${stat.label}-${idx}`}
+                  className={`bg-white/90 px-4 py-4 backdrop-blur-md sm:px-6 sm:py-5 ${lastStatSpan(idx)}`}
+                >
+                  <dt className="sr-only">{stat.label}</dt>
+                  <dd>
+                    <span className="block text-[21px] font-semibold leading-none tracking-tight text-[#0E7490] sm:text-[26px]">
+                      {stat.num}
+                    </span>
+                    <span className="mt-1.5 block text-[10px] font-semibold uppercase leading-tight tracking-[0.1em] text-[#55605F] sm:text-[10.5px]">
+                      {stat.label}
+                    </span>
+                  </dd>
+                </div>
+              ))}
+
+              {phoneHref && (
+                <a
+                  href={phoneHref}
+                  className={`group flex min-w-0 items-center gap-3 bg-[#0E1111] px-4 py-4 no-underline transition-colors duration-200 hover:bg-[#0B5C73] sm:px-6 sm:py-5 ${statCellSpan}`}
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/12 text-white">
+                    <Phone className="h-4 w-4" />
+                  </span>
+                  <span className="flex min-w-0 flex-col leading-tight">
+                    <span className="hidden text-[9px] font-semibold uppercase leading-tight tracking-[0.14em] text-white/55 sm:block sm:text-[9.5px]">
+                      Talk to our team
+                    </span>
+                    <span className="whitespace-nowrap text-[13px] font-semibold text-white sm:mt-0.5">{phone}</span>
+                  </span>
+                </a>
+              )}
+            </dl>
+          </div>
+        )}
       </section>
     </>
   );

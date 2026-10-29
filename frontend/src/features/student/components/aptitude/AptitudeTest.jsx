@@ -20,42 +20,42 @@ import greenTexture from '../../../../assets/greygreen.png';
 const DOMAIN_DETAILS = {
  Aptitude: {
  title: "General Cognitive Aptitude",
- icon: <Brain className="w-8 h-8 text-brand-dark" />,
+ icon: <Brain className="w-8 h-8 text-[#0e1111]" />,
  desc: "You have a strong capacity for general cognitive problem-solving, mathematical tracking, and deductive reasoning under time-bounded scenarios."
  },
  Logical: {
  title: "Logical & Pattern Reasoning",
- icon: <Puzzle className="w-8 h-8 text-brand-dark" />,
+ icon: <Puzzle className="w-8 h-8 text-[#0e1111]" />,
  desc: "You possess a powerful ability to analyze sequential data, identify underlying formulas, and evaluate structured arguments objectively."
  },
  Emotional: {
  title: "Emotional & Intrapersonal Intelligence",
- icon: <Heart className="w-8 h-8 text-brand-dark" />,
+ icon: <Heart className="w-8 h-8 text-[#0e1111]" />,
  desc: "You possess high self-awareness, active empathy, emotional regulation, and deep understanding of human psychological motivation models."
  },
  Career: {
  title: "Career Interests & Direction",
- icon: <BookOpen className="w-8 h-8 text-brand-dark" />,
+ icon: <BookOpen className="w-8 h-8 text-[#0e1111]" />,
  desc: "You have a highly defined interest profile in modern industrial and operational sectors, showing clear paths towards system planning and coaching."
  },
  Personality: {
  title: "Self-Direction & Personality Alignment",
- icon: <UserCheck className="w-8 h-8 text-brand-dark" />,
+ icon: <UserCheck className="w-8 h-8 text-[#0e1111]" />,
  desc: "You excel at identifying personal values, managing focus quarters, and establishing productive study environments with high self-discipline."
  },
  Communication: {
  title: "Verbal & Communication Flow",
- icon: <BookOpen className="w-8 h-8 text-brand-dark" />,
+ icon: <BookOpen className="w-8 h-8 text-[#0e1111]" />,
  desc: "You possess strong skills in speech articulation, conflict mediation, and clarifying complex technical systems for diverse audiences."
  },
  Creativity: {
  title: "Lateral & Creative Thinking",
- icon: <Lightbulb className="w-8 h-8 text-brand-dark" />,
+ icon: <Lightbulb className="w-8 h-8 text-[#0e1111]" />,
  desc: "You excel at visual layouts, abstract brainstorming, and finding multiple alternative uses for ordinary systems. You reject copy-paste designs."
  },
  Leadership: {
  title: "Leadership & Milestones Direction",
- icon: <Award className="w-8 h-8 text-brand-dark" />,
+ icon: <Award className="w-8 h-8 text-[#0e1111]" />,
  desc: "You naturally coordinate group roles, structure consensus votes, establish milestone tracking, and maintain motivational energy for team delivery."
  }
 };
@@ -315,9 +315,9 @@ export default function AptitudeTest({ onFinishTest }) {
  if (isLoading || shuffledQuestions.length === 0) {
  return (
   <div 
-        className="pt-24 pb-16 min-h-screen text-[#1c2826] flex items-center justify-center font-sans bg-transparent"
+        className="pt-24 pb-16 min-h-screen text-[#0e1111] flex items-center justify-center font-sans bg-transparent"
       >
- <p className="text-[10px] font-semibold tracking-widest text-[#8a938f] animate-pulse">Initializing quiz console...</p>
+ <p className="text-[10px] font-semibold tracking-widest text-[#7c8785] animate-pulse">Initializing quiz console...</p>
  </div>
  );
  }
@@ -327,14 +327,14 @@ export default function AptitudeTest({ onFinishTest }) {
 
  return (
     <div 
-      className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen text-[#1c2826] relative overflow-hidden font-sans bg-transparent text-left"
+      className="pt-20 sm:pt-24 pb-12 sm:pb-16 min-h-screen text-[#0e1111] relative overflow-hidden font-sans bg-transparent text-left"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="mb-4 flex items-center justify-between">
           <button
             type="button"
             onClick={handleExitTest}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a938f] hover:text-[#1c2826] transition-colors cursor-pointer bg-white/80 backdrop-blur-xs px-3.5 py-1.5 rounded-lg border border-[#ede7de] shadow-2xs"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#7c8785] hover:text-[#0e1111] transition-colors cursor-pointer bg-white/80 backdrop-blur-xs px-3.5 py-1.5 rounded-lg border border-[#e6dfd0] shadow-2xs"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Back</span>
@@ -344,7 +344,7 @@ export default function AptitudeTest({ onFinishTest }) {
         {!testFinished ? (
           /* Quiz Interface Card */
           <div
-            className={`bg-white border border-[#ede7de] rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 select-none transition-all duration-300 ${
+            className={`bg-white border border-[#e6dfd0] rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 select-none transition-all duration-300 ${
               isAnimating ? 'opacity-0 scale-95 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
             }`}
             id="quiz-card"
@@ -353,22 +353,22 @@ export default function AptitudeTest({ onFinishTest }) {
             <div className="mb-8 sm:mb-12">
               <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4 mb-4">
                 <div>
-                  <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c2826] leading-none">
+                  <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0e1111] leading-none">
                     Aptitude Profiling
                   </h2>
- <p className="text-sm font-medium text-[#8a938f] mt-2">
+ <p className="text-sm font-medium text-[#7c8785] mt-2">
  Discover your core cognitive affinities across 8 dimensions.
  </p>
  </div>
- <span className="text-[#1c2826] font-semibold text-sm sm:text-lg self-start sm:self-auto">
- {currentQuestion + 1} <span className="text-[#e0d8cb]">/</span> {shuffledQuestions.length}
+ <span className="text-[#0e1111] font-semibold text-sm sm:text-lg self-start sm:self-auto">
+ {currentQuestion + 1} <span className="text-[#d5cdbb]">/</span> {shuffledQuestions.length}
  </span>
  </div>
 
  {/* Progress Bar Container */}
- <div className="h-1.5 w-full bg-[#f4eee6] rounded-[10px] overflow-hidden">
+ <div className="h-1.5 w-full bg-[#f1eadc] rounded-[10px] overflow-hidden">
  <div
- className="h-full bg-[#1c2826] transition-all duration-500 ease-out"
+ className="h-full bg-[#0e1111] transition-all duration-500 ease-out"
  style={{ width: `${((currentQuestion + 1) / (shuffledQuestions.length || 1)) * 100}%` }}
  ></div>
  </div>
@@ -377,10 +377,10 @@ export default function AptitudeTest({ onFinishTest }) {
  {/* Question Text */}
  <div className="mb-6 sm:mb-10">
  <div className="flex gap-4 items-start mb-6">
- <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#f4eee6] text-[#1c2826] font-semibold text-sm shrink-0 mt-0.5 ">
+ <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#f1eadc] text-[#0e1111] font-semibold text-sm shrink-0 mt-0.5 ">
  Q
  </span>
- <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#1c2826] leading-snug">
+ <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#0e1111] leading-snug">
  {currentQObj.question}
  </h3>
  </div>
@@ -392,12 +392,12 @@ export default function AptitudeTest({ onFinishTest }) {
  key={i}
  id={`opt-btn-${i}`}
  onClick={() => handleAnswer(currentQObj.category, opt.weight)}
- className="w-full text-left p-4 sm:p-5 rounded-[10px] border border-[#ede7de] bg-[#faf6ee] hover:bg-[#f4eee6] hover:border-[#e0d8cb] transition-all duration-200 flex items-center justify-between group cursor-pointer text-[#1c2826] shadow-none"
+ className="w-full text-left p-4 sm:p-5 rounded-[10px] border border-[#e6dfd0] bg-[#f6f1e6] hover:bg-[#f1eadc] hover:border-[#d5cdbb] transition-all duration-200 flex items-center justify-between group cursor-pointer text-[#0e1111] shadow-none"
  >
- <span className="text-sm sm:text-base font-medium text-[#4c5b55] group-hover:text-[#1c2826] transition-colors pr-4">
+ <span className="text-sm sm:text-base font-medium text-[#3c4747] group-hover:text-[#0e1111] transition-colors pr-4">
  {opt.text}
  </span>
- <div className="w-4 h-4 rounded-[10px] border border-[#e0d8cb] group-hover:border-[#1c2826] group-hover:bg-[#1c2826] transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
+ <div className="w-4 h-4 rounded-[10px] border border-[#d5cdbb] group-hover:border-[#0e1111] group-hover:bg-[#0e1111] transition-all duration-200 flex items-center justify-center shrink-0 ml-4">
  <div className="w-1.5 h-1.5 rounded-[10px] bg-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
  </div>
  </button>
@@ -408,20 +408,20 @@ export default function AptitudeTest({ onFinishTest }) {
  ) : (
  /* Results Panel */
  <div
- className="bg-white border border-[#ede7de] rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 relative overflow-hidden animate-in zoom-in-95 duration-500 text-left"
+ className="bg-white border border-[#e6dfd0] rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 relative overflow-hidden animate-in zoom-in-95 duration-500 text-left"
  id="results-panel"
  >
  {/* Header Shield */}
- <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-[#f4eee6] mb-6 sm:mb-10">
+ <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 sm:pb-8 border-b border-[#f1eadc] mb-6 sm:mb-10">
  <div className="flex items-center gap-4">
- <div className="w-12 h-12 bg-[#1c2826] text-white rounded-[10px] flex items-center justify-center shadow-square-light shrink-0">
+ <div className="w-12 h-12 bg-[#0e1111] text-white rounded-[10px] flex items-center justify-center shadow-square-light shrink-0">
  <Brain className="w-6 h-6" />
  </div>
  <div>
- <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] bg-[#faf6ee] border border-[#ede7de] text-[#1c2826] text-[10px] tracking-widest font-semibold mb-1">
- <Award className="w-3.5 h-3.5 text-[#1c2826]" /> CIGI Framework Certified
+ <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] bg-[#f6f1e6] border border-[#e6dfd0] text-[#0e1111] text-[10px] tracking-widest font-semibold mb-1">
+ <Award className="w-3.5 h-3.5 text-[#0e1111]" /> CIGI Framework Certified
  </div>
- <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c2826] leading-none">
+ <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0e1111] leading-none">
  Assessment Completed
  </h2>
  </div>
@@ -429,7 +429,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <button
  id="btn-restart-test"
  onClick={handleRestart}
- className="px-5 py-2.5 bg-white border border-[#ede7de] hover:border-[#1c2826] hover:bg-[#faf6ee] text-[#1c2826] rounded-xl font-semibold text-[10px] tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
+ className="px-5 py-2.5 bg-white border border-[#e6dfd0] hover:border-[#0e1111] hover:bg-[#f6f1e6] text-[#0e1111] rounded-xl font-semibold text-[10px] tracking-widest transition-colors flex items-center gap-2 cursor-pointer shadow-none w-full md:w-auto justify-center"
  >
  <RotateCcw className="w-3.5 h-3.5" />
  <span>Retake Test</span>
@@ -441,17 +441,17 @@ export default function AptitudeTest({ onFinishTest }) {
 
  {/* Dominant Affinity Profile Card */}
  <div className="lg:col-span-7 space-y-6">
- <h3 className="text-xs font-semibold text-[#8a938f] tracking-wider uppercase">
+ <h3 className="text-xs font-semibold text-[#7c8785] tracking-wider uppercase">
  Your Dominant Affinity Profile
  </h3>
 
- <div className="p-5 sm:p-6 rounded-[10px] border border-[#ede7de] bg-[#faf6ee] flex gap-4 text-[#1c2826] shadow-square-light">
+ <div className="p-5 sm:p-6 rounded-[10px] border border-[#e6dfd0] bg-[#f6f1e6] flex gap-4 text-[#0e1111] shadow-square-light">
  <div className="shrink-0 mt-1">{dominantInfo.icon}</div>
  <div>
- <h4 className="text-base sm:text-lg font-semibold text-[#1c2826] tracking-wider leading-tight mb-2 uppercase">
+ <h4 className="text-base sm:text-lg font-semibold text-[#0e1111] tracking-wider leading-tight mb-2 uppercase">
  {dominantInfo.title}
  </h4>
- <p className="text-[#5c6b66] text-xs sm:text-sm font-medium leading-relaxed">
+ <p className="text-[#55605f] text-xs sm:text-sm font-medium leading-relaxed">
  {dominantInfo.desc}
  </p>
  </div>
@@ -460,22 +460,22 @@ export default function AptitudeTest({ onFinishTest }) {
 
  {/* Recommendations and Call-to-Action */}
  <div className="lg:col-span-5 lg:row-span-2 space-y-6">
- <div className="p-5 sm:p-6 bg-[#faf6ee] border border-[#ede7de] rounded-[10px] space-y-6 shadow-square-light">
- <h4 className="font-semibold text-[#1c2826] text-xs tracking-wider uppercase border-b border-[#ede7de] pb-3">
+ <div className="p-5 sm:p-6 bg-[#f6f1e6] border border-[#e6dfd0] rounded-[10px] space-y-6 shadow-square-light">
+ <h4 className="font-semibold text-[#0e1111] text-xs tracking-wider uppercase border-b border-[#e6dfd0] pb-3">
  Recommended Pathways
  </h4>
  <ul className="space-y-3">
  {recommendedCareers.map((item, cIdx) => (
  <li
  key={cIdx}
- className="flex flex-col bg-white p-3 sm:p-4 rounded-[10px] border border-[#ede7de] hover:border-[#a8a094] transition-all duration-200 group text-left"
+ className="flex flex-col bg-white p-3 sm:p-4 rounded-[10px] border border-[#e6dfd0] hover:border-[#9aa29f] transition-all duration-200 group text-left"
  >
  <div className="flex justify-between items-center">
- <span className="text-xs font-semibold text-[#1c2826] tracking-wider">
+ <span className="text-xs font-semibold text-[#0e1111] tracking-wider">
  {item.career}
  </span>
  </div>
- <span className="text-xs text-[#8a938f] font-medium mt-1 leading-relaxed">
+ <span className="text-xs text-[#7c8785] font-medium mt-1 leading-relaxed">
  {item.reason}
  </span>
  </li>
@@ -488,7 +488,7 @@ export default function AptitudeTest({ onFinishTest }) {
  id="btn-results-consult"
  onClick={handleClaimMentoring}
  disabled={isClaiming}
- className="w-full py-3.5 sm:py-4 bg-[#1c2826] hover:bg-[#33413d] text-white font-semibold text-[10px] tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+ className="w-full py-3.5 sm:py-4 bg-[#0e1111] hover:bg-[#243033] text-white font-semibold text-[10px] tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
  >
  {isClaiming ? (
  <>
@@ -499,7 +499,7 @@ export default function AptitudeTest({ onFinishTest }) {
  <span>Claim Free Mentoring</span>
  )}
  </button>
- <p className="text-[10px] font-semibold tracking-widest text-[#8a938f] text-center mt-3 flex items-center justify-center gap-1">
+ <p className="text-[10px] font-semibold tracking-widest text-[#7c8785] text-center mt-3 flex items-center justify-center gap-1">
  Schedules with a State Coordinator.
  </p>
  </div>
@@ -508,7 +508,7 @@ export default function AptitudeTest({ onFinishTest }) {
 
  {/* Detailed Metrics Breakdown */}
  <div className="lg:col-span-7 space-y-4">
- <h4 className="font-semibold text-[#1c2826] text-[10px] tracking-widest">
+ <h4 className="font-semibold text-[#0e1111] text-[10px] tracking-widest">
  Cognitive Distribution Metrics
  </h4>
 
@@ -516,14 +516,14 @@ export default function AptitudeTest({ onFinishTest }) {
  {CATEGORIES.map(({ key, label }) => {
  const pct = scorePercentages[key];
  return (
- <div key={key} className="space-y-1 bg-white p-3 rounded-[10px] border border-[#ede7de]" id={`score-metric-${key.toLowerCase()}`}>
- <div className="flex justify-between text-[10px] font-semibold text-[#8a938f] tracking-widest">
+ <div key={key} className="space-y-1 bg-white p-3 rounded-[10px] border border-[#e6dfd0]" id={`score-metric-${key.toLowerCase()}`}>
+ <div className="flex justify-between text-[10px] font-semibold text-[#7c8785] tracking-widest">
  <span>{label}</span>
- <span className="font-semibold text-[#1c2826]">{pct}%</span>
+ <span className="font-semibold text-[#0e1111]">{pct}%</span>
  </div>
- <div className="h-2 w-full bg-[#f4eee6] rounded-[10px] overflow-hidden">
+ <div className="h-2 w-full bg-[#f1eadc] rounded-[10px] overflow-hidden">
  <div
- className="h-full bg-[#1c2826] rounded-[10px] transition-all duration-1000 ease-out"
+ className="h-full bg-[#0e1111] rounded-[10px] transition-all duration-1000 ease-out"
  style={{ width: `${pct}%` }}
  ></div>
  </div>

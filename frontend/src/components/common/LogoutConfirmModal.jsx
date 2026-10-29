@@ -42,14 +42,14 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
     >
       {/* Premium Glassmorphic Backdrop */}
       <div
-        className="fixed inset-0 bg-[#1c2826]/60 backdrop-blur-md transition-opacity duration-300 animate-in fade-in z-[99999]"
+        className="fixed inset-0 bg-[#0e1111]/60 backdrop-blur-md transition-opacity duration-300 animate-in fade-in z-[99999]"
         onClick={handleClose}
         aria-hidden="true"
       />
 
       {/* Modal Card */}
       <div
-        className="relative z-[100000] w-full max-w-sm rounded-md animate-in zoom-in-95 duration-300 ease-out bg-[#fbf9f5] border border-[#ede7de] text-[#1c2826] overflow-hidden shadow-2xl"
+        className="relative z-[100000] w-full max-w-sm rounded-md animate-in zoom-in-95 duration-300 ease-out bg-[#fbf8f1] border border-[#e6dfd0] text-[#0e1111] overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button - Optimized for Touch & Mobile Tap Target */}
@@ -61,28 +61,28 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             handleClose(e);
           }}
           aria-label="Close sign out confirmation"
-          className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-md bg-white/80 hover:bg-[#ede7de] text-[#5c6b66] hover:text-[#1c2826] transition-colors cursor-pointer border border-[#ede7de] z-30"
+          className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-md bg-white/80 hover:bg-[#e6dfd0] text-[#55605f] hover:text-[#0e1111] transition-colors cursor-pointer border border-[#e6dfd0] z-30"
         >
           <X className="w-4 h-4 pointer-events-none" />
         </button>
 
         <div className="p-8 text-center space-y-6 relative z-10">
           {/* Animated warning icon */}
-          <div className="mx-auto w-16 h-16 rounded-md bg-[#b85438]/10 border border-[#b85438]/20 flex items-center justify-center text-[#b85438]">
+          <div className="mx-auto w-16 h-16 rounded-md bg-[#0e7490]/10 border border-[#0e7490]/20 flex items-center justify-center text-[#0e7490]">
             <AlertTriangle className="w-7 h-7" />
           </div>
 
           <div className="space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#b85438] block">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#0e7490] block">
               Session Security
             </span>
             <h3
               id="logout-confirm-title"
-              className="text-2xl sm:text-3xl font-serif font-bold text-[#1c2826]"
+              className="text-2xl sm:text-3xl font-serif font-bold text-[#0e1111]"
             >
               Sign Out
             </h3>
-            <p className="text-xs text-[#5c6b66] font-normal leading-relaxed px-1">
+            <p className="text-xs text-[#55605f] font-normal leading-relaxed px-1">
               You are about to end your current session. You can sign back in anytime with your phone number.
             </p>
           </div>
@@ -92,7 +92,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             <button
               type="button"
               onClick={handleConfirm}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#1c2826] hover:bg-rose-700 text-white font-medium text-sm rounded-md transition-all cursor-pointer border-none shadow-md"
+              className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#0e1111] hover:bg-rose-700 text-white font-medium text-sm rounded-md transition-all cursor-pointer border-none shadow-md"
             >
               <LogOut className="w-4 h-4 text-white" />
               <span>Yes, Sign Out</span>
@@ -101,7 +101,7 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
             <button
               type="button"
               onClick={handleClose}
-              className="w-full py-3.5 bg-white hover:bg-[#ede7de]/50 text-[#1c2826] font-medium text-sm rounded-md transition-all border border-[#ede7de] cursor-pointer"
+              className="w-full py-3.5 bg-white hover:bg-[#e6dfd0]/50 text-[#0e1111] font-medium text-sm rounded-md transition-all border border-[#e6dfd0] cursor-pointer"
             >
               Stay Signed In
             </button>

@@ -9,17 +9,17 @@ const PrivacyPolicy = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#fbf9f5] selection:bg-[#b85438]/20">
+    <div className="min-h-screen bg-[#fbf8f1] selection:bg-[#0e7490]/20">
       <SEO 
         title="Privacy Policy | BEHOLD"
         description="Learn how BEHOLD collects, uses, and protects your personal data, therapy session confidentiality, and privacy."
         canonicalUrl="https://www.behold.co.in/privacy-policy"
       />
       {/* Navbar spacer */}
-      <div className="h-20 lg:h-24 bg-[#fbf9f5] w-full" />
+      <div className="h-20 lg:h-24 bg-[#fbf8f1] w-full" />
       
       {/* Header Section */}
-      <section className="bg-brand text-white py-16 md:py-24 px-6 relative overflow-hidden">
+      <section className="bg-[#0e7490] text-white py-16 md:py-24 px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10 text-center">
           <h1 className="font-serif-hero text-4xl md:text-5xl font-normal tracking-tight mb-4">
             Privacy Policy
@@ -34,19 +34,19 @@ const PrivacyPolicy = () => {
         
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#1c2826]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#0e1111]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
       </section>
 
       {/* Content Section */}
       <section className="py-16 md:py-24 px-6">
-        <div className="max-w-4xl mx-auto bg-white rounded-md shadow-sm border border-[#ede7de] p-8 md:p-12">
+        <div className="max-w-4xl mx-auto bg-white rounded-md shadow-sm border border-[#e6dfd0] p-8 md:p-12">
           
-          <div className="prose max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-p:text-[#5c6b66] prose-li:text-[#5c6b66]">
-            <p className="text-lg leading-relaxed text-[#4c5b55] font-medium mb-8">
+          <div className="prose max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-p:text-[#55605f] prose-li:text-[#55605f]">
+            <p className="text-lg leading-relaxed text-[#3c4747] font-medium mb-8">
               BEHOLD. ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <strong>behold.co.in</strong> and use our services.
             </p>
 
-            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#1c2826] border-b border-[#ede7de] pb-2">1. Information We Collect</h2>
+            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#0e1111] border-b border-[#e6dfd0] pb-2">1. Information We Collect</h2>
             <p>
               We may collect information about you in a variety of ways. The information we may collect includes:
             </p>
@@ -56,7 +56,7 @@ const PrivacyPolicy = () => {
               <li><strong>Google OAuth Data:</strong> For counsellors and users syncing their calendars, we securely access Google Calendar data (specifically to create Google Meet links for sessions). We only access scopes explicitly authorized by you.</li>
             </ul>
 
-            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#1c2826] border-b border-[#ede7de] pb-2">2. How We Use Your Information</h2>
+            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#0e1111] border-b border-[#e6dfd0] pb-2">2. How We Use Your Information</h2>
             <p>
               Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. We use information collected about you to:
             </p>
@@ -68,7 +68,7 @@ const PrivacyPolicy = () => {
               <li>Improve our platform and user experience.</li>
             </ul>
 
-            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#1c2826] border-b border-[#ede7de] pb-2">3. Google Calendar Integration & OAuth</h2>
+            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#0e1111] border-b border-[#e6dfd0] pb-2">3. Google Calendar Integration & OAuth</h2>
             <p>
               Our application uses Google OAuth to connect with your Google Calendar. 
             </p>
@@ -78,7 +78,7 @@ const PrivacyPolicy = () => {
               <li><strong>Data Storage:</strong> We securely store the OAuth refresh token to maintain the connection, which you can revoke at any time from your dashboard or via your Google Account security settings.</li>
             </ul>
 
-            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#1c2826] border-b border-[#ede7de] pb-2">4. Disclosure of Your Information</h2>
+            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#0e1111] border-b border-[#e6dfd0] pb-2">4. Disclosure of Your Information</h2>
             <p>
               We may share information we have collected about you in certain situations. Your information may be disclosed as follows:
             </p>
@@ -87,19 +87,19 @@ const PrivacyPolicy = () => {
               <li><strong>Third-Party Service Providers:</strong> We may share your information with third parties that perform services for us or on our behalf, including payment processing (Razorpay), email/SMS delivery (Meta WhatsApp), and hosting services.</li>
             </ul>
 
-            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#1c2826] border-b border-[#ede7de] pb-2">5. Security of Your Information</h2>
+            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#0e1111] border-b border-[#e6dfd0] pb-2">5. Security of Your Information</h2>
             <p>
               We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable.
             </p>
 
-            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#1c2826] border-b border-[#ede7de] pb-2">6. Contact Us</h2>
+            <h2 className="font-serif-hero text-2xl mt-12 mb-4 text-[#0e1111] border-b border-[#e6dfd0] pb-2">6. Contact Us</h2>
             <p>
               If you have questions or comments about this Privacy Policy, please contact us at:
             </p>
-            <div className="bg-[#faf6ee] p-6 rounded-md mt-4 border border-[#ede7de]">
-              <p className="font-semibold text-[#1c2826] mb-1">BEHOLD.</p>
-              <p className="text-[#5c6b66] mb-1">Email: support@behold.co.in</p>
-              <p className="text-[#5c6b66]">Website: https://www.behold.co.in</p>
+            <div className="bg-[#f6f1e6] p-6 rounded-md mt-4 border border-[#e6dfd0]">
+              <p className="font-semibold text-[#0e1111] mb-1">BEHOLD.</p>
+              <p className="text-[#55605f] mb-1">Email: support@behold.co.in</p>
+              <p className="text-[#55605f]">Website: https://www.behold.co.in</p>
             </div>
           </div>
         </div>

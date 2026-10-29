@@ -138,37 +138,37 @@ export default function ActivitySheetView() {
 
   if (authChecking || loading) {
     return (
-      <div className="min-h-screen bg-[#16201d] flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-[#050707] flex flex-col items-center justify-center p-4">
         <BrandIcon className="w-12 h-12 text-emerald-500 animate-pulse mb-6" />
-        <p className="text-[#a8a094]">Verifying access...</p>
+        <p className="text-[#9aa29f]">Verifying access...</p>
       </div>
     );
   }
 
   if (needsAuth) {
     return (
-      <div className="min-h-screen bg-[#16201d] flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md bg-[#1c2826] border border-[#33413d] p-8 rounded-2xl shadow-xl flex flex-col items-center text-center">
+      <div className="min-h-screen bg-[#050707] flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md bg-[#0e1111] border border-[#243033] p-8 rounded-2xl shadow-xl flex flex-col items-center text-center">
           <div className="w-16 h-16 bg-emerald-900/30 rounded-full flex items-center justify-center mb-6">
             <Lock className="w-8 h-8 text-emerald-500" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Secure Access</h2>
-          <p className="text-sm text-[#a8a094] mb-8">
+          <p className="text-sm text-[#9aa29f] mb-8">
             Please verify your identity to access this activity sheet.
           </p>
           
           {step === 'phone' ? (
             <form onSubmit={handleSendOtp} className="w-full space-y-4">
               <div className="text-left">
-                <label className="block text-xs font-bold text-[#a8a094] mb-1">WhatsApp Number</label>
+                <label className="block text-xs font-bold text-[#9aa29f] mb-1">WhatsApp Number</label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a938f]" />
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7c8785]" />
                   <input
                     type="text"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="Enter registered number"
-                    className="w-full bg-[#16201d] border border-[#33413d] rounded-xl pl-10 pr-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none transition-colors"
+                    className="w-full bg-[#050707] border border-[#243033] rounded-xl pl-10 pr-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -183,13 +183,13 @@ export default function ActivitySheetView() {
           ) : (
             <form onSubmit={handleVerifyOtp} className="w-full space-y-4">
               <div className="text-left">
-                <label className="block text-xs font-bold text-[#a8a094] mb-1">Verification Code</label>
+                <label className="block text-xs font-bold text-[#9aa29f] mb-1">Verification Code</label>
                 <input
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="Enter 6-digit code"
-                  className="w-full bg-[#16201d] border border-[#33413d] rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none transition-colors text-center tracking-widest text-lg font-mono"
+                  className="w-full bg-[#050707] border border-[#243033] rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500 focus:outline-none transition-colors text-center tracking-widest text-lg font-mono"
                 />
               </div>
               <button 
@@ -202,7 +202,7 @@ export default function ActivitySheetView() {
               <button 
                 type="button" 
                 onClick={() => setStep('phone')}
-                className="text-xs text-[#8a938f] hover:text-[#e0d8cb] w-full mt-4"
+                className="text-xs text-[#7c8785] hover:text-[#d5cdbb] w-full mt-4"
               >
                 Use a different number
               </button>
@@ -215,32 +215,32 @@ export default function ActivitySheetView() {
 
   if (!worksheet) {
     return (
-      <div className="min-h-screen bg-[#16201d] flex flex-col items-center justify-center p-4">
-        <p className="text-[#a8a094]">Activity sheet not found.</p>
+      <div className="min-h-screen bg-[#050707] flex flex-col items-center justify-center p-4">
+        <p className="text-[#9aa29f]">Activity sheet not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#16201d] p-4 sm:p-8 flex justify-center items-start pt-12">
+    <div className="min-h-screen bg-[#050707] p-4 sm:p-8 flex justify-center items-start pt-12">
       <div className="w-full max-w-2xl">
         <div className="flex items-center gap-3 mb-8">
           <BrandIcon className="w-8 h-8 text-emerald-500" />
           <h1 className="text-xl font-bold text-white">BEHOLD Activity Sheet</h1>
         </div>
         
-        <div className="bg-[#1c2826] border border-[#33413d] rounded-2xl overflow-hidden shadow-2xl">
-          <div className="p-6 sm:p-8 border-b border-[#33413d] bg-[#1c2826]/50">
+        <div className="bg-[#0e1111] border border-[#243033] rounded-2xl overflow-hidden shadow-2xl">
+          <div className="p-6 sm:p-8 border-b border-[#243033] bg-[#0e1111]/50">
             <h2 className="text-2xl font-bold text-white mb-2">{worksheet.originalFileName}</h2>
             {worksheet.optionalMessage && (
-              <div className="bg-[#16201d] border border-[#33413d] p-4 rounded-xl mt-4">
-                <p className="text-sm text-[#e0d8cb] italic">"{worksheet.optionalMessage}"</p>
+              <div className="bg-[#050707] border border-[#243033] p-4 rounded-xl mt-4">
+                <p className="text-sm text-[#d5cdbb] italic">"{worksheet.optionalMessage}"</p>
               </div>
             )}
             
             <button 
               onClick={handleDownloadOriginal}
-              className="mt-6 flex items-center justify-center gap-2 w-full sm:w-auto bg-[#33413d] hover:bg-[#4c5b55] text-white font-bold py-3 px-6 rounded-xl transition-colors border border-[#4c5b55]"
+              className="mt-6 flex items-center justify-center gap-2 w-full sm:w-auto bg-[#243033] hover:bg-[#3c4747] text-white font-bold py-3 px-6 rounded-xl transition-colors border border-[#3c4747]"
             >
               <Download className="w-5 h-5" /> Download Worksheet
             </button>
@@ -253,7 +253,7 @@ export default function ActivitySheetView() {
                   <CheckCircle className="w-8 h-8 text-emerald-500" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Successfully Submitted</h3>
-                <p className="text-sm text-[#a8a094]">
+                <p className="text-sm text-[#9aa29f]">
                   Your completed activity sheet has been securely submitted to your psychologist.
                 </p>
               </div>
@@ -262,7 +262,7 @@ export default function ActivitySheetView() {
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                   <UploadCloud className="w-5 h-5 text-emerald-400" /> Upload Completed Worksheet
                 </h3>
-                <p className="text-sm text-[#a8a094] mb-6">
+                <p className="text-sm text-[#9aa29f] mb-6">
                   Once you have completed the activity sheet, upload the PDF file here.
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -270,7 +270,7 @@ export default function ActivitySheetView() {
                     type="file" 
                     accept="application/pdf"
                     onChange={(e) => setSubmitFile(e.target.files[0])}
-                    className="w-full bg-[#16201d] border border-[#33413d] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-[#33413d] file:text-[#e0d8cb] hover:file:bg-[#4c5b55] cursor-pointer"
+                    className="w-full bg-[#050707] border border-[#243033] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-[#243033] file:text-[#d5cdbb] hover:file:bg-[#3c4747] cursor-pointer"
                   />
                   <button 
                     type="submit" 

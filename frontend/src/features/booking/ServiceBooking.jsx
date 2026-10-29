@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { useBookingViewModel } from './useBookingViewModel';
+import { useBookingViewModel, BOOKING_DRAFT_KEY } from './useBookingViewModel';
 
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
@@ -236,12 +236,32 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         return dates;
     }, []);
 
-    // Reset or jump to the correct step when the modal opens
-    useEffect(() => {
-        if (isOpen) {
-            setWizardStep(preselectedAdvisorId ? 2 : 1);
+    // Reset, resume, or jump to the right step when the modal opens
+    const wasOpenRef = useRef(false);
+    useLayoutEffect(() => {
+        const justOpened = isOpen && !wasOpenRef.current;
+        wasOpenRef.current = isOpen;
+        if (!justOpened) return;
+        // Rescheduling always starts at date & time selection
+        if (isRescheduleParam) {
+            setWizardStep(3);
+            return;
         }
-    }, [isOpen, preselectedAdvisorId]);
+        if (preselectedAdvisorId) {
+            setWizardStep(2);
+            return;
+        }
+        // Resume at step 3/4 when an in-progress draft was restored from sessionStorage
+        let resumeStep = 1;
+        try {
+            const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+            const draft = raw ? JSON.parse(raw) : null;
+            if (draft && draft.selectedAdvisorId) {
+                resumeStep = draft.selectedDate && draft.selectedTime ? 4 : 3;
+            }
+        } catch { /* ignore */ }
+        setWizardStep(resumeStep);
+    }, [isOpen, preselectedAdvisorId, isRescheduleParam]);
 
     const isAdvisorLocked = !!preselectedAdvisorId;
     const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
@@ -425,37 +445,37 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 >
                     <button
                         onClick={onClose}
-                        className="absolute top-4 right-4 z-10 w-10 h-10 bg-[#f4eee6] hover:bg-[#ede7de] rounded-md flex items-center justify-center transition-colors cursor-pointer border-none"
+                        className="absolute top-4 right-4 z-10 w-10 h-10 bg-[#f1eadc] hover:bg-[#e6dfd0] rounded-md flex items-center justify-center transition-colors cursor-pointer border-none"
                     >
-                        <X className="w-5 h-5 text-[#5c6b66]" />
+                        <X className="w-5 h-5 text-[#55605f]" />
                     </button>
-                    <div className="max-w-md w-full bg-white border border-[#ede7de] p-8 rounded-md shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
-                        <div className="w-16 h-16 bg-[#f4eee6] border border-[#ede7de] rounded-md flex items-center justify-center mx-auto text-[#1c2826] shadow-sm">
+                    <div className="max-w-md w-full bg-white border border-[#e6dfd0] p-8 rounded-md shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
+                        <div className="w-16 h-16 bg-[#f1eadc] border border-[#e6dfd0] rounded-md flex items-center justify-center mx-auto text-[#0e1111] shadow-sm">
                             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         </div>
 
                         <div className="space-y-2">
-                            <span className="text-sm bg-[#1c2826] text-white px-3 py-1 rounded-md font-semibold w-fit mx-auto block">
+                            <span className="text-sm bg-[#0e1111] text-white px-3 py-1 rounded-md font-semibold w-fit mx-auto block">
                                 System Notice
                             </span>
-                            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#1c2826]">
+                            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#0e1111]">
                                 Bookings Paused
                             </h2>
-                            <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed font-semibold">
+                            <p className="text-xs sm:text-sm text-[#55605f] leading-relaxed font-semibold">
                                 We are currently performing scheduled maintenance. Booking new sessions is temporarily offline.
                             </p>
                         </div>
 
-                        <div className="pt-4 border-t border-[#ede7de] flex flex-col sm:flex-row gap-3 justify-center items-center">
+                        <div className="pt-4 border-t border-[#e6dfd0] flex flex-col sm:flex-row gap-3 justify-center items-center">
                             <button
                                 type="button"
                                 onClick={() => {
                                     window.spaNavigate('/');
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                className="px-6 py-3 min-h-[48px] bg-[#1c2826] hover:bg-[#b85438] text-white text-sm font-semibold rounded-md transition-all cursor-pointer shadow-none w-full sm:w-auto text-center border-none"
+                                className="px-6 py-3 min-h-[48px] bg-[#0e1111] hover:bg-[#0e7490] text-white text-sm font-semibold rounded-md transition-all cursor-pointer shadow-none w-full sm:w-auto text-center border-none"
                             >
                                 Home Page
                             </button>
@@ -465,7 +485,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                     window.spaNavigate('/sample-test');
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                className="px-6 py-3 min-h-[48px] bg-white border border-[#ede7de] hover:bg-[#faf6ee] text-[#1c2826] text-sm font-semibold rounded-md transition-all cursor-pointer w-full sm:w-auto text-center"
+                                className="px-6 py-3 min-h-[48px] bg-white border border-[#e6dfd0] hover:bg-[#f6f1e6] text-[#0e1111] text-sm font-semibold rounded-md transition-all cursor-pointer w-full sm:w-auto text-center"
                             >
                                 Take Sample Test
                             </button>
@@ -483,31 +503,31 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
                 canonicalUrl="https://www.behold.co.in/booking"
             />
-            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`bh-booking-dialog relative w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[92vh] sm:h-[90vh] bg-[#fbf9f5] rounded-t-lg sm:rounded-lg border border-[#ede7de] shadow-2xl overflow-y-auto overflow-x-hidden text-[#1c2826] text-left overscroll-contain animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 transition-all duration-300 flex flex-col scroll-smooth-momentum gpu-layer pb-[env(safe-area-inset-bottom,16px)]`}>
+            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`bh-booking-dialog relative w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[92vh] sm:h-[90vh] bg-[#fbf8f1] rounded-t-lg sm:rounded-lg border border-[#e6dfd0] shadow-2xl overflow-y-auto overflow-x-hidden text-[#0e1111] text-left overscroll-contain animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 transition-all duration-300 flex flex-col scroll-smooth-momentum gpu-layer pb-[env(safe-area-inset-bottom,16px)]`}>
 
                 {/* Mobile Drag Handle */}
-                <div className="w-12 h-1 bg-[#ede7de] rounded-xs mx-auto mt-2.5 sm:hidden shrink-0" />
+                <div className="w-12 h-1 bg-[#e6dfd0] rounded-xs mx-auto mt-2.5 sm:hidden shrink-0" />
 
                 {/* Secure Payment & Booking Verification Overlay */}
                 {isProcessingPayment && (
-                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#1c2826]/90 backdrop-blur-md text-white px-6 text-center animate-in fade-in duration-200">
+                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0e1111]/90 backdrop-blur-md text-white px-6 text-center animate-in fade-in duration-200">
                         <div className="relative w-16 h-16 mb-4 flex items-center justify-center">
-                            <div className="absolute inset-0 rounded-full border-4 border-[#b85438]/20 border-t-[#b85438] animate-spin" />
-                            <Lock className="w-6 h-6 text-[#b85438]" />
+                            <div className="absolute inset-0 rounded-full border-4 border-[#0e7490]/20 border-t-[#0e7490] animate-spin" />
+                            <Lock className="w-6 h-6 text-[#0e7490]" />
                         </div>
                         <h3 className="text-xl font-bold font-serif text-white mb-1">Verifying &amp; Confirming Session</h3>
-                        <p className="text-xs text-[#ede7de] max-w-xs text-center font-medium leading-relaxed">
+                        <p className="text-xs text-[#e6dfd0] max-w-xs text-center font-medium leading-relaxed">
                             {paymentStepText || 'Securing your appointment and reserving your session room...'}
                         </p>
                     </div>
                 )}
 
                 {/* Mobile App Style Header */}
-                <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#fbf9f5] border-b border-[#ede7de] shrink-0">
+                <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#fbf8f1] border-b border-[#e6dfd0] shrink-0">
                     <button
                         type="button"
                         onClick={handleModalBack}
-                        className="w-10 h-10 -ml-2 flex items-center justify-center text-[#1c2826] hover:text-[#b85438] transition-colors cursor-pointer border-none bg-transparent"
+                        className="w-10 h-10 -ml-2 flex items-center justify-center text-[#0e1111] hover:text-[#0e7490] transition-colors cursor-pointer border-none bg-transparent"
                         aria-label="Go Back"
                     >
                         <ArrowLeft className="w-5 h-5" />
@@ -522,12 +542,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                 return (
                                     <div key={step} className="flex items-center">
                                         <div className={`rounded-full transition-all duration-300 ${
-                                            isActive ? 'w-3 h-3 bg-[#b85438] dot-active ring-4 ring-[#b85438]/20' :
-                                            isDone   ? 'w-2 h-2 bg-[#b85438]/60' :
-                                                       'w-2 h-2 bg-[#ede7de]'
+                                            isActive ? 'w-3 h-3 bg-[#0e7490] dot-active ring-4 ring-[#0e7490]/20' :
+                                            isDone   ? 'w-2 h-2 bg-[#0e7490]/60' :
+                                                       'w-2 h-2 bg-[#e6dfd0]'
                                         }`} />
                                         {step < 5 && (
-                                            <div className={`h-[2px] transition-all duration-500 ${isDone ? 'w-4 bg-[#b85438]/40' : 'w-4 bg-[#ede7de]'}`} />
+                                            <div className={`h-[2px] transition-all duration-500 ${isDone ? 'w-4 bg-[#0e7490]/40' : 'w-4 bg-[#e6dfd0]'}`} />
                                         )}
                                     </div>
                                 );
@@ -551,14 +571,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                             type="button"
                             onClick={onClose}
                             aria-label="Close Booking"
-                            className="w-10 h-10 -mr-2 flex items-center justify-center text-[#8a938f] hover:text-[#1c2826] transition-colors cursor-pointer border-none bg-transparent"
+                            className="w-10 h-10 -mr-2 flex items-center justify-center text-[#7c8785] hover:text-[#0e1111] transition-colors cursor-pointer border-none bg-transparent"
                         >
                             <X className="w-6 h-6" />
                         </button>
                     </div>
                 </div>
 
-                <div className="bh-booking-content min-h-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#fbf9f5]">
+                <div className="bh-booking-content min-h-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#fbf8f1]">
                     <div className="space-y-8 sm:space-y-10">
 
                         {/* BOOKING FORM */}
@@ -566,12 +586,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                             {bookingStep === 'success' ? (
                                 /* STEP 5: Success & Confirmation View - Centered & Perfectly Balanced */
-                                <div className="p-6 sm:p-10 bg-white border border-[#ede7de] rounded-md max-w-xl mx-auto shadow-md space-y-6 text-center animate-step-in relative overflow-hidden">
+                                <div className="p-6 sm:p-10 bg-white border border-[#e6dfd0] rounded-md max-w-xl mx-auto shadow-md space-y-6 text-center animate-step-in relative overflow-hidden">
 
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#b85438]/10 rounded-full blur-3xl pointer-events-none" />
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#0e7490]/10 rounded-full blur-3xl pointer-events-none" />
 
-                                    <div className="relative w-16 h-16 bg-[#b85438]/10 border border-[#b85438]/30 rounded-md flex items-center justify-center mx-auto text-[#b85438] shadow-sm animate-checkmark-circle-pop z-10">
-                                        <svg className="w-8 h-8 text-[#b85438]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <div className="relative w-16 h-16 bg-[#0e7490]/10 border border-[#0e7490]/30 rounded-md flex items-center justify-center mx-auto text-[#0e7490] shadow-sm animate-checkmark-circle-pop z-10">
+                                        <svg className="w-8 h-8 text-[#0e7490]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                             <path className="animate-checkmark-path" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
@@ -580,26 +600,26 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-sm font-semibold w-fit mx-auto block shadow-xs">
                                             {rescheduleSession ? 'Reschedule Requested' : 'Session Confirmed & Paid'}
                                         </span>
-                                        <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#1c2826] tracking-tight mt-2">
+                                        <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0e1111] tracking-tight mt-2">
                                             {rescheduleSession ? 'Reschedule Requested' : "Booking Confirmed!"}
                                         </h3>
-                                        <p className="text-xs sm:text-sm text-[#5c6b66] max-w-md mx-auto leading-relaxed font-normal mt-1">
+                                        <p className="text-xs sm:text-sm text-[#55605f] max-w-md mx-auto leading-relaxed font-normal mt-1">
                                             {rescheduleSession ? (
                                                 <>
-                                                    Your reschedule request {bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') ? <>for <strong className="font-semibold text-[#1c2826]">{bookingForm.name}</strong> </> : ''}has been submitted to <strong className="font-semibold text-[#1c2826]">{selectedAdvisor?.name}</strong>.
+                                                    Your reschedule request {bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') ? <>for <strong className="font-semibold text-[#0e1111]">{bookingForm.name}</strong> </> : ''}has been submitted to <strong className="font-semibold text-[#0e1111]">{selectedAdvisor?.name}</strong>.
                                                 </>
                                             ) : (
                                                 <>
-                                                    Thank you{bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') ? <>, <strong className="font-semibold text-[#1c2826]">{bookingForm.name}</strong></> : ''}! Your payment is verified and your session is successfully booked.
+                                                    Thank you{bookingForm.name && bookingForm.name !== 'New User' && !bookingForm.name.includes('Behold User') ? <>, <strong className="font-semibold text-[#0e1111]">{bookingForm.name}</strong></> : ''}! Your payment is verified and your session is successfully booked.
                                                 </>
                                             )}
                                         </p>
                                     </div>
 
                                     {/* Invoice & Meeting Card */}
-                                    <div className="bg-[#faf6ee]/80 border border-[#ede7de]/80 rounded-xl p-5 sm:p-6 text-left space-y-4 shadow-xs animate-success-content relative z-10" style={{animationDelay: '0.75s'}}>
-                                        <div className="flex items-center justify-between border-b border-[#ede7de]/80 pb-3 mb-2">
-                                            <span className="text-xs font-semibold text-[#5c6b66]">
+                                    <div className="bg-[#f6f1e6]/80 border border-[#e6dfd0]/80 rounded-xl p-5 sm:p-6 text-left space-y-4 shadow-xs animate-success-content relative z-10" style={{animationDelay: '0.75s'}}>
+                                        <div className="flex items-center justify-between border-b border-[#e6dfd0]/80 pb-3 mb-2">
+                                            <span className="text-xs font-semibold text-[#55605f]">
                                                 {rescheduleSession ? 'Reschedule Details' : 'Booking Confirmation Summary'}
                                             </span>
                                             <span className="text-xs font-semibold text-emerald-600 bg-emerald-100/80 px-2.5 py-0.5 rounded-md">
@@ -609,49 +629,49 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                                             <div className="space-y-1">
-                                                <span className="text-[#5c6b66] block font-medium text-[11px]">Psychologist</span>
-                                                <span className="font-semibold text-[#1c2826] text-sm block">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
-                                                <span className="text-[#5c6b66] block font-normal text-xs">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
+                                                <span className="text-[#55605f] block font-medium text-[11px]">Psychologist</span>
+                                                <span className="font-semibold text-[#0e1111] text-sm block">{selectedAdvisor?.name || 'Assigned Advisor'}</span>
+                                                <span className="text-[#55605f] block font-normal text-xs">{selectedAdvisor?.role || 'Consultant Psychologist'}</span>
                                             </div>
                                             <div className="space-y-1">
-                                                <span className="text-[#5c6b66] block font-medium text-[11px]">Service & Mode</span>
-                                                <span className="font-semibold text-[#1c2826] text-sm block">
+                                                <span className="text-[#55605f] block font-medium text-[11px]">Service & Mode</span>
+                                                <span className="font-semibold text-[#0e1111] text-sm block">
                                                     {confirmedBooking?.service ? (confirmedBooking.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring') : (bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring')}
                                                 </span>
-                                                <span className="text-[#5c6b66] block font-normal text-xs">{confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
+                                                <span className="text-[#55605f] block font-normal text-xs">{confirmedBooking?.mode === 'ONLINE' ? 'Video Call' : confirmedBooking?.mode === 'DOOR_STEP' ? 'Home Visit' : confirmedBooking?.mode === 'OFFLINE' ? 'At Center' : bookingMode === 'ONLINE' ? 'Video Call' : bookingMode === 'DOOR_STEP' ? 'Home Visit' : 'At Center'}</span>
                                             </div>
                                             <div className="space-y-1">
-                                                <span className="text-[#5c6b66] block font-medium text-[11px]">Date & Schedule</span>
-                                                <span className="font-semibold text-[#1c2826] text-sm block">
+                                                <span className="text-[#55605f] block font-medium text-[11px]">Date & Schedule</span>
+                                                <span className="font-semibold text-[#0e1111] text-sm block">
                                                     {formatDateString(confirmedBooking?.date || selectedDate)}
                                                 </span>
-                                                <span className="text-[#5c6b66] block font-normal text-xs">
+                                                <span className="text-[#55605f] block font-normal text-xs">
                                                     {confirmedBooking?.time || selectedTime} • {confirmedBooking?.duration || (bookingDuration === 30 ? '30 Mins (Introductory Session)' : '1 Hour (Standard Session)')}
                                                 </span>
                                             </div>
                                             <div className="space-y-1">
-                                                <span className="text-[#5c6b66] block font-medium text-[11px]">Amount Paid</span>
-                                                <span className="font-semibold text-[#1c2826] text-sm block">
+                                                <span className="text-[#55605f] block font-medium text-[11px]">Amount Paid</span>
+                                                <span className="font-semibold text-[#0e1111] text-sm block">
                                                     ₹{confirmedBooking?.amountPaid || netTotal}
                                                 </span>
-                                                <span className="text-[#5c6b66] block font-normal text-xs">SSL Secure Payment</span>
+                                                <span className="text-[#55605f] block font-normal text-xs">SSL Secure Payment</span>
                                             </div>
                                         </div>
 
                                         {bookingMode === 'ONLINE' && !rescheduleSession && (
-                                            <div className="pt-4 border-t border-[#ede7de]/80 mt-3">
+                                            <div className="pt-4 border-t border-[#e6dfd0]/80 mt-3">
                                                 {(() => {
                                                     const canonicalId = confirmedBooking?.appointmentId || confirmedBooking?.id || 'Session';
                                                     const resolvedMeetLink = (confirmedBooking?.meetLink && !confirmedBooking.meetLink.includes('meet.jit.si'))
                                                         || (confirmedMeetLink && !confirmedMeetLink.includes('meet.jit.si'))
                                                         || buildGoogleMeetUrl(canonicalId);
                                                     return (
-                                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl border border-[#ede7de] shadow-xs">
+                                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl border border-[#e6dfd0] shadow-xs">
                                                             <div className="min-w-0 flex-1">
-                                                                <span className="text-[11px] font-semibold text-[#5c6b66] block mb-0.5">
+                                                                <span className="text-[11px] font-semibold text-[#55605f] block mb-0.5">
                                                                     Google Meet Video Consultation Room
                                                                 </span>
-                                                                <span className="text-xs text-[#1c2826] font-semibold truncate block font-mono">
+                                                                <span className="text-xs text-[#0e1111] font-semibold truncate block font-mono">
                                                                     {resolvedMeetLink}
                                                                 </span>
                                                             </div>
@@ -660,7 +680,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     href={resolvedMeetLink}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="px-3.5 py-2 bg-brand hover:bg-brand-dark text-white text-xs font-bold rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs no-underline"
+                                                                    className="px-3.5 py-2 bg-[#0e7490] hover:bg-[#0e1111] text-white text-xs font-bold rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5 border-none shadow-xs no-underline"
                                                                     title="Join Google Meet Consultation"
                                                                 >
                                                                     <VideoIcon className="w-3.5 h-3.5" />
@@ -673,7 +693,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         setCopiedMeet(true);
                                                                         setTimeout(() => setCopiedMeet(false), 2000);
                                                                     }}
-                                                                    className="px-3 py-2 bg-[#f4eee6] hover:bg-[#ede7de] text-[#4c5b55] text-xs font-semibold rounded-lg transition cursor-pointer flex items-center justify-center border border-[#ede7de] shadow-xs whitespace-nowrap"
+                                                                    className="px-3 py-2 bg-[#f1eadc] hover:bg-[#e6dfd0] text-[#3c4747] text-xs font-semibold rounded-lg transition cursor-pointer flex items-center justify-center border border-[#e6dfd0] shadow-xs whitespace-nowrap"
                                                                 >
                                                                     {copiedMeet ? 'Copied!' : 'Copy'}
                                                                 </button>
@@ -692,7 +712,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 onClick={() => {
                                                     window.location.href = '/profile?tab=booked';
                                                 }}
-                                                className="w-full sm:w-auto px-6 py-3 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-semibold rounded-xl transition cursor-pointer text-center shadow-sm"
+                                                className="w-full sm:w-auto px-6 py-3 bg-[#0e7490] hover:bg-[#0b5c73] text-white text-xs font-semibold rounded-xl transition cursor-pointer text-center shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)]"
                                             >
                                                 Go to My Sessions
                                             </button>
@@ -716,9 +736,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             })}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="w-full sm:w-auto px-6 py-3 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-semibold rounded-md transition cursor-pointer flex items-center justify-center gap-2 shadow-sm no-underline"
+                                                            className="w-full sm:w-auto px-6 py-3 bg-white border border-[#e6dfd0] hover:bg-[#f6f1e6] text-[#0e1111] text-xs font-semibold rounded-md transition cursor-pointer flex items-center justify-center gap-2 shadow-xs no-underline"
                                                         >
-                                                            <CalendarIcon className="w-4 h-4 text-white" />
+                                                            <CalendarIcon className="w-4 h-4 text-[#0e7490]" />
                                                             <span>Add to Calendar</span>
                                                         </a>
                                                     );
@@ -759,9 +779,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             appliedDiscount: appliedDiscount
                                                         });
                                                     }}
-                                                    className="w-full sm:w-auto px-5 py-3 bg-white border border-[#ede7de] text-[#1c2826] hover:bg-[#faf6ee] text-xs font-semibold rounded-md transition cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+                                                    className="w-full sm:w-auto px-5 py-3 bg-white border border-[#e6dfd0] text-[#0e1111] hover:bg-[#f6f1e6] text-xs font-semibold rounded-md transition cursor-pointer flex items-center justify-center gap-2 shadow-xs"
                                                 >
-                                                    <FileDown className="w-4 h-4 text-[#5c6b66]" />
+                                                    <FileDown className="w-4 h-4 text-[#55605f]" />
                                                     {downloadingPdf ? 'Generating PDF...' : 'Download Receipt'}
                                                 </button>
 
@@ -770,7 +790,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     onClick={() => {
                                                         window.location.href = '/profile?tab=booked';
                                                     }}
-                                                    className="w-full sm:w-auto px-6 py-3 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-semibold rounded-md transition cursor-pointer text-center shadow-sm"
+                                                    className="w-full sm:w-auto px-6 py-3 bg-[#0e7490] hover:bg-[#0b5c73] text-white text-xs font-semibold rounded-md transition cursor-pointer text-center shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)]"
                                                 >
                                                     View My Sessions
                                                 </button>
@@ -795,10 +815,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         {[1, 2, 3, 4].map((step) => {
                                                             const effectiveStep = (wizardStep === 1 && isAdvisorLocked) ? 2 : wizardStep;
                                                             return (
-                                                                <div key={step} className="flex flex-col items-center flex-1">
-                                                                    <div className={`w-full h-1 rounded-full ${effectiveStep >= step ? 'bg-[#b85438]' : 'bg-[#ede7de]'} transition-all duration-300`}></div>
-                                                                    <span className={`text-[9px] sm:text-[10px] font-semibold mt-2 uppercase tracking-wider text-center transition-colors ${effectiveStep === step ? 'text-[#b85438]' : effectiveStep > step ? 'text-[#1c2826]' : 'text-[#5c6b66]/60'}`}>
-                                                                        {step === 1 ? 'Expert' : step === 2 ? 'Service' : step === 3 ? 'Time' : 'Summary'}
+                                                                <div key={step} role={effectiveStep > step ? 'button' : undefined} tabIndex={effectiveStep > step ? 0 : undefined} aria-label={effectiveStep > step ? `Go back to step ${step}` : undefined} onClick={effectiveStep > step ? () => setWizardStep(step) : undefined} onKeyDown={effectiveStep > step ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setWizardStep(step); } } : undefined} className={`flex flex-col items-center flex-1 rounded-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490]/40 ${effectiveStep > step ? 'group cursor-pointer' : ''}`}>
+                                                                    <div className={`w-full h-1 rounded-full ${effectiveStep >= step ? 'bg-[#0e7490]' : 'bg-[#e6dfd0]'} transition-all duration-300`}></div>
+                                                                    <span className={`text-[9px] sm:text-[10px] font-semibold mt-2 uppercase tracking-wider text-center transition-colors ${effectiveStep === step ? 'text-[#0e7490]' : effectiveStep > step ? 'text-[#0e1111] group-hover:text-[#0c6b83]' : 'text-[#55605f]/60'}`}>
+                                                                        {step === 1 ? 'Advisor' : step === 2 ? 'Service' : step === 3 ? 'Time' : 'Summary'}
                                                                     </span>
                                                                 </div>
                                                             );
@@ -808,29 +828,29 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                 {/* STEP 2 — SELECT SERVICE & SESSION PLAN */}
                                                 {(wizardStep === 2 || (wizardStep === 1 && isAdvisorLocked)) && (
-                                                    <div ref={stepServiceRef} className="bh-booking-step-card bg-white border border-[#ede7de] rounded-md p-5 sm:p-7 shadow-sm space-y-6 text-left animate-step-in">
-                                                        <div className="flex items-center justify-between border-b border-[#ede7de] pb-4">
+                                                    <div ref={stepServiceRef} className="bh-booking-step-card bg-white border border-[#e6dfd0] rounded-md p-5 sm:p-7 shadow-sm space-y-6 text-left animate-step-in">
+                                                        <div className="flex items-center justify-between border-b border-[#e6dfd0] pb-4">
                                                             <div className="flex items-center gap-3">
-                                                                <span className="w-6 h-6 rounded-xs bg-[#1c2826] text-white text-xs flex items-center justify-center font-bold">
+                                                                <span className="w-6 h-6 rounded-xs bg-[#0e7490] text-white text-xs flex items-center justify-center font-bold shadow-xs">
                                                                     2
                                                                 </span>
                                                                 <div>
-                                                                    <h3 className="font-serif font-bold text-lg sm:text-xl text-[#1c2826] leading-tight">
+                                                                    <h3 className="font-serif font-bold text-lg sm:text-xl text-[#0e1111] leading-tight">
                                                                         Select Service & Session Plan
                                                                     </h3>
-                                                                    <p className="text-xs text-[#5c6b66] font-normal">
-                                                                        Choose your consultation service, delivery mode, and duration plan
+                                                                    <p className="text-xs text-[#55605f] font-normal">
+                                                                        {selectedAdvisor ? `Booking with ${selectedAdvisor.name} — pick your service, mode and duration` : 'Choose your consultation service, delivery mode, and duration plan'}
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <span className="text-[10px] font-semibold text-[#b85438] bg-[#b85438]/10 px-2.5 py-0.5 rounded-xs uppercase tracking-wider hidden sm:inline-block">
+                                                            <span className="text-[10px] font-semibold text-[#0e7490] bg-[#0e7490]/10 px-2.5 py-0.5 rounded-xs uppercase tracking-wider hidden sm:inline-block">
                                                                 Step 2
                                                             </span>
                                                         </div>
 
                                                         {isAdvisorLocked && !selectedAdvisor && (
-                                                            <div className={`p-3 rounded-lg flex items-center justify-between gap-3 text-xs mb-2 ${advisorLoadError ? 'bg-rose-50 border border-rose-200' : 'bg-[#faf5f0] border border-[#ede7de]'}`} role={advisorLoadError ? 'alert' : 'status'}>
-                                                                <span className={`font-bold ${advisorLoadError ? 'text-rose-700' : 'text-[#5c6b66]'}`}>
+                                                            <div className={`p-3 rounded-lg flex items-center justify-between gap-3 text-xs mb-2 ${advisorLoadError ? 'bg-rose-50 border border-rose-200' : 'bg-[#f7f2e7] border border-[#e6dfd0]'}`} role={advisorLoadError ? 'alert' : 'status'}>
+                                                                <span className={`font-bold ${advisorLoadError ? 'text-rose-700' : 'text-[#55605f]'}`}>
                                                                     {isLoadingAdvisors
                                                                         ? 'Loading the selected psychologist and live availability…'
                                                                         : advisorLoadError
@@ -841,7 +861,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     <button
                                                                         type="button"
                                                                         onClick={retryLoadAdvisors}
-                                                                        className="px-3 py-1.5 bg-[#1c2826] text-white text-xs font-bold rounded-md hover:bg-[#b85438] transition cursor-pointer border-none shrink-0"
+                                                                        className="px-3 py-1.5 bg-[#0e1111] text-white text-xs font-bold rounded-md hover:bg-[#0e7490] transition cursor-pointer border-none shrink-0"
                                                                     >
                                                                         Retry
                                                                     </button>
@@ -850,26 +870,26 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         )}
 
                                                         {selectedAdvisor && isAdvisorLocked && (
-                                                            <div className="p-3 bg-[#faf5f0] border border-[#ede7de] rounded-lg flex items-center justify-between gap-3 text-xs mb-2">
+                                                            <div className="p-3 bg-[#f7f2e7] border border-[#e6dfd0] rounded-lg flex items-center justify-between gap-3 text-xs mb-2">
                                                                 <div className="flex items-center gap-2 min-w-0">
-                                                                    <span className="w-2 h-2 rounded-full bg-[#b85438] animate-pulse shrink-0" />
-                                                                    <span className="font-bold text-[#1c2826] truncate">
-                                                                        Selected: <strong className="text-[#1c2826]">{selectedAdvisor.name}</strong>
+                                                                    <span className="w-2 h-2 rounded-full bg-[#0e7490] animate-pulse shrink-0" />
+                                                                    <span className="font-bold text-[#0e1111] truncate">
+                                                                        Selected: <strong className="text-[#0e1111]">{selectedAdvisor.name}</strong>
                                                                     </span>
                                                                 </div>
-                                                                <span className="text-[11px] font-bold text-[#4c5b55] shrink-0 hidden sm:inline-block">
+                                                                <span className="text-[11px] font-bold text-[#3c4747] shrink-0 hidden sm:inline-block">
                                                                     Review pricing below ↓
                                                                 </span>
                                                             </div>
                                                         )}
 
                                                         {/* Service Type & Mode Selection — plain text when only one option exists */}
-                                                        <div className={`${hasMultipleServices && hasMultipleModes ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'flex flex-col gap-2.5'} pb-3 border-b border-[#f4eee6]`}>
+                                                        <div className={`${hasMultipleServices && hasMultipleModes ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'flex flex-col gap-2.5'} pb-3 border-b border-[#f1eadc]`}>
                                                             {/* Service Type */}
                                                             <div className="space-y-2">
                                                                 {hasMultipleServices ? (
                                                                     <>
-                                                                        <span className="text-[11px] font-bold text-[#5c6b66] uppercase tracking-wider block">Service Type</span>
+                                                                        <span className="text-[11px] font-bold text-[#55605f] uppercase tracking-wider block">Service Type</span>
                                                                         <div className="flex flex-col sm:flex-row gap-2.5">
                                                                             <button
                                                                                 type="button"
@@ -878,14 +898,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     setBookingService('counselling');
                                                                                 }}
                                                                                 className={`flex-1 p-3.5 rounded-md border text-left flex items-center gap-3 transition-all cursor-pointer ${bookingService === 'counselling'
-                                                                                        ? 'border-[#b85438] bg-[#faf5f0] ring-1 ring-[#b85438]/30 text-[#1c2826]'
-                                                                                        : 'border-[#ede7de] bg-white text-[#1c2826] hover:border-[#b85438]/40'
+                                                                                        ? 'border-[#0e7490] bg-[#f7f2e7] ring-1 ring-[#0e7490]/30 text-[#0e1111]'
+                                                                                        : 'border-[#e6dfd0] bg-white text-[#0e1111] hover:border-[#0e7490]/40'
                                                                                     }`}
                                                                             >
                                                                                 <span className="text-xl shrink-0">🧠</span>
                                                                                 <div className="min-w-0">
-                                                                                    <span className="text-xs font-bold block text-[#1c2826] leading-tight">Psychology Counselling</span>
-                                                                                    <span className="text-[10px] text-[#5c6b66] block leading-tight mt-0.5">Clinical therapy & assessment</span>
+                                                                                    <span className="text-xs font-bold block text-[#0e1111] leading-tight">Psychology Counselling</span>
+                                                                                    <span className="text-[10px] text-[#55605f] block leading-tight mt-0.5">Clinical therapy & assessment</span>
                                                                                 </div>
                                                                             </button>
                                                                             <button
@@ -895,21 +915,21 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     setBookingService('career');
                                                                                 }}
                                                                                 className={`flex-1 p-3.5 rounded-md border text-left flex items-center gap-3 transition-all cursor-pointer ${bookingService === 'career'
-                                                                                        ? 'border-[#b85438] bg-[#faf5f0] ring-1 ring-[#b85438]/30 text-[#1c2826]'
-                                                                                        : 'border-[#ede7de] bg-white text-[#1c2826] hover:border-[#b85438]/40'
+                                                                                        ? 'border-[#0e7490] bg-[#f7f2e7] ring-1 ring-[#0e7490]/30 text-[#0e1111]'
+                                                                                        : 'border-[#e6dfd0] bg-white text-[#0e1111] hover:border-[#0e7490]/40'
                                                                                     }`}
                                                                             >
                                                                                 <span className="text-xl shrink-0">🧭</span>
                                                                                 <div className="min-w-0">
-                                                                                    <span className="text-xs font-bold block text-[#1c2826] leading-tight">Career Mentoring</span>
-                                                                                    <span className="text-[10px] text-[#5c6b66] block leading-tight mt-0.5">Guidance & direction</span>
+                                                                                    <span className="text-xs font-bold block text-[#0e1111] leading-tight">Career Mentoring</span>
+                                                                                    <span className="text-[10px] text-[#55605f] block leading-tight mt-0.5">Guidance & direction</span>
                                                                                 </div>
                                                                             </button>
                                                                         </div>
                                                                     </>
                                                                 ) : (
-                                                                    <p className="text-sm text-[#5c6b66] leading-tight">
-                                                                        Service Type: <span className="font-bold text-[#1c2826]">{bookingService === 'career' ? 'Career Mentoring' : 'Psychology Counselling'}</span>
+                                                                    <p className="text-sm text-[#55605f] leading-tight">
+                                                                        Service Type: <span className="font-bold text-[#0e1111]">{bookingService === 'career' ? 'Career Mentoring' : 'Psychology Counselling'}</span>
                                                                     </p>
                                                                 )}
                                                             </div>
@@ -918,7 +938,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             <div className="space-y-2">
                                                                 {hasMultipleModes ? (
                                                                     <>
-                                                                        <span className="text-[11px] font-bold text-[#5c6b66] uppercase tracking-wider block">Session Mode</span>
+                                                                        <span className="text-[11px] font-bold text-[#55605f] uppercase tracking-wider block">Session Mode</span>
                                                                         <div className="flex flex-wrap gap-2.5">
                                                                         <button
                                                                             type="button"
@@ -927,8 +947,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                 setBookingMode('ONLINE');
                                                                             }}
                                                                             className={`flex-1 min-w-[110px] p-3 rounded-md border flex items-center justify-center sm:justify-start gap-2.5 transition-all cursor-pointer ${bookingMode === 'ONLINE'
-                                                                                    ? 'border-[#b85438] bg-[#faf5f0] ring-1 ring-[#b85438]/30 text-[#1c2826]'
-                                                                                    : 'border-[#ede7de] bg-white text-[#1c2826] hover:border-[#b85438]/40'
+                                                                                    ? 'border-[#0e7490] bg-[#f7f2e7] ring-1 ring-[#0e7490]/30 text-[#0e1111]'
+                                                                                    : 'border-[#e6dfd0] bg-white text-[#0e1111] hover:border-[#0e7490]/40'
                                                                                 }`}
                                                                         >
                                                                             <span className="text-base shrink-0">🎥</span>
@@ -942,8 +962,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     setBookingMode('DOOR_STEP');
                                                                                 }}
                                                                                 className={`flex-1 min-w-[110px] p-3 rounded-md border flex items-center justify-center sm:justify-start gap-2.5 transition-all cursor-pointer ${bookingMode === 'DOOR_STEP'
-                                                                                        ? 'border-[#b85438] bg-[#faf5f0] ring-1 ring-[#b85438]/30 text-[#1c2826]'
-                                                                                        : 'border-[#ede7de] bg-white text-[#1c2826] hover:border-[#b85438]/40'
+                                                                                        ? 'border-[#0e7490] bg-[#f7f2e7] ring-1 ring-[#0e7490]/30 text-[#0e1111]'
+                                                                                        : 'border-[#e6dfd0] bg-white text-[#0e1111] hover:border-[#0e7490]/40'
                                                                                     }`}
                                                                             >
                                                                                 <span className="text-base shrink-0">🏠</span>
@@ -958,8 +978,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                     setBookingMode('OFFLINE');
                                                                                 }}
                                                                                 className={`flex-1 min-w-[110px] p-3 rounded-md border flex items-center justify-center sm:justify-start gap-2.5 transition-all cursor-pointer ${bookingMode === 'OFFLINE'
-                                                                                        ? 'border-[#b85438] bg-[#faf5f0] ring-1 ring-[#b85438]/30 text-[#1c2826]'
-                                                                                        : 'border-[#ede7de] bg-white text-[#1c2826] hover:border-[#b85438]/40'
+                                                                                        ? 'border-[#0e7490] bg-[#f7f2e7] ring-1 ring-[#0e7490]/30 text-[#0e1111]'
+                                                                                        : 'border-[#e6dfd0] bg-white text-[#0e1111] hover:border-[#0e7490]/40'
                                                                                     }`}
                                                                             >
                                                                                 <span className="text-base shrink-0">🏢</span>
@@ -969,8 +989,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         </div>
                                                                     </>
                                                                 ) : (
-                                                                    <p className="text-sm text-[#5c6b66] leading-tight">
-                                                                        Session Mode: <span className="font-bold text-[#1c2826]">{bookingMode === 'DOOR_STEP' ? 'Doorstep Visit' : bookingMode === 'OFFLINE' ? 'In-Center Session' : 'Online'}</span>
+                                                                    <p className="text-sm text-[#55605f] leading-tight">
+                                                                        Session Mode: <span className="font-bold text-[#0e1111]">{bookingMode === 'DOOR_STEP' ? 'Doorstep Visit' : bookingMode === 'OFFLINE' ? 'In-Center Session' : 'Online'}</span>
                                                                     </p>
                                                                 )}
                                                             </div>
@@ -979,7 +999,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         {/* Session Plan Selector: Introductory vs Standard */}
                                                         <div className="space-y-3 pt-1">
                                                             <div className="flex items-center justify-between">
-                                                                <label className="text-xs font-bold text-[#1c2826] uppercase tracking-wider block">
+                                                                <label className="text-xs font-bold text-[#0e1111] uppercase tracking-wider block">
                                                                     Choose Session Plan
                                                                 </label>
                                                                 {!isIntroductoryEligible && (
@@ -998,28 +1018,28 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             setBookingDuration(30);
                                                                         }}
                                                                         className={`p-5 rounded-md transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border relative ${bookingDuration === 30
-                                                                                ? 'border-[#b85438] bg-[#faf5f0] ring-1 ring-[#b85438]/30 shadow-sm'
-                                                                                : 'border-[#ede7de] bg-white hover:border-[#b85438]/40'
+                                                                                ? 'border-[#0e7490] bg-[#f7f2e7] ring-1 ring-[#0e7490]/30 shadow-sm'
+                                                                                : 'border-[#e6dfd0] bg-white hover:border-[#0e7490]/40'
                                                                             }`}
                                                                     >
                                                                         <div className="w-full flex items-center justify-between gap-2 mb-3">
-                                                                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-xs bg-[#b85438]/10 text-[#b85438] border border-[#b85438]/20">
+                                                                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-xs bg-[#0e7490]/10 text-[#0e7490] border border-[#0e7490]/20">
                                                                                 ✨ Intro Offer
                                                                             </span>
-                                                                            <span className="text-xl sm:text-2xl font-serif font-bold text-[#1c2826] shrink-0">
+                                                                            <span className="text-xl sm:text-2xl font-serif font-bold text-[#0e1111] shrink-0">
                                                                                 {selectedAdvisor?.halfSessionPrice != null ? `₹${selectedAdvisor.halfSessionPrice}` : 'Price not configured'}
                                                                             </span>
                                                                         </div>
                                                                         <div>
                                                                             <div className="flex items-center justify-between gap-2">
-                                                                                <h4 className="font-bold text-sm sm:text-base text-[#1c2826]">Introductory Session</h4>
+                                                                                <h4 className="font-bold text-sm sm:text-base text-[#0e1111]">Introductory Session</h4>
                                                                                 {bookingDuration === 30 ? (
-                                                                                    <CheckCircle2 className="w-4 h-4 text-[#b85438] shrink-0" />
+                                                                                    <CheckCircle2 className="w-4 h-4 text-[#0e7490] shrink-0" />
                                                                                 ) : (
-                                                                                    <span className="w-4 h-4 rounded-xs border border-[#ede7de] shrink-0 block" />
+                                                                                    <span className="w-4 h-4 rounded-xs border border-[#e6dfd0] shrink-0 block" />
                                                                                 )}
                                                                             </div>
-                                                                            <p className="text-xs text-[#5c6b66] mt-1 leading-relaxed">
+                                                                            <p className="text-xs text-[#55605f] mt-1 leading-relaxed">
                                                                                 30 Minutes • First session consultation & assessment
                                                                             </p>
                                                                         </div>
@@ -1032,48 +1052,48 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             setBookingDuration(60);
                                                                         }}
                                                                         className={`p-5 rounded-md transition-all duration-200 cursor-pointer flex flex-col justify-between text-left border relative ${bookingDuration === 60
-                                                                                ? 'border-[#b85438] bg-[#faf5f0] ring-1 ring-[#b85438]/30 shadow-sm'
-                                                                                : 'border-[#ede7de] bg-white hover:border-[#b85438]/40'
+                                                                                ? 'border-[#0e7490] bg-[#f7f2e7] ring-1 ring-[#0e7490]/30 shadow-sm'
+                                                                                : 'border-[#e6dfd0] bg-white hover:border-[#0e7490]/40'
                                                                             }`}
                                                                     >
                                                                         <div className="w-full flex items-center justify-between gap-2 mb-3">
-                                                                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-xs bg-[#ede7de] text-[#1c2826]">
+                                                                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-xs bg-[#e6dfd0] text-[#0e1111]">
                                                                                 Comprehensive
                                                                             </span>
-                                                                            <span className="text-xl sm:text-2xl font-serif font-bold text-[#1c2826] shrink-0">
+                                                                            <span className="text-xl sm:text-2xl font-serif font-bold text-[#0e1111] shrink-0">
                                                                                 {selectedAdvisor?.price != null ? `₹${selectedAdvisor.price}` : 'Price not configured'}
                                                                             </span>
                                                                         </div>
                                                                         <div>
                                                                             <div className="flex items-center justify-between gap-2">
-                                                                                <h4 className="font-bold text-sm sm:text-base text-[#1c2826]">Standard Session</h4>
+                                                                                <h4 className="font-bold text-sm sm:text-base text-[#0e1111]">Standard Session</h4>
                                                                                 {bookingDuration === 60 ? (
-                                                                                    <CheckCircle2 className="w-4 h-4 text-[#b85438] shrink-0" />
+                                                                                    <CheckCircle2 className="w-4 h-4 text-[#0e7490] shrink-0" />
                                                                                 ) : (
-                                                                                    <span className="w-4 h-4 rounded-xs border border-[#ede7de] shrink-0 block" />
+                                                                                    <span className="w-4 h-4 rounded-xs border border-[#e6dfd0] shrink-0 block" />
                                                                                 )}
                                                                             </div>
-                                                                            <p className="text-xs text-[#5c6b66] mt-1 leading-relaxed">
+                                                                            <p className="text-xs text-[#55605f] mt-1 leading-relaxed">
                                                                                 1 Hour (60 Minutes) • Full therapeutic consultation
                                                                             </p>
                                                                         </div>
                                                                     </button>
                                                                 </div>
                                                             ) : (
-                                                                <div className="p-4 bg-[#faf5f0] rounded-md border border-[#b85438] ring-1 ring-[#b85438]/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                                                <div className="p-4 bg-[#f7f2e7] rounded-md border border-[#0e7490] ring-1 ring-[#0e7490]/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                                                     <div>
                                                                         <div className="flex items-center gap-2 mb-1">
-                                                                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-xs bg-[#b85438]/10 text-[#b85438]">
+                                                                            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-xs bg-[#0e7490]/10 text-[#0e7490]">
                                                                                 Full Therapeutic Care
                                                                             </span>
-                                                                            <span className="text-xs text-[#5c6b66] font-medium">1 Hour (60 Mins)</span>
+                                                                            <span className="text-xs text-[#55605f] font-medium">1 Hour (60 Mins)</span>
                                                                         </div>
-                                                                        <h4 className="font-bold text-sm text-[#1c2826]">Standard Comprehensive Session</h4>
-                                                                        <p className="text-xs text-[#5c6b66] mt-0.5">
+                                                                        <h4 className="font-bold text-sm text-[#0e1111]">Standard Comprehensive Session</h4>
+                                                                        <p className="text-xs text-[#55605f] mt-0.5">
                                                                             Introductory session already completed. Continuing with full standard consultation.
                                                                         </p>
                                                                     </div>
-                                                                    <span className="text-2xl font-serif font-bold text-[#1c2826]">
+                                                                    <span className="text-2xl font-serif font-bold text-[#0e1111]">
                                                                         {selectedAdvisor?.price != null ? `₹${selectedAdvisor.price}` : 'Price not configured'}
                                                                     </span>
                                                                 </div>
@@ -1082,25 +1102,25 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                         {/* DOORSTEP LOCATION INPUTS */}
                                                         {bookingMode === 'DOOR_STEP' && (
-                                                            <div className="space-y-4 p-4 bg-[#faf6ee] border border-[#ede7de] rounded-lg animate-in fade-in slide-in-from-top-2 duration-300 text-left">
-                                                                <div className="border-b border-[#ede7de] pb-2">
-                                                                    <h4 className="text-xs font-bold text-[#1c2826] uppercase tracking-wider">
+                                                            <div className="space-y-4 p-4 bg-[#f6f1e6] border border-[#e6dfd0] rounded-lg animate-in fade-in slide-in-from-top-2 duration-300 text-left">
+                                                                <div className="border-b border-[#e6dfd0] pb-2">
+                                                                    <h4 className="text-xs font-bold text-[#0e1111] uppercase tracking-wider">
                                                                         Doorstep Visit Address
                                                                     </h4>
-                                                                    <p className="text-xs text-[#5c6b66] mt-0.5">
+                                                                    <p className="text-xs text-[#55605f] mt-0.5">
                                                                         Please provide your location to check for nearby psychologists within service radius.
                                                                     </p>
                                                                 </div>
 
                                                                 <div className="space-y-1.5 relative">
-                                                                    <label className="text-xs font-semibold text-[#4c5b55] block">Search Location Address</label>
+                                                                    <label className="text-xs font-semibold text-[#3c4747] block">Search Location Address</label>
                                                                     <div className="flex flex-col sm:flex-row gap-2">
                                                                         <input
                                                                             type="text"
                                                                             placeholder="Type your address to search... (e.g. Kozhikode, Kerala)"
                                                                             value={clientSearchQuery}
                                                                             onChange={(e) => setClientSearchQuery(e.target.value)}
-                                                                            className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-[#ede7de] text-xs font-medium text-[#1c2826] outline-none focus:border-[#b85438] rounded-lg transition"
+                                                                            className="flex-1 min-w-0 px-3.5 py-2.5 bg-white border border-[#e6dfd0] text-xs font-medium text-[#0e1111] outline-none focus:border-[#0e7490] rounded-lg transition"
                                                                             onKeyDown={(e) => {
                                                                                 if (e.key === 'Enter') {
                                                                                     e.preventDefault();
@@ -1112,14 +1132,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             type="button"
                                                                             onClick={handleClientAddressSearch}
                                                                             disabled={isClientSearching}
-                                                                            className="w-full sm:w-auto px-4 py-2.5 bg-[#1c2826] text-white text-xs font-bold rounded-lg hover:bg-[#b85438] transition cursor-pointer shrink-0 border-none"
+                                                                            className="w-full sm:w-auto px-4 py-2.5 bg-[#0e1111] text-white text-xs font-bold rounded-lg hover:bg-[#0e7490] transition cursor-pointer shrink-0 border-none"
                                                                         >
                                                                             {isClientSearching ? 'Searching...' : 'Search'}
                                                                         </button>
                                                                     </div>
 
                                                                     {clientSearchResults.length > 0 && (
-                                                                        <div className="absolute left-0 right-0 mt-1 bg-white border border-[#ede7de] rounded-lg max-h-40 overflow-y-auto z-50 shadow-md divide-y divide-[#ede7de]">
+                                                                        <div className="absolute left-0 right-0 mt-1 bg-white border border-[#e6dfd0] rounded-lg max-h-40 overflow-y-auto z-50 shadow-md divide-y divide-[#e6dfd0]">
                                                                             {clientSearchResults.map((res, index) => (
                                                                                 <button
                                                                                     key={index}
@@ -1134,7 +1154,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         setClientSearchQuery(res.display_name);
                                                                                         setClientSearchResults([]);
                                                                                     }}
-                                                                                    className="w-full text-left px-3.5 py-2 text-xs text-[#4c5b55] font-medium hover:bg-[#faf6ee] transition-colors block truncate"
+                                                                                    className="w-full text-left px-3.5 py-2 text-xs text-[#3c4747] font-medium hover:bg-[#f6f1e6] transition-colors block truncate"
                                                                                 >
                                                                                     {res.display_name}
                                                                                 </button>
@@ -1145,57 +1165,57 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </div>
                                                         )}
 
-                                                        <div className="pt-6 border-t border-[#f4eee6] flex justify-between items-center gap-3">
+                                                        <div className="pt-6 border-t border-[#f1eadc] flex justify-between items-center gap-3">
                                                             {!isAdvisorLocked ? (
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setWizardStep(1)}
-                                                                    className="px-5 py-2.5 bg-[#f4eee6] hover:bg-[#ede7de] text-[#4c5b55] font-bold text-xs sm:text-sm rounded-lg transition cursor-pointer border border-[#ede7de]"
+                                                                    className="px-5 py-2.5 bg-[#f1eadc] hover:bg-[#e6dfd0] text-[#3c4747] font-bold text-xs sm:text-sm rounded-lg transition cursor-pointer border border-[#e6dfd0]"
                                                                 >
                                                                     Back
                                                                 </button>
                                                             ) : (
                                                                 <div />
                                                             )}
-                                                            <button type="button" onClick={() => setWizardStep(3)} className="w-full sm:w-auto px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 cursor-pointer border border-[#1c2826] transition-all btn-booking-primary">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
+                                                            <button type="button" onClick={() => setWizardStep(3)} disabled={!selectedAdvisor} title={!selectedAdvisor ? 'Select a psychologist to continue' : undefined} className="w-full sm:w-auto px-6 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-bold text-xs sm:text-sm rounded-lg shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)] flex items-center justify-center gap-2 cursor-pointer border border-[#0e7490] transition-all btn-booking-primary disabled:opacity-50 disabled:cursor-not-allowed">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 1 — SELECT PSYCHOLOGIST */}
                                                 {wizardStep === 1 && !isAdvisorLocked && (
-                                                    <div ref={stepAdvisorRef} className="bh-booking-step-card bg-white border border-[#ede7de] rounded-lg p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
-                                                        <div className="flex items-center justify-between border-b border-[#f4eee6] pb-3">
+                                                    <div ref={stepAdvisorRef} className="bh-booking-step-card bg-white border border-[#e6dfd0] rounded-lg p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
+                                                        <div className="flex items-center justify-between border-b border-[#f1eadc] pb-3">
                                                             <div className="flex items-center gap-2.5">
-                                                                <span className="w-6 h-6 rounded-md bg-[#1c2826] text-[#d69f86] text-xs flex items-center justify-center font-extrabold shadow-xs">
+                                                                <span className="w-6 h-6 rounded-md bg-[#0e7490] text-white text-xs flex items-center justify-center font-extrabold shadow-xs">
                                                                     1
                                                                 </span>
                                                                 <div>
-                                                                    <h3 className="font-bold text-base sm:text-lg text-[#1c2826] leading-tight">
+                                                                    <h3 className="font-bold text-base sm:text-lg text-[#0e1111] leading-tight">
                                                                         Select Psychologist
                                                                     </h3>
-                                                                    <p className="text-xs text-[#5c6b66] font-medium">
+                                                                    <p className="text-xs text-[#55605f] font-medium">
                                                                         Certified licensed clinical psychologists & therapeutic advisors
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <span className="text-[10px] font-extrabold text-[#4c5b55] bg-[#faf5f0] border border-[#ede7de] px-2.5 py-0.5 rounded-md uppercase tracking-wider hidden sm:inline-block">
+                                                            <span className="text-[10px] font-extrabold text-[#3c4747] bg-[#f7f2e7] border border-[#e6dfd0] px-2.5 py-0.5 rounded-md uppercase tracking-wider hidden sm:inline-block">
                                                                 Step 1
                                                             </span>
                                                         </div>
 
                                                         {selectedAdvisor && (
-                                                            <div className="p-3 bg-[#faf5f0] border border-[#ede7de] rounded-lg flex items-center justify-between gap-3 text-xs">
+                                                            <div className="p-3 bg-[#f7f2e7] border border-[#e6dfd0] rounded-lg flex items-center justify-between gap-3 text-xs">
                                                                 <div className="flex items-center gap-2 min-w-0">
-                                                                    <span className="w-2 h-2 rounded-full bg-[#b85438] animate-pulse shrink-0" />
-                                                                    <span className="font-bold text-[#1c2826] truncate">
-                                                                        Selected: <strong className="text-[#1c2826]">{selectedAdvisor.name}</strong> • {bookingDuration === 30 ? selectedAdvisor.halfSessionPrice : selectedAdvisor.price} ({bookingDuration === 30 ? '30m Plan' : '1h Plan'})
+                                                                    <span className="w-2 h-2 rounded-full bg-[#0e7490] animate-pulse shrink-0" />
+                                                                    <span className="font-bold text-[#0e1111] truncate">
+                                                                        Selected: <strong className="text-[#0e1111]">{selectedAdvisor.name}</strong> • {bookingDuration === 30 ? selectedAdvisor.halfSessionPrice : selectedAdvisor.price} ({bookingDuration === 30 ? '30m Plan' : '1h Plan'})
                                                                     </span>
                                                                 </div>
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setWizardStep(2)}
-                                                                    className="px-3.5 py-1.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-bold text-xs rounded-md transition-all cursor-pointer whitespace-nowrap shadow-xs border-none flex items-center justify-center gap-1.5"
+                                                                    className="px-3.5 py-1.5 bg-[#0e1111] hover:bg-[#0e7490] text-white font-bold text-xs rounded-md transition-all cursor-pointer whitespace-nowrap shadow-xs border-none flex items-center justify-center gap-1.5"
                                                                 >
                                                                     Continue <ArrowRight className="w-3 h-3" />
                                                                 </button>
@@ -1223,7 +1243,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                                 if (isLoadingAdvisors) {
                                                                     return (
-                                                                        <div className="p-6 border border-[#ede7de] rounded-lg bg-[#faf6ee] text-[#5c6b66] text-center text-sm" role="status" aria-live="polite">
+                                                                        <div className="p-6 border border-[#e6dfd0] rounded-lg bg-[#f6f1e6] text-[#55605f] text-center text-sm" role="status" aria-live="polite">
                                                                             Loading psychologists and live availability…
                                                                         </div>
                                                                     );
@@ -1237,7 +1257,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             <button
                                                                                 type="button"
                                                                                 onClick={retryLoadAdvisors}
-                                                                                className="mt-3 px-4 py-2 bg-[#1c2826] text-white text-xs font-bold rounded-md hover:bg-[#b85438] transition cursor-pointer border-none"
+                                                                                className="mt-3 px-4 py-2 bg-[#0e1111] text-white text-xs font-bold rounded-md hover:bg-[#0e7490] transition cursor-pointer border-none"
                                                                             >
                                                                                 Try again
                                                                             </button>
@@ -1247,7 +1267,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                                 if (sortedAdvisors.length === 0) {
                                                                     return (
-                                                                        <div className="p-6 border border-dashed border-[#ede7de] rounded-lg bg-[#faf6ee] text-[#5c6b66] text-center font-medium text-xs" role="status">
+                                                                        <div className="p-6 border border-dashed border-[#e6dfd0] rounded-lg bg-[#f6f1e6] text-[#55605f] text-center font-medium text-xs" role="status">
                                                                             No psychologists are currently listed for this service. Please check back soon.
                                                                         </div>
                                                                     );
@@ -1268,6 +1288,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                             return (
                                                                                 <div
                                                                                     key={advisor.id}
+                                                                                    role={isAvailable ? 'button' : undefined}
+                                                                                    tabIndex={isAvailable ? 0 : undefined}
+                                                                                    aria-pressed={isAvailable ? isSelected : undefined}
+                                                                                    aria-disabled={isAvailable ? undefined : true}
+                                                                                    onKeyDown={isAvailable ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } } : undefined}
                                                                                     onClick={() => {
                                                                                         if (!isAvailable) return;
                                                                                         if (selectAdvisor) {
@@ -1283,17 +1308,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         setWizardStep(2);
                                                                                     }}
                                                                                     className={`group flex flex-col p-4 sm:p-5 border bg-white rounded-xl relative shadow-xs cursor-pointer booking-card transition-all ${isSelected
-                                                                                            ? 'border-[#b85438] ring-2 ring-[#b85438]/20 bg-[#faf5f0]/40 shadow-sm'
+                                                                                            ? 'border-[#0e7490] ring-2 ring-[#0e7490]/20 bg-[#f7f2e7]/40 shadow-sm'
                                                                                             : isAvailable
-                                                                                                ? 'border-[#ede7de] hover:border-[#b85438]/50 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
-                                                                                                : 'border-[#f4eee6] opacity-60 hover:opacity-90'
+                                                                                                ? 'border-[#e6dfd0] hover:border-[#0e7490]/50 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
+                                                                                                : 'border-[#f1eadc] opacity-60 hover:opacity-90'
                                                                                         }`}
                                                                                 >
                                                                                     <div className="flex flex-col gap-3 flex-1">
                                                                                         <div className="flex items-start gap-3 min-w-0">
-                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg shrink-0 flex items-center justify-center border bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#b85438]' : 'border-[#ede7de] group-hover:border-[#e0d8cb]'}`}>
+                                                                                            <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg shrink-0 flex items-center justify-center border bg-white shadow-xs overflow-hidden relative transition-colors ${isSelected ? 'border-[#0e7490]' : 'border-[#e6dfd0] group-hover:border-[#d5cdbb]'}`}>
                                                                                                 {(advisor.isHighlighted || advisor.isTopFive) && (
-                                                                                                    <div className="absolute top-0 left-0 right-0 bg-[#b85438] text-white text-[8px] font-bold text-center py-0.5 z-10 tracking-widest uppercase">
+                                                                                                    <div className="absolute top-0 left-0 right-0 bg-[#0e7490] text-white text-[8px] font-bold text-center py-0.5 z-10 tracking-widest uppercase">
                                                                                                         Top Rated
                                                                                                     </div>
                                                                                                 )}
@@ -1304,7 +1329,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                                         className="w-full h-full object-cover"
                                                                                                     />
                                                                                                 ) : (
-                                                                                                    <span className="font-bold text-xl text-[#9e432c]">
+                                                                                                    <span className="font-bold text-xl text-[#0c6b83]">
                                                                                                         {getInitials(advisor.name)}
                                                                                                     </span>
                                                                                                 )}
@@ -1312,16 +1337,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                                                             <div className="space-y-1 min-w-0 flex-1">
                                                                                                 <div className="flex items-center gap-2 flex-wrap">
-                                                                                                    <h4 className={`font-bold text-base sm:text-lg transition-colors truncate ${isSelected ? 'text-[#16201d] font-extrabold' : 'text-[#1c2826] group-hover:text-[#4c5b55]'}`}>
+                                                                                                    <h4 className={`font-bold text-base sm:text-lg transition-colors truncate ${isSelected ? 'text-[#050707] font-extrabold' : 'text-[#0e1111] group-hover:text-[#3c4747]'}`}>
                                                                                                         {advisor.name}
                                                                                                     </h4>
-                                                                                                    <span className="text-xs text-[#5c6b66] font-semibold">
+                                                                                                    <span className="text-xs text-[#55605f] font-semibold">
                                                                                                         • {advisor.role || 'Consultant Psychologist'}
                                                                                                     </span>
                                                                                                 </div>
 
                                                                                                 {advisor.bio && (
-                                                                                                    <p className="text-xs text-[#5c6b66] line-clamp-2 leading-relaxed">
+                                                                                                    <p className="text-xs text-[#55605f] line-clamp-2 leading-relaxed">
                                                                                                         {advisor.bio}
                                                                                                     </p>
                                                                                                 )}
@@ -1329,12 +1354,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                                 {advisor.specialties?.length > 0 && (
                                                                                                     <div className="flex flex-wrap items-center gap-1 pt-0.5">
                                                                                                         {advisor.specialties.slice(0, 2).map((spec, i) => (
-                                                                                                            <span key={i} title={spec} className="max-w-[140px] truncate px-2 py-0.5 bg-[#faf6ee] border border-[#ede7de] text-[#5c6b66] text-[10px] font-semibold rounded-md">
+                                                                                                            <span key={i} title={spec} className="max-w-[140px] truncate px-2 py-0.5 bg-[#f6f1e6] border border-[#e6dfd0] text-[#55605f] text-[10px] font-semibold rounded-md">
                                                                                                                 {spec}
                                                                                                             </span>
                                                                                                         ))}
                                                                                                         {advisor.specialties.length > 2 && (
-                                                                                                            <span className="shrink-0 px-2 py-0.5 bg-[#faf6ee] border border-[#ede7de] text-[#5c6b66] text-[10px] font-semibold rounded-md">
+                                                                                                            <span className="shrink-0 px-2 py-0.5 bg-[#f6f1e6] border border-[#e6dfd0] text-[#55605f] text-[10px] font-semibold rounded-md">
                                                                                                                 +{advisor.specialties.length - 2}
                                                                                                             </span>
                                                                                                         )}
@@ -1354,27 +1379,27 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                             </div>
                                                                                         </div>
 
-                                                                                        <div className="flex items-center justify-between gap-2 shrink-0 border-t border-[#f4eee6] pt-3 mt-auto">
+                                                                                        <div className="flex items-center justify-between gap-2 shrink-0 border-t border-[#f1eadc] pt-3 mt-auto">
                                                                                             <div className="text-left">
-                                                                                                <span className="font-extrabold text-xl sm:text-2xl text-[#1c2826] block leading-none">
+                                                                                                <span className="font-extrabold text-xl sm:text-2xl text-[#0e1111] block leading-none">
                                                                                                     {bookingDuration === 30 ? advisor.halfSessionPrice : advisor.price}
                                                                                                 </span>
-                                                                                                <span className="text-[10px] font-bold text-[#5c6b66] uppercase tracking-wider mt-0.5 block">
+                                                                                                <span className="text-[10px] font-bold text-[#55605f] uppercase tracking-wider mt-0.5 block">
                                                                                                     {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
                                                                                                 </span>
                                                                                             </div>
 
                                                                                             {isSelected ? (
-                                                                                                <div className="px-3.5 py-1.5 bg-[#b85438] text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 shadow-xs">
+                                                                                                <div className="px-3.5 py-1.5 bg-[#0e7490] text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 shadow-xs">
                                                                                                     <span>✓ Selected</span>
                                                                                                 </div>
                                                                                             ) : isAvailable ? (
-                                                                                                <div className="px-3.5 py-1.5 bg-[#1c2826] text-white text-xs font-bold rounded-lg group-hover:bg-[#b85438] transition-all flex items-center gap-1 shadow-xs">
+                                                                                                <div className="px-3.5 py-1.5 bg-[#0e1111] text-white text-xs font-bold rounded-lg group-hover:bg-[#0e7490] transition-all flex items-center gap-1 shadow-xs">
                                                                                                     <span>Select</span>
                                                                                                     <ArrowRight className="w-3.5 h-3.5" />
                                                                                                 </div>
                                                                                             ) : (
-                                                                                                <span className="text-xs font-semibold text-[#8a938f] bg-[#f4eee6] px-3 py-1.5 rounded-md">
+                                                                                                <span className="text-xs font-semibold text-[#7c8785] bg-[#f1eadc] px-3 py-1.5 rounded-md">
                                                                                                     Unavailable
                                                                                                 </span>
                                                                                             )}
@@ -1394,7 +1419,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         setAdvisorPage(p => Math.max(1, p - 1));
                                                                                     }}
                                                                                     disabled={advisorPage === 1}
-                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-[#ede7de] bg-white hover:bg-[#faf6ee] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-[#e6dfd0] bg-white hover:bg-[#f6f1e6] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                                                                                 >
                                                                                     ‹
                                                                                 </button>
@@ -1407,8 +1432,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                             setAdvisorPage(num);
                                                                                         }}
                                                                                         className={`w-8 h-8 rounded-full text-xs font-bold border flex items-center justify-center cursor-pointer ${advisorPage === num
-                                                                                                ? 'bg-[#1c2826] text-white border-[#1c2826] shadow-xs'
-                                                                                                : 'bg-white text-[#1c2826] border-[#ede7de] hover:border-[#b85438]'
+                                                                                                ? 'bg-[#0e1111] text-white border-[#0e1111] shadow-xs'
+                                                                                                : 'bg-white text-[#0e1111] border-[#e6dfd0] hover:border-[#0e7490]'
                                                                                             }`}
                                                                                     >
                                                                                         {num}
@@ -1421,7 +1446,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         setAdvisorPage(p => Math.min(totalPages, p + 1));
                                                                                     }}
                                                                                     disabled={advisorPage === totalPages}
-                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-[#ede7de] bg-white hover:bg-[#faf6ee] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-[#e6dfd0] bg-white hover:bg-[#f6f1e6] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                                                                                 >
                                                                                     ›
                                                                                 </button>
@@ -1434,8 +1459,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                         {errors.advisor && <p className="text-xs text-rose-500 font-medium">{errors.advisor}</p>}
 
-                                                        <div className="pt-6 border-t border-[#f4eee6] flex justify-end">
-                                                            <button type="button" onClick={() => setWizardStep(2)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 cursor-pointer border border-[#1c2826] transition-all btn-booking-primary disabled:opacity-50">Continue to Service Plan <ArrowRight className="w-4 h-4" /></button>
+                                                        <div className="pt-6 border-t border-[#f1eadc] flex justify-end">
+                                                            <button type="button" onClick={() => setWizardStep(2)} disabled={!selectedAdvisor} className="w-full sm:w-auto px-6 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-bold text-xs sm:text-sm rounded-lg shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)] flex items-center justify-center gap-2 cursor-pointer border border-[#0e7490] transition-all btn-booking-primary disabled:opacity-50">Continue to Service Plan <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
@@ -1461,44 +1486,44 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             errors={errors}
                                                         />
 
-                                                        <div ref={step3NextBtnRef} className="pt-6 border-t border-[#f4eee6] flex justify-between items-center gap-3">
+                                                        <div ref={step3NextBtnRef} className={`pt-6 border-t border-[#f1eadc] justify-between items-center gap-3 ${rescheduleSession ? 'hidden' : 'flex'}`}>
                                                             <button
                                                                 type="button"
                                                                 onClick={() => setWizardStep(2)}
-                                                                className="px-5 py-2.5 bg-[#f4eee6] hover:bg-[#ede7de] text-[#4c5b55] font-bold text-xs sm:text-sm rounded-lg transition cursor-pointer border border-[#ede7de]"
+                                                                className="px-5 py-2.5 bg-[#f1eadc] hover:bg-[#e6dfd0] text-[#3c4747] font-bold text-xs sm:text-sm rounded-lg transition cursor-pointer border border-[#e6dfd0]"
                                                             >
                                                                 Back
                                                             </button>
-                                                            <button type="button" onClick={() => setWizardStep(4)} disabled={!selectedTime} className="w-full sm:w-auto px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 cursor-pointer border border-[#1c2826] transition-all btn-booking-primary disabled:opacity-50">Continue to Summary <ArrowRight className="w-4 h-4" /></button>
+                                                            <button type="button" onClick={() => setWizardStep(4)} disabled={!selectedTime} className="w-full sm:w-auto px-6 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-bold text-xs sm:text-sm rounded-lg shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)] flex items-center justify-center gap-2 cursor-pointer border border-[#0e7490] transition-all btn-booking-primary disabled:opacity-50">Continue to Summary <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 4 — COMPACT BOOKING SUMMARY & PROCEED TO PAYMENT */}
                                                 {wizardStep === 4 && (
-                                                    <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-lg shadow-xs border border-[#ede7de] space-y-4 text-left animate-step-in">
-                                                        <div className="flex items-center justify-between border-b border-[#f4eee6] pb-3">
+                                                    <div ref={stepSummaryRef} className="p-5 sm:p-6 bg-white rounded-lg shadow-xs border border-[#e6dfd0] space-y-4 text-left animate-step-in">
+                                                        <div className="flex items-center justify-between border-b border-[#f1eadc] pb-3">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="w-2 h-2 rounded-full bg-[#b85438] animate-pulse" />
-                                                                <h4 className="font-extrabold text-sm uppercase tracking-wider text-[#1c2826]">
+                                                                <span className="w-2 h-2 rounded-full bg-[#0e7490] animate-pulse" />
+                                                                <h4 className="font-extrabold text-sm uppercase tracking-wider text-[#0e1111]">
                                                                     Booking Summary Review
                                                                 </h4>
                                                             </div>
-                                                            <span className="text-xl font-extrabold text-[#1c2826]">
+                                                            <span className="text-xl font-extrabold text-[#0e1111]">
                                                                 {netTotal === null ? 'Price not configured' : `₹${netTotal}`}
                                                             </span>
                                                         </div>
 
                                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs py-1">
                                                             <div className="space-y-1">
-                                                                <span className="text-[10px] uppercase font-bold text-[#8a938f] block">Psychologist</span>
+                                                                <span className="text-[10px] uppercase font-bold text-[#7c8785] block">Psychologist</span>
                                                                 <div className="flex items-center justify-between">
-                                                                    <span className="font-bold text-[#1c2826] text-sm truncate">{selectedAdvisor?.name}</span>
+                                                                    <span className="font-bold text-[#0e1111] text-sm truncate">{selectedAdvisor?.name}</span>
                                                                     {!isAdvisorLocked && (
                                                                         <button
                                                                             type="button"
-                                                                            onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); }}
-                                                                            className="text-[11px] text-[#a0462e] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
+                                                                            onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); setHasAutoAdvanced(false); setWizardStep(1); }}
+                                                                            className="text-[11px] text-[#0b5c73] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
                                                                         >
                                                                             Change
                                                                         </button>
@@ -1507,23 +1532,23 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </div>
 
                                                             <div className="space-y-1">
-                                                                <span className="text-[10px] uppercase font-bold text-[#8a938f] block">Service & Mode</span>
-                                                                <span className="font-bold text-[#1c2826] text-sm block">
+                                                                <span className="text-[10px] uppercase font-bold text-[#7c8785] block">Service & Mode</span>
+                                                                <span className="font-bold text-[#0e1111] text-sm block">
                                                                     {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'} • {bookingMode === 'ONLINE' ? 'Online Video Call' : bookingMode === 'DOOR_STEP' ? 'Doorstep Visit' : 'In-Center'}
                                                                 </span>
                                                             </div>
 
                                                             <div className="space-y-1">
-                                                                <span className="text-[10px] uppercase font-bold text-[#8a938f] block">Session Plan</span>
+                                                                <span className="text-[10px] uppercase font-bold text-[#7c8785] block">Session Plan</span>
                                                                 <div className="flex items-center justify-between">
-                                                                    <span className="font-bold text-[#1c2826] text-sm">
+                                                                    <span className="font-bold text-[#0e1111] text-sm">
                                                                         {bookingDuration === 30 ? 'Introductory Session (30 Mins)' : 'Standard Session (1 Hour)'}
                                                                     </span>
                                                                     {isIntroductoryEligible && (
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => setBookingDuration(bookingDuration === 30 ? 60 : 30)}
-                                                                            className="text-[11px] text-[#a0462e] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
+                                                                            className="text-[11px] text-[#0b5c73] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
                                                                         >
                                                                             Switch
                                                                         </button>
@@ -1532,15 +1557,15 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </div>
 
                                                             <div className="space-y-1">
-                                                                <span className="text-[10px] uppercase font-bold text-[#8a938f] block">Date & Time</span>
+                                                                <span className="text-[10px] uppercase font-bold text-[#7c8785] block">Date & Time</span>
                                                                 <div className="flex items-center justify-between">
-                                                                    <span className="font-bold text-[#1c2826] text-sm">
+                                                                    <span className="font-bold text-[#0e1111] text-sm">
                                                                         {formatDateString(selectedDate)} at {selectedTime}
                                                                     </span>
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => setWizardStep(3)}
-                                                                        className="text-[11px] text-[#a0462e] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
+                                                                        className="text-[11px] text-[#0b5c73] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
                                                                     >
                                                                         Change
                                                                     </button>
@@ -1549,17 +1574,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
 
                                                         {!rescheduleSession && (
-                                                            <div className="pt-3 border-t border-[#f4eee6] flex flex-col sm:flex-row items-center justify-between gap-4">
+                                                            <div className="pt-3 border-t border-[#f1eadc] flex flex-col sm:flex-row items-center justify-between gap-4">
                                                                 <div className="text-left w-full sm:w-auto">
-                                                                    <span className="text-[11px] text-[#8a938f] block font-medium">Total Amount Payable</span>
-                                                                    <span className="text-2xl font-extrabold text-[#1c2826]">{netTotal === null ? 'Price not configured' : `₹${netTotal}`}</span>
+                                                                    <span className="text-[11px] text-[#7c8785] block font-medium">Total Amount Payable</span>
+                                                                    <span className="text-2xl font-extrabold text-[#0e1111]">{netTotal === null ? 'Price not configured' : `₹${netTotal}`}</span>
                                                                 </div>
 
                                                                 <div className="flex gap-2.5 w-full sm:w-auto mt-4 sm:mt-0">
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => setWizardStep(3)}
-                                                                        className="px-5 py-2.5 bg-[#f4eee6] hover:bg-[#ede7de] text-[#4c5b55] font-bold text-xs sm:text-sm rounded-lg transition flex items-center justify-center cursor-pointer border border-[#ede7de]"
+                                                                        className="px-5 py-2.5 bg-[#f1eadc] hover:bg-[#e6dfd0] text-[#3c4747] font-bold text-xs sm:text-sm rounded-lg transition flex items-center justify-center cursor-pointer border border-[#e6dfd0]"
                                                                     >
                                                                         Back
                                                                     </button>
@@ -1567,10 +1592,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         type="button"
                                                                         disabled={!selectedAdvisor || !selectedDate || !selectedTime || baseFee === null}
                                                                         onClick={() => handleStepChange('payment')}
-                                                                        className="w-full sm:w-auto flex-1 px-6 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-sm flex items-center justify-center gap-2 cursor-pointer border border-[#1c2826] btn-booking-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                        className="w-full sm:w-auto flex-1 px-6 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-[0_12px_26px_-14px_rgba(14,116,144,0.75)] flex items-center justify-center gap-2 cursor-pointer border border-[#0e7490] btn-booking-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                                                     >
                                                                         <span>{netTotal === null ? 'Price not configured' : `Proceed to Payment (₹${netTotal})`}</span>
-                                                                        <ArrowRight className="w-4 h-4 stroke-[3] text-[#d69f86]" />
+                                                                        <ArrowRight className="w-4 h-4 stroke-[3] text-white" />
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -1578,20 +1603,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                     </div>
                                                 )}
 
-                                                {rescheduleSession && (
-                                                    <div className="flex items-center justify-between pt-4">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setWizardStep(3)}
-                                                            className="px-6 py-3 bg-[#f4eee6] hover:bg-[#ede7de] text-[#4c5b55] font-bold rounded-xl transition cursor-pointer border-none"
-                                                        >
-                                                            Back
-                                                        </button>
+                                                {rescheduleSession && wizardStep >= 3 && (
+                                                    <div className="flex items-center justify-end pt-4">
                                                         <button
                                                             type="button"
                                                             disabled={!selectedDate || !selectedTime || isSubmitting}
                                                             onClick={handleRescheduleConfirm}
-                                                            className="px-6 py-3 bg-[#1c2826] text-white font-bold text-sm rounded-xl transition hover:bg-[#b85438] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-none w-full sm:w-auto"
+                                                            className="px-6 py-3 bg-[#0e7490] text-white font-bold text-sm rounded-lg transition hover:bg-[#0b5c73] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center border-none shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)] w-full sm:w-auto"
                                                         >
                                                             {isSubmitting ? 'Rescheduling...' : 'Confirm Reschedule'}
                                                         </button>
@@ -1603,36 +1621,36 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         {/* STEP 2: Account & Payment */}
                                         {bookingStep === 'payment' && (
                                             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                                                <div className="border-b border-[#ede7de] pb-3 flex items-center justify-between">
+                                                <div className="border-b border-[#e6dfd0] pb-3 flex items-center justify-between">
                                                     <div>
-                                                        <h3 className="text-lg font-medium text-[#1c2826] flex items-center gap-2">
-                                                            <span className="w-6 h-6 rounded-md bg-[#1c2826] text-white text-xs flex items-center justify-center shrink-0 font-medium">2</span>
+                                                        <h3 className="text-lg font-medium text-[#0e1111] flex items-center gap-2">
+                                                            <span className="w-6 h-6 rounded-md bg-[#0e7490] text-white text-xs flex items-center justify-center shrink-0 font-medium shadow-xs">5</span>
                                                             Payment & Confirm
                                                         </h3>
-                                                        <p className="text-sm font-normal text-[#5c6b66] mt-1">
+                                                        <p className="text-sm font-normal text-[#55605f] mt-1">
                                                             {user ? 'Review your details and complete payment.' : 'Please enter your details to receive session link & confirmation.'}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 <div className="card-app-soft p-5 sm:p-6 space-y-5 text-left">
-                                                    <div className="bg-[#1c2826] text-white rounded-md p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+                                                    <div className="bg-[#0e1111] text-white rounded-md p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
                                                         <div>
-                                                            <span className="text-[10px] uppercase font-bold tracking-widest text-[#b85438] block mb-1">
+                                                            <span className="text-[10px] uppercase font-bold tracking-widest text-[#7fd3e3] block mb-1">
                                                                 {bookingDuration === 30 ? '✨ Introductory Session (30 Mins)' : 'Standard Session (1 Hour)'}
                                                             </span>
-                                                            <span className="text-sm font-semibold text-[#ede7de]">
-                                                                {selectedAdvisor?.name} • {selectedDate} at {selectedTime}
+                                                            <span className="text-sm font-semibold text-[#e6dfd0]">
+                                                                {selectedAdvisor?.name} • {formatDateString(selectedDate)} at {selectedTime}
                                                             </span>
                                                         </div>
                                                         <div className="sm:text-right">
                                                             <span className="text-2xl font-serif font-bold text-white block">{netTotal === null ? 'Price not configured' : `₹${netTotal}`}</span>
-                                                            <span className="text-[11px] text-[#ede7de]/70 block font-normal">Total Payable</span>
+                                                            <span className="text-[11px] text-[#e6dfd0]/70 block font-normal">Total Payable</span>
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between border-b border-[#ede7de] pb-3">
-                                                        <h4 className="text-xs font-bold text-[#1c2826] uppercase tracking-wider">
+                                                    <div className="flex items-center justify-between border-b border-[#e6dfd0] pb-3">
+                                                        <h4 className="text-xs font-bold text-[#0e1111] uppercase tracking-wider">
                                                             Client & Booking Contact Details
                                                         </h4>
                                                         {user && (
@@ -1644,7 +1662,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                         <div className="space-y-1.5">
-                                                            <label className="text-xs font-semibold text-[#1c2826] block">
+                                                            <label className="text-xs font-semibold text-[#0e1111] block">
                                                                 Full Name <span className="text-rose-500">*</span>
                                                             </label>
                                                             <input
@@ -1656,13 +1674,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     if (errors.name) setErrors(prev => ({ ...prev, name: null }));
                                                                 }}
                                                                 placeholder="e.g. Rahul Sharma"
-                                                                className={`w-full px-4 py-2.5 border rounded-md text-sm font-medium text-[#1c2826] outline-none transition ${errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-[#ede7de] focus:border-[#b85438] focus:ring-2 focus:ring-[#b85438]/10 bg-white'}`}
+                                                                className={`w-full px-4 py-2.5 border rounded-md text-sm font-medium text-[#0e1111] outline-none transition ${errors.name ? 'border-rose-400 bg-rose-50/30' : 'border-[#e6dfd0] focus:border-[#0e7490] focus:ring-2 focus:ring-[#0e7490]/10 bg-white'}`}
                                                             />
                                                             {errors.name && <p className="text-[11px] text-rose-500 font-medium">{errors.name}</p>}
                                                         </div>
 
                                                         <div className="space-y-1.5">
-                                                            <label className="text-xs font-semibold text-[#1c2826] block">
+                                                            <label className="text-xs font-semibold text-[#0e1111] block">
                                                                 Email Address <span className="text-rose-500">*</span>
                                                             </label>
                                                             <input
@@ -1674,7 +1692,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                     if (errors.email) setErrors(prev => ({ ...prev, email: null }));
                                                                 }}
                                                                 placeholder="you@example.com"
-                                                                className={`w-full px-4 py-2.5 border rounded-md text-sm font-medium text-[#1c2826] outline-none transition ${errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-[#ede7de] focus:border-[#b85438] focus:ring-2 focus:ring-[#b85438]/10 bg-white'}`}
+                                                                className={`w-full px-4 py-2.5 border rounded-md text-sm font-medium text-[#0e1111] outline-none transition ${errors.email ? 'border-rose-400 bg-rose-50/30' : 'border-[#e6dfd0] focus:border-[#0e7490] focus:ring-2 focus:ring-[#0e7490]/10 bg-white'}`}
                                                             />
                                                             {errors.email && <p className="text-[11px] text-rose-500 font-medium">{errors.email}</p>}
                                                         </div>
@@ -1682,66 +1700,66 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 </div>
 
                                                 <form onSubmit={handlePaymentSubmit} className="space-y-6">
-                                                    <div className="p-4 bg-[#faf6ee] border border-[#ede7de] rounded-xl space-y-2">
+                                                    <div className="p-4 bg-[#f6f1e6] border border-[#e6dfd0] rounded-xl space-y-2">
                                                         <div className="flex items-center gap-3 text-left">
-                                                            <div className="w-10 h-10 bg-white border border-[#ede7de] rounded-xl flex items-center justify-center shrink-0 shadow-xs">
-                                                                <Lock className="w-5 h-5 text-[#1c2826]" />
+                                                            <div className="w-10 h-10 bg-white border border-[#e6dfd0] rounded-xl flex items-center justify-center shrink-0 shadow-xs">
+                                                                <Lock className="w-5 h-5 text-[#0e1111]" />
                                                             </div>
                                                             <div>
-                                                                <h5 className="text-sm font-semibold text-[#1c2826]">Secure Payment Gateway</h5>
-                                                                <p className="text-xs text-[#8a938f] font-medium">
+                                                                <h5 className="text-sm font-semibold text-[#0e1111]">Secure Payment Gateway</h5>
+                                                                <p className="text-xs text-[#7c8785] font-medium">
                                                                     100% encrypted Razorpay gateway supporting UPI, Google Pay, PhonePe, Cards, Netbanking, and Wallets.
                                                                 </p>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="p-4 sm:p-5 bg-gradient-to-br from-[#faf6ee] via-white to-[#faf6ee]/80 border border-[#ede7de]/90 rounded-xl text-left space-y-4 shadow-xs">
-                                                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#ede7de]/80">
+                                                    <div className="p-4 sm:p-5 bg-gradient-to-br from-[#f6f1e6] via-white to-[#f6f1e6]/80 border border-[#e6dfd0]/90 rounded-xl text-left space-y-4 shadow-xs">
+                                                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#e6dfd0]/80">
                                                             <div className="flex items-center gap-2.5">
-                                                                <div className="w-7 h-7 rounded-lg bg-[#b85438]/10 border border-[#b85438]/20 flex items-center justify-center text-[#a0462e]">
+                                                                <div className="w-7 h-7 rounded-lg bg-[#0e7490]/10 border border-[#0e7490]/20 flex items-center justify-center text-[#0b5c73]">
                                                                     <ShieldCheck className="w-4 h-4" />
                                                                 </div>
                                                                 <div>
-                                                                    <h5 className="text-sm font-bold text-[#1c2826] leading-tight">Informed Client Consent & Agreement</h5>
-                                                                    <p className="text-[11px] text-[#5c6b66] font-medium mt-0.5">Please review the professional care disclosures before confirming</p>
+                                                                    <h5 className="text-sm font-bold text-[#0e1111] leading-tight">Informed Client Consent & Agreement</h5>
+                                                                    <p className="text-[11px] text-[#55605f] font-medium mt-0.5">Please review the professional care disclosures before confirming</p>
                                                                 </div>
                                                             </div>
-                                                            <span className="text-[10px] font-bold uppercase tracking-wider bg-[#faf5f0] text-[#9e432c] border border-[#eadfd0]/60 px-2 py-0.5 rounded-md">
+                                                            <span className="text-[10px] font-bold uppercase tracking-wider bg-[#f7f2e7] text-[#0c6b83] border border-[#bfe3ec]/60 px-2 py-0.5 rounded-md">
                                                                 Required
                                                             </span>
                                                         </div>
 
                                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#ede7de]/70">
-                                                                <CheckCircle2 className="w-3.5 h-3.5 text-[#b85438] shrink-0 mt-0.5" />
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#e6dfd0]/70">
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-[#0e7490] shrink-0 mt-0.5" />
                                                                 <div className="leading-snug">
-                                                                    <span className="font-bold text-[#1c2826] block text-[11px]">Strict Confidentiality</span>
-                                                                    <span className="text-[10.5px] text-[#5c6b66]">Session notes & discussions protected under clinical ethics.</span>
+                                                                    <span className="font-bold text-[#0e1111] block text-[11px]">Strict Confidentiality</span>
+                                                                    <span className="text-[10.5px] text-[#55605f]">Session notes & discussions protected under clinical ethics.</span>
                                                                 </div>
                                                             </div>
 
-                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#ede7de]/70">
-                                                                <CheckCircle2 className="w-3.5 h-3.5 text-[#b85438] shrink-0 mt-0.5" />
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#e6dfd0]/70">
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-[#0e7490] shrink-0 mt-0.5" />
                                                                 <div className="leading-snug">
-                                                                    <span className="font-bold text-[#1c2826] block text-[11px]">Voluntary Care</span>
-                                                                    <span className="text-[10.5px] text-[#5c6b66]">Collaborative process with freedom to ask questions anytime.</span>
+                                                                    <span className="font-bold text-[#0e1111] block text-[11px]">Voluntary Care</span>
+                                                                    <span className="text-[10.5px] text-[#55605f]">Collaborative process with freedom to ask questions anytime.</span>
                                                                 </div>
                                                             </div>
 
-                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#ede7de]/70">
-                                                                <CheckCircle2 className="w-3.5 h-3.5 text-[#b85438] shrink-0 mt-0.5" />
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#e6dfd0]/70">
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-[#0e7490] shrink-0 mt-0.5" />
                                                                 <div className="leading-snug">
-                                                                    <span className="font-bold text-[#1c2826] block text-[11px]">24-Hour Full Refund</span>
-                                                                    <span className="text-[10.5px] text-[#5c6b66]">100% refund for cancellations made 24+ hours in advance.</span>
+                                                                    <span className="font-bold text-[#0e1111] block text-[11px]">24-Hour Full Refund</span>
+                                                                    <span className="text-[10.5px] text-[#55605f]">100% refund for cancellations made 24+ hours in advance.</span>
                                                                 </div>
                                                             </div>
 
-                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#ede7de]/70">
+                                                            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white border border-[#e6dfd0]/70">
                                                                 <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
                                                                 <div className="leading-snug">
-                                                                    <span className="font-bold text-[#1c2826] block text-[11px]">Crisis Disclaimer</span>
-                                                                    <span className="text-[10.5px] text-[#5c6b66]">Scheduled consultations; not a 24/7 suicide crisis line.</span>
+                                                                    <span className="font-bold text-[#0e1111] block text-[11px]">Crisis Disclaimer</span>
+                                                                    <span className="text-[10.5px] text-[#55605f]">Scheduled consultations; not a 24/7 suicide crisis line.</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1756,27 +1774,27 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         setShowConsentModal(true);
                                                                     }
                                                                 }}
-                                                                className="text-xs font-bold text-[#a0462e] hover:text-[#9e432c] underline flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer transition-colors"
+                                                                className="text-xs font-bold text-[#0b5c73] hover:text-[#0c6b83] underline flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer transition-colors"
                                                             >
                                                                 <FileText className="w-3.5 h-3.5" />
                                                                 <span>Read Full Informed Consent Document</span>
                                                             </button>
                                                         </div>
 
-                                                        <div className="flex items-start gap-3 pt-3 border-t border-[#ede7de] bg-[#fbf9f5] p-3.5 rounded-md">
+                                                        <div className="flex items-start gap-3 pt-3 border-t border-[#e6dfd0] bg-[#fbf8f1] p-3.5 rounded-md">
                                                             <input
                                                                 type="checkbox"
                                                                 id="booking-consent-checkbox"
                                                                 checked={termsAgreed}
                                                                 onChange={(e) => setTermsAgreed(e.target.checked)}
-                                                                className="w-4 h-4 mt-0.5 rounded border-[#ede7de] text-[#b85438] focus:ring-[#b85438] accent-[#b85438] cursor-pointer shrink-0"
+                                                                className="w-4 h-4 mt-0.5 rounded border-[#e6dfd0] text-[#0e7490] focus:ring-[#0e7490] accent-[#0e7490] cursor-pointer shrink-0"
                                                             />
-                                                            <label htmlFor="booking-consent-checkbox" className="text-xs text-[#5c6b66] font-normal leading-relaxed cursor-pointer select-none">
+                                                            <label htmlFor="booking-consent-checkbox" className="text-xs text-[#55605f] font-normal leading-relaxed cursor-pointer select-none">
                                                                 I confirm that I have read, understood, and voluntarily agree to the{' '}
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => onOpenDocs ? onOpenDocs('consent') : setShowConsentModal(true)}
-                                                                    className="font-semibold text-[#b85438] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                    className="font-semibold text-[#0e7490] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
                                                                 >
                                                                     Informed Consent Agreement
                                                                 </button>
@@ -1784,7 +1802,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => onOpenDocs?.('terms')}
-                                                                    className="font-semibold text-[#b85438] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                    className="font-semibold text-[#0e7490] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
                                                                 >
                                                                     Platform Terms
                                                                 </button>
@@ -1792,7 +1810,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => onOpenDocs?.('refund')}
-                                                                    className="font-semibold text-[#b85438] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
+                                                                    className="font-semibold text-[#0e7490] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs inline"
                                                                 >
                                                                     Return & Refund Policy
                                                                 </button>
@@ -1801,11 +1819,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#ede7de] mt-6">
+                                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#e6dfd0] mt-6">
                                                         <button
                                                             type="button"
                                                             onClick={() => handleStepChange('config')}
-                                                            className="inline-flex items-center justify-center gap-1.5 text-xs text-[#5c6b66] hover:text-[#1c2826] font-semibold py-2.5 px-3 transition-colors cursor-pointer bg-transparent border-none order-2 sm:order-1"
+                                                            className="inline-flex items-center justify-center gap-1.5 text-xs text-[#55605f] hover:text-[#0e1111] font-semibold py-2.5 px-3 transition-colors cursor-pointer bg-transparent border-none order-2 sm:order-1"
                                                         >
                                                             <ArrowLeft className="w-3.5 h-3.5" />
                                                             <span>Back to Schedule</span>
@@ -1815,9 +1833,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             type="submit"
                                                             disabled={isProcessingPayment || !termsAgreed}
                                                             title={!termsAgreed ? "Please check the agreement box to proceed" : ""}
-                                                            className={`px-8 py-4 min-h-[48px] font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 border-none w-full sm:w-auto order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b85438] focus-visible:ring-offset-2 ${!termsAgreed || isProcessingPayment
-                                                                ? 'bg-[#ede7de] text-[#5c6b66]/60 cursor-not-allowed opacity-60 shadow-none'
-                                                                : 'bg-[#1c2826] hover:bg-[#b85438] text-white cursor-pointer active:scale-[0.98] shadow-lg'
+                                                            className={`px-8 py-4 min-h-[48px] font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 border-none w-full sm:w-auto order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2 ${!termsAgreed || isProcessingPayment
+                                                                ? 'bg-[#e6dfd0] text-[#55605f]/60 cursor-not-allowed opacity-60 shadow-none'
+                                                                : 'bg-[#0e7490] hover:bg-[#0b5c73] text-white cursor-pointer active:scale-[0.98] shadow-[0_14px_30px_-14px_rgba(14,116,144,0.75)]'
                                                                 }`}
                                                         >
                                                             {isProcessingPayment ? (
@@ -1843,90 +1861,90 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         <button
                                             type="button"
                                             onClick={() => setShowSummary(!showSummary)}
-                                            className="flex lg:hidden items-center justify-between w-full bg-[#faf6ee] border border-[#ede7de] p-3 rounded-xl text-left shadow-none mb-3 hover:bg-[#f4eee6] transition cursor-pointer"
+                                            className="flex lg:hidden items-center justify-between w-full bg-[#f6f1e6] border border-[#e6dfd0] p-3 rounded-xl text-left shadow-none mb-3 hover:bg-[#f1eadc] transition cursor-pointer"
                                         >
-                                            <span className="text-sm font-semibold text-[#1c2826] flex items-center gap-2">
+                                            <span className="text-sm font-semibold text-[#0e1111] flex items-center gap-2">
                                                 <span>Booking Summary</span>
                                                 {selectedAdvisor && (
-                                                    <span className="text-xs bg-brand text-white px-2 py-0.5 rounded-xl font-semibold">
+                                                    <span className="text-xs bg-[#0e7490] text-white px-2 py-0.5 rounded-xl font-semibold">
                                                         {bookingService === 'counselling' ? 'Counselling' : 'Career'}
                                                     </span>
                                                 )}
                                             </span>
                                             <svg
-                                                className={`w-4 h-4 text-[#a8a094] transition-transform duration-200 ${showSummary ? 'rotate-180' : ''}`}
+                                                className={`w-4 h-4 text-[#9aa29f] transition-transform duration-200 ${showSummary ? 'rotate-180' : ''}`}
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                                             >
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                                             </svg>
                                         </button>
 
-                                        <div className={`space-y-5 ${showSummary ? 'block' : 'hidden'} lg:block bg-white/80 backdrop-blur-md border border-[#ede7de] shadow-xs rounded-xl p-5 sm:p-6 mb-6`}>
+                                        <div className={`space-y-5 ${showSummary ? 'block' : 'hidden'} lg:block bg-white/80 backdrop-blur-md border border-[#e6dfd0] shadow-xs rounded-xl p-5 sm:p-6 mb-6`}>
                                             <div>
-                                                <h3 className="text-base font-semibold text-[#1c2826] border-b border-[#ede7de] pb-3 hidden lg:block">
+                                                <h3 className="text-base font-semibold text-[#0e1111] border-b border-[#e6dfd0] pb-3 hidden lg:block">
                                                     Booking Summary
                                                 </h3>
                                             </div>
 
                                             <div className="space-y-5 text-sm font-semibold">
                                                 <div>
-                                                    <span className="text-xs text-[#a8a094] block font-semibold mb-0.5">Service & Mode</span>
-                                                    <span className="font-semibold text-[#1c2826] block text-left">
+                                                    <span className="text-xs text-[#9aa29f] block font-semibold mb-0.5">Service & Mode</span>
+                                                    <span className="font-semibold text-[#0e1111] block text-left">
                                                         {bookingService === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring'}
                                                     </span>
-                                                    <span className="text-xs text-[#8a938f] font-semibold block mt-0.5 bg-white border border-[#ede7de] rounded-xl px-2 py-0.5 w-fit">
+                                                    <span className="text-xs text-[#7c8785] font-semibold block mt-0.5 bg-white border border-[#e6dfd0] rounded-xl px-2 py-0.5 w-fit">
                                                         {bookingMode === 'DOOR_STEP' ? 'Door Step' : bookingMode.charAt(0).toUpperCase() + bookingMode.slice(1).toLowerCase()}
                                                     </span>
                                                 </div>
 
                                                 <div>
-                                                    <span className="text-xs text-[#a8a094] block font-semibold mb-0.5">Session Plan</span>
+                                                    <span className="text-xs text-[#9aa29f] block font-semibold mb-0.5">Session Plan</span>
                                                     <div className="flex items-center gap-1.5">
-                                                        <span className="font-semibold text-[#1c2826] block text-left">
+                                                        <span className="font-semibold text-[#0e1111] block text-left">
                                                             {bookingDuration === 30 ? 'Introductory Session' : 'Standard Session'}
                                                         </span>
-                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${bookingDuration === 30 ? 'bg-[#f6efe8] text-[#a0462e] border border-[#e3c4b7]' : 'bg-[#f4eee6] text-[#4c5b55] border border-[#ede7de]'}`}>
+                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${bookingDuration === 30 ? 'bg-[#edf5f7] text-[#0b5c73] border border-[#c7e9f0]' : 'bg-[#f1eadc] text-[#3c4747] border border-[#e6dfd0]'}`}>
                                                             {bookingDuration === 30 ? '30 Mins' : '1 Hour'}
                                                         </span>
                                                     </div>
                                                     {bookingDuration === 30 && (
-                                                        <span className="text-[11px] text-[#a0462e] font-semibold mt-0.5 block">
+                                                        <span className="text-[11px] text-[#0b5c73] font-semibold mt-0.5 block">
                                                             {baseFee === null ? 'Price not configured' : `Session fee • ₹${baseFee}`}
                                                         </span>
                                                     )}
                                                 </div>
 
                                                 <div>
-                                                    <span className="text-xs text-[#a8a094] block font-semibold mb-0.5">Date & Time</span>
+                                                    <span className="text-xs text-[#9aa29f] block font-semibold mb-0.5">Date & Time</span>
                                                     {selectedDate && selectedTime ? (
-                                                        <div className="space-y-1 bg-white border border-[#ede7de] p-2 rounded-xl text-left">
-                                                            <span className="font-semibold text-[#1c2826] block">
+                                                        <div className="space-y-1 bg-white border border-[#e6dfd0] p-2 rounded-xl text-left">
+                                                            <span className="font-semibold text-[#0e1111] block">
                                                                 {formatDateString(selectedDate)}
                                                             </span>
-                                                            <span className="text-xs text-[#8a938f] block font-semibold">
+                                                            <span className="text-xs text-[#7c8785] block font-semibold">
                                                                 {selectedTime}
                                                             </span>
                                                         </div>
                                                     ) : (
-                                                        <span className="text-[#a8a094] italic font-semibold text-xs block text-left">Not configured yet</span>
+                                                        <span className="text-[#9aa29f] italic font-semibold text-xs block text-left">Not configured yet</span>
                                                     )}
                                                 </div>
 
                                                 <div>
-                                                    <span className="text-xs text-[#a8a094] block font-semibold mb-0.5">Psychologist</span>
+                                                    <span className="text-xs text-[#9aa29f] block font-semibold mb-0.5">Psychologist</span>
                                                     {selectedAdvisor ? (
-                                                        <div className="bg-white border border-[#ede7de] p-2.5 rounded-xl text-left">
-                                                            <span className="font-semibold text-[#1c2826] block text-xs">{selectedAdvisor.name}</span>
-                                                            <span className="text-xs text-[#8a938f] block font-semibold">{selectedAdvisor.role}</span>
+                                                        <div className="bg-white border border-[#e6dfd0] p-2.5 rounded-xl text-left">
+                                                            <span className="font-semibold text-[#0e1111] block text-xs">{selectedAdvisor.name}</span>
+                                                            <span className="text-xs text-[#7c8785] block font-semibold">{selectedAdvisor.role}</span>
                                                         </div>
                                                     ) : (
-                                                        <span className="text-[#a8a094] italic font-semibold text-xs block text-left">No psychologist selected</span>
+                                                        <span className="text-[#9aa29f] italic font-semibold text-xs block text-left">No psychologist selected</span>
                                                     )}
                                                 </div>
 
-                                                <div className="pt-3 border-t border-[#ede7de] space-y-2 text-left">
-                                                    <span className="text-xs text-[#8a938f] block font-semibold">Have a Promo Code?</span>
-                                                    <div className="flex items-stretch rounded-xl border border-[#ede7de] bg-white overflow-hidden focus-within:border-[#1c2826] focus-within:ring-1 focus-within:ring-[#1c2826] transition-all">
+                                                <div className="pt-3 border-t border-[#e6dfd0] space-y-2 text-left">
+                                                    <span className="text-xs text-[#7c8785] block font-semibold">Have a Promo Code?</span>
+                                                    <div className="flex items-stretch rounded-xl border border-[#e6dfd0] bg-white overflow-hidden focus-within:border-[#0e1111] focus-within:ring-1 focus-within:ring-[#0e1111] transition-all">
                                                         <input
                                                             type="text"
                                                             placeholder="e.g. BEHOLD100"
@@ -1939,7 +1957,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             <button
                                                                 type="button"
                                                                 onClick={handleRemoveCoupon}
-                                                                className="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition cursor-pointer flex-shrink-0 border-l border-[#ede7de]"
+                                                                className="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition cursor-pointer flex-shrink-0 border-l border-[#e6dfd0]"
                                                             >
                                                                 Remove
                                                             </button>
@@ -1947,50 +1965,50 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             <button
                                                                 type="button"
                                                                 onClick={handleApplyCoupon}
-                                                                className="px-5 py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white text-xs font-bold transition cursor-pointer border-none flex-shrink-0"
+                                                                className="px-5 py-2.5 bg-[#0e1111] hover:bg-[#0e7490] text-white text-xs font-bold transition cursor-pointer border-none flex-shrink-0"
                                                             >
                                                                 Apply
                                                             </button>
                                                         )}
                                                     </div>
                                                     {couponMsg.text && (
-                                                        <p className={`text-sm font-semibold ${couponMsg.type === 'success' ? 'text-[#1c2826]' : 'text-rose-500'}`}>
+                                                        <p className={`text-sm font-semibold ${couponMsg.type === 'success' ? 'text-[#0e1111]' : 'text-rose-500'}`}>
                                                             {couponMsg.text}
                                                         </p>
                                                     )}
                                                 </div>
 
-                                                <div className="pt-3 border-t border-[#ede7de] space-y-2">
-                                                    <span className="text-xs text-[#a8a094] block font-semibold text-left">Pricing Breakdown</span>
+                                                <div className="pt-3 border-t border-[#e6dfd0] space-y-2">
+                                                    <span className="text-xs text-[#9aa29f] block font-semibold text-left">Pricing Breakdown</span>
 
-                                                    <div className="space-y-1.5 text-xs font-semibold text-[#8a938f]">
+                                                    <div className="space-y-1.5 text-xs font-semibold text-[#7c8785]">
                                                         <div className="flex justify-between">
                                                             <span>Session Fee ({bookingDuration === 30 ? 'Introductory' : 'Standard'})</span>
-                                                            <span className="text-[#1c2826] font-semibold">{baseFee === null ? 'Price not configured' : `₹${baseFee}`}</span>
+                                                            <span className="text-[#0e1111] font-semibold">{baseFee === null ? 'Price not configured' : `₹${baseFee}`}</span>
                                                         </div>
 
                                                         {gstEnabled && (
                                                             <div className="flex justify-between">
                                                                 <span>GST ({gstPercent}%)</span>
-                                                                <span className="text-[#1c2826] font-semibold">₹{gstAmount}</span>
+                                                                <span className="text-[#0e1111] font-semibold">₹{gstAmount}</span>
                                                             </div>
                                                         )}
 
                                                         {appliedDiscount > 0 && (
-                                                            <div className="flex justify-between text-[#1c2826] font-semibold">
+                                                            <div className="flex justify-between text-[#0e1111] font-semibold">
                                                                 <span>Promo Discount</span>
                                                                 <span>-₹{appliedDiscount}</span>
                                                             </div>
                                                         )}
 
-                                                        <div className="flex justify-between text-sm font-semibold text-[#1c2826] border-t border-[#ede7de] pt-2 mt-1">
+                                                        <div className="flex justify-between text-sm font-semibold text-[#0e1111] border-t border-[#e6dfd0] pt-2 mt-1">
                                                             <span>Net Total</span>
-                                                            <span className="text-[#1c2826]">{netTotal === null ? 'Price not configured' : `₹${netTotal}`}</span>
+                                                            <span className="text-[#0e1111]">{netTotal === null ? 'Price not configured' : `₹${netTotal}`}</span>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="pt-4 border-t border-[#ede7de] text-sm font-semibold text-[#a8a094] text-center w-full">
+                                                <div className="pt-4 border-t border-[#e6dfd0] text-sm font-semibold text-[#9aa29f] text-center w-full">
                                                     <span>SSL Secure Checkout</span>
                                                 </div>
                                             </div>
@@ -2016,22 +2034,22 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                 {showNoCounsellorsModal && typeof document !== 'undefined' && createPortal(
                     <div className="bh-booking-alert-overlay fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-                        <div className="bh-booking-alert bg-white border border-[#ede7de] rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200" role="dialog" aria-modal="true" aria-labelledby="booking-clear-title">
+                        <div className="bh-booking-alert bg-white border border-[#e6dfd0] rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200" role="dialog" aria-modal="true" aria-labelledby="booking-clear-title">
                             <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mx-auto text-amber-600 shadow-sm text-xl font-semibold">
                                 !
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-base font-semibold text-[#1c2826] tracking-wide">
+                                <h3 className="text-base font-semibold text-[#0e1111] tracking-wide">
                                     No Counsellors Found
                                 </h3>
-                                <p className="text-xs text-[#8a938f] leading-relaxed font-sans font-light">
+                                <p className="text-xs text-[#7c8785] leading-relaxed font-sans font-light">
                                     There are no counsellors available matching your selected service type or mode. Please adjust your session preferences and try again.
                                 </p>
                             </div>
                             <button
                                 type="button"
                                 onClick={() => setShowNoCounsellorsModal(false)}
-                                className="w-full py-2.5 bg-[#1c2826] hover:bg-[#b85438] text-white font-semibold text-xs rounded-xl cursor-pointer transition border-none shadow-none"
+                                className="w-full py-2.5 bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-xs rounded-xl cursor-pointer transition border-none shadow-none"
                             >
                                 OK
                             </button>
@@ -2042,16 +2060,16 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                 {showClearBookingConfirm && typeof document !== 'undefined' && createPortal(
                     <div className="bh-booking-alert-overlay fixed inset-0 z-[205] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-                        <div className="bh-booking-alert bg-white border border-[#ede7de] rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200">
+                        <div className="bh-booking-alert bg-white border border-[#e6dfd0] rounded-xl w-full max-w-sm p-6 shadow-sm space-y-4 text-center animate-in zoom-in-95 duration-200">
                             <div className="w-12 h-12 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mx-auto text-rose-600">
                                 <Trash2 size={20} aria-hidden="true" />
                             </div>
                             <div className="space-y-1">
-                                <h3 id="booking-clear-title" className="text-lg font-semibold text-[#1c2826]">Start booking again?</h3>
-                                <p className="text-xs text-[#5c6b66] leading-relaxed">Your selected service, expert, date and time will be cleared. You can choose them again in the next step.</p>
+                                <h3 id="booking-clear-title" className="text-lg font-semibold text-[#0e1111]">Start booking again?</h3>
+                                <p className="text-xs text-[#55605f] leading-relaxed">Your selected service, expert, date and time will be cleared. You can choose them again in the next step.</p>
                             </div>
                             <div className="grid grid-cols-2 gap-2">
-                                <button type="button" onClick={() => setShowClearBookingConfirm(false)} className="bh-booking-alert-cancel w-full py-2.5 border border-[#ede7de] bg-white text-[#4c5b55] font-semibold text-xs rounded-xl cursor-pointer transition">
+                                <button type="button" onClick={() => setShowClearBookingConfirm(false)} className="bh-booking-alert-cancel w-full py-2.5 border border-[#e6dfd0] bg-white text-[#3c4747] font-semibold text-xs rounded-xl cursor-pointer transition">
                                     Keep booking
                                 </button>
                                 <button
@@ -2061,7 +2079,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         setWizardStep(1);
                                         setShowClearBookingConfirm(false);
                                     }}
-                                    className="bh-booking-alert-confirm w-full py-2.5 bg-[#1c2826] text-white font-semibold text-xs rounded-xl cursor-pointer transition border-none"
+                                    className="bh-booking-alert-confirm w-full py-2.5 bg-[#0e1111] text-white font-semibold text-xs rounded-xl cursor-pointer transition border-none"
                                 >
                                     Clear &amp; restart
                                 </button>
@@ -2073,28 +2091,28 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                 {showConsentModal && typeof document !== 'undefined' && createPortal(
                     <div className="bh-consent-overlay fixed inset-0 z-[220] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
-                        <div className="bh-consent-dialog bg-white border border-[#ede7de] rounded-md w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
-                            <div className="px-6 py-4 border-b border-[#ede7de] flex justify-between items-center bg-[#faf6ee]/80">
+                        <div className="bh-consent-dialog bg-white border border-[#e6dfd0] rounded-md w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
+                            <div className="px-6 py-4 border-b border-[#e6dfd0] flex justify-between items-center bg-[#f6f1e6]/80">
                                 <div className="flex items-center gap-2.5">
-                                    <div className="w-8 h-8 rounded-md bg-[#b85438]/10 border border-[#b85438]/20 flex items-center justify-center text-[#a0462e]">
+                                    <div className="w-8 h-8 rounded-md bg-[#0e7490]/10 border border-[#0e7490]/20 flex items-center justify-center text-[#0b5c73]">
                                         <ShieldCheck className="w-4.5 h-4.5" />
                                     </div>
                                     <div>
-                                        <h3 className="text-sm font-bold text-[#1c2826] leading-tight">Informed Consent Agreement</h3>
-                                        <p className="text-[11px] text-[#5c6b66] font-medium">Professional Psychological Counselling & Mentorship</p>
+                                        <h3 className="text-sm font-bold text-[#0e1111] leading-tight">Informed Consent Agreement</h3>
+                                        <p className="text-[11px] text-[#55605f] font-medium">Professional Psychological Counselling & Mentorship</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => setShowConsentModal(false)}
-                                    className="p-1 text-[#8a938f] hover:text-[#4c5b55] rounded-md hover:bg-[#f4eee6] transition-colors cursor-pointer border-none bg-transparent"
+                                    className="p-1 text-[#7c8785] hover:text-[#3c4747] rounded-md hover:bg-[#f1eadc] transition-colors cursor-pointer border-none bg-transparent"
                                     title="Close modal"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
                             </div>
 
-                            <div className="p-6 overflow-y-auto text-[#4c5b55] text-xs font-medium leading-relaxed space-y-4 max-h-[60vh] custom-scrollbar">
-                                <div className="p-3 bg-[#faf5f0] border border-[#eadfd0]/60 rounded-md text-[#1c2826] text-[11px] leading-relaxed">
+                            <div className="p-6 overflow-y-auto text-[#3c4747] text-xs font-medium leading-relaxed space-y-4 max-h-[60vh] custom-scrollbar">
+                                <div className="p-3 bg-[#f7f2e7] border border-[#bfe3ec]/60 rounded-md text-[#0e1111] text-[11px] leading-relaxed">
                                     <span className="font-bold block mb-1">Notice to Client / Guardian:</span>
                                     This informed consent document details your rights, ethical standards, confidentiality guidelines, and expectations regarding psychological consultations and mentorship at BEHOLD.
                                 </div>
@@ -2113,41 +2131,41 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
                                     if (activeConsent) {
                                         return (
-                                            <div className="text-[#4c5b55] text-xs font-medium leading-relaxed whitespace-pre-wrap font-sans">
+                                            <div className="text-[#3c4747] text-xs font-medium leading-relaxed whitespace-pre-wrap font-sans">
                                                 {activeConsent}
                                             </div>
                                         );
                                     }
 
                                     return (
-                                        <div className="space-y-3 text-[#4c5b55]">
+                                        <div className="space-y-3 text-[#3c4747]">
                                             <div className="space-y-1">
-                                                <h4 className="text-xs font-bold text-[#1c2826]">1. Nature of Services & Voluntary Participation</h4>
+                                                <h4 className="text-xs font-bold text-[#0e1111]">1. Nature of Services & Voluntary Participation</h4>
                                                 <p>Psychological counselling and career mentorship are collaborative, goal-directed processes designed to enhance personal wellbeing and decision-making. Participation is voluntary, and you have the right to ask questions or discuss your session goals at any time.</p>
                                             </div>
 
                                             <div className="space-y-1">
-                                                <h4 className="text-xs font-bold text-[#1c2826]">2. Confidentiality & Ethical Safeguards</h4>
+                                                <h4 className="text-xs font-bold text-[#0e1111]">2. Confidentiality & Ethical Safeguards</h4>
                                                 <p>All discussions, case notes, and personal information are strictly confidential and protected in accordance with professional clinical ethics. Information may only be disclosed without prior consent if mandated by law—namely, if there is clear, imminent danger of harm to yourself or others, suspected child or vulnerable adult abuse, or by formal court order.</p>
                                             </div>
 
                                             <div className="space-y-1">
-                                                <h4 className="text-xs font-bold text-[#1c2826]">3. Tele-Consultation & Privacy Guidelines</h4>
+                                                <h4 className="text-xs font-bold text-[#0e1111]">3. Tele-Consultation & Privacy Guidelines</h4>
                                                 <p>For online video consultations, sessions are conducted through secure, end-to-end encrypted video channels. Please ensure you are in a private, quiet room with minimal distractions. Unauthorized audio or video recording of sessions by either party is strictly prohibited without explicit mutual written consent.</p>
                                             </div>
 
                                             <div className="space-y-1">
-                                                <h4 className="text-xs font-bold text-[#1c2826]">4. Emergency & Crisis Notice</h4>
+                                                <h4 className="text-xs font-bold text-[#0e1111]">4. Emergency & Crisis Notice</h4>
                                                 <p>Behold provides scheduled appointment consultations and is not an emergency crisis or suicide intervention service. If you are experiencing an acute life-threatening emergency, please immediately reach out to national emergency services (112), KIRAN Helpline (1800-599-0019), or Tele-MANAS (14416).</p>
                                             </div>
 
                                             <div className="space-y-1">
-                                                <h4 className="text-xs font-bold text-[#1c2826]">5. Cancellation, Rescheduling & Refund Policy</h4>
+                                                <h4 className="text-xs font-bold text-[#0e1111]">5. Cancellation, Rescheduling & Refund Policy</h4>
                                                 <p>Appointments can be cancelled up to 24 hours prior to scheduled start time for a 100% full refund. Rescheduling is available free of charge up to 12 hours before your appointment. Late cancellations or no-shows are non-refundable.</p>
                                             </div>
 
                                             <div className="space-y-1">
-                                                <h4 className="text-xs font-bold text-[#1c2826]">6. Minor / Guardian Consent</h4>
+                                                <h4 className="text-xs font-bold text-[#0e1111]">6. Minor / Guardian Consent</h4>
                                                 <p>For clients under 18 years of age, parent or legal guardian acknowledgment and consent is affirmed upon booking.</p>
                                             </div>
                                         </div>
@@ -2155,11 +2173,11 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                 })()}
                             </div>
 
-                            <div className="px-6 py-4 border-t border-[#ede7de] flex items-center justify-between gap-3 bg-[#faf6ee]">
+                            <div className="px-6 py-4 border-t border-[#e6dfd0] flex items-center justify-between gap-3 bg-[#f6f1e6]">
                                 <button
                                     type="button"
                                     onClick={() => setShowConsentModal(false)}
-                                    className="px-4 py-2.5 bg-white hover:bg-[#f4eee6] text-[#4c5b55] font-semibold text-xs rounded-md cursor-pointer transition border border-[#e0d8cb] shadow-xs"
+                                    className="px-4 py-2.5 bg-white hover:bg-[#f1eadc] text-[#3c4747] font-semibold text-xs rounded-md cursor-pointer transition border border-[#d5cdbb] shadow-xs"
                                 >
                                     Close
                                 </button>
@@ -2170,7 +2188,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                         setShowConsentModal(false);
                                         toast.success('Informed Consent acknowledged and agreed.');
                                     }}
-                                    className="px-6 py-3 bg-[#1c2826] hover:bg-[#b85438] text-white font-medium text-xs rounded-md cursor-pointer transition border-none shadow-md flex items-center gap-1.5"
+                                    className="px-6 py-3 bg-[#0e1111] hover:bg-[#0e7490] text-white font-medium text-xs rounded-md cursor-pointer transition border-none shadow-md flex items-center gap-1.5"
                                 >
                                     <CheckCircle2 className="w-4 h-4" />
                                     <span>I Agree & Accept</span>

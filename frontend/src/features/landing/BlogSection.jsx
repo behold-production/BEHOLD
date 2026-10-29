@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Clock, Calendar } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import ApiService from '../../services/api';
-
+import SectionHeading from './SectionHeading';
 
 export default function BlogSection({ siteSettings = {} }) {
   const navigate = useNavigate();
@@ -25,7 +25,6 @@ export default function BlogSection({ siteSettings = {} }) {
               excerpt: b.excerpt || b.summary || (typeof b.content === 'string' ? b.content.substring(0, 140) + '...' : ''),
               image: b.coverImage || b.image || null,
               date: b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent',
-              readTime: b.readTime || null,
             }));
             setBlogs(mapped);
           } else {
@@ -58,114 +57,87 @@ export default function BlogSection({ siteSettings = {} }) {
     <section
       id="blog"
       aria-labelledby="bh-journal-heading"
-      className="relative py-20 sm:py-28 bg-[#fbf9f5] text-[#1c2826] overflow-hidden scroll-mt-20 border-t border-[#ece6dc]"
+      className="relative w-full overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
     >
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header: Left terracotta eyebrow, Right serif heading */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#ece6dc]">
-          <div>
-            <span className="text-[#b85438] text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase block">
-              Journal &amp; Insights
-            </span>
-          </div>
-          <div>
-            <h2
-              id="bh-journal-heading"
-              className="font-serif-hero text-2xl sm:text-3xl md:text-4xl font-normal text-[#1c2826] tracking-tight leading-snug"
-            >
-              A Journal for Mindful Living
-            </h2>
-          </div>
-        </div>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Insights"
+          title={siteSettings.blogSectionTitle || 'Latest Articles'}
+          description={siteSettings.blogSectionSub || undefined}
+        />
 
-        {/* 2-Column Magazine Grid matching Mockup */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-            {[1, 2].map((i) => (
-              <div key={i} className="flex flex-col space-y-4">
-                <div className="w-full h-56 sm:h-64 rounded-md bg-[#f0eae1] animate-pulse border border-[#ede7de]" />
-                <div className="h-3 w-1/4 bg-[#f0eae1] rounded-sm animate-pulse" />
-                <div className="h-5 w-5/6 bg-[#f0eae1] rounded-sm animate-pulse" />
-                <div className="h-3 w-full bg-[#f0eae1] rounded-sm animate-pulse" />
+          <div className="mt-9 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <div key={item}>
+                <div className="aspect-[16/10] w-full animate-pulse rounded-xl bg-[#F1EAD9]" />
+                <div className="mt-4 h-2.5 w-1/4 animate-pulse rounded bg-[#F1EAD9]" />
+                <div className="mt-3 h-4 w-5/6 animate-pulse rounded bg-[#F1EAD9]" />
+                <div className="mt-2 h-3 w-full animate-pulse rounded bg-[#F1EAD9]" />
               </div>
             ))}
           </div>
         ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-          {blogs.slice(0, 2).map((post) => (
-            <article
-              key={post.id}
-              onClick={() => handleOpenBlog(post.slug)}
-              className="group cursor-pointer flex flex-col justify-between"
-            >
-              <div>
-                {/* Image */}
-                <div className="w-full h-56 sm:h-64 rounded-md overflow-hidden mb-4 sm:mb-5 bg-[#f4eee6] border border-[#ede7de]">
+          <div className="mt-9 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+            {blogs.slice(0, 3).map((post) => (
+              <article
+                key={post.id}
+                onClick={() => handleOpenBlog(post.slug)}
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-[#E6DFD0] bg-[#FBF8F1] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#0E7490]/45 hover:shadow-[0_18px_36px_-28px_rgba(14,17,17,0.5)]"
+              >
+                <div className="aspect-[16/10] w-full overflow-hidden bg-[#EDF5F7]">
                   {post.image ? (
                     <img
                       src={post.image}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#f6f2ec] to-[#eee4d7]">
-                      <span className="font-serif-hero text-4xl text-[#b85438]/50">B</span>
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#EAF4F7] to-[#F1EAD9]">
+                      <span className="text-3xl font-semibold text-[#0E7490]/40">{post.category.charAt(0)}</span>
                     </div>
                   )}
                 </div>
 
-                {/* Category & Meta */}
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-[10px] font-bold text-[#b85438] uppercase tracking-wider">
-                    {post.category}
-                  </span>
-                  {post.readTime && (
-                    <>
-                      <span className="text-[#e0d8cb]">•</span>
-                      <span className="text-[11px] text-[#5c6b66] flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{post.readTime}</span>
-                      </span>
-                    </>
+                <div className="flex flex-1 flex-col p-4 sm:p-5">
+                  <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.1em]">
+                    <span className="rounded-full bg-white px-2.5 py-1 text-[#0B5C73]">{post.category}</span>
+                    <span className="inline-flex items-center gap-1 text-[#8B9593]">
+                      <Calendar className="h-3 w-3" />
+                      {post.date}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-3 line-clamp-2 text-[15px] font-semibold leading-snug text-[#0E1111] transition-colors group-hover:text-[#0E7490] sm:text-base">
+                    {post.title}
+                  </h3>
+
+                  {post.excerpt && (
+                    <p className="mt-2 line-clamp-2 text-[12px] leading-relaxed text-[#55605F]">
+                      {post.excerpt}
+                    </p>
                   )}
+
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-[#0E7490]">
+                    Read Article
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </span>
                 </div>
-
-                {/* Title */}
-                <h3 className="font-serif-hero text-xl sm:text-2xl font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors leading-snug mb-2 sm:mb-3">
-                  {post.title}
-                </h3>
-
-                {/* Excerpt */}
-                {post.excerpt && (
-                  <p className="text-xs sm:text-sm text-[#5c6b66] leading-relaxed line-clamp-2">
-                    {post.excerpt}
-                  </p>
-                )}
-              </div>
-
-              {/* Read More Link */}
-              <div className="pt-4 mt-4 border-t border-[#ede7de] flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#1c2826] group-hover:text-[#b85438] transition-colors inline-flex items-center gap-1.5">
-                  <span>Read Article</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </span>
-                <span className="text-[11px] text-[#5c6b66]">{post.date}</span>
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
         )}
 
-        {/* View All Articles Button */}
-        <div className="mt-12 text-center">
+        <div className="mt-10 text-center sm:mt-12">
           <button
             type="button"
             onClick={handleOpenAll}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-md text-xs font-semibold bg-white hover:bg-[#f6f2ec] text-[#1c2826] border border-[#ede7de] shadow-2xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#0E1111] px-6 py-3 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#0E7490] cursor-pointer border-none sm:text-sm"
           >
-            <span>Explore All Journal Entries</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            Show All
+            <ArrowRight className="h-4 w-4" />
           </button>
         </div>
       </div>
