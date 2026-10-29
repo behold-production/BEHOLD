@@ -6,6 +6,7 @@ import ProtectedRoute from '../components/common/ProtectedRoute';
 import UnauthorizedFallback from '../features/admin/UnauthorizedFallback';
 import Navbar from '../components/common/Navbar';
 import BrandIcon from '../components/common/BrandIcon';
+import { useScrollLock } from '../utils/scrollLock';
 import Hero from '../features/landing/Hero';
 import CdatSection from '../features/student/components/aptitude/CdatSection';
 import Services from '../features/booking/Services';
@@ -123,6 +124,10 @@ export default function App() {
   // Expanded site settings sync state
   const [siteSettings, setSiteSettings] = useState({});
   const [activeDocType, setActiveDocType] = useState(null); // 'terms', 'privacy', 'refund', 'consent'
+
+  // The legal-document sheet is opened from the footer and from inside the
+  // booking wizard, so it locks the page through the shared counted lock.
+  useScrollLock(Boolean(activeDocType));
 
   useEffect(() => {
     const handleOpenAuth = () => setIsAuthModalOpen(true);
@@ -826,8 +831,8 @@ export default function App() {
  
       {/* Terms & Privacy Documents Modal */}
       {activeDocType && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-[#0e1111] border border-[#243033] rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 overflow-hidden bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-[#0e1111] border border-[#243033] rounded-lg w-full max-w-2xl max-h-[85vh] sm:max-h-[min(85vh,900px)] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
 
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-[#243033] flex justify-between items-center bg-[#050707]/40">
@@ -845,7 +850,7 @@ export default function App() {
             </div>
  
             {/* Modal Body */}
-            <div className="p-6 overflow-y-auto text-left text-[#d5cdbb] text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans max-h-[60vh] custom-scrollbar">
+            <div className="flex-1 min-h-0 p-6 overflow-y-auto overscroll-contain text-left text-[#d5cdbb] text-xs font-semibold leading-relaxed whitespace-pre-wrap font-sans custom-scrollbar">
               {(activeDocType === 'terms'
                 ? siteSettings.termsOfUse
                 : activeDocType === 'refund'

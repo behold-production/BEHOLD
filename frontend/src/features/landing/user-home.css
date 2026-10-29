@@ -1146,8 +1146,11 @@
 .bh-booking-dialog {
   width: min(840px, calc(100vw - 32px)) !important;
   max-width: 840px !important;
-  height: min(90vh, 880px) !important;
-  height: min(90svh, 880px) !important;
+  /* The shell is a flex column: header pinned, body scrolled. The old 880px
+     cap truncated tall steps on desktop, so it only clamps on very tall
+     screens where the content still needs somewhere to breathe. */
+  height: min(90vh, 1040px) !important;
+  height: min(90svh, 1040px) !important;
   background: #ffffff !important;
   border: 1px solid #e6dfd0 !important;
   border-radius: 18px !important;
@@ -1198,7 +1201,7 @@
 }
 
 .bh-booking-content {
-  padding: 24px 22px 36px !important;
+  padding: 24px 22px 44px !important;
   background: #fbf8f1 !important;
 }
 
@@ -1501,21 +1504,26 @@
 }
 
 @media (max-width: 700px) {
+  .bh-booking-overlay {
+    padding: 0 10px 10px !important;
+  }
+
   .bh-booking-dialog {
     width: 100% !important;
     max-width: none !important;
     height: 94vh !important;
     height: 94svh !important;
-    border-radius: 6px 6px 0 0 !important;
+    border-radius: 14px !important;
   }
 
   .bh-booking-dialog>.sticky {
     min-height: 60px;
     padding: 10px 16px !important;
+    border-radius: 14px 14px 0 0 !important;
   }
 
   .bh-booking-content {
-    padding: 18px 12px 28px !important;
+    padding: 18px 12px 34px !important;
   }
 
   .bh-booking-content .bh-booking-step-card {

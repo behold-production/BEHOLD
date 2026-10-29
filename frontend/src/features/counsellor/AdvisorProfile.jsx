@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   ChevronLeft, Clock, Globe, Award, BookOpen, Calendar, MapPin, Heart, 
   GraduationCap, Star, ShieldCheck, CheckCircle2, Video, Sparkles, 
@@ -11,6 +12,7 @@ import { calculateNextAvailable } from '../../utils/dateFormatter';
 import { formatExperience } from '../../utils/formatters';
 import SEO from '../../components/common/SEO';
 import { trackViewContent } from '../../utils/metaPixel';
+import { useScrollLock } from '../../utils/scrollLock';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -61,6 +63,10 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   const [newComment, setNewComment] = useState('');
   const [newTag, setNewTag] = useState('Skill');
   const [submittingReview, setSubmittingReview] = useState(false);
+
+  // Freeze the page behind the review sheet — the same counted lock every other
+  // public dialog uses, so an inner sheet closing can never unfreeze the page.
+  useScrollLock(showReviewModal);
 
   const siteSettings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
   const enablePsychology = siteSettings.enablePsychology !== false;
@@ -881,11 +887,11 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
       </div>
 
       {/* ── WRITE REVIEW MODAL ── */}
-      {showReviewModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-md max-w-md w-full p-6 space-y-5 shadow-2xl border border-[#e6dfd0] animate-in zoom-in-95 duration-200">
-            
-            <div className="flex items-center justify-between border-b border-[#e6dfd0] pb-3">
+      {showReviewModal && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/60 backdrop-blur-xs p-4">
+          <div className="flex w-full max-w-md max-h-full flex-col overflow-hidden rounded-md border border-[#e6dfd0] bg-white shadow-2xl animate-in zoom-in-95 duration-200">
+
+            <div className="flex shrink-0 items-center justify-between border-b border-[#e6dfd0] px-6 pt-6 pb-4">
               <h3 className="text-lg font-bold text-[#0e1111]">Write a Verified Review</h3>
               <button
                 type="button"
@@ -896,7 +902,9 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
               </button>
             </div>
 
-            <form onSubmit={handleWriteReviewSubmit} className="space-y-4">
+            <form onSubmit={handleWriteReviewSubmit} className="flex min-h-0 flex-1 flex-col">
+              {/* Only the fields scroll; header and action row stay pinned so nothing gets cut. */}
+              <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-6 py-5">
               
               {/* Star Rating Select */}
               <div>
@@ -954,8 +962,9 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
                   className="w-full px-3.5 py-2.5 bg-[#f6f1e6] border border-[#e6dfd0] rounded-md text-xs text-[#0e1111] outline-none focus:border-[#0e7490] resize-none"
                 />
               </div>
+              </div>
 
-              <div className="flex items-center justify-end gap-3 pt-2">
+              <div className="flex shrink-0 items-center justify-end gap-3 border-t border-[#e6dfd0] bg-[#fbf8f1] px-6 py-4">
                 <button
                   type="button"
                   onClick={() => setShowReviewModal(false)}
@@ -974,7 +983,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ── STICKY BOTTOM BOOKING CTA BAR (Fixed on Mobile, Desktop Responsive) ── */}

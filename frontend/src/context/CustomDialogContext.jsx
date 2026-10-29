@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useContext } from 'react';
 import { AlertCircle, HelpCircle, Info, CheckCircle2, X } from 'lucide-react';
+import { useScrollLock } from '../utils/scrollLock';
 
 const CustomDialogContext = createContext(null);
 
@@ -25,6 +26,9 @@ export const CustomDialogProvider = ({ children }) => {
  });
 
  const [inputValue, setInputValue] = useState('');
+
+ // Page behind the dialog stays put while it is up.
+ useScrollLock(dialogState.isOpen);
 
  const showAlert = (message, title = 'Notification') => {
  return new Promise((resolve) => {
@@ -116,7 +120,7 @@ export const CustomDialogProvider = ({ children }) => {
  <CustomDialogContext.Provider value={{ showAlert, showConfirm, showPrompt }}>
  {children}
  {dialogState.isOpen && (
- <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-hidden bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
  <div className="bg-zinc-900 border border-zinc-800 rounded-[10px] w-full max-w-md p-6 flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-white relative">
  
  {/* Close button */}

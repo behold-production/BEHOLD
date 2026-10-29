@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, Check, Clock, Zap } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import { toLocalDateString, getLocalTodayString, getSmartWeekdayDate } from '../../utils/calendarUtils';
+import { useScrollLock } from '../../utils/scrollLock';
 
 const WEEKDAY_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 const MONTH_NAMES = [
@@ -168,6 +169,10 @@ export default function DateTimePicker({
     onDateChange(dateStr);
   };
 
+  // Counted lock: this sheet usually opens on top of the booking wizard, which
+  // already holds a lock, so releasing here can't unfreeze the page underneath.
+  useScrollLock(isOpen);
+
   if (!isOpen) return null;
 
   const quickJumpList = [
@@ -181,11 +186,11 @@ export default function DateTimePicker({
 
   const modalNode = (
     <div
-      className="fixed inset-0 z-[250] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md animate-backdrop-in overflow-y-auto"
+      className="fixed inset-0 z-[250] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md animate-backdrop-in overflow-hidden"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-xl shadow-2xl border border-[#e6dfd0]/90 overflow-hidden text-[#0e1111] animate-modal-in my-auto text-left"
+        className="relative flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-[#e6dfd0]/90 bg-white text-[#0e1111] shadow-2xl animate-modal-in my-auto text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -211,7 +216,7 @@ export default function DateTimePicker({
           </button>
         </div>
 
-        <div className="p-4 sm:p-6 space-y-5">
+        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain p-4 sm:p-6">
           {/* Quick Jump Chips */}
           <div className="space-y-1.5">
             <span className="text-[11px] font-bold text-[#7c8785] uppercase tracking-wider block">Quick Jump</span>

@@ -11,6 +11,7 @@ import { buildGoogleMeetUrl } from '../student/utils/utils';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
 import SEO from '../../components/common/SEO';
+import { useScrollLock } from '../../utils/scrollLock';
 
 const getInitials = (name) => {
     if (!name) return '';
@@ -289,8 +290,6 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     useEffect(() => {
         if (!isOpen) return;
 
-        document.body.style.overflow = 'hidden';
-
         const stateId = `booking_modal_${Date.now()}`;
         window.history.pushState({ modalState: stateId }, '');
 
@@ -301,10 +300,14 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         window.addEventListener('popstate', handlePopState);
 
         return () => {
-            document.body.style.overflow = '';
             window.removeEventListener('popstate', handlePopState);
         };
     }, [isOpen, handleModalBack]);
+
+    // The wizard and the sheets stacked on top of it share one counted lock, so
+    // the landing page never scrolls behind an open dialog and never unfreezes
+    // while a shallower sheet is dismissed.
+    useScrollLock(isOpen);
 
     // Instantly reset scroll to top on step change so each step starts cleanly.
     // (Manual scroll-to-target calls run after this via requestAnimationFrame.)
@@ -439,9 +442,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     if (!enablePsychology && !enableCareerMentoring && !isRescheduleParam) {
         return (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden bg-black/60 backdrop-blur-sm">
                 <div
-                    className="relative w-full max-w-md max-h-screen sm:max-h-[90vh] bg-white sm:rounded-md shadow-2xl overflow-y-auto flex flex-col items-center justify-center text-center px-4 py-16 select-none"
+                    className="relative my-auto flex max-h-full w-full max-w-md flex-col items-center justify-start overflow-y-auto overscroll-contain rounded-none bg-white text-center shadow-2xl select-none px-4 py-16 sm:rounded-md"
                 >
                     <button
                         onClick={onClose}
@@ -449,7 +452,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                     >
                         <X className="w-5 h-5 text-[#55605f]" />
                     </button>
-                    <div className="max-w-md w-full bg-white border border-[#e6dfd0] p-8 rounded-md shadow-sm space-y-6 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="my-auto max-w-md w-full bg-white border border-[#e6dfd0] p-8 rounded-md shadow-sm space-y-6 text-center animate-in fade-in zoom-in-95 duration-500">
                         <div className="w-16 h-16 bg-[#f1eadc] border border-[#e6dfd0] rounded-md flex items-center justify-center mx-auto text-[#0e1111] shadow-sm">
                             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -503,14 +506,17 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 description="Book an online, doorstep, or offline therapy session with certified clinical psychologists and career mentors on BEHOLD."
                 canonicalUrl="https://www.behold.co.in/booking"
             />
-            <div id="booking-modal-scroll" ref={scrollContainerRef} className={`bh-booking-dialog relative w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[92vh] sm:h-[90vh] bg-[#fbf8f1] rounded-t-lg sm:rounded-lg border border-[#e6dfd0] shadow-2xl overflow-y-auto overflow-x-hidden text-[#0e1111] text-left overscroll-contain animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 transition-all duration-300 flex flex-col scroll-smooth-momentum gpu-layer pb-[env(safe-area-inset-bottom,16px)]`}>
+            <div id="booking-modal-shell" className={`bh-booking-dialog relative w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[92vh] sm:h-[90vh] bg-[#fbf8f1] rounded-t-lg sm:rounded-lg border border-[#e6dfd0] shadow-2xl overflow-hidden text-[#0e1111] text-left animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 transition-all duration-300 flex flex-col`}>
 
                 {/* Mobile Drag Handle */}
                 <div className="w-12 h-1 bg-[#e6dfd0] rounded-xs mx-auto mt-2.5 sm:hidden shrink-0" />
 
-                {/* Secure Payment & Booking Verification Overlay */}
-                {isProcessingPayment && (
-                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0e1111]/90 backdrop-blur-md text-white px-6 text-center animate-in fade-in duration-200">
+                {/* Secure Payment & Booking Verification Overlay
+                    Portalled to <body>: inside the dialog it would be sized to the
+                    full scroll height and drift off-screen the moment the wizard
+                    scrolled, leaving a hard cut line across the middle of the sheet. */}
+                {isProcessingPayment && typeof document !== 'undefined' && createPortal(
+                    <div className="fixed inset-0 z-[300] flex flex-col items-center justify-center bg-[#0e1111]/90 backdrop-blur-md text-white px-6 text-center animate-in fade-in duration-200" role="status" aria-live="polite">
                         <div className="relative w-16 h-16 mb-4 flex items-center justify-center">
                             <div className="absolute inset-0 rounded-full border-4 border-[#0e7490]/20 border-t-[#0e7490] animate-spin" />
                             <Lock className="w-6 h-6 text-[#0e7490]" />
@@ -519,7 +525,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                         <p className="text-xs text-[#e6dfd0] max-w-xs text-center font-medium leading-relaxed">
                             {paymentStepText || 'Securing your appointment and reserving your session room...'}
                         </p>
-                    </div>
+                    </div>,
+                    document.body
                 )}
 
                 {/* Mobile App Style Header */}
@@ -578,7 +585,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                     </div>
                 </div>
 
-                <div className="bh-booking-content min-h-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#fbf8f1]">
+                <div id="booking-modal-scroll" ref={scrollContainerRef} className="bh-booking-content min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth-momentum pb-[env(safe-area-inset-bottom,16px)] py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#fbf8f1]">
                     <div className="space-y-8 sm:space-y-10">
 
                         {/* BOOKING FORM */}
@@ -2128,7 +2135,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                 </button>
                             </div>
 
-                            <div className="p-6 overflow-y-auto text-[#3c4747] text-xs font-medium leading-relaxed space-y-4 max-h-[60vh] custom-scrollbar">
+                            <div className="flex-1 min-h-0 p-6 overflow-y-auto overscroll-contain text-[#3c4747] text-xs font-medium leading-relaxed space-y-4 custom-scrollbar">
                                 <div className="p-3 bg-[#f7f2e7] border border-[#bfe3ec]/60 rounded-md text-[#0e1111] text-[11px] leading-relaxed">
                                     <span className="font-bold block mb-1">Notice to Client / Guardian:</span>
                                     This informed consent document details your rights, ethical standards, confidentiality guidelines, and expectations regarding psychological consultations and mentorship at BEHOLD.

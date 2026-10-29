@@ -4,6 +4,7 @@ import { Loader2, Mail, User, Calendar, Heart, AlertCircle, X } from 'lucide-rea
 import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import { validateEmail } from '../../utils/validation';
+import { useScrollLock } from '../../utils/scrollLock';
 import toast from 'react-hot-toast';
 import { trackCompleteRegistration, setMetaUserData, getStoredCampaignData } from '../../utils/metaPixel';
 
@@ -64,6 +65,8 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
       if (onClose) onClose();
     }
   }, [isProfileActuallyComplete, isOpen, onClose]);
+
+  useScrollLock(isOpen);
 
   if (!isOpen || isDismissed || !user || user.role === 'admin' || user.role === 'counsellor' || isProfileActuallyComplete) {
     return null;
@@ -218,7 +221,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
       {/* Modal Container */}
       <div className="bh-profile-overlay fixed inset-0 z-[210] flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain">
         <div 
-          className="bh-profile-dialog relative w-full max-w-md my-auto bg-[#fbf8f1] rounded-3xl shadow-2xl animate-modal-in border border-[#e6dfd0] flex flex-col max-h-[92vh] overflow-hidden text-left"
+          className="bh-profile-dialog relative w-full max-w-md my-auto bg-[#fbf8f1] rounded-3xl shadow-2xl animate-modal-in border border-[#e6dfd0] flex flex-col max-h-full overflow-hidden text-left"
           onClick={(e) => e.stopPropagation()}
         >
           

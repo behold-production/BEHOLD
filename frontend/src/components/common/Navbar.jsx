@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'; //
 import { useAuth } from '../../context/AuthContext';
 import LogoutConfirmModal from './LogoutConfirmModal';
 import BrandIcon from './BrandIcon';
+import { useScrollLock } from '../../utils/scrollLock';
 import { Menu, X, User, Phone } from 'lucide-react';
 
 export default function Navbar({ navigateToSection, currentView, onOpenAuth, onOpenBooking, siteName, siteSettings }) {
@@ -20,16 +21,9 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
+  // Drawer open: freeze the page behind it. Restoring happens on unmount too,
+  // so navigating away mid-drawer can never leave the site locked.
+  useScrollLock(mobileMenuOpen);
 
   const [activeSection, setActiveSection] = useState('home'); //
 

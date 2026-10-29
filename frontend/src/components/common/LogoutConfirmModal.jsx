@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { LogOut, X, AlertTriangle } from 'lucide-react';
+import { useScrollLock } from '../../utils/scrollLock';
 
 export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClose }) {
   const closeAction = onClose || onCancel;
@@ -12,15 +13,15 @@ export default function LogoutConfirmModal({ isOpen, onConfirm, onCancel, onClos
     if (closeAction) closeAction();
   };
 
+  useScrollLock(isOpen);
+
   useEffect(() => {
     if (!isOpen || typeof document === 'undefined') return;
-    document.body.classList.add('no-scroll');
     const handleEsc = (e) => {
       if (e.key === 'Escape') handleClose(e);
     };
     document.addEventListener('keydown', handleEsc);
     return () => {
-      document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
     };
   }, [isOpen]);

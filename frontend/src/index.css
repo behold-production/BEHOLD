@@ -478,12 +478,22 @@ textarea {
 
 
 
-/* Prevent layout shift when modal/drawer locks body scroll */
+/* Prevent layout shift when modal/drawer locks body scroll.
+   The lock itself is applied by src/utils/scrollLock.js (it parks the document
+   with position: fixed so iOS can't rubber-band the page behind an open
+   dialog). This rule is the belt-and-braces fallback for the class-based
+   callers — deliberately no `height: 100vh` and no `touch-action: none`, both
+   of which used to disable touch scrolling *inside* the open dialog. */
 html.no-scroll,
 body.no-scroll {
   overflow: hidden !important;
-  height: 100vh !important;
-  touch-action: none;
+  overscroll-behavior: none;
+}
+
+/* While any dialog is open the page cannot scroll, so keep the sticky navbar
+   in its compact state instead of letting it pop back to its tall variant. */
+html.scroll-locked header.bh-home-nav {
+  min-height: 64px;
 }
 
 /* Hide Scrollbars Globally */
