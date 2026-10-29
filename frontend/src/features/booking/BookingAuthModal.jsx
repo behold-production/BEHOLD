@@ -5,6 +5,7 @@ import ApiService from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { validateIndianPhone, parseIndianPhone, validateEmail } from '../../utils/validation';
 import OtpPinInput from '../../components/common/OtpPinInput';
+import { useScrollLock } from '../../utils/scrollLock';
 import { trackCompleteRegistration, setMetaUserData } from '../../utils/metaPixel';
 
 const OTP_RESEND_SECONDS = 60;
@@ -20,6 +21,8 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   // OTP State
   const [otpPhone, setOtpPhone] = useState('');
   const [otpCode, setOtpCode] = useState('');
+  // How long the current code stays valid — taken from the server response.
+  const [otpExpirySeconds, setOtpExpirySeconds] = useState(300);
 
   // Details State
   const [detailsForm, setDetailsForm] = useState({ name: '', email: '' });
@@ -60,9 +63,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     handleModalBackRef.current = handleModalBack;
   }, [handleModalBack]);
 
+  // Counted lock: closing this sheet must not unfreeze the page while the
+  // booking wizard behind it is still open.
+  useScrollLock(isOpen);
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
       setAuthStep('phone');
       setFieldErrors({});
 
@@ -77,18 +82,13 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
       setResendTimer(0);
       clearInterval(timerRef.current);
     } else {
-      document.body.style.overflow = '';
       clearInterval(timerRef.current);
     }
-    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
-  // Body scroll lock + Esc to close + popstate history back (stable: attaches once per modal open)
+  // Esc to close + popstate history back (stable: attaches once per modal open)
   useEffect(() => {
     if (!isOpen) return;
-
-    document.documentElement.classList.add('no-scroll');
-    document.body.classList.add('no-scroll');
 
     const stateId = `booking_auth_modal_${Date.now()}`;
     window.history.pushState({ modalState: stateId }, '');
@@ -100,8 +100,6 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     window.addEventListener('popstate', handlePopState);
 
     return () => {
-      document.documentElement.classList.remove('no-scroll');
-      document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
       window.removeEventListener('popstate', handlePopState);
     };
@@ -119,7 +117,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
   const sendOtp = async (phone) => {
     const cleanPhone = parseIndianPhone(phone).phone10;
     const res = await ApiService.sendOtp(cleanPhone);
-    if (res.success) return true;
+    if (res.success) return res;
     throw new Error(res.message || 'Failed to send OTP');
   };
 
@@ -135,12 +133,13 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
         if (!cleanPhone) throw new Error('Phone number is required');
         if (!validateIndianPhone(cleanPhone)) throw new Error('Please enter a valid phone number (include country code if outside India)');
 
-        await sendOtp(cleanPhone);
+        const sendRes = await sendOtp(cleanPhone);
+        if (sendRes?.data?.expiresInSeconds) setOtpExpirySeconds(sendRes.data.expiresInSeconds);
         setOtpPhone(cleanPhone);
         setOtpCode('');
         setAuthStep('otp');
         startResendTimer();
-        showToast('OTP sent to your WhatsApp!', 'success');
+        showToast('Verification code sent on WhatsApp!', 'success');
         setIsLoading(false);
         return;
       } else if (authStep === 'otp') {
@@ -332,10 +331,11 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     if (resendTimer > 0 || isResending) return;
     setIsResending(true);
     try {
-      await sendOtp(otpPhone);
+      const sendRes = await sendOtp(otpPhone);
+      if (sendRes?.data?.expiresInSeconds) setOtpExpirySeconds(sendRes.data.expiresInSeconds);
       setOtpCode('');
       startResendTimer();
-      showToast('OTP resent to your WhatsApp!', 'success');
+      showToast('New code sent on WhatsApp!', 'success');
     } catch (err) {
       showToast(err.message || 'Failed to resend OTP');
     } finally {
@@ -350,7 +350,7 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
     <>
       <div className="bh-booking-auth-backdrop fixed inset-0 z-[120] bg-black/40 backdrop-blur-sm animate-in fade-in duration-200" onClick={authStep === 'details' ? undefined : onClose} aria-hidden="true" />
       <div className="bh-booking-auth-overlay fixed inset-0 z-[125] flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-labelledby="booking-auth-modal-title" onClick={authStep === 'details' ? undefined : onClose}>
-        <div className="bh-booking-auth-dialog relative w-full max-w-full sm:max-w-md bg-[#fbf8f1] rounded-t-lg sm:rounded-md shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-[#e6dfd0] flex flex-col max-h-[88vh] sm:max-h-[85vh] pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
+        <div className="bh-booking-auth-dialog relative w-full max-w-full sm:max-w-md bg-[#fbf8f1] rounded-t-lg sm:rounded-md shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 text-left border border-[#e6dfd0] flex flex-col max-h-full pb-[calc(1rem+env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
 
           {/* Mobile Bottom Sheet Pull Indicator */}
           <div className="w-12 h-1.5 bg-[#e6dfd0] rounded-full mx-auto mt-3 mb-0 sm:hidden shrink-0" />
@@ -521,6 +521,18 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               {/* OTP input + resend */}
               {authStep === 'otp' && (
                 <div className="space-y-3">
+                  <div className="flex items-start gap-2.5 bg-[#f7f2e7] border border-[#e6dfd0] rounded-md px-3 py-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#0e7490] shrink-0 mt-0.5" />
+                    <p className="text-[11px] leading-snug text-[#3c4747]">
+                      Sent on WhatsApp to{' '}
+                      <span className="font-semibold text-[#0e1111] tabular-nums">
+                        +91 {parseIndianPhone(otpPhone).phone10 || otpPhone}
+                      </span>
+                      <span className="block text-[10px] text-[#55605f]">
+                        Expires in {Math.max(1, Math.round(otpExpirySeconds / 60))} minutes · never share this code
+                      </span>
+                    </p>
+                  </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-[#0e1111] block">6-Digit Verification Code</label>
                     <OtpPinInput
@@ -570,7 +582,10 @@ export default function BookingAuthModal({ isOpen, onClose, onSuccess, bookingFo
               <div className="pt-2">
                 <button type="submit" disabled={isLoading} className="w-full py-3.5 min-h-[48px] bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md">
                   {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>{authStep === 'phone' ? 'Sending code on WhatsApp…' : 'Verifying…'}</span>
+                    </>
                   ) : (
                     <span>{authStep === 'phone' ? 'Send OTP via WhatsApp' : 'Verify & Continue'}</span>
                   )}

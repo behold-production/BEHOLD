@@ -77,11 +77,14 @@ async function executeRequest(endpoint, options = {}) {
   }
 
   let response;
+  // Delivery of a WhatsApp OTP is awaited server-side, so that one call may
+  // legitimately outlast the default window; callers raise it via `timeoutMs`.
+  const { timeoutMs, ...fetchOptions } = options;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000);
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs || 15000);
   try {
     response = await fetch(`${BASE_URL}${endpoint}`, {
-      ...options,
+      ...fetchOptions,
       headers,
       signal: options.signal || controller.signal
     });
@@ -464,7 +467,8 @@ const ApiService = {
   async sendOtp(phone) {
     return await request('/auth/send-otp', {
       method: 'POST',
-      body: JSON.stringify({ phone })
+      body: JSON.stringify({ phone }),
+      timeoutMs: 30000
     });
   },
 

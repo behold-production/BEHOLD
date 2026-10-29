@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import ApiService from '../../services/api';
 import { validateIndianPhone, parseIndianPhone, validateEmail } from '../../utils/validation';
 import OtpPinInput from '../../components/common/OtpPinInput';
+import { useScrollLock } from '../../utils/scrollLock';
 import { trackCompleteRegistration, setMetaUserData } from '../../utils/metaPixel';
 
 const OTP_RESEND_SECONDS = 60;
@@ -23,6 +24,8 @@ export default function AuthModals({ isOpen, onClose }) {
   // Phone & OTP State
   const [otpPhone, setOtpPhone] = useState('');
   const [otpCode, setOtpCode] = useState('');
+  // How long the current code stays valid — taken from the server response.
+  const [otpExpirySeconds, setOtpExpirySeconds] = useState(300);
 
   // Details State
   const [detailsForm, setDetailsForm] = useState({ name: '', email: '' });
@@ -32,6 +35,9 @@ export default function AuthModals({ isOpen, onClose }) {
   // Resend timer
   const [resendTimer, setResendTimer] = useState(0);
   const timerRef = useRef(null);
+
+  // Nothing behind this dialog scrolls while it is up.
+  useScrollLock(isOpen);
 
   const startResendTimer = useCallback(() => {
     setResendTimer(OTP_RESEND_SECONDS);
@@ -71,7 +77,6 @@ export default function AuthModals({ isOpen, onClose }) {
   // Reset state when modal opens/closes
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
       setAuthStep('phone');
       setOtpPhone('');
       setOtpCode('');
@@ -82,20 +87,13 @@ export default function AuthModals({ isOpen, onClose }) {
       setResendTimer(0);
       clearInterval(timerRef.current);
     } else {
-      document.body.style.overflow = '';
       clearInterval(timerRef.current);
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [isOpen]);
 
-  // Body scroll lock + Esc to close + popstate history back (stable: attaches once per modal open)
+  // Esc to close + popstate history back (stable: attaches once per modal open)
   useEffect(() => {
     if (!isOpen) return;
-
-    document.documentElement.classList.add('no-scroll');
-    document.body.classList.add('no-scroll');
 
     const stateId = `auth_modal_${Date.now()}`;
     window.history.pushState({ modalState: stateId }, '');
@@ -111,8 +109,6 @@ export default function AuthModals({ isOpen, onClose }) {
     window.addEventListener('popstate', handlePopState);
 
     return () => {
-      document.documentElement.classList.remove('no-scroll');
-      document.body.classList.remove('no-scroll');
       document.removeEventListener('keydown', handleEsc);
       window.removeEventListener('popstate', handlePopState);
     };
@@ -131,7 +127,7 @@ export default function AuthModals({ isOpen, onClose }) {
     const cleanPhone = parseIndianPhone(phone).phone10;
     const res = await ApiService.sendOtp(cleanPhone);
     if (res.success) {
-      return true;
+      return res;
     }
     throw new Error(res.message || 'Failed to send OTP');
   };
@@ -176,11 +172,12 @@ export default function AuthModals({ isOpen, onClose }) {
         const cleanPhone = parsed.phone10;
         setOtpPhone(cleanPhone);
 
-        await sendOtp(cleanPhone);
+        const sendRes = await sendOtp(cleanPhone);
+        if (sendRes?.data?.expiresInSeconds) setOtpExpirySeconds(sendRes.data.expiresInSeconds);
         setOtpCode('');
         setAuthStep('otp');
         startResendTimer();
-        showToast('OTP sent to your WhatsApp!', 'success');
+        showToast('Verification code sent on WhatsApp!', 'success');
         setIsLoading(false);
         return;
       } else if (authStep === 'otp') {
@@ -349,10 +346,11 @@ export default function AuthModals({ isOpen, onClose }) {
     if (resendTimer > 0 || isResending) return;
     setIsResending(true);
     try {
-      await sendOtp(otpPhone);
+      const sendRes = await sendOtp(otpPhone);
+      if (sendRes?.data?.expiresInSeconds) setOtpExpirySeconds(sendRes.data.expiresInSeconds);
       setOtpCode('');
       startResendTimer();
-      showToast('OTP resent to your WhatsApp!', 'success');
+      showToast('New code sent on WhatsApp!', 'success');
     } catch (err) {
       showToast(err.message || 'Failed to resend OTP');
     } finally {
@@ -555,6 +553,18 @@ export default function AuthModals({ isOpen, onClose }) {
               {/* OTP input + resend */}
               {authStep === 'otp' && (
                 <div className="space-y-3">
+                  <div className="flex items-start gap-2.5 bg-[#f7f2e7] border border-[#e6dfd0] rounded-md px-3 py-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#0e7490] shrink-0 mt-0.5" />
+                    <p className="text-[11px] leading-snug text-[#3c4747]">
+                      Sent on WhatsApp to{' '}
+                      <span className="font-semibold text-[#0e1111] tabular-nums">
+                        +91 {parseIndianPhone(otpPhone).phone10 || otpPhone}
+                      </span>
+                      <span className="block text-[10px] text-[#55605f]">
+                        Expires in {Math.max(1, Math.round(otpExpirySeconds / 60))} minutes · never share this code
+                      </span>
+                    </p>
+                  </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-[#55605f] block">6-Digit Verification Code</label>
                     <OtpPinInput
@@ -603,7 +613,10 @@ export default function AuthModals({ isOpen, onClose }) {
                   className="w-full py-3.5 min-h-[48px] bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
                 >
                   {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>{authStep === 'phone' ? 'Sending code on WhatsApp…' : 'Verifying…'}</span>
+                    </>
                   ) : (
                     <span>{authStep === 'phone' ? 'Send OTP via WhatsApp' : 'Verify & Continue'}</span>
                   )}
