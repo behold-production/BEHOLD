@@ -37,6 +37,7 @@ function SocialIcon({ name, className }) {
 
 export default function Footer({ navigateToSection, siteName, siteCopyright, onOpenDocs, onOpenBooking, siteSettings }) {
   const settings = siteSettings || {};
+  const ctaBg = (typeof settings.heroBgImage === 'string' && settings.heroBgImage.trim()) || heroLandscapeBg;
   const emailAddr = settings.contactEmail?.trim() || 'beholdoffice@gmail.com';
   const phoneVal = settings.contactPhone?.trim() || '+91 92070 75151';
 
@@ -99,7 +100,7 @@ export default function Footer({ navigateToSection, siteName, siteCopyright, onO
             {/* Watercolor Mountain Landscape Background */}
             <div
               className="w-full min-h-[300px] sm:min-h-[360px] bg-cover bg-center flex items-center justify-center p-8 sm:p-12 relative"
-              style={{ backgroundImage: `url(${heroLandscapeBg})` }}
+              style={{ backgroundImage: `url(${ctaBg})` }}
             >
               {/* Soft Ambient Overlay for crystal clear typography */}
               <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px] pointer-events-none" />

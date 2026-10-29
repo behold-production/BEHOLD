@@ -19,6 +19,9 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
   );
 
   const buttonText = getFirstText(settings.heroBtnText, 'Begin Your Journey');
+  const eyebrow = getFirstText(settings.heroEyebrow, 'Clinical Care & Mentorship');
+  const heroBg = getFirstText(settings.heroBgImage) || heroLandscapeBg;
+  const cleanHeadline = headline.replace(/\\n/g, '\n').replace(/[{}]/g, '');
 
   const handleConnectClick = () => {
     if (typeof onOpenBooking === 'function') {
@@ -50,8 +53,8 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
       >
         {/* Full-bleed watercolor landscape background */}
         <img
-          src={heroLandscapeBg}
-          alt="Serene watercolor landscape of green hills and a calm river"
+          src={heroBg}
+          alt="Serene watercolor landscape"
           fetchPriority="high"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-[center_22%] pointer-events-none select-none"
@@ -69,14 +72,14 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
         <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-28 pt-32 sm:pt-40 text-center">
           <span className="inline-flex items-center gap-2 mb-5 sm:mb-6 px-3.5 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#e5ddd0] text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b85438] shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#b85438] animate-pulse" />
-            Clinical Care &amp; Mentorship
+            {eyebrow}
           </span>
 
           <h1
             id="bh-hero-title"
-            className="font-serif-hero text-[2.5rem] sm:text-6xl md:text-7xl lg:text-[76px] font-medium text-[#1c2826] tracking-tight leading-[1.08] mb-5 sm:mb-6"
+            className="font-serif-hero whitespace-pre-line text-[2.5rem] sm:text-6xl md:text-7xl lg:text-[76px] font-medium text-[#1c2826] tracking-tight leading-[1.08] mb-5 sm:mb-6"
           >
-            {headline}
+            {cleanHeadline}
           </h1>
 
           <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-[#4c5b55] font-normal leading-relaxed mb-8 sm:mb-10">
