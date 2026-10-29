@@ -183,8 +183,8 @@ export default function ThankYouPage() {
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-[#1c2826] bg-white hover:bg-[#f6f2ec] border border-[#ede7de] transition-all cursor-pointer no-underline"
             >
               <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="hidden xs:inline">WhatsApp Support</span>
-              <span className="xs:hidden">Support</span>
+              <span className="hidden sm:inline">WhatsApp Support</span>
+              <span className="sm:hidden">Support</span>
             </a>
           </div>
         </div>
