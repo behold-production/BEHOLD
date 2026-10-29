@@ -122,7 +122,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
             <h1
               id="bh-hero-title"
-              className="mt-3 whitespace-pre-line text-[2.1rem] font-semibold leading-[1.08] tracking-tight text-[#0E1111] sm:mt-4 sm:text-[3rem] lg:text-[3.45rem]"
+              className="font-display-italic mt-3 whitespace-pre-line text-[2.35rem] leading-[1.12] tracking-tight text-[#0E1111] sm:mt-4 sm:text-[3.2rem] lg:text-[3.9rem]"
             >
               {headline}
             </h1>
