@@ -55,7 +55,7 @@ export default function CdatSection({ setView, siteSettings }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
           {/* Left: Info (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="reveal-slide-left lg:col-span-7 space-y-6">
             <div>
               <span className="text-xs font-semibold tracking-widest uppercase text-[#0e7490] flex items-center gap-1.5 mb-2">
 
@@ -104,7 +104,7 @@ export default function CdatSection({ setView, siteSettings }) {
           </div>
 
           {/* Right: Registration Form (5 cols) */}
-          <div className="lg:col-span-5 bg-white rounded-md p-6 sm:p-10 shadow-md border border-[#e6dfd0]">
+          <div className="reveal-slide-right reveal-delay-1 lg:col-span-5 bg-white rounded-md p-6 sm:p-10 shadow-md border border-[#e6dfd0]">
             <h3 className="font-serif-hero text-xl sm:text-2xl font-semibold text-[#0e1111] mb-2">
               Register for the C-DAT<span className="text-[#0e7490] drop-shadow-[0_0_8px_rgba(14,116,144,0.8)] font-semibold">.</span>
             </h3>

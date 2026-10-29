@@ -42,7 +42,7 @@ export default function Faq({ siteSettings }) {
       className="relative w-full overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+        <div className="reveal-on-scroll grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
           {/* Intro */}
           <div>
             <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0E7490]">

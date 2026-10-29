@@ -114,7 +114,7 @@ export default function FaqsPage() {
 
       {/* Header Section */}
       <section className="relative py-14 sm:py-20 pt-24 sm:pt-32 border-b border-[#e6dfd0] bg-[#fbf8f1] overflow-hidden">
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <div className="reveal-on-scroll relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           {/* Breadcrumbs */}
           <div className="flex items-center justify-center gap-2 text-xs font-medium text-[#55605f] mb-4">
             <button
@@ -205,7 +205,7 @@ export default function FaqsPage() {
             </button>
           </div>
         ) : (
-          <div className="space-y-3.5">
+          <div className="reveal-on-scroll space-y-3.5">
             {filteredFaqs.map((faq, idx) => {
               const isOpen = openIndex === idx;
               return (
@@ -236,7 +236,7 @@ export default function FaqsPage() {
         )}
 
         {/* CTA Card */}
-        <div className="mt-12 bg-[#0e1111] rounded-md p-6 sm:p-10 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl border border-[#e6dfd0]/10">
+        <div className="reveal-scale-in mt-12 bg-[#0e1111] rounded-md p-6 sm:p-10 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl border border-[#e6dfd0]/10">
           <div className="space-y-1.5 z-10">
             <h3 className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">
               <MessageSquare className="w-5 h-5 text-[#0e7490]" /> Still have questions?

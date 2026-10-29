@@ -179,7 +179,7 @@ export default function TherapistSwipeSection({ onBookTherapist }) {
             </p>
           </div>
         ) : (
-          <div className="mt-8 flex flex-wrap justify-center gap-4 sm:mt-10 sm:gap-5">
+          <div className="reveal-on-scroll reveal-delay-1 mt-8 flex flex-wrap justify-center gap-4 sm:mt-10 sm:gap-5">
             {displayList.map((psychologist) => (
               <article
                 key={psychologist.id}

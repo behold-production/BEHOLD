@@ -115,7 +115,7 @@ export default function ServicesShowcase({ siteSettings = {}, onOpenBooking }) {
           description={description}
         />
 
-        <div className="mt-9 flex flex-wrap justify-center gap-3 sm:mt-12 sm:gap-4">
+        <div className="reveal-on-scroll reveal-delay-1 mt-9 flex flex-wrap justify-center gap-3 sm:mt-12 sm:gap-4">
           {tiles.map((tile) => {
             const Icon = tile.icon;
             return (

@@ -45,6 +45,14 @@
   letter-spacing: 0.01em;
 }
 
+/* Calligraphic display serif for the hero headline */
+.font-display-italic {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif !important;
+  font-style: italic;
+  font-weight: 500 !important;
+  letter-spacing: 0;
+}
+
 @theme {
   --color-neon-blue-deep: #060e20;
   --color-neon-blue-mid: #0c1a36;
@@ -753,7 +761,8 @@ body.no-scroll {
 }
 
 .hover-scale-btn {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  /* Colour is included so a hover never snaps — only the lift is eased longer. */
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease !important;
 }
 
 .hover-scale-btn:hover {
@@ -948,11 +957,13 @@ body.no-scroll {
   transform: translateY(0) scale(0.98);
 }
 
-/* Premium Hardware-Accelerated & RAM-Optimized Scroll Reveal System */
+/* Premium Hardware-Accelerated & RAM-Optimized Scroll Reveal System.
+   Travel is deliberately short (22px / 1.2% scale) and the easing is
+   front-loaded so content settles quickly instead of drifting in late. */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translate3d(0, 35px, 0) scale(0.96);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 22px, 0) scale(0.985);
+  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
@@ -964,8 +975,8 @@ body.no-scroll {
 
 .reveal-scale-in {
   opacity: 0;
-  transform: scale(0.92) translate3d(0, 0, 0);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.96) translate3d(0, 0, 0);
+  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
@@ -977,8 +988,8 @@ body.no-scroll {
 
 .reveal-slide-left {
   opacity: 0;
-  transform: translate3d(-40px, 0, 0);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(-26px, 0, 0);
+  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
@@ -990,8 +1001,8 @@ body.no-scroll {
 
 .reveal-slide-right {
   opacity: 0;
-  transform: translate3d(40px, 0, 0);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(26px, 0, 0);
+  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
@@ -1002,11 +1013,11 @@ body.no-scroll {
 }
 
 /* Stagger Delays for Scroll Reveal */
-.reveal-delay-1, .delay-100 { animation-delay: 150ms; transition-delay: 150ms; }
-.reveal-delay-2, .delay-200 { animation-delay: 300ms; transition-delay: 300ms; }
-.reveal-delay-3, .delay-300 { animation-delay: 450ms; transition-delay: 450ms; }
-.reveal-delay-4, .delay-400 { animation-delay: 600ms; transition-delay: 600ms; }
-.reveal-delay-5, .delay-500 { animation-delay: 750ms; transition-delay: 750ms; }
+.reveal-delay-1, .delay-100 { animation-delay: 90ms; transition-delay: 90ms; }
+.reveal-delay-2, .delay-200 { animation-delay: 180ms; transition-delay: 180ms; }
+.reveal-delay-3, .delay-300 { animation-delay: 270ms; transition-delay: 270ms; }
+.reveal-delay-4, .delay-400 { animation-delay: 360ms; transition-delay: 360ms; }
+.reveal-delay-5, .delay-500 { animation-delay: 450ms; transition-delay: 450ms; }
 
 @keyframes fadeScaleIn {
   0% {
@@ -1063,9 +1074,138 @@ body.no-scroll {
   animation: pulseGentle 2.4s ease-in-out infinite;
 }
 
+/* ─── Entrance Animation Utilities (native, dependency-free) ───────────
+   The app uses the tailwindcss-animate API everywhere: `animate-in` plays
+   the entrance while `fade-in` / `zoom-in-*` / `slide-in-from-*` describe
+   the starting state. Declared with @utility so responsive and state
+   variants (sm:slide-in-from-bottom-0, sm:zoom-in-95 …) keep working. The
+   duration is inherited from the `duration-*` utility via --tw-duration. */
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0)
+      scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1))
+      rotate(var(--tw-enter-rotate, 0));
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0)
+      scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1))
+      rotate(var(--tw-exit-rotate, 0));
+  }
+}
+
+@utility animate-in {
+  animation: enter var(--tw-duration, 0.15s) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility animate-out {
+  animation: exit var(--tw-duration, 0.15s) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility fade-in {
+  --tw-enter-opacity: 0;
+}
+
+@utility fade-in-0 {
+  --tw-enter-opacity: 0;
+}
+
+@utility fade-in-40 {
+  --tw-enter-opacity: 0.4;
+}
+
+@utility zoom-in {
+  --tw-enter-scale: 0.5;
+}
+
+@utility zoom-in-95 {
+  --tw-enter-scale: 0.95;
+}
+
+@utility zoom-in-90 {
+  --tw-enter-scale: 0.9;
+}
+
+@utility slide-in-from-top {
+  --tw-enter-translate-y: -100%;
+}
+
+@utility slide-in-from-top-1 {
+  --tw-enter-translate-y: -0.25rem;
+}
+
+@utility slide-in-from-top-2 {
+  --tw-enter-translate-y: -0.5rem;
+}
+
+@utility slide-in-from-top-4 {
+  --tw-enter-translate-y: -1rem;
+}
+
+@utility slide-in-from-bottom {
+  --tw-enter-translate-y: 100%;
+}
+
+@utility slide-in-from-bottom-0 {
+  --tw-enter-translate-y: 0;
+}
+
+@utility slide-in-from-bottom-full {
+  --tw-enter-translate-y: 100%;
+}
+
+@utility slide-in-from-left {
+  --tw-enter-translate-x: -100%;
+}
+
+@utility slide-in-from-left-2 {
+  --tw-enter-translate-x: -0.5rem;
+}
+
+@utility slide-in-from-right {
+  --tw-enter-translate-x: 100%;
+}
+
+@utility slide-in-from-right-4 {
+  --tw-enter-translate-x: 1rem;
+}
+
+/* Accordion panels, late-arriving cards and the error-boundary refresh icon
+   reference these names in JSX — they need real keyframes behind them. */
+@keyframes fadeInSoft {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeInSoft .28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-card-fade {
+  animation: cardFadeIn .5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes spinReverse {
+  to { transform: rotate(-360deg); }
+}
+
+.animate-spin-reverse {
+  animation: spinReverse 1s linear infinite;
+}
+
 /* Animations */
 .fade-in-up {
-  animation: fadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* Route/mount entrance — short enough to feel instant, soft enough to settle. */
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .float-slow {

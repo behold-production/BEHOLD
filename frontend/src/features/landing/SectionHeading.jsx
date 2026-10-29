@@ -12,7 +12,7 @@ export default function SectionHeading({ eyebrow, title, description, align = 'c
 
   return (
     <div
-      className={`${isCentered ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'} ${className}`}
+      className={`reveal-on-scroll ${isCentered ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'} ${className}`}
     >
       {eyebrow && (
         <span

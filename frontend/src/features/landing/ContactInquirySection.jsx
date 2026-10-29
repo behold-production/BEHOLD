@@ -95,7 +95,7 @@ export default function ContactInquirySection({ siteSettings = {}, onOpenBooking
         className="pointer-events-none absolute -left-20 bottom-0 h-[280px] w-[280px] rounded-full bg-[#06B6D4]/20 blur-3xl"
       />
 
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
+      <div className="reveal-on-scroll relative mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
         {/* Copy + contact details */}
         <div className="text-white">
           <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7DD3E0]">

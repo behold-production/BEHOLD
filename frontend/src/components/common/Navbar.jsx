@@ -141,6 +141,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
  
   const navRefs = useRef([]);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
+  const [hoverBar, setHoverBar] = useState({ left: 0, width: 0, visible: false });
 
   const activeIndex = navLinks.findIndex((link) => link.isActive);
 
@@ -202,7 +203,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
 
         return (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${location.pathname === '/' ? 'bh-home-nav' : ''} ${isHomeTop
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${location.pathname === '/' ? 'bh-home-nav' : ''} ${isScrolled ? 'is-scrolled' : ''} ${isHomeTop
               ? 'bg-transparent border-none shadow-none text-[#0e1111]'
               : 'bg-white/90 backdrop-blur-md border-b border-[#e6dfd0]/60 shadow-sm text-[#0e1111]'
               }`}
@@ -213,10 +214,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
                 <button
                   onClick={() => setMobileMenuOpen(true)}
-                  className="p-1.5 rounded-md transition-colors cursor-pointer border-none bg-[#f1eadc]/80 hover:bg-[#e6dfd0]/80 text-[#0e1111] flex items-center justify-center"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 cursor-pointer border-none bg-[#f1eadc]/80 hover:bg-[#e6dfd0] active:scale-95 text-[#0e1111]"
                   aria-label="Open Navigation Drawer"
                 >
-                  <Menu className="w-5.5 h-5.5 text-[#0e1111]" />
+                  <Menu className="w-5 h-5 text-[#0e1111]" />
                 </button>
 
                 <button
@@ -242,7 +243,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               </button>
 
               {/* Desktop Nav Links - Smooth Sliding Underline Indicator */}
-              <nav className="hidden lg:flex items-center gap-7 xl:gap-9 relative py-1">
+              <nav className="hidden lg:flex items-center gap-7 xl:gap-9 relative py-1" onMouseLeave={() => setHoverBar((prev) => ({ ...prev, visible: false }))}>
+                {/* Ghost indicator that previews the link you are about to open */}
+                <span
+                  className="absolute bottom-0 h-[2.5px] rounded-full bg-[#0e7490] pointer-events-none transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={{
+                    left: `${hoverBar.left}px`,
+                    width: `${hoverBar.width}px`,
+                    opacity: hoverBar.visible ? 0.3 : 0,
+                  }}
+                />
+
                 {/* Smooth Sliding Active Underline Indicator Bar */}
                 <span
                   className="absolute bottom-0 h-[2.5px] bg-[#0e7490] rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none"
@@ -260,7 +271,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                       key={label}
                       ref={(el) => (navRefs.current[idx] = el)}
                       onClick={action}
-                      className={`text-sm font-medium tracking-wide transition-colors duration-200 bg-transparent cursor-pointer py-1 px-1 rounded-md border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] ${isActive
+                      onMouseEnter={(e) => {
+                        if (idx === activeIndex) { setHoverBar((prev) => ({ ...prev, visible: false })); return; }
+                        setHoverBar({ left: e.currentTarget.offsetLeft, width: e.currentTarget.offsetWidth, visible: true });
+                      }}
+                      onFocus={(e) => {
+                        if (idx === activeIndex) return;
+                        setHoverBar({ left: e.currentTarget.offsetLeft, width: e.currentTarget.offsetWidth, visible: true });
+                      }}
+                      onBlur={() => setHoverBar((prev) => ({ ...prev, visible: false }))}
+                      className={`text-sm font-medium tracking-wide transition-all duration-200 bg-transparent cursor-pointer py-1 px-1 rounded-md border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] ${isActive
                         ? 'text-[#0e7490] font-semibold'
                         : 'text-[#3c4747] hover:text-[#0e7490]'
                         }`}
@@ -271,21 +291,23 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 })}
               </nav>
 
-              {/* Desktop Action Buttons */}
-              <div className="hidden lg:flex items-center gap-3">
+              {/* Desktop Action Buttons — one shared 40px control height so the row lines up */}
+              <div className="hidden lg:flex items-center gap-2.5">
                 {siteSettings?.contactPhone && (
                   <a
                     href={`tel:${String(siteSettings.contactPhone).replace(/[^\d+]/g, '')}`}
-                    className="inline-flex items-center gap-2 rounded-md border border-[#DED8C9] bg-white/80 px-4 py-2 text-xs font-semibold text-[#0E1111] no-underline transition-colors hover:border-[#0E7490]/50 hover:text-[#0B5C73]"
+                    data-nav-phone=""
+                    className="hidden xl:inline-flex h-10 items-center gap-2 rounded-lg border border-[#DED8C9] bg-white/70 px-3.5 text-xs font-semibold tabular-nums text-[#0E1111] no-underline transition-all duration-200 hover:border-[#0E7490]/60 hover:bg-white hover:text-[#0B5C73] active:scale-[0.98]"
                   >
-                    <Phone className="h-3.5 w-3.5 text-[#0E7490]" />
+                    <Phone className="h-3.5 w-3.5 shrink-0 text-[#0E7490]" />
                     {siteSettings.contactPhone}
                   </a>
                 )}
               
                 <button
                   onClick={() => { onOpenBooking(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="px-6 py-2.5 font-semibold text-xs sm:text-sm rounded-md transition-all duration-300 shadow-sm cursor-pointer border-none bg-[#0E7490] hover:bg-[#0B5C73] text-white hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490] focus-visible:ring-offset-2"
+                  data-nav-book=""
+                  className="inline-flex h-10 items-center justify-center rounded-lg bg-[#0E7490] px-5 text-sm font-semibold text-white shadow-sm transition-all cursor-pointer border-none hover:bg-[#0B5C73] hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490] focus-visible:ring-offset-2"
                 >
                   Book Session
                 </button>
@@ -295,7 +317,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                     onClick={handleProfileClick}
                     title={`Logged in as ${user.name || user.email}`}
                     aria-label="User Profile"
-                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-md transition-all cursor-pointer border shrink-0 bg-white/90 hover:bg-white text-[#0e1111] border-[#e6dfd0]/80 shadow-xs hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
+                    data-nav-profile=""
+                    className="inline-flex h-10 items-center gap-2.5 rounded-lg px-2 py-1 transition-all cursor-pointer border shrink-0 bg-white/90 hover:bg-white text-[#0e1111] border-[#e6dfd0]/80 shadow-xs hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
                   >
                     <div className="w-7 h-7 rounded-sm overflow-hidden shrink-0 bg-[#0e7490]/10 flex items-center justify-center border border-[#0e7490]/20">
                       {user.profilePic ? (
@@ -312,7 +335,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-5 py-2 font-medium text-xs sm:text-sm rounded-md transition-all cursor-pointer border bg-white/80 hover:bg-white text-[#0e1111] border-[#e6dfd0]/80 hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
+                    data-nav-signin=""
+                    className="inline-flex h-10 items-center justify-center rounded-lg border border-[#e6dfd0]/90 bg-white/70 px-4 text-sm font-medium text-[#0e1111] transition-all cursor-pointer hover:border-[#0e7490]/50 hover:bg-white hover:text-[#0b5c73] hover-scale-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
                   >
                     Sign In
                   </button>
@@ -339,7 +363,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 ) : (
                   <button
                     onClick={() => onOpenAuth?.()}
-                    className="px-4 py-1.5 font-bold text-xs rounded-md transition-all cursor-pointer border-none bg-[#0e7490] hover:bg-[#0b5c73] text-white shadow-xs"
+                    className="inline-flex h-10 items-center justify-center rounded-lg bg-[#0e7490] px-4 text-xs font-bold text-white shadow-xs transition-all duration-200 hover:bg-[#0b5c73] active:scale-95"
                   >
                     Sign In
                   </button>
@@ -351,12 +375,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
         );
       })()}
 
-      {/* Mobile Slide-out Menu via Portal */}
-      {typeof document !== 'undefined' && mobileMenuOpen && createPortal(
+      {/* Mobile Slide-out Menu via Portal — stays mounted so the close motion can play */}
+      {typeof document !== 'undefined' && createPortal(
         <div
-          className={`fixed inset-0 z-[100] lg:hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
-          }`}
+          aria-hidden={!mobileMenuOpen}
+          inert={!mobileMenuOpen}
+          className={`fixed inset-0 z-[100] lg:hidden transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+            }`}
         >
           {/* Backdrop */}
           <div
@@ -386,12 +411,14 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                 </button>
               </div>
 
-              <div className="flex flex-col gap-2 mt-6">
-                {navLinks.map(({ label, action }) => (
+              <div className="flex flex-col gap-1 mt-6">
+                {navLinks.map(({ label, action }, idx) => (
                   <button
                     key={label}
                     onClick={action}
-                    className="text-left py-2.5 px-3 rounded-md text-sm font-medium text-[#0e1111] hover:text-[#0e7490] hover:bg-[#e6dfd0]/40 transition border-none bg-transparent cursor-pointer"
+                    style={{ transitionDelay: mobileMenuOpen ? `${90 + idx * 45}ms` : '0ms' }}
+                    className={`text-left py-2.5 px-3 rounded-md text-sm font-medium text-[#0e1111] hover:text-[#0e7490] hover:bg-[#e6dfd0]/40 transition-all duration-300 border-none bg-transparent cursor-pointer ${mobileMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-3 opacity-0'
+                      }`}
                   >
                     {label}
                   </button>
@@ -403,7 +430,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {user && (
                 <button
                   onClick={handleProfileClick}
-                  className="w-full py-3 bg-[#0e1111] hover:bg-[#0e7490] text-white font-medium text-sm rounded-md transition-all cursor-pointer shadow-sm text-center flex items-center justify-center gap-2 border-none"
+                  style={{ transitionDelay: mobileMenuOpen ? '330ms' : '0ms' }}
+                  className={`w-full py-3 bg-[#0e1111] hover:bg-[#0e7490] text-white font-medium text-sm rounded-lg transition-all duration-300 cursor-pointer shadow-sm text-center flex items-center justify-center gap-2 border-none ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}
                 >
                   <User className="w-4 h-4 text-white" />
                   <span>My Profile / Dashboard</span>
@@ -411,9 +439,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               )}
               <button
                 onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
-                className={`w-full py-3 font-medium text-sm rounded-md transition-all cursor-pointer text-center border-none shadow-sm ${user
-                  ? 'bg-white hover:bg-[#e6dfd0]/40 text-[#0e1111] border border-[#e6dfd0]'
-                  : 'bg-[#0e7490] hover:bg-[#0b5c73] text-white'
+                style={{ transitionDelay: mobileMenuOpen ? '370ms' : '0ms' }}
+                className={`w-full py-3 font-medium text-sm rounded-lg transition-all duration-300 cursor-pointer text-center border shadow-sm ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'} ${user
+                  ? 'bg-white hover:bg-[#e6dfd0]/40 text-[#0e1111] border-[#e6dfd0]'
+                  : 'bg-[#0e7490] hover:bg-[#0b5c73] text-white border-[#0e7490]'
                   }`}
               >
                 Book Session
@@ -421,14 +450,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {user ? (
                 <button
                   onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                  className="w-full py-2.5 border border-rose-200 text-rose-600 font-medium text-sm rounded-md transition bg-white hover:bg-rose-50 text-center cursor-pointer"
+                  style={{ transitionDelay: mobileMenuOpen ? '410ms' : '0ms' }}
+                  className={`w-full py-2.5 border border-rose-200 text-rose-600 font-medium text-sm rounded-lg transition-all duration-300 bg-white hover:bg-rose-50 text-center cursor-pointer ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}
                 >
                   Sign Out
                 </button>
               ) : (
                 <button
                   onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                  className="w-full py-2.5 border border-[#e6dfd0] text-[#0e1111] font-semibold text-sm rounded-md transition bg-[#f1eadc] hover:bg-[#e6dfd0] text-center cursor-pointer"
+                  style={{ transitionDelay: mobileMenuOpen ? '410ms' : '0ms' }}
+                  className={`w-full py-2.5 border border-[#e6dfd0] text-[#0e1111] font-semibold text-sm rounded-lg transition-all duration-300 bg-[#f1eadc] hover:bg-[#e6dfd0] text-center cursor-pointer ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}
                 >
                   Sign In
                 </button>

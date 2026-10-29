@@ -151,7 +151,7 @@ export default function Footer({
 
       <footer className="relative z-10 border-t border-[#E6DFD0] bg-[#FBF8F1] pb-8 pt-12 sm:pt-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-9 pb-9 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+          <div className="reveal-on-scroll grid grid-cols-1 gap-9 pb-9 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-5">
               <button

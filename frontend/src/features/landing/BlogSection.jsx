@@ -78,7 +78,7 @@ export default function BlogSection({ siteSettings = {} }) {
             ))}
           </div>
         ) : (
-          <div className="mt-9 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          <div className="reveal-on-scroll reveal-delay-1 mt-9 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {blogs.slice(0, 3).map((post) => (
               <article
                 key={post.id}

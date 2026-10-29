@@ -198,7 +198,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
           </nav>
 
           {/* Page Header matching mockup */}
-          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+          <div className="reveal-on-scroll text-center max-w-3xl mx-auto mb-10 sm:mb-14">
             <span className="text-[#0e7490] text-[11px] font-bold tracking-[0.2em] uppercase block mb-3">
               All Licensed Specialists
             </span>
@@ -211,7 +211,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
           </div>
 
           {/* Interactive Toolbar matching modern professional layout */}
-          <div className="bg-white rounded-md border border-[#e6dfd0] shadow-xs p-5 sm:p-6 mb-8">
+          <div className="reveal-scale-in reveal-delay-1 bg-white rounded-md border border-[#e6dfd0] shadow-xs p-5 sm:p-6 mb-8">
             {/* Top Row: Search & Dropdowns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 items-center">
               {/* Search */}
@@ -336,7 +336,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
               ))}
             </div>
           ) : filteredAdvisors.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-md border border-[#e6dfd0] shadow-xs max-w-lg mx-auto p-10">
+            <div className="reveal-scale-in text-center py-20 bg-white rounded-md border border-[#e6dfd0] shadow-xs max-w-lg mx-auto p-10">
               <div className="w-14 h-14 bg-[#f7f2e7] text-[#0e7490] rounded-sm flex items-center justify-center mx-auto mb-4 border border-[#cbe9f1]">
                 <UserRound className="w-6 h-6" />
               </div>
@@ -357,7 +357,7 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
+            <div className="reveal-on-scroll grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
               {filteredAdvisors.map((advisor) => {
                 const nextAvailable = calculateNextAvailable(advisor.availability, advisor.bookedSlots);
                 const modeLabels = getModeLabels(advisor.modes, siteSettings);

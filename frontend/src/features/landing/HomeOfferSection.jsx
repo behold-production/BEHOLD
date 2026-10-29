@@ -27,7 +27,7 @@ export default function HomeOfferSection({ siteSettings = {}, onOpenBooking }) {
   return (
     <section id="about" className="relative w-full overflow-hidden bg-[#FBF8F1] py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-9 lg:grid-cols-2 lg:gap-14">
+        <div className="reveal-on-scroll grid items-center gap-9 lg:grid-cols-2 lg:gap-14">
           {/* Numbers panel — every figure comes from the admin's about stats */}
           <div className="relative">
             <div

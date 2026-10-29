@@ -86,7 +86,7 @@ export default function WhyChooseSection({ siteSettings = {}, onOpenBooking }) {
         <SectionHeading eyebrow="Why Choose Us" title="Care That Puts You First" />
 
         <div
-          className={`mt-10 grid gap-8 sm:mt-12 sm:gap-10 ${
+          className={`reveal-on-scroll reveal-delay-1 mt-10 grid gap-8 sm:mt-12 sm:gap-10 ${
             hasSidePanel ? 'items-stretch lg:grid-cols-2 lg:gap-14' : 'mx-auto max-w-3xl'
           }`}
         >

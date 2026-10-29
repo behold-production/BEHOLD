@@ -56,7 +56,7 @@ export default function About({ siteSettings, onOpenBooking }) {
       >
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header: Left terracotta eyebrow, Right serif heading */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 sm:mb-16 pb-4 border-b border-[#e6dfd0]">
+          <div className="reveal-on-scroll flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 sm:mb-16 pb-4 border-b border-[#e6dfd0]">
             <div>
               <span className="text-[#0e7490] text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase block">
                 {eyebrow}
@@ -73,7 +73,7 @@ export default function About({ siteSettings, onOpenBooking }) {
           </div>
 
           {/* Forest Backdrop Container with 3 Floating Cards */}
-          <div className="relative rounded-md overflow-hidden p-6 sm:p-10 md:p-12 shadow-sm border border-[#e6dfd0]">
+          <div className="reveal-scale-in reveal-delay-1 relative rounded-md overflow-hidden p-6 sm:p-10 md:p-12 shadow-sm border border-[#e6dfd0]">
             {/* Background Image: Serene Pine Trees / Forest Mist */}
             <div
               className="absolute inset-0 bg-cover bg-center pointer-events-none"

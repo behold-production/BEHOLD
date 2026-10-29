@@ -140,7 +140,7 @@ export default function Reviews({ siteSettings = {} }) {
           </div>
         ) : (
           <>
-            <div className="mt-9 flex flex-wrap justify-center gap-4 sm:mt-12">
+            <div className="reveal-on-scroll reveal-delay-1 mt-9 flex flex-wrap justify-center gap-4 sm:mt-12">
               {visibleReviews.map((review, idx) => (
                 <article
                   key={`${review.id}-${idx}`}
