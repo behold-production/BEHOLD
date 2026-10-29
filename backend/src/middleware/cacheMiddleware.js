@@ -36,4 +36,20 @@ const cacheMiddleware = (duration = 300) => {
   };
 };
 
-module.exports = { cacheMiddleware, cache };
+/**
+ * Drop cached GET responses whose key contains the given path fragment.
+ * Needed so admin edits reach the public site immediately instead of waiting
+ * for the TTL to expire.
+ */
+const invalidateResponseCache = (pathFragment = '') => {
+  let cleared = 0;
+  cache.keys().forEach((key) => {
+    if (!pathFragment || key.includes(pathFragment)) {
+      cache.del(key);
+      cleared += 1;
+    }
+  });
+  return cleared;
+};
+
+module.exports = { cacheMiddleware, cache, invalidateResponseCache };

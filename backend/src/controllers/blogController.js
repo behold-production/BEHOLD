@@ -182,7 +182,7 @@ class BlogController {
       };
 
       const newBlog = await StorageService.create('blogs', newBlogData);
-
+      require('../utils/cacheHelper').clear('public_blog');
       res.status(201).json({ success: true, data: newBlog });
     } catch (error) {
       console.error('[Create Blog Error]', error);
@@ -286,7 +286,7 @@ class BlogController {
 
       const targetId = blog._id || blog.id || id;
       const updatedBlog = await StorageService.update('blogs', targetId, updates);
-
+      require('../utils/cacheHelper').clear('public_blog');
       res.status(200).json({ success: true, data: updatedBlog });
     } catch (error) {
       console.error('[Update Blog Error]', error);
@@ -322,6 +322,7 @@ class BlogController {
       if (!deleted) {
         return res.status(404).json({ success: false, message: 'Blog post not found' });
       }
+      require('../utils/cacheHelper').clear('public_blog');
 
       res.status(200).json({ success: true, message: 'Blog post deleted successfully' });
     } catch (error) {

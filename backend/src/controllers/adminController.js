@@ -59,7 +59,7 @@ async function ensureEmailAvailable(email, excludeId) {
   return normalizedEmail;
 }
 
-function flushCounsellorCaches() {
+function flushPublicCaches() {
   try {
     cacheHelper.clear();
     const { cache } = require('../middleware/cacheMiddleware');
@@ -236,8 +236,8 @@ https://www.behold.co.in/counsellor`;
         WhatsAppService.sendNotification(updated.phone, waMsg).catch(err => console.error('[WA Verify Error]:', err));
       }
 
-      flushCounsellorCaches();
-
+      flushPublicCaches();
+      
       res.status(200).json({
         success: true,
         message: `Counsellor verification status updated to ${isVerified}`,
@@ -805,7 +805,7 @@ If you have questions or would like to reapply with updated information, please 
         isTopFive: isTopFive === true || isTopFive === 'true',
         commissionPercent: normalizedCommission
       });
-      flushCounsellorCaches();
+      flushPublicCaches();
       const { password: _, ...counsellorData } = newCounsellor;
       res.status(201).json({ success: true, message: 'Counsellor created successfully', data: counsellorData });
     } catch (error) {
@@ -922,8 +922,8 @@ If you have questions or would like to reapply with updated information, please 
         WhatsAppService.sendNotification(updated.phone, msg).catch(err => console.error(err));
       }
 
-      flushCounsellorCaches();
-
+      flushPublicCaches();
+      
       const { password: _, ...counsellorData } = updated;
       res.status(200).json({ success: true, message: 'Counsellor updated successfully', data: counsellorData });
     } catch (error) {
@@ -946,7 +946,7 @@ If you have questions or would like to reapply with updated information, please 
       // Cascade soft-delete: mark all related appointments as deleted too
       const Appointment = require('../models/Appointment');
       await Appointment.updateMany({ counsellorId: id, isDeleted: { $ne: true } }, { $set: { isDeleted: true, deletedAt: now } });
-      flushCounsellorCaches();
+      flushPublicCaches();
       res.status(200).json({ success: true, message: 'Psychologist moved to trash. Can be restored within 30 days.' });
     } catch (error) {
       next(error);
@@ -1001,7 +1001,7 @@ If you have questions or would like to reapply with updated information, please 
         { counsellorId: id, isDeleted: true, deletedAt: counsellor.deletedAt },
         { $set: { isDeleted: false, deletedAt: null } }
       );
-      flushCounsellorCaches();
+      flushPublicCaches();
       const { password, ...data } = restored;
       res.status(200).json({ success: true, message: 'Psychologist restored successfully', data });
     } catch (error) {
@@ -1065,7 +1065,7 @@ If you have questions or would like to reapply with updated information, please 
       const Appointment = require('../models/Appointment');
       await Appointment.deleteMany({ counsellorId: id, isDeleted: true });
       await StorageService.delete('counsellors', id);
-      flushCounsellorCaches();
+      flushPublicCaches();
       res.status(200).json({ success: true, message: 'Psychologist permanently deleted.' });
     } catch (error) {
       next(error);
@@ -1166,6 +1166,7 @@ If you have questions or would like to reapply with updated information, please 
         return res.status(400).json({ success: false, message: 'Question and answer are required' });
       }
       const newFaq = await StorageService.create('faqs', { question, answer });
+      flushPublicCaches();
       res.status(201).json({ success: true, message: 'FAQ created successfully', data: newFaq });
     } catch (error) {
       next(error);
@@ -1178,6 +1179,7 @@ If you have questions or would like to reapply with updated information, please 
       const { question, answer } = req.body;
       const updated = await StorageService.update('faqs', id, { question, answer });
       if (!updated) return res.status(404).json({ success: false, message: 'FAQ not found' });
+      flushPublicCaches();
       res.status(200).json({ success: true, message: 'FAQ updated successfully', data: updated });
     } catch (error) {
       next(error);
@@ -1189,6 +1191,7 @@ If you have questions or would like to reapply with updated information, please 
       const { id } = req.params;
       const deleted = await StorageService.delete('faqs', id);
       if (!deleted) return res.status(404).json({ success: false, message: 'FAQ not found' });
+      flushPublicCaches();
       res.status(200).json({ success: true, message: 'FAQ deleted successfully' });
     } catch (error) {
       next(error);
@@ -1377,8 +1380,8 @@ If you have questions or would like to reapply with updated information, please 
       } else {
         settings = await StorageService.update('settings', settings.id || settings._id, updates);
       }
-      cacheHelper.clear('public_settings');
-      cacheHelper.clear('counsellors_list_');
+      // Global settings feed every public section — drop both cache layers at once.
+      flushPublicCaches();
       res.status(200).json({ success: true, message: 'Settings updated successfully', data: settings });
     } catch (error) {
       next(error);
@@ -2438,8 +2441,8 @@ If you have questions or would like to reapply with updated information, please 
         profilePicPublicId: uploadResult.public_id
       });
 
-      flushCounsellorCaches();
-
+      flushPublicCaches();
+      
       const { password, ...counsellorData } = updated || counsellor;
 
       res.status(200).json({
