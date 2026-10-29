@@ -10,6 +10,10 @@ const { normalizePhoneWithCountryCode, cleanUserName } = require('../utils/phone
  * Required .env:
  *   WASENDER_TOKEN — Session-specific API key from wasenderapi.com
  *                    Dashboard → WhatsApp Sessions → your session → 🔑 key icon
+ *
+ * The token is never defaulted in code: without it the service reports a
+ * configuration failure so callers can tell the user the truth instead of
+ * claiming a message was delivered.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -22,7 +26,7 @@ class WhatsAppService {
   }
 
   _init() {
-    this.waSenderToken = (process.env.WASENDER_TOKEN || '04dd74a889079fa8a0030b0d5758854885be408fa8486f84a962c7ffb18ecf50').trim();
+    this.waSenderToken = (process.env.WASENDER_TOKEN || '').trim();
     this.isWaSenderConfigured = Boolean(this.waSenderToken);
   }
 
@@ -63,13 +67,37 @@ class WhatsAppService {
     return formatted || null;
   }
 
+  /** Is there enough room left before the deadline to sit out for `ms`? */
+  _canWait(deadlineMs, ms) {
+    return Date.now() + ms < deadlineMs;
+  }
+
   /**
-   * Low-level send via WASender API with automatic rate-limit handling & retries
+   * Seconds to wait before the next attempt. Honours the provider's retry_after
+   * hint but never sleeps past the caller's deadline. 6.5s is the floor because
+   * WASender's account protection blocks anything under 5s.
    */
-  async _sendViaWaSender(phone, text, attempt = 1) {
+  _retryWaitSeconds(deadlineMs, retryAfterSec = 0) {
+    const requested = Math.max(Number(retryAfterSec) + 1, 6.5);
+    if (!Number.isFinite(deadlineMs)) return requested;
+    return Math.min(requested, Math.max(0, (deadlineMs - Date.now()) / 1000));
+  }
+
+  /**
+   * Low-level send via WASender API with automatic rate-limit handling & retries.
+   *
+   * `deadlineMs` is an absolute timestamp: retries only happen while there is
+   * still time left, so a caller waiting on this promise (an HTTP request inside
+   * a 30s serverless function, for example) is never held open indefinitely.
+   */
+  async _sendViaWaSender(phone, text, { attempt = 1, maxAttempts = 3, deadlineMs = Infinity } = {}) {
     const formattedPhoneWithPlus = this._formatPhoneNumber(phone);
     if (!formattedPhoneWithPlus) {
       return { success: false, provider: 'WASender', error: 'Invalid phone number' };
+    }
+
+    if (Date.now() > deadlineMs) {
+      return { success: false, provider: 'WASender', error: 'Send deadline exceeded before dispatch' };
     }
 
     const cleanedPhoneWithoutPlus = formattedPhoneWithPlus.replace(/^\+/, '');
@@ -80,6 +108,11 @@ class WhatsAppService {
       text: text
     };
 
+    // Never let the socket outlive the caller's deadline.
+    const httpTimeout = Number.isFinite(deadlineMs)
+      ? Math.max(2000, Math.min(25000, deadlineMs - Date.now()))
+      : 25000;
+
     try {
       const response = await axios.post(
         'https://wasenderapi.com/api/send-message',
@@ -89,7 +122,7 @@ class WhatsAppService {
             Authorization: `Bearer ${this.waSenderToken}`,
             'Content-Type': 'application/json'
           },
-          timeout: 25000
+          timeout: httpTimeout
         }
       );
       console.log(`[WhatsApp] ✅ Sent to ${formattedPhoneWithPlus}:`, response.data?.data || response.data?.message || 'OK');
@@ -104,11 +137,11 @@ class WhatsAppService {
         errMsg.includes('5 second') || errMsg.includes('account protection') ||
         errMsg.includes('rate limit') || errMsg.includes('too many');
 
-      if (isAccountProtection && attempt <= 3) {
-        const waitSeconds = Math.max(retryAfter + 1, 6.5);
-        console.warn(`[WhatsApp Rate Protection] ⏳ WASender Account Protection active. Auto-waiting ${waitSeconds}s before retry (Attempt ${attempt}/3)...`);
+      if (isAccountProtection && attempt < maxAttempts && this._canWait(deadlineMs, 6500)) {
+        const waitSeconds = this._retryWaitSeconds(deadlineMs, retryAfter);
+        console.warn(`[WhatsApp Rate Protection] ⏳ WASender Account Protection active. Auto-waiting ${waitSeconds}s before retry (Attempt ${attempt}/${maxAttempts})...`);
         await new Promise((resolve) => setTimeout(resolve, waitSeconds * 1000));
-        return this._sendViaWaSender(phone, text, attempt + 1);
+        return this._sendViaWaSender(phone, text, { attempt: attempt + 1, maxAttempts, deadlineMs });
       }
 
       console.error(`[WhatsApp] ⚠️ Initial payload failed for ${formattedPhoneWithPlus}:`, JSON.stringify(errData));
@@ -123,7 +156,7 @@ class WhatsAppService {
               Authorization: `Bearer ${this.waSenderToken}`,
               'Content-Type': 'application/json'
             },
-            timeout: 20000
+            timeout: Number.isFinite(deadlineMs) ? Math.max(2000, Math.min(20000, deadlineMs - Date.now())) : 20000
           }
         );
         console.log(`[WhatsApp] ✅ Fallback sent to ${cleanedPhoneWithoutPlus}:`, response2.data?.data || response2.data?.message || 'OK');
@@ -138,11 +171,11 @@ class WhatsAppService {
           retryErrMsg.includes('5 second') || retryErrMsg.includes('account protection') ||
           retryErrMsg.includes('rate limit');
 
-        if (isRetryAccountProtection && attempt <= 3) {
-          const waitSec = Math.max(retryWaitSec + 1, 6.5);
+        if (isRetryAccountProtection && attempt < maxAttempts && this._canWait(deadlineMs, 6500)) {
+          const waitSec = this._retryWaitSeconds(deadlineMs, retryWaitSec);
           console.warn(`[WhatsApp Rate Protection] ⏳ Secondary attempt triggered Account Protection. Auto-waiting ${waitSec}s...`);
           await new Promise((resolve) => setTimeout(resolve, waitSec * 1000));
-          return this._sendViaWaSender(phone, text, attempt + 1);
+          return this._sendViaWaSender(phone, text, { attempt: attempt + 1, maxAttempts, deadlineMs });
         }
         console.error(`[WhatsApp] ❌ Both attempts failed for ${phone}:`, retryErr.response?.data || retryErr.message);
       }
@@ -162,7 +195,7 @@ class WhatsAppService {
    * Core dispatcher — sends via WASender or falls back to console mock
    * Uses sequential queue throttling (6s gap) to prevent Account Protection rate limits
    */
-  async _dispatch(phone, text, { skipDeduplication = false, bypassQueue = false } = {}) {
+  async _dispatch(phone, text, { skipDeduplication = false, bypassQueue = false, maxAttempts = 3, deadlineMs = Infinity } = {}) {
     this._init(); // re-read env each time so .env changes take effect without restart
     if (!phone) return { success: false, error: 'Phone number is required' };
 
@@ -178,7 +211,7 @@ class WhatsAppService {
       if (bypassQueue) {
         console.log(`[WhatsApp] 🚀 Bypassing queue for high-priority message to ${phone}...`);
         try {
-          const result = await this._sendViaWaSender(phone, truncated);
+          const result = await this._sendViaWaSender(phone, truncated, { maxAttempts, deadlineMs });
           this._lastSendTime = Date.now(); // Reset timer so regular messages wait
           return result;
         } catch (e) {
@@ -198,7 +231,7 @@ class WhatsAppService {
           await new Promise((resolve) => setTimeout(resolve, waitMs));
         }
         try {
-          const result = await this._sendViaWaSender(phone, truncated);
+          const result = await this._sendViaWaSender(phone, truncated, { maxAttempts, deadlineMs });
           this._lastSendTime = Date.now();
           return result;
         } catch (e) {
@@ -210,6 +243,14 @@ class WhatsAppService {
       // Keep chain advancing even if this specific send errors
       this._sendQueue = sendTask.catch(() => {});
       return sendTask;
+    }
+
+    // No token configured: in production this used to fall through to the mock
+    // branch and report success, so users were told an OTP had been sent when it
+    // never left the server.
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[WhatsApp] WASENDER_TOKEN is not configured — message to', this._formatPhoneNumber(phone) || phone, 'was NOT sent.');
+      return { success: false, notConfigured: true, provider: 'WASender', error: 'WhatsApp provider not configured' };
     }
 
     // Dev/Mock mode — print to console so devs can see messages without real sends
@@ -225,13 +266,42 @@ class WhatsAppService {
   // ─── Public API ────────────────────────────────────────────────────────────
 
   /**
-   * OTP Verification — sent when user logs in or registers via WhatsApp
+   * OTP Verification — sent when a user logs in or registers over WhatsApp.
+   *
+   * Callers await this inside an HTTP request, so it runs against a deadline:
+   * an OTP that keeps retrying until the platform kills the function is worse
+   * than one that fails fast and lets the user ask for a fresh code.
    */
-  async sendOTP(phone, code) {
+  async sendOTP(phone, code, { deadlineMs = 14000 } = {}) {
     const text =
-      `Your BEHOLD. verification code is: ${code}\n\n` +
-      `Valid for 5 minutes. Please do not share this code with anyone.`;
-    return this._dispatch(phone, text, { skipDeduplication: true, bypassQueue: true });
+      `*BEHOLD. — Verification Code*\n\n` +
+      `Your 6-digit code is:\n\n` +
+      `*${code}*\n\n` +
+      `It expires in 5 minutes.\n` +
+      `Never share this code with anyone — not even BEHOLD. staff.`;
+    return this._dispatch(phone, text, {
+      skipDeduplication: true,
+      bypassQueue: true,
+      maxAttempts: 2,
+      deadlineMs: Date.now() + deadlineMs
+    });
+  }
+
+  /**
+   * Password reset code — same urgent treatment as the login OTP.
+   */
+  async sendPasswordResetOtp(phone, code, { minutes = 10, deadlineMs = 14000 } = {}) {
+    const text =
+      `*BEHOLD. — Password Reset Code*\n\n` +
+      `Your 6-digit verification code is:\n\n` +
+      `*${code}*\n\n` +
+      `This code is valid for ${minutes} minutes. Do not share it with anyone.`;
+    return this._dispatch(phone, text, {
+      skipDeduplication: true,
+      bypassQueue: true,
+      maxAttempts: 2,
+      deadlineMs: Date.now() + deadlineMs
+    });
   }
 
   /**

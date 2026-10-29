@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const StorageService = require('../services/storageService');
 const EmailService = require('../services/emailService');
@@ -9,6 +10,28 @@ const PasswordResetOtp = require('../models/PasswordResetOtp');
 
 const ACCESS_EXPIRY = '15m';
 const REFRESH_EXPIRY = '7d';
+
+// ── One-time code policy ───────────────────────────────────────────────────
+const OTP_TTL_MS = 5 * 60 * 1000;          // login code validity
+const OTP_RESEND_COOLDOWN_MS = 30 * 1000;  // minimum gap between codes per number
+const OTP_REQUEST_WINDOW_MS = 60 * 60 * 1000;
+const OTP_REQUEST_LIMIT = 5;               // codes per number per hour
+const OTP_MAX_ATTEMPTS = 5;                // wrong entries before a code burns
+
+/**
+ * Codes have historically been stored under whichever shape the user typed
+ * ('919876543210', '+919876543210', or the bare 10 digits). Any lookup has to
+ * cover all three or a resend and a verify can end up on different records.
+ */
+function phoneLookupVariants(normalizedPhone) {
+  const last10 = String(normalizedPhone).slice(-10);
+  return [String(normalizedPhone), `+${normalizedPhone}`, last10];
+}
+
+/** Cryptographically sound 6-digit code — Math.random is predictable. */
+function generateOtpCode() {
+  return crypto.randomInt(100000, 1000000).toString();
+}
 
 function buildEmailQuery(email) {
   const escaped = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -550,7 +573,7 @@ const AuthController = {
       }
 
       // Generate 6-digit OTP
-      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpCode = generateOtpCode();
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
       await PasswordResetOtp.create({
@@ -577,8 +600,7 @@ const AuthController = {
       // ── 2. WhatsApp OTP Delivery (If phone requested or user has phone) ─────
       let waSuccess = false;
       if (targetPhone && targetPhone.trim() !== '' && (!email || phone)) {
-        const waMsg = `*BEHOLD. — Password Reset Code*\n\nYour 6-digit verification code is:\n\n*${otpCode}*\n\nThis code is valid for 10 minutes. Do not share it with anyone.`;
-        const waRes = await WhatsAppService.sendNotification(targetPhone, waMsg).catch(err => {
+        const waRes = await WhatsAppService.sendPasswordResetOtp(targetPhone, otpCode, { minutes: 10 }).catch((err) => {
           console.error('[WhatsApp Reset OTP Error]:', err.message);
           return null;
         });
@@ -751,27 +773,64 @@ const AuthController = {
         return res.status(400).json({ success: false, message: 'Phone number is required' });
       }
 
-      // Normalize phone: strip non-digits, prepend 91 for 10-digit Indian numbers
-      const phoneClean = String(phone).replace(/\D/g, '');
-      const normalizedPhone = phoneClean.length === 10 ? '91' + phoneClean : phoneClean;
+      // Canonicalise first so the number we throttle, store and send to is one shape.
+      const formattedPhone = normalizePhoneWithCountryCode(phone);
+      if (!formattedPhone) {
+        return res.status(400).json({ success: false, message: 'Please enter a valid WhatsApp number' });
+      }
+      const normalizedPhone = formattedPhone.replace(/^\+/, '');
+      const variants = phoneLookupVariants(normalizedPhone);
 
-      if (normalizedPhone.length < 10) {
-        return res.status(400).json({ success: false, message: 'Invalid phone number provided' });
+      // ── Throttle: every code costs money and provider reputation ──────────
+      // Attempts that never reached the user are not counted, so a provider
+      // outage cannot lock someone out of retrying.
+      const sentThisHour = await StorageService.count('otps', {
+        phone: { $in: variants },
+        createdAt: { $gte: new Date(Date.now() - OTP_REQUEST_WINDOW_MS) },
+        deliveryStatus: { $nin: ['failed', 'not_configured'] }
+      });
+      if (sentThisHour >= OTP_REQUEST_LIMIT) {
+        return res.status(429).json({
+          success: false,
+          message: 'Too many verification codes requested for this number. Please try again in an hour.'
+        });
       }
 
-      // Invalidate any previous unused OTPs for this phone number before creating a new one
-      const existingOtps = await StorageService.findAll('otps', { phone: normalizedPhone });
-      const unusedOtps = existingOtps.filter((o) => !o.used);
-      for (const otp of unusedOtps) {
+      const recent = await StorageService.findAll('otps', {
+        phone: { $in: variants },
+        createdAt: { $gte: new Date(Date.now() - OTP_RESEND_COOLDOWN_MS) }
+      });
+      if (recent.length) {
+        const newest = recent.reduce((a, b) => (new Date(b.createdAt) > new Date(a.createdAt) ? b : a));
+        const neverDelivered = newest.deliveryStatus === 'failed' || newest.deliveryStatus === 'not_configured';
+        if (!neverDelivered) {
+          const waitSeconds = Math.max(
+            1,
+            Math.ceil((new Date(newest.createdAt).getTime() + OTP_RESEND_COOLDOWN_MS - Date.now()) / 1000)
+          );
+          return res.status(429).json({
+            success: false,
+            message: `Please wait ${waitSeconds} second${waitSeconds === 1 ? '' : 's'} before requesting a new code.`,
+            data: { retryAfterSeconds: waitSeconds }
+          });
+        }
+      }
+
+      // Retire any outstanding code before issuing a fresh one
+      const existingOtps = await StorageService.findAll('otps', {
+        phone: { $in: variants },
+        used: false
+      });
+      for (const otp of existingOtps) {
         await StorageService.update('otps', otp.id || otp._id, { used: true });
       }
 
       // Generate 6 digit OTP
-      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes validity
+      const otpCode = generateOtpCode();
+      const expiresAt = new Date(Date.now() + OTP_TTL_MS);
 
       // Store in otps collection using the normalized phone number
-      await StorageService.create('otps', {
+      const otpRecord = await StorageService.create('otps', {
         phone: normalizedPhone,
         otpCode,
         expiresAt,
@@ -784,25 +843,53 @@ const AuthController = {
       console.log(`TO: ${normalizedPhone}`);
       console.log(`======================================\n`);
 
-      // Dispatch via WhatsApp asynchronously without blocking the HTTP response
-      WhatsAppService.sendOTP(phone, otpCode)
-        .then((waResponse) => {
-          if (!waResponse?.success && !waResponse?.mock) {
-            console.warn(`[WhatsApp OTP Warning]: WASender API failed for ${phone}:`, waResponse?.error);
-            console.log(`[Fallback OTP]: Code generated for ${phone} is ${otpCode}`);
-          } else {
-            console.log(`[WhatsApp OTP Success]: Dispatched code to ${phone}`);
-          }
-        })
-        .catch((waErr) => {
-          console.error(`[WhatsApp OTP Error]: Failed to send OTP to ${phone}:`, waErr.message);
-          console.log(`[Fallback OTP]: Code generated for ${phone} is ${otpCode}`);
+      // Delivery is awaited deliberately. This handler used to answer the client
+      // first and fire the send afterwards, but a serverless function is frozen
+      // the moment the response leaves — the code was saved to the database and
+      // never reached WhatsApp, while the UI said "OTP sent".
+      let waResult;
+      try {
+        waResult = await WhatsAppService.sendOTP(formattedPhone, otpCode);
+      } catch (sendErr) {
+        console.error('[WhatsApp OTP dispatch error]:', sendErr?.message || sendErr);
+        waResult = { success: false, error: { message: sendErr?.message || 'dispatch failed' } };
+      }
+
+      const delivered = Boolean(waResult?.success || waResult?.mock);
+      const deliveryStatus = delivered
+        ? (waResult?.mock ? 'mock' : 'sent')
+        : (waResult?.notConfigured ? 'not_configured' : 'failed');
+
+      await StorageService.update('otps', otpRecord.id || otpRecord._id, {
+        deliveryStatus,
+        deliveryError: delivered
+          ? ''
+          : String(waResult?.error?.message || waResult?.error || 'provider rejected send').slice(0, 300)
+      });
+
+      if (!delivered) {
+        console.warn(`[WhatsApp OTP] Code for ${normalizedPhone} was NOT delivered:`, waResult?.error);
+        return res.status(502).json({
+          success: false,
+          delivered: false,
+          message: waResult?.notConfigured
+            ? 'The verification service is unavailable right now. Please try again in a moment.'
+            : 'We could not deliver the code to your WhatsApp just now. Please try again.'
         });
+      }
+
+      const maskedPhone = formattedPhone.replace(/\d(?=\d{4})/g, '•');
 
       return res.status(200).json({
         success: true,
-        message: 'OTP sent successfully via WhatsApp',
-        ...(process.env.NODE_ENV !== 'production' || !process.env.WASENDER_TOKEN ? { devOtp: otpCode } : {})
+        delivered: true,
+        message: 'Verification code sent on WhatsApp',
+        data: {
+          maskedPhone,
+          expiresInSeconds: Math.floor(OTP_TTL_MS / 1000),
+          resendAfterSeconds: Math.ceil(OTP_RESEND_COOLDOWN_MS / 1000),
+          ...(process.env.NODE_ENV !== 'production' || !process.env.WASENDER_TOKEN ? { devOtp: otpCode } : {})
+        }
       });
     } catch (error) {
       next(error);
@@ -827,19 +914,39 @@ const AuthController = {
 
       // Find OTP records using normalized phone and fallback formats
       const otps = await StorageService.findAll('otps', {
-        $or: [
-          { phone: normalizedPhone },
-          { phone: phoneClean },
-          { phone: `+${normalizedPhone}` },
-          { phone: last10 }
-        ]
+        phone: { $in: [...phoneLookupVariants(normalizedPhone), phoneClean] }
       });
       // Get the latest unused, non-expired OTP
       const validOtps = otps.filter((o) => !o.used && new Date(o.expiresAt) > new Date());
       const latestOtp = validOtps.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
-      if (!latestOtp || String(latestOtp.otpCode).trim() !== cleanOtpInput) {
-        return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+      if (!latestOtp) {
+        const hasExpiredCode = otps.some((o) => !o.used && new Date(o.expiresAt) <= new Date());
+        return res.status(400).json({
+          success: false,
+          message: hasExpiredCode
+            ? 'That code has expired. Request a new one and try again.'
+            : 'Invalid or expired OTP'
+        });
+      }
+
+      if (String(latestOtp.otpCode).trim() !== cleanOtpInput) {
+        // Count wrong entries so a 6-digit code cannot be guessed repeatedly.
+        const attempts = Number(latestOtp.attempts || 0) + 1;
+        const burned = attempts >= OTP_MAX_ATTEMPTS;
+        await StorageService.update(
+          'otps',
+          latestOtp.id || latestOtp._id,
+          burned ? { attempts, used: true } : { attempts }
+        );
+        console.warn(`[OTP] Incorrect code attempt ${attempts} for ${normalizedPhone}`);
+        const left = OTP_MAX_ATTEMPTS - attempts;
+        return res.status(400).json({
+          success: false,
+          message: burned
+            ? 'Too many incorrect attempts. Please request a new code.'
+            : `Incorrect code. ${left} attempt${left === 1 ? '' : 's'} left.`
+        });
       }
 
       // Mark as used
