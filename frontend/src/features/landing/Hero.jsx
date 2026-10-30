@@ -130,11 +130,11 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
               className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 mt-3 text-[#0E1111]"
             >
               {headlineLines.slice(0, -1).map((line, idx) => (
-                <span key={`${line}-${idx}`} className="font-brush-hero block text-[2.1rem] leading-[1.15] text-[#0E7490] sm:text-[2.5rem] lg:text-[2.75rem]">
+                <span key={`${line}-${idx}`} className="font-brush-hero block text-[1.7rem] leading-[1.15] text-[#0E7490] sm:text-[1.95rem] lg:text-[2.15rem]">
                   {line}
                 </span>
               ))}
-              <span className="font-heading mt-2 block text-[3.5rem] font-bold leading-[0.98] tracking-[-0.03em] sm:mt-3 sm:text-[5rem] lg:text-[5.75rem]">
+              <span className="font-heading mt-1.5 block text-[2.5rem] font-bold leading-[1.02] tracking-[-0.02em] sm:mt-2 sm:text-[3.25rem] lg:text-[3.75rem]">
                 {headlineLines[headlineLines.length - 1]}
               </span>
             </h1>
