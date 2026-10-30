@@ -4,7 +4,7 @@ import { useBookingViewModel, BOOKING_DRAFT_KEY } from './useBookingViewModel';
 
 import TimePicker from './TimePicker';
 import BookingAuthModal from './BookingAuthModal';
-import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon, Trash2, Video as VideoIcon, Star } from 'lucide-react';
+import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon, Trash2, Video as VideoIcon, Star, Search } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import { buildGoogleMeetUrl } from '../student/utils/utils';
@@ -216,7 +216,9 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
     const [showConsentModal, setShowConsentModal] = useState(false);
     const [showClearBookingConfirm, setShowClearBookingConfirm] = useState(false);
 
-    const [wizardStep, setWizardStep] = useState(() => preselectedAdvisorId ? 2 : 1);
+    // The wizard always opens on step 1 — even when arriving from the
+    // psychologist directory with a picked advisor, who shows up preselected.
+    const [wizardStep, setWizardStep] = useState(1);
     const [selectedSpecialty, setSelectedSpecialty] = useState('all');
 
     // Generate date strip for horizontal picker
@@ -239,6 +241,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
 
     // Reset, resume, or jump to the right step when the modal opens
     const wasOpenRef = useRef(false);
+    const resumedFromDraftRef = useRef(false);
     useLayoutEffect(() => {
         const justOpened = isOpen && !wasOpenRef.current;
         wasOpenRef.current = isOpen;
@@ -248,8 +251,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             setWizardStep(3);
             return;
         }
+        // Coming from the directory with a picked advisor: still start at step 1
+        // so the selection is visible and confirmed before anything else.
         if (preselectedAdvisorId) {
-            setWizardStep(2);
+            setWizardStep(1);
             return;
         }
         // Resume at step 3/4 when an in-progress draft was restored from sessionStorage
@@ -261,10 +266,30 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                 resumeStep = draft.selectedDate && draft.selectedTime ? 4 : 3;
             }
         } catch { /* ignore */ }
+        resumedFromDraftRef.current = resumeStep > 1;
         setWizardStep(resumeStep);
     }, [isOpen, preselectedAdvisorId, isRescheduleParam]);
 
-    const isAdvisorLocked = !!preselectedAdvisorId;
+    // The prop is cleared by the view model the moment it has consumed the id,
+    // so the "chosen for you" UI keeps a mirror of it for the whole session.
+    const [lockedAdvisorId, setLockedAdvisorId] = useState(preselectedAdvisorId || null);
+    useEffect(() => {
+        if (preselectedAdvisorId) setLockedAdvisorId(preselectedAdvisorId);
+    }, [preselectedAdvisorId]);
+    const isAdvisorLocked = !!lockedAdvisorId;
+
+    // Letting go of the directory pick: unlocks step 1's banner and lets the
+    // user browse and choose someone else.
+    const [hasAutoAdvanced, setHasAutoAdvanced] = useState(false);
+    const releasePreselectedAdvisor = useCallback(() => {
+        setLockedAdvisorId(null);
+        setSelectedAdvisor(null);
+        setSelectedTime('');
+        setHasAutoAdvanced(false);
+        setWizardStep(1);
+        if (clearPreselectedAdvisor) clearPreselectedAdvisor();
+    }, [clearPreselectedAdvisor]);
+
     const flowKey = bookingMode === 'DOOR_STEP' ? 'doorstep' : bookingMode.toLowerCase();
     const activeSteps = bookingService === 'counselling' ? COUNSELLING_FLOW[flowKey] : CAREER_FLOW[flowKey];
 
@@ -276,16 +301,12 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             handleStepChange('config');
             return;
         }
-        if (wizardStep === 2 && isAdvisorLocked) {
-            onClose();
-            return;
-        }
         if (wizardStep > 1) {
             setWizardStep(prev => prev - 1);
             return;
         }
         onClose();
-    }, [bookingStep, wizardStep, isAdvisorLocked, handleStepChange, onClose]);
+    }, [bookingStep, wizardStep, handleStepChange, onClose]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -325,15 +346,32 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
         return () => cancelAnimationFrame(frame);
     }, [bookingStep, wizardStep]);
 
-    const [hasAutoAdvanced, setHasAutoAdvanced] = useState(false);
     useEffect(() => {
-        if (selectedAdvisor && !hasAutoAdvanced && wizardStep === 1 && !isAdvisorLocked) {
+        // Only resume-from-draft opens skip ahead with an advisor already set;
+        // a directory pick or a fresh manual selection stays on step 1 first.
+        if (selectedAdvisor && !hasAutoAdvanced && wizardStep === 1 && resumedFromDraftRef.current) {
             setWizardStep(2);
             setHasAutoAdvanced(true);
         }
-    }, [selectedAdvisor, hasAutoAdvanced, wizardStep, isAdvisorLocked]);
+    }, [selectedAdvisor, hasAutoAdvanced, wizardStep]);
 
     const effectiveAdvisorPage = Math.max(1, advisorPage);
+
+    // A directory pick can sit on a later page of the list — jump straight to
+    // the page holding them so the selected card is visible immediately.
+    const jumpedToPickedRef = useRef(false);
+    useEffect(() => {
+        if (jumpedToPickedRef.current) return;
+        if (!isOpen || !selectedAdvisor || advisors.length === 0) return;
+        const idx = advisors.findIndex(a => String(a.id) === String(selectedAdvisor.id));
+        if (idx >= 0) {
+            setAdvisorPage(Math.floor(idx / 6) + 1);
+            jumpedToPickedRef.current = true;
+        }
+    }, [isOpen, selectedAdvisor, advisors]);
+
+    // Step 1 directory search
+    const [advisorSearch, setAdvisorSearch] = useState('');
 
     // When admin enables only one service/mode, show it as plain text instead of a selectable card
     const hasMultipleServices = enablePsychology && enableCareerMentoring;
@@ -820,7 +858,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 {!rescheduleSession && (
                                                     <div className="flex items-center justify-between px-2 mb-6 gap-2">
                                                         {[1, 2, 3, 4].map((step) => {
-                                                            const effectiveStep = (wizardStep === 1 && isAdvisorLocked) ? 2 : wizardStep;
+                                                            const effectiveStep = wizardStep;
                                                             return (
                                                                 <div key={step} role={effectiveStep > step ? 'button' : undefined} tabIndex={effectiveStep > step ? 0 : undefined} aria-label={effectiveStep > step ? `Go back to step ${step}` : undefined} onClick={effectiveStep > step ? () => setWizardStep(step) : undefined} onKeyDown={effectiveStep > step ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setWizardStep(step); } } : undefined} className={`flex flex-col items-center flex-1 rounded-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490]/40 ${effectiveStep > step ? 'group cursor-pointer' : ''}`}>
                                                                     <div className={`w-full h-1 rounded-full ${effectiveStep >= step ? 'bg-[#0e7490]' : 'bg-[#e6dfd0]'} transition-all duration-300`}></div>
@@ -834,7 +872,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                 )}
 
                                                 {/* STEP 2 — SELECT SERVICE & SESSION PLAN */}
-                                                {(wizardStep === 2 || (wizardStep === 1 && isAdvisorLocked)) && (
+                                                {wizardStep === 2 && (
                                                     <div ref={stepServiceRef} className="bh-booking-step-card bg-white border border-[#e6dfd0] rounded-md p-5 sm:p-7 shadow-sm space-y-6 text-left animate-step-in">
                                                         <div className="flex items-center justify-between border-b border-[#e6dfd0] pb-4">
                                                             <div className="flex items-center gap-3">
@@ -855,7 +893,7 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                             </span>
                                                         </div>
 
-                                                        {isAdvisorLocked && !selectedAdvisor && (
+                                                        {!selectedAdvisor && (
                                                             <div className={`p-3 rounded-lg flex items-center justify-between gap-3 text-xs mb-2 ${advisorLoadError ? 'bg-rose-50 border border-rose-200' : 'bg-[#f7f2e7] border border-[#e6dfd0]'}`} role={advisorLoadError ? 'alert' : 'status'}>
                                                                 <span className={`font-bold ${advisorLoadError ? 'text-rose-700' : 'text-[#55605f]'}`}>
                                                                     {isLoadingAdvisors
@@ -1173,25 +1211,23 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                         )}
 
                                                         <div className="pt-6 border-t border-[#f1eadc] flex justify-between items-center gap-3">
-                                                            {!isAdvisorLocked ? (
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setWizardStep(1)}
-                                                                    className="min-h-[44px] px-5 py-2.5 bg-[#f1eadc] hover:bg-[#e6dfd0] text-[#3c4747] font-bold text-[13px] rounded-lg transition cursor-pointer border border-[#e6dfd0]"
-                                                                >
-                                                                    Back
-                                                                </button>
-                                                            ) : (
-                                                                <div />
-                                                            )}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setWizardStep(1)}
+                                                                className="min-h-[44px] px-5 py-2.5 bg-[#f1eadc] hover:bg-[#e6dfd0] text-[#3c4747] font-bold text-[13px] rounded-lg transition cursor-pointer border border-[#e6dfd0]"
+                                                            >
+                                                                Back
+                                                            </button>
                                                             <button type="button" onClick={() => setWizardStep(3)} disabled={!selectedAdvisor} title={!selectedAdvisor ? 'Select a psychologist to continue' : undefined} className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-bold text-[13px] rounded-lg shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)] flex items-center justify-center gap-2 cursor-pointer border border-[#0e7490] transition-all btn-booking-primary disabled:opacity-50 disabled:cursor-not-allowed">Continue to Date & Time <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
                                                 )}
 
                                                 {/* STEP 1 — SELECT PSYCHOLOGIST */}
-                                                {wizardStep === 1 && !isAdvisorLocked && (
-                                                    <div ref={stepAdvisorRef} className="bh-booking-step-card @container bg-white border border-[#e6dfd0] rounded-lg p-4 sm:p-6 shadow-xs space-y-5 text-left animate-step-in">
+                                                {wizardStep === 1 && (
+                                                    <div ref={stepAdvisorRef} className="bh-booking-step-card @container bg-white border border-[#e6dfd0] rounded-lg p-4 sm:p-6 shadow-xs space-y-4 text-left animate-step-in">
+
+                                                        {/* Panel header */}
                                                         <div className="flex items-center justify-between gap-3 border-b border-[#f1eadc] pb-3">
                                                             <div className="flex min-w-0 items-center gap-2.5">
                                                                 <span className="w-6 h-6 shrink-0 rounded-md bg-[#0e7490] text-white text-xs flex items-center justify-center font-extrabold shadow-xs">
@@ -1202,103 +1238,163 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                         Select Psychologist
                                                                     </h3>
                                                                     <p className="text-xs text-[#55605f] font-medium">
-                                                                        Certified licensed clinical psychologists & therapeutic advisors
+                                                                        Certified licensed clinical psychologists &amp; therapeutic advisors
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <span className="shrink-0 whitespace-nowrap text-[10px] font-extrabold text-[#3c4747] bg-[#f7f2e7] border border-[#e6dfd0] px-2.5 py-0.5 rounded-md uppercase tracking-wider hidden sm:inline-block">
+                                                            <span className="shrink-0 whitespace-nowrap text-[10px] font-extrabold text-[#0e7490] bg-[#0e7490]/10 border border-[#0e7490]/20 px-2.5 py-0.5 rounded-md uppercase tracking-wider hidden sm:inline-block">
                                                                 Step 1
                                                             </span>
                                                         </div>
 
-                                                        {selectedAdvisor && (
-                                                            <div className="p-3 bg-[#f7f2e7] border border-[#e6dfd0] rounded-lg flex items-center justify-between gap-3 text-xs">
-                                                                <div className="flex min-w-0 items-center gap-2">
-                                                                    <span className="w-2 h-2 rounded-full bg-[#0e7490] animate-pulse shrink-0" />
-                                                                    {/* Two short lines instead of one long truncated one on phones */}
-                                                                    <div className="min-w-0">
-                                                                        <p className="truncate text-xs font-bold text-[#0e1111]">
-                                                                            Selected: {selectedAdvisor.name}
-                                                                        </p>
-                                                                        <p className="mt-0.5 truncate text-[10.5px] font-medium text-[#7c8785]">
-                                                                            ₹{bookingDuration === 30 ? selectedAdvisor.halfSessionPrice : selectedAdvisor.price} • {bookingDuration === 30 ? '30 min plan' : '1 hour plan'}
-                                                                        </p>
-                                                                    </div>
+                                                        {/* Preselected advisor — chosen on the directory, confirmed up-front */}
+                                                        {isAdvisorLocked && (
+                                                            isLoadingAdvisors && !selectedAdvisor ? (
+                                                                <div className="flex items-center gap-2.5 rounded-lg border border-[#e6dfd0] bg-[#f7f2e7] px-3.5 py-3 text-xs font-bold text-[#55605f]" role="status" aria-live="polite">
+                                                                    <span className="h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-[#0e7490]/30 border-t-[#0e7490]" />
+                                                                    Confirming your psychologist and live availability…
                                                                 </div>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setWizardStep(2)}
-                                                                    className="px-3.5 py-1.5 bg-[#0e1111] hover:bg-[#0e7490] text-white font-bold text-xs rounded-md transition-all cursor-pointer whitespace-nowrap shadow-xs border-none flex items-center justify-center gap-1.5"
-                                                                >
-                                                                    Continue <ArrowRight className="w-3 h-3" />
-                                                                </button>
-                                                            </div>
-                                                        )}
-
-                                                        <div className="space-y-3">
-                                                            {(() => {
-                                                                const filtered = advisors.filter(adv => {
-                                                                    const match = !bookingService || adv.type === bookingService || (bookingService === 'counselling' && adv.type !== 'career');
-                                                                    return match;
-                                                                });
-
-                                                                const sortedAdvisors = [...filtered].sort((a, b) => {
-                                                                    const aRank = Number(a.rank || 0);
-                                                                    const bRank = Number(b.rank || 0);
-                                                                    if (aRank !== bRank) return bRank - aRank;
-                                                                    
-                                                                    const aInfo = getAdvisorEarliestAvailableInfo(a);
-                                                                    const bInfo = getAdvisorEarliestAvailableInfo(b);
-                                                                    if (aInfo.available && !bInfo.available) return -1;
-                                                                    if (bInfo.available && !aInfo.available) return 1;
-                                                                    return bInfo.slotCount - aInfo.slotCount;
-                                                                });
-
-                                                                if (isLoadingAdvisors) {
-                                                                    return (
-                                                                        <div className="p-6 border border-[#e6dfd0] rounded-lg bg-[#f6f1e6] text-[#55605f] text-center text-sm" role="status" aria-live="polite">
-                                                                            Loading psychologists and live availability…
+                                                            ) : selectedAdvisor ? (
+                                                                <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 ease-out-expo rounded-xl border border-[#0e7490]/30 bg-[#0e7490]/[0.06] p-3 shadow-xs">
+                                                                    <p className="text-[9.5px] font-extrabold uppercase tracking-[0.14em] text-[#0e7490] mb-1.5">
+                                                                        Chosen from your selection
+                                                                    </p>
+                                                                    <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                                                                        <div className="flex min-w-0 flex-1 items-center gap-2.5">
+                                                                            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#0e7490]/30 bg-[#f6f1e6] shadow-xs">
+                                                                                {selectedAdvisor.profilePic || selectedAdvisor.image ? (
+                                                                                    <img src={selectedAdvisor.profilePic || selectedAdvisor.image} alt={selectedAdvisor.name} className="h-full w-full object-cover" />
+                                                                                ) : (
+                                                                                    <span className="text-sm font-bold text-[#0c6b83]">{getInitials(selectedAdvisor.name)}</span>
+                                                                                )}
+                                                                            </div>
+                                                                            <div className="min-w-0">
+                                                                                <p className="truncate text-[13px] font-extrabold text-[#0e1111]">{selectedAdvisor.name}</p>
+                                                                                <p className="truncate text-[10.5px] font-medium text-[#55605f]">
+                                                                                    {selectedAdvisor.role || 'Consultant Psychologist'} • ₹{bookingDuration === 30 ? selectedAdvisor.halfSessionPrice : selectedAdvisor.price} / {bookingDuration === 30 ? '30 min' : '60 min'}
+                                                                                </p>
+                                                                            </div>
                                                                         </div>
-                                                                    );
-                                                                }
-
-                                                                if (advisorLoadError) {
-                                                                    return (
-                                                                        <div className="p-6 border border-rose-200 rounded-lg bg-rose-50 text-center" role="alert">
-                                                                            <p className="text-sm font-semibold text-rose-800">Couldn’t load psychologists</p>
-                                                                            <p className="mt-1 text-xs text-rose-700">{advisorLoadError}</p>
+                                                                        <div className="flex shrink-0 items-center gap-1.5">
+                                                                            <span className="inline-flex items-center gap-1 rounded-lg bg-[#0e7490] px-2.5 py-1 text-[10.5px] font-bold text-white shadow-xs">
+                                                                                <CheckCircle2 className="h-3 w-3" /> Selected
+                                                                            </span>
                                                                             <button
                                                                                 type="button"
-                                                                                onClick={retryLoadAdvisors}
-                                                                                className="mt-3 px-4 py-2 bg-[#0e1111] text-white text-xs font-bold rounded-md hover:bg-[#0e7490] transition cursor-pointer border-none"
+                                                                                onClick={releasePreselectedAdvisor}
+                                                                                className="rounded-lg border border-[#e6dfd0] bg-white px-2.5 py-1 text-[10.5px] font-bold text-[#3c4747] transition-colors hover:border-[#0e7490]/40 hover:text-[#0e7490] cursor-pointer"
                                                                             >
-                                                                                Try again
+                                                                                Change
                                                                             </button>
                                                                         </div>
-                                                                    );
-                                                                }
+                                                                    </div>
+                                                                </div>
+                                                            ) : null
+                                                        )}
 
-                                                                if (sortedAdvisors.length === 0) {
-                                                                    return (
-                                                                        <div className="p-6 border border-dashed border-[#e6dfd0] rounded-lg bg-[#f6f1e6] text-[#55605f] text-center font-medium text-xs" role="status">
-                                                                            No psychologists are currently listed for this service. Please check back soon.
-                                                                        </div>
-                                                                    );
-                                                                }
+                                                        {(() => {
+                                                            const serviceMatch = (adv) => !bookingService || adv.type === bookingService || (bookingService === 'counselling' && adv.type !== 'career');
 
-                                                                const totalPages = Math.max(1, Math.ceil(sortedAdvisors.length / 6));
-                                                                const currentPage = Math.min(effectiveAdvisorPage, totalPages);
-                                                                const advisorsToRender = sortedAdvisors.slice((currentPage - 1) * 6, currentPage * 6);
+                                                            const sortedAdvisors = advisors.filter(serviceMatch).filter(adv => {
+                                                                const q = advisorSearch.trim().toLowerCase();
+                                                                if (!q) return true;
+                                                                return [adv.name, adv.role, adv.bio, ...(adv.specialties || [])]
+                                                                    .some(val => String(val).toLowerCase().includes(q));
+                                                            }).sort((a, b) => {
+                                                                const aRank = Number(a.rank || 0);
+                                                                const bRank = Number(b.rank || 0);
+                                                                if (aRank !== bRank) return bRank - aRank;
 
+                                                                const aInfo = getAdvisorEarliestAvailableInfo(a);
+                                                                const bInfo = getAdvisorEarliestAvailableInfo(b);
+                                                                if (aInfo.available && !bInfo.available) return -1;
+                                                                if (bInfo.available && !aInfo.available) return 1;
+                                                                return bInfo.slotCount - aInfo.slotCount;
+                                                            });
+
+                                                            if (isLoadingAdvisors) {
                                                                 return (
-                                                                    <React.Fragment>
-                                                                        {/* Columns follow the panel width, not the viewport: this dialog maxes out
-                                                                            at 672px, so xl:grid-cols-3 used to squeeze cards to ~165px. */}
-                                                                        <div className="grid grid-cols-1 gap-3 @md:grid-cols-2 @min-[46rem]:grid-cols-3 items-stretch">
+                                                                    <div className="space-y-2.5" role="status" aria-live="polite">
+                                                                        {[0, 1, 2].map(i => (
+                                                                            <div key={i} className="flex items-center gap-3 rounded-xl border border-[#f1eadc] bg-white p-3.5">
+                                                                                <div className="h-12 w-12 shrink-0 rounded-lg bg-[#f1eadc] animate-pulse" />
+                                                                                <div className="flex-1 space-y-2 py-1">
+                                                                                    <div className="h-3.5 w-2/5 rounded bg-[#f1eadc] animate-pulse" />
+                                                                                    <div className="h-2.5 w-3/5 rounded bg-[#f6f1e6] animate-pulse" />
+                                                                                </div>
+                                                                            </div>
+                                                                        ))}
+                                                                        <p className="text-center text-[11px] font-medium text-[#7c8785]">Loading psychologists and live availability…</p>
+                                                                    </div>
+                                                                );
+                                                            }
+
+                                                            if (advisorLoadError) {
+                                                                return (
+                                                                    <div className="p-6 border border-rose-200 rounded-lg bg-rose-50 text-center" role="alert">
+                                                                        <p className="text-sm font-semibold text-rose-800">Couldn’t load psychologists</p>
+                                                                        <p className="mt-1 text-xs text-rose-700">{advisorLoadError}</p>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={retryLoadAdvisors}
+                                                                            className="mt-3 px-4 py-2 bg-[#0e1111] text-white text-xs font-bold rounded-md hover:bg-[#0e7490] transition cursor-pointer border-none"
+                                                                        >
+                                                                            Try again
+                                                                        </button>
+                                                                    </div>
+                                                                );
+                                                            }
+
+                                                            if (sortedAdvisors.length === 0) {
+                                                                return advisorSearch.trim() ? (
+                                                                    <div className="p-6 border border-dashed border-[#e6dfd0] rounded-lg bg-[#f6f1e6] text-center" role="status">
+                                                                        <p className="text-xs font-semibold text-[#0e1111]">No matches for “{advisorSearch.trim()}”</p>
+                                                                        <p className="mt-1 text-[11px] text-[#55605f]">Try a name, focus area, or keyword from their bio.</p>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => setAdvisorSearch('')}
+                                                                            className="mt-3 px-4 py-1.5 bg-white border border-[#e6dfd0] text-[11px] font-bold text-[#0e7490] rounded-md hover:bg-[#f7f2e7] transition cursor-pointer"
+                                                                        >
+                                                                            Clear search
+                                                                        </button>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="p-6 border border-dashed border-[#e6dfd0] rounded-lg bg-[#f6f1e6] text-[#55605f] text-center font-medium text-xs" role="status">
+                                                                        No psychologists are currently listed for this service. Please check back soon.
+                                                                    </div>
+                                                                );
+                                                            }
+
+                                                            const totalPages = Math.max(1, Math.ceil(sortedAdvisors.length / 6));
+                                                            const currentPage = Math.min(effectiveAdvisorPage, totalPages);
+                                                            const advisorsToRender = sortedAdvisors.slice((currentPage - 1) * 6, currentPage * 6);
+
+                                                            return (
+                                                                <React.Fragment>
+                                                                    {/* Search — the directory can run deep, find the right specialist fast */}
+                                                                    <div className="relative">
+                                                                        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#7c8785]" />
+                                                                        <input
+                                                                            type="search"
+                                                                            value={advisorSearch}
+                                                                            onChange={(e) => { setAdvisorSearch(e.target.value); setAdvisorPage(1); }}
+                                                                            placeholder="Search by name, focus area, or keyword…"
+                                                                            aria-label="Search psychologists"
+                                                                            className="w-full rounded-lg border border-[#e6dfd0] bg-[#f6f1e6] py-2.5 pl-9 pr-3 text-xs font-medium text-[#0e1111] placeholder-[#9aa29f] outline-none transition-all focus:border-[#0e7490] focus:bg-white focus:ring-2 focus:ring-[#0e7490]/10"
+                                                                        />
+                                                                    </div>
+
+                                                                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#7c8785]">
+                                                                        {sortedAdvisors.length} specialist{sortedAdvisors.length !== 1 ? 's' : ''} available
+                                                                    </p>
+
+                                                                    {/* Horizontal rows: full name, role and bio stay readable inside the 672px dialog */}
+                                                                    <div className="space-y-2.5">
                                                                         {advisorsToRender.map((advisor) => {
                                                                             const info = getAdvisorEarliestAvailableInfo(advisor);
                                                                             const isAvailable = info.available;
                                                                             const isSelected = selectedAdvisor?.id === advisor.id;
+                                                                            const planPrice = bookingDuration === 30 ? advisor.halfSessionPrice : advisor.price;
 
                                                                             return (
                                                                                 <div
@@ -1322,168 +1418,170 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                         if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
                                                                                         setWizardStep(2);
                                                                                     }}
-                                                                                    className={`group flex min-w-0 flex-col p-4 sm:p-5 border bg-white rounded-xl relative shadow-xs cursor-pointer booking-card transition-all ${isSelected
-                                                                                            ? 'border-[#0e7490] ring-2 ring-[#0e7490]/20 bg-[#f7f2e7]/40 shadow-sm'
+                                                                                    className={`group relative flex min-w-0 cursor-pointer items-stretch gap-3 overflow-hidden rounded-xl border bg-white p-3.5 pl-4 booking-card transition-all duration-300 ease-out-expo ${isSelected
+                                                                                            ? 'border-[#0e7490]/60 bg-[#f7f2e7]/50 shadow-sm ring-2 ring-[#0e7490]/15'
                                                                                             : isAvailable
-                                                                                                ? 'border-[#e6dfd0] hover:border-[#0e7490]/50 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
+                                                                                                ? 'border-[#e6dfd0] hover:-translate-y-0.5 hover:border-[#0e7490]/40 hover:shadow-md'
                                                                                                 : 'border-[#f1eadc] opacity-60 hover:opacity-90'
                                                                                         }`}
                                                                                 >
-                                                                                    <div className="flex flex-col flex-1">
-                                                                                        {/* Identity row — the role sits on its own line so long names never truncate */}
-                                                                                        <div className="flex items-start gap-3">
-                                                                                            <div className="relative shrink-0">
-                                                                                                <div className={`flex h-13 w-13 items-center justify-center overflow-hidden rounded-lg border bg-[#f6f1e6] shadow-xs transition-colors ${isSelected ? 'border-[#0e7490]' : 'border-[#e6dfd0] group-hover:border-[#d5cdbb]'}`}>
-                                                                                                    {advisor.profilePic || advisor.image ? (
-                                                                                                        <img
-                                                                                                            src={advisor.profilePic || advisor.image}
-                                                                                                            alt={advisor.name}
-                                                                                                            className="h-full w-full object-cover"
-                                                                                                        />
-                                                                                                    ) : (
-                                                                                                        <span className="text-xl font-bold text-[#0c6b83]">
-                                                                                                            {getInitials(advisor.name)}
-                                                                                                        </span>
-                                                                                                    )}
-                                                                                                </div>
-                                                                                                {/* Corner star keeps the rating signal without covering the photo */}
-                                                                                                {(advisor.isHighlighted || advisor.isTopFive) && (
-                                                                                                    <span
-                                                                                                        title="Top rated psychologist"
-                                                                                                        aria-label="Top rated psychologist"
-                                                                                                        className="absolute -right-1.5 -top-1.5 z-10 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#0e7490] text-white shadow-sm ring-2 ring-white"
-                                                                                                    >
-                                                                                                        <Star className="h-2.5 w-2.5 fill-current" strokeWidth={0} />
-                                                                                                    </span>
-                                                                                                )}
-                                                                                            </div>
+                                                                                    {/* Selection rail — slides in when this psychologist is the one */}
+                                                                                    <span aria-hidden="true" className={`absolute inset-y-0 left-0 w-1 origin-bottom bg-[#0e7490] transition-transform duration-300 ease-spring ${isSelected ? 'scale-y-100' : 'scale-y-0 group-hover:scale-y-[0.35]'}`} />
 
-                                                                                            <div className="min-w-0 flex-1">
-                                                                                                <h4 title={advisor.name} className={`truncate text-[15px] font-bold leading-snug transition-colors ${isSelected ? 'text-[#050707]' : 'text-[#0e1111] group-hover:text-[#3c4747]'}`}>
-                                                                                                    {advisor.name}
-                                                                                                </h4>
-                                                                                                {/* Wraps instead of truncating: "Consultant Psychologist" is cut in every card otherwise */}
-                                                                                                <p className="mt-0.5 line-clamp-2 text-[10.5px] font-medium leading-snug text-[#7c8785]">
-                                                                                                    {advisor.role || 'Consultant Psychologist'}
-                                                                                                </p>
-                                                                                            </div>
+                                                                                    <div className="relative shrink-0">
+                                                                                        <div className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center overflow-hidden rounded-xl border bg-[#f6f1e6] shadow-xs transition-colors ${isSelected ? 'border-[#0e7490]' : 'border-[#e6dfd0] group-hover:border-[#d5cdbb]'}`}>
+                                                                                            {advisor.profilePic || advisor.image ? (
+                                                                                                <img
+                                                                                                    src={advisor.profilePic || advisor.image}
+                                                                                                    alt={advisor.name}
+                                                                                                    className="h-full w-full object-cover"
+                                                                                                />
+                                                                                            ) : (
+                                                                                                <span className="text-lg font-bold text-[#0c6b83]">
+                                                                                                    {getInitials(advisor.name)}
+                                                                                                </span>
+                                                                                            )}
                                                                                         </div>
+                                                                                        {(advisor.isHighlighted || advisor.isTopFive) && (
+                                                                                            <span
+                                                                                                title="Top rated psychologist"
+                                                                                                aria-label="Top rated psychologist"
+                                                                                                className="absolute -right-1.5 -top-1.5 z-10 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#0e7490] text-white shadow-sm ring-2 ring-white"
+                                                                                            >
+                                                                                                <Star className="h-2.5 w-2.5 fill-current" strokeWidth={0} />
+                                                                                            </span>
+                                                                                        )}
+                                                                                    </div>
+
+                                                                                    <div className="flex min-w-0 flex-1 flex-col">
+                                                                                        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
+                                                                                            <h4 title={advisor.name} className={`min-w-0 max-w-full truncate text-[14.5px] font-bold leading-snug transition-colors ${isSelected ? 'text-[#050707]' : 'text-[#0e1111] group-hover:text-[#3c4747]'}`}>
+                                                                                                {advisor.name}
+                                                                                            </h4>
+                                                                                            {advisor.rating ? (
+                                                                                                <span className="inline-flex shrink-0 items-center gap-0.5 text-[10.5px] font-bold text-[#3c4747]">
+                                                                                                    <Star className="h-3 w-3 fill-amber-400 text-amber-500" strokeWidth={0} />
+                                                                                                    {Number(advisor.rating).toFixed(1)}
+                                                                                                </span>
+                                                                                            ) : null}
+                                                                                        </div>
+                                                                                        <p className="mt-0.5 truncate text-[10.5px] font-semibold uppercase tracking-wide text-[#7c8785]">
+                                                                                            {advisor.role || 'Consultant Psychologist'}
+                                                                                        </p>
 
                                                                                         {advisor.bio && (
-                                                                                            <p className="mt-2.5 line-clamp-2 text-[11.5px] leading-relaxed text-[#55605f]">
+                                                                                            <p className="mt-1 line-clamp-1 text-[11.5px] leading-relaxed text-[#55605f] sm:line-clamp-2">
                                                                                                 {advisor.bio}
                                                                                             </p>
                                                                                         )}
 
-                                                                                        {/* One chip + counter: two long chips got cut mid-word. */}
-                                                                                        {advisor.specialties?.length > 0 && (
-                                                                                            <div className="mt-2 flex items-center gap-1 overflow-hidden">
-                                                                                                <span title={advisor.specialties[0]} className="min-w-0 truncate rounded-md border border-[#e6dfd0] bg-[#f6f1e6] px-2 py-0.5 text-[10px] font-semibold text-[#55605f]">
-                                                                                                    {advisor.specialties[0]}
-                                                                                                </span>
-                                                                                                {advisor.specialties.length > 1 && (
-                                                                                                    <span title={advisor.specialties.slice(1).join(', ')} className="shrink-0 rounded-md border border-[#e6dfd0] bg-[#f6f1e6] px-2 py-0.5 text-[10px] font-semibold text-[#55605f]">
-                                                                                                        +{advisor.specialties.length - 1}
+                                                                                        <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                                                                                            {advisor.specialties?.length > 0 && (
+                                                                                                <>
+                                                                                                    <span title={advisor.specialties[0]} className="max-w-[46%] truncate rounded-md border border-[#e6dfd0] bg-[#f6f1e6] px-2 py-0.5 text-[10px] font-semibold text-[#55605f]">
+                                                                                                        {advisor.specialties[0]}
                                                                                                     </span>
-                                                                                                )}
-                                                                                            </div>
-                                                                                        )}
-
-                                                                                        {/* Availability reads as a chip so every card keeps the same rhythm */}
-                                                                                        {isAvailable ? (
-                                                                                            <span className="mt-2 inline-flex w-fit max-w-full items-center gap-1.5 rounded-md border border-emerald-200/80 bg-emerald-50 px-2 py-1 text-[10.5px] font-bold text-emerald-700">
-                                                                                                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
-                                                                                                <span className="truncate">{info.label}</span>
-                                                                                            </span>
-                                                                                        ) : (
-                                                                                            <span className="mt-2 inline-flex w-fit max-w-full items-center gap-1.5 rounded-md border border-rose-200/80 bg-rose-50 px-2 py-1 text-[10.5px] font-semibold text-rose-600">
-                                                                                                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400" />
-                                                                                                No upcoming slots
-                                                                                            </span>
-                                                                                        )}
-
-                                                                                        <div className="flex items-center justify-between gap-2 shrink-0 border-t border-[#f1eadc] pt-3 mt-auto">
-                                                                                            <div className="min-w-0 text-left">
-                                                                                                <span className="font-extrabold text-xl text-[#0e1111] block leading-none tabular-nums">
-                                                                                                    ₹{bookingDuration === 30 ? advisor.halfSessionPrice : advisor.price}
+                                                                                                    {advisor.specialties.length > 1 && (
+                                                                                                        <span title={advisor.specialties.slice(1).join(', ')} className="shrink-0 rounded-md border border-[#e6dfd0] bg-[#f6f1e6] px-2 py-0.5 text-[10px] font-semibold text-[#55605f]">
+                                                                                                            +{advisor.specialties.length - 1}
+                                                                                                        </span>
+                                                                                                    )}
+                                                                                                </>
+                                                                                            )}
+                                                                                            {isAvailable ? (
+                                                                                                <span className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-emerald-200/80 bg-emerald-50 px-2 py-0.5 text-[10.5px] font-bold text-emerald-700">
+                                                                                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                                                                                                    <span className="truncate">{info.label}</span>
                                                                                                 </span>
-                                                                                                <span className="text-[9.5px] font-bold text-[#7c8785] uppercase tracking-wider mt-1 block">
-                                                                                                    {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
-                                                                                                </span>
-                                                                                            </div>
-
-                                                                                            {isSelected ? (
-                                                                                                <div className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-[#0e7490] px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition-all">
-                                                                                                    <CheckCircle2 className="h-3.5 w-3.5" />
-                                                                                                    <span>Selected</span>
-                                                                                                </div>
-                                                                                            ) : isAvailable ? (
-                                                                                                <div className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-[#0e1111] px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition-all group-hover:bg-[#0e7490]">
-                                                                                                    <span>Select</span>
-                                                                                                    <ArrowRight className="h-3.5 w-3.5" />
-                                                                                                </div>
                                                                                             ) : (
-                                                                                                <span className="shrink-0 whitespace-nowrap rounded-md bg-[#f1eadc] px-2.5 py-1.5 text-[10.5px] font-semibold text-[#7c8785]">
-                                                                                                    Unavailable
+                                                                                                <span className="inline-flex items-center gap-1.5 rounded-md border border-rose-200/80 bg-rose-50 px-2 py-0.5 text-[10.5px] font-semibold text-rose-600">
+                                                                                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400" />
+                                                                                                    No upcoming slots
                                                                                                 </span>
                                                                                             )}
                                                                                         </div>
                                                                                     </div>
+
+                                                                                    <div className="flex shrink-0 flex-col items-end justify-between gap-2 border-l border-[#f1eadc] pl-3">
+                                                                                        <div className="text-right">
+                                                                                            <span className="block whitespace-nowrap text-[9px] font-bold uppercase tracking-wider text-[#7c8785]">
+                                                                                                {bookingDuration === 30 ? '30 Mins Plan' : '1 Hour Plan'}
+                                                                                            </span>
+                                                                                            <span className="mt-0.5 block whitespace-nowrap text-[17px] font-extrabold leading-none tabular-nums text-[#0e1111]">
+                                                                                                {planPrice === null || planPrice === undefined ? '—' : `₹${planPrice}`}
+                                                                                            </span>
+                                                                                        </div>
+
+                                                                                        {isSelected ? (
+                                                                                            <div className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-[#0e7490] px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition-all">
+                                                                                                <CheckCircle2 className="h-3.5 w-3.5" />
+                                                                                                <span>Selected</span>
+                                                                                            </div>
+                                                                                        ) : isAvailable ? (
+                                                                                            <div className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-[#0e1111] px-3 py-1.5 text-[11px] font-bold text-white shadow-xs transition-all duration-300 group-hover:bg-[#0e7490]">
+                                                                                                <span>Select</span>
+                                                                                                <ArrowRight className="h-3.5 w-3.5" />
+                                                                                            </div>
+                                                                                        ) : (
+                                                                                            <span className="shrink-0 whitespace-nowrap rounded-md bg-[#f1eadc] px-2.5 py-1.5 text-[10.5px] font-semibold text-[#7c8785]">
+                                                                                                Unavailable
+                                                                                            </span>
+                                                                                        )}
+                                                                                    </div>
                                                                                 </div>
                                                                             );
                                                                         })}
-                                                                        </div>
+                                                                    </div>
 
-                                                                        {totalPages > 1 && (
-                                                                            <div className="flex items-center justify-center gap-2 pt-3">
+                                                                    {totalPages > 1 && (
+                                                                        <div className="flex items-center justify-center gap-2 pt-1">
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    setAdvisorPage(p => Math.max(1, p - 1));
+                                                                                }}
+                                                                                disabled={currentPage === 1}
+                                                                                className="w-8 h-8 rounded-lg text-sm font-bold border border-[#e6dfd0] bg-white hover:bg-[#f6f1e6] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                            >
+                                                                                ‹
+                                                                            </button>
+                                                                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
                                                                                 <button
+                                                                                    key={num}
                                                                                     type="button"
                                                                                     onClick={(e) => {
                                                                                         e.stopPropagation();
-                                                                                        setAdvisorPage(p => Math.max(1, p - 1));
+                                                                                        setAdvisorPage(num);
                                                                                     }}
-                                                                                    disabled={advisorPage === 1}
-                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-[#e6dfd0] bg-white hover:bg-[#f6f1e6] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                                    className={`w-8 h-8 rounded-full text-xs font-bold border flex items-center justify-center cursor-pointer ${currentPage === num
+                                                                                            ? 'bg-[#0e1111] text-white border-[#0e1111] shadow-xs'
+                                                                                            : 'bg-white text-[#0e1111] border-[#e6dfd0] hover:border-[#0e7490]'
+                                                                                        }`}
                                                                                 >
-                                                                                    ‹
+                                                                                    {num}
                                                                                 </button>
-                                                                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                                                                                    <button
-                                                                                        key={num}
-                                                                                        type="button"
-                                                                                        onClick={(e) => {
-                                                                                            e.stopPropagation();
-                                                                                            setAdvisorPage(num);
-                                                                                        }}
-                                                                                        className={`w-8 h-8 rounded-full text-xs font-bold border flex items-center justify-center cursor-pointer ${advisorPage === num
-                                                                                                ? 'bg-[#0e1111] text-white border-[#0e1111] shadow-xs'
-                                                                                                : 'bg-white text-[#0e1111] border-[#e6dfd0] hover:border-[#0e7490]'
-                                                                                            }`}
-                                                                                    >
-                                                                                        {num}
-                                                                                    </button>
-                                                                                ))}
-                                                                                <button
-                                                                                    type="button"
-                                                                                    onClick={(e) => {
-                                                                                        e.stopPropagation();
-                                                                                        setAdvisorPage(p => Math.min(totalPages, p + 1));
-                                                                                    }}
-                                                                                    disabled={advisorPage === totalPages}
-                                                                                    className="w-8 h-8 rounded-lg text-sm font-bold border border-[#e6dfd0] bg-white hover:bg-[#f6f1e6] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
-                                                                                >
-                                                                                    ›
-                                                                                </button>
-                                                                            </div>
-                                                                        )}
-                                                                    </React.Fragment>
-                                                                );
-                                                            })()}
-                                                        </div>
+                                                                            ))}
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    setAdvisorPage(p => Math.min(totalPages, p + 1));
+                                                                                }}
+                                                                                disabled={currentPage === totalPages}
+                                                                                className="w-8 h-8 rounded-lg text-sm font-bold border border-[#e6dfd0] bg-white hover:bg-[#f6f1e6] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                                                                            >
+                                                                                ›
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </React.Fragment>
+                                                            );
+                                                        })()}
 
                                                         {errors.advisor && <p className="text-xs text-rose-500 font-medium">{errors.advisor}</p>}
 
-                                                        <div className="pt-6 border-t border-[#f1eadc] flex justify-end">
+                                                        <div className="pt-4 border-t border-[#f1eadc] flex justify-end">
                                                             <button type="button" onClick={() => setWizardStep(2)} disabled={!selectedAdvisor} className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-bold text-[13px] rounded-lg shadow-[0_10px_24px_-14px_rgba(14,116,144,0.7)] flex items-center justify-center gap-2 cursor-pointer border border-[#0e7490] transition-all btn-booking-primary disabled:opacity-50">Continue to Service Plan <ArrowRight className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
@@ -1543,15 +1641,13 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                 <span className="text-[10px] uppercase font-bold text-[#7c8785] block">Psychologist</span>
                                                                 <div className="flex items-center justify-between">
                                                                     <span className="font-bold text-[#0e1111] text-sm truncate">{selectedAdvisor?.name}</span>
-                                                                    {!isAdvisorLocked && (
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => { setSelectedAdvisor(null); setSelectedTime(''); setHasAutoAdvanced(false); setWizardStep(1); }}
-                                                                            className="text-[11px] text-[#0b5c73] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
-                                                                        >
-                                                                            Change
-                                                                        </button>
-                                                                    )}
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={releasePreselectedAdvisor}
+                                                                        className="text-[11px] text-[#0b5c73] hover:underline font-bold cursor-pointer bg-transparent border-none p-0"
+                                                                    >
+                                                                        Change
+                                                                    </button>
                                                                 </div>
                                                             </div>
 
