@@ -19,6 +19,10 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
     .replace(/\\n/g, '\n')
     .replace(/[{}]/g, '');
 
+  // Admins save the tagline on two lines — the lead line renders big bold
+  // sans, every following line becomes the cyan brush-script accent.
+  const headlineLines = headline.split('\n').map((line) => line.trim()).filter(Boolean);
+
   const description = getFirstText(
     settings.heroSub,
     'Professional online counselling tailored to your needs — accessible, compassionate, and confidential.'
@@ -122,9 +126,29 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
             <h1
               id="bh-hero-title"
-              className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 font-display-italic mt-3 whitespace-pre-line text-[2.35rem] leading-[1.12] tracking-tight text-[#0E1111] sm:mt-4 sm:text-[3.2rem] lg:text-[3.9rem]"
+              className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 mt-3 text-[#0E1111]"
             >
-              {headline}
+              <span className="font-heading block text-[2.6rem] font-bold leading-[1.06] tracking-[-0.02em] sm:text-[3.7rem] lg:text-[4.5rem]">
+                {headlineLines[0]}
+              </span>
+              {headlineLines.slice(1).map((line, idx) => (
+                <span key={`${line}-${idx}`} className="mt-1 block sm:mt-2">
+                  <span className="inline-block">
+                    <span className="font-brush-hero block text-[3.4rem] leading-[1.05] text-[#0E7490] sm:text-[5rem] lg:text-[6.25rem]">
+                      {line}
+                    </span>
+                    {/* Hand-drawn swoosh under the script accent line */}
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 320 14"
+                      preserveAspectRatio="none"
+                      className="-mt-1 block h-[9px] w-[88%] max-w-[420px] text-[#0E7490]/65 sm:h-[12px]"
+                    >
+                      <path d="M4 9C64 3 150 2 214 5c34 2 72 4 102 3" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </span>
+              ))}
             </h1>
 
             <p className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-200 mx-auto mt-5 max-w-xl text-[13.5px] leading-[1.8] text-[#3F4A49] sm:text-[15px] lg:mx-0">
