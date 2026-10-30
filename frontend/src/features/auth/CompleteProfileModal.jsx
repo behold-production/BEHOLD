@@ -448,7 +448,7 @@ export default function CompleteProfileModal({ isOpen, onSuccess, onClose }) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3.5 min-h-[48px] bg-[#0e1111] hover:bg-[#0e7490] text-white font-medium text-sm rounded-full transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
+                className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full bg-[#0e1111] px-4 py-2.5 text-[13px] font-medium text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md hover:bg-[#0e7490]"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save & Continue'}
               </button>

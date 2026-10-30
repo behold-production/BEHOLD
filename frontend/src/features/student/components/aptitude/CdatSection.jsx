@@ -96,7 +96,7 @@ export default function CdatSection({ setView, siteSettings }) {
             <div className="pt-2">
               <button
                 onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="px-7 py-3 bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-xs uppercase tracking-widest rounded-md transition-all border border-[#0e7490]/30 cursor-pointer shadow-xs inline-flex items-center justify-center"
+                className="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-md bg-[#0e1111] px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition-all border border-[#0e7490]/30 cursor-pointer shadow-xs hover:bg-[#0e7490]"
               >
                 Try a Free Sample Test
               </button>
@@ -139,7 +139,7 @@ export default function CdatSection({ setView, siteSettings }) {
                   />
                   {errors.email && <p className="text-rose-600 text-xs mt-1 font-semibold">{errors.email}</p>}
                 </div>
-                <button type="submit" className="w-full py-3.5 bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-xs uppercase tracking-widest rounded-md transition-all border border-[#0e7490]/30 cursor-pointer shadow-xs mt-2">
+                <button type="submit" className="inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md bg-[#0e1111] px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition-all border border-[#0e7490]/30 cursor-pointer shadow-xs hover:bg-[#0e7490] mt-2">
                   Generate Group Code
                 </button>
                 <div className="relative flex items-center my-3">
@@ -150,7 +150,7 @@ export default function CdatSection({ setView, siteSettings }) {
                 <button
                   type="button"
                   onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="w-full py-3 bg-[#f1eadc] hover:bg-[#f0e9dc] text-[#0e1111] font-semibold text-xs uppercase tracking-widest rounded-md transition-all border border-[#e6dfd0] cursor-pointer"
+                  className="inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md bg-[#f1eadc] px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-[#0e1111] transition-all border border-[#e6dfd0] cursor-pointer hover:bg-[#f0e9dc]"
                 >
                   Try a Sample Test Instead
                 </button>

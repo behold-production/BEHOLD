@@ -387,7 +387,7 @@ export default function ThankYouPage() {
                 })}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:flex-1 py-3.5 px-4 bg-[#f7f2e7] hover:bg-[#eaf7fa] border border-[#bfe3ec] text-[#0e1111] font-semibold text-sm rounded-md transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
+                className="flex w-full min-h-[44px] sm:flex-1 items-center justify-center gap-2 rounded-md bg-[#f7f2e7] px-4 py-2.5 text-[13px] font-semibold text-[#0e1111] transition-all shadow-sm border border-[#bfe3ec] cursor-pointer no-underline hover:bg-[#eaf7fa]"
               >
                 <Calendar className="w-4 h-4 text-[#0e7490] shrink-0" />
                 <span>Add to Calendar</span>
@@ -396,7 +396,7 @@ export default function ThankYouPage() {
 
             <button
               onClick={handleDownloadReceipt}
-              className="w-full sm:flex-1 py-3.5 px-4 bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-sm rounded-md transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e1111] focus-visible:ring-offset-2"
+              className="flex w-full min-h-[44px] sm:flex-1 items-center justify-center gap-2 rounded-md bg-[#0e1111] px-4 py-2.5 text-[13px] font-semibold text-white transition-all shadow-md cursor-pointer border-none hover:bg-[#0e7490] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e1111] focus-visible:ring-offset-2"
             >
               <Download className="w-4 h-4 text-white shrink-0" />
               <span>Download Receipt</span>
@@ -404,7 +404,7 @@ export default function ThankYouPage() {
 
             <button
               onClick={() => navigate('/')}
-              className="w-full sm:w-auto py-3.5 px-6 bg-white hover:bg-[#f5f0e5] text-[#0e1111] font-semibold text-sm rounded-md border border-[#e6dfd0] transition-all flex items-center justify-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
+              className="flex w-full min-h-[44px] sm:w-auto items-center justify-center gap-1.5 whitespace-nowrap rounded-md bg-white px-5 py-2.5 text-[13px] font-semibold text-[#0e1111] border border-[#e6dfd0] transition-all cursor-pointer hover:bg-[#f5f0e5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
             >
               <Home className="w-4 h-4 shrink-0" />
               <span>Return Home</span>

@@ -437,7 +437,7 @@ export default function AuthModals({ isOpen, onClose }) {
                   <p className="text-sm text-[#3c4747] italic leading-relaxed">"{rejectionReason}"</p>
                 </div>
               </div>
-              <button onClick={() => setRejectionReason(null)} className="w-full py-3.5 bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-sm rounded-md transition-all cursor-pointer border-none shadow-md">
+              <button onClick={() => setRejectionReason(null)} className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md bg-[#0e1111] px-4 py-2.5 text-[13px] font-semibold text-white transition-all cursor-pointer border-none shadow-md hover:bg-[#0e7490]">
                 Return to Login
               </button>
             </div>
@@ -511,7 +511,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 min-h-[48px] bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
+                  className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md bg-[#0e1111] px-4 py-2.5 text-[13px] font-semibold text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md hover:bg-[#0e7490]"
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Save Details &amp; Proceed to Home</span>}
                 </button>
@@ -610,7 +610,7 @@ export default function AuthModals({ isOpen, onClose }) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3.5 min-h-[48px] bg-[#0e1111] hover:bg-[#0e7490] text-white font-semibold text-sm rounded-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md"
+                  className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md bg-[#0e1111] px-4 py-2.5 text-[13px] font-semibold text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer border-none shadow-md hover:bg-[#0e7490]"
                 >
                   {isLoading ? (
                     <>

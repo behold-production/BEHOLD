@@ -156,7 +156,7 @@
 }
 
 .bh-button {
-  min-height: 48px;
+  min-height: 44px;
   padding: 0 24px;
   display: inline-flex;
   align-items: center;
@@ -1106,7 +1106,7 @@
 }
 
 .bh-home #inquiry form>button {
-  min-height: 47px;
+  min-height: 44px;
   border-radius: 3px;
   background: var(--bh-teal);
 }
@@ -1427,7 +1427,7 @@
 .bh-auth-dialog button[class*="bg-[#0e1111]"],
 .bh-booking-auth-dialog button[class*="bg-[#0e1111]"],
 .bh-profile-dialog button[type="submit"] {
-  min-height: 46px;
+  min-height: 44px;
   color: #fff !important;
   background: var(--bh-teal) !important;
   border: 0 !important;
@@ -2093,7 +2093,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-button {
-  min-height: 46px;
+  min-height: 44px;
   border-radius: 3px;
   font-size: 11px !important;
 }
@@ -2823,7 +2823,7 @@ header.bh-home-nav>div>div:last-child>button:hover {
 }
 
 .bh-home .bh-button-cream {
-  min-height: 43px;
+  min-height: 44px;
   color: #0e7490;
   background: #f6f1e6;
 }

@@ -87,7 +87,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="px-8 py-3.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-semibold text-xs tracking-widest rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 border-none shadow-md w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="inline-flex w-full min-h-[44px] sm:w-auto items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#0e7490] px-7 py-2.5 text-xs font-semibold tracking-widest text-white transition-all cursor-pointer border-none shadow-md hover:bg-[#0b5c73] hover:scale-[1.03] active:scale-[0.97]"
               >
                 <RefreshCw className="w-4 h-4 animate-spin-reverse" />
                 Reload Application
@@ -95,7 +95,7 @@ export default class ErrorBoundary extends React.Component {
               <button
                 type="button"
                 onClick={this.handleGoHome}
-                className="px-8 py-3.5 bg-[#243033] hover:bg-[#3c4747] text-white font-semibold text-xs tracking-widest rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 border border-[#3c4747] w-full sm:w-auto hover:scale-[1.03] active:scale-[0.97]"
+                className="inline-flex w-full min-h-[44px] sm:w-auto items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#243033] px-7 py-2.5 text-xs font-semibold tracking-widest text-white transition-all cursor-pointer border border-[#3c4747] hover:bg-[#3c4747] hover:scale-[1.03] active:scale-[0.97]"
               >
                 <Home className="w-4 h-4" />
                 Go Back Home

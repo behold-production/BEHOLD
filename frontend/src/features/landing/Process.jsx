@@ -78,7 +78,7 @@ export default function Process() {
         <div className="mt-14 text-center">
           <button
             onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-8 py-3.5 bg-[#0e1111] hover:bg-[#0e7490] hover:text-slate-950 text-white font-semibold text-xs tracking-wider rounded-full transition-all cursor-pointer border-none shadow-sm inline-flex items-center gap-2 hover-scale-btn"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#0e1111] px-7 py-2.5 text-xs font-semibold tracking-wider text-white transition-all cursor-pointer border-none shadow-sm hover:bg-[#0e7490] hover:text-slate-950 hover-scale-btn"
           >
             <span>Start Your Session Today</span>
             <span className="text-xs text-[#0e7490]">›</span>

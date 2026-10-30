@@ -105,13 +105,13 @@ export default function Inquiry({ testProfile, siteSettings }) {
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => { const el = document.getElementById('inquiry'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-semibold text-xs uppercase tracking-widest rounded-full transition-all shadow-md border-none cursor-pointer"
+              className="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#0e7490] px-7 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition-all shadow-md border-none cursor-pointer hover:bg-[#0b5c73]"
             >
               Book Your Consultation
             </button>
             <button
               onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase tracking-widest rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer"
+              className="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white/10 px-7 py-2.5 text-xs font-semibold uppercase tracking-widest text-white border border-white/30 backdrop-blur-md transition-all cursor-pointer hover:bg-white/20"
             >
               Take Aptitude Test
             </button>
@@ -197,7 +197,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
 
                   <button
                     type="submit" disabled={isSubmitting}
-                    className="w-full py-3.5 bg-[#0e1111] hover:bg-[#123039] text-[#0e7490] font-semibold text-sm rounded-full transition-all border border-[#0e7490]/30 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 shadow-xs"
+                    className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full bg-[#0e1111] px-4 py-2.5 text-[13px] font-semibold text-[#0e7490] transition-all border border-[#0e7490]/30 cursor-pointer disabled:opacity-60 shadow-xs hover:bg-[#123039]"
                   >
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send Request'}
                   </button>

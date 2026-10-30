@@ -53,13 +53,13 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
                 <div className="flex flex-wrap items-center gap-3 pt-3">
                   <button
                     onClick={handleBook}
-                    className="px-6 py-3 bg-[#0e7490] hover:bg-[#0b5c73] hover-scale-btn text-white font-semibold text-xs rounded-full transition-all shadow-md border-none cursor-pointer flex items-center gap-1.5"
+                    className="inline-flex min-h-[44px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#0e7490] px-6 py-2.5 text-xs font-semibold text-white transition-all shadow-md border-none cursor-pointer hover:bg-[#0b5c73] hover-scale-btn"
                   >
                     <span>Book a Session</span>
                   </button>
                   <button
                     onClick={() => { window.spaNavigate?.('/booking'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="px-6 py-3 bg-white/10 hover:bg-white/20 hover-scale-btn text-white font-semibold text-xs rounded-full transition-all border border-white/30 backdrop-blur-md cursor-pointer"
+                    className="inline-flex min-h-[44px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-white/10 px-6 py-2.5 text-xs font-semibold text-white transition-all border border-white/30 backdrop-blur-md cursor-pointer hover:bg-white/20 hover-scale-btn"
                   >
                     Explore All Services
                   </button>

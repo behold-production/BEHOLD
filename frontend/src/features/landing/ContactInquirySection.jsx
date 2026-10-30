@@ -166,7 +166,7 @@ export default function ContactInquirySection({ siteSettings = {}, onOpenBooking
           <button
             type="button"
             onClick={handleBookingCta}
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#0B5C73] cursor-pointer border-none sm:text-[13px]"
+            className="mt-8 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#0E7490] px-6 py-2.5 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#0B5C73] cursor-pointer border-none"
           >
             {bookingCta}
           </button>
@@ -186,7 +186,7 @@ export default function ContactInquirySection({ siteSettings = {}, onOpenBooking
               <button
                 type="button"
                 onClick={() => setSubmitted(false)}
-                className="mt-2 rounded-lg border border-[#E6DFD0] bg-[#FBF8F1] px-5 py-2.5 text-xs font-semibold text-[#0E1111] transition-colors hover:border-[#0E7490] hover:text-[#0B5C73] cursor-pointer"
+                className="mt-2 inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#E6DFD0] bg-[#FBF8F1] px-5 py-2.5 text-[13px] font-semibold text-[#0E1111] transition-colors hover:border-[#0E7490] hover:text-[#0B5C73] cursor-pointer"
               >
                 Send another message
               </button>
@@ -241,7 +241,7 @@ export default function ContactInquirySection({ siteSettings = {}, onOpenBooking
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-1 flex w-full items-center justify-center gap-2 rounded-lg bg-[#0E7490] py-3 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#0B5C73] disabled:opacity-50 cursor-pointer border-none sm:text-[13px]"
+                className="mt-1 flex w-full min-h-[44px] items-center justify-center gap-2 rounded-lg bg-[#0E7490] px-4 py-2.5 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#0B5C73] disabled:opacity-50 cursor-pointer border-none"
               >
                 {loading ? (
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

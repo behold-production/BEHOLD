@@ -82,7 +82,7 @@ export default function AptitudeLanding({ setView }) {
 
             <button
               onClick={handleProceed}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all shadow-md border-none cursor-pointer"
+              className="inline-flex w-full min-h-[44px] sm:w-auto items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#0e7490] px-7 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition-all shadow-md border-none cursor-pointer hover:bg-[#0b5c73]"
             >
               Try a Sample Test ›
             </button>
