@@ -203,7 +203,13 @@
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
+    /* Staggered entrances use delays — without zeroing them an element would
+       sit invisible for its slot and then appear, which is the opposite of
+       what a reduced-motion request asks for. */
+    transition-delay: 0ms !important;
+    transition-property: none !important;
     scroll-behavior: auto !important;
   }
 }
@@ -763,11 +769,14 @@ html.scroll-locked header.bh-home-nav {
 
 .hover-scale-card {
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease !important;
+  will-change: transform;
 }
 
+/* Lift plus a whisper of scale and a deeper, cyan-tinted shadow — the card
+   reads as coming toward you rather than just moving up. */
 .hover-scale-card:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 16px 32px -12px rgba(14, 116, 144, 0.16), 0 8px 16px -6px rgba(14, 17, 17, 0.10) !important;
+  transform: translateY(-6px) scale(1.015) !important;
+  box-shadow: 0 22px 44px -18px rgba(14, 116, 144, 0.24), 0 10px 20px -8px rgba(14, 17, 17, 0.12) !important;
 }
 
 .hover-scale-btn {
@@ -800,19 +809,22 @@ html.scroll-locked header.bh-home-nav {
   100% { opacity: 1; backdrop-filter: blur(10px); }
 }
 
-/* 2. Modal slide-up on mobile, pop-in on desktop */
+/* 2. Modal slide-up on mobile, pop-in on desktop. The curve overshoots to
+   1.02 so the panel visibly settles — the scale is the main cue. */
 @keyframes modalPopIn {
-  0%   { opacity: 0; transform: scale(0.94) translateY(32px); }
-  60%  { opacity: 1; transform: scale(1.01) translateY(-4px); }
+  0%   { opacity: 0; transform: scale(0.9) translateY(38px); }
+  55%  { opacity: 1; transform: scale(1.02) translateY(-5px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .animate-backdrop-in {
-  animation: backdropFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: backdropFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-modal-in {
-  animation: modalPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  /* Starts slightly after the backdrop so the blur lands first, then the
+     panel scales in over it — two beats instead of one flat pop. */
+  animation: modalPopIn 0.56s cubic-bezier(0.34, 1.5, 0.64, 1) 0.06s both;
   will-change: transform, opacity;
 }
 
@@ -967,13 +979,15 @@ html.scroll-locked header.bh-home-nav {
   transform: translateY(0) scale(0.98);
 }
 
-/* Premium Hardware-Accelerated & RAM-Optimized Scroll Reveal System.
-   Travel is deliberately short (22px / 1.2% scale) and the easing is
-   front-loaded so content settles quickly instead of drifting in late. */
+/* Premium Hardware-Accelerated Scroll Reveal System.
+   Travel is long enough to be noticed (34px / 4% scale) and the transform
+   curve overshoots a touch, so sections arrive with weight instead of
+   just fading in place. Opacity stays on a clean ease-out so nothing
+   flickers brighter than 1 on the way past its resting position. */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translate3d(0, 22px, 0) scale(0.985);
-  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, 34px, 0) scale(0.96);
+  transition: opacity .62s cubic-bezier(0.22, 1, 0.36, 1), transform .82s cubic-bezier(0.22, 1.06, 0.32, 1);
   will-change: opacity, transform;
 }
 
@@ -985,8 +999,8 @@ html.scroll-locked header.bh-home-nav {
 
 .reveal-scale-in {
   opacity: 0;
-  transform: scale(0.96) translate3d(0, 0, 0);
-  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(0.9) translate3d(0, 18px, 0);
+  transition: opacity .62s cubic-bezier(0.22, 1, 0.36, 1), transform .82s cubic-bezier(0.34, 1.45, 0.64, 1);
   will-change: opacity, transform;
 }
 
@@ -998,36 +1012,36 @@ html.scroll-locked header.bh-home-nav {
 
 .reveal-slide-left {
   opacity: 0;
-  transform: translate3d(-26px, 0, 0);
-  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(-42px, 0, 0) scale(0.985);
+  transition: opacity .62s cubic-bezier(0.22, 1, 0.36, 1), transform .82s cubic-bezier(0.22, 1.06, 0.32, 1);
   will-change: opacity, transform;
 }
 
 .reveal-slide-left.is-revealed {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0) scale(1);
   will-change: auto;
 }
 
 .reveal-slide-right {
   opacity: 0;
-  transform: translate3d(26px, 0, 0);
-  transition: opacity .7s cubic-bezier(0.22, 1, 0.36, 1), transform .7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(42px, 0, 0) scale(0.985);
+  transition: opacity .62s cubic-bezier(0.22, 1, 0.36, 1), transform .82s cubic-bezier(0.22, 1.06, 0.32, 1);
   will-change: opacity, transform;
 }
 
 .reveal-slide-right.is-revealed {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0) scale(1);
   will-change: auto;
 }
 
 /* Stagger Delays for Scroll Reveal */
-.reveal-delay-1, .delay-100 { animation-delay: 90ms; transition-delay: 90ms; }
-.reveal-delay-2, .delay-200 { animation-delay: 180ms; transition-delay: 180ms; }
-.reveal-delay-3, .delay-300 { animation-delay: 270ms; transition-delay: 270ms; }
-.reveal-delay-4, .delay-400 { animation-delay: 360ms; transition-delay: 360ms; }
-.reveal-delay-5, .delay-500 { animation-delay: 450ms; transition-delay: 450ms; }
+.reveal-delay-1, .delay-100 { animation-delay: 110ms; transition-delay: 110ms; }
+.reveal-delay-2, .delay-200 { animation-delay: 220ms; transition-delay: 220ms; }
+.reveal-delay-3, .delay-300 { animation-delay: 330ms; transition-delay: 330ms; }
+.reveal-delay-4, .delay-400 { animation-delay: 440ms; transition-delay: 440ms; }
+.reveal-delay-5, .delay-500 { animation-delay: 550ms; transition-delay: 550ms; }
 
 @keyframes fadeScaleIn {
   0% {
@@ -1168,6 +1182,24 @@ html.scroll-locked header.bh-home-nav {
   --tw-enter-translate-y: 100%;
 }
 
+/* Travel steps for the above-the-fold hero choreography — the copy lifts a
+   little further than a toast does, so the block reads as arriving. */
+@utility slide-in-from-bottom-2 {
+  --tw-enter-translate-y: 0.5rem;
+}
+
+@utility slide-in-from-bottom-4 {
+  --tw-enter-translate-y: 1rem;
+}
+
+@utility slide-in-from-bottom-6 {
+  --tw-enter-translate-y: 1.5rem;
+}
+
+@utility slide-in-from-bottom-8 {
+  --tw-enter-translate-y: 2rem;
+}
+
 @utility slide-in-from-left {
   --tw-enter-translate-x: -100%;
 }
@@ -1182,6 +1214,89 @@ html.scroll-locked header.bh-home-nav {
 
 @utility slide-in-from-right-4 {
   --tw-enter-translate-x: 1rem;
+}
+
+/* Deeper scale + travel steps so entrances can read as a real "pop".
+   Declared with @utility to keep sm:/lg: variants working (the booking
+   sheet relies on sm:zoom-in-*, sm:slide-in-from-bottom-0). */
+@utility zoom-in-85 {
+  --tw-enter-scale: 0.85;
+}
+
+@utility zoom-in-80 {
+  --tw-enter-scale: 0.8;
+}
+
+/* Named easing curves. `ease-spring` overshoots slightly, which is what
+   makes a scaled panel feel like it settles instead of just stopping. */
+@utility ease-spring {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@utility ease-out-expo {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility ease-out-soft {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility ease-in-fast {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ─── Mobile Navigation Drawer ─────────────────────────────────────────
+   The drawer stays mounted so the close motion can play, which means every
+   state here is a transition driven by `.is-open` on the root wrapper.
+   The panel scales from its left edge, so it swings out of a hinge instead
+   of sliding flat across the screen; rows then cascade in behind it. */
+.bh-drawer-scrim {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  transition: opacity .34s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter .34s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bh-drawer.is-open .bh-drawer-scrim {
+  opacity: 1;
+  backdrop-filter: blur(6px);
+}
+
+.bh-drawer-panel {
+  transform: translate3d(-100%, 0, 0) scale(0.86);
+  transform-origin: left center;
+  /* Asymmetric on purpose: leaving is quick and linear-ish, arriving is
+     slow with a slight overshoot so the panel feels like it settles. */
+  transition: transform .3s cubic-bezier(0.4, 0, 1, 1);
+  will-change: transform;
+}
+
+.bh-drawer.is-open .bh-drawer-panel {
+  transform: translate3d(0, 0, 0) scale(1);
+  transition: transform .62s cubic-bezier(0.32, 1.42, 0.5, 1);
+}
+
+.bh-drawer-item {
+  opacity: 0;
+  transform: translate3d(-20px, 0, 0) scale(0.94);
+  transition-property: opacity, transform;
+  transition-duration: .24s, .3s;
+  transition-timing-function: ease-out, cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* Property lists are spelled out per entry so the entrance stagger only
+   delays opacity/transform — hover colours on the same rows must react
+   immediately, which a shared transition-delay would break. */
+.bh-drawer.is-open .bh-drawer-item {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition-property: opacity, transform, color, background-color, border-color, box-shadow;
+  transition-duration: .34s, .58s, .25s, .25s, .25s, .25s;
+  transition-timing-function: ease-out, cubic-bezier(0.34, 1.5, 0.64, 1), cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(120ms + var(--bh-i, 0) * 38ms), calc(120ms + var(--bh-i, 0) * 38ms), 0ms, 0ms, 0ms, 0ms;
 }
 
 /* Accordion panels, late-arriving cards and the error-boundary refresh icon

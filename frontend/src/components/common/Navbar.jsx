@@ -208,10 +208,10 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
                 <button
                   onClick={() => setMobileMenuOpen(true)}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 cursor-pointer border-none bg-[#f1eadc]/80 hover:bg-[#e6dfd0] active:scale-95 text-[#0e1111]"
                   aria-label="Open Navigation Drawer"
+                  className="group flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-300 ease-spring cursor-pointer border-none bg-[#f1eadc]/80 hover:bg-[#e6dfd0] active:scale-90 text-[#0e1111]"
                 >
-                  <Menu className="w-5 h-5 text-[#0e1111]" />
+                  <Menu className="w-5 h-5 text-[#0e1111] transition-transform duration-300 ease-spring group-hover:rotate-90 group-active:scale-90" />
                 </button>
 
                 <button
@@ -374,32 +374,27 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
         <div
           aria-hidden={!mobileMenuOpen}
           inert={!mobileMenuOpen}
-          className={`fixed inset-0 z-[100] lg:hidden transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
-            }`}
+          className={`bh-drawer fixed inset-0 z-[100] lg:hidden ${mobileMenuOpen ? 'is-open pointer-events-auto' : 'pointer-events-none'}`}
         >
           {/* Backdrop */}
           <div
-            className={`absolute inset-0 bg-[#0e1111]/40 backdrop-blur-sm transition-opacity duration-300 ${
-              mobileMenuOpen ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="bh-drawer-scrim absolute inset-0 bg-[#0e1111]/45"
             onClick={() => setMobileMenuOpen(false)}
           />
 
           {/* Left-Side Drawer Panel */}
           <div
-            className={`absolute top-0 left-0 bottom-0 w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between border-r border-[#e6dfd0] transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-            }`}
+            className="bh-drawer-panel absolute top-0 left-0 bottom-0 w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between border-r border-[#e6dfd0]"
           >
             <div>
-              <div className="flex items-center justify-between pb-6 border-b border-[#e6dfd0]">
+              <div className="bh-drawer-item flex items-center justify-between pb-6 border-b border-[#e6dfd0]" style={{ '--bh-i': 0 }}>
                 <span className="text-2xl font-serif font-bold text-[#0e1111] tracking-tight">
                   {(siteName || 'BEHOLD').replace(/\.$/, '')}
                   <span className="text-[#0e7490] font-bold">.</span>
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-[#55605f] hover:text-[#0e1111] transition rounded-sm hover:bg-[#e6dfd0]/50 border-none bg-transparent cursor-pointer"
+                  className="rounded-sm border-none bg-transparent p-2 text-[#55605f] transition-all duration-300 ease-spring hover:rotate-90 hover:bg-[#e6dfd0]/50 hover:text-[#0e1111] active:scale-90 cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -410,11 +405,13 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
                   <button
                     key={label}
                     onClick={action}
-                    style={{ transitionDelay: mobileMenuOpen ? `${90 + idx * 45}ms` : '0ms' }}
-                    className={`text-left py-2.5 px-3 rounded-md text-sm font-medium text-[#0e1111] hover:text-[#0e7490] hover:bg-[#e6dfd0]/40 transition-all duration-300 border-none bg-transparent cursor-pointer ${mobileMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-3 opacity-0'
-                      }`}
+                    style={{ '--bh-i': idx + 1 }}
+                    className="bh-drawer-item group flex items-center gap-2.5 rounded-md border-none bg-transparent px-3 py-2.5 text-left text-sm font-medium text-[#0e1111] transition-colors duration-200 hover:bg-[#e6dfd0]/40 hover:text-[#0e7490] cursor-pointer"
                   >
-                    {label}
+                    {/* Accent bar grows out of the hinge on hover — the only
+                        motion left on the row once the entrance has played. */}
+                    <span className="h-4 w-0 shrink-0 rounded-full bg-[#0e7490] transition-all duration-300 ease-spring group-hover:w-1" aria-hidden="true" />
+                    <span className="transition-transform duration-300 ease-spring group-hover:translate-x-0.5">{label}</span>
                   </button>
                 ))}
               </div>
@@ -424,17 +421,17 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {user && (
                 <button
                   onClick={handleProfileClick}
-                  style={{ transitionDelay: mobileMenuOpen ? '330ms' : '0ms' }}
-                  className={`w-full py-3 bg-[#0e1111] hover:bg-[#0e7490] text-white font-medium text-sm rounded-lg transition-all duration-300 cursor-pointer shadow-sm text-center flex items-center justify-center gap-2 border-none ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}
+                  style={{ '--bh-i': navLinks.length + 1 }}
+                  className="bh-drawer-item group w-full py-3 bg-[#0e1111] hover:bg-[#0e7490] text-white font-medium text-sm rounded-lg transition-colors duration-300 cursor-pointer shadow-sm text-center flex items-center justify-center gap-2 border-none"
                 >
-                  <User className="w-4 h-4 text-white" />
+                  <User className="w-4 h-4 text-white transition-transform duration-300 ease-spring group-hover:-translate-y-0.5" />
                   <span>My Profile / Dashboard</span>
                 </button>
               )}
               <button
                 onClick={() => { setMobileMenuOpen(false); onOpenBooking(); }}
-                style={{ transitionDelay: mobileMenuOpen ? '370ms' : '0ms' }}
-                className={`w-full py-3 font-medium text-sm rounded-lg transition-all duration-300 cursor-pointer text-center border shadow-sm ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'} ${user
+                style={{ '--bh-i': navLinks.length + 2 }}
+                className={`bh-drawer-item w-full py-3 font-medium text-sm rounded-lg transition-colors duration-300 cursor-pointer text-center border shadow-sm ${user
                   ? 'bg-white hover:bg-[#e6dfd0]/40 text-[#0e1111] border-[#e6dfd0]'
                   : 'bg-[#0e7490] hover:bg-[#0b5c73] text-white border-[#0e7490]'
                   }`}
@@ -444,16 +441,16 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
               {user ? (
                 <button
                   onClick={() => { setMobileMenuOpen(false); setIsLogoutOpen(true); }}
-                  style={{ transitionDelay: mobileMenuOpen ? '410ms' : '0ms' }}
-                  className={`w-full py-2.5 border border-rose-200 text-rose-600 font-medium text-sm rounded-lg transition-all duration-300 bg-white hover:bg-rose-50 text-center cursor-pointer ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}
+                  style={{ '--bh-i': navLinks.length + 3 }}
+                  className="bh-drawer-item w-full py-2.5 border border-rose-200 text-rose-600 font-medium text-sm rounded-lg transition-colors duration-300 bg-white hover:bg-rose-50 text-center cursor-pointer"
                 >
                   Sign Out
                 </button>
               ) : (
                 <button
                   onClick={() => { setMobileMenuOpen(false); onOpenAuth?.(); }}
-                  style={{ transitionDelay: mobileMenuOpen ? '410ms' : '0ms' }}
-                  className={`w-full py-2.5 border border-[#e6dfd0] text-[#0e1111] font-semibold text-sm rounded-lg transition-all duration-300 bg-[#f1eadc] hover:bg-[#e6dfd0] text-center cursor-pointer ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}
+                  style={{ '--bh-i': navLinks.length + 3 }}
+                  className="bh-drawer-item w-full py-2.5 border border-[#e6dfd0] text-[#0e1111] font-semibold text-sm rounded-lg transition-colors duration-300 bg-[#f1eadc] hover:bg-[#e6dfd0] text-center cursor-pointer"
                 >
                   Sign In
                 </button>

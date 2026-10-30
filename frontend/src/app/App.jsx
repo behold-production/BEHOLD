@@ -831,8 +831,8 @@ export default function App() {
  
       {/* Terms & Privacy Documents Modal */}
       {activeDocType && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 overflow-hidden bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-[#0e1111] border border-[#243033] rounded-lg w-full max-w-2xl max-h-[85vh] sm:max-h-[min(85vh,900px)] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 overflow-hidden bg-black/70 backdrop-blur-xs animate-in fade-in duration-300">
+          <div className="bg-[#0e1111] border border-[#243033] rounded-lg w-full max-w-2xl max-h-[85vh] sm:max-h-[min(85vh,900px)] flex flex-col shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 zoom-in-90 duration-400 ease-spring">
 
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-[#243033] flex justify-between items-center bg-[#050707]/40">

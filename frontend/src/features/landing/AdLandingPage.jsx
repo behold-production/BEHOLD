@@ -489,10 +489,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <button
                 type="button"
                 onClick={() => handleBook()}
-                className="px-9 py-4 rounded-2xl bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-bold text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5 text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2"
+                className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-2xl bg-[var(--color-brand)] px-7 py-2.5 text-[13px] font-bold tracking-wide text-white transition-all shadow-lg hover:bg-[var(--color-brand-dark)] hover:shadow-xl hover:-translate-y-0.5 cursor-pointer text-center active:scale-[0.98] border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2"
               >
                 <span>{heroBtnText}</span>
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
 
@@ -895,7 +895,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
               <button
                 type="button"
                 onClick={() => handleBook()}
-                className="w-full sm:w-auto bg-[#0e7490] hover:bg-[#0b5c73] active:bg-[#0a5f75] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(14,116,144,0.4)] transition-all cursor-pointer whitespace-nowrap border-none flex items-center justify-center gap-2"
+                className="inline-flex w-full min-h-[44px] sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#0e7490] px-6 py-2.5 text-[13px] font-bold text-white shadow-lg transition-all cursor-pointer border-none hover:bg-[#0b5c73] active:bg-[#0a5f75] hover:shadow-[0_0_20px_rgba(14,116,144,0.4)]"
               >
                 <span>{heroBtnText}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -941,16 +941,22 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
                   <span className="text-sm sm:text-base font-semibold text-slate-900">
                     {faq.q}
                   </span>
-                  <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center shrink-0 text-slate-500">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ease-spring ${isOpen ? 'rotate-180 bg-[#0e7490]/12 text-[#0e7490]' : 'bg-slate-100 text-slate-500'}`}>
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
                 </button>
 
-                {isOpen && (
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100 mt-1">
-                    <p className="pt-3 font-normal leading-relaxed">{faq.a}</p>
+                {/* Grid 0fr → 1fr keeps the reveal smooth without measuring. */}
+                <div
+                  aria-hidden={!isOpen}
+                  className={`grid transition-[grid-template-rows,opacity] duration-450 ease-out-expo ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                >
+                  <div className="overflow-hidden">
+                    <div className={`px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100 mt-1 transition-[opacity,transform] duration-400 ease-out-expo ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'}`}>
+                      <p className="pt-3 font-normal leading-relaxed">{faq.a}</p>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
@@ -960,10 +966,10 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
         <div className="pt-10 text-center space-y-3">
           <button
             onClick={() => handleBook()}
-            className="inline-flex items-center gap-2 px-8 py-4 min-h-[44px] rounded-2xl bg-[#0e7490] hover:bg-[#0b5c73] text-white font-semibold text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer border-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-2xl bg-[#0e7490] px-7 py-2.5 text-[13px] font-semibold text-white shadow-lg hover:shadow-xl transition-all cursor-pointer border-none hover:bg-[#0b5c73] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
           >
             <span>{heroBtnText}</span>
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </button>
           <p className="text-xs text-slate-500">
             100% Confidential • Professional Support • Secure Online Booking
@@ -1013,7 +1019,7 @@ export default function AdLandingPage({ onOpenBooking, onSelectAdvisor, siteSett
       >
         <button
           onClick={() => handleBook()}
-          className="w-full py-3.5 px-5 rounded-2xl bg-[#0e7490] active:bg-[#0a5f75] text-white font-semibold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
+          className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-2xl bg-[#0e7490] px-5 py-2.5 text-[13px] font-semibold tracking-wide text-white transition-all shadow-md cursor-pointer border-none active:bg-[#0a5f75] hover:bg-[#0b5c73] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0e7490] focus-visible:ring-offset-2"
         >
           <span>{heroBtnText}</span>
           <ArrowRight className="w-4 h-4" />

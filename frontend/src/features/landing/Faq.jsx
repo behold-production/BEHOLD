@@ -105,19 +105,29 @@ export default function Faq({ siteSettings }) {
                         {item.question}
                       </span>
                       <span
-                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-colors duration-200 ${
-                          isOpen ? 'bg-[#0E7490] text-white' : 'bg-[#EAF4F7] text-[#0E7490]'
-                        }`}
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-all duration-300 ease-spring ${isOpen
+                          ? 'rotate-180 bg-[#0E7490] text-white'
+                          : 'bg-[#EAF4F7] text-[#0E7490]'
+                          }`}
                       >
                         {isOpen ? <Minus className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
                       </span>
                     </button>
 
-                    {isOpen && item.answer && (
-                      <div className="border-t border-[#EDE6D7] px-4 pb-4 pt-3 text-[12px] leading-relaxed text-[#55605F] sm:px-5 sm:text-[12.5px]">
-                        {item.answer}
+                    {/* Height animates with the grid 0fr → 1fr technique — the card
+                        unfolds smoothly without measuring content in JS. */}
+                    <div
+                      aria-hidden={!isOpen}
+                      className={`grid transition-[grid-template-rows,opacity] duration-450 ease-out-expo ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                    >
+                      <div className="overflow-hidden">
+                        {item.answer && (
+                          <div className={`border-t border-[#EDE6D7] px-4 pb-4 pt-3 text-[12px] leading-relaxed text-[#55605F] transition-[opacity,transform] duration-400 ease-out-expo sm:px-5 sm:text-[12.5px] ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'}`}>
+                            {item.answer}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
                 );
               })}

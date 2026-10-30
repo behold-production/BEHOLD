@@ -115,27 +115,27 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
         <div className="relative mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 pb-10 pt-24 sm:min-h-[560px] sm:px-6 sm:pt-28 lg:min-h-[600px] lg:px-8 lg:pt-32">
           <div className="mx-auto max-w-[36rem] text-center lg:mx-0 lg:text-left">
             {eyebrow && (
-              <p className="font-hand text-[26px] leading-none text-[#0B5C73] sm:text-[31px]">
+              <p className="animate-in fade-in slide-in-from-bottom-4 duration-500 font-hand text-[26px] leading-none text-[#0B5C73] sm:text-[31px]">
                 {eyebrow}
               </p>
             )}
 
             <h1
               id="bh-hero-title"
-              className="font-display-italic mt-3 whitespace-pre-line text-[2.35rem] leading-[1.12] tracking-tight text-[#0E1111] sm:mt-4 sm:text-[3.2rem] lg:text-[3.9rem]"
+              className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 font-display-italic mt-3 whitespace-pre-line text-[2.35rem] leading-[1.12] tracking-tight text-[#0E1111] sm:mt-4 sm:text-[3.2rem] lg:text-[3.9rem]"
             >
               {headline}
             </h1>
 
-            <p className="mx-auto mt-5 max-w-xl text-[13.5px] leading-[1.8] text-[#3F4A49] sm:text-[15px] lg:mx-0">
+            <p className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-200 mx-auto mt-5 max-w-xl text-[13.5px] leading-[1.8] text-[#3F4A49] sm:text-[15px] lg:mx-0">
               {description}
             </p>
 
-            <div className="mt-7 flex flex-col items-stretch gap-2.5 sm:mt-8 sm:flex-row sm:items-center sm:justify-center lg:justify-start">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-300 mt-7 flex flex-col items-stretch gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center lg:justify-start">
               <button
                 type="button"
                 onClick={handleBookClick}
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3 text-[13px] font-semibold text-white shadow-[0_14px_30px_-16px_rgba(14,116,144,0.95)] transition-all duration-200 hover:bg-[#0B5C73] active:scale-[0.99] cursor-pointer border-none sm:px-7"
+                className="group inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0E7490] px-6 py-2.5 text-[13px] font-semibold text-white shadow-[0_14px_30px_-16px_rgba(14,116,144,0.95)] transition-all duration-200 hover:bg-[#0B5C73] active:scale-[0.99] cursor-pointer border-none sm:px-7"
               >
                 {buttonText}
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -144,7 +144,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
               <button
                 type="button"
                 onClick={handleAccountClick}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#D8D2C3] bg-white/85 px-5 py-3 text-[13px] font-semibold text-[#0E1111] backdrop-blur-sm transition-all duration-200 hover:border-[#0E7490]/45 hover:text-[#0B5C73] active:scale-[0.99] cursor-pointer sm:px-6"
+                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-xl border border-[#D8D2C3] bg-white/85 px-5 py-2.5 text-[13px] font-semibold text-[#0E1111] backdrop-blur-sm transition-all duration-200 hover:border-[#0E7490]/45 hover:text-[#0B5C73] active:scale-[0.99] cursor-pointer sm:px-6"
               >
                 <UserRound className="h-4 w-4 text-[#0E7490]" />
                 {user ? 'My Account' : 'Login / Register'}
@@ -153,7 +153,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
               <button
                 type="button"
                 onClick={() => scrollToSection('services')}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-transparent px-2 py-3 text-[13px] font-semibold text-[#0B5C73] underline decoration-[#0E7490]/30 decoration-1 underline-offset-4 transition-colors duration-200 hover:text-[#0E7490] hover:decoration-[#0E7490] cursor-pointer bg-transparent"
+                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-xl border border-transparent px-3 py-2.5 text-[13px] font-semibold text-[#0B5C73] underline decoration-[#0E7490]/30 decoration-1 underline-offset-4 transition-colors duration-200 hover:text-[#0E7490] hover:decoration-[#0E7490] cursor-pointer bg-transparent"
               >
                 Explore Our Services
                 <ArrowUpRight className="h-4 w-4" />
@@ -161,7 +161,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
             </div>
 
             {modes.length > 0 && (
-              <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 lg:justify-start">
+              <ul className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 lg:justify-start">
                 {modes.map(({ key, label, Icon }) => (
                   <li key={key} className="inline-flex items-center gap-2 text-[11.5px] font-medium text-[#3F4A49] sm:text-xs">
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-[#0E7490] shadow-[0_1px_3px_rgba(14,17,17,0.08)]">
@@ -177,7 +177,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
         {/* Admin trust stats bar, sitting on the artwork */}
         {(stats.length > 0 || phoneHref) && (
-          <div className="relative mx-auto max-w-6xl px-4 pb-12 sm:px-6 lg:px-8">
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500 relative mx-auto max-w-6xl px-4 pb-12 sm:px-6 lg:px-8">
             <dl className={`grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/70 bg-[#E3DCCB] shadow-[0_26px_56px_-38px_rgba(14,17,17,0.55)] ${statsDesktopCols}`}>
               {stats.map((stat, idx) => (
                 <div

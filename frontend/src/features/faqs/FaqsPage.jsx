@@ -220,15 +220,22 @@ export default function FaqsPage() {
                     <span className="font-medium text-[#0e1111] text-sm sm:text-base leading-snug">
                       {faq.question}
                     </span>
-                    <span className="shrink-0 w-8 h-8 rounded-sm bg-[#fbf8f1] border border-[#e6dfd0] flex items-center justify-center text-[#55605f] transition-colors">
+                    <span className={`shrink-0 w-8 h-8 rounded-sm border flex items-center justify-center transition-all duration-300 ease-spring ${isOpen ? 'rotate-180 border-[#0e7490]/45 bg-[#0e7490]/10 text-[#0e7490]' : 'border-[#e6dfd0] bg-[#fbf8f1] text-[#55605f]'}`}>
                       {isOpen ? <Minus className="w-4 h-4 text-[#0e7490]" /> : <Plus className="w-4 h-4" />}
                     </span>
                   </button>
-                  {isOpen && (
-                    <div className="px-6 pb-6 pt-1 text-[#55605f] text-xs sm:text-sm leading-relaxed border-t border-[#e6dfd0] font-normal animate-fade-in">
-                      {faq.answer}
+                  {/* Unfolds via grid-template-rows so the card grows smoothly
+                      instead of snapping to the answer's full height. */}
+                  <div
+                    aria-hidden={!isOpen}
+                    className={`grid transition-[grid-template-rows,opacity] duration-450 ease-out-expo ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className={`px-6 pb-6 pt-1 text-[#55605f] text-xs sm:text-sm leading-relaxed border-t border-[#e6dfd0] font-normal transition-[opacity,transform] duration-400 ease-out-expo ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'}`}>
+                        {faq.answer}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}
@@ -248,7 +255,7 @@ export default function FaqsPage() {
 
           <button
             onClick={() => navigate('/#inquiry')}
-            className="z-10 shrink-0 px-7 py-3.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-medium text-xs sm:text-sm rounded-md transition shadow-md flex items-center gap-2 cursor-pointer whitespace-nowrap border-none"
+            className="z-10 shrink-0 inline-flex min-h-[44px] items-center justify-center gap-2 px-6 py-2.5 bg-[#0e7490] hover:bg-[#0b5c73] text-white font-semibold text-[13px] rounded-md transition shadow-md cursor-pointer whitespace-nowrap border-none"
           >
             Contact Support Desk <ArrowRight className="w-4 h-4" />
           </button>

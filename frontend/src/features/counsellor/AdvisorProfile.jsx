@@ -522,7 +522,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         
         {/* ── 1. OVERVIEW TAB ── */}
         {activeTab === 'overview' && (
-          <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-450 ease-out-expo">
             
             {/* About Card */}
             <div className="bg-white p-6 sm:p-8 rounded-md border border-[#e6dfd0] shadow-xs space-y-4">
@@ -614,7 +614,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
         {/* ── 2. REVIEW TAB (Matching User Reference Image UI) ── */}
         {activeTab === 'review' && (
-          <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-450 ease-out-expo">
             
             {/* Header Title with Write Review Action */}
             <div className="flex items-center justify-between">
@@ -888,8 +888,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
       {/* ── WRITE REVIEW MODAL ── */}
       {showReviewModal && createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/60 backdrop-blur-xs p-4">
-          <div className="flex w-full max-w-md max-h-full flex-col overflow-hidden rounded-md border border-[#e6dfd0] bg-white shadow-2xl animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-300">
+          <div className="flex w-full max-w-md max-h-full flex-col overflow-hidden rounded-md border border-[#e6dfd0] bg-white shadow-2xl animate-in fade-in slide-in-from-bottom-4 zoom-in-90 duration-400 ease-spring">
 
             <div className="flex shrink-0 items-center justify-between border-b border-[#e6dfd0] px-6 pt-6 pb-4">
               <h3 className="text-lg font-bold text-[#0e1111]">Write a Verified Review</h3>
@@ -1009,7 +1009,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             <button
               type="button"
               onClick={() => onBook?.(advisor)}
-              className="px-6 sm:px-8 py-3.5 bg-[#0e7490] hover:bg-[#0c6b83] text-white font-bold text-xs sm:text-sm rounded-md shadow-lg shadow-[#0e7490]/25 transition-all transform active:scale-95 cursor-pointer border-none flex items-center gap-2"
+              className="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-md bg-[#0e7490] px-6 sm:px-7 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-[#0e7490]/25 transition-all transform active:scale-95 cursor-pointer border-none hover:bg-[#0c6b83]"
             >
               <span>Book Consultation</span>
               <Plus className="w-4 h-4 text-white" />

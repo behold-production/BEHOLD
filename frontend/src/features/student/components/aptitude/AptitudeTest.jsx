@@ -408,7 +408,7 @@ export default function AptitudeTest({ onFinishTest }) {
  ) : (
  /* Results Panel */
  <div
- className="bg-white border border-[#e6dfd0] rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 relative overflow-hidden animate-in zoom-in-95 duration-500 text-left"
+ className="bg-white border border-[#e6dfd0] rounded-[10px] shadow-square-light p-5 sm:p-8 md:p-14 relative overflow-hidden animate-in fade-in slide-in-from-bottom-6 zoom-in-90 duration-600 ease-spring text-left"
  id="results-panel"
  >
  {/* Header Shield */}
@@ -488,7 +488,7 @@ export default function AptitudeTest({ onFinishTest }) {
  id="btn-results-consult"
  onClick={handleClaimMentoring}
  disabled={isClaiming}
- className="w-full py-3.5 sm:py-4 bg-[#0e1111] hover:bg-[#243033] text-white font-semibold text-[10px] tracking-widest rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+ className="w-full inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-[#0e1111] px-4 py-2.5 text-[10px] font-semibold tracking-widest text-white transition-all cursor-pointer shadow-none border-none disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100 hover:bg-[#243033]"
  >
  {isClaiming ? (
  <>
