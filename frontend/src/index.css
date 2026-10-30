@@ -53,8 +53,9 @@
   letter-spacing: 0;
 }
 
-/* Brush-script accent for the second hero headline line — local Rough face,
-   Dancing Script as web fallback. Needs !important to beat the global h1 rule. */
+/* Brush-script accent for the hero headline's small lead-in lines — local
+   Rough face, Dancing Script as web fallback. Needs !important to beat the
+   global h1 rule. */
 .font-brush-hero {
   font-family: 'Rough', 'Dancing Script', 'Satisfy', cursive !important;
   font-style: normal;
