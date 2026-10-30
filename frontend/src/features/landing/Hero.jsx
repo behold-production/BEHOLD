@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Phone, Video, MapPin, Home as HomeIcon, UserRound } from 'lucide-react';
 import SEO from '../../components/common/SEO';
@@ -7,10 +7,15 @@ import heroFallbackImage from '../../assets/hero-watercolor.jpg';
 
 const getFirstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
 
-export default function Hero({ siteSettings, navigateToSection, onOpenBooking }) {
+export default function Hero({ siteSettings, navigateToSection, onOpenBooking, settingsLoaded = true }) {
   const settings = siteSettings || {};
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Hold a skeleton until the first settings round-trip settles so the hero
+  // never paints the fallback copy and then swaps to the admin content. An
+  // explicit load error is treated as settled (falls back to default copy).
+  const loading = !settingsLoaded && !settings.contentLoadError;
 
   const headline = getFirstText(
     settings.heroTitle,
@@ -32,6 +37,12 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
   const buttonText = getFirstText(settings.heroBtnText, 'Book an Appointment');
   const eyebrow = getFirstText(settings.heroEyebrow, 'Licensed Clinical Psychologists').replace(/\s+/g, ' ');
   const heroImage = getFirstText(settings.heroBgImage) || heroFallbackImage;
+  // Crossfade the full-bleed backdrop when the admin image URL arrives so it
+  // doesn't pop over the fallback; reveal immediately if already cached.
+  const [imgReady, setImgReady] = useState(false);
+  useEffect(() => {
+    setImgReady(false);
+  }, [heroImage]);
   const phone = getFirstText(settings.contactPhone);
   const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
 
@@ -106,7 +117,9 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
           aria-hidden="true"
           fetchPriority="high"
           decoding="async"
-          className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-[center_58%]"
+          onLoad={() => setImgReady(true)}
+          onError={() => setImgReady(true)}
+          className={`pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-[center_58%] transition-opacity duration-700 ease-out ${imgReady ? 'opacity-100' : 'opacity-0'}`}
         />
 
         {/* Legibility veils — strong cream behind the copy, artwork left clear on desktop */}
@@ -119,29 +132,45 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking })
 
         <div className="relative mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 pb-10 pt-24 sm:min-h-[560px] sm:px-6 sm:pt-28 lg:min-h-[600px] lg:px-8 lg:pt-32">
           <div className="mx-auto max-w-[36rem] text-center lg:mx-0 lg:text-left">
-            {eyebrow && (
-              <p className="animate-in fade-in slide-in-from-bottom-4 duration-500 font-hand text-[26px] leading-none text-[#0B5C73] sm:text-[31px]">
-                {eyebrow}
-              </p>
+            {loading ? (
+              /* Skeleton mirrors the two-voice layout so nothing shifts or
+                 flashes when the admin copy arrives. */
+              <div aria-hidden="true" className="animate-pulse space-y-4">
+                <div className="mx-auto h-6 w-52 rounded-full bg-[#0E1111]/10 lg:mx-0" />
+                <div className="mx-auto h-7 w-40 rounded-full bg-[#0E7490]/15 lg:mx-0" />
+                <div className="mx-auto h-14 w-72 rounded-2xl bg-[#0E1111]/12 lg:mx-0" />
+                <div className="mx-auto mt-6 space-y-2.5 lg:mx-0">
+                  <div className="h-3.5 w-full max-w-md rounded-full bg-[#0E1111]/8" />
+                  <div className="h-3.5 w-4/5 mx-auto max-w-md rounded-full bg-[#0E1111]/8 lg:mx-0" />
+                </div>
+              </div>
+            ) : (
+              <>
+                {eyebrow && (
+                  <p className="animate-in fade-in slide-in-from-bottom-4 duration-500 font-hand text-[26px] leading-none text-[#0B5C73] sm:text-[31px]">
+                    {eyebrow}
+                  </p>
+                )}
+
+                <h1
+                  id="bh-hero-title"
+                  className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 mt-3 text-[#0E1111]"
+                >
+                  {headlineLines.slice(0, -1).map((line, idx) => (
+                    <span key={`${line}-${idx}`} className="font-brush-hero block text-[1.7rem] leading-[1.15] text-[#0E7490] sm:text-[1.95rem] lg:text-[2.15rem]">
+                      {line}
+                    </span>
+                  ))}
+                  <span className="font-heading mt-1.5 block text-[2.5rem] font-bold leading-[1.02] tracking-[-0.02em] sm:mt-2 sm:text-[3.25rem] lg:text-[3.75rem]">
+                    {headlineLines[headlineLines.length - 1]}
+                  </span>
+                </h1>
+
+                <p className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-200 mx-auto mt-5 max-w-xl text-[13.5px] leading-[1.8] text-[#3F4A49] sm:text-[15px] lg:mx-0">
+                  {description}
+                </p>
+              </>
             )}
-
-            <h1
-              id="bh-hero-title"
-              className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 mt-3 text-[#0E1111]"
-            >
-              {headlineLines.slice(0, -1).map((line, idx) => (
-                <span key={`${line}-${idx}`} className="font-brush-hero block text-[1.7rem] leading-[1.15] text-[#0E7490] sm:text-[1.95rem] lg:text-[2.15rem]">
-                  {line}
-                </span>
-              ))}
-              <span className="font-heading mt-1.5 block text-[2.5rem] font-bold leading-[1.02] tracking-[-0.02em] sm:mt-2 sm:text-[3.25rem] lg:text-[3.75rem]">
-                {headlineLines[headlineLines.length - 1]}
-              </span>
-            </h1>
-
-            <p className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-200 mx-auto mt-5 max-w-xl text-[13.5px] leading-[1.8] text-[#3F4A49] sm:text-[15px] lg:mx-0">
-              {description}
-            </p>
 
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-600 delay-300 mt-7 flex flex-col items-stretch gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center lg:justify-start">
               <button

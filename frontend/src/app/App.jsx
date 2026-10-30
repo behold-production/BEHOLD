@@ -123,6 +123,9 @@ export default function App() {
 
   // Expanded site settings sync state
   const [siteSettings, setSiteSettings] = useState({});
+  // True once the first settings round-trip settles (success or failure) so
+  // the hero can hold a skeleton instead of flashing the fallback copy.
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [activeDocType, setActiveDocType] = useState(null); // 'terms', 'privacy', 'refund', 'consent'
 
   // The legal-document sheet is opened from the footer and from inside the
@@ -144,6 +147,8 @@ export default function App() {
       } catch (err) {
         console.error('Failed to fetch global settings', err);
         setSiteSettings((current) => ({ ...current, contentLoadError: err.message }));
+      } finally {
+        setSettingsLoaded(true);
       }
     };
     fetchGlobalSettings();
@@ -636,7 +641,7 @@ export default function App() {
           {/* Public landing page */}
           <Route path="/" element={
             <main className="fade-in-up bg-[#FBF8F1] text-[#0E1111]">
-              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
               <WhyChooseSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               <ServicesShowcase siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
