@@ -607,6 +607,16 @@ const AuthController = {
         waSuccess = Boolean(waRes && (waRes.success || waRes.mock));
       }
 
+      // Phone-only resets ride on WhatsApp alone — never claim the code was
+      // sent when the provider refused to deliver it (same honesty rule as
+      // the login OTP endpoint).
+      if (!email && targetPhone && !waSuccess) {
+        return res.status(502).json({
+          success: false,
+          message: 'We could not deliver the reset code to your WhatsApp just now. Please try again or reset with your email address.'
+        });
+      }
+
       const maskedPhone = targetPhone ? targetPhone.replace(/.(?=.{4})/g, '•') : '';
       const maskedEmail = cleanEmail.replace(/(.{2})(.*)(?=@)/, (_, g1, g2) => g1 + '•'.repeat(Math.max(1, g2.length)));
 

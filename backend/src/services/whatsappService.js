@@ -89,15 +89,18 @@ class WhatsAppService {
   async _ensureContactWarm(phoneWithPlus, deadlineMs) {
     const key = String(phoneWithPlus || '').replace(/\D/g, '');
     if (!key) return null;
-    const cached = this._warmedContacts.get(key);
-    if (cached && Date.now() - cached.ts < 10 * 60 * 1000) return cached.exists;
+    // Only a confirmed true is cached — the chat stays registered, while a
+    // false/null answer must be re-checked on the next send (the owner may
+    // have just installed WhatsApp, or the earlier check may have timed out).
+    const warmedAt = this._warmedContacts.get(key);
+    if (warmedAt && Date.now() - warmedAt < 10 * 60 * 1000) return true;
     if (!this._canWait(deadlineMs, 3000)) return null; // no budget left — send anyway
 
     // Keep the map from growing unbounded on long-lived instances.
     if (this._warmedContacts.size > 500) {
       const cutoff = Date.now() - 10 * 60 * 1000;
-      for (const [k, entry] of this._warmedContacts.entries()) {
-        if (entry.ts < cutoff) this._warmedContacts.delete(k);
+      for (const [k, ts] of this._warmedContacts.entries()) {
+        if (ts < cutoff) this._warmedContacts.delete(k);
       }
     }
 
@@ -107,7 +110,7 @@ class WhatsAppService {
         timeout: Math.max(1500, Math.min(3500, deadlineMs - Date.now()))
       });
       const exists = res.data?.data?.exists !== undefined ? Boolean(res.data.data.exists) : null;
-      if (exists !== false) this._warmedContacts.set(key, { ts: Date.now(), exists });
+      if (exists === true) this._warmedContacts.set(key, Date.now());
       return exists;
     } catch (e) {
       // A 4xx/5xx here still forces the client-side JID resolution, and a
@@ -253,6 +256,18 @@ class WhatsAppService {
         const isRetryAccountProtection = retryStatus === 400 || retryStatus === 429 || retryWaitSec > 0 ||
           retryErrMsg.includes('5 second') || retryErrMsg.includes('account protection') ||
           retryErrMsg.includes('rate limit');
+
+        // Same chat-miss recovery the primary path gets: if the fallback was
+        // the first attempt to touch this number, re-warm and retry spaced.
+        const isRetryChatMiss = retryStatus === 422 &&
+          (retryErrMsg.includes('jid') || retryErrMsg.includes('chat') || retryErrMsg.includes('does not exist') || retryErrMsg.includes('not exist'));
+
+        if (isRetryChatMiss && attempt < maxAttempts && this._canWait(deadlineMs, 7000)) {
+          this._warmedContacts.delete(cleanedPhoneWithoutPlus);
+          console.warn(`[WhatsApp] Chat miss on fallback for ${formattedPhoneWithPlus} — re-warming contact and retrying...`);
+          await new Promise((resolve) => setTimeout(resolve, 6500));
+          return this._sendViaWaSender(phone, text, { attempt: attempt + 1, maxAttempts, deadlineMs });
+        }
 
         if (isRetryAccountProtection && attempt < maxAttempts && this._canWait(deadlineMs, 6500)) {
           const waitSec = this._retryWaitSeconds(deadlineMs, retryWaitSec);
