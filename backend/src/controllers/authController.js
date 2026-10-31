@@ -869,6 +869,13 @@ const AuthController = {
 
       if (!delivered) {
         console.warn(`[WhatsApp OTP] Code for ${normalizedPhone} was NOT delivered:`, waResult?.error);
+        if (waResult?.notOnWhatsApp) {
+          return res.status(400).json({
+            success: false,
+            delivered: false,
+            message: 'This number is not registered on WhatsApp. Please check the number or use a different sign-in option.'
+          });
+        }
         return res.status(502).json({
           success: false,
           delivered: false,

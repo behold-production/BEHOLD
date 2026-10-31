@@ -20,6 +20,7 @@ const { normalizePhoneWithCountryCode, cleanUserName } = require('../utils/phone
 class WhatsAppService {
   constructor() {
     this._recentSends = new Map();
+    this._warmedContacts = new Map(); // canonical phone -> last on-whatsapp check
     this._sendQueue = Promise.resolve();
     this._lastSendTime = 0;
     this._init();
@@ -73,6 +74,50 @@ class WhatsAppService {
   }
 
   /**
+   * Resolve the recipient against WhatsApp once per number before sending.
+   *
+   * WASender runs on a linked WhatsApp Web client, and the very first message
+   * to a number with no existing chat is rejected or dropped ("The provided
+   * JID does not exist on WhatsApp") even though every later send succeeds —
+   * which is exactly why OTPs historically only arrived on resend (the dropped
+   * first attempt had registered the contact by then). This check makes the
+   * session resolve the JID, so the first code actually lands.
+   *
+   * Returns true/false when the provider gave a definitive answer, or null
+   * when the check was skipped or failed — callers must still send on null.
+   */
+  async _ensureContactWarm(phoneWithPlus, deadlineMs) {
+    const key = String(phoneWithPlus || '').replace(/\D/g, '');
+    if (!key) return null;
+    const cached = this._warmedContacts.get(key);
+    if (cached && Date.now() - cached.ts < 10 * 60 * 1000) return cached.exists;
+    if (!this._canWait(deadlineMs, 3000)) return null; // no budget left — send anyway
+
+    // Keep the map from growing unbounded on long-lived instances.
+    if (this._warmedContacts.size > 500) {
+      const cutoff = Date.now() - 10 * 60 * 1000;
+      for (const [k, entry] of this._warmedContacts.entries()) {
+        if (entry.ts < cutoff) this._warmedContacts.delete(k);
+      }
+    }
+
+    try {
+      const res = await axios.get(`https://wasenderapi.com/api/on-whatsapp/${encodeURIComponent(key)}`, {
+        headers: { Authorization: `Bearer ${this.waSenderToken}` },
+        timeout: Math.max(1500, Math.min(3500, deadlineMs - Date.now()))
+      });
+      const exists = res.data?.data?.exists !== undefined ? Boolean(res.data.data.exists) : null;
+      if (exists !== false) this._warmedContacts.set(key, { ts: Date.now(), exists });
+      return exists;
+    } catch (e) {
+      // A 4xx/5xx here still forces the client-side JID resolution, and a
+      // timeout costs the provider-side check nothing — never block the send.
+      console.warn(`[WhatsApp] Contact warm-up for ${key} inconclusive (${e?.message || 'error'}) — sending anyway.`);
+      return null;
+    }
+  }
+
+  /**
    * Seconds to wait before the next attempt. Honours the provider's retry_after
    * hint but never sleeps past the caller's deadline. 6.5s is the floor because
    * WASender's account protection blocks anything under 5s.
@@ -102,6 +147,19 @@ class WhatsAppService {
 
     const cleanedPhoneWithoutPlus = formattedPhoneWithPlus.replace(/^\+/, '');
 
+    // Register the contact/chat with the session before the first send —
+    // without this, the very first OTP to a new number is rejected by the
+    // WhatsApp Web client (see _ensureContactWarm).
+    const onWhatsApp = await this._ensureContactWarm(formattedPhoneWithPlus, deadlineMs);
+    if (onWhatsApp === false) {
+      return {
+        success: false,
+        provider: 'WASender',
+        notOnWhatsApp: true,
+        error: { message: 'This number is not registered on WhatsApp' }
+      };
+    }
+
     // Primary WASender payload with +91 format: { to: "+919876543210", text: "..." }
     const primaryPayload = {
       to: formattedPhoneWithPlus,
@@ -125,6 +183,13 @@ class WhatsAppService {
           timeout: httpTimeout
         }
       );
+      // The provider can answer HTTP 200 with { success: false } — never
+      // report those as delivered or the UI lies to the user.
+      if (response.data && response.data.success === false) {
+        const bizMsg = String(response.data.message || 'provider rejected send');
+        console.error(`[WhatsApp] ⚠️ Provider reported success:false for ${formattedPhoneWithPlus}: ${bizMsg}`);
+        return { success: false, provider: 'WASender', error: response.data };
+      }
       console.log(`[WhatsApp] ✅ Sent to ${formattedPhoneWithPlus}:`, response.data?.data || response.data?.message || 'OK');
       return { success: true, provider: 'WASender', data: response.data };
     } catch (error) {
@@ -136,6 +201,20 @@ class WhatsAppService {
       const isAccountProtection = status === 400 || status === 429 || retryAfter > 0 ||
         errMsg.includes('5 second') || errMsg.includes('account protection') ||
         errMsg.includes('rate limit') || errMsg.includes('too many');
+
+      // "JID does not exist" on a brand-new number: the contact registration
+      // raced the send. Re-warm and retry — but the provider counts every
+      // attempt against its 5s account-protection window, so the gap must be
+      // at least as long as a rate-limit retry or the second try bounces too.
+      const isChatMiss = status === 422 &&
+        (errMsg.includes('jid') || errMsg.includes('chat') || errMsg.includes('does not exist') || errMsg.includes('not exist'));
+
+      if (isChatMiss && attempt < maxAttempts && this._canWait(deadlineMs, 7000)) {
+        this._warmedContacts.delete(cleanedPhoneWithoutPlus);
+        console.warn(`[WhatsApp] Chat miss for ${formattedPhoneWithPlus} — re-warming contact and retrying (Attempt ${attempt}/${maxAttempts})...`);
+        await new Promise((resolve) => setTimeout(resolve, 6500));
+        return this._sendViaWaSender(phone, text, { attempt: attempt + 1, maxAttempts, deadlineMs });
+      }
 
       if (isAccountProtection && attempt < maxAttempts && this._canWait(deadlineMs, 6500)) {
         const waitSeconds = this._retryWaitSeconds(deadlineMs, retryAfter);
@@ -159,6 +238,10 @@ class WhatsAppService {
             timeout: Number.isFinite(deadlineMs) ? Math.max(2000, Math.min(20000, deadlineMs - Date.now())) : 20000
           }
         );
+        if (response2.data && response2.data.success === false) {
+          console.error(`[WhatsApp] ⚠️ Fallback reported success:false for ${cleanedPhoneWithoutPlus}:`, response2.data.message || '');
+          return { success: false, provider: 'WASender', error: response2.data };
+        }
         console.log(`[WhatsApp] ✅ Fallback sent to ${cleanedPhoneWithoutPlus}:`, response2.data?.data || response2.data?.message || 'OK');
         return { success: true, provider: 'WASender', data: response2.data };
       } catch (retryErr) {
@@ -271,8 +354,9 @@ class WhatsAppService {
    * Callers await this inside an HTTP request, so it runs against a deadline:
    * an OTP that keeps retrying until the platform kills the function is worse
    * than one that fails fast and lets the user ask for a fresh code.
+   * The budget covers contact warm-up (~3.5s) + send + one spaced retry.
    */
-  async sendOTP(phone, code, { deadlineMs = 14000 } = {}) {
+  async sendOTP(phone, code, { deadlineMs = 16000 } = {}) {
     const text =
       `*BEHOLD. — Verification Code*\n\n` +
       `Your 6-digit code is:\n\n` +
@@ -290,7 +374,7 @@ class WhatsAppService {
   /**
    * Password reset code — same urgent treatment as the login OTP.
    */
-  async sendPasswordResetOtp(phone, code, { minutes = 10, deadlineMs = 14000 } = {}) {
+  async sendPasswordResetOtp(phone, code, { minutes = 10, deadlineMs = 16000 } = {}) {
     const text =
       `*BEHOLD. — Password Reset Code*\n\n` +
       `Your 6-digit verification code is:\n\n` +
