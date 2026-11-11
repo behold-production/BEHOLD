@@ -102,10 +102,6 @@ export default function Footer({
       label: settings.careerTitle,
       onClick: handleBookingCTA,
     },
-    settings.enableAptitude !== false && settings.aptitudeSectionTitle && {
-      label: settings.aptitudeSectionTitle,
-      onClick: () => { window.spaNavigate?.('/aptitude'); window.scrollTo({ top: 0, behavior: 'smooth' }); },
-    },
   ].filter(Boolean);
 
   const ctaHeading = settings.counselSubtitle?.trim() || 'You Don’t Have to Face It Alone.';

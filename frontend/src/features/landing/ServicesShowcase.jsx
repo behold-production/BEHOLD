@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   ArrowUpRight,
   BookOpen,
@@ -24,7 +23,6 @@ const getFirstText = (...values) => values.find((value) => typeof value === 'str
  * dynamic "What we offer" cards they maintain in Settings.
  */
 export default function ServicesShowcase({ siteSettings = {}, onOpenBooking }) {
-  const navigate = useNavigate();
 
   const tiles = useMemo(() => {
     const settings = siteSettings || {};
@@ -50,18 +48,8 @@ export default function ServicesShowcase({ siteSettings = {}, onOpenBooking }) {
       });
     }
 
-    if (settings.enableAptitude !== false) {
-      list.push({
-        id: 'aptitude',
-        icon: Sparkles,
-        title: getFirstText(settings.aptitudeSectionTitle, 'Aptitude Assessment'),
-        description: getFirstText(settings.aptitudeSectionDesc),
-        action: 'aptitude',
-      });
-    }
-
     // Admin maintains the offer list either as aboutCards or as offer1..offer6 fields.
-    const offerCards = Array.isArray(settings.aboutCards) && settings.aboutCards.length > 0
+    const rawOfferCards = Array.isArray(settings.aboutCards) && settings.aboutCards.length > 0
       ? settings.aboutCards
       : [1, 2, 3, 4, 5, 6]
           .map((n) => ({
@@ -69,6 +57,19 @@ export default function ServicesShowcase({ siteSettings = {}, onOpenBooking }) {
             desc: settings[`offer${n}Desc`] || '',
           }))
           .filter((card) => (card.title || '').trim());
+
+    // Sanitize any legacy CDAT / Aptitude titles and descriptions
+    const offerCards = rawOfferCards.map((card) => {
+      let t = card.title.trim();
+      let d = (card.desc || '').trim();
+      if (/c-?dat|aptitude/i.test(t)) {
+        t = 'Personal Growth & Coping Skills';
+        d = 'Practical therapeutic strategies and coping mechanisms to handle stress, anxiety, and daily challenges.';
+      } else if (/assessment reports/i.test(d)) {
+        d = 'We guide you through evidence-based steps to turn emotional clarity into lasting personal balance.';
+      }
+      return { title: t, desc: d };
+    });
 
     offerCards
       .filter((card) => card && (card.title || '').trim())
@@ -88,19 +89,23 @@ export default function ServicesShowcase({ siteSettings = {}, onOpenBooking }) {
 
   if (tiles.length === 0) return null;
 
-  const handleTileClick = (tile) => {
-    if (tile.action === 'aptitude') {
-      navigate('/aptitude');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
+  const handleTileClick = () => {
     if (typeof onOpenBooking === 'function') onOpenBooking();
+    else window.spaNavigate?.('/booking');
   };
 
-  const description = getFirstText(
+  const rawDescription = getFirstText(
     siteSettings.servicesSectionDesc,
     siteSettings.aboutSub
   );
+  const description = /career mentoring|aptitude|cdat/i.test(rawDescription)
+    ? 'Access standard, confidential counselling sessions with certified clinical psychologists.'
+    : rawDescription;
+
+  const rawEyebrow = getFirstText(siteSettings.servicesSectionSub, 'Our Services');
+  const eyebrow = /mentorship|aptitude|cdat/i.test(rawEyebrow)
+    ? 'Our Services'
+    : rawEyebrow;
 
   return (
     <section
@@ -110,7 +115,7 @@ export default function ServicesShowcase({ siteSettings = {}, onOpenBooking }) {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow={getFirstText(siteSettings.servicesSectionSub, 'Our Services')}
+          eyebrow={eyebrow}
           title={getFirstText(siteSettings.servicesSectionTitle, 'Explore Our Services')}
           description={description}
         />

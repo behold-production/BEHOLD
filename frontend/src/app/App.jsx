@@ -8,7 +8,6 @@ import Navbar from '../components/common/Navbar';
 import BrandIcon from '../components/common/BrandIcon';
 import { useScrollLock } from '../utils/scrollLock';
 import Hero from '../features/landing/Hero';
-import CdatSection from '../features/student/components/aptitude/CdatSection';
 import Services from '../features/booking/Services';
 import About from '../features/landing/About';
 import Faq from '../features/landing/Faq';
@@ -52,8 +51,6 @@ const StudentProfile = lazyWithRetry(() => import('../features/student/component
 const PsychologistDashboard = lazyWithRetry(() => import('../features/counsellor/PsychologistDashboard'));
 const AdminDashboard = lazyWithRetry(() => import('../features/admin/AdminDashboard'));
 const TestResultsTab = lazyWithRetry(() => import('../features/admin/admin-dashboard/tabs/TestResultsTab'));
-const AptitudeTest = lazyWithRetry(() => import('../features/student/components/aptitude/AptitudeTest'));
-const AptitudeLanding = lazyWithRetry(() => import('../features/student/components/aptitude/AptitudeLanding'));
 const ResetPassword = lazyWithRetry(() => import('../features/auth/ResetPassword'));
 const BlogList = lazyWithRetry(() => import('../features/blog/BlogList'));
 const BlogPostDetail = lazyWithRetry(() => import('../features/blog/BlogPostDetail'));
@@ -116,7 +113,6 @@ function ScrollToTop() {
 export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [testProfile, setTestProfile] = useState(null);
   const [bookingAdvisor, setBookingAdvisor] = useState(null);
   const [pendingScrollSection, setPendingScrollSection] = useState(null);
 
@@ -263,8 +259,8 @@ export default function App() {
   useEffect(() => {
     if (!pendingScrollSection) return;
 
-    if (location.pathname === '/booking' && (pendingScrollSection === 'services' || pendingScrollSection === 'aptitude' || pendingScrollSection === 'cdat')) {
-      let targetId = pendingScrollSection === 'aptitude' ? 'cdat' : pendingScrollSection;
+    if (location.pathname === '/booking' && pendingScrollSection === 'services') {
+      let targetId = 'services';
       let attempts = 0;
       const tryScroll = () => {
         const element = document.getElementById(targetId); //
@@ -335,42 +331,6 @@ export default function App() {
     setIsBookingModalOpen(true);
   };
 
-  const handleFinishTest = async (dominantDomain, scores) => { //
-    setTestProfile({
-      dominantDomain,
-      scores,
-      date: (() => {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      })()
-    });
- 
-    try {
-      await ApiService.saveTestResult({
-        userId: user ? user.id : 'guest',
-        studentName: user ? user.name : 'Anonymous Student',
-        studentEmail: user ? user.email : 'anonymous@behold.com',
-        dominantDomain,
-        scores,
-        date: (() => {
-          const d = new Date();
-          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        })()
-      });
-
-      // Track Meta Pixel standard events for aptitude test completion
-      trackSubmitApplication({ dominantDomain });
-      trackLead({
-        content_name: 'C-DAT Assessment Submission',
-        content_category: 'Aptitude Test'
-      });
-    } catch (err) {
-      console.error('Failed to save test results', err);
-    }
-
-    navigateToSection('inquiry');
-  };
-
   const navigateToSection = (sectionId) => { //
     if (!sectionId) return;
 
@@ -382,8 +342,8 @@ export default function App() {
       return; //
     }
 
-    if (sectionId === 'services' || sectionId === 'aptitude') {
-      const targetId = sectionId === 'aptitude' ? 'cdat' : 'services';
+    if (sectionId === 'services') {
+      const targetId = 'services';
       if (location.pathname === '/booking') {
         const el = document.getElementById(targetId);
         if (el) {
@@ -714,7 +674,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPostDetail />} />
           <Route path="/faqs" element={<FaqsPage />} />
           <Route path="/faq" element={<Navigate to="/faqs" replace />} />
-          <Route path="/test" element={<AptitudeTest onFinishTest={handleFinishTest} />} />
+          <Route path="/test" element={<Navigate to="/booking" replace />} />
           <Route path="/results/:testId" element={<TestResultsTab />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -722,27 +682,14 @@ export default function App() {
           <Route path="/terms-of-service" element={<PrivacyPolicy />} />
           <Route path="/terms-and-conditions" element={<PrivacyPolicy />} />
 
-          {/* Aptitude routes: only active when admin enables aptitude */}
-          {siteSettings.enableAptitude !== false ? (
-            <Route path="/aptitude" element={<AptitudeLanding />} />
-          ) : (
-            <Route path="/aptitude" element={<Navigate to="/booking" replace />} />
-          )}
-          {siteSettings.enableAptitude !== false && siteSettings.enableSampleTest !== false ? (
-            <Route path="/sample-test" element={
-              <AptitudeTest onFinishTest={handleFinishTest} />
-            } />
-          ) : (
-            <Route path="/sample-test" element={<Navigate to="/booking" replace />} />
-          )}
+          {/* Aptitude & CDAT redirects to booking */}
+          <Route path="/aptitude" element={<Navigate to="/booking" replace />} />
+          <Route path="/sample-test" element={<Navigate to="/booking" replace />} />
 
-          {/* Services Page — Career Mentoring + Psychological Counselling + Expert Listing */}
+          {/* Services Page — Psychological Counselling + Expert Listing */}
           <Route path="/booking" element={
             <main className="fade-in-up pt-16 sm:pt-20 bg-transparent">
               <Services setView={() => { }} onBookTherapist={handleBookTherapist} siteSettings={siteSettings} />
-              {siteSettings.enableAptitude !== false && (
-                <CdatSection setView={() => { }} siteSettings={siteSettings} />
-              )}
             </main>
           } />
           <Route path="/services" element={<Navigate to="/booking" replace />} />

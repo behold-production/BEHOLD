@@ -10,10 +10,13 @@ const getFirstText = (...values) => values.find((value) => typeof value === 'str
 export default function HomeOfferSection({ siteSettings = {}, onOpenBooking }) {
   const settings = siteSettings || {};
   const title = getFirstText(settings.aboutTitle, 'What We Offer');
-  const description = getFirstText(
+  const rawDescription = getFirstText(
     settings.aboutSub,
-    'Personalised psychological care and career mentorship, delivered with clinical rigour and complete confidentiality.'
+    'Personalised psychological care and professional counselling support, delivered with clinical rigour and complete confidentiality.'
   );
+  const description = /career mentorship|aptitude|cdat/i.test(rawDescription)
+    ? 'Personalised psychological care and professional counselling support, delivered with clinical rigour and complete confidentiality.'
+    : rawDescription;
   const ctaText = getFirstText(settings.counselBtnText, settings.heroBtnText);
   const stats = Array.isArray(settings.aboutStats)
     ? settings.aboutStats.filter((stat) => stat && (stat.value || stat.label)).slice(0, 4)

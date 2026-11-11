@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 
@@ -10,7 +9,6 @@ const getFirstText = (...values) => values.find((value) => typeof value === 'str
  * admin maintains for counselling, career mentoring and the aptitude assessment.
  */
 export default function WhyChooseSection({ siteSettings = {}, onOpenBooking }) {
-  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const slides = useMemo(() => {
@@ -41,18 +39,6 @@ export default function WhyChooseSection({ siteSettings = {}, onOpenBooking }) {
       });
     }
 
-    if (settings.enableAptitude !== false) {
-      list.push({
-        key: 'aptitude',
-        tag: getFirstText(settings.aptitudeSectionSub),
-        title: getFirstText(settings.aptitudeSectionTitle),
-        hook: '',
-        body: getFirstText(settings.aptitudeSectionDesc),
-        cta: '',
-        action: 'aptitude',
-      });
-    }
-
     return list.filter((slide) => slide.title || slide.body);
   }, [siteSettings]);
 
@@ -72,12 +58,8 @@ export default function WhyChooseSection({ siteSettings = {}, onOpenBooking }) {
   const goNext = () => setActiveIndex(safeIndex === slides.length - 1 ? 0 : safeIndex + 1);
 
   const handleCta = () => {
-    if (slide.action === 'aptitude') {
-      navigate('/aptitude');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
     if (typeof onOpenBooking === 'function') onOpenBooking();
+    else window.spaNavigate?.('/booking');
   };
 
   return (

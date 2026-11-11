@@ -3,8 +3,8 @@ import React from 'react';
 const steps = [
   {
     num: '01',
-    title: 'Choose Service & Expert',
-    desc: 'Select Psychological Counselling, Career Mentoring, or Aptitude Testing, and pick your preferred certified advisor.',
+    title: 'Choose Service & Psychologist',
+    desc: 'Select your preferred counselling focus and pick a certified clinical psychologist.',
   },
   {
     num: '02',

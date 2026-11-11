@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { Brain, Compass, FileText, Sparkles, ArrowRight } from 'lucide-react';
+import { Brain, Compass, ArrowRight } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
 import SEO from '../../components/common/SEO';
 import { trackViewContent } from '../../utils/metaPixel';
 
-export default function Services({ setView, onBookTherapist, siteSettings, mode }) {
+export default function Services({ onBookTherapist, siteSettings }) {
   useEffect(() => {
     trackViewContent({
       content_name: 'Services & Consultations',
@@ -16,8 +16,6 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
 
   const enablePsychology = settings.enablePsychology !== false;
   const enableCareerMentoring = settings.enableCareerMentoring !== false;
-  const enableAptitude = settings.enableAptitude !== false;
-  const enableSampleTest = enableAptitude && settings.enableSampleTest !== false;
 
   const allServices = [
     {
@@ -38,36 +36,12 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
       enabled: enableCareerMentoring,
       icon: Compass,
       title: settings.careerTitle || 'Career Mentoring',
-      description: settings.careerDesc || 'Personalized 1:1 career guidance, stream selection, higher education roadmaps, and profile building with experienced education advisors.',
+      description: settings.careerDesc || 'Personalized 1:1 guidance, stream selection, and roadmap planning with experienced counselors.',
       price: 'From ₹800 / Session',
       actionText: settings.careerBtnText || 'Book Your Mentor',
       onAction: () => {
         if (onBookTherapist) onBookTherapist();
         else window.spaNavigate?.('/booking');
-      }
-    },
-    {
-      id: 'aptitude',
-      enabled: enableAptitude,
-      icon: Sparkles,
-      title: 'C-DAT Aptitude Assessment',
-      description: 'The CIGI Differential Aptitude Test evaluates 7 core cognitive domains to match students in Grades 8–12 with ideal career options.',
-      price: 'Scientific Protocol',
-      actionText: 'Register C-DAT',
-      onAction: () => {
-        window.spaNavigate?.('/aptitude-test');
-      }
-    },
-    {
-      id: 'sample-test',
-      enabled: enableSampleTest,
-      icon: FileText,
-      title: 'C-DAT Sample & Demo Test',
-      description: 'Take a free interactive sample test preview to explore C-DAT question formats, domain logic, and instant scoring feedback before registration.',
-      price: '100% Free Demo',
-      actionText: 'Try Sample Test',
-      onAction: () => {
-        window.spaNavigate?.('/aptitude-test');
       }
     }
   ];
@@ -75,21 +49,23 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
   // Filter only admin-enabled services
   const visibleServices = allServices.filter(s => s.enabled);
 
-  const sectionId = mode === 'experts' ? 'counsellors' : 'services';
-
   // Determine optimal max width & grid layout based on card count
   const getGridClasses = () => {
     if (visibleServices.length === 1) return 'max-w-2xl mx-auto grid grid-cols-1 gap-6';
     if (visibleServices.length === 2) return 'max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8';
-    if (visibleServices.length === 3) return 'max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8';
-    return 'max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8';
+    return 'max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8';
   };
+
+  const rawDesc = settings.servicesSectionDesc || '';
+  const cleanDesc = /career mentoring|aptitude|cdat/i.test(rawDesc)
+    ? 'Access standard, confidential counselling sessions with certified clinical psychologists.'
+    : rawDesc || 'Access standard, confidential counselling sessions with certified clinical psychologists.';
 
   return (
     <>
       <SEO 
         title="Services & Appointments" 
-        description="Book a session for Psychological Counselling, Career Mentoring, or C-DAT Aptitude tests." 
+        description="Book a session for Psychological Counselling and mental wellbeing." 
         canonicalUrl={typeof window !== 'undefined' ? window.location.origin + "/booking" : "https://www.behold.co.in/booking"}
       />
       <section id="services" className="relative py-20 sm:py-28 bg-[#fbf8f1] text-[#0e1111] overflow-hidden scroll-mt-20 border-t border-[#e6dfd0] reveal-on-scroll">
@@ -116,7 +92,7 @@ export default function Services({ setView, onBookTherapist, siteSettings, mode 
           </h2>
 
           <p className="text-sm sm:text-base text-[#55605f] font-normal leading-relaxed max-w-xl mx-auto">
-            {settings.servicesSectionDesc || 'Access standard, expert counselling sessions and lifetime career mentoring.'}
+            {cleanDesc}
           </p>
         </div>
 

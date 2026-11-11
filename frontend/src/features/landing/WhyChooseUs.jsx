@@ -46,7 +46,7 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
                 </h2>
 
                 <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-medium max-w-lg">
-                  {siteSettings?.servicesSectionDesc || 'True growth happens when emotional peace and career direction align. Behold brings both psychological care and CIGI-certified career mentoring into one cohesive model.'}
+                  {siteSettings?.servicesSectionDesc || 'True growth happens when emotional peace and mental wellbeing align. Behold brings personalized psychological care into one cohesive, supportive model.'}
                 </p>
 
                 {/* Action Buttons inside Card */}
@@ -71,12 +71,12 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
           {/* Right Column: 2x2 Feature Grid Matrix */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 pt-6 lg:pt-0 items-stretch content-start reveal-on-scroll reveal-slide-right reveal-delay-2">
 
-            {/* Cell 1: Dual Support */}
+            {/* Cell 1: Comprehensive Support */}
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#0e7490] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-1">
               <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-[#0e1111] mb-1.5 font-sans leading-snug group-hover:text-[#0e7490] transition-colors">Dual Support Architecture</h3>
+                <h3 className="text-xs sm:text-sm font-semibold text-[#0e1111] mb-1.5 font-sans leading-snug group-hover:text-[#0e7490] transition-colors">Comprehensive Support</h3>
                 <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                  Transition seamlessly between clinical psychologists and career strategists under one roof.
+                  Connect seamlessly with certified clinical psychologists and wellness specialists under one roof.
                 </p>
               </div>
               <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
@@ -85,12 +85,12 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
               </div>
             </div>
 
-            {/* Cell 2: Safe & Scientific */}
+            {/* Cell 2: Safe & Confidential */}
             <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#0e7490] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-2">
               <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-[#0e1111] mb-1.5 font-sans leading-snug group-hover:text-[#0e7490] transition-colors">100% Safe & Scientific</h3>
+                <h3 className="text-xs sm:text-sm font-semibold text-[#0e1111] mb-1.5 font-sans leading-snug group-hover:text-[#0e7490] transition-colors">100% Safe & Confidential</h3>
                 <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                  Backed by CIGI assessment data and strictly private, non-judgmental counseling protocols.
+                  Strictly private, evidence-based, and non-judgmental clinical counseling protocols.
                 </p>
               </div>
               <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
@@ -99,39 +99,24 @@ export default function WhyChooseUs({ siteSettings, onOpenBooking }) {
               </div>
             </div>
 
-            {/* Cell 3: Conditional — C-DAT when aptitude enabled, Career Roadmap when disabled */}
-            {siteSettings?.enableAptitude !== false ? (
-              <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#0e7490] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-3">
-                <div>
-                  <h3 className="text-xs sm:text-sm font-semibold text-[#0e1111] mb-1.5 font-sans leading-snug group-hover:text-[#0e7490] transition-colors">C-DAT Aptitude Assessment</h3>
-                  <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                    Evaluations designed for grades 8–12 to align cognitive strengths with career aspirations.
-                  </p>
-                </div>
-                <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
-                  <span className="text-base sm:text-2xl font-semibold text-[#0e1111] font-sans uppercase">C-DAT</span>
-                  <span className="w-2 h-2 rounded-full bg-[#0e7490] shadow-[0_0_6px_#0e7490]" />
-                </div>
+            {/* Cell 3: Individualized Therapy */}
+            <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#0e7490] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-3">
+              <div>
+                <h3 className="text-xs sm:text-sm font-semibold text-[#0e1111] mb-1.5 font-sans leading-snug group-hover:text-[#0e7490] transition-colors">Individualized Therapy</h3>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                  Tailored therapeutic roadmaps focusing on emotional resilience, stress reduction, and mental clarity.
+                </p>
               </div>
-            ) : (
-              <div className="p-5 sm:p-7 rounded-xl bg-white border border-surface-200 hover-scale-card hover:border-[#0e7490] transition-all shadow-xs flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 group reveal-on-scroll reveal-scale-in reveal-delay-3">
-                <div>
-                  <h3 className="text-xs sm:text-sm font-semibold text-[#0e1111] mb-1.5 font-sans leading-snug group-hover:text-[#0e7490] transition-colors">Personalised Career Roadmap</h3>
-                  <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                    CIGI-certified mentors craft tailored stream & degree roadmaps aligned with each student's strengths.
-                  </p>
-                </div>
-                <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
-                  <span className="text-base sm:text-2xl font-semibold text-[#0e1111] font-sans uppercase">CIGI</span>
-                  <span className="w-2 h-2 rounded-full bg-[#0e7490] shadow-[0_0_6px_#0e7490]" />
-                </div>
+              <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
+                <span className="text-base sm:text-2xl font-semibold text-[#0e1111] font-sans uppercase">CARE</span>
+                <span className="w-2 h-2 rounded-full bg-[#0e7490] shadow-[0_0_6px_#0e7490]" />
               </div>
-            )}
+            </div>
 
-            {/* Cell 4: Dark Blue Statement Highlight Box */}
+            {/* Cell 4: Statement Highlight Box */}
             <div className="p-5 sm:p-7 rounded-xl bg-[#0e1111] text-white border border-[#0e7490]/30 shadow-md flex flex-col justify-between min-h-[208px] sm:min-h-[240px] space-y-3 reveal-on-scroll reveal-scale-in reveal-delay-4">
               <p className="text-xs sm:text-sm text-surface-200 font-medium leading-relaxed italic">
-                "True growth happens when emotional peace and career direction align<span className="text-[#0e7490] not-italic font-semibold">.</span>"
+                "True growth happens when you have a compassionate space to heal and reflect<span className="text-[#0e7490] not-italic font-semibold">.</span>"
               </p>
               <div className="pt-2">
                 <button

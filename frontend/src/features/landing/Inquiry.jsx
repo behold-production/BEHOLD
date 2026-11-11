@@ -20,8 +20,8 @@ const steps = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
-    title: 'Expert Mapping',
-    desc: 'We review any C-DAT scores and match you with the right psychological mentor.',
+    title: 'Expert Matching',
+    desc: 'We understand your personal needs and match you with the right clinical psychologist.',
   },
   {
     icon: (
@@ -100,7 +100,7 @@ export default function Inquiry({ testProfile, siteSettings }) {
             <span className="text-[#0e7490] drop-shadow-[0_0_8px_rgba(14,116,144,0.8)]">.</span>
           </h2>
           <p className="text-sm sm:text-base text-[#d5cdbb] font-normal max-w-xl mx-auto mb-10 leading-relaxed">
-            {settings.inquirySectionDesc || 'Take the first step toward discovering your true potential. Our mentors are here to guide you through every stage of your academic and career journey.'}
+            {settings.inquirySectionDesc || 'Take the first step toward emotional peace and mental clarity. Our licensed psychologists are here to support your personal wellbeing.'}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <button
@@ -110,10 +110,10 @@ export default function Inquiry({ testProfile, siteSettings }) {
               Book Your Consultation
             </button>
             <button
-              onClick={() => { window.spaNavigate?.('/sample-test'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              onClick={() => { window.spaNavigate?.('/psychologists'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               className="inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white/10 px-7 py-2.5 text-xs font-semibold uppercase tracking-widest text-white border border-white/30 backdrop-blur-md transition-all cursor-pointer hover:bg-white/20"
             >
-              Take Aptitude Test
+              View Psychologists
             </button>
           </div>
         </div>
@@ -134,15 +134,9 @@ export default function Inquiry({ testProfile, siteSettings }) {
                   Want to Know More<span className="text-[#0e7490] drop-shadow-[0_0_8px_rgba(14,116,144,0.8)]">.</span>
                 </h2>
                 <p className="text-sm text-[#55605f] font-normal leading-relaxed">
-                  Submit your request and we'll match you with the right expert within 24 hours.
+                  Submit your request and we'll match you with the right psychologist within 24 hours.
                 </p>
               </div>
-
-              {testProfile && (
-                <div className="mb-6 p-4 bg-[#f6f1e6] border border-[#0e7490]/40 rounded-xl text-[#0e1111] text-xs sm:text-sm font-semibold">
-                  ✓ Pre-filled with your aptitude test results ({testProfile.dominantDomain} profile).
-                </div>
-              )}
 
               {submitStatus === 'success' ? (
                 <div className="text-center py-12">
