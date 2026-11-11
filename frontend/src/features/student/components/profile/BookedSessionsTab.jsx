@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
   Plus, Video, MapPin, Calendar, Clock, AlertCircle,
-  ExternalLink, Lock, Download, RefreshCw, X as XIcon,
+  ExternalLink, Download, RefreshCw,
   CalendarDays, CheckCircle2, Star, Award, Trophy, Trash2,
-  MessageSquare, Send, ChevronDown
+  Send, ChevronDown
 } from 'lucide-react';
 import { formatDateString, formatTimeString } from "../../../../utils/dateFormatter";
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
@@ -117,16 +117,13 @@ function SessionFeedbackForm({ session, onSubmit, alreadySubmitted }) {
 const BookedSessionsTab = ({
   sessionSubTab,
   setSessionSubTab,
-  bookedSessions,
-  completedSessions,
-  enablePsychology,
-  enableCareerMentoring,
+  bookedSessions = [],
+  completedSessions = [],
   navigate,
   filterChips,
   setSessionFilter,
   sessionFilter,
-  filteredBooked,
-  getMeetLinkStatus,
+  filteredBooked = [],
   showAlert,
   handleCancelSession,
   downloadPDFReceiptForSession,
@@ -175,16 +172,16 @@ const BookedSessionsTab = ({
           </button>
         </div>
 
-        {sessionSubTab === 'upcoming' && (enablePsychology || enableCareerMentoring) && (
+        {sessionSubTab === 'upcoming' && (
           <button
             type="button"
             onClick={() => {
               if (onOpenBooking) onOpenBooking();
               else navigate('/booking');
             }}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0e1111] hover:bg-[#243033] text-white text-xs font-bold rounded-xl transition-all border-none sm:self-center cursor-pointer hover-scale-btn shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0e7490] hover:bg-[#0891b2] text-white text-xs font-bold rounded-xl transition-all border-none sm:self-center cursor-pointer shadow-xs"
           >
-            <Plus className="w-4 h-4" /> New Booking
+            <Plus className="w-4 h-4" /> Book Session
           </button>
         )}
       </div>
@@ -219,7 +216,6 @@ const BookedSessionsTab = ({
           {filteredBooked.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {filteredBooked.map((session, idx) => {
-                const meetStatus = getMeetLinkStatus(session);
                 const cd = formatCountdown(session.date, session.time);
                 const isConfirmed = session.status === 'CONFIRMED';
                 return (
@@ -248,8 +244,8 @@ const BookedSessionsTab = ({
                               }`} />
                             {session.status}
                           </span>
-                          <p className="text-[10px] tracking-widest text-[#7c8785] font-semibold mt-1">
-                            {session.service === 'counselling' ? 'Psychological' : 'Career'} · {session.mode}
+                          <p className="text-[10px] tracking-wider text-[#7c8785] font-semibold mt-1">
+                            Psychological Counselling · {session.mode === 'ONLINE' ? 'Online Video' : session.mode === 'DOOR_STEP' ? 'Doorstep Visit' : 'In-Clinic'}
                           </p>
                         </div>
                       </div>
@@ -325,7 +321,7 @@ const BookedSessionsTab = ({
                                         studentName: session.clientName || session.userName || 'Student',
                                         location: validMeetLink,
                                         meetLink: validMeetLink,
-                                        service: session.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
+                                        service: 'Emotional Wellbeing & Counselling',
                                         date: session.date,
                                         time: session.time,
                                         durationMinutes: session.duration && String(session.duration).includes('30') ? 30 : 60
@@ -370,7 +366,7 @@ const BookedSessionsTab = ({
                                   advisorName: session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist',
                                   studentName: session.clientName || session.userName || 'Student',
                                   location: session.counsellor?.locationName || session.clientLocationName || (session.mode === 'DOOR_STEP' ? 'Doorstep Visit' : 'Clinic Consultation'),
-                                  service: session.service === 'career' ? 'Career Mapping & Guidance' : 'Emotional Wellbeing & Counselling',
+                                  service: 'Emotional Wellbeing & Counselling',
                                   date: session.date,
                                   time: session.time,
                                   durationMinutes: session.duration && String(session.duration).includes('30') ? 30 : 60
@@ -416,7 +412,7 @@ const BookedSessionsTab = ({
                                   await showAlert('Cannot reschedule a session less than 1 hour before the scheduled time.', 'Error');
                                   return;
                                 }
-                              } catch (e) { }
+                              } catch { }
 
                               // 2. Check per-appointment limit
                               if ((session.rescheduleCount || 0) >= 3) {
@@ -455,15 +451,16 @@ const BookedSessionsTab = ({
                   ? 'Book a session with one of our experts.'
                   : `No ${sessionFilter} sessions scheduled.`}
               </p>
-              {(enablePsychology || enableCareerMentoring) && (
-                <button
-                  type="button"
-                  onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-[#0e1111] text-white tracking-widest text-[10px] font-semibold rounded-[10px] hover:bg-[#243033] transition-colors border-none"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Book a Session
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenBooking) onOpenBooking();
+                  else navigate('/booking');
+                }}
+                className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-[#0e7490] text-white text-xs font-bold rounded-xl hover:bg-[#0891b2] transition-colors border-none cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" /> Book a Session
+              </button>
             </div>
           )}
         </div>
@@ -604,15 +601,16 @@ const BookedSessionsTab = ({
               </div>
               <p className="text-sm font-semibold text-[#0e1111] tracking-widest">No completed sessions yet</p>
               <p className="text-xs text-[#7c8785] mt-1">Finished sessions will appear here with psychologist feedback.</p>
-              {(enablePsychology || enableCareerMentoring) && (
-                <button
-                  type="button"
-                  onClick={() => navigate('/booking')}
-                  className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-[#0e1111] text-white tracking-widest text-[10px] font-semibold rounded-[10px] hover:bg-[#243033] transition-colors border-none"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Book First Session
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenBooking) onOpenBooking();
+                  else navigate('/booking');
+                }}
+                className="mt-4 inline-flex items-center gap-1.5 min-h-[36px] px-5 py-2 bg-[#0e7490] hover:bg-[#0891b2] text-white text-xs font-bold rounded-xl transition-colors border-none cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" /> Book First Session
+              </button>
             </div>
           )}
         </div>

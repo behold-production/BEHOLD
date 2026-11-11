@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     phone: { type: String, default: '' },
     age: { type: String, default: '' },
+    city: { type: String, default: '' },
     feelingLately: { type: String, default: '' },
     hadPriorTherapy: { type: String, default: '' },
     priorTherapyDetails: { type: String, default: '' },

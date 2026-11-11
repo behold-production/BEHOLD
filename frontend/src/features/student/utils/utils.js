@@ -10,8 +10,8 @@ export function getGreeting() {
 }
 
 export function calculateCompletion(profile) {
-  const fields = ['name', 'email', 'phone', 'schoolName', 'grade', 'guardianName', 'guardianPhone'];
-  const filled = fields.filter(f => profile[f] && String(profile[f]).trim().length > 0).length;
+  const fields = ['name', 'email', 'phone', 'age', 'feelingLately'];
+  const filled = fields.filter(f => profile && profile[f] && String(profile[f]).trim().length > 0).length;
   return Math.round((filled / fields.length) * 100);
 }
 
@@ -137,7 +137,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setFontSize(9);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(113, 113, 122); // zinc-500
-    doc.text('Premium Career Guidance & Mental Health Platform', 20, 30);
+    doc.text('Psychological Counselling & Mental Wellbeing Platform', 20, 30);
 
     const netAmount = Number(bookingDetails.amount || 0);
     const isFree = netAmount === 0;
@@ -297,7 +297,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     const fileName = `Behold_Session_Receipt_${displayId}.pdf`;
     try {
       doc.save(fileName);
-    } catch (saveErr) {
+    } catch (_saveErr) {
       const blob = doc.output('blob');
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -329,7 +329,7 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
         gstEnabled = parsed.gstEnabled === true;
         gstPercent = typeof parsed.gstPercent === 'number' ? parsed.gstPercent : 0;
       }
-    } catch (e) {}
+    } catch (_e) {}
 
     const amountPaid = session?.amountPaid !== undefined ? Number(session.amountPaid) : 0;
     const appliedDiscount = Number(session?.appliedDiscount || 0);
@@ -348,7 +348,7 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
     const clientEmail = profile?.email || user?.email || session?.clientEmail || '';
     const clientPhone = profile?.phone || user?.phone || session?.clientPhone || '';
 
-    const service = session?.service === 'career' ? 'Career Mentoring & Guidance' : 'Psychological Counselling';
+    const service = session?.service?.toLowerCase() === 'career' ? 'Specialized Consultation' : (session?.service || 'Psychological Counselling');
     const mode = session?.mode === 'ONLINE' ? 'ONLINE' : session?.mode === 'DOOR_STEP' ? 'DOOR_STEP' : (session?.mode || 'ONLINE');
     const duration = session?.duration || '1 Hour (60 Mins)';
 
@@ -358,7 +358,7 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
       mode,
       duration,
       advisorName: session?.advisorName || 'Consultant Psychologist',
-      advisorRole: session?.advisorRole || (session?.service === 'career' ? 'Career Advisor' : 'Consultant Psychologist'),
+      advisorRole: session?.advisorRole || 'Consultant Psychologist',
       date: session?.date || new Date().toISOString().split('T')[0],
       time: session?.time || 'Scheduled Time',
       clientName,
@@ -432,7 +432,7 @@ export const downloadCertificatePDF = async (session, profile = {}, user = {}) =
     doc.text('has successfully completed a professional consultation session for', 148.5, 98, { align: 'center' });
 
     // Service Name
-    const serviceName = session?.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+    const serviceName = session?.service || 'Psychological Counselling';
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(16);
     doc.setTextColor(6, 182, 212);
@@ -503,7 +503,7 @@ export const downloadConsultationReportPDF = async (session, profile = {}, user 
     const advisorName = session?.advisorName || 'Consultant Psychologist';
     const dateStr = formatDateString(session?.date || new Date());
     const timeStr = session?.time || 'N/A';
-    const serviceStr = session?.service === 'counselling' ? 'Psychological Counselling' : 'Career Mentoring';
+    const serviceStr = session?.service || 'Psychological Counselling';
 
     // Header Accent Line
     doc.setFillColor(6, 182, 212); // Teal

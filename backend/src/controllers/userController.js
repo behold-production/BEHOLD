@@ -53,7 +53,7 @@ const UserController = {
   // Update User Profile
   async updateProfile(req, res, next) {
     try {
-      const { name, email, phone, age, feelingLately, hadPriorTherapy, priorTherapyDetails, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
+      const { name, email, phone, age, city, feelingLately, hadPriorTherapy, priorTherapyDetails, schoolName, grade, guardianName, guardianPhone, groupCode, locationName, latitude, longitude } = req.body;
       const updates = {};
 
       const existingUser = await StorageService.findById('users', req.user.id);
@@ -65,6 +65,7 @@ const UserController = {
       if (email !== undefined) updates.email = email;
       if (phone !== undefined) updates.phone = normalizePhoneWithCountryCode(phone);
       if (age !== undefined) updates.age = String(age).trim();
+      if (city !== undefined) updates.city = String(city).trim();
       if (feelingLately !== undefined) updates.feelingLately = String(feelingLately).trim();
       if (hadPriorTherapy !== undefined) updates.hadPriorTherapy = String(hadPriorTherapy).trim();
       if (priorTherapyDetails !== undefined) updates.priorTherapyDetails = String(priorTherapyDetails).trim();

@@ -4,7 +4,7 @@ import ApiService from '../../../services/api';
 import { INITIAL_STATE } from '../utils/studentProfileConstants';
 import { getGreeting, calculateCompletion } from '../utils/utils';
 import { useAuth } from '../../../context/AuthContext';
-import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../../utils/validation';
+import { validateEmail, validateIndianPhone } from '../../../utils/validation';
 
 /**
  * Hook to manage student profile data, form state, and updates.

@@ -1,528 +1,384 @@
 import React from 'react';
 import {
- User, GraduationCap, Users, Shield, Mail, Phone,
- BookOpen, Hash, Check, AlertCircle, Bell, Save, CheckCircle2,
- MapPin, Navigation, Search, Calendar, Heart
+  User, Mail, Phone, Calendar, Heart, Shield,
+  Save, Check, AlertCircle, Bell, CheckCircle2, MapPin
 } from 'lucide-react';
 import { isNotificationSupported } from '../../../../services/notificationHelper';
 
 const ProfileDetailsTab = ({
- completion,
- handleSave,
- formData,
- handleChange,
- errors,
- permissionState,
- handleEnableNotifications,
- handleTestNotification,
- handleDiscard,
- isSaving,
- isSaved,
- enableAptitude
+  handleSave,
+  formData,
+  handleChange,
+  errors = {},
+  permissionState,
+  handleEnableNotifications,
+  handleTestNotification,
+  handleDiscard,
+  isSaving,
+  isSaved
 }) => {
- const enableAptitudeSetting = enableAptitude !== undefined ? enableAptitude : (() => {
-   try {
-     const stored = localStorage.getItem('behold_site_settings');
-     if (stored) return JSON.parse(stored).enableAptitude !== false;
-   } catch (e) {}
-   return true;
- })();
- const [searchQuery, setSearchQuery] = React.useState(formData.locationName || '');
- const [searchResults, setSearchResults] = React.useState([]);
- const [isSearching, setIsSearching] = React.useState(false);
- const [isLocating, setIsLocating] = React.useState(false);
+  const sections = [
+    {
+      title: 'Personal Information',
+      subtitle: 'Primary details for appointment scheduling and records',
+      icon: User,
+      fields: [
+        {
+          name: 'name',
+          label: 'Full Name',
+          type: 'text',
+          placeholder: 'Your full name',
+          required: true,
+          icon: User
+        },
+        {
+          name: 'email',
+          label: 'Email Address',
+          type: 'email',
+          placeholder: 'your.email@example.com',
+          required: true,
+          icon: Mail,
+          disabled: true
+        },
+        {
+          name: 'phone',
+          label: 'Phone Number',
+          type: 'tel',
+          placeholder: 'e.g. 9876543210',
+          required: true,
+          icon: Phone,
+          autoComplete: 'tel'
+        },
+        {
+          name: 'age',
+          label: 'Age',
+          type: 'number',
+          placeholder: 'e.g. 24',
+          required: true,
+          icon: Calendar
+        },
+        {
+          name: 'city',
+          label: 'City / Location',
+          type: 'text',
+          placeholder: 'e.g. Kochi, Kerala',
+          required: false,
+          icon: MapPin
+        }
+      ]
+    },
+    {
+      title: 'Wellbeing & Care Background',
+      subtitle: 'Helps your psychologist prepare for your consultations',
+      icon: Heart,
+      fields: [
+        {
+          name: 'feelingLately',
+          label: 'How have you been feeling lately?',
+          type: 'text',
+          placeholder: 'e.g. Seeking stress management, feeling anxious, emotional clarity...',
+          required: false,
+          icon: Heart
+        },
+        {
+          name: 'hadPriorTherapy',
+          label: 'Have you had prior counseling or therapy?',
+          type: 'select',
+          options: ['', 'No', 'Yes'],
+          required: false,
+          icon: Shield
+        },
+        ...(formData.hadPriorTherapy === 'Yes'
+          ? [
+              {
+                name: 'priorTherapyDetails',
+                label: 'Previous counseling experience (optional)',
+                type: 'textarea',
+                placeholder: 'Share any past experience or therapist notes that might help...',
+                required: false,
+                icon: Shield
+              }
+            ]
+          : [])
+      ]
+    },
+    {
+      title: 'Emergency Contact (Optional)',
+      subtitle: 'Contact person in case of urgent consultation reach-out',
+      icon: Shield,
+      fields: [
+        {
+          name: 'guardianName',
+          label: 'Contact Person / Guardian Name',
+          type: 'text',
+          placeholder: 'Name of contact person',
+          required: false,
+          icon: User
+        },
+        {
+          name: 'guardianPhone',
+          label: 'Contact Phone Number',
+          type: 'tel',
+          placeholder: 'Mobile number',
+          required: false,
+          icon: Phone,
+          autoComplete: 'tel'
+        }
+      ]
+    }
+  ];
 
- React.useEffect(() => {
-   setSearchQuery(formData.locationName || '');
- }, [formData.locationName]);
+  return (
+    <div className="space-y-6 text-left">
+      {/* Header */}
+      <div>
+        <h2 className="text-xl sm:text-2xl font-bold text-[#0e1111] tracking-tight">My Profile</h2>
+        <p className="text-sm text-[#7c8785] mt-1 font-medium">
+          Manage your personal information and consultation preferences.
+        </p>
+      </div>
 
- React.useEffect(() => {
-   if (!searchQuery.trim() || searchQuery.trim().length < 3 || searchQuery === formData.locationName) {
-     const timer = setTimeout(() => {
-       setSearchResults([]);
-     }, 0);
-     return () => clearTimeout(timer);
-   }
-   const timer = setTimeout(async () => {
-     setIsSearching(true);
-     try {
-       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
-       const data = await res.json();
-       setSearchResults(data);
-     } catch (err) {
-       console.error("Geocoding error", err);
-     } finally {
-       setIsSearching(false);
-     }
-   }, 600);
-   return () => clearTimeout(timer);
- }, [searchQuery, formData.locationName]);
+      <form onSubmit={handleSave} className="space-y-6 pb-24 lg:pb-16">
+        {sections.map((section, sIdx) => {
+          const SIcon = section.icon;
+          return (
+            <div
+              key={sIdx}
+              className="relative overflow-hidden rounded-2xl p-5 sm:p-6 border border-[#e6dfd0] bg-white shadow-xs"
+            >
+              <div className="flex items-center gap-3.5 mb-5 pb-3 border-b border-[#f1eadc]">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#f6f1e6] border border-[#e6dfd0] text-[#0e7490]">
+                  <SIcon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#0e1111]">{section.title}</h3>
+                  <p className="text-xs text-[#7c8785] mt-0.5 font-medium">{section.subtitle}</p>
+                </div>
+              </div>
 
- const setLocationFields = (locationName, latitude, longitude) => {
- handleChange({ target: { name: 'locationName', value: locationName } });
- handleChange({ target: { name: 'latitude', value: latitude } });
- handleChange({ target: { name: 'longitude', value: longitude } });
- };
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {section.fields.map((field) => {
+                  const FIcon = field.icon;
+                  const hasError = !!errors[field.name];
+                  const hasValue = !!formData[field.name];
+                  const isTextarea = field.type === 'textarea';
 
- const handleAddressSearch = async () => {
- if (!searchQuery.trim()) return;
- setIsSearching(true);
- try {
- const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
- const data = await res.json();
- setSearchResults(data);
- if (data.length === 0) {
- import('react-hot-toast').then(m => m.toast.error("No locations found."));
- }
- } catch (err) {
- console.error("Geocoding error", err);
- import('react-hot-toast').then(m => m.toast.error("Failed to search location."));
- } finally {
- setIsSearching(false);
- }
- };
+                  return (
+                    <div
+                      key={field.name}
+                      className={`space-y-1.5 ${isTextarea ? 'sm:col-span-2' : ''}`}
+                    >
+                      <label
+                        htmlFor={`sp-${field.name}`}
+                        className="text-xs text-[#3c4747] font-semibold flex items-center justify-between"
+                      >
+                        <span className="flex items-center">
+                          <span>{field.label}</span>
+                          {field.required && (
+                            <span className="text-rose-500 font-bold ml-1 text-sm leading-none">*</span>
+                          )}
+                        </span>
+                        {!field.required && (
+                          <span className="text-[10px] text-[#9aa29f] font-normal">(Optional)</span>
+                        )}
+                      </label>
 
- const handleDetectLocation = () => {
- if (!navigator.geolocation) {
- import('react-hot-toast').then(m => m.toast.error("Geolocation not supported."));
- return;
- }
- setIsLocating(true);
- navigator.geolocation.getCurrentPosition(
- async (position) => {
- const lat = position.coords.latitude;
- const lng = position.coords.longitude;
- 
- try {
- const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
- const data = await res.json();
- if (data && data.display_name) {
- setLocationFields(data.display_name, lat, lng);
- setSearchQuery(data.display_name);
- } else {
- setLocationFields('', lat, lng);
- }
- } catch (err) {
- console.error("Reverse geocoding error", err);
- setLocationFields('', lat, lng);
- }
- import('react-hot-toast').then(m => m.toast.success("Location auto-detected!"));
- setIsLocating(false);
- },
- (err) => {
- import('react-hot-toast').then(m => m.toast.error("Failed to detect coordinates: " + err.message));
- setIsLocating(false);
- }
- );
- };
+                      <div className="relative">
+                        {FIcon && (
+                          <FIcon
+                            className={`absolute left-3.5 top-3.5 w-4 h-4 transition-colors ${
+                              hasError
+                                ? 'text-rose-400'
+                                : hasValue
+                                ? 'text-[#55605f]'
+                                : 'text-[#d5cdbb]'
+                            }`}
+                          />
+                        )}
 
- const sections = [
- {
- title: 'Personal Info',
- icon: User,
- hint: 'Used for booking and contact',
- accentColor: '#3b82f6',
- accentBg: '#ecf8fb',
- fields: [
- { name: 'name', label: 'Full Name', type: 'text', placeholder: 'Your full name', required: true, icon: User },
- { name: 'email', label: 'Email Address', type: 'email', placeholder: 'name@email.com', required: true, icon: Mail, autoComplete: 'email', disabled: true },
- { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'e.g. 8086664001', required: true, icon: Phone, autoComplete: 'tel' },
- { name: 'age', label: 'Age', type: 'number', placeholder: 'e.g. 24', required: true, icon: Calendar },
- { name: 'feelingLately', label: 'How have you been feeling lately?', type: 'text', placeholder: 'e.g. Anxious, Stressed, Good, Seeking Guidance...', required: false, icon: Heart },
- ],
- },
- ...(enableAptitudeSetting ? [{
- title: 'Academic Details',
- icon: GraduationCap,
- hint: 'Optional but recommended',
- accentColor: '#0e7490',
- accentBg: '#eaf7fa',
- fields: [
- { name: 'schoolName', label: 'School Name', type: 'text', placeholder: 'Name of your school', required: false, icon: BookOpen },
- { name: 'grade', label: 'Grade / Class', type: 'select', options: ['', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12', 'Graduate', 'Other'], required: false, icon: Hash },
- { name: 'groupCode', label: 'Group / School Code', type: 'text', placeholder: 'e.g. BEHOLD-CDAT-2026', required: false, icon: Hash },
- ],
- }] : []),
- {
- title: 'Prior Therapy Experience',
- icon: Heart,
- hint: 'Your prior counselling / therapy history',
- accentColor: '#06b6d4',
- accentBg: '#ecf8fb',
- fields: [
- { name: 'hadPriorTherapy', label: '1. Did you had any prefer therapy experience?', type: 'select', options: ['', 'Yes', 'No'], required: false, icon: Heart },
- ...(formData.hadPriorTherapy === 'Yes' ? [{ name: 'priorTherapyDetails', label: '2. If yes, please tell us more about it', type: 'textarea', placeholder: 'Tell us more about your prior therapy experience...', required: false, icon: BookOpen }] : []),
- ],
- },
- {
- title: 'Guardian Information',
- icon: Users,
- hint: 'For students under 18',
- accentColor: '#10b981',
- accentBg: '#ecfdf5',
- fields: [
- { name: 'guardianName', label: 'Parent / Guardian Name', type: 'text', placeholder: 'Name of parent or guardian', required: true, icon: User },
- { name: 'guardianPhone', label: 'Guardian Phone', type: 'tel', placeholder: 'Guardian mobile number', required: false, icon: Phone, autoComplete: 'tel' },
- ],
- },
- ];
+                        {field.type === 'select' ? (
+                          <select
+                            id={`sp-${field.name}`}
+                            name={field.name}
+                            value={formData[field.name] || ''}
+                            onChange={handleChange}
+                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 border text-sm text-[#0e1111] font-medium rounded-xl outline-none transition-all appearance-none cursor-pointer ${
+                              hasError
+                                ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600'
+                                : 'bg-[#f6f1e6] border-[#e6dfd0] focus:border-[#0e1111] focus:bg-white'
+                            }`}
+                          >
+                            {field.options.map((o, i) => (
+                              <option key={i} value={o}>
+                                {o || 'Select ' + field.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : field.type === 'textarea' ? (
+                          <textarea
+                            id={`sp-${field.name}`}
+                            name={field.name}
+                            value={formData[field.name] || ''}
+                            onChange={handleChange}
+                            placeholder={field.placeholder}
+                            rows={3}
+                            className={`w-full pl-10 pr-9 py-2.5 text-sm font-medium rounded-xl outline-none transition-all resize-none ${
+                              hasError
+                                ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 text-[#0e1111]'
+                                : 'bg-[#f6f1e6] border-[#e6dfd0] focus:border-[#0e1111] focus:bg-white text-[#0e1111]'
+                            }`}
+                          />
+                        ) : (
+                          <input
+                            id={`sp-${field.name}`}
+                            type={field.type}
+                            name={field.name}
+                            value={formData[field.name] || ''}
+                            onChange={handleChange}
+                            placeholder={field.placeholder}
+                            autoComplete={field.autoComplete}
+                            disabled={field.disabled}
+                            className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-xl outline-none transition-all ${
+                              field.disabled
+                                ? 'bg-[#f1eadc] border-[#e6dfd0] text-[#7c8785] cursor-not-allowed'
+                                : hasError
+                                ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 text-[#0e1111]'
+                                : 'bg-[#f6f1e6] border-[#e6dfd0] focus:border-[#0e1111] focus:bg-white text-[#0e1111]'
+                            }`}
+                          />
+                        )}
 
- return (
- <div className="space-y-5">
- {/* Header */}
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
- <div>
- <h2 className="text-xl font-semibold text-[#0e1111] tracking-tight">My Profile</h2>
- <p className="text-sm text-[#7c8785] mt-0.5">Keep your details up to date.</p>
- </div>
- </div>
+                        {hasValue && !hasError && !field.disabled && (
+                          <div className="absolute right-3 top-3.5">
+                            <Check className="w-4 h-4 text-emerald-500" strokeWidth={2.5} />
+                          </div>
+                        )}
+                      </div>
 
- <form onSubmit={handleSave} className="space-y-4 pb-24 lg:pb-16">
- {sections.map((section, sIdx) => {
- const SIcon = section.icon;
- return (
- <div
- key={sIdx}
- className="relative overflow-hidden rounded-2xl p-5 border border-[#e6dfd0] bg-white shadow-square-light"
- >
- {/* Left accent border */}
- <div className="absolute left-0 top-4 bottom-4 w-1 rounded-xl" style={{ background: section.accentColor }} />
- <div className="flex items-center gap-3 mb-5 pb-3 border-b border-[#f1eadc] pl-3">
- <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: section.accentBg, border: `1px solid ${section.accentColor}25` }}>
- <SIcon className="w-[18px] h-[18px]" style={{ color: section.accentColor }} />
- </div>
- <div>
- <h3 className="text-sm font-semibold text-[#0e1111]">{section.title}</h3>
- <p className="text-xs text-[#7c8785] mt-0.5">{section.hint}</p>
- </div>
- </div>
+                      {hasError && (
+                        <p className="text-xs text-rose-500 flex items-center gap-1 mt-1" role="alert">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          <span>{errors[field.name]}</span>
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
 
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- {section.fields.map(field => {
- const FIcon = field.icon;
- const hasError = !!errors[field.name];
- const hasValue = !!formData[field.name];
- return (
- <div key={field.name} className="space-y-1.5">
- <label htmlFor={`sp-${field.name}`} className="text-xs text-[#3c4747] font-semibold flex items-center justify-between">
-   <span className="flex items-center">
-     <span>{field.label}</span>
-     {field.required && <span className="text-rose-500 font-bold ml-1 text-sm leading-none">*</span>}
-   </span>
-   {!field.required && <span className="text-[10px] text-[#9aa29f] font-normal font-sans">(Optional)</span>}
- </label>
- <div className="relative">
- {FIcon && (
- <FIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${hasError ? 'text-rose-400' : hasValue ? 'text-[#55605f]' : 'text-[#d5cdbb]'
- }`} />
- )}
- {field.type === 'select' ? (
- <select
- id={`sp-${field.name}`}
- name={field.name}
- value={formData[field.name]}
- onChange={handleChange}
- className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 border text-sm text-[#0e1111] font-medium rounded-xl outline-none transition-all appearance-none cursor-pointer ${hasError
- ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
- : 'bg-[#f6f1e6] border-[#e6dfd0] focus:border-[#0e1111] focus:ring-0 focus:bg-white'
- }`}
- >
- {field.options.map((o, i) => (
- <option key={i} value={o}>{o || 'Select ' + field.label}</option>
- ))}
- </select>
- ) : field.type === 'textarea' ? (
- <textarea
- id={`sp-${field.name}`}
- name={field.name}
- value={formData[field.name]}
- onChange={handleChange}
- placeholder={field.placeholder}
- rows={3}
- className={`w-full pl-10 pr-9 py-2.5 text-sm font-medium rounded-xl outline-none transition-all resize-none ${hasError
- ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-[#0e1111]'
- : 'bg-[#f6f1e6] border-[#e6dfd0] focus:border-[#0e1111] focus:ring-0 focus:bg-white text-[#0e1111]'
- }`}
- />
- ) : (
- <input
- id={`sp-${field.name}`}
- type={field.type}
- name={field.name}
- value={formData[field.name]}
- onChange={handleChange}
- placeholder={field.placeholder}
- autoComplete={field.autoComplete}
- disabled={field.disabled}
- className={`w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-xl outline-none transition-all ${field.disabled
- ? 'bg-[#f1eadc] border-[#e6dfd0] text-[#7c8785] cursor-not-allowed'
- : hasError
- ? 'border-rose-500 bg-rose-50/50 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10 text-[#0e1111]'
- : 'bg-[#f6f1e6] border-[#e6dfd0] focus:border-[#0e1111] focus:ring-0 focus:bg-white text-[#0e1111]'
- }`}
- />
- )}
- {hasValue && !hasError && (
- <div className="absolute right-3 top-1/2 -translate-y-1/2">
- <Check className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2.5} />
- </div>
- )}
- {hasError && (
- <div className="absolute right-3 top-1/2 -translate-y-1/2">
- <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
- </div>
- )}
- </div>
- {hasError ? (
- <p className="text-xs text-rose-500 flex items-center gap-1" role="alert">
- <AlertCircle className="w-3 h-3" /> {errors[field.name]}
- </p>
- ) : (
- <p className="text-[10px] tracking-widest font-semibold text-[#9aa29f]">{field.required ? 'Required' : 'Optional'}</p>
- )}
- </div>
- );
- })}
- </div>
- </div>
- );
- })}
+        {/* Notification Preferences */}
+        <div className="bg-white border border-[#e6dfd0] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-3 pb-3 border-b border-[#f1eadc]">
+            <div className="w-10 h-10 rounded-xl bg-[#f6f1e6] border border-[#e6dfd0] flex items-center justify-center text-[#0e7490]">
+              <Bell className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-[#0e1111]">Desktop Alerts & Reminders</h3>
+              <p className="text-xs text-[#7c8785] mt-0.5 font-medium">
+                Receive browser notifications for appointment reminders and updates.
+              </p>
+            </div>
+          </div>
 
- {/* Home Location & Address Card */}
- <div
- className="relative overflow-hidden rounded-[10px] p-5 border border-[#e6dfd0] bg-white shadow-square-light"
- >
- {/* Left accent border */}
- <div className="absolute left-0 top-4 bottom-4 w-1 rounded-[10px] bg-amber-500" />
- <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#f1eadc] pl-3">
- <div className="flex items-center gap-3">
- <div className="w-9 h-9 rounded-[10px] flex items-center justify-center bg-amber-55/20 border border-amber-200/25">
- <MapPin className="w-[18px] h-[18px] text-amber-600" />
- </div>
- <div>
- <h3 className="text-sm font-semibold text-[#0e1111]">Home Location & Address</h3>
- <p className="text-xs text-[#7c8785] mt-0.5">Used for calculating doorstep session booking feasibility (10 km limit)</p>
- </div>
- </div>
- <button
- type="button"
- onClick={handleDetectLocation}
- disabled={isLocating}
- className="min-h-[32px] inline-flex items-center gap-1 px-3 py-1 bg-[#0e1111] hover:bg-[#243033] text-white rounded-xl tracking-widest text-[10px] font-semibold transition cursor-pointer border-none shadow-none disabled:opacity-50"
- >
- <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
- {isLocating ? 'Locating...' : 'Detect Location'}
- </button>
- </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#f6f1e6] p-4 rounded-xl border border-[#e6dfd0]">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-2.5 h-2.5 rounded-full ${
+                    !isNotificationSupported()
+                      ? 'bg-rose-500'
+                      : permissionState === 'granted'
+                      ? 'bg-emerald-500 animate-pulse'
+                      : permissionState === 'denied'
+                      ? 'bg-rose-500'
+                      : 'bg-[#9aa29f]'
+                  }`}
+                />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#3c4747]">
+                  {!isNotificationSupported()
+                    ? 'Not Supported'
+                    : permissionState === 'granted'
+                    ? 'Active'
+                    : permissionState === 'denied'
+                    ? 'Blocked'
+                    : 'Disabled'}
+                </span>
+              </div>
+              <p className="text-xs text-[#7c8785] font-medium leading-relaxed">
+                {permissionState === 'granted'
+                  ? 'You will receive reminders before your consultations start.'
+                  : 'Enable notifications to get timely consultation reminders.'}
+              </p>
+            </div>
 
- <div className="space-y-4 animate-in fade-in duration-200">
- {/* Address Search Autocomplete Input */}
- <div className="space-y-1.5 text-left relative">
- <label htmlFor="student-location-search" className="text-[10px] tracking-widest text-[#55605f] font-semibold flex items-center gap-1">
- Search Home Address
- </label>
- <div className="relative flex gap-2">
- <div className="relative flex-1">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9aa29f]" />
- <input
- id="student-location-search"
- type="text"
- placeholder="Type to search and select your address... (e.g. Kozhikode, Kerala)"
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full min-h-[44px] pl-10 pr-9 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#f6f1e6] border border-[#e6dfd0] focus:border-[#0e1111] focus:ring-0 focus:bg-white text-[#0e1111]"
- onKeyDown={(e) => {
- if (e.key === 'Enter') {
- e.preventDefault();
- handleAddressSearch();
- }
- }}
- />
- </div>
- <button
- type="button"
- onClick={handleAddressSearch}
- disabled={isSearching}
- className="px-4 py-2 bg-[#0e1111] hover:bg-[#243033] text-white text-[10px] tracking-widest font-semibold rounded-xl transition cursor-pointer border-none shadow-none"
- >
- {isSearching ? 'Searching...' : 'Search'}
- </button>
- </div>
+            <div className="flex gap-2 shrink-0">
+              {isNotificationSupported() && permissionState === 'default' && (
+                <button
+                  type="button"
+                  onClick={handleEnableNotifications}
+                  className="px-4 py-2 bg-[#0e1111] hover:bg-[#243033] text-white rounded-xl text-xs font-bold transition-colors cursor-pointer border-none"
+                >
+                  Enable Alerts
+                </button>
+              )}
+              {isNotificationSupported() && permissionState === 'granted' && (
+                <button
+                  type="button"
+                  onClick={handleTestNotification}
+                  className="px-4 py-2 bg-white border border-[#e6dfd0] text-[#0e1111] hover:bg-[#f6f1e6] rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  Test Alert
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
 
- {/* Autocomplete Dropdown */}
- {searchResults.length > 0 && (
- <div className="absolute left-0 right-0 mt-1 bg-white border border-[#e6dfd0] rounded-[10px] max-h-48 overflow-y-auto z-50 shadow-xl divide-y divide-[#f1eadc]">
- {searchResults.map((res, index) => (
- <button
- key={index}
- type="button"
- onClick={() => {
- setLocationFields(res.display_name, parseFloat(res.lat) || 0, parseFloat(res.lon) || 0);
- setSearchQuery(res.display_name);
- setSearchResults([]);
- }}
- className="w-full text-left px-3.5 py-2.5 text-xs text-[#3c4747] hover:text-[#0e1111] hover:bg-[#f6f1e6] transition-colors block truncate border-none cursor-pointer"
- >
- {res.display_name}
- </button>
- ))}
- </div>
- )}
- </div>
+        {/* Sticky action bar */}
+        <div className="sticky bottom-[72px] lg:bottom-4 z-30 flex items-center justify-end gap-3 p-4 bg-white/95 backdrop-blur-md border border-[#e6dfd0] rounded-2xl shadow-lg">
+          <button
+            type="button"
+            onClick={handleDiscard}
+            disabled={isSaving}
+            className="min-h-[42px] px-5 py-2.5 border border-[#e6dfd0] hover:border-[#d5cdbb] rounded-xl text-xs font-semibold text-[#0e1111] hover:bg-[#f6f1e6] transition-colors bg-white cursor-pointer disabled:opacity-50"
+          >
+            Discard
+          </button>
+          <button
+            type="submit"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="min-h-[42px] inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#0e7490] hover:bg-[#0891b2] disabled:bg-[#7c8785] text-white text-xs font-bold rounded-xl shadow-xs transition-colors border-none cursor-pointer"
+          >
+            {isSaving ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                <span>Save Changes</span>
+              </>
+            )}
+          </button>
+        </div>
+      </form>
 
- {/* Read/Write Coordinates Form Fields */}
- <div className="space-y-1.5">
- <label htmlFor="sp-locationName" className="text-[10px] tracking-widest text-[#55605f] font-semibold">Selected / Current Address</label>
- <input
- id="sp-locationName"
- type="text"
- name="locationName"
- placeholder="Selected address details"
- value={formData.locationName || ''}
- onChange={(e) => {
- handleChange(e);
- setSearchQuery(e.target.value);
- }}
- className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#f6f1e6] border border-[#e6dfd0] focus:border-[#0e1111] focus:ring-0 focus:bg-white text-[#0e1111]"
- />
- </div>
-
- <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5">
- <label htmlFor="sp-latitude" className="text-[10px] tracking-widest text-[#55605f] font-semibold">Latitude</label>
- <input
- id="sp-latitude"
- type="number"
- step="any"
- name="latitude"
- placeholder="e.g., 11.2588"
- value={formData.latitude || ''}
- onChange={(e) => handleChange({ target: { name: 'latitude', value: parseFloat(e.target.value) || 0 } })}
- className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#f6f1e6] border border-[#e6dfd0] focus:border-[#0e1111] focus:ring-0 focus:bg-white text-[#0e1111]"
- />
- </div>
- <div className="space-y-1.5">
- <label htmlFor="sp-longitude" className="text-[10px] tracking-widest text-[#55605f] font-semibold">Longitude</label>
- <input
- id="sp-longitude"
- type="number"
- step="any"
- name="longitude"
- placeholder="e.g., 75.7804"
- value={formData.longitude || ''}
- onChange={(e) => handleChange({ target: { name: 'longitude', value: parseFloat(e.target.value) || 0 } })}
- className="w-full min-h-[44px] px-3.5 py-2.5 text-sm font-medium rounded-[10px] outline-none transition-all bg-[#f6f1e6] border border-[#e6dfd0] focus:border-[#0e1111] focus:ring-0 focus:bg-white text-[#0e1111]"
- />
- </div>
- </div>
- </div>
- </div>
-
- {/* Browser Notification Settings Widget */}
- <div className="bg-white border border-[#e6dfd0] shadow-square-light rounded-[10px] p-5 space-y-4">
- <div className="flex items-center gap-2.5 pb-3 border-b border-[#f1eadc]">
- <div className="w-8 h-8 rounded-[10px] bg-[#f1eadc] flex items-center justify-center">
- <Bell className="w-4 h-4 text-[#55605f]" />
- </div>
- <div>
- <h3 className="text-sm font-semibold text-[#0e1111]">Desktop Alerts & Reminders</h3>
- <p className="text-xs text-[#7c8785]">Receive real-time notifications for booking updates and messages</p>
- </div>
- </div>
-
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#f6f1e6] p-4 rounded-[10px] border border-[#e6dfd0] text-left">
- <div className="space-y-1">
- <div className="flex items-center gap-2">
- <span className={`w-2.5 h-2.5 rounded-[10px] ${
- !isNotificationSupported()
- ? 'bg-rose-500'
- : permissionState === 'granted'
- ? 'bg-emerald-500 animate-pulse'
- : permissionState === 'denied'
- ? 'bg-rose-500'
- : 'bg-[#9aa29f]'
- }`} />
- <span className="text-[10px] font-semibold tracking-widest text-[#3c4747]">
- {!isNotificationSupported()
- ? 'Not Supported'
- : permissionState === 'granted'
- ? 'Active / Enabled'
- : permissionState === 'denied'
- ? 'Blocked'
- : 'Disabled'}
- </span>
- </div>
- <p className="text-xs text-[#7c8785] font-medium leading-relaxed">
- {!isNotificationSupported()
- ? 'Your browser does not support native desktop alerts.'
- : permissionState === 'granted'
- ? 'You will receive native desktop notifications for session updates, confirmations, and alerts.'
- : permissionState === 'denied'
- ? 'Desktop notifications are blocked. Reset permission in your browser address bar to enable alerts.'
- : 'Enable browser notifications to stay updated about your coaching schedules and session links.'}
- </p>
- </div>
-
- <div className="flex gap-2 shrink-0">
- {isNotificationSupported() && permissionState === 'default' && (
- <button
- type="button"
- onClick={handleEnableNotifications}
- className="min-h-[36px] px-4 py-2 bg-[#0e1111] hover:bg-[#243033] text-white rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer border-none shadow-none"
- >
- Enable Notifications
- </button>
- )}
- {isNotificationSupported() && permissionState === 'granted' && (
- <button
- type="button"
- onClick={handleTestNotification}
- className="min-h-[36px] px-4 py-2 bg-[#f6f1e6] border border-[#e6dfd0] text-[#0e1111] hover:bg-[#f1eadc] rounded-xl text-[10px] tracking-widest font-semibold transition cursor-pointer shadow-none"
- >
- Test Alert Notification
- </button>
- )}
- {isNotificationSupported() && permissionState === 'denied' && (
- <span className="text-[10px] text-rose-500 font-semibold tracking-widest bg-rose-50 border border-rose-100 p-2 rounded-[10px] block max-w-[200px]">
- 🔒 Unblock in browser site settings
- </span>
- )}
- </div>
- </div>
- </div>
-
- <div className="sticky bottom-[72px] lg:bottom-0 z-30 flex items-center justify-end gap-2 p-3 bg-white border-t border-[#e6dfd0] rounded-xl shadow-square-light">
- <button
- type="button"
- onClick={handleDiscard}
- disabled={isSaving}
- className="min-h-[40px] px-4 py-2 border border-[#e6dfd0] hover:border-[#d5cdbb] rounded-xl text-[10px] tracking-widest font-semibold text-[#0e1111] hover:bg-[#f6f1e6] transition-colors bg-white shadow-none disabled:opacity-50"
- >
- Discard
- </button>
- <button
- type="submit"
- onClick={handleSave}
- disabled={isSaving}
- className="min-h-[40px] inline-flex items-center gap-1.5 px-5 py-2 bg-[#0e1111] hover:bg-[#243033] disabled:bg-[#7c8785] text-white text-[10px] tracking-widest font-semibold rounded-xl shadow-none transition-colors border-none cursor-pointer"
- >
- {isSaving ? (
- <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>
- ) : (
- <><Save className="w-3.5 h-3.5" />Save Changes</>
- )}
- </button>
- </div>
- </form>
-
- {isSaved && (
- <div className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-[#0e1111] text-white rounded-xl shadow-xl" role="status">
- <CheckCircle2 className="w-4 h-4 text-emerald-400" />
- <span className="text-[10px] tracking-widest font-semibold">Profile saved successfully!</span>
- </div>
- )}
- </div>
- );
+      {isSaved && (
+        <div
+          className="fixed bottom-[90px] lg:bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 bg-[#0e1111] text-white rounded-2xl shadow-2xl"
+          role="status"
+        >
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span className="text-xs font-semibold">Profile saved successfully!</span>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ProfileDetailsTab;
