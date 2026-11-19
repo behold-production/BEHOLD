@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Phone, Video, MapPin, Home as HomeIcon, UserRound } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import { useAuth } from '../../context/AuthContext';
-import heroFallbackImage from '../../assets/hero-watercolor.jpg';
+import heroFallbackImage from '../../assets/header_landscape.jpg';
 
 const getFirstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
 
@@ -29,20 +29,17 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
   // sans statement ("it's okay to be" / "Not okay" treatment).
   const headlineLines = headline.split('\n').map((line) => line.trim()).filter(Boolean);
 
-  const description = getFirstText(
+  const rawDescription = getFirstText(
     settings.heroSub,
     'Professional online counselling tailored to your needs — accessible, compassionate, and confidential.'
   );
+  const description = rawDescription
+    .replace(/,?\s*aptitude assessment,?\s*and\s*career mentorship/gi, '')
+    .replace(/career mentorship|aptitude|cdat/gi, 'professional counselling');
 
   const buttonText = getFirstText(settings.heroBtnText, 'Book an Appointment');
   const eyebrow = getFirstText(settings.heroEyebrow, 'Licensed Clinical Psychologists').replace(/\s+/g, ' ');
   const heroImage = getFirstText(settings.heroBgImage) || heroFallbackImage;
-  // Crossfade the full-bleed backdrop when the admin image URL arrives so it
-  // doesn't pop over the fallback; reveal immediately if already cached.
-  const [imgReady, setImgReady] = useState(false);
-  useEffect(() => {
-    setImgReady(false);
-  }, [heroImage]);
   const phone = getFirstText(settings.contactPhone);
   const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
 
@@ -112,26 +109,34 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
         canonicalUrl="https://www.behold.co.in/"
       />
 
-      <section id="home" aria-labelledby="bh-hero-title" className="relative isolate w-full overflow-hidden bg-[#FBF8F1]">
-        {/* Admin background image, edge to edge */}
+      <section
+        id="home"
+        aria-labelledby="bh-hero-title"
+        className="relative isolate w-full overflow-hidden bg-[#FBF8F1]"
+        style={{
+          backgroundImage: `url(${heroImage})`,
+          backgroundPosition: 'center bottom',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Full-bleed watercolor landscape backdrop */}
         <img
           src={heroImage}
           alt=""
           aria-hidden="true"
           fetchPriority="high"
           decoding="async"
-          onLoad={() => setImgReady(true)}
-          onError={() => setImgReady(true)}
-          className={`pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-[center_58%] transition-opacity duration-700 ease-out ${imgReady ? 'opacity-100' : 'opacity-0'}`}
+          className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-[center_bottom] sm:object-[center_60%]"
         />
 
-        {/* Legibility veils — strong cream behind the copy, artwork left clear on desktop */}
+        {/* Legibility veils — soft cream on text side, landscape artwork clear on desktop */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-[#FBF8F1]/92 via-[#FBF8F1]/74 to-[#FBF8F1]/38 lg:bg-gradient-to-r lg:from-[#FBF8F1] lg:via-[#FBF8F1]/72 lg:to-transparent"
+          className="absolute inset-0 bg-gradient-to-b from-[#FBF8F1]/85 via-[#FBF8F1]/55 to-[#FBF8F1]/20 lg:bg-gradient-to-r lg:from-[#FBF8F1]/95 lg:via-[#FBF8F1]/65 lg:to-transparent/10"
         />
-        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#FBF8F1]/85 to-transparent" />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#FBF8F1] via-[#FBF8F1]/70 to-transparent" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#FBF8F1]/80 to-transparent" />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#FBF8F1] via-[#FBF8F1]/50 to-transparent" />
 
         <div className="relative mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 pb-10 pt-24 sm:min-h-[560px] sm:px-6 sm:pt-28 lg:min-h-[600px] lg:px-8 lg:pt-32">
           <div className="mx-auto max-w-[36rem] text-center lg:mx-0 lg:text-left">
