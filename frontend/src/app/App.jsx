@@ -711,7 +711,7 @@ export default function App() {
           {/* Student Profile */}
           <Route path="/profile" element={ //
             <ProtectedRoute allowedRoles={['USER']}>
-              <StudentProfile onOpenBooking={handleOpenGeneralBooking} />
+              <StudentProfile onOpenBooking={handleBookTherapist} />
             </ProtectedRoute>
           } />
 

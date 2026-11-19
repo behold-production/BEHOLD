@@ -251,10 +251,10 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
             setWizardStep(3);
             return;
         }
-        // Coming from the directory with a picked advisor: still start at step 1
-        // so the selection is visible and confirmed before anything else.
+        // Coming from the directory or card with a picked advisor: jump directly to Schedule (step 3)
+        // so the user does NOT have to re-select or re-confirm the psychologist.
         if (preselectedAdvisorId) {
-            setWizardStep(1);
+            setWizardStep(3);
             return;
         }
         // Resume at step 3/4 when an in-progress draft was restored from sessionStorage
@@ -1416,7 +1416,8 @@ export default function ServiceBooking({ isOpen, onClose, preselectedAdvisorId, 
                                                                                             setSelectedTime('');
                                                                                         }
                                                                                         if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
-                                                                                        setWizardStep(2);
+                                                                                        // Advance directly to the schedule section (step 3)
+                                                                                        setWizardStep(3);
                                                                                     }}
                                                                                     className={`group relative flex min-w-0 cursor-pointer items-stretch gap-3 overflow-hidden rounded-xl border bg-white p-3.5 pl-4 booking-card transition-all duration-300 ease-out-expo ${isSelected
                                                                                             ? 'border-[#0e7490]/60 bg-[#f7f2e7]/50 shadow-sm ring-2 ring-[#0e7490]/15'

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Bell, MapPin, Search, SlidersHorizontal, ChevronRight, 
   Sparkles, HeartHandshake, Users, Smile, ShieldAlert, ArrowRight, Video
@@ -24,6 +25,7 @@ export default function MobileHomeScreen({
   onNavigateTab,
   onEnableNotifications,
 }) {
+  const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState('Kochi, Kerala');
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
@@ -225,7 +227,7 @@ export default function MobileHomeScreen({
               isFavorite={favorites.includes(doc.id)}
               onToggleFavorite={() => toggleFavorite(doc.id)}
               onBookTap={() => onOpenBooking(doc.id)}
-              onCardTap={() => onOpenBooking(doc.id)}
+              onCardTap={() => navigate(`/advisor/${doc.id}`)}
             />
           ))
         ) : (

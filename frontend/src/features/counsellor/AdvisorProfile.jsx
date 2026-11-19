@@ -13,6 +13,7 @@ import { formatExperience } from '../../utils/formatters';
 import SEO from '../../components/common/SEO';
 import { trackViewContent } from '../../utils/metaPixel';
 import { useScrollLock } from '../../utils/scrollLock';
+import MobileDoctorProfile from './mobile/MobileDoctorProfile';
 
 function getInitials(name) {
   if (!name) return 'EX';
@@ -361,14 +362,28 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbf8f1] text-[#0e1111] pb-32 pt-0 relative">
+    <>
       <SEO 
         title={`${advisor.name} | Doctor Details`}
         description={`Book an online session with ${advisor.name}, ${advisor.role}. ${advisor.about ? advisor.about.substring(0, 100) + '...' : ''}`}
         canonicalUrl={`https://www.behold.co.in/advisor/${advisor.id}`}
       />
 
-      {/* ── TOP HERO BANNER (decorative) + OVERLAY NAV ── */}
+      {/* Mobile Screen Experience — Matching CarePro DoctorProfileScreen */}
+      <div className="block md:hidden">
+        <MobileDoctorProfile
+          advisor={advisor}
+          onBack={handleBack}
+          onBook={() => onBook?.(advisor)}
+          isBookmarked={isBookmarked}
+          onToggleBookmark={handleBookmarkToggle}
+          reviews={filteredReviews}
+        />
+      </div>
+
+      {/* Desktop Screen Experience — Editorial Landscape */}
+      <div className="hidden md:block min-h-screen bg-[#fbf8f1] text-[#0e1111] pb-32 pt-0 relative">
+        {/* ── TOP HERO BANNER (decorative) + OVERLAY NAV ── */}
       <div className="relative w-full h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#123039] via-[#0e1111] to-[#050707] overflow-hidden">
         {/* Soft ambient terracotta accents */}
         <div className="absolute -top-16 -right-10 w-64 h-64 rounded-full bg-[#0e7490]/20 blur-3xl pointer-events-none" />
@@ -987,11 +1002,11 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         document.body
       )}
 
-      {/* ── FIXED BOTTOM BOOKING CTA BAR (Viewport Fixed via Portal, Never Scrolls) ── */}
+      {/* ── FIXED BOTTOM BOOKING CTA BAR (Desktop Responsive Viewport Fixed via Portal) ── */}
       {enableBooking && typeof document !== 'undefined' && createPortal(
         <aside
           aria-label="Book Consultation Sticky Bar"
-          className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-[#e6dfd0] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]"
+          className="hidden md:block fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-[#e6dfd0] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]"
         >
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
             
@@ -1023,6 +1038,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         document.body
       )}
 
-    </div>
+      </div>
+    </>
   );
 }
