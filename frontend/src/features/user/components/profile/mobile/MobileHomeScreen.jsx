@@ -9,12 +9,12 @@ import MobileTherapistCard from './MobileTherapistCard';
 import MobileLocationModal from './MobileLocationModal';
 
 const SPECIALTIES = [
-  { id: 'all', name: 'All', icon: Sparkles, color: 'bg-[#0E7490]', textColor: 'text-white' },
-  { id: 'individual', name: 'Individual', icon: Sparkles, color: 'bg-cyan-500', textColor: 'text-white' },
-  { id: 'anxiety', name: 'Anxiety', icon: HeartHandshake, color: 'bg-emerald-500', textColor: 'text-white' },
-  { id: 'couples', name: 'Couples', icon: Users, color: 'bg-rose-500', textColor: 'text-white' },
-  { id: 'child', name: 'Child Care', icon: Smile, color: 'bg-amber-500', textColor: 'text-white' },
-  { id: 'trauma', name: 'Healing', icon: ShieldAlert, color: 'bg-purple-500', textColor: 'text-white' },
+  { id: 'all', name: 'All', icon: Sparkles },
+  { id: 'individual', name: 'Individual', icon: Sparkles },
+  { id: 'anxiety', name: 'Anxiety', icon: HeartHandshake },
+  { id: 'couples', name: 'Couples', icon: Users },
+  { id: 'child', name: 'Child Care', icon: Smile },
+  { id: 'trauma', name: 'Healing', icon: ShieldAlert },
 ];
 
 const SPECIALTY_KEYWORDS = {
@@ -236,16 +236,18 @@ export default function MobileHomeScreen({
                 key={spec.id}
                 type="button"
                 onClick={() => setSelectedSpecialty(isSelected ? 'All' : spec.name)}
-                className="flex flex-col items-center gap-1.5 shrink-0 transition-transform active:scale-95 cursor-pointer"
+                className="flex flex-col items-center gap-1.5 shrink-0 transition-all duration-200 active:scale-95 cursor-pointer border-none bg-transparent"
               >
                 <div
-                  className={`flex h-14 w-14 items-center justify-center rounded-2xl shadow-xs transition-all ${
-                    isSelected ? 'ring-3 ring-[#0E7490] ring-offset-2 scale-105' : ''
-                  } ${spec.color} text-white`}
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-200 ${
+                    isSelected
+                      ? 'bg-[#0E7490] text-white shadow-md shadow-[#0E7490]/25 ring-2 ring-[#0E7490] ring-offset-2 scale-105'
+                      : 'bg-white text-[#0E7490] border border-slate-200/90 shadow-2xs hover:border-[#0E7490]/40 hover:bg-[#0E7490]/5'
+                  }`}
                 >
                   <Icon className="h-6 w-6" />
                 </div>
-                <span className={`text-[11px] font-semibold whitespace-nowrap ${isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-600'}`}>
+                <span className={`text-[11.5px] whitespace-nowrap transition-colors ${isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-600 font-medium'}`}>
                   {spec.name}
                 </span>
               </button>
@@ -292,22 +294,25 @@ export default function MobileHomeScreen({
         )}
       </div>
 
-      {/* Promo Care Banner (Matching CarePro insurance banner) */}
-      <div className="mt-5 rounded-2xl bg-gradient-to-r from-cyan-600 to-[#0E7490] p-4 text-white shadow-sm relative overflow-hidden">
+      {/* Promo Care Banner (CarePro Aesthetic with Behold Brand Colors) */}
+      <div className="mt-5 rounded-2xl bg-gradient-to-br from-[#0E7490] via-[#0B5C73] to-[#083344] p-5 text-white shadow-md relative overflow-hidden">
+        <div className="absolute -right-4 -bottom-4 text-white/10 pointer-events-none">
+          <ShieldAlert className="w-28 h-28" />
+        </div>
         <div className="relative z-10">
-          <span className="inline-block rounded-md bg-white/20 px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider text-cyan-100">
+          <span className="inline-block rounded-md bg-white/20 px-2.5 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider text-cyan-100 backdrop-blur-xs">
             100% Confidential
           </span>
-          <h4 className="mt-1.5 text-base font-bold">Mental Wellbeing Care</h4>
+          <h4 className="mt-2 text-base font-bold">Mental Wellbeing Care</h4>
           <p className="mt-1 text-xs text-cyan-100/90 leading-relaxed max-w-[240px]">
-            Schedule doorstep visits or private online therapy with certified psychologists.
+            Schedule doorstep visits or private online therapy with certified clinical psychologists.
           </p>
           <button
             type="button"
             onClick={() => onOpenBooking()}
-            className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-1.5 text-xs font-bold text-[#0E7490] shadow-xs active:scale-95"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#0E7490] shadow-sm hover:bg-slate-50 active:scale-95 transition-all cursor-pointer border-none"
           >
-            Book Appointment
+            <span>Book Appointment</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>

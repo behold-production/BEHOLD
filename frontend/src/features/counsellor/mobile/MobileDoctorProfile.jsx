@@ -117,7 +117,7 @@ export default function MobileDoctorProfile({
             <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-50 text-[#0E7490]">
               <Users className="h-4 w-4" />
             </div>
-            <span className="mt-1.5 block text-[10px] font-medium text-slate-400">Patients</span>
+            <span className="mt-1.5 block text-[10px] font-medium text-slate-400">Clients</span>
             <span className="block text-xs font-bold text-slate-900">1,200+</span>
           </div>
 
