@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   ChevronLeft, Star, Award, Users, ShieldCheck, 
-  MapPin, CheckCircle2, Share2, Bookmark, Info, Calendar
+  MapPin, CheckCircle2, Share2, Bookmark, Info, Calendar, Plus
 } from 'lucide-react';
 
 /**
@@ -220,27 +221,31 @@ export default function MobileDoctorProfile({
         </div>
       </div>
 
-      {/* Fixed Bottom Booking Bar (CarePro Dicto Copy) */}
-      <aside className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200/80 px-5 py-3.5 pb-[max(0.85rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-              CONSULTATION FEE
-            </span>
-            <span className="text-xl font-extrabold text-slate-900">
-              ₹{(advisor.price || 899).toLocaleString('en-IN')}
-            </span>
-          </div>
+      {/* Fixed Bottom Booking Bar (Portal attached to body to prevent any scroll jitter) */}
+      {typeof document !== 'undefined' && createPortal(
+        <aside className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200/80 px-5 py-3.5 pb-[max(0.85rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                CONSULTATION FEE
+              </span>
+              <span className="text-xl font-extrabold text-slate-900">
+                ₹{(advisor.price || 899).toLocaleString('en-IN')}
+              </span>
+            </div>
 
-          <button
-            type="button"
-            onClick={onBook}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#0E7490] px-6 py-2.5 text-sm font-bold text-white shadow-xs transition-all hover:bg-[#0B5C73] active:scale-95 cursor-pointer border-none"
-          >
-            Book Appointment
-          </button>
-        </div>
-      </aside>
+            <button
+              type="button"
+              onClick={onBook}
+              className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[#0E7490] px-5 py-2.5 text-sm font-bold text-white shadow-xs transition-all hover:bg-[#0B5C73] active:scale-95 cursor-pointer border-none"
+            >
+              <span>Book Consultation</span>
+              <Plus className="w-4 h-4 text-white" />
+            </button>
+          </div>
+        </aside>,
+        document.body
+      )}
     </div>
   );
 }

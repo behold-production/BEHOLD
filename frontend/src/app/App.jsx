@@ -57,7 +57,6 @@ const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
 const PsychologistsPage = lazyWithRetry(() => import('../features/counsellor/PsychologistsPage'));
 const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingPage'));
 const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
-const MobileHomeContainer = lazyWithRetry(() => import('../features/user/components/profile/mobile/MobileHomeContainer'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
 
@@ -568,9 +567,9 @@ export default function App() {
         </Suspense>
       )}
  
-      {/* Navbar — desktop header only; mobile app uses native app header and bottom nav */}
+      {/* Navbar — hidden on mobile only when inside the native user app shell (/profile) */}
       {!hideNavbarAndFooter && (
-        <div className="hidden md:block">
+        <div className={location.pathname === '/profile' ? 'hidden md:block' : ''}>
           <Navbar
             navigateToSection={navigateToSection}
             currentView={location.pathname}
@@ -599,27 +598,19 @@ export default function App() {
         </div>
       }>
         <Routes>
-          {/* Public landing page */}
+          {/* Public landing page (Responsive Mobile & Desktop) */}
           <Route path="/" element={
-            <>
-              {/* Mobile Viewport — CarePro Native Mobile HomeScreen with AppNavBar */}
-              <div className="block md:hidden">
-                <MobileHomeContainer onOpenBooking={handleBookTherapist} />
-              </div>
-
-              {/* Desktop Viewport — Editorial Landscape Landing Page */}
-              <main className="hidden md:block fade-in-up bg-[#FBF8F1] text-[#0E1111]">
-                <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
-                <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
-                <Reviews siteSettings={siteSettings} />
-                <BlogSection siteSettings={siteSettings} />
-                <HomeOfferSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-                <Faq siteSettings={siteSettings} />
-                {siteSettings.enableInquiry !== false && (
-                  <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-                )}
-              </main>
-            </>
+            <main className="fade-in-up bg-[#FBF8F1] text-[#0E1111]">
+              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
+              <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
+              <Reviews siteSettings={siteSettings} />
+              <BlogSection siteSettings={siteSettings} />
+              <HomeOfferSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              <Faq siteSettings={siteSettings} />
+              {siteSettings.enableInquiry !== false && (
+                <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+              )}
+            </main>
           } />
 
           {/* About Page Route */}
@@ -773,9 +764,9 @@ export default function App() {
 
 
 
-      {/* Footer — desktop only; mobile app uses native bottom app navigation */}
+      {/* Footer — hidden on mobile only when inside the native user app shell (/profile) */}
       {!hideNavbarAndFooter && (
-        <div className="hidden md:block">
+        <div className={location.pathname === '/profile' ? 'hidden md:block' : ''}>
           <Footer
             navigateToSection={navigateToSection}
             siteName={siteSettings.siteName}

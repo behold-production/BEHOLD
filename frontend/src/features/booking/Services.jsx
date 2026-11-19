@@ -4,8 +4,6 @@ import { Brain, Compass, ArrowRight } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
 import SEO from '../../components/common/SEO';
 import { trackViewContent } from '../../utils/metaPixel';
-import MobileFindDoctorScreen from '../user/components/profile/mobile/MobileFindDoctorScreen';
-import MobileAppNavBar from '../user/components/profile/mobile/MobileAppNavBar';
 
 export default function Services({ onBookTherapist, siteSettings }) {
   const navigate = useNavigate();
@@ -72,25 +70,8 @@ export default function Services({ onBookTherapist, siteSettings }) {
         description="Book a session for Psychological Counselling and mental wellbeing." 
         canonicalUrl={typeof window !== 'undefined' ? window.location.origin + "/booking" : "https://www.behold.co.in/booking"}
       />
-      {/* Mobile Screen Experience — CarePro FindDoctorScreen */}
-      <div className="block md:hidden">
-        <MobileFindDoctorScreen
-          onBack={() => navigate(-1)}
-          onOpenBooking={onBookTherapist}
-        />
-        <MobileAppNavBar
-          activeTab={0}
-          onTabChange={(tab) => {
-            if (tab === 0) navigate('/');
-            else if (tab === 1) navigate('/profile?tab=booked');
-            else if (tab === 2) navigate('/profile?tab=records');
-            else if (tab === 3) navigate('/profile?tab=details');
-          }}
-        />
-      </div>
-
-      {/* Desktop Screen Experience — Services Grid */}
-      <section id="services" className="hidden md:block relative py-20 sm:py-28 bg-[#fbf8f1] text-[#0e1111] overflow-hidden scroll-mt-20 border-t border-[#e6dfd0] reveal-on-scroll">
+      {/* Services Grid (Responsive Mobile & Desktop) */}
+      <section id="services" className="relative py-20 sm:py-28 bg-[#fbf8f1] text-[#0e1111] overflow-hidden scroll-mt-20 border-t border-[#e6dfd0] reveal-on-scroll">
       {/* Background Image Layer with smooth mask gradient fade */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
