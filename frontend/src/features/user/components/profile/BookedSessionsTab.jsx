@@ -318,7 +318,7 @@ const BookedSessionsTab = ({
                                       href={createGoogleCalendarUrl({
                                         title: `BEHOLD Counselling Session - ${session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist'}`,
                                         advisorName: session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist',
-                                        studentName: session.clientName || session.userName || 'Student',
+                                        studentName: session.clientName || session.userName || 'User',
                                         location: validMeetLink,
                                         meetLink: validMeetLink,
                                         service: 'Emotional Wellbeing & Counselling',
@@ -364,7 +364,7 @@ const BookedSessionsTab = ({
                                 href={createGoogleCalendarUrl({
                                   title: `BEHOLD Consultation - ${session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist'}`,
                                   advisorName: session.advisorName || session.counsellorName || session.counsellor?.name || 'Psychologist',
-                                  studentName: session.clientName || session.userName || 'Student',
+                                  studentName: session.clientName || session.userName || 'User',
                                   location: session.counsellor?.locationName || session.clientLocationName || (session.mode === 'DOOR_STEP' ? 'Doorstep Visit' : 'Clinic Consultation'),
                                   service: 'Emotional Wellbeing & Counselling',
                                   date: session.date,

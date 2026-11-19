@@ -14,7 +14,7 @@ const steps = [
   {
     num: '03',
     title: '1-on-1 Confidential Session',
-    desc: 'Join your private video session via instant Google Meet delivery from your email or personal student portal.',
+    desc: 'Join your private video session via instant Google Meet delivery from your email or personal user portal.',
   },
   {
     num: '04',

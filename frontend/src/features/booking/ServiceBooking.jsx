@@ -7,7 +7,7 @@ import BookingAuthModal from './BookingAuthModal';
 import { FileDown, X, ArrowLeft, ArrowRight, Lock, ShieldCheck, FileText, CheckCircle2, AlertCircle, Info, ExternalLink, Calendar as CalendarIcon, Trash2, Video as VideoIcon, Star, Search } from 'lucide-react';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
-import { buildGoogleMeetUrl } from '../student/utils/utils';
+import { buildGoogleMeetUrl } from '../user/utils/utils';
 import toast from 'react-hot-toast';
 import { ScrollDot } from '../../components/common/BrandDot';
 import SEO from '../../components/common/SEO';

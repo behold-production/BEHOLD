@@ -9,8 +9,8 @@ import {
 import { useCustomDialog } from '../../../../context/CustomDialogContext';
 import ApiService from '../../../../services/api';
 
-import { useStudentProfile } from '../../hooks/useStudentProfile';
-import { useStudentSessions } from '../../hooks/useStudentSessions';
+import { useUserProfile } from '../../hooks/useUserProfile';
+import { useUserSessions } from '../../hooks/useUserSessions';
 import { downloadPDFReceiptForSession, downloadCertificatePDF as downloadCertPDF, downloadConsultationReportPDF } from '../../utils/utils';
 import HeroHeader from './HeroHeader';
 import SidebarNav from './SidebarNav';
@@ -20,7 +20,7 @@ import BookedSessionsTab from './BookedSessionsTab';
 import MobilePatientShell from './mobile/MobilePatientShell';
 import SEO from '../../../../components/common/SEO';
 
-export default function StudentProfile({ onOpenBooking }) {
+export default function UserProfile({ onOpenBooking }) {
   const { showAlert } = useCustomDialog();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,12 +43,12 @@ export default function StudentProfile({ onOpenBooking }) {
   const {
     profile, formData, isSaved, isSaving, errors, isLoading,
     completion, greeting, displayName, handleChange, handleDiscard, handleSave, handleProfilePicUpload
-  } = useStudentProfile();
+  } = useUserProfile();
 
   const {
     bookedSessions, completedSessions, sessionFilter, sessionSubTab,
     filteredBooked, filterChips, stats, setSessionFilter, setSessionSubTab, handleCancelSession
-  } = useStudentSessions();
+  } = useUserSessions();
 
   const authLoading = isLoading;
   const user = { name: displayName, role: 'USER' };
@@ -249,3 +249,5 @@ export default function StudentProfile({ onOpenBooking }) {
     </div>
   );
 }
+
+export const StudentProfile = UserProfile;

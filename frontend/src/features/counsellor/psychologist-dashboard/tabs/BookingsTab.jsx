@@ -2,7 +2,7 @@ import React from 'react';
 import { Clock, AlertCircle, Link, Video, FileText, Send, Edit, ShieldCheck, Lock, Calendar } from 'lucide-react';
 import { formatDateString, formatTimeString } from '../../../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../../../utils/calendarUtils';
-import { buildGoogleMeetUrl } from '../../../student/utils/utils';
+import { buildGoogleMeetUrl } from '../../../user/utils/utils';
 import ApiService from '../../../../services/api';
 import { toast } from 'react-hot-toast';
 

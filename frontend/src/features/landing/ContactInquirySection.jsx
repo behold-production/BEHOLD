@@ -44,6 +44,7 @@ export default function ContactInquirySection({ siteSettings = {}, onOpenBooking
     setLoading(true);
     try {
       await ApiService.submitInquiry({
+        name: formData.name,
         studentName: formData.name,
         email: formData.email,
         comments: formData.message,

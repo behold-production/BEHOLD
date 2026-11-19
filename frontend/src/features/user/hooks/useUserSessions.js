@@ -5,11 +5,11 @@ import { useAuth } from '../../../context/AuthContext';
 import { useCustomDialog } from '../../../context/CustomDialogContext';
 
 /**
- * Hook to manage student bookings and sessions logic.
+ * Hook to manage user bookings and sessions logic.
  *
  * @returns {Object} Booked sessions, filters, and handlers.
  */
-export function useStudentSessions() {
+export function useUserSessions() {
   const [bookedSessions, setBookedSessions] = useState([]);
   const [completedSessions, setCompletedSessions] = useState([]);
   const [sessionFilter, setSessionFilter] = useState('all');
@@ -28,15 +28,15 @@ export function useStudentSessions() {
           setCompletedSessions(list.filter(b => b.status === 'COMPLETED' || isSessionCompleted(b)));
         }
       } catch (err) {
-        console.error('Failed to load student sessions:', err);
+        console.error('Failed to load user sessions:', err);
       }
     };
 
     const hasToken = !!localStorage.getItem('behold_token');
     const roleUpper = user?.role?.toUpperCase();
-    const isStudent = user && (roleUpper === 'USER' || roleUpper === 'CUSTOMER' || roleUpper === 'STUDENT');
+    const isUser = user && (roleUpper === 'USER' || roleUpper === 'CUSTOMER' || roleUpper === 'STUDENT');
 
-    if (isStudent && hasToken && !authLoading) {
+    if (isUser && hasToken && !authLoading) {
       fetchSessions();
     }
   }, [user, authLoading]);
@@ -128,3 +128,5 @@ export function useStudentSessions() {
     handleCancelSession
   };
 }
+
+export const useStudentSessions = useUserSessions;

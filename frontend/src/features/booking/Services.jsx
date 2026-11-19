@@ -4,8 +4,8 @@ import { Brain, Compass, ArrowRight } from 'lucide-react';
 import greyGreenBg from '../../assets/greygreen.png';
 import SEO from '../../components/common/SEO';
 import { trackViewContent } from '../../utils/metaPixel';
-import MobileFindDoctorScreen from '../student/components/profile/mobile/MobileFindDoctorScreen';
-import MobileAppNavBar from '../student/components/profile/mobile/MobileAppNavBar';
+import MobileFindDoctorScreen from '../user/components/profile/mobile/MobileFindDoctorScreen';
+import MobileAppNavBar from '../user/components/profile/mobile/MobileAppNavBar';
 
 export default function Services({ onBookTherapist, siteSettings }) {
   const navigate = useNavigate();

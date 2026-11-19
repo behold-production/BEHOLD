@@ -18,8 +18,8 @@ import ApiService from '../../services/api';
 import { formatExperience } from '../../utils/formatters';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
 import SEO from '../../components/common/SEO';
-import MobileFindDoctorScreen from '../student/components/profile/mobile/MobileFindDoctorScreen';
-import MobileAppNavBar from '../student/components/profile/mobile/MobileAppNavBar';
+import MobileFindDoctorScreen from '../user/components/profile/mobile/MobileFindDoctorScreen';
+import MobileAppNavBar from '../user/components/profile/mobile/MobileAppNavBar';
 
 const getInitial = (name = '') => {
   const cleanName = (typeof name === 'string' ? name : '').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();

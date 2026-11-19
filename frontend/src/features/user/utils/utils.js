@@ -166,7 +166,7 @@ export const generateReceiptPDFDoc = async (bookingDetails, showAlert) => {
     doc.setTextColor(82, 82, 91); // zinc-600
     
     // Client info
-    const cName = bookingDetails.student?.name || bookingDetails.clientName || bookingDetails.userName || bookingDetails.studentName || 'Student';
+    const cName = bookingDetails.clientName || bookingDetails.userName || bookingDetails.student?.name || bookingDetails.studentName || 'Client';
     const cEmail = bookingDetails.student?.email || bookingDetails.clientEmail || 'N/A';
     const cPhone = bookingDetails.student?.phone || bookingDetails.clientPhone || 'N/A';
     
@@ -344,7 +344,7 @@ export const downloadPDFReceiptForSession = async (session, profile, user, showA
       gstAmountVal = totalBeforeDiscount - baseFeeVal;
     }
 
-    const clientName = profile?.name || user?.name || session?.clientName || 'Student';
+    const clientName = profile?.name || user?.name || session?.clientName || 'Client';
     const clientEmail = profile?.email || user?.email || session?.clientEmail || '';
     const clientPhone = profile?.phone || user?.phone || session?.clientPhone || '';
 
@@ -499,7 +499,7 @@ export const downloadConsultationReportPDF = async (session, profile = {}, user 
     });
 
     const displayId = (session?.appointmentId || session?.id || Date.now()).toString().slice(-8);
-    const clientName = profile?.name || user?.name || session?.clientName || 'Student';
+    const clientName = profile?.name || user?.name || session?.clientName || 'Client';
     const advisorName = session?.advisorName || 'Consultant Psychologist';
     const dateStr = formatDateString(session?.date || new Date());
     const timeStr = session?.time || 'N/A';
@@ -534,7 +534,7 @@ export const downloadConsultationReportPDF = async (session, profile = {}, user 
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(71, 85, 105);
-    doc.text('STUDENT NAME:', 24, 49);
+    doc.text('CLIENT NAME:', 24, 49);
     doc.text('PSYCHOLOGIST:', 110, 49);
     doc.text('SERVICE & MODE:', 24, 58);
     doc.text('SESSION SCHEDULE:', 110, 58);

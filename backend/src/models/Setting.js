@@ -134,7 +134,7 @@ const settingSchema = new mongoose.Schema(
         }
       ],
       default: [
-        { num: '500+', label: 'Students Guided' },
+        { num: '500+', label: 'Clients Guided' },
         { num: '98%', label: 'Clarity & Peace' },
         { num: '50+', label: 'Certified Mentors' }
       ]
@@ -148,7 +148,7 @@ const settingSchema = new mongoose.Schema(
       ],
       default: [
         { value: '10+', label: 'Years Experience' },
-        { value: '500+', label: 'Students Guided' },
+        { value: '500+', label: 'Clients Guided' },
         { value: '50+', label: 'Expert Mentors' },
         { value: '98%', label: 'Success Rate' }
       ]

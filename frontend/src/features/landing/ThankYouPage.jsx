@@ -26,7 +26,7 @@ import SEO from '../../components/common/SEO';
 import { formatDateString } from '../../utils/dateFormatter';
 import { createGoogleCalendarUrl } from '../../utils/calendarUtils';
 import { trackPurchase } from '../../utils/metaPixel';
-import { generateReceiptPDFDoc } from '../student/utils/utils';
+import { generateReceiptPDFDoc } from '../user/utils/utils';
 import { toast } from 'react-hot-toast';
 
 export default function ThankYouPage() {

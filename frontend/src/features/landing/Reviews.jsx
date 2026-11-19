@@ -252,7 +252,7 @@ export default function Reviews({ siteSettings = {} }) {
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
                     className="w-full rounded-lg border border-[#E6DFD0] bg-[#FBF8F1] px-3.5 py-2.5 text-[13px] outline-none transition-colors focus:border-[#0E7490] focus:bg-white"
-                    placeholder="Student, Parent, Individual Therapy"
+                    placeholder="Client, Parent, Individual Therapy"
                   />
                 </div>
                 <div>

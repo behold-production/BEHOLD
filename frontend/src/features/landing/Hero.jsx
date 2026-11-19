@@ -44,7 +44,13 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
   const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
 
   const stats = Array.isArray(settings.heroStats)
-    ? settings.heroStats.filter((stat) => stat && (stat.num || stat.label)).slice(0, 3)
+    ? settings.heroStats
+        .filter((stat) => stat && (stat.num || stat.label))
+        .map((stat) => ({
+          ...stat,
+          label: (stat.label || '').replace(/students/gi, 'Clients').replace(/student/gi, 'Client'),
+        }))
+        .slice(0, 3)
     : [];
 
   // The bar is built from however many stats the admin saved plus an optional

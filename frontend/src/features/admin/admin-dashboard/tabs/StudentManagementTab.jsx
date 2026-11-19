@@ -753,7 +753,7 @@ export default function StudentManagementTab(props) {
  {isEditUserOpen && (
  <>
  <div className="border-t border-zinc-800 pt-3">
- <p className="text-xs font-bold text-zinc-500 tracking-widest mb-3">Student Information</p>
+ <p className="text-xs font-bold text-zinc-500 tracking-widest mb-3">User Information</p>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div className="space-y-1">
  <label className="text-xs font-bold text-zinc-400 tracking-wide">Phone Number</label>
@@ -1075,7 +1075,7 @@ export default function StudentManagementTab(props) {
  if (studentBookings.length === 0) {
  return (
  <tr>
- <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No consult history for this student.</td>
+ <td colSpan={4} className="p-4 text-center text-zinc-650 italic">No consult history for this user.</td>
  </tr>
  );
  }

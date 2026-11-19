@@ -24,7 +24,7 @@ import HomeOfferSection from '../features/landing/HomeOfferSection';
 import HomeValuesSection from '../features/landing/HomeValuesSection';
 import HomeClosingSection from '../features/landing/HomeClosingSection';
 import '../features/landing/user-home.css';
-import ActivitySheetView from '../features/student/ActivitySheetView';
+import ActivitySheetView from '../features/user/ActivitySheetView';
 import globalBg from '../assets/greygreen.png';
 import globalBgTexture from '../assets/greygreen.png';
 
@@ -46,7 +46,7 @@ function lazyWithRetry(importFn) { //
 
 const ServiceBooking = lazyWithRetry(() => import('../features/booking/ServiceBooking'));
 const AdvisorProfile = lazyWithRetry(() => import('../features/counsellor/AdvisorProfile'));
-const StudentProfile = lazyWithRetry(() => import('../features/student/components/profile/StudentProfile'));
+const UserProfile = lazyWithRetry(() => import('../features/user/components/profile/UserProfile'));
 const PsychologistDashboard = lazyWithRetry(() => import('../features/counsellor/PsychologistDashboard'));
 const AdminDashboard = lazyWithRetry(() => import('../features/admin/AdminDashboard'));
 const TestResultsTab = lazyWithRetry(() => import('../features/admin/admin-dashboard/tabs/TestResultsTab'));
@@ -57,7 +57,7 @@ const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
 const PsychologistsPage = lazyWithRetry(() => import('../features/counsellor/PsychologistsPage'));
 const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingPage'));
 const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
-const MobileHomeContainer = lazyWithRetry(() => import('../features/student/components/profile/mobile/MobileHomeContainer'));
+const MobileHomeContainer = lazyWithRetry(() => import('../features/user/components/profile/mobile/MobileHomeContainer'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
 
@@ -719,10 +719,10 @@ export default function App() {
 
 
 
-          {/* Student Profile */}
+          {/* User Profile */}
           <Route path="/profile" element={ //
             <ProtectedRoute allowedRoles={['USER']}>
-              <StudentProfile onOpenBooking={handleBookTherapist} />
+              <UserProfile onOpenBooking={handleBookTherapist} />
             </ProtectedRoute>
           } />
 

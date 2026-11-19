@@ -1,17 +1,17 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ApiService from '../../../services/api';
-import { INITIAL_STATE } from '../utils/studentProfileConstants';
+import { INITIAL_STATE } from '../utils/userProfileConstants';
 import { getGreeting, calculateCompletion } from '../utils/utils';
 import { useAuth } from '../../../context/AuthContext';
 import { validateEmail, validateIndianPhone } from '../../../utils/validation';
 
 /**
- * Hook to manage student profile data, form state, and updates.
+ * Hook to manage user profile data, form state, and updates.
  *
  * @returns {Object} Profile state and handlers.
  */
-export function useStudentProfile() {
+export function useUserProfile() {
   const [profile, setProfile] = useState(INITIAL_STATE);
   const [formData, setFormData] = useState(INITIAL_STATE);
   const formLoadedRef = useRef(false);
@@ -24,7 +24,7 @@ export function useStudentProfile() {
 
   const completion = useMemo(() => calculateCompletion(formData), [formData]);
   const greeting = useMemo(() => getGreeting(), []);
-  const displayName = profile.name || user?.name || 'Student';
+  const displayName = profile.name || user?.name || 'Client';
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -42,7 +42,7 @@ export function useStudentProfile() {
           }
         }
       } catch (err) {
-        console.error('Failed to load student profile:', err);
+        console.error('Failed to load user profile:', err);
       } finally {
         setIsLoading(false);
       }
@@ -50,9 +50,9 @@ export function useStudentProfile() {
 
     const hasToken = !!localStorage.getItem('behold_token');
     const roleUpper = user?.role?.toUpperCase();
-    const isStudent = user && (roleUpper === 'USER' || roleUpper === 'CUSTOMER' || roleUpper === 'STUDENT');
+    const isUser = user && (roleUpper === 'USER' || roleUpper === 'CUSTOMER' || roleUpper === 'STUDENT');
 
-    if (isStudent && hasToken && !authLoading) {
+    if (isUser && hasToken && !authLoading) {
       fetchProfile();
     } else if (!authLoading) {
       setTimeout(() => setIsLoading(false), 0);
@@ -176,3 +176,5 @@ export function useStudentProfile() {
     handleProfilePicUpload
   };
 }
+
+export const useStudentProfile = useUserProfile;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Clock, AlertCircle, Video, Link2, Copy, CheckCheck, ExternalLink, Share2 } from 'lucide-react';
 import { formatDateString } from '../../../../utils/dateFormatter';
-import { buildGoogleMeetUrl } from '../../../student/utils/utils';
+import { buildGoogleMeetUrl } from '../../../user/utils/utils';
 
 const formatAmount = (num) => {
     const val = Number(num) || 0;
