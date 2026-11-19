@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Phone, Video, MapPin, Home as HomeIcon, UserRound } from 'lucide-react';
+import { ArrowUpRight, Phone, Video, MapPin, Home as HomeIcon, UserRound } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import { useAuth } from '../../context/AuthContext';
 import heroFallbackImage from '../../assets/header_landscape.jpg';
@@ -69,18 +69,6 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
     settings.enableOffline !== false && { key: 'centre', label: 'In-centre sessions', Icon: MapPin },
     settings.enableDoorstep !== false && { key: 'doorstep', label: 'Doorstep visits', Icon: HomeIcon },
   ].filter(Boolean);
-
-  const scrollToSection = (id) => {
-    if (typeof document !== 'undefined') {
-      const el = document.getElementById(id);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY - 84;
-        window.scrollTo({ top, behavior: 'smooth' });
-        return;
-      }
-    }
-    navigateToSection?.(id);
-  };
 
   const handleBookClick = () => {
     if (typeof onOpenBooking === 'function') onOpenBooking();
@@ -184,10 +172,10 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
               <button
                 type="button"
                 onClick={handleBookClick}
-                className="group inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0E7490] px-6 py-2.5 text-[13px] font-semibold text-white shadow-[0_14px_30px_-16px_rgba(14,116,144,0.95)] transition-all duration-200 hover:bg-[#0B5C73] active:scale-[0.99] cursor-pointer border-none sm:px-7"
+                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0E7490] px-6 py-2.5 text-[13px] font-semibold text-white shadow-xs transition-colors duration-200 hover:bg-[#0B5C73] active:scale-[0.99] cursor-pointer border-none"
               >
                 {buttonText}
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                <ArrowUpRight className="h-4 w-4" />
               </button>
 
               <button
