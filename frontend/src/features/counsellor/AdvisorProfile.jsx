@@ -333,12 +333,41 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-[#fbf8f1] flex items-center justify-center px-4">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-[#0e7490] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[#55605f] font-bold tracking-wide">Loading verified specialist details...</p>
+      <>
+        {/* Mobile Native Loading Skeleton */}
+        <div className="block md:hidden min-h-screen bg-[#F8FAFC]">
+          <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 py-3 backdrop-blur-md">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 active:scale-95 transition-transform cursor-pointer border-none"
+              aria-label="Go back"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <h1 className="text-base font-bold text-slate-900">Doctor Profile</h1>
+            <div className="w-9" />
+          </header>
+
+          <div className="p-4 space-y-4 animate-pulse">
+            <div className="h-32 bg-white rounded-2xl border border-slate-200/80 p-4" />
+            <div className="grid grid-cols-3 gap-2.5">
+              <div className="h-20 bg-white rounded-2xl border border-slate-200/80" />
+              <div className="h-20 bg-white rounded-2xl border border-slate-200/80" />
+              <div className="h-20 bg-white rounded-2xl border border-slate-200/80" />
+            </div>
+            <div className="h-44 bg-white rounded-2xl border border-slate-200/80" />
+          </div>
         </div>
-      </div>
+
+        {/* Desktop Loading View */}
+        <div className="hidden md:flex min-h-screen pt-24 pb-16 bg-[#fbf8f1] items-center justify-center px-4">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-10 h-10 border-4 border-[#0e7490] border-t-transparent rounded-full animate-spin" />
+            <p className="text-[#55605f] font-bold tracking-wide">Loading verified specialist details...</p>
+          </div>
+        </div>
+      </>
     );
   }
 

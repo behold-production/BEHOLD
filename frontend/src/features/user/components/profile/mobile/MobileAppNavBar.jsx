@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Home, Calendar, FileText, User } from 'lucide-react';
 
 /**
@@ -14,11 +15,11 @@ export default function MobileAppNavBar({ activeTab = 0, onTabChange, upcomingCo
     { id: 3, label: 'Profile', icon: User },
   ];
 
-  return (
+  const content = (
     <nav
       aria-label="Mobile Navigation"
       className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] md:hidden"
-      style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+      style={{ paddingBottom: 'max(0.65rem, env(safe-area-inset-bottom))' }}
     >
       <div className="flex items-center justify-around px-3 py-1.5">
         {navItems.map((item) => {
@@ -30,14 +31,14 @@ export default function MobileAppNavBar({ activeTab = 0, onTabChange, upcomingCo
               key={item.id}
               type="button"
               onClick={() => onTabChange(item.id)}
-              className={`relative flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl transition-all duration-200 cursor-pointer border-none bg-transparent ${
+              className={`relative flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 cursor-pointer border-none bg-transparent ${
                 isSelected
                   ? 'text-[#0E7490] font-semibold'
                   : 'text-slate-400 hover:text-slate-600 font-medium'
               }`}
             >
               <div
-                className={`relative flex items-center justify-center w-10 h-8 rounded-xl transition-all duration-200 ${
+                className={`relative flex items-center justify-center w-10 h-7 rounded-xl transition-all duration-200 ${
                   isSelected ? 'bg-[#0E7490]/10 text-[#0E7490]' : 'text-slate-500'
                 }`}
               >
@@ -59,4 +60,9 @@ export default function MobileAppNavBar({ activeTab = 0, onTabChange, upcomingCo
       </div>
     </nav>
   );
+
+  if (typeof document !== 'undefined') {
+    return createPortal(content, document.body);
+  }
+  return content;
 }

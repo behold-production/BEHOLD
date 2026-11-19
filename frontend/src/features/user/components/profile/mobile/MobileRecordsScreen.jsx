@@ -1,5 +1,6 @@
 import React from 'react';
 import { FileText, Download, Calendar, Activity, ShieldCheck } from 'lucide-react';
+import { formatDateString } from '../../../../../utils/dateFormatter';
 
 export default function MobileRecordsScreen({
   completedSessions = [],
@@ -10,7 +11,7 @@ export default function MobileRecordsScreen({
   onNavigateTab,
 }) {
   return (
-    <div className="pb-24 pt-4 px-4 bg-[#F8FAFC] min-h-screen text-slate-900">
+    <div className="pb-32 pt-4 px-4 bg-[#F8FAFC] min-h-screen text-slate-900">
       <div className="mb-4">
         <h2 className="text-xl font-extrabold text-slate-900">Health & Consultation Records</h2>
         <p className="text-xs text-slate-500 mt-0.5">Clinical notes, vitals & digital receipts</p>
@@ -28,7 +29,7 @@ export default function MobileRecordsScreen({
           <button
             type="button"
             onClick={() => onNavigateTab(3)}
-            className="text-xs font-bold text-[#0E7490]"
+            className="text-xs font-bold text-[#0E7490] cursor-pointer"
           >
             Edit
           </button>
@@ -37,17 +38,17 @@ export default function MobileRecordsScreen({
         <div className="grid grid-cols-3 gap-2.5">
           <div className="rounded-xl bg-slate-50 p-3 text-center border border-slate-100">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">HEIGHT</span>
-            <span className="text-sm font-extrabold text-slate-800 block mt-0.5">{formData?.height || 172}</span>
+            <span className="text-sm font-extrabold text-slate-800 block mt-0.5">{formData?.height || '--'}</span>
             <span className="text-[10px] font-semibold text-slate-400">CM</span>
           </div>
           <div className="rounded-xl bg-slate-50 p-3 text-center border border-slate-100">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">WEIGHT</span>
-            <span className="text-sm font-extrabold text-slate-800 block mt-0.5">{formData?.weight || 68}</span>
+            <span className="text-sm font-extrabold text-slate-800 block mt-0.5">{formData?.weight || '--'}</span>
             <span className="text-[10px] font-semibold text-slate-400">KG</span>
           </div>
           <div className="rounded-xl bg-slate-50 p-3 text-center border border-slate-100">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">BLOOD</span>
-            <span className="text-sm font-extrabold text-[#0E7490] block mt-0.5">{formData?.bloodGroup || 'O+'}</span>
+            <span className="text-sm font-extrabold text-[#0E7490] block mt-0.5">{formData?.bloodGroup || '--'}</span>
             <span className="text-[10px] font-semibold text-slate-400">TYPE</span>
           </div>
         </div>
@@ -61,7 +62,7 @@ export default function MobileRecordsScreen({
           completedSessions.map((session) => {
             const sid = session._id || session.id;
             const therapist = session.counsellorName || session.therapistName || 'Clinical Psychologist';
-            const date = session.date || session.slotDate || 'Session Date';
+            const date = formatDateString(session.date || session.slotDate) || 'Session Date';
 
             return (
               <div

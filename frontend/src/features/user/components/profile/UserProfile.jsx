@@ -105,7 +105,7 @@ export default function UserProfile({ onOpenBooking }) {
   const nextSession = bookedSessions[0];
 
   return (
-    <div className="pt-0 md:pt-24 lg:pt-32 pb-0 md:pb-24 lg:pb-12 min-h-screen bg-transparent text-[#0e1111] font-sans text-left relative overflow-hidden">
+    <div className="pt-0 md:pt-24 lg:pt-32 pb-0 md:pb-24 lg:pb-12 min-h-screen bg-transparent text-[#0e1111] font-sans text-left relative overflow-x-clip md:overflow-visible">
       <SEO title="My Profile & Sessions | BEHOLD." noindex={true} />
       <div className="relative z-10 max-w-7xl mx-auto px-0 md:px-4 sm:px-6 space-y-0 md:space-y-5 sm:space-y-6">
         {(isLoading || authLoading) ? (

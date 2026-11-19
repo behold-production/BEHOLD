@@ -1,6 +1,20 @@
 import React from 'react';
 import { Star, Heart, MapPin, Video, Building2, Home } from 'lucide-react';
 
+function formatCityLabel(rawCity) {
+  if (!rawCity) return 'Kochi, Kerala';
+  const str = String(rawCity).trim();
+  if (str.length > 25) {
+    if (/kochi/i.test(str) && /calicut/i.test(str)) return 'Kochi & Calicut, Kerala';
+    if (/kochi/i.test(str)) return 'Kochi, Kerala';
+    if (/calicut/i.test(str)) return 'Calicut, Kerala';
+    if (/trivandrum/i.test(str)) return 'Trivandrum, Kerala';
+    if (/bangalore|bengaluru/i.test(str)) return 'Bengaluru, Karnataka';
+    return str.split(',')[0].trim();
+  }
+  return str;
+}
+
 export default function MobileTherapistCard({
   therapist,
   isFavorite = false,
@@ -54,13 +68,13 @@ export default function MobileTherapistCard({
           </div>
 
           {/* Location & Reviews */}
-          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
-            <span className="inline-flex items-center gap-1 text-[11.5px] font-medium text-slate-700">
-              <MapPin className="h-3 w-3 text-[#0E7490]" />
-              {therapist.city || 'Kochi, Kerala'}
+          <div className="mt-1 flex items-center gap-x-1.5 text-xs text-slate-500 overflow-hidden">
+            <span className="inline-flex items-center gap-1 text-[11.5px] font-medium text-slate-700 truncate max-w-[175px]">
+              <MapPin className="h-3 w-3 shrink-0 text-[#0E7490]" />
+              <span className="truncate">{formatCityLabel(therapist.city)}</span>
             </span>
-            <span>•</span>
-            <span className="text-[11.5px] text-slate-400">
+            <span className="text-slate-300 shrink-0">•</span>
+            <span className="text-[11px] text-slate-400 shrink-0">
               ({therapist.reviews || 24} reviews)
             </span>
           </div>

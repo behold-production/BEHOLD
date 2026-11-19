@@ -560,19 +560,26 @@ export default function App() {
         </Suspense>
       )}
  
-      {/* Navbar — desktop header; on mobile, native app header is used on app screens */}
-      {!hideNavbarAndFooter && (
-        <div className={location.pathname === '/' || location.pathname === '/profile' ? 'hidden md:block' : ''}>
-          <Navbar
-            navigateToSection={navigateToSection}
-            currentView={location.pathname}
-            onOpenAuth={() => setIsAuthModalOpen(true)}
-            onOpenBooking={handleOpenGeneralBooking}
-            siteName={siteSettings.siteName}
-            siteSettings={siteSettings}
-          />
-        </div>
-      )}
+      {/* Navbar — desktop header; on mobile, native app header is used on native app screens */}
+      {!hideNavbarAndFooter && (() => {
+        const isNativeMobileHeader = location.pathname === '/' ||
+          location.pathname === '/profile' ||
+          location.pathname.startsWith('/advisor/') ||
+          location.pathname.startsWith('/counsellor/');
+
+        return (
+          <div className={isNativeMobileHeader ? 'hidden md:block' : ''}>
+            <Navbar
+              navigateToSection={navigateToSection}
+              currentView={location.pathname}
+              onOpenAuth={() => setIsAuthModalOpen(true)}
+              onOpenBooking={handleOpenGeneralBooking}
+              siteName={siteSettings.siteName}
+              siteSettings={siteSettings}
+            />
+          </div>
+        );
+      })()}
  
 
       <Suspense fallback={

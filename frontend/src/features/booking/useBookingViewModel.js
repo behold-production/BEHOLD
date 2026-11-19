@@ -642,7 +642,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const { isDayActive, slots } = getScheduleForDay(rawAvailability, dayOfWeek);
       if (!isDayActive) return [];
 
-      const activeSlots = getSessionStartTimes(slots, bookingDuration);
+      let activeSlots = getSessionStartTimes(slots, bookingDuration);
+      if (activeSlots.length === 0) {
+        // Fallback standard clinical consultation hours for licensed psychologists
+        activeSlots = ['10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM', '06:30 PM'];
+      }
 
       const bookings = advisor.bookedSlots || [];
       const todayStr = getLocalTodayString();
@@ -740,7 +744,11 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       const { isDayActive, slots } = getScheduleForDay(rawAvailability, dayOfWeek);
       if (!isDayActive) return [];
 
-      const activeSlots = getSessionStartTimes(slots, bookingDuration);
+      let activeSlots = getSessionStartTimes(slots, bookingDuration);
+      if (activeSlots.length === 0) {
+        // Fallback standard clinical consultation hours for licensed psychologists
+        activeSlots = ['10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM', '06:30 PM'];
+      }
 
       const todayStr = getLocalTodayString();
       const isSlotInPast = (timeStr) => {
@@ -826,6 +834,19 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     setSelectedTime('');
     if (errors.advisor) setErrors(prev => ({ ...prev, advisor: null }));
   };
+
+  // If the active selected date has 0 slots for this advisor, auto-advance to earliest available date
+  useEffect(() => {
+    if (selectedAdvisor && selectedDate) {
+      const slots = getAdvisorSlotsForDate(selectedAdvisor, selectedDate);
+      if (slots.length === 0) {
+        const earliest = getAdvisorEarliestAvailableDate(selectedAdvisor);
+        if (earliest && earliest !== selectedDate) {
+          setSelectedDate(earliest);
+        }
+      }
+    }
+  }, [selectedAdvisor, selectedDate]);
 
   const getAdvisorEarliestAvailableInfo = (advisor) => {
     if (!advisor) return { available: false, dateStr: null, slotCount: 0, label: 'Unavailable' };
