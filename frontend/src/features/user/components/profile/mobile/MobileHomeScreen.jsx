@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Bell, MapPin, Search, ChevronRight, 
-  Sparkles, HeartHandshake, Users, Smile, ShieldAlert, ArrowRight, Video
+  Sparkles, HeartHandshake, Users, Smile, ShieldAlert, ArrowRight, Video, User
 } from 'lucide-react';
 import ApiService from '../../../../../services/api';
 import MobileTherapistCard from './MobileTherapistCard';
@@ -10,7 +10,7 @@ import MobileLocationModal from './MobileLocationModal';
 
 const SPECIALTIES = [
   { id: 'all', name: 'All', icon: Sparkles },
-  { id: 'individual', name: 'Individual', icon: Sparkles },
+  { id: 'individual', name: 'Individual', icon: User },
   { id: 'anxiety', name: 'Anxiety', icon: HeartHandshake },
   { id: 'couples', name: 'Couples', icon: Users },
   { id: 'child', name: 'Child Care', icon: Smile },
@@ -227,7 +227,7 @@ export default function MobileHomeScreen({
           </button>
         </div>
 
-        <div className="flex gap-3 overflow-x-auto pb-2 pr-6 overscroll-x-contain scrollbar-none">
+        <div className="-mx-4 px-4 flex gap-3.5 overflow-x-auto pt-2.5 pb-2 scrollbar-none overscroll-x-contain">
           {SPECIALTIES.map((spec) => {
             const isSelected = selectedSpecialty === spec.name;
             const Icon = spec.icon;
@@ -236,18 +236,20 @@ export default function MobileHomeScreen({
                 key={spec.id}
                 type="button"
                 onClick={() => setSelectedSpecialty(isSelected ? 'All' : spec.name)}
-                className="flex flex-col items-center gap-1.5 shrink-0 transition-all duration-200 active:scale-95 cursor-pointer border-none bg-transparent"
+                className="flex flex-col items-center gap-2 shrink-0 transition-all duration-200 active:scale-95 cursor-pointer border-none bg-transparent group w-[64px]"
               >
                 <div
-                  className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-200 ${
+                  className={`flex h-[56px] w-[56px] items-center justify-center rounded-full transition-all duration-300 ${
                     isSelected
-                      ? 'bg-[#0E7490] text-white shadow-md shadow-[#0E7490]/25 ring-2 ring-[#0E7490] ring-offset-2 scale-105'
-                      : 'bg-white text-[#0E7490] border border-slate-200/90 shadow-2xs hover:border-[#0E7490]/40 hover:bg-[#0E7490]/5'
+                      ? 'bg-[#0E7490] text-white shadow-lg shadow-[#0E7490]/35 scale-105 ring-2 ring-[#0E7490] ring-offset-2'
+                      : 'bg-white text-[#0E7490] border border-slate-200/90 shadow-2xs group-hover:border-[#0E7490]/50 group-hover:bg-[#0E7490]/5'
                   }`}
                 >
-                  <Icon className="h-6 w-6" />
+                  <Icon className="h-6 w-6 transition-transform duration-200 group-hover:scale-110" />
                 </div>
-                <span className={`text-[11.5px] whitespace-nowrap transition-colors ${isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-600 font-medium'}`}>
+                <span className={`text-[11.5px] whitespace-nowrap transition-colors tracking-tight text-center ${
+                  isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-700 font-semibold'
+                }`}>
                   {spec.name}
                 </span>
               </button>
