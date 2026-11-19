@@ -57,6 +57,7 @@ const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
 const PsychologistsPage = lazyWithRetry(() => import('../features/counsellor/PsychologistsPage'));
 const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingPage'));
 const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
+const MobileHomeContainer = lazyWithRetry(() => import('../features/student/components/profile/mobile/MobileHomeContainer'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
 
@@ -567,16 +568,18 @@ export default function App() {
         </Suspense>
       )}
  
-      {/* Navbar — hidden on admin/counsellor dashboards */}
+      {/* Navbar — desktop header only; mobile app uses native app header and bottom nav */}
       {!hideNavbarAndFooter && (
-        <Navbar
-          navigateToSection={navigateToSection}
-          currentView={location.pathname}
-          onOpenAuth={() => setIsAuthModalOpen(true)}
-          onOpenBooking={handleOpenGeneralBooking}
-          siteName={siteSettings.siteName}
-          siteSettings={siteSettings}
-        />
+        <div className="hidden md:block">
+          <Navbar
+            navigateToSection={navigateToSection}
+            currentView={location.pathname}
+            onOpenAuth={() => setIsAuthModalOpen(true)}
+            onOpenBooking={handleOpenGeneralBooking}
+            siteName={siteSettings.siteName}
+            siteSettings={siteSettings}
+          />
+        </div>
       )}
  
 
@@ -598,17 +601,25 @@ export default function App() {
         <Routes>
           {/* Public landing page */}
           <Route path="/" element={
-            <main className="fade-in-up bg-[#FBF8F1] text-[#0E1111]">
-              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
-              <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
-              <Reviews siteSettings={siteSettings} />
-              <BlogSection siteSettings={siteSettings} />
-              <HomeOfferSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              <Faq siteSettings={siteSettings} />
-              {siteSettings.enableInquiry !== false && (
-                <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              )}
-            </main>
+            <>
+              {/* Mobile Viewport — CarePro Native Mobile HomeScreen with AppNavBar */}
+              <div className="block md:hidden">
+                <MobileHomeContainer onOpenBooking={handleBookTherapist} />
+              </div>
+
+              {/* Desktop Viewport — Editorial Landscape Landing Page */}
+              <main className="hidden md:block fade-in-up bg-[#FBF8F1] text-[#0E1111]">
+                <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
+                <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
+                <Reviews siteSettings={siteSettings} />
+                <BlogSection siteSettings={siteSettings} />
+                <HomeOfferSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+                <Faq siteSettings={siteSettings} />
+                {siteSettings.enableInquiry !== false && (
+                  <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+                )}
+              </main>
+            </>
           } />
 
           {/* About Page Route */}
@@ -762,19 +773,21 @@ export default function App() {
 
 
 
-      {/* Footer */}
+      {/* Footer — desktop only; mobile app uses native bottom app navigation */}
       {!hideNavbarAndFooter && (
-        <Footer
-          navigateToSection={navigateToSection}
-          siteName={siteSettings.siteName}
-          siteCopyright={siteSettings.siteCopyright}
-          onOpenDocs={(docType) => setActiveDocType(docType)}
-          enablePsychology={siteSettings.enablePsychology !== false}
-          enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
-          siteSettings={siteSettings}
-          hideCta={location.pathname === '/'}
-          onOpenBooking={handleOpenGeneralBooking}
-        />
+        <div className="hidden md:block">
+          <Footer
+            navigateToSection={navigateToSection}
+            siteName={siteSettings.siteName}
+            siteCopyright={siteSettings.siteCopyright}
+            onOpenDocs={(docType) => setActiveDocType(docType)}
+            enablePsychology={siteSettings.enablePsychology !== false}
+            enableCareerMentoring={siteSettings.enableCareerMentoring !== false}
+            siteSettings={siteSettings}
+            hideCta={location.pathname === '/'}
+            onOpenBooking={handleOpenGeneralBooking}
+          />
+        </div>
       )}
  
       {/* Terms & Privacy Documents Modal */}

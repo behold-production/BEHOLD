@@ -18,6 +18,8 @@ import ApiService from '../../services/api';
 import { formatExperience } from '../../utils/formatters';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
 import SEO from '../../components/common/SEO';
+import MobileFindDoctorScreen from '../student/components/profile/mobile/MobileFindDoctorScreen';
+import MobileAppNavBar from '../student/components/profile/mobile/MobileAppNavBar';
 
 const getInitial = (name = '') => {
   const cleanName = (typeof name === 'string' ? name : '').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
@@ -185,7 +187,25 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
         canonicalUrl="https://www.behold.co.in/psychologists"
       />
 
-      <div className="min-h-screen bg-[#fbf8f1] text-[#0e1111] pt-24 sm:pt-28 pb-20 relative">
+      {/* Mobile Screen Experience — CarePro FindDoctorScreen */}
+      <div className="block md:hidden">
+        <MobileFindDoctorScreen
+          onBack={() => navigate(-1)}
+          onOpenBooking={onBookTherapist}
+        />
+        <MobileAppNavBar
+          activeTab={0}
+          onTabChange={(tab) => {
+            if (tab === 0) navigate('/');
+            else if (tab === 1) navigate('/profile?tab=booked');
+            else if (tab === 2) navigate('/profile?tab=records');
+            else if (tab === 3) navigate('/profile?tab=details');
+          }}
+        />
+      </div>
+
+      {/* Desktop Screen Experience — Directory View */}
+      <div className="hidden md:block min-h-screen bg-[#fbf8f1] text-[#0e1111] pt-24 sm:pt-28 pb-20 relative">
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb Navigation */}
           <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs font-medium text-[#55605f]">
