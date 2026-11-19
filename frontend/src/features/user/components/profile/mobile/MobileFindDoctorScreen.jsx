@@ -4,6 +4,7 @@ import {
   ChevronLeft, Search, MapPin, ChevronDown
 } from 'lucide-react';
 import ApiService from '../../../../../services/api';
+import { DEFAULT_FALLBACK_COUNSELLORS } from '../../../../../utils/fallbackSpecialists';
 import MobileTherapistCard from './MobileTherapistCard';
 import MobileLocationModal from './MobileLocationModal';
 
@@ -75,8 +76,44 @@ export default function MobileFindDoctorScreen({
   });
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [therapists, setTherapists] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [therapists, setTherapists] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_counsellors_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((c) => ({
+            id: c.id || c._id,
+            name: c.name || c.user?.name || 'Licensed Psychologist',
+            designation: c.title || c.designation || 'Clinical Psychologist',
+            rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
+            reviews: c.reviews || c.reviewCount || 28,
+            photo: c.profilePic || c.photo || c.avatar,
+            specialties: inferSpecialties(c),
+            city: c.city || c.locationName || 'Kochi, Kerala',
+            modes: c.modes || ['ONLINE', 'OFFLINE'],
+            bio: c.bio || c.about || '',
+            price: c.price || 899,
+          }));
+        }
+      }
+    } catch {}
+    return DEFAULT_FALLBACK_COUNSELLORS.map((c) => ({
+      id: c.id || c._id,
+      name: c.name,
+      designation: c.title,
+      rating: Number(c.rating).toFixed(1),
+      reviews: c.reviews,
+      photo: c.profilePic || '',
+      specialties: inferSpecialties(c),
+      city: c.city,
+      modes: c.modes,
+      bio: c.bio,
+      price: c.price,
+    }));
+  });
+
+  const [isLoading, setIsLoading] = useState(() => therapists.length === 0);
   const [favorites, setFavorites] = useState(() => {
     try {
       const saved = localStorage.getItem('behold_fav_therapists');
@@ -108,23 +145,27 @@ export default function MobileFindDoctorScreen({
       .then((res) => {
         if (!isMounted) return;
         const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
-        setTherapists(
-          list.map((c) => ({
-            id: c.id || c._id,
-            name: c.name || c.user?.name || 'Licensed Psychologist',
-            designation: c.title || c.designation || 'Clinical Psychologist',
-            rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
-            reviews: c.reviews || c.reviewCount || 28,
-            photo: c.profilePic || c.photo || c.avatar,
-            specialties: inferSpecialties(c),
-            city: c.city || c.locationName || 'Kochi, Kerala',
-            modes: c.modes || ['ONLINE', 'OFFLINE'],
-            bio: c.bio || c.about || '',
-            price: c.price || 899,
-          }))
-        );
+        if (list.length > 0) {
+          setTherapists(
+            list.map((c) => ({
+              id: c.id || c._id,
+              name: c.name || c.user?.name || 'Licensed Psychologist',
+              designation: c.title || c.designation || 'Clinical Psychologist',
+              rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
+              reviews: c.reviews || c.reviewCount || 28,
+              photo: c.profilePic || c.photo || c.avatar,
+              specialties: inferSpecialties(c),
+              city: c.city || c.locationName || 'Kochi, Kerala',
+              modes: c.modes || ['ONLINE', 'OFFLINE'],
+              bio: c.bio || c.about || '',
+              price: c.price || 899,
+            }))
+          );
+        }
       })
-      .catch(() => {})
+      .catch((err) => {
+        console.warn('Specialist live list notice:', err);
+      })
       .finally(() => {
         if (isMounted) setIsLoading(false);
       });
@@ -253,10 +294,23 @@ export default function MobileFindDoctorScreen({
         </div>
 
         {/* Doctor List */}
-        {isLoading ? (
+        {isLoading && filtered.length === 0 ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 rounded-2xl bg-white border border-slate-200 animate-pulse" />
+              <div key={i} className="rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-xs animate-pulse">
+                <div className="flex items-start gap-3">
+                  <div className="h-16 w-16 rounded-2xl bg-slate-100 shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-slate-100 rounded-md w-3/4" />
+                    <div className="h-3 bg-slate-100 rounded-md w-1/2" />
+                    <div className="h-3 bg-slate-100 rounded-md w-1/3" />
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <div className="h-6 w-20 bg-slate-100 rounded-lg" />
+                  <div className="h-8 w-28 bg-slate-100 rounded-xl" />
+                </div>
+              </div>
             ))}
           </div>
         ) : filtered.length > 0 ? (

@@ -4,6 +4,7 @@ import { ArrowRight, BadgeCheck, Star, UserRound } from 'lucide-react';
 import ApiService from '../../services/api';
 import SectionHeading from './SectionHeading';
 import { formatExperience } from '../../utils/formatters';
+import { DEFAULT_FALLBACK_COUNSELLORS } from '../../utils/fallbackSpecialists';
 
 const getInitial = (name = '') => {
   const cleanName = (typeof name === 'string' ? name : '').replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.)\s+/i, '').trim();
@@ -54,8 +55,19 @@ function isPublicAdvisor(advisor) {
 export default function TherapistSwipeSection({ onBookTherapist }) {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('All');
-  const [advisors, setAdvisors] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [advisors, setAdvisors] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_counsellors_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.filter(isPublicAdvisor).map(normalizeAdvisor);
+        }
+      }
+    } catch {}
+    return DEFAULT_FALLBACK_COUNSELLORS.map(normalizeAdvisor);
+  });
+  const [loading, setLoading] = useState(() => advisors.length === 0);
   const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
@@ -64,16 +76,15 @@ export default function TherapistSwipeSection({ onBookTherapist }) {
       .then((response) => {
         if (!isMounted) return;
         if (response?.success && Array.isArray(response.data) && response.data.length > 0) {
-          setAdvisors(response.data.filter(isPublicAdvisor).map(normalizeAdvisor));
-        } else {
-          setAdvisors([]);
+          const list = response.data.filter(isPublicAdvisor).map(normalizeAdvisor);
+          if (list.length > 0) {
+            setAdvisors(list);
+            setFetchError(false);
+          }
         }
       })
-      .catch(() => {
-        if (isMounted) {
-          setAdvisors([]);
-          setFetchError(true);
-        }
+      .catch((err) => {
+        console.warn('Live team fetch notice, retaining directory:', err);
       })
       .finally(() => {
         if (isMounted) setLoading(false);

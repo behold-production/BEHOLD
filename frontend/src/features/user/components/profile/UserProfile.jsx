@@ -109,37 +109,65 @@ export default function UserProfile({ onOpenBooking }) {
       <SEO title="My Profile & Sessions | BEHOLD." noindex={true} />
       <div className="relative z-10 max-w-7xl mx-auto px-0 md:px-4 sm:px-6 space-y-0 md:space-y-5 sm:space-y-6">
         {(isLoading || authLoading) ? (
-          <div className="animate-pulse space-y-5 sm:space-y-6 p-4 md:p-0">
-            <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-[#e6dfd0]">
-              <div className="w-20 h-20 rounded-2xl bg-[#e6dfd0] shrink-0"></div>
-              <div className="flex-1 w-full space-y-3">
-                <div className="h-6 bg-[#e6dfd0] rounded-xl w-1/3"></div>
-                <div className="h-4 bg-[#e6dfd0] rounded-xl w-1/4"></div>
-                <div className="flex gap-4 mt-4">
-                  <div className="h-4 bg-[#e6dfd0] rounded-xl w-24"></div>
-                  <div className="h-4 bg-[#e6dfd0] rounded-xl w-24"></div>
+          <>
+            {/* Mobile Native Loading Skeleton */}
+            <div className="block md:hidden min-h-screen bg-[#F8FAFC] p-4 space-y-4 animate-pulse">
+              <div className="flex items-center justify-between pt-2">
+                <div className="space-y-1">
+                  <div className="h-3 w-24 bg-slate-200 rounded" />
+                  <div className="h-6 w-36 bg-slate-200 rounded-md" />
                 </div>
+                <div className="h-10 w-10 bg-slate-200 rounded-2xl" />
+              </div>
+              <div className="h-11 bg-white rounded-2xl border border-slate-200" />
+              <div className="flex gap-3 overflow-x-hidden pt-1">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex flex-col items-center gap-1.5 shrink-0">
+                    <div className="h-14 w-14 rounded-2xl bg-white border border-slate-200" />
+                    <div className="h-2.5 w-10 bg-slate-200 rounded" />
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-3 pt-2">
+                {[1, 2].map((i) => (
+                  <div key={i} className="h-28 rounded-2xl bg-white border border-slate-200" />
+                ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-              <aside className="lg:col-span-3">
-                <div className="bg-white border border-[#e6dfd0] rounded-2xl p-3 space-y-2">
-                  <div className="h-10 bg-[#e6dfd0] rounded-xl w-full"></div>
-                  <div className="h-10 bg-[#e6dfd0] rounded-xl w-full"></div>
-                  <div className="h-10 bg-[#e6dfd0] rounded-xl w-full"></div>
+            {/* Desktop Skeleton */}
+            <div className="hidden md:block animate-pulse space-y-5 sm:space-y-6 p-4 md:p-0">
+              <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-[#e6dfd0]">
+                <div className="w-20 h-20 rounded-2xl bg-[#e6dfd0] shrink-0"></div>
+                <div className="flex-1 w-full space-y-3">
+                  <div className="h-6 bg-[#e6dfd0] rounded-xl w-1/3"></div>
+                  <div className="h-4 bg-[#e6dfd0] rounded-xl w-1/4"></div>
+                  <div className="flex gap-4 mt-4">
+                    <div className="h-4 bg-[#e6dfd0] rounded-xl w-24"></div>
+                    <div className="h-4 bg-[#e6dfd0] rounded-xl w-24"></div>
+                  </div>
                 </div>
-              </aside>
-              <main className="lg:col-span-9 space-y-5">
-                <div className="h-8 bg-[#e6dfd0] rounded-xl w-1/4 mb-4"></div>
-                <div className="h-32 bg-[#e6dfd0] rounded-xl w-full"></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="h-24 bg-[#e6dfd0] rounded-xl w-full"></div>
-                  <div className="h-24 bg-[#e6dfd0] rounded-xl w-full"></div>
-                </div>
-              </main>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                <aside className="lg:col-span-3">
+                  <div className="bg-white border border-[#e6dfd0] rounded-2xl p-3 space-y-2">
+                    <div className="h-10 bg-[#e6dfd0] rounded-xl w-full"></div>
+                    <div className="h-10 bg-[#e6dfd0] rounded-xl w-full"></div>
+                    <div className="h-10 bg-[#e6dfd0] rounded-xl w-full"></div>
+                  </div>
+                </aside>
+                <main className="lg:col-span-9 space-y-5">
+                  <div className="h-8 bg-[#e6dfd0] rounded-xl w-1/4 mb-4"></div>
+                  <div className="h-32 bg-[#e6dfd0] rounded-xl w-full"></div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="h-24 bg-[#e6dfd0] rounded-xl w-full"></div>
+                    <div className="h-24 bg-[#e6dfd0] rounded-xl w-full"></div>
+                  </div>
+                </main>
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           <>
             {/* Native Mobile App Experience (Matching CarePro PatientShell) */}

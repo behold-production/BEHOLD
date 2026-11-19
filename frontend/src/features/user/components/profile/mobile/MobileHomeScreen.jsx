@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import ApiService from '../../../../../services/api';
 import { formatDateString } from '../../../../../utils/dateFormatter';
+import { DEFAULT_FALLBACK_COUNSELLORS } from '../../../../../utils/fallbackSpecialists';
 import MobileTherapistCard from './MobileTherapistCard';
 import MobileLocationModal from './MobileLocationModal';
 
@@ -77,7 +78,43 @@ export default function MobileHomeScreen({
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [therapists, setTherapists] = useState([]);
+  
+  const [therapists, setTherapists] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_counsellors_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((c) => ({
+            id: c.id || c._id,
+            name: c.name || c.user?.name || 'Licensed Psychologist',
+            designation: c.title || c.designation || 'Clinical Psychologist',
+            rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
+            reviews: c.reviews || c.reviewCount || 28,
+            photo: c.profilePic || c.photo || c.avatar,
+            specialties: inferSpecialties(c),
+            city: c.city || c.locationName || 'Kochi, Kerala',
+            modes: c.modes || ['ONLINE', 'OFFLINE'],
+            bio: c.bio || c.about || '',
+          }));
+        }
+      }
+    } catch {}
+    return DEFAULT_FALLBACK_COUNSELLORS.map((c) => ({
+      id: c.id || c._id,
+      name: c.name,
+      designation: c.title,
+      rating: Number(c.rating).toFixed(1),
+      reviews: c.reviews,
+      photo: c.profilePic || '',
+      specialties: inferSpecialties(c),
+      city: c.city,
+      modes: c.modes,
+      bio: c.bio,
+    }));
+  });
+
+  const [isLoading, setIsLoading] = useState(() => therapists.length === 0);
   const [favorites, setFavorites] = useState(() => {
     try {
       const saved = localStorage.getItem('behold_fav_therapists');
@@ -109,22 +146,29 @@ export default function MobileHomeScreen({
       .then((res) => {
         if (!isMounted) return;
         const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
-        setTherapists(
-          list.map((c) => ({
-            id: c.id || c._id,
-            name: c.name || c.user?.name || 'Licensed Psychologist',
-            designation: c.title || c.designation || 'Clinical Psychologist',
-            rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
-            reviews: c.reviews || c.reviewCount || 28,
-            photo: c.profilePic || c.photo || c.avatar,
-            specialties: inferSpecialties(c),
-            city: c.city || c.locationName || 'Kochi, Kerala',
-            modes: c.modes || ['ONLINE', 'OFFLINE'],
-            bio: c.bio || c.about || '',
-          }))
-        );
+        if (list.length > 0) {
+          setTherapists(
+            list.map((c) => ({
+              id: c.id || c._id,
+              name: c.name || c.user?.name || 'Licensed Psychologist',
+              designation: c.title || c.designation || 'Clinical Psychologist',
+              rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
+              reviews: c.reviews || c.reviewCount || 28,
+              photo: c.profilePic || c.photo || c.avatar,
+              specialties: inferSpecialties(c),
+              city: c.city || c.locationName || 'Kochi, Kerala',
+              modes: c.modes || ['ONLINE', 'OFFLINE'],
+              bio: c.bio || c.about || '',
+            }))
+          );
+        }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.warn('Live advisor fetch notice:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
     return () => { isMounted = false; };
   }, []);
 
@@ -330,7 +374,26 @@ export default function MobileHomeScreen({
           </button>
         </div>
 
-        {filteredTherapists.length > 0 ? (
+        {isLoading && filteredTherapists.length === 0 ? (
+          <div className="space-y-3">
+            {[1, 2].map((i) => (
+              <div key={i} className="rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-xs animate-pulse">
+                <div className="flex items-start gap-3">
+                  <div className="h-16 w-16 rounded-2xl bg-slate-100 shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-slate-100 rounded-md w-3/4" />
+                    <div className="h-3 bg-slate-100 rounded-md w-1/2" />
+                    <div className="h-3 bg-slate-100 rounded-md w-1/3" />
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <div className="h-6 w-20 bg-slate-100 rounded-lg" />
+                  <div className="h-8 w-28 bg-slate-100 rounded-xl" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredTherapists.length > 0 ? (
           filteredTherapists.slice(0, 4).map((doc) => (
             <MobileTherapistCard
               key={doc.id}

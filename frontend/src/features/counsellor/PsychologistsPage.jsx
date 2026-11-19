@@ -17,6 +17,7 @@ import {
 import ApiService from '../../services/api';
 import { formatExperience } from '../../utils/formatters';
 import { calculateNextAvailable } from '../../utils/dateFormatter';
+import { DEFAULT_FALLBACK_COUNSELLORS } from '../../utils/fallbackSpecialists';
 import SEO from '../../components/common/SEO';
 
 const getInitial = (name = '') => {
@@ -95,8 +96,19 @@ function isPublicAdvisor(advisor) {
 
 export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }) {
   const navigate = useNavigate();
-  const [advisors, setAdvisors] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [advisors, setAdvisors] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_counsellors_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.filter(isPublicAdvisor).map(normalizeAdvisor);
+        }
+      }
+    } catch {}
+    return DEFAULT_FALLBACK_COUNSELLORS.map(normalizeAdvisor);
+  });
+  const [loading, setLoading] = useState(() => advisors.length === 0);
   const [fetchError, setFetchError] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,13 +123,14 @@ export default function PsychologistsPage({ onBookTherapist, siteSettings = {} }
         if (!isMounted) return;
         if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
           const active = res.data.filter(isPublicAdvisor).map(normalizeAdvisor);
-          setAdvisors(active);
-        } else {
-          setAdvisors([]);
+          if (active.length > 0) {
+            setAdvisors(active);
+            setFetchError(false);
+          }
         }
       })
-      .catch(() => {
-        if (isMounted) { setAdvisors([]); setFetchError(true); }
+      .catch((err) => {
+        console.warn('Live psychologists directory notice, retaining cached list:', err);
       })
       .finally(() => {
         if (isMounted) setLoading(false);

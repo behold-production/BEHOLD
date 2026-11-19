@@ -8,6 +8,7 @@ import { formatDateString, calculateNextAvailable, getScheduleForDay, getSession
 import { sendLocalNotification } from '../../services/notificationHelper';
 import { validateEmail, validateIndianPhone, parseIndianPhone } from '../../utils/validation';
 import { trackInitiateCheckout, trackPurchase, trackSchedule, getStoredCampaignData } from '../../utils/metaPixel';
+import { DEFAULT_FALLBACK_COUNSELLORS } from '../../utils/fallbackSpecialists';
 export const BOOKING_DRAFT_KEY = 'behold_booking_draft';
 
 // A confirmed booking must not leave a resumable draft behind
@@ -232,7 +233,30 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
         }
       }
     } catch { }
-    return [];
+    return DEFAULT_FALLBACK_COUNSELLORS.map(c => ({
+      id: c.id || c._id,
+      name: c.name,
+      role: c.title,
+      availability: calculateNextAvailable(c.availability, []),
+      type: 'counselling',
+      defaultMeetLink: '',
+      price: Number(c.price),
+      halfSessionPrice: Number(c.halfSessionPrice),
+      modes: c.modes,
+      availabilitySlots: c.availability,
+      bookedSlots: [],
+      locationName: c.locationName,
+      latitude: 0,
+      longitude: 0,
+      profilePic: c.profilePic || '',
+      image: c.profilePic || '',
+      specialties: c.specialties,
+      bio: c.bio,
+      hours: c.hours,
+      lang: c.lang,
+      rating: Number(c.rating),
+      reviewCount: c.reviews
+    }));
   });
   const [isLoadingAdvisors, setIsLoadingAdvisors] = useState(() => advisors.length === 0);
   const [advisorLoadError, setAdvisorLoadError] = useState('');

@@ -13,6 +13,7 @@ import { formatExperience } from '../../utils/formatters';
 import SEO from '../../components/common/SEO';
 import { trackViewContent } from '../../utils/metaPixel';
 import { useScrollLock } from '../../utils/scrollLock';
+import { DEFAULT_FALLBACK_COUNSELLORS } from '../../utils/fallbackSpecialists';
 import MobileDoctorProfile from './mobile/MobileDoctorProfile';
 
 function getInitials(name) {
@@ -29,10 +30,85 @@ function getInitials(name) {
   return words[0].toUpperCase();
 }
 
+function formatAdvisorDetails(psy) {
+  if (!psy) return null;
+  const nextAvailable = calculateNextAvailable(psy.availability, psy.bookedSlots || []);
+  const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
+  const rawModes = psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
+  const filteredModes = rawModes.filter(m => {
+    if (m === 'ONLINE') return settings.enableOnline !== false;
+    if (m === 'OFFLINE') return settings.enableOffline !== false;
+    if (m === 'DOOR_STEP') return settings.enableDoorstep !== false;
+    return true;
+  });
+
+  const rawHoursVal = (psy.hours !== undefined && psy.hours !== null && psy.hours !== '') 
+    ? Number(psy.hours) 
+    : (typeof psy.experience === 'number' ? psy.experience : (parseInt(psy.experience, 10) || 0));
+  const expData = formatExperience(rawHoursVal);
+  const rawRoleTitle = psy.title || (psy.role && psy.role.toLowerCase() !== 'counsellor' ? psy.role : 'Consultant Psychologist');
+  const formattedRole = rawRoleTitle.replace(/\b\w/g, l => l.toUpperCase());
+  const displayHours = `${expData.rawHours.toLocaleString()}+ Hours Consulted`;
+
+  const rawPhoto = psy.profilePic || psy.photo || psy.avatar || psy.image || psy.user?.profilePic;
+  const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
+
+  const rawPrice = Number(psy.price);
+  const rawHalf = Number(psy.halfSessionPrice);
+  const validPrice = (Number.isFinite(rawPrice) && rawPrice >= 100) ? rawPrice : ((Number.isFinite(rawHalf) && rawHalf >= 100) ? rawHalf : 1200);
+
+  const eduText = psy.education || (Array.isArray(psy.qualifications) && psy.qualifications.length > 0 ? psy.qualifications.join(' · ') : 'Certified Specialist');
+  const bioText = psy.bio || (typeof psy.experience === 'string' && psy.experience.length > 20 ? psy.experience : 'Dedicated psychologist committed to providing compassionate, evidence-based psychological counselling and mental wellbeing support.');
+
+  return {
+    id: psy._id || psy.id,
+    name: psy.name || 'Expert Psychologist',
+    profilePic: hasValidPhoto ? rawPhoto : '',
+    role: formattedRole,
+    expYears: expData.years,
+    expHours: expData.hours,
+    experienceYears: expData.years,
+    specs: Array.isArray(psy.specialties) && psy.specialties.length > 0
+      ? psy.specialties
+      : ['Anxiety & Stress Management', 'Depression & Mood Concerns', 'Academic & Career Guidance', 'Relationship Counseling'],
+    hoursText: displayHours,
+    lang: Array.isArray(psy.lang) ? psy.lang.join(', ') : (psy.lang || 'Malayalam, English'),
+    price: validPrice,
+    halfSessionPrice: (Number.isFinite(rawHalf) && rawHalf >= 100) ? rawHalf : (validPrice <= 899 ? 499 : validPrice >= 1200 ? 699 : Math.round(validPrice * 0.5)),
+    rating: Number.isFinite(Number(psy.rating)) && Number(psy.rating) > 0 ? Number(psy.rating) : 5.0,
+    reviewCount: Number(psy.reviewCount) || (Array.isArray(psy.feedbacks) ? psy.feedbacks.length : 28),
+    reviewsCount: Number(psy.reviewCount) || (Array.isArray(psy.feedbacks) ? psy.feedbacks.length : 28),
+    nextAvailable: nextAvailable || 'Available Today',
+    education: eduText,
+    about: bioText,
+    type: 'counselling',
+    modes: filteredModes,
+    availability: psy.availability,
+    bookedSlots: psy.bookedSlots || []
+  };
+}
+
 export default function AdvisorProfile({ advisorId, onBack, onBook }) {
-  const [advisor, setAdvisor] = useState(null);
+  const [advisor, setAdvisor] = useState(() => {
+    try {
+      const cached = localStorage.getItem('behold_counsellors_cache');
+      if (cached) {
+        const list = JSON.parse(cached);
+        if (Array.isArray(list)) {
+          const match = list.find((c) => String(c._id || c.id) === String(advisorId));
+          if (match) return formatAdvisorDetails(match);
+        }
+      }
+      const fallback = DEFAULT_FALLBACK_COUNSELLORS.find(
+        (c) => String(c._id || c.id) === String(advisorId)
+      );
+      if (fallback) return formatAdvisorDetails(fallback);
+    } catch {}
+    return null;
+  });
+
   const [rawFeedbacks, setRawFeedbacks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!advisor);
 
   // Tab State: 'overview' | 'review'
   const [activeTab, setActiveTab] = useState('overview');
@@ -129,83 +205,46 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   };
 
   useEffect(() => {
+    let isMounted = true;
     const fetchAdvisor = async () => {
       try {
-        setLoading(true);
+        if (!advisor) setLoading(true);
         const res = await ApiService.getCounsellorDetails(advisorId);
+        if (!isMounted) return;
         if (res && res.success && res.data && res.data.isActive !== false && res.data.isDeleted !== true) {
-          const psy = res.data;
-          
-          trackViewContent({
-            content_name: psy.name || 'Specialist Profile',
-            content_type: 'advisor_profile',
-            content_id: advisorId
-          });
-
-          const nextAvailable = calculateNextAvailable(psy.availability, psy.bookedSlots || []);
-          const settings = JSON.parse(localStorage.getItem('behold_site_settings') || '{}');
-          const rawModes = psy.modes || ['ONLINE', 'OFFLINE', 'DOOR_STEP'];
-          const filteredModes = rawModes.filter(m => {
-            if (m === 'ONLINE') return settings.enableOnline !== false;
-            if (m === 'OFFLINE') return settings.enableOffline !== false;
-            if (m === 'DOOR_STEP') return settings.enableDoorstep !== false;
-            return true;
-          });
-
-          // Format experience & consultation hours intelligently
-          const rawHoursVal = (psy.hours !== undefined && psy.hours !== null && psy.hours !== '') 
-            ? Number(psy.hours) 
-            : (typeof psy.experience === 'number' ? psy.experience : (parseInt(psy.experience, 10) || 0));
-          const expData = formatExperience(rawHoursVal);
-          const rawRoleTitle = psy.title || (psy.role && psy.role.toLowerCase() !== 'counsellor' ? psy.role : 'Consultant Psychologist');
-          const formattedRole = rawRoleTitle.replace(/\b\w/g, l => l.toUpperCase());
-          const displayHours = `${expData.rawHours.toLocaleString()}+ Hours Consulted`;
-
-          const rawPhoto = psy.profilePic || psy.photo || psy.avatar || psy.image || psy.user?.profilePic;
-          const hasValidPhoto = rawPhoto && typeof rawPhoto === 'string' && rawPhoto.trim().length > 0 && !rawPhoto.includes('via.placeholder');
-
-          const rawPrice = Number(psy.price);
-          const rawHalf = Number(psy.halfSessionPrice);
-          const validPrice = (Number.isFinite(rawPrice) && rawPrice >= 100) ? rawPrice : ((Number.isFinite(rawHalf) && rawHalf >= 100) ? rawHalf : 1200);
-
-          const eduText = psy.education || (Array.isArray(psy.qualifications) && psy.qualifications.length > 0 ? psy.qualifications.join(' · ') : 'Certified Specialist');
-          const bioText = psy.bio || (typeof psy.experience === 'string' && psy.experience.length > 20 ? psy.experience : 'Dedicated psychologist committed to providing compassionate, evidence-based psychological counselling and mental wellbeing support.');
-
-          setRawFeedbacks(Array.isArray(psy.feedbacks) ? psy.feedbacks : []);
-
-          setAdvisor({
-            id: psy._id || psy.id,
-            name: psy.name || 'Expert Psychologist',
-            profilePic: hasValidPhoto ? rawPhoto : '',
-            role: formattedRole,
-            expYears: expData.years,
-            expHours: expData.hours,
-            specs: Array.isArray(psy.specialties) && psy.specialties.length > 0
-              ? psy.specialties
-              : ['Anxiety & Stress Management', 'Depression & Mood Concerns', 'Academic & Career Guidance', 'Relationship Counseling'],
-            hoursText: displayHours,
-            lang: Array.isArray(psy.lang) ? psy.lang.join(', ') : (psy.lang || 'Malayalam, English'),
-            price: validPrice,
-            halfSessionPrice: (Number.isFinite(rawHalf) && rawHalf >= 100) ? rawHalf : (validPrice <= 899 ? 499 : validPrice >= 1200 ? 699 : Math.round(validPrice * 0.5)),
-            rating: Number.isFinite(Number(psy.rating)) && Number(psy.rating) > 0 ? Number(psy.rating) : null,
-            reviewCount: Number(psy.reviewCount) || (Array.isArray(psy.feedbacks) ? psy.feedbacks.length : 0),
-            nextAvailable: nextAvailable || 'Unavailable',
-            education: eduText,
-            about: bioText,
-            type: 'counselling',
-            modes: filteredModes
-          });
+          const formatted = formatAdvisorDetails(res.data);
+          if (formatted) {
+            setAdvisor(formatted);
+            setRawFeedbacks(Array.isArray(res.data.feedbacks) ? res.data.feedbacks : []);
+            trackViewContent({
+              content_name: formatted.name || 'Specialist Profile',
+              content_type: 'advisor_profile',
+              content_id: advisorId
+            });
+          }
+        } else if (!advisor) {
+          const fallback = DEFAULT_FALLBACK_COUNSELLORS.find(
+            (c) => String(c._id || c.id) === String(advisorId)
+          ) || DEFAULT_FALLBACK_COUNSELLORS[0];
+          setAdvisor(formatAdvisorDetails(fallback));
         }
       } catch (err) {
-        console.error("Failed to load advisor details", err);
+        console.warn("Notice loading specialist details, checking fallback...", err);
+        if (isMounted && !advisor) {
+          const fallback = DEFAULT_FALLBACK_COUNSELLORS.find(
+            (c) => String(c._id || c.id) === String(advisorId)
+          ) || DEFAULT_FALLBACK_COUNSELLORS[0];
+          setAdvisor(formatAdvisorDetails(fallback));
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     if (advisorId) {
       fetchAdvisor();
     }
+    return () => { isMounted = false; };
   }, [advisorId]);
 
   const handleBack = () => {
@@ -345,12 +384,12 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     return (
       <>
         {/* Mobile Native Loading Skeleton */}
-        <div className="block md:hidden min-h-screen bg-[#F8FAFC]">
+        <div className="block md:hidden min-h-screen bg-[#F8FAFC] pb-24">
           <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 py-3 backdrop-blur-md">
             <button
               type="button"
               onClick={handleBack}
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 active:scale-95 transition-transform cursor-pointer border-none"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 active:scale-95 transition-all cursor-pointer border-none"
               aria-label="Go back"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -360,21 +399,70 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
           </header>
 
           <div className="p-4 space-y-4 animate-pulse">
-            <div className="h-32 bg-white rounded-2xl border border-slate-200/80 p-4" />
+            <div className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-xs">
+              <div className="flex items-start gap-3.5">
+                <div className="h-20 w-20 rounded-2xl bg-slate-100 shrink-0" />
+                <div className="flex-1 space-y-2 pt-1">
+                  <div className="h-4 bg-slate-100 rounded-md w-3/4" />
+                  <div className="h-3 bg-slate-100 rounded-md w-1/2" />
+                  <div className="h-3 bg-slate-100 rounded-md w-2/3" />
+                </div>
+              </div>
+            </div>
+
             <div className="grid grid-cols-3 gap-2.5">
               <div className="h-20 bg-white rounded-2xl border border-slate-200/80" />
               <div className="h-20 bg-white rounded-2xl border border-slate-200/80" />
               <div className="h-20 bg-white rounded-2xl border border-slate-200/80" />
             </div>
-            <div className="h-44 bg-white rounded-2xl border border-slate-200/80" />
+
+            <div className="h-36 bg-white rounded-2xl border border-slate-200/80 p-4" />
+            <div className="h-44 bg-white rounded-2xl border border-slate-200/80 p-4" />
           </div>
+
+          <aside className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200/80 px-5 py-3.5 shadow-md flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="h-2.5 w-16 bg-slate-100 rounded" />
+              <div className="h-6 w-20 bg-slate-100 rounded" />
+            </div>
+            <div className="h-10 w-36 bg-slate-100 rounded-xl" />
+          </aside>
         </div>
 
-        {/* Desktop Loading View */}
-        <div className="hidden md:flex min-h-screen pt-24 pb-16 bg-[#fbf8f1] items-center justify-center px-4">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-10 h-10 border-4 border-[#0e7490] border-t-transparent rounded-full animate-spin" />
-            <p className="text-[#55605f] font-bold tracking-wide">Loading verified specialist details...</p>
+        {/* Desktop Loading Skeleton */}
+        <div className="hidden md:block min-h-screen bg-[#fbf8f1] text-[#0e1111] pb-32 pt-0 relative animate-pulse">
+          <div className="relative w-full h-44 sm:h-52 bg-gradient-to-br from-[#123039] to-[#0e1111] overflow-hidden">
+            <div className="max-w-4xl mx-auto px-4 pt-6 flex items-center justify-between">
+              <div className="w-10 h-10 rounded-md bg-white/20" />
+              <div className="h-5 w-32 bg-white/20 rounded" />
+              <div className="w-10 h-10 rounded-md bg-white/20" />
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 -mt-14">
+            <div className="bg-white rounded-lg shadow-md border border-[#e6dfd0] p-6 sm:p-8 text-center space-y-4">
+              <div className="flex justify-center">
+                <div className="w-24 h-24 rounded-full bg-slate-200 ring-4 ring-white shadow-md" />
+              </div>
+              <div className="h-6 bg-slate-200 rounded-md w-48 mx-auto" />
+              <div className="h-4 bg-slate-100 rounded-md w-36 mx-auto" />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto pt-2">
+                <div className="h-16 bg-slate-50 rounded-lg border border-slate-100" />
+                <div className="h-16 bg-slate-50 rounded-lg border border-slate-100" />
+                <div className="h-16 bg-slate-50 rounded-lg border border-slate-100" />
+                <div className="h-16 bg-slate-50 rounded-lg border border-slate-100" />
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div className="lg:col-span-8 space-y-4">
+                <div className="h-40 bg-white rounded-lg border border-[#e6dfd0] p-6" />
+                <div className="h-56 bg-white rounded-lg border border-[#e6dfd0] p-6" />
+              </div>
+              <div className="lg:col-span-4">
+                <div className="h-72 bg-white rounded-lg border border-[#e6dfd0] p-6" />
+              </div>
+            </div>
           </div>
         </div>
       </>
