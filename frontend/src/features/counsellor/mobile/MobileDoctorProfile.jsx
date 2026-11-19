@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { 
-  ChevronLeft, Star, Award, Users, ShieldCheck, 
-  MapPin, CheckCircle2, Share2, Bookmark, Info, Calendar, Plus
+  ChevronLeft, Star, Award, Users, 
+  MapPin, CheckCircle2, Bookmark, Plus
 } from 'lucide-react';
+import { getScheduleForDay, getSessionStartTimes, hasOverlappingBooking } from '../../../utils/dateFormatter';
 
 /**
  * MobileDoctorProfile
@@ -19,15 +20,82 @@ export default function MobileDoctorProfile({
 }) {
   const [isBioExpanded, setIsBioExpanded] = useState(false);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+  const [selectedSlot, setSelectedSlot] = useState('');
 
-  const availabilityDays = [
-    { day: 'MON', date: '16', available: true },
-    { day: 'TUE', date: '17', available: true },
-    { day: 'WED', date: '18', available: true },
-    { day: 'THU', date: '19', available: true },
-    { day: 'FRI', date: '20', available: true },
-    { day: 'SAT', date: '21', available: true },
-  ];
+  // Dynamically compute 7 days starting from CURRENT DATE (Today)
+  const availabilityDays = useMemo(() => {
+    const days = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dayNum = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${y}-${m}-${dayNum}`;
+      const dayShort = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+      const dayOfWeek = d.getDay();
+
+      const schedule = getScheduleForDay(advisor.availability, dayOfWeek);
+      const isAvailable = schedule.isDayActive;
+
+      days.push({
+        day: i === 0 ? 'TODAY' : dayShort,
+        date: String(d.getDate()),
+        dateStr,
+        dayOfWeek,
+        available: isAvailable,
+        rawSlots: schedule.slots || []
+      });
+    }
+    return days;
+  }, [advisor.availability]);
+
+  const activeDay = availabilityDays[selectedDayIndex] || availabilityDays[0];
+
+  const availableSlotsForDay = useMemo(() => {
+    if (!activeDay) return [];
+    const raw = activeDay.rawSlots;
+    const baseSlots = Array.isArray(raw) && raw.length > 0
+      ? getSessionStartTimes(raw, 60, 30)
+      : ['10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM', '06:30 PM'];
+
+    const booked = advisor.bookedSlots || [];
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const isToday = activeDay.dateStr === todayStr;
+    const nowMinutes = today.getHours() * 60 + today.getMinutes();
+
+    return baseSlots.filter((time) => {
+      if (hasOverlappingBooking(activeDay.dateStr, time, 60, booked)) return false;
+
+      if (isToday) {
+        try {
+          const [t, mod] = time.split(' ');
+          let [h, min] = t.split(':').map(Number);
+          if (mod === 'PM' && h < 12) h += 12;
+          if (mod === 'AM' && h === 12) h = 0;
+          const slotMinutes = h * 60 + min;
+          if (slotMinutes <= nowMinutes + 15) return false;
+        } catch {}
+      }
+
+      return true;
+    });
+  }, [activeDay, advisor.bookedSlots]);
+
+  const handleBook = () => {
+    try {
+      const draft = {
+        selectedAdvisorId: advisor.id || advisor._id,
+        selectedDate: activeDay?.dateStr,
+        selectedTime: selectedSlot || availableSlotsForDay[0] || '',
+        advisorConfirmed: true
+      };
+      sessionStorage.setItem('behold_booking_draft', JSON.stringify(draft));
+    } catch {}
+    if (onBook) onBook(advisor);
+  };
 
   const initial = (advisor?.name || 'D').charAt(0).toUpperCase();
   const bio = advisor.about || advisor.bio || 'Compassionate licensed clinical psychologist specializing in cognitive behavioral therapy, anxiety management, and personal growth counseling.';
@@ -167,13 +235,16 @@ export default function MobileDoctorProfile({
               const isSelected = selectedDayIndex === idx;
               return (
                 <button
-                  key={`${item.day}-${item.date}`}
+                  key={item.dateStr}
                   type="button"
-                  onClick={() => setSelectedDayIndex(idx)}
-                  className={`flex flex-col items-center rounded-xl px-3 py-2 text-xs font-bold transition-all shrink-0 ${
+                  onClick={() => {
+                    setSelectedDayIndex(idx);
+                    setSelectedSlot('');
+                  }}
+                  className={`flex flex-col items-center rounded-xl px-3 py-2 text-xs font-bold transition-all shrink-0 cursor-pointer ${
                     isSelected
                       ? 'bg-[#0E7490] text-white shadow-xs'
-                      : 'bg-slate-50 text-slate-600 border border-slate-200/60'
+                      : 'bg-slate-50 text-slate-600 border border-slate-200/60 hover:bg-slate-100'
                   }`}
                 >
                   <span className="text-[10px] font-medium">{item.day}</span>
@@ -181,6 +252,42 @@ export default function MobileDoctorProfile({
                 </button>
               );
             })}
+          </div>
+
+          {/* Time Slots for Selected Day */}
+          <div className="mt-3.5 pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-bold text-slate-700">
+                {activeDay?.day === 'TODAY' ? 'Today' : activeDay?.day}, {activeDay?.date}
+              </span>
+              <span className="text-[10.5px] text-slate-400 font-medium">
+                {availableSlotsForDay.length} open slots
+              </span>
+            </div>
+
+            {availableSlotsForDay.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {availableSlotsForDay.map((slot) => {
+                  const isSlotSelected = selectedSlot === slot;
+                  return (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => setSelectedSlot(slot)}
+                      className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all cursor-pointer border ${
+                        isSlotSelected
+                          ? 'bg-[#0E7490] text-white border-[#0E7490] shadow-xs'
+                          : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-[#0E7490]/40'
+                      }`}
+                    >
+                      {slot}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-xs text-slate-400 italic py-1">No open slots remaining for this date.</p>
+            )}
           </div>
         </div>
 
@@ -236,7 +343,7 @@ export default function MobileDoctorProfile({
 
             <button
               type="button"
-              onClick={onBook}
+              onClick={handleBook}
               className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[#0E7490] px-5 py-2.5 text-sm font-bold text-white shadow-xs transition-all hover:bg-[#0B5C73] active:scale-95 cursor-pointer border-none"
             >
               <span>Book Consultation</span>

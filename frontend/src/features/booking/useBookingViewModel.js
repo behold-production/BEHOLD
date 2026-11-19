@@ -137,16 +137,17 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     return defaultForm;
   });
   const [selectedDate, setSelectedDate] = useState(() => {
+    const todayStr = getLocalTodayString();
     if (typeof window !== 'undefined') {
       try {
         const raw = sessionStorage.getItem(BOOKING_DRAFT_KEY);
         if (raw) {
           const draft = JSON.parse(raw);
-          if (draft.selectedDate) return draft.selectedDate;
+          if (draft.selectedDate && draft.selectedDate >= todayStr) return draft.selectedDate;
         }
       } catch { }
     }
-    return getLocalTodayString();
+    return todayStr;
   });
   const [selectedTime, setSelectedTime] = useState(() => {
     if (typeof window !== 'undefined') {

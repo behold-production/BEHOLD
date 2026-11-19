@@ -5,6 +5,7 @@ import {
   Sparkles, HeartHandshake, Users, Smile, ShieldAlert, ArrowRight, Video, User
 } from 'lucide-react';
 import ApiService from '../../../../../services/api';
+import { formatDateString } from '../../../../../utils/dateFormatter';
 import MobileTherapistCard from './MobileTherapistCard';
 import MobileLocationModal from './MobileLocationModal';
 
@@ -239,7 +240,7 @@ export default function MobileHomeScreen({
               Next Session
             </span>
             <span className="text-[11px] text-cyan-200 font-medium">
-              {nextSession.date || nextSession.slotDate}
+              {formatDateString(nextSession.date || nextSession.slotDate)}
             </span>
           </div>
 

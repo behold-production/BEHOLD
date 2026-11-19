@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Calendar, Clock, Video, FileText, Download, Star, XCircle, RefreshCw } from 'lucide-react';
+import { formatDateString } from '../../../../../utils/dateFormatter';
 
 export default function MobileAppointmentsScreen({
   bookedSessions = [],
@@ -116,7 +117,7 @@ export default function MobileAppointmentsScreen({
             const sid = session._id || session.id || session.bookingId;
             const therapistName = session.counsellorName || session.therapistName || session.advisorName || 'Clinical Psychologist';
             const initial = therapistName.charAt(0);
-            const dateStr = session.date || session.slotDate || 'Scheduled Date';
+            const dateStr = formatDateString(session.date || session.slotDate) || 'Scheduled Date';
             const timeStr = session.time || session.slotTime || 'Scheduled Time';
             const mode = session.sessionType || session.mode || 'Online Video';
             const isReviewed = submittedFeedbackIds?.has?.(sid);
