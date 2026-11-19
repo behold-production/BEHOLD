@@ -18,9 +18,15 @@ export default function HomeOfferSection({ siteSettings = {}, onOpenBooking }) {
     ? 'Personalised psychological care and professional counselling support, delivered with clinical rigour and complete confidentiality.'
     : rawDescription;
   const ctaText = getFirstText(settings.counselBtnText, settings.heroBtnText);
-  const stats = Array.isArray(settings.aboutStats)
+  const defaultAboutStats = [
+    { value: '100%', label: 'Confidential & Secure' },
+    { value: '50+', label: 'Verified Specialists' },
+    { value: '10k+', label: 'Consultations Done' },
+    { value: '4.9/5', label: 'Client Satisfaction' },
+  ];
+  const stats = (Array.isArray(settings.aboutStats) && settings.aboutStats.length > 0)
     ? settings.aboutStats.filter((stat) => stat && (stat.value || stat.label)).slice(0, 4)
-    : [];
+    : defaultAboutStats;
 
   const handleBook = () => {
     if (typeof onOpenBooking === 'function') onOpenBooking();

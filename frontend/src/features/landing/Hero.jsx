@@ -19,7 +19,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
 
   const headline = getFirstText(
     settings.heroTitle,
-    'Your Mental Wellness, From the Comfort of Your Home'
+    "it's okay to be\nNot okay"
   )
     .replace(/\\n/g, '\n')
     .replace(/[{}]/g, '');
@@ -31,19 +31,25 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
 
   const rawDescription = getFirstText(
     settings.heroSub,
-    'Professional online counselling tailored to your needs — accessible, compassionate, and confidential.'
+    'Professional psychological counseling, mental wellness guidance, and personal support designed to help individuals thrive with confidence and purpose.'
   );
   const description = rawDescription
     .replace(/,?\s*aptitude assessment,?\s*and\s*career mentorship/gi, '')
     .replace(/career mentorship|aptitude|cdat/gi, 'professional counselling');
 
   const buttonText = getFirstText(settings.heroBtnText, 'Book an Appointment');
-  const eyebrow = getFirstText(settings.heroEyebrow, 'Licensed Clinical Psychologists').replace(/\s+/g, ' ');
+  const eyebrow = getFirstText(settings.heroEyebrow, '').replace(/\s+/g, ' ');
   const heroImage = getFirstText(settings.heroBgImage) || heroFallbackImage;
-  const phone = getFirstText(settings.contactPhone);
-  const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
+  const phone = getFirstText(settings.contactPhone, '9400090106');
+  const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : 'tel:9400090106';
 
-  const stats = Array.isArray(settings.heroStats)
+  const defaultStats = [
+    { num: '100+', label: 'Clients Guided' },
+    { num: '98%', label: 'Clarity & Peace' },
+    { num: '50+', label: 'Certified Mentors' },
+  ];
+
+  const stats = (Array.isArray(settings.heroStats) && settings.heroStats.length > 0)
     ? settings.heroStats
         .filter((stat) => stat && (stat.num || stat.label))
         .map((stat) => ({
@@ -51,7 +57,7 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
           label: (stat.label || '').replace(/students/gi, 'Clients').replace(/student/gi, 'Client'),
         }))
         .slice(0, 3)
-    : [];
+    : defaultStats;
 
   // The bar is built from however many stats the admin saved plus an optional
   // phone cell — the column count follows the cell count so no empty cell
