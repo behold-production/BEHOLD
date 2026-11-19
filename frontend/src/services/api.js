@@ -41,15 +41,40 @@ const getCampaignParams = () => {
   }
 };
 
-let envUrl = (typeof process !== 'undefined' && (process.env.NEXT_PUBLIC_API_URL || process.env.VITE_API_URL)) ||
-  (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_API_URL || import.meta.env.NEXT_PUBLIC_API_URL)) ||
-  '/api';
+const resolveBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+    const isPrivateIp = /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
+                        /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
+                        /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname);
 
-if (envUrl && !envUrl.endsWith('/api') && envUrl !== '/api') {
-  // Trim trailing slash before appending /api
-  envUrl = envUrl.endsWith('/') ? `${envUrl}api` : `${envUrl}/api`;
-}
-const BASE_URL = envUrl;
+    // If on a public domain (like behold.co.in or Vercel preview), NEVER connect to an internal private LAN IP
+    if (!isLocalhost && !isPrivateIp) {
+      return '/api';
+    }
+  }
+
+  let envUrl = (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_API_URL || import.meta.env.NEXT_PUBLIC_API_URL)) ||
+    (typeof process !== 'undefined' && (process.env.NEXT_PUBLIC_API_URL || process.env.VITE_API_URL)) ||
+    '/api';
+
+  if (!envUrl || typeof envUrl !== 'string' || envUrl.trim() === '') {
+    return '/api';
+  }
+
+  // Prevent mixed content when frontend is running on HTTPS
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:' && envUrl.startsWith('http://')) {
+    return '/api';
+  }
+
+  if (envUrl && !envUrl.endsWith('/api') && envUrl !== '/api') {
+    envUrl = envUrl.endsWith('/') ? `${envUrl}api` : `${envUrl}/api`;
+  }
+  return envUrl;
+};
+
+const BASE_URL = resolveBaseUrl();
 
 export const getApiUrl = () => BASE_URL;
 
@@ -93,7 +118,10 @@ async function executeRequest(endpoint, options = {}) {
     const errorMsg = controller.signal.aborted && !options.signal?.aborted
       ? 'The server did not respond in time. Please try again.'
       : 'Network error occurred. Please verify your connection.';
-    if (typeof window !== 'undefined') toast.error(errorMsg, { id: 'network-error' });
+    const isMutation = options.method && options.method !== 'GET';
+    if (!options.silent && isMutation && typeof window !== 'undefined') {
+      toast.error(errorMsg, { id: 'network-error' });
+    }
     throw new Error(errorMsg, { cause: err });
   } finally {
     clearTimeout(timeoutId);
@@ -1050,12 +1078,15 @@ const ApiService = {
     if (!forceRefresh && this._faqsCache && (Date.now() - this._faqsCacheTime < 10 * 60 * 1000)) {
       return this._faqsCache;
     }
-    const res = await request('/faqs', { forceRefresh });
-    if (res && res.success) {
-      this._faqsCache = res;
-      this._faqsCacheTime = Date.now();
-    }
-    return res;
+    try {
+      const res = await request('/faqs', { forceRefresh, silent: true });
+      if (res && res.success) {
+        this._faqsCache = res;
+        this._faqsCacheTime = Date.now();
+        return res;
+      }
+    } catch {}
+    return { success: true, data: [], isFallback: true };
   },
 
   // Settings //
@@ -1065,12 +1096,24 @@ const ApiService = {
     if (!forceRefresh && this._settingsCache && (Date.now() - this._settingsCacheTime < 10 * 60 * 1000)) {
       return this._settingsCache;
     }
-    const res = await request('/settings', { forceRefresh });
-    if (res && res.success) {
-      this._settingsCache = res;
-      this._settingsCacheTime = Date.now();
+    try {
+      const res = await request('/settings', { forceRefresh, silent: true });
+      if (res && res.success && res.data) {
+        this._settingsCache = res;
+        this._settingsCacheTime = Date.now();
+        try { safeStorage.setItem('behold_site_settings', JSON.stringify(res.data)); } catch {}
+        return res;
+      }
+    } catch {}
+
+    const saved = safeStorage.getItem('behold_site_settings');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return { success: true, data: parsed, fromCache: true };
+      } catch {}
     }
-    return res;
+    return { success: true, data: {}, isFallback: true };
   },
 
   async getPublicSettings(forceRefresh = false) {

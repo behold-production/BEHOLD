@@ -33,9 +33,9 @@ async function connectDB() {
 
   dbPromise = mongoose
     .connect(targetUri, {
-      serverSelectionTimeoutMS: 15000,
-      connectTimeoutMS: 20000,
-      socketTimeoutMS: 45000
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 8000,
+      socketTimeoutMS: 20000
     })
     .then((mongooseInstance) => {
       isConnected = true;

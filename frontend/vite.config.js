@@ -12,6 +12,13 @@ export default defineConfig({
     host: true, // Expose to LAN so other devices can connect
     port: 5173,
     allowedHosts: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   },
   build: {
     chunkSizeWarningLimit: 1600,
