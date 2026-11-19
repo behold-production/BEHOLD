@@ -17,17 +17,38 @@ export default function MobileProfileScreen({
   handleEnableNotifications,
   onNavigateTab,
 }) {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [showHelplineModal, setShowHelplineModal] = useState(false);
 
-  const initial = (formData.name || profile.name || 'U').charAt(0).toUpperCase();
+  const initial = (formData.name || profile.name || user?.name || 'U').charAt(0).toUpperCase();
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out of your BEHOLD account?')) {
       logout();
     }
   };
+
+  if (!user) {
+    return (
+      <div className="pb-24 pt-8 px-4 bg-[#F8FAFC] min-h-screen text-slate-900 flex flex-col items-center justify-center text-center">
+        <div className="w-20 h-20 rounded-full bg-cyan-100/70 border-2 border-cyan-500/20 text-[#0E7490] flex items-center justify-center mb-4 shadow-sm">
+          <User className="w-10 h-10" />
+        </div>
+        <h2 className="text-xl font-extrabold text-slate-900 mb-2">Welcome to BEHOLD</h2>
+        <p className="text-xs text-slate-500 mb-6 max-w-xs leading-relaxed">
+          Sign in or create your account to view your bookings, therapeutic records, and personalized care plan.
+        </p>
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent('behold:open_auth'))}
+          className="w-full max-w-xs py-3 rounded-xl bg-[#0E7490] text-white text-xs font-bold shadow-md hover:bg-[#0B5C73] active:scale-95 transition-all cursor-pointer border-none"
+        >
+          Sign In / Register
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-24 pt-4 px-4 bg-[#F8FAFC] min-h-screen text-slate-900">

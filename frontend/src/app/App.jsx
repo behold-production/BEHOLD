@@ -57,6 +57,7 @@ const FaqsPage = lazyWithRetry(() => import('../features/faqs/FaqsPage'));
 const PsychologistsPage = lazyWithRetry(() => import('../features/counsellor/PsychologistsPage'));
 const AdLandingPage = lazyWithRetry(() => import('../features/landing/AdLandingPage'));
 const ThankYouPage = lazyWithRetry(() => import('../features/landing/ThankYouPage'));
+const MobilePatientShell = lazyWithRetry(() => import('../features/user/components/profile/mobile/MobilePatientShell'));
 const GoogleCallbackRedirect = lazyWithRetry(() => import('../components/common/GoogleCallbackRedirect'));
 const NotFound = lazyWithRetry(() => import('../components/common/NotFound'));
 
@@ -567,9 +568,9 @@ export default function App() {
         </Suspense>
       )}
  
-      {/* Navbar — hidden on mobile only when inside the native user app shell (/profile) */}
+      {/* Navbar — desktop header; on mobile, native app header is used on app screens */}
       {!hideNavbarAndFooter && (
-        <div className={location.pathname === '/profile' ? 'hidden md:block' : ''}>
+        <div className={location.pathname === '/' || location.pathname === '/profile' ? 'hidden md:block' : ''}>
           <Navbar
             navigateToSection={navigateToSection}
             currentView={location.pathname}
@@ -598,19 +599,31 @@ export default function App() {
         </div>
       }>
         <Routes>
-          {/* Public landing page (Responsive Mobile & Desktop) */}
+          {/* Public landing page */}
           <Route path="/" element={
-            <main className="fade-in-up bg-[#FBF8F1] text-[#0E1111]">
-              <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
-              <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
-              <Reviews siteSettings={siteSettings} />
-              <BlogSection siteSettings={siteSettings} />
-              <HomeOfferSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              <Faq siteSettings={siteSettings} />
-              {siteSettings.enableInquiry !== false && (
-                <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
-              )}
-            </main>
+            <>
+              {/* Mobile Viewport — CarePro Native Mobile App Shell */}
+              <div className="block md:hidden">
+                <MobilePatientShell
+                  onOpenBooking={handleBookTherapist}
+                  user={user}
+                  displayName={user?.name || user?.profile?.name || (user ? 'Client' : 'Friend')}
+                />
+              </div>
+
+              {/* Desktop Viewport — Editorial Landscape Landing Page */}
+              <main className="hidden md:block fade-in-up bg-[#FBF8F1] text-[#0E1111]">
+                <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
+                <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
+                <Reviews siteSettings={siteSettings} />
+                <BlogSection siteSettings={siteSettings} />
+                <HomeOfferSection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+                <Faq siteSettings={siteSettings} />
+                {siteSettings.enableInquiry !== false && (
+                  <ContactInquirySection siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
+                )}
+              </main>
+            </>
           } />
 
           {/* About Page Route */}
@@ -764,9 +777,9 @@ export default function App() {
 
 
 
-      {/* Footer — hidden on mobile only when inside the native user app shell (/profile) */}
+      {/* Footer — desktop footer; on mobile app screens, bottom app navbar is used */}
       {!hideNavbarAndFooter && (
-        <div className={location.pathname === '/profile' ? 'hidden md:block' : ''}>
+        <div className={location.pathname === '/' || location.pathname === '/profile' ? 'hidden md:block' : ''}>
           <Footer
             navigateToSection={navigateToSection}
             siteName={siteSettings.siteName}
@@ -846,9 +859,8 @@ export default function App() {
             else if (digits.length > 10) href = `https://wa.me/${digits}`;
           }
         }
-        const isProfilePage = location.pathname === '/profile' || location.pathname.startsWith('/profile');
         const isAdvisorPage = location.pathname.startsWith('/advisor/') || location.pathname.startsWith('/counsellor/');
-        const bottomOffset = isProfilePage ? 'bottom-20 md:bottom-6' : isAdvisorPage ? 'bottom-22 sm:bottom-24' : 'bottom-6 sm:bottom-6';
+        const bottomOffset = isAdvisorPage ? 'bottom-22 sm:bottom-24' : 'bottom-[5rem] md:bottom-6';
         return (
           <a
             href={href}

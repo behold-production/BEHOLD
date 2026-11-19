@@ -4,6 +4,7 @@ import MobileHomeScreen from './MobileHomeScreen';
 import MobileAppointmentsScreen from './MobileAppointmentsScreen';
 import MobileRecordsScreen from './MobileRecordsScreen';
 import MobileProfileScreen from './MobileProfileScreen';
+import MobileFindDoctorScreen from './MobileFindDoctorScreen';
 
 /**
  * MobilePatientShell
@@ -34,11 +35,17 @@ export default function MobilePatientShell({
   handleEnableNotifications,
 }) {
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [findDoctorSpecialty, setFindDoctorSpecialty] = useState(null);
 
   // Sync with initialTab prop if updated from URL
   useEffect(() => {
     setActiveTab(initialTab);
   }, [initialTab]);
+
+  const handleTabChange = (tabId) => {
+    setFindDoctorSpecialty(null);
+    setActiveTab(tabId);
+  };
 
   const upcomingCount = bookedSessions.filter((s) => {
     const st = (s.status || '').toLowerCase();
@@ -49,60 +56,71 @@ export default function MobilePatientShell({
     <div className="block md:hidden min-h-screen bg-[#F8FAFC]">
       {/* Active Screen */}
       <main className="min-h-screen">
-        {activeTab === 0 && (
-          <MobileHomeScreen
-            displayName={displayName}
-            profile={profile}
-            nextSession={nextSession}
+        {findDoctorSpecialty !== null ? (
+          <MobileFindDoctorScreen
+            initialSpecialty={findDoctorSpecialty}
+            onBack={() => setFindDoctorSpecialty(null)}
             onOpenBooking={onOpenBooking}
-            onNavigateTab={setActiveTab}
-            onEnableNotifications={handleEnableNotifications}
           />
-        )}
+        ) : (
+          <>
+            {activeTab === 0 && (
+              <MobileHomeScreen
+                displayName={displayName}
+                profile={profile}
+                nextSession={nextSession}
+                onOpenBooking={onOpenBooking}
+                onNavigateTab={handleTabChange}
+                onEnableNotifications={handleEnableNotifications}
+                onOpenFindDoctor={(spec = 'All') => setFindDoctorSpecialty(spec)}
+              />
+            )}
 
-        {activeTab === 1 && (
-          <MobileAppointmentsScreen
-            bookedSessions={bookedSessions}
-            completedSessions={completedSessions}
-            onOpenBooking={onOpenBooking}
-            handleCancelSession={handleCancelSession}
-            downloadPDFReceiptForSession={downloadPDFReceiptForSession}
-            downloadConsultationReportPDF={downloadConsultationReportPDF}
-            onSubmitFeedback={onSubmitFeedback}
-            submittedFeedbackIds={submittedFeedbackIds}
-          />
-        )}
+            {activeTab === 1 && (
+              <MobileAppointmentsScreen
+                bookedSessions={bookedSessions}
+                completedSessions={completedSessions}
+                onOpenBooking={onOpenBooking}
+                handleCancelSession={handleCancelSession}
+                downloadPDFReceiptForSession={downloadPDFReceiptForSession}
+                downloadConsultationReportPDF={downloadConsultationReportPDF}
+                onSubmitFeedback={onSubmitFeedback}
+                submittedFeedbackIds={submittedFeedbackIds}
+              />
+            )}
 
-        {activeTab === 2 && (
-          <MobileRecordsScreen
-            completedSessions={completedSessions}
-            profile={profile}
-            formData={formData}
-            downloadPDFReceiptForSession={downloadPDFReceiptForSession}
-            downloadConsultationReportPDF={downloadConsultationReportPDF}
-            onNavigateTab={setActiveTab}
-          />
-        )}
+            {activeTab === 2 && (
+              <MobileRecordsScreen
+                completedSessions={completedSessions}
+                profile={profile}
+                formData={formData}
+                downloadPDFReceiptForSession={downloadPDFReceiptForSession}
+                downloadConsultationReportPDF={downloadConsultationReportPDF}
+                onNavigateTab={handleTabChange}
+              />
+            )}
 
-        {activeTab === 3 && (
-          <MobileProfileScreen
-            profile={profile}
-            formData={formData}
-            handleChange={handleChange}
-            handleSave={handleSave}
-            isSaving={isSaving}
-            handleProfilePicUpload={handleProfilePicUpload}
-            permissionState={permissionState}
-            handleEnableNotifications={handleEnableNotifications}
-            onNavigateTab={setActiveTab}
-          />
+            {activeTab === 3 && (
+              <MobileProfileScreen
+                profile={profile}
+                formData={formData}
+                handleChange={handleChange}
+                handleSave={handleSave}
+                isSaving={isSaving}
+                handleProfilePicUpload={handleProfilePicUpload}
+                permissionState={permissionState}
+                handleEnableNotifications={handleEnableNotifications}
+                onNavigateTab={handleTabChange}
+              />
+            )}
+          </>
         )}
       </main>
 
       {/* Bottom App Navigation Bar */}
       <MobileAppNavBar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         upcomingCount={upcomingCount}
       />
     </div>

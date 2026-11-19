@@ -16,6 +16,36 @@ const SPECIALTIES = [
   { id: 'trauma', name: 'Healing' },
 ];
 
+const SPECIALTY_KEYWORDS = {
+  all: [],
+  individual: ['individual', 'personal', 'cbt', 'adult', 'depression', 'therapy', 'counselling', 'psychology'],
+  anxiety: ['anxiety', 'stress', 'panic', 'phobia', 'fear', 'ocd', 'burnout', 'pressure'],
+  couples: ['couple', 'couples', 'relationship', 'marriage', 'partner', 'family', 'interpersonal', 'conflict', 'marital'],
+  'child care': ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
+  child: ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
+  healing: ['healing', 'trauma', 'ptsd', 'grief', 'recovery', 'loss', 'coping', 'wellness', 'emotional']
+};
+
+const inferSpecialties = (c) => {
+  const raw = Array.isArray(c.specialties) && c.specialties.length > 0
+    ? c.specialties
+    : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : (c.focus || c.areasOfExpertise || []));
+  const list = raw.filter((s) => typeof s === 'string' && s.trim());
+  if (list.length > 0) return list;
+
+  const text = `${c.bio || ''} ${c.about || ''} ${c.title || ''} ${c.designation || ''} ${c.role || ''}`.toLowerCase();
+  const inferred = [];
+  if (/couple|marriage|family|relationship|partner|marital/i.test(text)) inferred.push('Couples & Family');
+  if (/anxiety|stress|panic|phobia|ocd|depression|burnout/i.test(text)) inferred.push('Anxiety & Stress');
+  if (/child|adolescent|teen|youth|parent|pediatric|school/i.test(text)) inferred.push('Child Care');
+  if (/trauma|healing|ptsd|grief|loss|coping/i.test(text)) inferred.push('Emotional Healing');
+  if (/cbt|adult|personal|cognitive/i.test(text)) inferred.push('Individual CBT');
+
+  return inferred.length > 0
+    ? inferred
+    : ['Individual Therapy', 'Anxiety & Stress', 'Couples Counseling', 'Emotional Healing', 'Child Care'];
+};
+
 /**
  * MobileFindDoctorScreen
  * 1:1 mobile implementation of CarePro FindDoctorScreen (care_pro)
@@ -49,10 +79,11 @@ export default function MobileFindDoctorScreen({
             name: c.name || c.user?.name || 'Licensed Psychologist',
             designation: c.title || c.designation || 'Clinical Psychologist',
             rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
-            reviews: c.reviews || 28,
+            reviews: c.reviews || c.reviewCount || 28,
             photo: c.profilePic || c.photo || c.avatar,
-            specialties: Array.isArray(c.specialties) ? c.specialties : [c.specialization || 'Therapy'],
-            city: c.city || 'Kochi',
+            specialties: inferSpecialties(c),
+            city: c.city || c.locationName || 'Kochi',
+            bio: c.bio || c.about || '',
             price: c.price || 899,
           }))
         );
@@ -73,16 +104,31 @@ export default function MobileFindDoctorScreen({
   };
 
   const filtered = useMemo(() => {
-    return therapists.filter((t) => {
+    const list = therapists.filter((t) => {
+      const specKey = selectedSpecialty.toLowerCase();
+      const keywords = SPECIALTY_KEYWORDS[specKey] || [specKey];
+
+      const searchTarget = [
+        ...(t.specialties || []),
+        t.designation || '',
+        t.bio || '',
+        t.name || ''
+      ].join(' ').toLowerCase();
+
       const matchesSpec = selectedSpecialty === 'All' ||
-        t.specialties.some((s) => s.toLowerCase().includes(selectedSpecialty.toLowerCase())) ||
-        t.designation.toLowerCase().includes(selectedSpecialty.toLowerCase());
+        keywords.some((k) => searchTarget.includes(k));
+
       const matchesQuery = !searchQuery.trim() ||
         t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (t.specialties || []).some((s) => s.toLowerCase().includes(searchQuery.toLowerCase())) ||
         t.city.toLowerCase().includes(searchQuery.toLowerCase());
+
       return matchesSpec && matchesQuery;
     });
+
+    if (searchQuery.trim() && list.length === 0) return [];
+    return list.length > 0 ? list : therapists;
   }, [therapists, selectedSpecialty, searchQuery]);
 
   return (

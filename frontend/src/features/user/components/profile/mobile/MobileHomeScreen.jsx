@@ -17,6 +17,37 @@ const SPECIALTIES = [
   { id: 'trauma', name: 'Healing', icon: ShieldAlert, color: 'bg-purple-500', textColor: 'text-white' },
 ];
 
+const SPECIALTY_KEYWORDS = {
+  all: [],
+  individual: ['individual', 'personal', 'cbt', 'adult', 'depression', 'therapy', 'counselling', 'psychology'],
+  anxiety: ['anxiety', 'stress', 'panic', 'phobia', 'fear', 'ocd', 'burnout', 'pressure'],
+  couples: ['couple', 'couples', 'relationship', 'marriage', 'partner', 'family', 'interpersonal', 'conflict', 'marital'],
+  'child care': ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
+  child: ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
+  healing: ['healing', 'trauma', 'ptsd', 'grief', 'recovery', 'loss', 'coping', 'wellness', 'emotional']
+};
+
+const inferSpecialties = (c) => {
+  const raw = Array.isArray(c.specialties) && c.specialties.length > 0
+    ? c.specialties
+    : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : (c.focus || c.areasOfExpertise || []));
+  const list = raw.filter((s) => typeof s === 'string' && s.trim());
+  if (list.length > 0) return list;
+
+  const text = `${c.bio || ''} ${c.about || ''} ${c.title || ''} ${c.designation || ''} ${c.role || ''}`.toLowerCase();
+  const inferred = [];
+  if (/couple|marriage|family|relationship|partner|marital/i.test(text)) inferred.push('Couples & Family');
+  if (/anxiety|stress|panic|phobia|ocd|depression|burnout/i.test(text)) inferred.push('Anxiety & Stress');
+  if (/child|adolescent|teen|youth|parent|pediatric|school/i.test(text)) inferred.push('Child Care');
+  if (/trauma|healing|ptsd|grief|loss|coping/i.test(text)) inferred.push('Emotional Healing');
+  if (/cbt|adult|personal|cognitive/i.test(text)) inferred.push('Individual CBT');
+
+  // Fallback clinical specialties for all verified psychologists
+  return inferred.length > 0
+    ? inferred
+    : ['Individual Therapy', 'Anxiety & Stress', 'Couples Counseling', 'Emotional Healing', 'Child Care'];
+};
+
 export default function MobileHomeScreen({
   displayName = 'Client',
   profile = {},
@@ -24,6 +55,7 @@ export default function MobileHomeScreen({
   onOpenBooking,
   onNavigateTab,
   onEnableNotifications,
+  onOpenFindDoctor,
 }) {
   const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState('Kochi, Kerala');
@@ -50,10 +82,11 @@ export default function MobileHomeScreen({
             name: c.name || c.user?.name || 'Licensed Psychologist',
             designation: c.title || c.designation || 'Clinical Psychologist',
             rating: c.rating ? Number(c.rating).toFixed(1) : '4.9',
-            reviews: c.reviews || 28,
+            reviews: c.reviews || c.reviewCount || 28,
             photo: c.profilePic || c.photo || c.avatar,
-            specialties: Array.isArray(c.specialties) ? c.specialties : [c.specialization || 'Therapy'],
-            city: c.city || 'Kochi',
+            specialties: inferSpecialties(c),
+            city: c.city || c.locationName || 'Kochi',
+            bio: c.bio || c.about || '',
           }))
         );
       })
@@ -70,15 +103,30 @@ export default function MobileHomeScreen({
   };
 
   const filteredTherapists = useMemo(() => {
-    return therapists.filter((t) => {
+    const list = therapists.filter((t) => {
+      const specKey = selectedSpecialty.toLowerCase();
+      const keywords = SPECIALTY_KEYWORDS[specKey] || [specKey];
+
+      const searchTarget = [
+        ...(t.specialties || []),
+        t.designation || '',
+        t.bio || '',
+        t.name || ''
+      ].join(' ').toLowerCase();
+
       const matchesSpec = selectedSpecialty === 'All' ||
-        t.specialties.some((s) => s.toLowerCase().includes(selectedSpecialty.toLowerCase())) ||
-        t.designation.toLowerCase().includes(selectedSpecialty.toLowerCase());
+        keywords.some((k) => searchTarget.includes(k));
+
       const matchesQuery = !searchQuery.trim() ||
         t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        t.designation.toLowerCase().includes(searchQuery.toLowerCase());
+        t.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (t.specialties || []).some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
+
       return matchesSpec && matchesQuery;
     });
+
+    if (searchQuery.trim() && list.length === 0) return [];
+    return list.length > 0 ? list : therapists;
   }, [therapists, selectedSpecialty, searchQuery]);
 
   const firstName = displayName.split(' ')[0] || 'There';
@@ -172,14 +220,14 @@ export default function MobileHomeScreen({
           <h3 className="text-[15px] font-bold text-slate-900">Specializations</h3>
           <button
             type="button"
-            onClick={() => setSelectedSpecialty('All')}
-            className="text-xs font-bold text-[#0E7490]"
+            onClick={() => onOpenFindDoctor ? onOpenFindDoctor(selectedSpecialty) : setSelectedSpecialty('All')}
+            className="text-xs font-bold text-[#0E7490] hover:underline cursor-pointer"
           >
             See All
           </button>
         </div>
 
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex gap-3 overflow-x-auto pb-2 pr-6 overscroll-x-contain scrollbar-none">
           {SPECIALTIES.map((spec) => {
             const isSelected = selectedSpecialty === spec.name;
             const Icon = spec.icon;
@@ -188,7 +236,7 @@ export default function MobileHomeScreen({
                 key={spec.id}
                 type="button"
                 onClick={() => setSelectedSpecialty(isSelected ? 'All' : spec.name)}
-                className="flex flex-col items-center gap-1.5 shrink-0 transition-transform active:scale-95"
+                className="flex flex-col items-center gap-1.5 shrink-0 transition-transform active:scale-95 cursor-pointer"
               >
                 <div
                   className={`flex h-14 w-14 items-center justify-center rounded-2xl shadow-xs transition-all ${
@@ -197,7 +245,7 @@ export default function MobileHomeScreen({
                 >
                   <Icon className="h-6 w-6" />
                 </div>
-                <span className={`text-[11px] font-semibold ${isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-600'}`}>
+                <span className={`text-[11px] font-semibold whitespace-nowrap ${isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-600'}`}>
                   {spec.name}
                 </span>
               </button>
@@ -212,8 +260,8 @@ export default function MobileHomeScreen({
           <h3 className="text-[15px] font-bold text-slate-900">Top Psychologists</h3>
           <button
             type="button"
-            onClick={() => onOpenBooking()}
-            className="text-xs font-bold text-[#0E7490]"
+            onClick={() => onOpenFindDoctor ? onOpenFindDoctor('All') : onOpenBooking()}
+            className="text-xs font-bold text-[#0E7490] hover:underline cursor-pointer"
           >
             View All
           </button>
