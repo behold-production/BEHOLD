@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Download, Calendar, Activity, ShieldCheck, User } from 'lucide-react';
+import { FileText, Download, Calendar, Activity, ShieldCheck } from 'lucide-react';
 
 export default function MobileRecordsScreen({
   completedSessions = [],

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, User, Mail, Phone, Calendar, Heart, Activity } from 'lucide-react';
+import React from 'react';
+import { X, User, Mail, Phone } from 'lucide-react';
 
 export default function MobileEditProfileModal({
   isOpen,

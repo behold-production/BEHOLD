@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ChevronLeft, Search, SlidersHorizontal, Sparkles, 
-  HeartHandshake, Users, Smile, ShieldAlert, CheckCircle2 
+  ChevronLeft, Search
 } from 'lucide-react';
 import ApiService from '../../../../../services/api';
 import MobileTherapistCard from './MobileTherapistCard';

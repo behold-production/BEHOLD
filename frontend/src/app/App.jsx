@@ -1,17 +1,15 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
-import { MessageCircle, X, Download, ShieldAlert, Eye, EyeOff } from 'lucide-react'; //
+import { X, Download } from 'lucide-react';
 import { Toaster, useToasterStore, toast } from 'react-hot-toast';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import UnauthorizedFallback from '../features/admin/UnauthorizedFallback';
 import Navbar from '../components/common/Navbar';
-import BrandIcon from '../components/common/BrandIcon';
 import { useScrollLock } from '../utils/scrollLock';
 import Hero from '../features/landing/Hero';
 import Services from '../features/booking/Services';
 import About from '../features/landing/About';
 import Faq from '../features/landing/Faq';
-import Inquiry from '../features/landing/Inquiry';
 import Reviews from '../features/landing/Reviews';
 import PrivacyPolicy from '../features/landing/PrivacyPolicy';
 import Footer from '../components/common/Footer';
@@ -21,12 +19,8 @@ import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import BlogSection from '../features/landing/BlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
 import HomeOfferSection from '../features/landing/HomeOfferSection';
-import HomeValuesSection from '../features/landing/HomeValuesSection';
-import HomeClosingSection from '../features/landing/HomeClosingSection';
 import '../features/landing/user-home.css';
 import ActivitySheetView from '../features/user/ActivitySheetView';
-import globalBg from '../assets/greygreen.png';
-import globalBgTexture from '../assets/greygreen.png';
 
 function lazyWithRetry(importFn) { //
   return lazy(() =>
@@ -68,8 +62,6 @@ import {
   trackPageView,
   captureUtmParameters,
   trackContact,
-  trackLead,
-  trackSubmitApplication,
   setMetaUserData
 } from '../utils/metaPixel';
  

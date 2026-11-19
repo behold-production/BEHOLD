@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Camera, Edit3, User, Bell, FileText, Shield, 
+  Camera, Edit3, User, Bell, FileText, 
   PhoneCall, LogOut, ChevronRight, CheckCircle2 
 } from 'lucide-react';
 import { useAuth } from '../../../../../context/AuthContext';

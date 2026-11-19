@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Bell, MapPin, Search, SlidersHorizontal, ChevronRight, 
+  Bell, MapPin, Search, ChevronRight, 
   Sparkles, HeartHandshake, Users, Smile, ShieldAlert, ArrowRight, Video
 } from 'lucide-react';
 import ApiService from '../../../../../services/api';
