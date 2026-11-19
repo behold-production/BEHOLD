@@ -361,7 +361,7 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbf8f1] text-[#0e1111] pb-32 pt-0 animate-in fade-in duration-300 relative">
+    <div className="min-h-screen bg-[#fbf8f1] text-[#0e1111] pb-32 pt-0 relative">
       <SEO 
         title={`${advisor.name} | Doctor Details`}
         description={`Book an online session with ${advisor.name}, ${advisor.role}. ${advisor.about ? advisor.about.substring(0, 100) + '...' : ''}`}
@@ -987,9 +987,12 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
         document.body
       )}
 
-      {/* ── STICKY BOTTOM BOOKING CTA BAR (Fixed on Mobile, Desktop Responsive) ── */}
-      {enableBooking && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-[#e6dfd0] px-4 py-3 sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
+      {/* ── FIXED BOTTOM BOOKING CTA BAR (Viewport Fixed via Portal, Never Scrolls) ── */}
+      {enableBooking && typeof document !== 'undefined' && createPortal(
+        <aside
+          aria-label="Book Consultation Sticky Bar"
+          className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-[#e6dfd0] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:py-4 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]"
+        >
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
             
             {/* Fee summary left side */}
@@ -1016,7 +1019,8 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
             </button>
 
           </div>
-        </div>
+        </aside>,
+        document.body
       )}
 
     </div>
