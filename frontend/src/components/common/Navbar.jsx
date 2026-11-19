@@ -170,7 +170,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   return (
     <>
       {/* Top Text-Only Announcement Bar - Only shows when Admin enables & assigns details */}
-      {siteSettings?.showBanner && siteSettings?.bannerNotice && (
+      {siteSettings?.showBanner && siteSettings?.bannerNotice && location.pathname !== '/profile' && (
         <div className="bg-[#0e1111] text-[#d5cdbb] text-xs py-2 px-4 border-b border-[#050707] font-medium flex items-center justify-center gap-3 relative z-50">
           <span className="inline-block text-[#a5deea] bg-[#123039] px-2.5 py-0.5 rounded-md text-[11px] font-semibold border border-[#3c4747]">
             {siteSettings.bannerNotice}
@@ -195,7 +195,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
 
         return (
           <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${location.pathname === '/' ? 'bh-home-nav' : ''} ${isScrolled ? 'is-scrolled' : ''} ${isHomeTop
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${location.pathname === '/profile' ? 'hidden md:block' : ''} ${location.pathname === '/' ? 'bh-home-nav' : ''} ${isScrolled ? 'is-scrolled' : ''} ${isHomeTop
               ? 'bg-transparent border-none shadow-none text-[#0e1111]'
               : 'bg-white/90 backdrop-blur-md border-b border-[#e6dfd0]/60 shadow-sm text-[#0e1111]'
               }`}

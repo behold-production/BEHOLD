@@ -17,6 +17,7 @@ import SidebarNav from './SidebarNav';
 import OverviewTab from './OverviewTab';
 import ProfileDetailsTab from './ProfileDetailsTab';
 import BookedSessionsTab from './BookedSessionsTab';
+import MobilePatientShell from './mobile/MobilePatientShell';
 import SEO from '../../../../components/common/SEO';
 
 export default function StudentProfile({ onOpenBooking }) {
@@ -104,11 +105,11 @@ export default function StudentProfile({ onOpenBooking }) {
   const nextSession = bookedSessions[0];
 
   return (
-    <div className="pt-24 sm:pt-32 pb-24 lg:pb-12 min-h-screen bg-transparent text-[#0e1111] font-sans text-left relative overflow-hidden">
+    <div className="pt-0 md:pt-24 lg:pt-32 pb-0 md:pb-24 lg:pb-12 min-h-screen bg-transparent text-[#0e1111] font-sans text-left relative overflow-hidden">
       <SEO title="My Profile & Sessions | BEHOLD." noindex={true} />
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 space-y-5 sm:space-y-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-0 md:px-4 sm:px-6 space-y-0 md:space-y-5 sm:space-y-6">
         {(isLoading || authLoading) ? (
-          <div className="animate-pulse space-y-5 sm:space-y-6">
+          <div className="animate-pulse space-y-5 sm:space-y-6 p-4 md:p-0">
             <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-[#e6dfd0]">
               <div className="w-20 h-20 rounded-2xl bg-[#e6dfd0] shrink-0"></div>
               <div className="flex-1 w-full space-y-3">
@@ -141,78 +142,106 @@ export default function StudentProfile({ onOpenBooking }) {
           </div>
         ) : (
           <>
-            <div className={currentSection === 'overview' ? 'block' : 'hidden lg:block'}>
-              <HeroHeader
-                profile={profile}
-                user={user}
-                displayName={displayName}
-                greeting={greeting}
-                completion={completion}
-                stats={stats}
-                handleProfilePicUpload={handleProfilePicUpload}
-              />
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-              <aside className="lg:col-span-3 lg:sticky lg:top-24 lg:self-start">
-                <SidebarNav
-                  currentSection={currentSection}
-                  handleSectionChange={handleSectionChange}
-                  bookedSessions={bookedSessions}
-                />
-              </aside>
+            {/* Native Mobile App Experience (Matching CarePro PatientShell) */}
+            <MobilePatientShell
+              initialTab={currentSection === 'booked' ? 1 : currentSection === 'details' ? 3 : 0}
+              profile={profile}
+              user={user}
+              formData={formData}
+              displayName={displayName}
+              completion={completion}
+              bookedSessions={bookedSessions}
+              completedSessions={completedSessions}
+              nextSession={nextSession}
+              onOpenBooking={onOpenBooking}
+              handleCancelSession={handleCancelSession}
+              downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
+              downloadConsultationReportPDF={(session) => downloadConsultationReportPDF(session, profile, user)}
+              onSubmitFeedback={handleSubmitFeedback}
+              submittedFeedbackIds={submittedFeedbackIds}
+              handleChange={handleChange}
+              handleSave={handleSave}
+              isSaving={isSaving}
+              handleProfilePicUpload={handleProfilePicUpload}
+              permissionState={permissionState}
+              handleEnableNotifications={handleEnableNotifications}
+            />
 
-              <main className="lg:col-span-9 min-w-0 animate-fade-scale">
-                {currentSection === 'overview' && (
-                  <OverviewTab
-                    nextSession={nextSession}
-                    navigate={navigate}
+            {/* Desktop Web Layout */}
+            <div className="hidden md:block">
+              <div className={currentSection === 'overview' ? 'block' : 'hidden lg:block'}>
+                <HeroHeader
+                  profile={profile}
+                  user={user}
+                  displayName={displayName}
+                  greeting={greeting}
+                  completion={completion}
+                  stats={stats}
+                  handleProfilePicUpload={handleProfilePicUpload}
+                />
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start mt-5 sm:mt-6">
+                <aside className="lg:col-span-3 lg:sticky lg:top-24 lg:self-start">
+                  <SidebarNav
+                    currentSection={currentSection}
                     handleSectionChange={handleSectionChange}
-                    setSessionSubTab={setSessionSubTab}
-                    stats={stats}
                     bookedSessions={bookedSessions}
-                    completedSessions={completedSessions}
-                    profile={profile}
-                    onOpenBooking={onOpenBooking}
-                    downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
                   />
-                )}
-                {currentSection === 'booked' && (
-                  <BookedSessionsTab
-                    sessionSubTab={sessionSubTab}
-                    setSessionSubTab={setSessionSubTab}
-                    bookedSessions={bookedSessions}
-                    completedSessions={completedSessions}
-                    navigate={navigate}
-                    filterChips={filterChips}
-                    setSessionFilter={setSessionFilter}
-                    sessionFilter={sessionFilter}
-                    filteredBooked={filteredBooked}
-                    showAlert={showAlert}
-                    handleCancelSession={handleCancelSession}
-                    downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
-                    downloadCertificatePDF={downloadCertificatePDF}
-                    downloadConsultationReportPDF={(session) => downloadConsultationReportPDF(session, profile, user)}
-                    onOpenBooking={onOpenBooking}
-                    submittedFeedbackIds={submittedFeedbackIds}
-                    onSubmitFeedback={handleSubmitFeedback}
-                  />
-                )}
-                {currentSection === 'details' && (
-                  <ProfileDetailsTab
-                    completion={completion}
-                    handleSave={handleSave}
-                    formData={formData}
-                    handleChange={handleChange}
-                    errors={errors}
-                    permissionState={permissionState}
-                    handleEnableNotifications={handleEnableNotifications}
-                    handleTestNotification={handleTestNotification}
-                    handleDiscard={handleDiscard}
-                    isSaving={isSaving}
-                    isSaved={isSaved}
-                  />
-                )}
-              </main>
+                </aside>
+
+                <main className="lg:col-span-9 min-w-0 animate-fade-scale">
+                  {currentSection === 'overview' && (
+                    <OverviewTab
+                      nextSession={nextSession}
+                      navigate={navigate}
+                      handleSectionChange={handleSectionChange}
+                      setSessionSubTab={setSessionSubTab}
+                      stats={stats}
+                      bookedSessions={bookedSessions}
+                      completedSessions={completedSessions}
+                      profile={profile}
+                      onOpenBooking={onOpenBooking}
+                      downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
+                    />
+                  )}
+                  {currentSection === 'booked' && (
+                    <BookedSessionsTab
+                      sessionSubTab={sessionSubTab}
+                      setSessionSubTab={setSessionSubTab}
+                      bookedSessions={bookedSessions}
+                      completedSessions={completedSessions}
+                      navigate={navigate}
+                      filterChips={filterChips}
+                      setSessionFilter={setSessionFilter}
+                      sessionFilter={sessionFilter}
+                      filteredBooked={filteredBooked}
+                      showAlert={showAlert}
+                      handleCancelSession={handleCancelSession}
+                      downloadPDFReceiptForSession={(session) => downloadPDFReceiptForSession(session, profile, user, showAlert)}
+                      downloadCertificatePDF={downloadCertificatePDF}
+                      downloadConsultationReportPDF={(session) => downloadConsultationReportPDF(session, profile, user)}
+                      onOpenBooking={onOpenBooking}
+                      submittedFeedbackIds={submittedFeedbackIds}
+                      onSubmitFeedback={handleSubmitFeedback}
+                    />
+                  )}
+                  {currentSection === 'details' && (
+                    <ProfileDetailsTab
+                      completion={completion}
+                      handleSave={handleSave}
+                      formData={formData}
+                      handleChange={handleChange}
+                      errors={errors}
+                      permissionState={permissionState}
+                      handleEnableNotifications={handleEnableNotifications}
+                      handleTestNotification={handleTestNotification}
+                      handleDiscard={handleDiscard}
+                      isSaving={isSaving}
+                      isSaved={isSaved}
+                    />
+                  )}
+                </main>
+              </div>
             </div>
           </>
         )}
