@@ -37,11 +37,12 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
   // Tab State: 'overview' | 'review'
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Bookmark Toggle State
+  // Bookmark Toggle State — Synced with mobile favorites
   const [isBookmarked, setIsBookmarked] = useState(() => {
     try {
-      const saved = localStorage.getItem(`behold_bookmarked_${advisorId}`);
-      return saved === 'true';
+      const favs = JSON.parse(localStorage.getItem('behold_fav_therapists') || '[]');
+      if (favs.includes(advisorId)) return true;
+      return localStorage.getItem(`behold_bookmarked_${advisorId}`) === 'true';
     } catch {
       return false;
     }
@@ -83,6 +84,15 @@ export default function AdvisorProfile({ advisorId, onBack, onBook }) {
     setIsBookmarked(next);
     try {
       localStorage.setItem(`behold_bookmarked_${advisorId}`, String(next));
+      const favs = JSON.parse(localStorage.getItem('behold_fav_therapists') || '[]');
+      let updatedFavs;
+      if (next) {
+        updatedFavs = Array.from(new Set([...favs, advisorId]));
+      } else {
+        updatedFavs = favs.filter(id => id !== advisorId);
+      }
+      localStorage.setItem('behold_fav_therapists', JSON.stringify(updatedFavs));
+      window.dispatchEvent(new CustomEvent('behold_favorites_changed', { detail: updatedFavs }));
     } catch {}
     if (next) {
       toast.success("Saved to your bookmarked specialists!");

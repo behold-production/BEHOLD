@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   ChevronLeft, Star, Award, Users, 
   MapPin, CheckCircle2, Bookmark, Plus
@@ -18,9 +19,26 @@ export default function MobileDoctorProfile({
   onToggleBookmark,
   reviews = [],
 }) {
+  const navigate = useNavigate();
   const [isBioExpanded, setIsBioExpanded] = useState(false);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState('');
+
+  const handleBackClick = () => {
+    if (typeof onBack === 'function') {
+      try {
+        onBack();
+        return;
+      } catch (err) {
+        console.error("onBack error", err);
+      }
+    }
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
 
   // Dynamically compute 7 days starting from CURRENT DATE (Today)
   const availabilityDays = useMemo(() => {
@@ -107,8 +125,8 @@ export default function MobileDoctorProfile({
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 py-3 backdrop-blur-md">
         <button
           type="button"
-          onClick={onBack}
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 active:scale-95 transition-transform"
+          onClick={handleBackClick}
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 active:scale-95 transition-all cursor-pointer outline-none border-none focus:outline-none focus:ring-0 select-none"
           aria-label="Go back"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -120,7 +138,7 @@ export default function MobileDoctorProfile({
           <button
             type="button"
             onClick={onToggleBookmark}
-            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all cursor-pointer outline-none focus:outline-none focus:ring-0 active:scale-95 select-none ${
               isBookmarked
                 ? 'border-amber-300 bg-amber-50 text-amber-600'
                 : 'border-slate-200 bg-white text-slate-600'
