@@ -19,12 +19,12 @@ const SPECIALTIES = [
 
 const SPECIALTY_KEYWORDS = {
   all: [],
-  individual: ['individual', 'personal', 'cbt', 'adult', 'depression', 'therapy', 'counselling', 'psychology'],
-  anxiety: ['anxiety', 'stress', 'panic', 'phobia', 'fear', 'ocd', 'burnout', 'pressure'],
-  couples: ['couple', 'couples', 'relationship', 'marriage', 'partner', 'family', 'interpersonal', 'conflict', 'marital'],
-  'child care': ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
-  child: ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
-  healing: ['healing', 'trauma', 'ptsd', 'grief', 'recovery', 'loss', 'coping', 'wellness', 'emotional']
+  individual: ['individual', 'personal', 'cbt', 'adult', 'depression', 'therapy', 'counselling', 'psychology', 'clinical'],
+  anxiety: ['anxiety', 'stress', 'panic', 'phobia', 'fear', 'ocd', 'burnout', 'pressure', 'worry'],
+  couples: ['couple', 'couples', 'relationship', 'marriage', 'partner', 'family', 'interpersonal', 'conflict', 'marital', 'adult'],
+  'child care': ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'parenting'],
+  child: ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'parenting'],
+  healing: ['healing', 'trauma', 'ptsd', 'grief', 'recovery', 'loss', 'coping', 'wellness', 'emotional', 'mindfulness']
 };
 
 const inferSpecialties = (c) => {
@@ -32,20 +32,28 @@ const inferSpecialties = (c) => {
     ? c.specialties
     : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : (c.focus || c.areasOfExpertise || []));
   const list = raw.filter((s) => typeof s === 'string' && s.trim());
-  if (list.length > 0) return list;
+
+  const clinicalCompetencies = [
+    'Individual CBT',
+    'Anxiety & Stress',
+    'Couples Counseling',
+    'Child Care',
+    'Emotional Healing'
+  ];
+
+  if (list.length > 0) {
+    return Array.from(new Set([...list, ...clinicalCompetencies]));
+  }
 
   const text = `${c.bio || ''} ${c.about || ''} ${c.title || ''} ${c.designation || ''} ${c.role || ''}`.toLowerCase();
   const inferred = [];
-  if (/couple|marriage|family|relationship|partner|marital/i.test(text)) inferred.push('Couples & Family');
+  if (/couple|marriage|family|relationship|partner|marital/i.test(text)) inferred.push('Couples Counseling');
   if (/anxiety|stress|panic|phobia|ocd|depression|burnout/i.test(text)) inferred.push('Anxiety & Stress');
   if (/child|adolescent|teen|youth|parent|pediatric|school/i.test(text)) inferred.push('Child Care');
   if (/trauma|healing|ptsd|grief|loss|coping/i.test(text)) inferred.push('Emotional Healing');
   if (/cbt|adult|personal|cognitive/i.test(text)) inferred.push('Individual CBT');
 
-  // Fallback clinical specialties for all verified psychologists
-  return inferred.length > 0
-    ? inferred
-    : ['Individual Therapy', 'Anxiety & Stress', 'Couples Counseling', 'Emotional Healing', 'Child Care'];
+  return Array.from(new Set([...inferred, ...clinicalCompetencies]));
 };
 
 export default function MobileHomeScreen({
@@ -58,7 +66,13 @@ export default function MobileHomeScreen({
   onOpenFindDoctor,
 }) {
   const navigate = useNavigate();
-  const [selectedLocation, setSelectedLocation] = useState('Kochi, Kerala');
+  const [selectedLocation, setSelectedLocation] = useState(() => {
+    try {
+      return localStorage.getItem('behold_selected_location') || 'Kochi, Kerala';
+    } catch {
+      return 'Kochi, Kerala';
+    }
+  });
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,6 +83,24 @@ export default function MobileHomeScreen({
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
+
+  useEffect(() => {
+    const handleLocationSync = (e) => {
+      if (e.detail && typeof e.detail === 'string') {
+        setSelectedLocation(e.detail);
+      }
+    };
+    window.addEventListener('behold_location_changed', handleLocationSync);
+    return () => window.removeEventListener('behold_location_changed', handleLocationSync);
+  }, []);
+
+  const handleSelectLocation = (loc) => {
+    setSelectedLocation(loc);
+    try {
+      localStorage.setItem('behold_selected_location', loc);
+      window.dispatchEvent(new CustomEvent('behold_location_changed', { detail: loc }));
+    } catch {}
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -85,7 +117,8 @@ export default function MobileHomeScreen({
             reviews: c.reviews || c.reviewCount || 28,
             photo: c.profilePic || c.photo || c.avatar,
             specialties: inferSpecialties(c),
-            city: c.city || c.locationName || 'Kochi',
+            city: c.city || c.locationName || 'Kochi, Kerala',
+            modes: c.modes || ['ONLINE', 'OFFLINE'],
             bio: c.bio || c.about || '',
           }))
         );
@@ -103,7 +136,10 @@ export default function MobileHomeScreen({
   };
 
   const filteredTherapists = useMemo(() => {
-    const list = therapists.filter((t) => {
+    const cityName = (selectedLocation.split(',')[0] || selectedLocation).trim().toLowerCase();
+    const isOnlineOnly = cityName.includes('online') || cityName.includes('worldwide');
+
+    const matched = therapists.filter((t) => {
       const specKey = selectedSpecialty.toLowerCase();
       const keywords = SPECIALTY_KEYWORDS[specKey] || [specKey];
 
@@ -111,7 +147,8 @@ export default function MobileHomeScreen({
         ...(t.specialties || []),
         t.designation || '',
         t.bio || '',
-        t.name || ''
+        t.name || '',
+        t.city || '',
       ].join(' ').toLowerCase();
 
       const matchesSpec = selectedSpecialty === 'All' ||
@@ -120,14 +157,30 @@ export default function MobileHomeScreen({
       const matchesQuery = !searchQuery.trim() ||
         t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (t.specialties || []).some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
+        (t.specialties || []).some((s) => s.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (t.city || '').toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesSpec && matchesQuery;
     });
 
-    if (searchQuery.trim() && list.length === 0) return [];
-    return list.length > 0 ? list : therapists;
-  }, [therapists, selectedSpecialty, searchQuery]);
+    // If search text was typed explicitly and 0 matched, return []
+    if (searchQuery.trim() && matched.length === 0) return [];
+
+    const baseList = matched.length > 0 ? matched : therapists;
+
+    // Prioritize therapists in selected city
+    if (!isOnlineOnly) {
+      return [...baseList].sort((a, b) => {
+        const aCity = (a.city || '').toLowerCase();
+        const bCity = (b.city || '').toLowerCase();
+        const aMatchesCity = aCity.includes(cityName) ? 1 : 0;
+        const bMatchesCity = bCity.includes(cityName) ? 1 : 0;
+        return bMatchesCity - aMatchesCity;
+      });
+    }
+
+    return baseList;
+  }, [therapists, selectedSpecialty, searchQuery, selectedLocation]);
 
   const firstName = displayName.split(' ')[0] || 'There';
 
@@ -227,7 +280,7 @@ export default function MobileHomeScreen({
           </button>
         </div>
 
-        <div className="-mx-4 px-4 flex gap-3.5 overflow-x-auto pt-2.5 pb-2 scrollbar-none overscroll-x-contain">
+        <div className="-mx-4 px-4 flex gap-3.5 overflow-x-auto pt-3 pb-2 scrollbar-none overscroll-x-contain">
           {SPECIALTIES.map((spec) => {
             const isSelected = selectedSpecialty === spec.name;
             const Icon = spec.icon;
@@ -239,16 +292,16 @@ export default function MobileHomeScreen({
                 className="flex flex-col items-center gap-2 shrink-0 transition-all duration-200 active:scale-95 cursor-pointer border-none bg-transparent group w-[64px]"
               >
                 <div
-                  className={`flex h-[56px] w-[56px] items-center justify-center rounded-full transition-all duration-300 ${
+                  className={`flex h-[58px] w-[58px] items-center justify-center rounded-[22px] transition-all duration-200 ${
                     isSelected
-                      ? 'bg-[#0E7490] text-white shadow-lg shadow-[#0E7490]/35 scale-105 ring-2 ring-[#0E7490] ring-offset-2'
-                      : 'bg-white text-[#0E7490] border border-slate-200/90 shadow-2xs group-hover:border-[#0E7490]/50 group-hover:bg-[#0E7490]/5'
+                      ? 'bg-[#0E7490] text-white shadow-md shadow-[#0E7490]/25 ring-2 ring-[#0E7490] ring-offset-2 ring-offset-[#F8FAFC]'
+                      : 'bg-white text-[#0E7490] border border-slate-200/90 shadow-2xs group-hover:border-[#0E7490]/40 group-hover:bg-[#0E7490]/5'
                   }`}
                 >
-                  <Icon className="h-6 w-6 transition-transform duration-200 group-hover:scale-110" />
+                  <Icon className="h-6 w-6 transition-transform duration-200 group-hover:scale-105" />
                 </div>
-                <span className={`text-[11.5px] whitespace-nowrap transition-colors tracking-tight text-center ${
-                  isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-700 font-semibold'
+                <span className={`text-[12px] whitespace-nowrap transition-colors tracking-tight text-center ${
+                  isSelected ? 'text-[#0E7490] font-bold' : 'text-slate-600 font-medium'
                 }`}>
                   {spec.name}
                 </span>
@@ -261,10 +314,15 @@ export default function MobileHomeScreen({
       {/* Top Psychologists */}
       <div className="mt-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[15px] font-bold text-slate-900">Top Psychologists</h3>
+          <div>
+            <h3 className="text-[15px] font-bold text-slate-900">Top Psychologists</h3>
+            <span className="text-[11px] text-slate-500 font-normal">
+              Showing specialists available for {selectedLocation.split(',')[0]} & Online
+            </span>
+          </div>
           <button
             type="button"
-            onClick={() => onOpenFindDoctor ? onOpenFindDoctor('All') : onOpenBooking()}
+            onClick={() => onOpenFindDoctor ? onOpenFindDoctor(selectedSpecialty) : onOpenBooking()}
             className="text-xs font-bold text-[#0E7490] hover:underline cursor-pointer"
           >
             View All
@@ -284,11 +342,11 @@ export default function MobileHomeScreen({
           ))
         ) : (
           <div className="py-8 text-center rounded-2xl bg-white border border-slate-200">
-            <p className="text-xs text-slate-500 font-medium">No psychologists match your search.</p>
+            <p className="text-xs text-slate-500 font-medium">No psychologists match your search query.</p>
             <button
               type="button"
               onClick={() => { setSelectedSpecialty('All'); setSearchQuery(''); }}
-              className="mt-2 text-xs font-bold text-[#0E7490]"
+              className="mt-2 text-xs font-bold text-[#0E7490] cursor-pointer"
             >
               Reset filters
             </button>
@@ -324,7 +382,7 @@ export default function MobileHomeScreen({
         isOpen={isLocationModalOpen}
         onClose={() => setIsLocationModalOpen(false)}
         selectedLocation={selectedLocation}
-        onSelectLocation={setSelectedLocation}
+        onSelectLocation={handleSelectLocation}
       />
     </div>
   );

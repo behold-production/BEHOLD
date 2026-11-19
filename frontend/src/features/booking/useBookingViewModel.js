@@ -102,6 +102,16 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
     return true;
   });
   const [bookingForm, setBookingForm] = useState(() => {
+    let defaultLocation = '';
+    if (typeof window !== 'undefined') {
+      try {
+        const savedLoc = localStorage.getItem('behold_selected_location');
+        if (savedLoc && !savedLoc.toLowerCase().includes('worldwide') && !savedLoc.toLowerCase().includes('online')) {
+          defaultLocation = savedLoc;
+        }
+      } catch {}
+    }
+
     const defaultForm = {
       name: '',
       phone: '',
@@ -111,7 +121,7 @@ export function useBookingViewModel({ preselectedAdvisorId, clearPreselectedAdvi
       hadPriorTherapy: '',
       priorTherapyDetails: '',
       groupCode: '',
-      clientLocationName: '',
+      clientLocationName: defaultLocation,
       clientLatitude: '',
       clientLongitude: ''
     };

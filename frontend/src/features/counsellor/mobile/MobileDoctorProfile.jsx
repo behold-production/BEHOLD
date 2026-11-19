@@ -98,8 +98,8 @@ export default function MobileDoctorProfile({
               </p>
 
               <div className="mt-1 flex items-center gap-1 text-xs text-slate-500">
-                <MapPin className="h-3 w-3 shrink-0 text-slate-400" />
-                <span className="truncate">{advisor.hospital || 'Behold Wellness Clinic • Video & In-Person'}</span>
+                <MapPin className="h-3 w-3 shrink-0 text-[#0E7490]" />
+                <span className="truncate">{advisor.city || advisor.locationName || 'Kochi, Kerala'} • Behold Center</span>
               </div>
 
               <div className="mt-2 flex items-center gap-1">

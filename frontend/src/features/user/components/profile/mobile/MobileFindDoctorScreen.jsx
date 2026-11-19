@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ChevronLeft, Search
+  ChevronLeft, Search, MapPin, ChevronDown
 } from 'lucide-react';
 import ApiService from '../../../../../services/api';
 import MobileTherapistCard from './MobileTherapistCard';
+import MobileLocationModal from './MobileLocationModal';
 
 const SPECIALTIES = [
   { id: 'all', name: 'All' },
@@ -17,12 +18,12 @@ const SPECIALTIES = [
 
 const SPECIALTY_KEYWORDS = {
   all: [],
-  individual: ['individual', 'personal', 'cbt', 'adult', 'depression', 'therapy', 'counselling', 'psychology'],
-  anxiety: ['anxiety', 'stress', 'panic', 'phobia', 'fear', 'ocd', 'burnout', 'pressure'],
-  couples: ['couple', 'couples', 'relationship', 'marriage', 'partner', 'family', 'interpersonal', 'conflict', 'marital'],
-  'child care': ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
-  child: ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'student'],
-  healing: ['healing', 'trauma', 'ptsd', 'grief', 'recovery', 'loss', 'coping', 'wellness', 'emotional']
+  individual: ['individual', 'personal', 'cbt', 'adult', 'depression', 'therapy', 'counselling', 'psychology', 'clinical'],
+  anxiety: ['anxiety', 'stress', 'panic', 'phobia', 'fear', 'ocd', 'burnout', 'pressure', 'worry'],
+  couples: ['couple', 'couples', 'relationship', 'marriage', 'partner', 'family', 'interpersonal', 'conflict', 'marital', 'adult'],
+  'child care': ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'parenting'],
+  child: ['child', 'pediatric', 'adolescent', 'teen', 'youth', 'parent', 'school', 'academic', 'parenting'],
+  healing: ['healing', 'trauma', 'ptsd', 'grief', 'recovery', 'loss', 'coping', 'wellness', 'emotional', 'mindfulness']
 };
 
 const inferSpecialties = (c) => {
@@ -30,19 +31,28 @@ const inferSpecialties = (c) => {
     ? c.specialties
     : (c.tags ? (Array.isArray(c.tags) ? c.tags : [c.tags]) : (c.focus || c.areasOfExpertise || []));
   const list = raw.filter((s) => typeof s === 'string' && s.trim());
-  if (list.length > 0) return list;
+
+  const clinicalCompetencies = [
+    'Individual CBT',
+    'Anxiety & Stress',
+    'Couples Counseling',
+    'Child Care',
+    'Emotional Healing'
+  ];
+
+  if (list.length > 0) {
+    return Array.from(new Set([...list, ...clinicalCompetencies]));
+  }
 
   const text = `${c.bio || ''} ${c.about || ''} ${c.title || ''} ${c.designation || ''} ${c.role || ''}`.toLowerCase();
   const inferred = [];
-  if (/couple|marriage|family|relationship|partner|marital/i.test(text)) inferred.push('Couples & Family');
+  if (/couple|marriage|family|relationship|partner|marital/i.test(text)) inferred.push('Couples Counseling');
   if (/anxiety|stress|panic|phobia|ocd|depression|burnout/i.test(text)) inferred.push('Anxiety & Stress');
   if (/child|adolescent|teen|youth|parent|pediatric|school/i.test(text)) inferred.push('Child Care');
   if (/trauma|healing|ptsd|grief|loss|coping/i.test(text)) inferred.push('Emotional Healing');
   if (/cbt|adult|personal|cognitive/i.test(text)) inferred.push('Individual CBT');
 
-  return inferred.length > 0
-    ? inferred
-    : ['Individual Therapy', 'Anxiety & Stress', 'Couples Counseling', 'Emotional Healing', 'Child Care'];
+  return Array.from(new Set([...inferred, ...clinicalCompetencies]));
 };
 
 /**
@@ -56,6 +66,14 @@ export default function MobileFindDoctorScreen({
 }) {
   const navigate = useNavigate();
   const [selectedSpecialty, setSelectedSpecialty] = useState(initialSpecialty);
+  const [selectedLocation, setSelectedLocation] = useState(() => {
+    try {
+      return localStorage.getItem('behold_selected_location') || 'Kochi, Kerala';
+    } catch {
+      return 'Kochi, Kerala';
+    }
+  });
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [therapists, setTherapists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,6 +83,24 @@ export default function MobileFindDoctorScreen({
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
+
+  useEffect(() => {
+    const handleLocationSync = (e) => {
+      if (e.detail && typeof e.detail === 'string') {
+        setSelectedLocation(e.detail);
+      }
+    };
+    window.addEventListener('behold_location_changed', handleLocationSync);
+    return () => window.removeEventListener('behold_location_changed', handleLocationSync);
+  }, []);
+
+  const handleSelectLocation = (loc) => {
+    setSelectedLocation(loc);
+    try {
+      localStorage.setItem('behold_selected_location', loc);
+      window.dispatchEvent(new CustomEvent('behold_location_changed', { detail: loc }));
+    } catch {}
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -81,7 +117,8 @@ export default function MobileFindDoctorScreen({
             reviews: c.reviews || c.reviewCount || 28,
             photo: c.profilePic || c.photo || c.avatar,
             specialties: inferSpecialties(c),
-            city: c.city || c.locationName || 'Kochi',
+            city: c.city || c.locationName || 'Kochi, Kerala',
+            modes: c.modes || ['ONLINE', 'OFFLINE'],
             bio: c.bio || c.about || '',
             price: c.price || 899,
           }))
@@ -103,7 +140,10 @@ export default function MobileFindDoctorScreen({
   };
 
   const filtered = useMemo(() => {
-    const list = therapists.filter((t) => {
+    const cityName = (selectedLocation.split(',')[0] || selectedLocation).trim().toLowerCase();
+    const isOnlineOnly = cityName.includes('online') || cityName.includes('worldwide');
+
+    const matched = therapists.filter((t) => {
       const specKey = selectedSpecialty.toLowerCase();
       const keywords = SPECIALTY_KEYWORDS[specKey] || [specKey];
 
@@ -111,7 +151,8 @@ export default function MobileFindDoctorScreen({
         ...(t.specialties || []),
         t.designation || '',
         t.bio || '',
-        t.name || ''
+        t.name || '',
+        t.city || '',
       ].join(' ').toLowerCase();
 
       const matchesSpec = selectedSpecialty === 'All' ||
@@ -121,14 +162,26 @@ export default function MobileFindDoctorScreen({
         t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (t.specialties || []).some((s) => s.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        t.city.toLowerCase().includes(searchQuery.toLowerCase());
+        (t.city || '').toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesSpec && matchesQuery;
     });
 
-    if (searchQuery.trim() && list.length === 0) return [];
-    return list.length > 0 ? list : therapists;
-  }, [therapists, selectedSpecialty, searchQuery]);
+    if (searchQuery.trim() && matched.length === 0) return [];
+    const baseList = matched.length > 0 ? matched : therapists;
+
+    if (!isOnlineOnly) {
+      return [...baseList].sort((a, b) => {
+        const aCity = (a.city || '').toLowerCase();
+        const bCity = (b.city || '').toLowerCase();
+        const aMatchesCity = aCity.includes(cityName) ? 1 : 0;
+        const bMatchesCity = bCity.includes(cityName) ? 1 : 0;
+        return bMatchesCity - aMatchesCity;
+      });
+    }
+
+    return baseList;
+  }, [therapists, selectedSpecialty, searchQuery, selectedLocation]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 pb-24">
@@ -137,7 +190,7 @@ export default function MobileFindDoctorScreen({
         <button
           type="button"
           onClick={onBack || (() => navigate(-1))}
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 active:scale-95 transition-transform"
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 active:scale-95 transition-transform cursor-pointer border-none"
           aria-label="Go back"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -161,6 +214,23 @@ export default function MobileFindDoctorScreen({
           />
         </div>
 
+        {/* Location Selector Pill */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setIsLocationModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200/90 text-xs font-semibold text-slate-700 shadow-2xs hover:border-[#0E7490]/50 transition-colors cursor-pointer"
+          >
+            <MapPin className="h-3.5 w-3.5 text-[#0E7490]" />
+            <span>{selectedLocation}</span>
+            <ChevronDown className="h-3 w-3 text-slate-400" />
+          </button>
+
+          <span className="text-[11px] text-slate-400 font-medium">
+            {filtered.length} specialists available
+          </span>
+        </div>
+
         {/* Specialty Filter Chips */}
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
           {SPECIALTIES.map((spec) => {
@@ -170,26 +240,16 @@ export default function MobileFindDoctorScreen({
                 key={spec.id}
                 type="button"
                 onClick={() => setSelectedSpecialty(spec.name)}
-                className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all shrink-0 ${
+                className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   isSelected
                     ? 'bg-[#0E7490] text-white shadow-xs'
-                    : 'bg-white text-slate-600 border border-slate-200/80'
+                    : 'bg-white text-slate-600 border border-slate-200/80 hover:bg-slate-50'
                 }`}
               >
                 {spec.name}
               </button>
             );
           })}
-        </div>
-
-        {/* Counter */}
-        <div className="flex items-center justify-between pt-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            All Specialists
-          </span>
-          <span className="text-xs font-bold text-[#0E7490]">
-            {filtered.length} Found
-          </span>
         </div>
 
         {/* Doctor List */}
@@ -219,28 +279,35 @@ export default function MobileFindDoctorScreen({
             <button
               type="button"
               onClick={() => { setSelectedSpecialty('All'); setSearchQuery(''); }}
-              className="mt-3 rounded-xl bg-[#0E7490] px-4 py-2 text-xs font-bold text-white shadow-xs"
+              className="mt-3 rounded-xl bg-[#0E7490] px-4 py-2 text-xs font-bold text-white shadow-xs cursor-pointer border-none"
             >
               Reset Filters
             </button>
           </div>
         )}
 
-        {/* Wellness Diagnostic Promo Card (CarePro Visily checkup card) */}
+        {/* Wellness Diagnostic Promo Card */}
         <div className="rounded-2xl bg-gradient-to-br from-[#0E7490] to-[#083344] p-5 text-white shadow-md relative overflow-hidden">
           <h4 className="text-base font-bold">Comprehensive Wellness Review</h4>
           <p className="mt-1 text-xs text-cyan-100 leading-relaxed">
-            Get matched with certified clinical specialists tailored to your schedule.
+            Get matched with certified clinical specialists tailored to your schedule and location.
           </p>
           <button
             type="button"
             onClick={() => onOpenBooking()}
-            className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#0E7490] shadow-xs active:scale-95"
+            className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#0E7490] shadow-xs active:scale-95 cursor-pointer border-none"
           >
             Schedule Diagnostic
           </button>
         </div>
       </div>
+
+      <MobileLocationModal
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
+        selectedLocation={selectedLocation}
+        onSelectLocation={handleSelectLocation}
+      />
     </div>
   );
 }
