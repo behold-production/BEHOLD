@@ -20,7 +20,6 @@ import CompleteProfileModal from '../features/auth/CompleteProfileModal';
 import TherapistSwipeSection from '../features/landing/TherapistSwipeSection';
 import BlogSection from '../features/landing/BlogSection';
 import ContactInquirySection from '../features/landing/ContactInquirySection';
-import ServicesShowcase from '../features/landing/ServicesShowcase';
 import HomeOfferSection from '../features/landing/HomeOfferSection';
 import HomeValuesSection from '../features/landing/HomeValuesSection';
 import HomeClosingSection from '../features/landing/HomeClosingSection';
@@ -601,7 +600,6 @@ export default function App() {
           <Route path="/" element={
             <main className="fade-in-up bg-[#FBF8F1] text-[#0E1111]">
               <Hero setView={() => { }} navigateToSection={navigateToSection} siteSettings={siteSettings} settingsLoaded={settingsLoaded} onOpenBooking={handleOpenGeneralBooking} />
-              <ServicesShowcase siteSettings={siteSettings} onOpenBooking={handleOpenGeneralBooking} />
               <TherapistSwipeSection onBookTherapist={handleBookTherapist} />
               <Reviews siteSettings={siteSettings} />
               <BlogSection siteSettings={siteSettings} />

@@ -9,12 +9,11 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const SECTIONS = [
   { id: 'home',          label: 'Home' },
-  { id: 'about',         label: 'About' },
-  { id: 'services',      label: 'Services' },
-  { id: 'process',       label: 'Process' },
+  { id: 'experts',       label: 'Experts' },
   { id: 'reviews',       label: 'Reviews' },
+  { id: 'blog',          label: 'Articles' },
+  { id: 'about',         label: 'About' },
   { id: 'faqs',          label: 'FAQs' },
-  { id: 'contact',       label: 'Contact' },
   { id: 'inquiry',       label: 'Inquiry' },
 ];
 

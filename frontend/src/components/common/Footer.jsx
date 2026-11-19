@@ -232,7 +232,7 @@ export default function Footer({
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => goTo('services')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
+                  <button onClick={() => goTo('/booking')} className="cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:text-[#0E7490]">
                     Services
                   </button>
                 </li>

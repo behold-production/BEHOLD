@@ -30,7 +30,7 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
   useEffect(() => {
     if (location.pathname !== '/') return;
 
-    const sectionIds = ['home', 'why-choose-us', 'services', 'experts', 'about', 'faqs', 'blog', 'inquiry'];
+    const sectionIds = ['home', 'experts', 'about', 'faqs', 'blog', 'inquiry'];
     const handleScrollSection = () => {
       const scrollPos = window.scrollY + 160;
       for (const id of sectionIds) {
@@ -111,10 +111,8 @@ export default function Navbar({ navigateToSection, currentView, onOpenAuth, onO
     },
     {
       label: 'Services',
-      action: () => goTo('services'),
-      isActive: isHome
-        ? ['services', 'why-choose-us'].includes(activeSection)
-        : location.pathname === '/booking',
+      action: () => goTo('/booking'),
+      isActive: location.pathname === '/booking',
     },
     {
       label: 'Psychologists',

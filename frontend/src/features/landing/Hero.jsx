@@ -87,7 +87,10 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
 
   const handleBookClick = () => {
     if (typeof onOpenBooking === 'function') onOpenBooking();
-    else scrollToSection('services');
+    else {
+      navigate('/booking');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleAccountClick = () => {
@@ -193,7 +196,10 @@ export default function Hero({ siteSettings, navigateToSection, onOpenBooking, s
 
               <button
                 type="button"
-                onClick={() => scrollToSection('services')}
+                onClick={() => {
+                  navigate('/booking');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-xl border border-transparent px-3 py-2.5 text-[13px] font-semibold text-[#0B5C73] underline decoration-[#0E7490]/30 decoration-1 underline-offset-4 transition-colors duration-200 hover:text-[#0E7490] hover:decoration-[#0E7490] cursor-pointer bg-transparent"
               >
                 Explore Our Services
